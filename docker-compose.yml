@@ -1,0 +1,17 @@
+services:
+  otp:
+    image: opentripplanner/opentripplanner:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/var/opentripplanner
+    command: --load --serve
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - OTP_URL=http://otp:8080
+    depends_on:
+      - otp

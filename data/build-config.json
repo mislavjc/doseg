@@ -1,0 +1,13 @@
+{
+  "osm": [
+    {
+      "source": "osm/croatia.osm.pbf"
+    }
+  ],
+  "transitFeeds": [
+    {
+      "type": "gtfs",
+      "source": "gtfs/zet.zip"
+    }
+  ]
+}

@@ -34,3 +34,10 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data files (download separately)
+data/gtfs/*.zip
+data/osm/*.osm.pbf
+
+# graphql-codegen output
+/generated

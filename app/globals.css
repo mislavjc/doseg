@@ -135,6 +135,15 @@
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(0, 0, 0, 0.04);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 /* Origin marker */
@@ -164,7 +173,7 @@
 
 @keyframes marker-ping {
   0% {
-    transform: scale(0.5);
+    transform: scale(0.8);
     opacity: 0.7;
   }
   100% {
@@ -178,7 +187,13 @@
   height: 2px;
   background: linear-gradient(90deg, #22c55e, #06b6d4, #3b82f6, #6366f1);
   background-size: 300% 100%;
-  animation: loading-slide 1.5s ease-in-out infinite;
+  animation: loading-slide 1.5s linear infinite;
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 @keyframes loading-slide {
@@ -207,4 +222,36 @@
   background: #fff !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
   border-radius: 8px !important;
+}
+
+/* Route detail leg stagger animation */
+@keyframes leg-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.leg-item {
+  animation: leg-fade-in 200ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .origin-marker-ring {
+    animation: none;
+  }
+  .loading-bar {
+    animation-duration: 4s;
+  }
+  .panel {
+    transition-duration: 0ms;
+  }
+  .leg-item {
+    animation: none;
+  }
 }

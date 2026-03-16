@@ -35,7 +35,8 @@ export function RouteDetails({ itinerary }: { itinerary: Itinerary }) {
 
       <div className="mt-3 flex flex-col gap-0.5">
         {itinerary.legs.map((leg, i) => (
-          <div key={i} className="flex items-center gap-2 py-1">
+          <div key={i} className="leg-item flex items-center gap-2 py-1"
+            style={{ animationDelay: `${i * 50}ms` }}>
             <span
               className="inline-flex h-[22px] min-w-[36px] items-center justify-center rounded-[5px] px-1.5 text-[11px] font-semibold"
               style={{

@@ -38,6 +38,7 @@ next-env.d.ts
 # data files (download separately)
 data/gtfs/*.zip
 data/osm/*.osm.pbf
+data/graph.obj
 
 # graphql-codegen output
 /generated

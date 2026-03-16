@@ -40,6 +40,33 @@ function createMarkerElement(): HTMLDivElement {
   return el
 }
 
+const legendPanel = (
+  <div className="panel absolute top-4 left-4">
+    <div className="text-[15px] font-semibold tracking-tight text-slate-900">
+      doseg
+    </div>
+    <div className="mb-3 text-[11px] text-slate-500">
+      Zagreb transit reachability
+    </div>
+    <div className="mb-1 text-[10px] font-medium text-slate-400">
+      Trip duration
+    </div>
+    <div
+      className="h-2 w-full rounded-sm"
+      style={{
+        background:
+          "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+      }}
+    />
+    <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500">
+      <span>0</span>
+      <span>15</span>
+      <span>30</span>
+      <span>45 min</span>
+    </div>
+  </div>
+)
+
 export function TransitMap() {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
@@ -243,31 +270,7 @@ export function TransitMap() {
     <div className="relative h-svh w-full">
       <div ref={containerRef} className="h-full w-full" />
 
-      {/* Title + legend */}
-      <div className="panel absolute top-4 left-4">
-        <div className="text-[15px] font-semibold tracking-tight text-slate-900">
-          doseg
-        </div>
-        <div className="mb-3 text-[11px] text-slate-500">
-          Zagreb transit reachability
-        </div>
-        <div className="mb-1 text-[10px] font-medium text-slate-400">
-          Trip duration
-        </div>
-        <div
-          className="h-2 w-full rounded-sm"
-          style={{
-            background:
-              "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
-          }}
-        />
-        <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500">
-          <span>0</span>
-          <span>15</span>
-          <span>30</span>
-          <span>45 min</span>
-        </div>
-      </div>
+      {legendPanel}
 
       {!origin && (
         <div className="panel absolute bottom-8 left-1/2 -translate-x-1/2">

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
+import { gzipSync } from "node:zlib"
 
 import { getRealtimeData, getStopDelay, type TripRT } from "@/lib/gtfs-rt"
 import { secondsOfDay } from "@/lib/zagreb-time"
@@ -390,7 +391,7 @@ export async function GET(request: NextRequest) {
   const lon = parseFloat(searchParams.get("lon") || "")
 
   if (isNaN(lat) || isNaN(lon)) {
-    return NextResponse.json(
+    return Response.json(
       { error: "lat and lon are required" },
       { status: 400 }
     )
@@ -491,25 +492,30 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    const json = JSON.stringify({
+      type: "FeatureCollection",
+      features,
+      routing: { stops: routingStops, patterns: routingPatterns },
+      realtime: rtData.size > 0,
+    })
     const tSerial = performance.now()
 
-    return NextResponse.json(
-      {
-        type: "FeatureCollection",
-        features,
-        routing: { stops: routingStops, patterns: routingPatterns },
-        realtime: rtData.size > 0,
+    const acceptsGzip = request.headers
+      .get("accept-encoding")
+      ?.includes("gzip")
+    const body = acceptsGzip ? gzipSync(json) : json
+
+    return new Response(body, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(acceptsGzip && { "Content-Encoding": "gzip" }),
+        "Cache-Control": "private, max-age=30",
+        "Server-Timing": `graph;dur=${(tGraph-t0).toFixed(0)}, dijkstra;dur=${(tDijkstra-tLoad).toFixed(0)}, walk;dur=${(tWalk-tDijkstra).toFixed(0)}, serial;dur=${(tSerial-tWalk).toFixed(0)}, total;dur=${(tSerial-t0).toFixed(0)}`,
       },
-      {
-        headers: {
-          "Cache-Control": "private, max-age=30",
-          "Server-Timing": `graph;dur=${(tGraph-t0).toFixed(0)}, dijkstra;dur=${(tDijkstra-tLoad).toFixed(0)}, walk;dur=${(tWalk-tDijkstra).toFixed(0)}, serial;dur=${(tSerial-tWalk).toFixed(0)}, total;dur=${(tSerial-t0).toFixed(0)}`,
-        },
-      }
-    )
+    })
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 502 })
+    return Response.json({ error: message }, { status: 502 })
   }
 }

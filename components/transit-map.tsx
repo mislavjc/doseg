@@ -42,13 +42,13 @@ function createMarkerElement(): HTMLDivElement {
 
 const legendPanel = (
   <div className="panel absolute top-4 left-4">
-    <div className="text-[15px] font-semibold tracking-tight text-slate-900">
+    <div className="text-[15px] font-semibold tracking-tight text-slate-100">
       doseg
     </div>
-    <div className="mb-3 text-[11px] text-slate-500">
+    <div className="mb-3 text-[11px] text-slate-400">
       Zagreb transit reachability
     </div>
-    <div className="mb-1 text-[10px] font-medium text-slate-400">
+    <div className="mb-1 text-[10px] font-medium text-slate-500">
       Trip duration
     </div>
     <div
@@ -78,16 +78,16 @@ export function TransitMap() {
 
   const [origin, setOrigin] = useState<[number, number] | null>(null)
   const [route, setRoute] = useState<Itinerary | null>(null)
+  const [routeLoading, setRouteLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Initialize map
   useEffect(() => {
     if (!containerRef.current) return
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: "https://tiles.openfreemap.org/styles/liberty",
+      style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
       center: ZAGREB,
       zoom: 12,
       attributionControl: false,
@@ -105,6 +105,11 @@ export function TransitMap() {
     map.on("load", () => {
       mapRef.current = map
 
+      // Lighten the dark basemap slightly
+      if (map.getLayer("background")) {
+        map.setPaintProperty("background", "background-color", "#1a1a24")
+      }
+
       map.addSource("isochrone", { type: "geojson", data: EMPTY_FC })
       map.addLayer({
         id: "isochrone-core",
@@ -112,12 +117,65 @@ export function TransitMap() {
         source: "isochrone",
         paint: {
           "line-color": TIME_COLOR_STOPS,
-          "line-width": 2,
-          "line-opacity": 0.3,
+          "line-width": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 1,
+            13, 1.5,
+            16, 2.5,
+          ],
+          "line-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 0.4,
+            13, 0.5,
+            16, 0.65,
+          ],
+          "line-blur": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 1,
+            14, 0.5,
+          ],
         },
         layout: { "line-cap": "round", "line-join": "round" },
       })
 
+      // Preview line: instant straight line from origin to cursor
+      map.addSource("preview", { type: "geojson", data: EMPTY_FC })
+      map.addLayer({
+        id: "preview-line",
+        type: "line",
+        source: "preview",
+        paint: {
+          "line-color": "rgba(255, 255, 255, 0.25)",
+          "line-width": 1.5,
+          "line-dasharray": [4, 4],
+        },
+        layout: { "line-cap": "round" },
+      })
+
+      // Destination dot
+      map.addSource("dest-dot", {
+        type: "geojson",
+        data: EMPTY_FC,
+      })
+      map.addLayer({
+        id: "dest-dot",
+        type: "circle",
+        source: "dest-dot",
+        paint: {
+          "circle-radius": 4,
+          "circle-color": "rgba(255, 255, 255, 0.7)",
+          "circle-stroke-width": 1.5,
+          "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+        },
+      })
+
+      // Route layers (on top)
       map.addSource("route", { type: "geojson", data: EMPTY_FC })
       map.addLayer({
         id: "route-casing",
@@ -169,21 +227,51 @@ export function TransitMap() {
       originRef.current = coords
       setOrigin(coords)
       setRoute(null)
+      setRouteLoading(false)
       setLoading(true)
       setError(null)
     })
 
-    // Hover → debounced route fetch
+    // Hover → instant preview + debounced route fetch
     map.on("mousemove", (e) => {
       const o = originRef.current
       if (!o) return
 
+      const dest: [number, number] = [e.lngLat.lng, e.lngLat.lat]
+
+      // Instant: update preview line + destination dot
+      const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+      if (previewSrc) {
+        previewSrc.setData({
+          type: "FeatureCollection",
+          features: [{
+            type: "Feature",
+            properties: {},
+            geometry: { type: "LineString", coordinates: [o, dest] },
+          }],
+        })
+      }
+      const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+      if (dotSrc) {
+        dotSrc.setData({
+          type: "FeatureCollection",
+          features: [{
+            type: "Feature",
+            properties: {},
+            geometry: { type: "Point", coordinates: dest },
+          }],
+        })
+      }
+
+      // Debounced: fetch actual route
       if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
 
       hoverTimerRef.current = setTimeout(async () => {
         if (planAbortRef.current) planAbortRef.current.abort()
         const controller = new AbortController()
         planAbortRef.current = controller
+
+        setRouteLoading(true)
 
         try {
           const result = await fetchPlan(
@@ -200,12 +288,23 @@ export function TransitMap() {
           if (result.itineraries.length > 0) {
             const itinerary = pickBestItinerary(result.itineraries)
             setRoute(itinerary)
-            renderRoute(mapRef.current!, itinerary)
+            setRouteLoading(false)
+            renderRoute(map, itinerary)
+          } else {
+            setRouteLoading(false)
           }
         } catch {
-          // Silently ignore aborted/failed hover requests
+          if (!controller.signal.aborted) setRouteLoading(false)
         }
       }, 150)
+    })
+
+    // Clear preview when mouse leaves
+    map.on("mouseout", () => {
+      const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+      if (previewSrc) previewSrc.setData(EMPTY_FC)
+      const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+      if (dotSrc) dotSrc.setData(EMPTY_FC)
     })
 
     return () => {
@@ -216,7 +315,6 @@ export function TransitMap() {
     }
   }, [])
 
-  // Origin changed → update marker + fetch isochrone
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
@@ -232,8 +330,12 @@ export function TransitMap() {
     if (!origin) {
       const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
       if (isoSource) isoSource.setData(EMPTY_FC)
+      map.getCanvas().style.cursor = ""
       return
     }
+
+    // Crosshair cursor once origin is set
+    map.getCanvas().style.cursor = "crosshair"
 
     markerRef.current = new maplibregl.Marker({
       element: createMarkerElement(),
@@ -274,7 +376,7 @@ export function TransitMap() {
 
       {!origin && (
         <div className="panel absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="text-[13px] text-slate-700">
+          <div className="text-[13px] text-slate-300">
             Click anywhere to see how far you can go
           </div>
         </div>
@@ -287,12 +389,14 @@ export function TransitMap() {
       )}
 
       {error && (
-        <div className="panel absolute top-5 left-1/2 -translate-x-1/2 text-[12px] text-red-600">
+        <div className="panel absolute top-5 left-1/2 -translate-x-1/2 text-[12px] text-red-400">
           {error}
         </div>
       )}
 
-      {route && <RouteDetails itinerary={route} />}
+      {(route || routeLoading) && (
+        <RouteDetails itinerary={route} loading={routeLoading} />
+      )}
     </div>
   )
 }

@@ -127,14 +127,15 @@
   }
 }
 
-/* Map overlay panels — solid white for readability on dark map */
+/* Map overlay panels — dark glass */
 .panel {
-  background: #fff;
+  background: rgba(20, 20, 28, 0.85);
+  backdrop-filter: blur(12px);
   border-radius: 10px;
   padding: 12px 16px;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(0, 0, 0, 0.04);
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
   opacity: 1;
   transform: translateY(0);
   transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
@@ -219,9 +220,16 @@
 }
 
 .maplibregl-ctrl-group {
-  background: #fff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  background: rgba(20, 20, 28, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06) !important;
   border-radius: 8px !important;
+}
+
+.maplibregl-ctrl-group button {
+  filter: invert(1);
 }
 
 /* Route detail leg stagger animation */
@@ -238,6 +246,20 @@
 
 .leg-item {
   animation: leg-fade-in 200ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+/* Route loading spinner */
+.route-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Reduced motion */

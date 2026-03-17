@@ -3,33 +3,29 @@ services:
     image: opentripplanner/opentripplanner:2.9.0_2025-12-15T13-18
     volumes:
       - ./data:/var/opentripplanner
-    command: --load --serve
+    command: --build --serve
     environment:
       - JAVA_TOOL_OPTIONS=-Xmx1536m
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/otp/actuators/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/otp/ || exit 1"]
       interval: 10s
       timeout: 5s
-      start_period: 120s
-      retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 3G
+      start_period: 300s
+      retries: 5
     restart: unless-stopped
 
   app:
     build: .
     environment:
       - OTP_URL=http://otp:8080
+      - HOSTNAME=0.0.0.0
     volumes:
       - ./data/walk-graph.bin:/app/data/walk-graph.bin:ro
     depends_on:
       otp:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r=>{if(!r.ok)throw r;process.exit(0)}).catch(()=>process.exit(1))\""]
       interval: 10s
       timeout: 5s
       start_period: 30s
@@ -57,7 +53,7 @@ services:
       app:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:2019/metrics || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/api/health || exit 1"]
       interval: 10s
       timeout: 5s
       start_period: 10s

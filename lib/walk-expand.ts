@@ -245,3 +245,91 @@ export function expandWalking(
 
   return features
 }
+
+/**
+ * Lightweight walk expansion that counts unique reachable grid cells (~200m×200m)
+ * instead of generating GeoJSON. Used for batch scoring (neighbourhood rankings).
+ *
+ * Counting grid cells instead of raw nodes removes bias from street-network density:
+ * downtown has 2-3x more nodes/km² than suburbs, but cells normalize to area.
+ *
+ * @param bestBuf - pre-allocated Float64Array(nodeCount) to avoid per-call allocation
+ */
+export function countReachableCells(
+  graph: WalkingGraph,
+  transitTimes: Map<string, number>,
+  transitStops: ReadonlyMap<string, { lat: number; lon: number }>,
+  originLat: number,
+  originLon: number,
+  maxSeconds: number,
+  bestBuf: Float64Array
+): number {
+  bestBuf.fill(Infinity)
+  const heap = new WalkHeap()
+
+  // Seed 1: Origin point → nearest walk node
+  const originNode = findNearestNode(graph, originLat, originLon, 0.25)
+  if (originNode >= 0) {
+    const olat = graph.coords[originNode * 2]
+    const olon = graph.coords[originNode * 2 + 1]
+    const walkTime =
+      (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
+    if (walkTime < maxSeconds) {
+      bestBuf[originNode] = walkTime
+      heap.push(walkTime, originNode)
+    }
+  }
+
+  // Seed 2: Each reachable transit stop → nearest walk node
+  for (const [key, time] of transitTimes) {
+    if (time >= maxSeconds) continue
+    const stop = transitStops.get(key)
+    if (!stop) continue
+
+    const nodeIdx = findNearestNode(graph, stop.lat, stop.lon, 0.09)
+    if (nodeIdx < 0) continue
+
+    const nlat = graph.coords[nodeIdx * 2]
+    const nlon = graph.coords[nodeIdx * 2 + 1]
+    const walkToNode =
+      (fastDistKm(stop.lat, stop.lon, nlat, nlon) / WALK_SPEED) * 3600
+    const totalTime = time + walkToNode
+
+    if (totalTime < maxSeconds && totalTime < bestBuf[nodeIdx]) {
+      bestBuf[nodeIdx] = totalTime
+      heap.push(totalTime, nodeIdx)
+    }
+  }
+
+  // Dijkstra on walking graph — count unique grid cells reached
+  const cells = new Set<number>()
+  const { offsets, edgeTargets, edgeDistCm, coords, gridCellSize } = graph
+
+  while (heap.size > 0) {
+    const time = heap.popTime()
+    const nodeIdx = heap.popNode()
+    heap.pop()
+
+    if (time > bestBuf[nodeIdx]) continue
+    if (time > maxSeconds) break
+
+    // Compute cell key as single integer (faster than string)
+    const ni2 = nodeIdx * 2
+    const cx = Math.floor(coords[ni2 + 1] / gridCellSize) // lon
+    const cy = Math.floor(coords[ni2] / gridCellSize) // lat
+    cells.add(cx * 100000 + cy)
+
+    const edgeEnd = offsets[nodeIdx + 1]
+    for (let e = offsets[nodeIdx]; e < edgeEnd; e++) {
+      const toIdx = edgeTargets[e]
+      const arrivalTime = time + edgeDistCm[e] * CM_TO_SECONDS
+
+      if (arrivalTime < maxSeconds && arrivalTime < bestBuf[toIdx]) {
+        bestBuf[toIdx] = arrivalTime
+        heap.push(arrivalTime, toIdx)
+      }
+    }
+  }
+
+  return cells.size
+}

@@ -20,7 +20,7 @@ services:
       - OTP_URL=http://otp:8080
       - HOSTNAME=0.0.0.0
     volumes:
-      - ./data/walk-graph.bin:/app/data/walk-graph.bin:ro
+      - ./data:/app/data
     depends_on:
       otp:
         condition: service_healthy

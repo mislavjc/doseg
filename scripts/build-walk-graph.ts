@@ -12,7 +12,7 @@
  *   edgeCount × 8 bytes  [toIdx uint32, distCm uint32]
  */
 
-import { createReadStream, writeFileSync } from "fs"
+import { createReadStream, readFileSync, writeFileSync } from "fs"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const createParser = require("osm-pbf-parser")
@@ -63,6 +63,56 @@ function distKm(
   const dlat = (lat2 - lat1) * KM_PER_DEG_LAT
   const dlon = (lon2 - lon1) * KM_PER_DEG_LON
   return Math.sqrt(dlat * dlat + dlon * dlon)
+}
+
+// --- SRTM elevation data ---
+
+const SRTM_SIZE = 3601 // 1 arc-second resolution
+const SRTM_DIR = "data/srtm"
+
+function loadSRTMTiles(): Map<string, Int16Array> {
+  const tiles = new Map<string, Int16Array>()
+  for (const name of ["N45E015", "N45E016"]) {
+    try {
+      const buf = readFileSync(`${SRTM_DIR}/${name}.hgt`)
+      const data = new Int16Array(SRTM_SIZE * SRTM_SIZE)
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (buf[i * 2] << 8) | buf[i * 2 + 1] // big-endian
+      }
+      tiles.set(name, data)
+    } catch {
+      console.log(`  Warning: SRTM tile ${name} not found, skipping elevation`)
+    }
+  }
+  return tiles
+}
+
+function getElevation(
+  lat: number,
+  lon: number,
+  tiles: Map<string, Int16Array>
+): number {
+  const tileLat = Math.floor(lat)
+  const tileLon = Math.floor(lon)
+  const key = `N${tileLat}E${String(tileLon).padStart(3, "0")}`
+  const tile = tiles.get(key)
+  if (!tile) return 0
+
+  const row = Math.round((tileLat + 1 - lat) * (SRTM_SIZE - 1))
+  const col = Math.round((lon - tileLon) * (SRTM_SIZE - 1))
+  const idx = row * SRTM_SIZE + col
+  if (idx < 0 || idx >= tile.length) return 0
+
+  const elev = tile[idx]
+  return elev === -32768 ? 0 : elev // -32768 = void
+}
+
+/**
+ * Tobler's hiking function: speed factor relative to flat walking.
+ * Returns >1 for mild downhill (faster), <1 for uphill/steep downhill (slower).
+ */
+function toblerFactor(slope: number): number {
+  return Math.exp(-3.5 * (Math.abs(slope + 0.05) - 0.05))
 }
 
 interface OsmItem {
@@ -157,7 +207,15 @@ async function main() {
     nodeList.push(coord)
   }
 
-  // Build edge list (bidirectional)
+  // Load SRTM elevation data
+  console.log("Loading SRTM elevation data...")
+  const srtmTiles = loadSRTMTiles()
+  const hasElevation = srtmTiles.size > 0
+  if (hasElevation) {
+    console.log(`  ${srtmTiles.size} tiles loaded`)
+  }
+
+  // Build edge list (bidirectional, elevation-adjusted)
   interface Edge {
     from: number
     to: number
@@ -172,10 +230,27 @@ async function main() {
       const fromCoord = nodeList[fromIdx]
       const toCoord = nodeList[toIdx]
       const d = distKm(fromCoord.lat, fromCoord.lon, toCoord.lat, toCoord.lon)
-      const distCm = Math.round(d * 100000) // km to cm
 
-      edges.push({ from: fromIdx, to: toIdx, distCm })
-      edges.push({ from: toIdx, to: fromIdx, distCm })
+      if (!hasElevation || d < 0.01) {
+        // No elevation data or edge too short (<10m) for reliable gradient
+        const distCm = Math.round(d * 100000)
+        edges.push({ from: fromIdx, to: toIdx, distCm })
+        edges.push({ from: toIdx, to: fromIdx, distCm })
+      } else {
+        const elevFrom = getElevation(fromCoord.lat, fromCoord.lon, srtmTiles)
+        const elevTo = getElevation(toCoord.lat, toCoord.lon, srtmTiles)
+        const rise = elevTo - elevFrom // meters
+        const run = d * 1000 // km to meters
+        const slope = rise / run
+
+        // Forward (from→to): equivalent flat distance accounting for terrain
+        const fwd = Math.round((d / toblerFactor(slope)) * 100000)
+        // Reverse (to→from): opposite slope
+        const rev = Math.round((d / toblerFactor(-slope)) * 100000)
+
+        edges.push({ from: fromIdx, to: toIdx, distCm: fwd })
+        edges.push({ from: toIdx, to: fromIdx, distCm: rev })
+      }
     }
   }
 

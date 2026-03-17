@@ -267,6 +267,69 @@
   to { transform: rotate(360deg); }
 }
 
+/* Stats page — score bar entrance */
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.score-bar {
+  transform-origin: left;
+  animation: bar-grow 600ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Stats page — staggered row entrance */
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.district-row {
+  opacity: 0;
+  animation: row-in 350ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* District map popup */
+.district-popup .maplibregl-popup-content {
+  background: rgba(20, 20, 28, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.district-popup .maplibregl-popup-content strong {
+  color: white;
+  font-weight: 600;
+  display: block;
+}
+.district-popup .maplibregl-popup-content .score {
+  display: block;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.district-popup .maplibregl-popup-content .detail {
+  display: block;
+  color: #94a3b8;
+  font-size: 12px;
+}
+.district-popup .maplibregl-popup-content .pop {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+}
+.district-popup .maplibregl-popup-tip {
+  border-top-color: rgba(20, 20, 28, 0.92) !important;
+  border-bottom-color: rgba(20, 20, 28, 0.92) !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .origin-marker-ring {

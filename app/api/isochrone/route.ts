@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
+
+import { MinHeap } from "@/lib/min-heap"
 import { decodePolyline } from "@/lib/polyline"
 import { modeSpeed } from "@/lib/transit"
+import { expandWalking } from "@/lib/walk-expand"
+import { getWalkGraph } from "@/lib/walk-graph"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_SECONDS = 45 * 60
@@ -14,8 +18,6 @@ const TRANSFER_MAX_KM = 0.3
 const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
 const KM_PER_DEG_LAT = 111.32
 const KM_PER_DEG_LON = 111.32 * COS_LAT
-
-// --- Graph types ---
 
 interface PatternData {
   geometry: [number, number][]
@@ -40,64 +42,6 @@ interface TransitGraph {
   patterns: PatternData[]
   stops: Map<string, StopNode>
 }
-
-// --- Min-heap priority queue ---
-
-interface HeapEntry {
-  time: number
-  key: string
-}
-
-class MinHeap {
-  private data: HeapEntry[] = []
-
-  get size() {
-    return this.data.length
-  }
-
-  push(entry: HeapEntry) {
-    this.data.push(entry)
-    this.bubbleUp(this.data.length - 1)
-  }
-
-  pop(): HeapEntry | undefined {
-    if (this.data.length === 0) return undefined
-    const top = this.data[0]
-    const last = this.data.pop()!
-    if (this.data.length > 0) {
-      this.data[0] = last
-      this.sinkDown(0)
-    }
-    return top
-  }
-
-  private bubbleUp(i: number) {
-    while (i > 0) {
-      const parent = (i - 1) >> 1
-      if (this.data[parent].time <= this.data[i].time) break
-      ;[this.data[parent], this.data[i]] = [this.data[i], this.data[parent]]
-      i = parent
-    }
-  }
-
-  private sinkDown(i: number) {
-    const n = this.data.length
-    while (true) {
-      let smallest = i
-      const left = 2 * i + 1
-      const right = 2 * i + 2
-      if (left < n && this.data[left].time < this.data[smallest].time)
-        smallest = left
-      if (right < n && this.data[right].time < this.data[smallest].time)
-        smallest = right
-      if (smallest === i) break
-      ;[this.data[smallest], this.data[i]] = [this.data[i], this.data[smallest]]
-      i = smallest
-    }
-  }
-}
-
-// --- Graph cache with dedup ---
 
 let cachedGraph: TransitGraph | null = null
 let graphPromise: Promise<TransitGraph> | null = null
@@ -197,8 +141,6 @@ async function buildGraph(): Promise<TransitGraph> {
   return cachedGraph
 }
 
-// --- Distance ---
-
 function fastDistKm(
   lat1: number,
   lon1: number,
@@ -209,8 +151,6 @@ function fastDistKm(
   const dlon = (lon2 - lon1) * KM_PER_DEG_LON
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
-
-// --- Dijkstra ---
 
 function computeTravelTimes(
   graph: TransitGraph,
@@ -286,13 +226,13 @@ function computeTravelTimes(
   return best
 }
 
-// --- Generate colored features ---
+const BUCKET_SECONDS = 60
 
 function generateFeatures(
   graph: TransitGraph,
   travelTimes: Map<string, number>
 ): GeoJSON.Feature[] {
-  const features: GeoJSON.Feature[] = []
+  const buckets = new Map<number, [number, number][][]>()
 
   for (const pattern of graph.patterns) {
     const geo = pattern.geometry
@@ -317,18 +257,23 @@ function generateFeatures(
       const coords = geo.slice(startIdx, endIdx + 1)
       if (coords.length < 2) continue
 
-      features.push({
-        type: "Feature",
-        properties: { time: Math.round(time) },
-        geometry: { type: "LineString", coordinates: coords },
-      })
+      const bucket =
+        Math.floor(time / BUCKET_SECONDS) * BUCKET_SECONDS
+      let lines = buckets.get(bucket)
+      if (!lines) {
+        lines = []
+        buckets.set(bucket, lines)
+      }
+      lines.push(coords)
     }
   }
 
-  return features
+  return Array.from(buckets, ([time, lines]) => ({
+    type: "Feature" as const,
+    properties: { time },
+    geometry: { type: "MultiLineString" as const, coordinates: lines },
+  }))
 }
-
-// --- Handler ---
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
@@ -344,8 +289,25 @@ export async function GET(request: NextRequest) {
 
   try {
     const graph = await getGraph()
+    const walkGraph = getWalkGraph()
     const travelTimes = computeTravelTimes(graph, lat, lon)
-    const features = generateFeatures(graph, travelTimes)
+    const transitFeatures = generateFeatures(graph, travelTimes)
+
+    // Build stop coordinate map for walking expansion
+    const stopCoords = new Map<string, { lat: number; lon: number }>()
+    for (const [key, stop] of graph.stops) {
+      stopCoords.set(key, { lat: stop.lat, lon: stop.lon })
+    }
+
+    const walkFeatures = expandWalking(
+      walkGraph,
+      travelTimes,
+      stopCoords,
+      lat,
+      lon
+    )
+
+    const features = [...transitFeatures, ...walkFeatures]
 
     return NextResponse.json(
       { type: "FeatureCollection", features } as GeoJSON.FeatureCollection,

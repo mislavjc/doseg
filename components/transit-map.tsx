@@ -114,7 +114,7 @@ export function TransitMap() {
 
     map.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
-      "bottom-right"
+      "top-right"
     )
     map.addControl(
       new maplibregl.AttributionControl({ compact: true }),
@@ -522,7 +522,7 @@ export function TransitMap() {
           {!hasOrigin && (
             <motion.div
               key="hint"
-              className="panel absolute bottom-4 left-1/2 -translate-x-1/2 sm:bottom-8"
+              className="panel absolute bottom-8 left-1/2 -translate-x-1/2 sm:bottom-8"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -561,7 +561,7 @@ export function TransitMap() {
 
         <Link
           href="/o-projektu"
-          className="absolute bottom-3 right-14 z-10 rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-slate-400 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-slate-200"
+          className="absolute top-3 left-3 z-10 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-slate-200 sm:top-4 sm:left-4"
         >
           O projektu
         </Link>

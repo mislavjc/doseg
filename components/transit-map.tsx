@@ -442,59 +442,70 @@ export function TransitMap() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, ease }}
           >
-            <div className="flex items-center gap-2.5">
-              <TimePicker
-                value={effectiveTime}
-                onChange={(v) => setTime(v)}
-              />
-              <AnimatePresence>
-                {realtime && !loading && (
-                  <motion.div
-                    key="live"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5"
-                    title="Using real-time transit data"
-                  >
-                    <span className="live-dot" />
-                    <span className="text-[9px] font-semibold tracking-wider text-emerald-400">LIVE</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5">
+                <TimePicker
+                  value={effectiveTime}
+                  onChange={(v) => setTime(v)}
+                />
+                <AnimatePresence>
+                  {realtime && !loading && (
+                    <motion.div
+                      key="live"
+                      initial={{ opacity: 0, scale: 0.8, width: 0 }}
+                      animate={{ opacity: 1, scale: 1, width: "auto" }}
+                      exit={{ opacity: 0, scale: 0.8, width: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5 ml-0.5" title="Using real-time transit data">
+                        <span className="live-dot" />
+                        <span className="hidden sm:inline text-[9px] font-semibold tracking-wider text-emerald-400">LIVE</span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Divider */}
+              <div className="h-6 w-px bg-white/10" />
+
+              <div className="flex flex-col justify-center py-0.5">
                 <div
-                  className="h-1 w-[240px] rounded-full"
+                  className="h-1.5 w-[140px] sm:w-[200px] rounded-full"
                   style={{
                     background:
                       "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
                   }}
                 />
-                <div className="mt-0.5 flex w-[240px] justify-between text-[9px] tabular-nums text-slate-400">
+                <div className="mt-1 flex w-[140px] sm:w-[200px] justify-between text-[9px] font-medium tabular-nums text-slate-400 leading-none">
                   <span>0</span>
                   <span>15</span>
                   <span>30</span>
-                  <span>45 min</span>
+                  <span>45m</span>
                 </div>
               </div>
+
               <AnimatePresence>
                 {hasOrigin && (
-                  <motion.button
+                  <motion.div
                     key="close"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    onClick={() => setCoords({ lat: null, lon: null })}
-                    className="flex h-6 shrink-0 items-center gap-1 rounded-full bg-white/10 px-2 text-[11px] font-medium text-slate-400 transition-colors hover:bg-white/20 hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 sm:gap-1.5 sm:px-2.5"
-                    aria-label="Obriši ishodište"
+                    initial={{ opacity: 0, width: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, width: "auto", scale: 1 }}
+                    exit={{ opacity: 0, width: 0, scale: 0.9 }}
+                    className="flex items-center gap-2 sm:gap-3 overflow-hidden"
                   >
-                    <svg aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                      <path d="M1 1l6 6M7 1l-6 6" />
-                    </svg>
-                    <span className="hidden sm:inline">Obriši</span>
-                  </motion.button>
+                    <div className="h-6 w-px bg-white/10 shrink-0" />
+                    <button
+                      onClick={() => setCoords({ lat: null, lon: null })}
+                      className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 hover:bg-white/15 px-2 sm:px-2.5 text-slate-400 hover:text-slate-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                      aria-label="Obriši ishodište"
+                    >
+                      <svg aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                        <path d="M1 1l6 6M7 1l-6 6" />
+                      </svg>
+                      <span className="hidden sm:inline ml-1.5 text-[11px] font-medium">Obriši</span>
+                    </button>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>

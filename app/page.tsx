@@ -8,5 +8,10 @@ const TransitMap = dynamic(
 )
 
 export default function Page() {
-  return <TransitMap />
+  return (
+    <main id="main-content">
+      <h1 className="sr-only">Doseg — karta dosega javnog prijevoza u Zagrebu</h1>
+      <TransitMap />
+    </main>
+  )
 }

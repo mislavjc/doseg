@@ -40,6 +40,7 @@ data/gtfs/*.zip
 data/osm/*.osm.pbf
 data/graph.obj
 data/walk-graph.bin
+data/srtm/
 
 # graphql-codegen output
 /generated

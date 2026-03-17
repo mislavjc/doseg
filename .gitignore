@@ -39,6 +39,7 @@ next-env.d.ts
 data/gtfs/*.zip
 data/osm/*.osm.pbf
 data/graph.obj
+data/walk-graph.bin
 
 # graphql-codegen output
 /generated

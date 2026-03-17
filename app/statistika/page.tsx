@@ -157,15 +157,20 @@ export default function StatistikaPage() {
 			/>
 
 			{/* Choropleth map */}
-			<div className="mt-16 sm:mt-20">
-				<DistrictMap />
-				<div className="mt-4">
-					<p className="text-[12px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
-						<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-						Zeleno = bolja povezanost, ljubičasto = lošija. Zadrži pokazivač ili fokusiraj četvrt za detalje.
+			<section className="mt-20 sm:mt-32">
+				<div className="mb-10 text-center flex flex-col items-center">
+					<h2 className="text-3xl sm:text-4xl font-serif tracking-tight text-slate-900 dark:text-slate-100">
+						Karta područja
+					</h2>
+					<p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-slate-600 dark:text-slate-400">
+						<span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-emerald-500" />
+						Zeleno = bolja povezanost, ljubičasto = lošija. Zadrži pokazivač ili fokusiraj četvrt.
 					</p>
 				</div>
-			</div>
+				<div className="mx-auto max-w-5xl">
+					<DistrictMap />
+				</div>
+			</section>
 
 			{/* Headline insights */}
 			<div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 border-t border-black/10 dark:border-white/10 pt-10">

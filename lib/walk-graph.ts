@@ -38,46 +38,39 @@ export function getWalkGraph(): WalkingGraph {
     )
   }
   const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
-  let pos = 0
 
-  const nodeCount = view.getUint32(pos, true)
-  pos += 4
-  const edgeCount = view.getUint32(pos, true)
-  pos += 4
+  const nodeCount = view.getUint32(0, true)
+  const edgeCount = view.getUint32(4, true)
 
-  // Read node coordinates
+  // Read node coordinates — bulk copy via DataView
+  const coordsBytes = nodeCount * 2 * 8
   const coords = new Float64Array(nodeCount * 2)
-  for (let i = 0; i < nodeCount; i++) {
-    coords[i * 2] = view.getFloat64(pos, true) // lat
-    pos += 8
-    coords[i * 2 + 1] = view.getFloat64(pos, true) // lon
-    pos += 8
-  }
+  const coordSrc = new Uint8Array(buf.buffer, buf.byteOffset + 8, coordsBytes)
+  new Uint8Array(coords.buffer).set(coordSrc)
 
-  // Read CSR offsets
+  // Read CSR offsets — bulk copy
+  const offsetsStart = 8 + coordsBytes
+  const offsetsBytes = (nodeCount + 1) * 4
   const offsets = new Uint32Array(nodeCount + 1)
-  for (let i = 0; i <= nodeCount; i++) {
-    offsets[i] = view.getUint32(pos, true)
-    pos += 4
-  }
+  new Uint8Array(offsets.buffer).set(
+    new Uint8Array(buf.buffer, buf.byteOffset + offsetsStart, offsetsBytes)
+  )
 
-  // Read edges
+  // Read edges — interleaved [target, dist, target, dist, ...], deinterleave
+  const edgesStart = offsetsStart + offsetsBytes
   const edgeTargets = new Uint32Array(edgeCount)
   const edgeDistCm = new Uint32Array(edgeCount)
   for (let i = 0; i < edgeCount; i++) {
-    edgeTargets[i] = view.getUint32(pos, true)
-    pos += 4
-    edgeDistCm[i] = view.getUint32(pos, true)
-    pos += 4
+    const off = edgesStart + i * 8
+    edgeTargets[i] = view.getUint32(off, true)
+    edgeDistCm[i] = view.getUint32(off + 4, true)
   }
 
   // Build spatial grid for nearest-node lookup
   const grid = new Map<string, number[]>()
   for (let i = 0; i < nodeCount; i++) {
-    const lat = coords[i * 2]
-    const lon = coords[i * 2 + 1]
-    const cx = Math.floor(lon / GRID_CELL_SIZE)
-    const cy = Math.floor(lat / GRID_CELL_SIZE)
+    const cx = Math.floor(coords[i * 2 + 1] / GRID_CELL_SIZE) // lon
+    const cy = Math.floor(coords[i * 2] / GRID_CELL_SIZE) // lat
     const key = `${cx},${cy}`
     let cell = grid.get(key)
     if (!cell) {

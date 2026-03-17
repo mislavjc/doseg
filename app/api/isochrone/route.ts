@@ -314,16 +314,10 @@ export async function GET(request: NextRequest) {
     const { times: travelTimes, preds } = computeTravelTimes(graph, lat, lon)
     const transitFeatures = generateFeatures(graph, travelTimes)
 
-    // Build stop coordinate map for walking expansion
-    const stopCoords = new Map<string, { lat: number; lon: number }>()
-    for (const [key, stop] of graph.stops) {
-      stopCoords.set(key, { lat: stop.lat, lon: stop.lon })
-    }
-
     const walkFeatures = expandWalking(
       walkGraph,
       travelTimes,
-      stopCoords,
+      graph.stops,
       lat,
       lon
     )

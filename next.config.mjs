@@ -2,6 +2,7 @@
 const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  compress: true,
   async rewrites() {
     return [
       {

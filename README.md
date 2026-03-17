@@ -50,7 +50,37 @@ Caddy handles TLS, gzip/zstd compression, and security headers.
 
 Roughly ordered by how much sense they make next:
 
-- **Time-of-day selector** — isochrones currently assume a fixed departure time. A time picker would show how reachability changes at rush hour vs. late night. OTP already supports `dateTime` queries, so this is mostly UI work.
+### Stats page
+
+A dedicated page with precomputed city-wide transit analytics. Computed by running the Dijkstra engine from a grid of sample points across Zagreb and aggregating results per neighbourhood (using OSM admin boundary polygons). Results only need recomputing when GTFS schedules update.
+
+- **Neighbourhood tier list** — rank every neighbourhood by average reachable area within 30 minutes. S-tier to F-tier, shareable, debatable.
+
+- **Best/worst connected neighbourhoods** — top and bottom 5, with isochrone previews showing why they rank where they do.
+
+- **Transit desert score** — flag areas where the nearest stop is >500m away or service frequency drops below 2 trips/hour. The gaps in Zagreb's network, quantified.
+
+- **Peak vs off-peak gap** — which neighbourhoods lose the most connectivity outside rush hour? Compute isochrones at 8am vs 10pm and show the delta.
+
+- **Tram vs bus dependency** — neighbourhoods that collapse if you remove one mode. How much of Zagreb is tram-only viable?
+
+- **Transfer penalty map** — where do you need 2+ transfers to reach the city centre (Trg bana Jelačića)? Single-seat rides vs painful connections.
+
+- **Equity score** — how evenly is transit access distributed across the city? Gini coefficient of reachable area across all sample points.
+
+- **Best/worst time to travel** — hour-by-hour reachability heatmap (6am–midnight). When does your neighbourhood come alive, when does it go dark?
+
+- **Walk gap** — how much further can you get with transit vs just walking? Some areas transit barely helps; others it's transformative.
+
+- **"Zagreb in 45 minutes"** — what percentage of the city is reachable from Trg bana Jelačića? A single headline number with a map.
+
+- **Most isolated stop** — the stop with the fewest destinations reachable within 30 minutes. The loneliest stop in Zagreb.
+
+- **Best-connected stop** — the opposite. Which single stop gives you the most city?
+
+- **Real-time reliability** — average delay by line and neighbourhood, computed from GTFS-RT data over time. Which lines are chronically late?
+
+### Map features
 
 - **Reverse isochrone** — flip the question from "where can I go?" to "where can people reach this point from?" Useful for evaluating how accessible a venue or workplace is.
 
@@ -60,10 +90,6 @@ Roughly ordered by how much sense they make next:
 
 - **Bike/scooter integration** — Zagreb has bike-share. Extending the graph with cycling speeds would show how a bike leg at either end expands your reach dramatically.
 
-- **Accessibility score heatmap** — precompute a grid of origins, score each by total reachable area. Visualize which neighborhoods are best/worst connected by transit.
-
-- **Real-time delays** — OTP supports GTFS-RT. Show how current disruptions shrink or shift the reachable area.
-
 - **Walking-only comparison** — show a walking-only isochrone ring alongside the transit one. Makes it obvious where transit actually helps vs. where you'd be just as fast on foot. The walking graph is already there.
 
 - **Animated expansion** — play button that sweeps from 0 to 45 minutes, watching the isochrone grow in real-time. Visually striking and makes the data more intuitive.
@@ -72,9 +98,9 @@ Roughly ordered by how much sense they make next:
 
 - **Commute evaluator** — pin your workplace, then explore commute times from any potential home. Reverse isochrone framed for apartment hunting.
 
-- **Transit deserts** — highlight areas with poor coverage. Where does travel time spike over a short distance? Where are the gaps? Could be a compelling data journalism angle.
-
 - **Elevation-aware walking** — Zagreb has hills. Factor DEM elevation data into walking speed calculations for more accurate isochrones in hilly areas like the upper town.
+
+### Platform
 
 - **Embeddable widget** — lightweight iframe version that real estate listings, tourism sites, or city planning pages could drop in.
 

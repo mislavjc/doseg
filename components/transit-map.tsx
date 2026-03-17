@@ -73,7 +73,6 @@ export function TransitMap() {
   const [route, setRoute] = useState<Itinerary | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [realtime, setRealtime] = useState(false)
   const [mapReady, setMapReady] = useState(false)
 
   const originLat = coords.lat
@@ -360,7 +359,6 @@ export function TransitMap() {
       map.getCanvas().style.cursor = ""
       originRef.current = null
       setRoute(null) // eslint-disable-line react-hooks/set-state-in-effect -- cleanup
-      setRealtime(false)
       return
     }
 
@@ -406,7 +404,6 @@ export function TransitMap() {
             originLon
           )
         }
-        setRealtime(!!geojson.realtime)
         setLoading(false)
         map.getCanvas().style.cursor = "crosshair"
       })
@@ -448,22 +445,6 @@ export function TransitMap() {
                   value={effectiveTime}
                   onChange={(v) => setTime(v)}
                 />
-                <AnimatePresence>
-                  {realtime && !loading && (
-                    <motion.div
-                      key="live"
-                      initial={{ opacity: 0, scale: 0.8, width: 0 }}
-                      animate={{ opacity: 1, scale: 1, width: "auto" }}
-                      exit={{ opacity: 0, scale: 0.8, width: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5 ml-0.5" title="Using real-time transit data">
-                        <span className="live-dot" />
-                        <span className="hidden sm:inline text-[9px] font-semibold tracking-wider text-emerald-400">LIVE</span>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* Divider */}

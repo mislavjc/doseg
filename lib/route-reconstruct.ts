@@ -5,6 +5,7 @@ interface RoutingStop {
   lon: number
   name: string
   time: number
+  delay?: number // RT delay in seconds at this stop
   pred: {
     fromKey: string
     patternIdx: number
@@ -64,6 +65,7 @@ export function parseRoutingData(
       lon: s.lon,
       name: s.name || "",
       time: s.time,
+      delay: s.delay,
       pred: s.pred,
     })
     const cx = Math.floor(s.lon / GRID_CELL_SIZE)
@@ -242,6 +244,7 @@ export function reconstructRoute(
           distMeters(boardStop.lat, boardStop.lon, stop.lat, stop.lon)
         ),
         route: pattern.route || undefined,
+        delay: stop.delay,
         legGeometry: {
           points: "",
           coords,

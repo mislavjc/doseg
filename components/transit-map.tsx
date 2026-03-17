@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { motion, AnimatePresence, MotionConfig } from "motion/react"
-import { useQueryStates, parseAsFloat } from "nuqs"
+import { useQueryStates, useQueryState, parseAsFloat, parseAsString } from "nuqs"
 
 import { fetchIsochrone, type Itinerary } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
@@ -15,7 +15,9 @@ import {
   type RoutingData,
 } from "@/lib/route-reconstruct"
 import { modeColor } from "@/lib/transit"
+import { formatTime } from "@/lib/zagreb-time"
 import { RouteDetails } from "@/components/route-details"
+import { TimePicker } from "@/components/time-picker"
 
 const ZAGREB: [number, number] = [15.9819, 45.815]
 
@@ -63,9 +65,13 @@ export function TransitMap() {
     lat: parseAsFloat,
     lon: parseAsFloat,
   })
+  const [time, setTime] = useQueryState("t", parseAsString)
+  const [defaultTime] = useState(formatTime)
+  const effectiveTime = time ?? defaultTime
   const [route, setRoute] = useState<Itinerary | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [realtime, setRealtime] = useState(false)
   const [mapReady, setMapReady] = useState(false)
 
   const originLat = coords.lat
@@ -238,17 +244,19 @@ export function TransitMap() {
 
         const dest: [number, number] = [lng, lat]
 
-        // Instant: update preview line + destination dot
-        const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-        if (previewSrc) {
-          previewSrc.setData({
-            type: "FeatureCollection",
-            features: [{
-              type: "Feature",
-              properties: {},
-              geometry: { type: "LineString", coordinates: [o, dest] },
-            }],
-          })
+        // Instant: update preview line (desktop only) + destination dot
+        if (!isTouchRef.current) {
+          const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+          if (previewSrc) {
+            previewSrc.setData({
+              type: "FeatureCollection",
+              features: [{
+                type: "Feature",
+                properties: {},
+                geometry: { type: "LineString", coordinates: [o, dest] },
+              }],
+            })
+          }
         }
         const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
         if (dotSrc) {
@@ -296,6 +304,7 @@ export function TransitMap() {
           lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
           lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
         })
+        map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat], duration: 400 })
       })
 
       // Mousemove → preview route (desktop, throttled via RAF)
@@ -349,6 +358,7 @@ export function TransitMap() {
       map.getCanvas().style.cursor = ""
       originRef.current = null
       setRoute(null) // eslint-disable-line react-hooks/set-state-in-effect -- cleanup
+      setRealtime(false)
       return
     }
 
@@ -379,7 +389,7 @@ export function TransitMap() {
     setError(null)
     setRoute(null)
 
-    fetchIsochrone({ lat: originLat, lon: originLon }, controller.signal)
+    fetchIsochrone({ lat: originLat, lon: originLon, time: effectiveTime }, controller.signal)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((geojson: any) => {
         if (controller.signal.aborted) return
@@ -394,6 +404,7 @@ export function TransitMap() {
             originLon
           )
         }
+        setRealtime(!!geojson.realtime)
         setLoading(false)
         map.getCanvas().style.cursor = "crosshair"
       })
@@ -412,7 +423,7 @@ export function TransitMap() {
     return () => {
       controller.abort()
     }
-  }, [originLat, originLon, mapReady])
+  }, [originLat, originLon, mapReady, effectiveTime])
 
   const ease = [0.23, 1, 0.32, 1] as const
 
@@ -421,51 +432,89 @@ export function TransitMap() {
       <div className="relative h-svh w-full">
         <div ref={containerRef} className="h-full w-full" />
 
-        <motion.div
-          className="panel absolute top-3 left-3 sm:top-4 sm:left-4"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, ease }}
-        >
-          <div className="flex items-center justify-between gap-4">
-            <div className="text-[15px] font-semibold tracking-tight text-slate-100">
-              doseg
+        {/* Dynamic Island */}
+        <div className="pointer-events-none absolute top-3 right-0 left-0 z-10 flex flex-col items-center gap-2 sm:top-4">
+          <motion.div
+            className="island pointer-events-auto"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, ease }}
+          >
+            <div className="flex items-center gap-2.5">
+              <TimePicker
+                value={effectiveTime}
+                onChange={(v) => setTime(v)}
+              />
+              <AnimatePresence>
+                {realtime && !loading && (
+                  <motion.div
+                    key="live"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5"
+                    title="Using real-time transit data"
+                  >
+                    <span className="live-dot" />
+                    <span className="text-[9px] font-semibold tracking-wider text-emerald-400">LIVE</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <div>
+                <div
+                  className="h-1 w-[240px] rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+                  }}
+                />
+                <div className="mt-0.5 flex w-[240px] justify-between text-[9px] tabular-nums text-slate-500">
+                  <span>0</span>
+                  <span>15</span>
+                  <span>30</span>
+                  <span>45 min</span>
+                </div>
+              </div>
+              <AnimatePresence>
+                {hasOrigin && (
+                  <motion.button
+                    key="close"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    onClick={() => setCoords({ lat: null, lon: null })}
+                    className="flex h-6 shrink-0 items-center gap-1 rounded-full bg-white/10 px-2 text-[11px] font-medium text-slate-400 transition-colors hover:bg-white/20 hover:text-slate-200 sm:gap-1.5 sm:px-2.5"
+                    aria-label="Clear origin"
+                  >
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                      <path d="M1 1l6 6M7 1l-6 6" />
+                    </svg>
+                    <span className="hidden sm:inline">Clear</span>
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
-            <AnimatePresence>
-              {hasOrigin && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setCoords({ lat: null, lon: null })}
-                  className="text-[11px] text-slate-500 transition-colors hover:text-slate-300"
-                  aria-label="Clear origin"
-                >
-                  Reset
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-          <div className="mb-3 text-[11px] text-slate-400">
-            Zagreb transit reachability
-          </div>
-          <div className="mb-1 text-[10px] font-medium text-slate-400">
-            Trip duration
-          </div>
-          <div
-            className="h-2 w-full rounded-sm"
-            style={{
-              background:
-                "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
-            }}
-          />
-          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-400">
-            <span>0</span>
-            <span>15</span>
-            <span>30</span>
-            <span>45 min</span>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                key="error"
+                role="alert"
+                aria-live="assertive"
+                className="island pointer-events-auto text-[12px] text-red-400"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
+                transition={{ duration: 0.2, ease }}
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         <AnimatePresence>
           {!hasOrigin && (
@@ -501,22 +550,6 @@ export function TransitMap() {
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              key="error"
-              role="alert"
-              aria-live="assertive"
-              className="panel absolute top-5 left-1/2 z-10 -translate-x-1/2 text-[12px] text-red-400"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.2, ease }}
-            >
-              {error}
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <AnimatePresence>
           {route && (

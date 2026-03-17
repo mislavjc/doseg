@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
+import { getRealtimeData, getStopDelay, type TripRT } from "@/lib/gtfs-rt"
+import { secondsOfDay } from "@/lib/zagreb-time"
 import { MinHeap } from "@/lib/min-heap"
 import { decodePolyline } from "@/lib/polyline"
 import { modeSpeed } from "@/lib/transit"
@@ -8,10 +10,10 @@ import { getWalkGraph } from "@/lib/walk-graph"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_SECONDS = 45 * 60
+const MAX_WAIT = 60 * 60 // skip patterns with >1h wait
 
 const WALK_SPEED = 5 // km/h
 const WALK_MAX_KM = 1.2
-const WAIT_SECONDS = 300 // average 5 min wait
 const TRANSFER_MAX_KM = 0.3
 
 // Precomputed for Zagreb latitude (~45.8°)
@@ -24,6 +26,9 @@ interface PatternData {
   stopKeys: string[]
   mode: string
   route: string
+  departures: number[] // sorted departure seconds from first stop
+  tripIds: string[] // GTFS trip IDs, parallel to departures
+  stopOffsets: number[] // cumulative travel seconds from first stop to each stop
 }
 
 interface Predecessor {
@@ -71,7 +76,7 @@ async function buildGraph(): Promise<TransitGraph> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: `{ patterns { route { mode shortName } patternGeometry { points } stops { name lat lon } } }`,
+      query: `{ patterns { route { mode shortName } patternGeometry { points } stops { name lat lon } trips { gtfsId stoptimes { scheduledDeparture } } } }`,
     }),
   })
 
@@ -112,11 +117,39 @@ async function buildGraph(): Promise<TransitGraph> {
       stops.get(key)!.patterns.push({ patternIdx, stopIdx })
     }
 
+    // Extract departure time + trip ID from each trip's first stop
+    const tripDeps: Array<{ dep: number; tripId: string }> = []
+    for (const trip of p.trips ?? []) {
+      const st = trip.stoptimes?.[0]
+      if (st?.scheduledDeparture != null) {
+        // Strip OTP feed prefix: "1:tripId" → "tripId"
+        const rawId = ((trip.gtfsId as string) || "").replace(/^[^:]*:/, "")
+        tripDeps.push({ dep: st.scheduledDeparture, tripId: rawId })
+      }
+    }
+    tripDeps.sort((a, b) => a.dep - b.dep)
+    const departures = tripDeps.map((td) => td.dep)
+    const tripIds = tripDeps.map((td) => td.tripId)
+
+    // Cumulative travel time offset from first stop to each subsequent stop
+    const mode = p.route?.mode || "BUS"
+    const speed = modeSpeed(mode)
+    const stopOffsets = [0]
+    for (let i = 1; i < p.stops.length; i++) {
+      const prev = p.stops[i - 1]
+      const curr = p.stops[i]
+      const d = fastDistKm(prev.lat, prev.lon, curr.lat, curr.lon)
+      stopOffsets.push(stopOffsets[i - 1] + (d / speed) * 3600)
+    }
+
     patterns.push({
       geometry: decodePolyline(p.patternGeometry.points),
       stopKeys,
-      mode: p.route?.mode || "BUS",
+      mode,
       route: p.route?.shortName || "",
+      departures,
+      tripIds,
+      stopOffsets,
     })
   }
 
@@ -166,13 +199,46 @@ function fastDistKm(
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
+/**
+ * Find wait time for the next departure of a pattern at a given stop.
+ * Returns seconds to wait + index into departures/tripIds, or null if no service.
+ */
+function getNextWait(
+  departures: number[],
+  stopOffset: number,
+  clockTime: number
+): { waitSeconds: number; tripIndex: number } | null {
+  if (departures.length === 0) return null
+
+  // A trip departing first stop at time D passes this stop at D + stopOffset.
+  // We need D + stopOffset >= clockTime, i.e., D >= clockTime - stopOffset.
+  const target = clockTime - stopOffset
+
+  // Binary search for first departure >= target
+  let lo = 0
+  let hi = departures.length
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1
+    if (departures[mid] < target) lo = mid + 1
+    else hi = mid
+  }
+
+  if (lo >= departures.length) return null
+
+  const wait = departures[lo] + stopOffset - clockTime
+  return wait <= MAX_WAIT ? { waitSeconds: wait, tripIndex: lo } : null
+}
+
 function computeTravelTimes(
   graph: TransitGraph,
   originLat: number,
-  originLon: number
-): { times: Map<string, number>; preds: Map<string, Predecessor> } {
+  originLon: number,
+  departureTime: number,
+  rtData: Map<string, TripRT>
+): { times: Map<string, number>; preds: Map<string, Predecessor>; delays: Map<string, number> } {
   const best = new Map<string, number>()
   const preds = new Map<string, Predecessor>()
+  const delays = new Map<string, number>() // delay in seconds at alight stop
   const heap = new MinHeap()
 
   // Seed: walk from origin to all stops within walking distance
@@ -198,20 +264,36 @@ function computeTravelTimes(
 
     for (const { patternIdx, stopIdx } of stop.patterns) {
       const pattern = graph.patterns[patternIdx]
-      const speed = modeSpeed(pattern.mode)
 
-      const boardTime = time + WAIT_SECONDS
-      let travelTime = boardTime
+      const clockTime = departureTime + time
+      const result = getNextWait(
+        pattern.departures,
+        pattern.stopOffsets[stopIdx],
+        clockTime
+      )
+      if (result === null) continue
+
+      const boardTime = time + result.waitSeconds
+      const boardOffset = pattern.stopOffsets[stopIdx]
+
+      // Look up GTFS-RT delay data. The selected trip likely hasn't started
+      // yet (not in RT feed), so also check recent trips on the same pattern
+      // as a proxy for current conditions on this route.
+      let tripRT: TripRT | undefined
+      for (let ti = result.tripIndex; ti >= Math.max(0, result.tripIndex - 3); ti--) {
+        tripRT = rtData.get(pattern.tripIds[ti])
+        if (tripRT) break
+      }
+
+      const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
+
       for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
-        const prevStop = graph.stops.get(pattern.stopKeys[i - 1])!
-        const nextStop = graph.stops.get(pattern.stopKeys[i])!
-        const segDist = fastDistKm(
-          prevStop.lat,
-          prevStop.lon,
-          nextStop.lat,
-          nextStop.lon
-        )
-        travelTime += (segDist / speed) * 3600
+        let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
+
+        // Apply real-time delay adjustment if available
+        if (tripRT) {
+          travelTime += getStopDelay(tripRT, i) - boardDelay
+        }
 
         const existing = best.get(pattern.stopKeys[i]) ?? Infinity
         if (travelTime < existing) {
@@ -222,6 +304,9 @@ function computeTravelTimes(
             boardIdx: stopIdx,
             alightIdx: i,
           })
+          if (tripRT) {
+            delays.set(pattern.stopKeys[i], getStopDelay(tripRT, i))
+          }
           heap.push({ time: travelTime, key: pattern.stopKeys[i] })
         }
       }
@@ -244,7 +329,7 @@ function computeTravelTimes(
     }
   }
 
-  return { times: best, preds }
+  return { times: best, preds, delays }
 }
 
 const BUCKET_SECONDS = 60
@@ -308,10 +393,28 @@ export async function GET(request: NextRequest) {
     )
   }
 
+  // Parse departure time (HH:MM → seconds since midnight), default to now
+  const timeStr = searchParams.get("time")
+  let departureTime: number
+  if (timeStr) {
+    const [h, m] = timeStr.split(":").map(Number)
+    departureTime =
+      !isNaN(h) && !isNaN(m) ? h * 3600 + m * 60 : secondsOfDay()
+  } else {
+    departureTime = secondsOfDay()
+  }
+
   try {
     const graph = await getGraph()
+    const rtData = getRealtimeData()
     const walkGraph = getWalkGraph()
-    const { times: travelTimes, preds } = computeTravelTimes(graph, lat, lon)
+    const { times: travelTimes, preds, delays } = computeTravelTimes(
+      graph,
+      lat,
+      lon,
+      departureTime,
+      rtData
+    )
     const transitFeatures = generateFeatures(graph, travelTimes)
 
     const walkFeatures = expandWalking(
@@ -352,17 +455,20 @@ export async function GET(request: NextRequest) {
       lon: number
       name: string
       time: number
+      delay?: number
       pred: { fromKey: string; patternIdx: number; boardIdx: number; alightIdx: number } | null
     }[] = []
     for (const [key, time] of travelTimes) {
       const stop = graph.stops.get(key)!
       const pred = preds.get(key)
+      const delay = delays.get(key)
       routingStops.push({
         key,
         lat: stop.lat,
         lon: stop.lon,
         name: stop.name,
         time,
+        ...(delay !== undefined && { delay }),
         pred: pred
           ? {
               fromKey: pred.fromKey,
@@ -382,8 +488,9 @@ export async function GET(request: NextRequest) {
         type: "FeatureCollection",
         features,
         routing: { stops: routingStops, patterns: routingPatterns },
+        realtime: rtData.size > 0,
       },
-      { headers: { "Cache-Control": "private, max-age=300" } }
+      { headers: { "Cache-Control": "private, max-age=30" } }
     )
   } catch (err) {
     const message =

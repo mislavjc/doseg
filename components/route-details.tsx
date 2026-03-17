@@ -16,6 +16,16 @@ function formatDistance(meters: number): string {
   return `${(meters / 1000).toFixed(1)} km`
 }
 
+const DELAY_THRESHOLD = 30 // seconds — below this is "on time"
+
+function delayBadge(delay: number): { label: string; color: string } {
+  if (delay > DELAY_THRESHOLD)
+    return { label: `+${Math.round(delay / 60)}m`, color: "text-amber-400" }
+  if (delay < -DELAY_THRESHOLD)
+    return { label: `${Math.round(delay / 60)}m`, color: "text-sky-400" }
+  return { label: "on time", color: "text-emerald-400" }
+}
+
 interface RouteDetailsProps {
   itinerary: Itinerary | null
   loading: boolean
@@ -96,8 +106,18 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                 <span className="min-w-0 flex-1 truncate text-[12px] text-slate-400">
                   {leg.from.name || "Start"} → {leg.to.name || "End"}
                 </span>
-                <span className="shrink-0 text-[11px] tabular-nums text-slate-500">
-                  {formatDuration(leg.duration)}
+                <span className="flex shrink-0 items-center gap-1.5">
+                  <span className="text-[11px] tabular-nums text-slate-500">
+                    {formatDuration(leg.duration)}
+                  </span>
+                  {leg.mode !== "WALK" && leg.delay !== undefined && (() => {
+                    const badge = delayBadge(leg.delay)
+                    return (
+                      <span className={`text-[9px] font-medium tabular-nums ${badge.color}`}>
+                        {badge.label}
+                      </span>
+                    )
+                  })()}
                 </span>
               </motion.div>
             ))}

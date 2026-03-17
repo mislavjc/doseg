@@ -5,6 +5,8 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import DistrictMap from "@/components/district-map-lazy"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: "Statistika — Doseg",
   description:
@@ -458,6 +460,7 @@ function BackLink() {
       className="inline-flex items-center gap-1.5 text-[13px] text-slate-500 transition-colors hover:text-slate-200 active:scale-[0.97]"
     >
       <svg
+        aria-hidden="true"
         width="14"
         height="14"
         viewBox="0 0 16 16"
@@ -557,20 +560,20 @@ function getSvgPath(feature: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPoly
 function DistrictEmblem({ feature, rank, color }: { feature?: GeoJSON.Feature, rank: number, color: string }) {
   if (!feature || !feature.geometry || (feature.geometry.type !== "Polygon" && feature.geometry.type !== "MultiPolygon")) {
     return (
-      <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center">
-        <span className="text-[13px] font-semibold tabular-nums text-slate-400">{rank}</span>
+      <div className="relative flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center">
+        <span className="text-[18px] font-semibold tabular-nums text-slate-400">{rank}</span>
       </div>
     )
   }
 
-  const pathData = getSvgPath(feature as any, 40)
+  const pathData = getSvgPath(feature as any, 80)
   return (
-    <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center">
-      <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0 opacity-40">
+    <div className="relative flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center">
+      <svg width="80" height="80" viewBox="0 0 80 80" className="absolute inset-0 opacity-50">
         <path d={pathData} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
-        <path d={pathData} fill={color} opacity="0.1" />
+        <path d={pathData} fill={color} opacity="0.15" />
       </svg>
-      <span className="relative z-10 text-[13px] font-semibold tabular-nums text-white drop-shadow-md">
+      <span className="relative z-10 text-[20px] font-bold tabular-nums text-white drop-shadow-md">
         {rank}
       </span>
     </div>
@@ -604,86 +607,93 @@ function DistrictRow({
 
   return (
     <div
-      className="district-row group rounded-lg px-3 py-3 hover:bg-white/[0.03]"
+      className="district-row group relative overflow-hidden rounded-xl px-4 py-5 hover:bg-white/[0.03] ring-1 ring-transparent hover:ring-white/[0.06] transition-colors"
       style={{ animationDelay: `${index * 40}ms` }}
     >
-      {/* Header: rank, name, score */}
-      <div className="flex items-center gap-3">
+      <div className="flex gap-5">
+        {/* Big Emblem Column */}
         <DistrictEmblem feature={feature} rank={d.rank} color={bandColor} />
-        <div className="flex flex-1 items-baseline gap-3">
-          <span className="flex-1 text-[15px] font-medium text-slate-200">
-            {d.name}
-          </span>
-          <span className="text-[15px] font-semibold tabular-nums text-white">
-            {d.score}
-          </span>
-        </div>
-      </div>
 
-      {/* Score bar */}
-      <div className="mt-2 ml-[52px] h-1.5 rounded-full bg-white/[0.06]">
-        <div
-          className="score-bar h-full rounded-full"
-          style={{
-            width: `${Math.max(d.score, 1)}%`,
-            backgroundColor: bandColor,
-            opacity: 0.8,
-            animationDelay: `${index * 40 + 150}ms`,
-          }}
-        />
-      </div>
+        {/* Content Column */}
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[17px] font-medium text-slate-100">
+              {d.name}
+            </span>
+            <span className="text-[18px] font-semibold tabular-nums text-white">
+              {d.score}
+            </span>
+          </div>
 
-      {/* Transit line pills */}
-      <div className="mt-2.5 ml-[52px] flex flex-wrap items-center gap-1">
-        {hasTram ? (
-          <>
-            {d.tramLines.map((line) => (
-              <span
-                key={`t${line}`}
-                className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] bg-white/[0.08] px-1 text-[10px] font-semibold tabular-nums text-white"
-              >
-                {line}
-              </span>
-            ))}
-            {d.busLines.length > 0 && (
-              <span className="ml-0.5 text-[11px] text-slate-600">
-                + {d.busLines.length} bus
+          {/* Score bar */}
+          <div className="mt-2.5 h-2 rounded-full bg-white/[0.06] shadow-inner">
+            <div
+              className="score-bar h-full rounded-full"
+              style={{
+                width: `${Math.max(d.score, 1)}%`,
+                backgroundColor: bandColor,
+                opacity: 0.9,
+                animationDelay: `${index * 40 + 150}ms`,
+              }}
+            />
+          </div>
+
+          {/* Transit line pills */}
+          <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
+            {hasTram ? (
+              <>
+                {d.tramLines.map((line) => (
+                  <span
+                    key={`t${line}`}
+                    className="inline-flex h-[20px] min-w-[20px] items-center justify-center rounded-[6px] bg-white/[0.08] px-1.5 text-[11px] font-semibold tabular-nums text-white ring-1 ring-white/[0.05]"
+                  >
+                    {line}
+                  </span>
+                ))}
+                {d.busLines.length > 0 && (
+                  <span className="ml-1 text-[12px] text-slate-500">
+                    + {d.busLines.length} bus
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="rounded-[6px] bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium text-slate-300 ring-1 ring-white/[0.05]">
+                Samo bus · {d.busLines.length}{" "}
+                {d.busLines.length === 1 ? "linija" : "linija"}
               </span>
             )}
-          </>
-        ) : (
-          <span className="rounded-[4px] bg-white/[0.06] px-1.5 py-px text-[10px] font-medium text-slate-300">
-            Samo bus · {d.busLines.length}{" "}
-            {d.busLines.length === 1 ? "linija" : "linija"}
-          </span>
-        )}
-        <span className="text-[11px] text-slate-700">
-          · {d.stops} stajališta
-        </span>
-      </div>
+            <span className="ml-auto text-[12px] text-slate-600 font-medium">
+              {d.stops} stajališta
+            </span>
+          </div>
 
-      {/* Stats row */}
-      <div className="mt-1.5 ml-[52px] flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[12px]">
-        <span className="text-slate-500">{reachPct}% grada dostupno</span>
-        <span
-          className={`tabular-nums ${vsAvg > 0 ? "text-emerald-600" : vsAvg < 0 ? "text-rose-500/70" : "text-slate-600"}`}
-        >
-          {vsAvgStr} od prosjeka
-        </span>
-        {d.population && (
-          <span className="text-slate-700">
-            {d.population.toLocaleString("hr-HR")} stan.
-          </span>
-        )}
-        <Link
-          href={mapLink}
-          className="inline-flex items-center gap-0.5 text-slate-700 transition-colors hover:text-slate-400 group-hover:text-slate-600"
-        >
-          Pogledaj na karti
-          <span className="inline-block transition-transform duration-150 group-hover:translate-x-0.5">
-            &rarr;
-          </span>
-        </Link>
+          {/* Stats row */}
+          <div className="mt-2.5 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[13px]">
+            <span className="text-slate-400 font-medium">{reachPct}% grada dostupno</span>
+            <span
+              className={`tabular-nums font-medium ${vsAvg > 0 ? "text-emerald-500" : vsAvg < 0 ? "text-rose-400" : "text-slate-500"}`}
+            >
+              {vsAvgStr} od prosjeka
+            </span>
+            {d.population && (
+              <span className="text-slate-600">
+                {d.population.toLocaleString("hr-HR")} stan.
+              </span>
+            )}
+          </div>
+          
+          <div className="mt-3 pt-3 border-t border-white/[0.04]">
+            <Link
+              href={mapLink}
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-slate-500 transition-colors hover:text-slate-300 group-hover:text-slate-400"
+            >
+              Pogledaj na karti
+              <span aria-hidden="true" className="inline-block transition-transform duration-150 group-hover:translate-x-1">
+                &rarr;
+              </span>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )

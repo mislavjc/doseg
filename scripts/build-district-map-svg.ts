@@ -3,7 +3,11 @@ import { join } from "node:path"
 
 const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
 const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
-const EMBLEM_OUTPUT_PATH = join(process.cwd(), "public", "district-emblems.json")
+const EMBLEM_OUTPUT_PATH = join(
+  process.cwd(),
+  "public",
+  "district-emblems.json"
+)
 
 const VIEWBOX_WIDTH = 960
 const VIEWBOX_HEIGHT = 620
@@ -77,7 +81,9 @@ function enrichGeoJSON(
   geojson: GeoJSON.FeatureCollection,
   data: ScoreData
 ): GeoJSON.FeatureCollection {
-  const scoreMap = new Map(data.districts.map((district) => [district.osmId, district]))
+  const scoreMap = new Map(
+    data.districts.map((district) => [district.osmId, district])
+  )
 
   for (const feature of geojson.features) {
     const score = scoreMap.get(Number(feature.properties?.osmId))
@@ -85,7 +91,10 @@ function enrichGeoJSON(
 
     feature.properties.score = score.score
     feature.properties.rank = score.rank
-    feature.properties.reachPct = pct(score.avgReachableCells, data.totalGridCells)
+    feature.properties.reachPct = pct(
+      score.avgReachableCells,
+      data.totalGridCells
+    )
     feature.properties.maxMinutes = data.maxMinutes
     feature.properties.population = score.population
   }
@@ -145,10 +154,15 @@ function createProjector(geojson: GeoJSON.FeatureCollection): Projector {
     (VIEWBOX_HEIGHT - PADDING * 2) / height
   )
 
+  const scaledWidth = width * scale
+  const scaledHeight = height * scale
+  const offsetX = (VIEWBOX_WIDTH - scaledWidth) / 2
+  const offsetY = (VIEWBOX_HEIGHT - scaledHeight) / 2
+
   return {
     project([lon, lat]) {
-      const x = PADDING + (lon * lonFactor - minX) * scale
-      const y = VIEWBOX_HEIGHT - PADDING - (lat - minLat) * scale
+      const x = offsetX + (lon * lonFactor - minX) * scale
+      const y = VIEWBOX_HEIGHT - offsetY - (lat - minLat) * scale
       return [roundCoord(x), roundCoord(y)]
     },
   }
@@ -217,18 +231,19 @@ function geometryToEmblemPath(
   const centerY = minY + height / 2
 
   return projectedRings
-    .map((ring) =>
-      `${ring
-        .map(([x, y], index) => {
-          const px = roundCoord(
-            EMBLEM_PADDING + innerSize / 2 + (x - centerX) * scale
-          )
-          const py = roundCoord(
-            EMBLEM_PADDING + innerSize / 2 - (y - centerY) * scale
-          )
-          return `${index === 0 ? "M" : "L"}${px} ${py}`
-        })
-        .join("")}Z`
+    .map(
+      (ring) =>
+        `${ring
+          .map(([x, y], index) => {
+            const px = roundCoord(
+              EMBLEM_PADDING + innerSize / 2 + (x - centerX) * scale
+            )
+            const py = roundCoord(
+              EMBLEM_PADDING + innerSize / 2 - (y - centerY) * scale
+            )
+            return `${index === 0 ? "M" : "L"}${px} ${py}`
+          })
+          .join("")}Z`
     )
     .join("")
 }
@@ -305,10 +320,7 @@ function formatLabelLines(name: string): string[] {
   if (words.length === 2) return words
 
   const midpoint = Math.ceil(words.length / 2)
-  return [
-    words.slice(0, midpoint).join(" "),
-    words.slice(midpoint).join(" "),
-  ]
+  return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")]
 }
 
 function escapeXml(value: string): string {
@@ -334,7 +346,9 @@ function featureTitle(shape: DistrictShape): string {
   return lines.join("\n")
 }
 
-function buildDistrictShapes(geojson: GeoJSON.FeatureCollection): DistrictShape[] {
+function buildDistrictShapes(
+  geojson: GeoJSON.FeatureCollection
+): DistrictShape[] {
   const projector = createProjector(geojson)
   const shapes: DistrictShape[] = []
 
@@ -388,7 +402,9 @@ function buildDistrictMapSvg(geojson: GeoJSON.FeatureCollection): string {
                 (line, index) =>
                   `<tspan x="${shape.centroid[0]}" dy="${index === 0 ? "-0.35em" : "1.1em"}">${escapeXml(line)}</tspan>`
               )
-              .join("")}<tspan class="score" x="${shape.centroid[0]}" dy="1.15em">${shape.score}</tspan></text>`
+              .join(
+                ""
+              )}<tspan class="score" x="${shape.centroid[0]}" dy="1.15em">${shape.score}</tspan></text>`
           : ""
 
       return `<g><path class="district" d="${shape.path}" fill="${scoreColor(shape.score)}" tabindex="0"><title>${escapeXml(featureTitle(shape))}</title></path>${labelMarkup}</g>`
@@ -418,7 +434,9 @@ function main() {
     return
   }
 
-  const rawGeojson = JSON.parse(readFileSync(geojsonPath, "utf-8")) as GeoJSON.FeatureCollection
+  const rawGeojson = JSON.parse(
+    readFileSync(geojsonPath, "utf-8")
+  ) as GeoJSON.FeatureCollection
   mkdirSync(join(process.cwd(), "public"), { recursive: true })
 
   const emblems = buildDistrictEmblems(rawGeojson)

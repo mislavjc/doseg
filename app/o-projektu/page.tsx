@@ -15,11 +15,11 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-xl bg-white/[0.04] px-5 py-4 ring-1 ring-white/[0.06]">
-      <h2 className="text-[13px] font-medium tracking-wide text-slate-500">
+    <section className="rounded-xl bg-white/[0.04] p-5 ring-1 ring-white/[0.08]">
+      <h2 className="text-[14px] font-semibold tracking-wide text-slate-200">
         {title}
       </h2>
-      {children}
+      <div className="mt-4">{children}</div>
     </section>
   )
 }
@@ -29,19 +29,20 @@ export default function AboutPage() {
     <div className="min-h-svh bg-background">
       <main
         id="main-content"
-        className="mx-auto max-w-xl px-5 py-12 sm:py-20"
+        className="mx-auto max-w-3xl px-5 py-12 sm:py-24"
       >
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-[13px] text-slate-400 transition-colors hover:text-slate-200"
+          className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-500 transition-colors hover:text-slate-300 uppercase"
         >
           <svg
-            width="14"
-            height="14"
+            aria-hidden="true"
+            width="16"
+            height="16"
             viewBox="0 0 16 16"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -50,17 +51,17 @@ export default function AboutPage() {
           Natrag na kartu
         </Link>
 
-        <h1 className="mt-8 text-2xl font-semibold tracking-tight text-white">
+        <h1 className="mt-12 text-4xl sm:text-5xl font-bold tracking-tighter text-white">
           Doseg
         </h1>
-        <p className="mt-2 text-[15px] leading-relaxed text-slate-400">
+        <p className="mt-4 text-[16px] sm:text-[18px] leading-relaxed text-slate-400">
           Interaktivna karta dosega javnog prijevoza u Zagrebu. Klikni bilo gdje
           i vidi dokle možeš stići tramvajem ili busom u 15, 30 ili 45 minuta.
         </p>
 
-        <div className="mt-10 space-y-4">
+        <div className="mt-12 space-y-6">
           <Section title="Kako radi">
-            <p className="mt-1.5 text-[14px] leading-relaxed text-slate-300">
+            <p className="text-[14px] leading-relaxed text-slate-300">
               Klikom na kartu Doseg izračunava izokrone koristeći Dijkstrin
               algoritam nad ZET-ovim voznim redom. Rute se rekonstruiraju
               na klijentskoj strani, pa pregled prijelaza između linija
@@ -69,35 +70,35 @@ export default function AboutPage() {
           </Section>
 
           <Section title="Podaci">
-            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-[13px]">
               <div>
-                <span className="text-slate-200">ZET GTFS</span>
-                <p className="text-slate-500">vozni red tramvaja i buseva</p>
+                <span className="font-semibold text-slate-200 block mb-1">ZET GTFS</span>
+                <p className="text-slate-400 font-medium">vozni red tramvaja i buseva</p>
               </div>
               <div>
-                <span className="text-slate-200">ZET GTFS-RT</span>
-                <p className="text-slate-500">kašnjenja u stvarnom vremenu</p>
+                <span className="font-semibold text-slate-200 block mb-1">ZET GTFS-RT</span>
+                <p className="text-slate-400 font-medium">kašnjenja u stvarnom vremenu</p>
               </div>
               <div>
-                <span className="text-slate-200">OpenStreetMap</span>
-                <p className="text-slate-500">pješačka mreža</p>
+                <span className="font-semibold text-slate-200 block mb-1">OpenStreetMap</span>
+                <p className="text-slate-400 font-medium">pješačka mreža</p>
               </div>
               <div>
-                <span className="text-slate-200">OpenTripPlanner</span>
-                <p className="text-slate-500">server za rutiranje</p>
+                <span className="font-semibold text-slate-200 block mb-1">OpenTripPlanner</span>
+                <p className="text-slate-400 font-medium">server za rutiranje</p>
               </div>
             </div>
           </Section>
 
           <Section title="Privatnost">
-            <p className="mt-1.5 text-[14px] leading-relaxed text-slate-300">
+            <p className="text-[14px] leading-relaxed text-slate-300">
               Nema kolačića, praćenja ni osobnih podataka. Svi upiti ostaju
               između tvog preglednika i servera za rutiranje.
             </p>
           </Section>
         </div>
 
-        <p className="mt-8 text-[13px] text-slate-500">
+        <p className="mt-12 text-[13px] font-medium text-slate-500">
           Napravio{" "}
           <a
             href="https://mislavjc.com"

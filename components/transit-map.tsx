@@ -487,10 +487,10 @@ export function TransitMap() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
                     onClick={() => setCoords({ lat: null, lon: null })}
-                    className="flex h-6 shrink-0 items-center gap-1 rounded-full bg-white/10 px-2 text-[11px] font-medium text-slate-400 transition-colors hover:bg-white/20 hover:text-slate-200 sm:gap-1.5 sm:px-2.5"
+                    className="flex h-6 shrink-0 items-center gap-1 rounded-full bg-white/10 px-2 text-[11px] font-medium text-slate-400 transition-colors hover:bg-white/20 hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 sm:gap-1.5 sm:px-2.5"
                     aria-label="Obriši ishodište"
                   >
-                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                    <svg aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                       <path d="M1 1l6 6M7 1l-6 6" />
                     </svg>
                     <span className="hidden sm:inline">Obriši</span>

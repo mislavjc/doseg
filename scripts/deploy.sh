@@ -65,10 +65,12 @@ timeout 180 bash -c 'until docker compose ps otp | grep -q healthy; do sleep 5; 
 kill $LOG_PID 2>/dev/null
 
 # Pre-generate district scores for /statistika (app container has Node, not Bun)
-echo "==> Generating district scores..."
-docker run --rm --network doseg_default -e OTP_URL=http://otp:8080 \
-  -v "$PWD:/app" -w /app oven/bun:latest \
-  sh -c "bun install --frozen-lockfile && bun scripts/score-districts.ts"
+if [ ! -f data/district-scores.json ]; then
+  echo "==> Generating district scores..."
+  docker run --rm --network doseg_default -e OTP_URL=http://otp:8080 \
+    -v "$PWD:/app" -w /app oven/bun:latest \
+    sh -c "bun install --frozen-lockfile && bun scripts/score-districts.ts"
+fi
 
 echo ""
 echo "==> Deployed! Site should be live at https://$DOMAIN"

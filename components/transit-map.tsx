@@ -20,6 +20,7 @@ import { formatTime } from "@/lib/zagreb-time"
 import { RouteDetails } from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
 import { OnboardingDialog } from "@/components/onboarding-dialog"
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
 
 const ZAGREB: [number, number] = [15.9819, 45.815]
 
@@ -550,6 +551,16 @@ export function TransitMap() {
             <RouteDetails itinerary={route} loading={false} />
           )}
         </AnimatePresence>
+
+        <div className="hidden sm:flex absolute top-[10px] right-[52px] z-10 items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-[12px]">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Pomicanje</span>
+          <KbdGroup>
+            <Kbd>↑</Kbd>
+            <Kbd>↓</Kbd>
+            <Kbd>←</Kbd>
+            <Kbd>→</Kbd>
+          </KbdGroup>
+        </div>
 
         <Link
           href="/o-projektu"

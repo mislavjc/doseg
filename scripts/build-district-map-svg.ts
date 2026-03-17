@@ -396,17 +396,15 @@ function buildDistrictMapSvg(geojson: GeoJSON.FeatureCollection): string {
     .join("")
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
 <title id="title">Karta povezanosti zagrebačkih četvrti</title>
 <desc id="desc">Choropleth karta koja prikazuje ocjenu povezanosti po gradskoj četvrti. Zeleno označava bolju povezanost, a ljubičasto slabiju.</desc>
 <style>
-svg{background:radial-gradient(circle at top,rgba(255,255,255,.06),transparent 55%),linear-gradient(180deg,rgba(8,15,28,.94),rgba(17,24,39,.98))}
 .district{fill-opacity:.42;stroke:rgba(226,232,240,.24);stroke-width:1.2;vector-effect:non-scaling-stroke;transition:fill-opacity .15s ease,stroke .15s ease;cursor:pointer;outline:none}
 .district:hover,.district:focus{fill-opacity:.7;stroke:rgba(255,255,255,.55)}
 .label{fill:rgba(203,213,225,.85);font:11px "Inter","Segoe UI",sans-serif;text-anchor:middle;pointer-events:none;user-select:none}
 .score{fill:#f8fafc;font-size:12px;font-weight:600}
 </style>
-<rect width="${VIEWBOX_WIDTH}" height="${VIEWBOX_HEIGHT}" fill="rgba(15,23,42,.4)"/>
 ${districtsMarkup}
 </svg>`
 }

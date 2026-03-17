@@ -405,9 +405,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const t0 = performance.now()
     const graph = await getGraph()
+    const tGraph = performance.now()
     const rtData = getRealtimeData()
     const walkGraph = getWalkGraph()
+    const tLoad = performance.now()
     const { times: travelTimes, preds, delays } = computeTravelTimes(
       graph,
       lat,
@@ -415,6 +418,7 @@ export async function GET(request: NextRequest) {
       departureTime,
       rtData
     )
+    const tDijkstra = performance.now()
     const transitFeatures = generateFeatures(graph, travelTimes)
 
     const walkFeatures = expandWalking(
@@ -424,6 +428,7 @@ export async function GET(request: NextRequest) {
       lat,
       lon
     )
+    const tWalk = performance.now()
 
     const features = [...transitFeatures, ...walkFeatures]
 
@@ -467,8 +472,8 @@ export async function GET(request: NextRequest) {
         lat: stop.lat,
         lon: stop.lon,
         name: stop.name,
-        time,
-        ...(delay !== undefined && { delay }),
+        time: Math.round(time),
+        ...(delay !== undefined && { delay: Math.round(delay) }),
         pred: pred
           ? {
               fromKey: pred.fromKey,
@@ -483,6 +488,8 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    const tSerial = performance.now()
+
     return NextResponse.json(
       {
         type: "FeatureCollection",
@@ -490,7 +497,12 @@ export async function GET(request: NextRequest) {
         routing: { stops: routingStops, patterns: routingPatterns },
         realtime: rtData.size > 0,
       },
-      { headers: { "Cache-Control": "private, max-age=30" } }
+      {
+        headers: {
+          "Cache-Control": "private, max-age=30",
+          "Server-Timing": `graph;dur=${(tGraph-t0).toFixed(0)}, dijkstra;dur=${(tDijkstra-tLoad).toFixed(0)}, walk;dur=${(tWalk-tDijkstra).toFixed(0)}, serial;dur=${(tSerial-tWalk).toFixed(0)}, total;dur=${(tSerial-t0).toFixed(0)}`,
+        },
+      }
     )
   } catch (err) {
     const message =

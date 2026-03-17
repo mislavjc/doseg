@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
+import { motion, AnimatePresence, MotionConfig } from "motion/react"
 
 import { fetchIsochrone, fetchPlan, type Itinerary } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
@@ -39,33 +40,6 @@ function createMarkerElement(): HTMLDivElement {
   `
   return el
 }
-
-const legendPanel = (
-  <div className="panel absolute top-4 left-4">
-    <div className="text-[15px] font-semibold tracking-tight text-slate-100">
-      doseg
-    </div>
-    <div className="mb-3 text-[11px] text-slate-400">
-      Zagreb transit reachability
-    </div>
-    <div className="mb-1 text-[10px] font-medium text-slate-500">
-      Trip duration
-    </div>
-    <div
-      className="h-2 w-full rounded-sm"
-      style={{
-        background:
-          "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
-      }}
-    />
-    <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500">
-      <span>0</span>
-      <span>15</span>
-      <span>30</span>
-      <span>45 min</span>
-    </div>
-  </div>
-)
 
 export function TransitMap() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -368,36 +342,97 @@ export function TransitMap() {
     }
   }, [origin])
 
+  const ease = [0.23, 1, 0.32, 1] as const
+
   return (
-    <div className="relative h-svh w-full">
-      <div ref={containerRef} className="h-full w-full" />
+    <MotionConfig reducedMotion="user">
+      <div className="relative h-svh w-full">
+        <div ref={containerRef} className="h-full w-full" />
 
-      {legendPanel}
-
-      {!origin && (
-        <div className="panel absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="text-[13px] text-slate-300">
-            Click anywhere to see how far you can go
+        <motion.div
+          className="panel absolute top-4 left-4"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease }}
+        >
+          <div className="text-[15px] font-semibold tracking-tight text-slate-100">
+            doseg
           </div>
-        </div>
-      )}
+          <div className="mb-3 text-[11px] text-slate-400">
+            Zagreb transit reachability
+          </div>
+          <div className="mb-1 text-[10px] font-medium text-slate-500">
+            Trip duration
+          </div>
+          <div
+            className="h-2 w-full rounded-sm"
+            style={{
+              background:
+                "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+            }}
+          />
+          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500">
+            <span>0</span>
+            <span>15</span>
+            <span>30</span>
+            <span>45 min</span>
+          </div>
+        </motion.div>
 
-      {loading && (
-        <div className="absolute top-0 right-0 left-0 z-10">
-          <div className="loading-bar" />
-        </div>
-      )}
+        <AnimatePresence>
+          {!origin && (
+            <motion.div
+              key="hint"
+              className="panel absolute bottom-8 left-1/2 -translate-x-1/2"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.2, ease }}
+            >
+              <div className="text-[13px] text-slate-300">
+                Click anywhere to see how far you can go
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {error && (
-        <div className="panel absolute top-5 left-1/2 -translate-x-1/2 text-[12px] text-red-400">
-          {error}
-        </div>
-      )}
+        <AnimatePresence>
+          {loading && (
+            <motion.div
+              key="loading"
+              className="absolute top-0 right-0 left-0 z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease }}
+            >
+              <div className="loading-bar" />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {(route || routeLoading) && (
-        <RouteDetails itinerary={route} loading={routeLoading} />
-      )}
-    </div>
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              key="error"
+              className="panel absolute top-5 left-1/2 -translate-x-1/2 text-[12px] text-red-400"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.2, ease }}
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {(route || routeLoading) && (
+            <RouteDetails itinerary={route} loading={routeLoading} />
+          )}
+        </AnimatePresence>
+      </div>
+    </MotionConfig>
   )
 }
 

@@ -1,3 +1,5 @@
+import { motion } from "motion/react"
+
 import type { Itinerary } from "@/lib/otp"
 import { modeColor, modeLabel } from "@/lib/transit"
 
@@ -19,9 +21,17 @@ interface RouteDetailsProps {
   loading: boolean
 }
 
+const ease = [0.23, 1, 0.32, 1] as const
+
 export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
   return (
-    <div className="panel absolute bottom-8 left-4 w-[280px]">
+    <motion.div
+      className="panel absolute bottom-8 left-4 w-[280px]"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+      transition={{ duration: 0.2, ease }}
+    >
       {loading && !itinerary && (
         <div className="flex items-center gap-2">
           <div className="route-spinner" />
@@ -47,15 +57,35 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
             {loading && <div className="route-spinner ml-auto" />}
           </div>
 
-          <div className="mt-3 flex flex-col gap-0.5">
+          <motion.div
+            key={itinerary.legs.map((l) => l.mode + (l.route || "")).join()}
+            className="mt-3 flex flex-col gap-0.5"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.05 } },
+            }}
+          >
             {itinerary.legs.map((leg, i) => (
-              <div key={i} className="leg-item flex items-center gap-2 py-1"
-                style={{ animationDelay: `${i * 50}ms` }}>
+              <motion.div
+                key={i}
+                className="flex items-center gap-2 py-1"
+                variants={{
+                  hidden: { opacity: 0, y: 4 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.2, ease },
+                  },
+                }}
+              >
                 <span
                   className="inline-flex h-[22px] min-w-[36px] items-center justify-center rounded-[5px] px-1.5 text-[11px] font-semibold"
                   style={{
                     backgroundColor:
-                      leg.mode === "WALK" ? "rgba(255,255,255,0.08)" : modeColor(leg.mode),
+                      leg.mode === "WALK"
+                        ? "rgba(255,255,255,0.08)"
+                        : modeColor(leg.mode),
                     color: leg.mode === "WALK" ? "#94a3b8" : "#fff",
                   }}
                 >
@@ -67,11 +97,11 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                 <span className="shrink-0 text-[11px] tabular-nums text-slate-500">
                   {formatDuration(leg.duration)}
                 </span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </>
       )}
-    </div>
+    </motion.div>
   )
 }

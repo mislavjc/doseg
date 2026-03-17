@@ -276,7 +276,7 @@ export function TransitMap() {
         const rd = routingDataRef.current
         if (rd) {
           const nearest = findNearestStop(rd, lat, lng)
-          const itinerary = reconstructRoute(rd, lat, lng)
+          const itinerary = reconstructRoute(rd, lat, lng, nearest)
 
           if (itinerary) {
             renderRoute(map, itinerary)
@@ -564,9 +564,16 @@ export function TransitMap() {
 
         <Link
           href="/o-projektu"
-          className="absolute top-3 left-3 z-10 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-slate-200 sm:top-4 sm:left-4"
+          prefetch={false}
+          className="absolute top-[80px] right-[10px] z-10 flex h-[29px] w-[29px] items-center justify-center rounded-md bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-[12px] transition-colors hover:text-slate-200 sm:top-4 sm:left-4 sm:right-auto sm:bg-white/10 sm:h-auto sm:w-auto sm:rounded-full sm:px-2.5 sm:py-1 sm:text-[11px] sm:font-medium sm:shadow-none"
+          aria-label="O projektu"
         >
-          O projektu
+          <svg className="h-[18px] w-[18px] sm:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
+          </svg>
+          <span className="hidden sm:inline">O projektu</span>
         </Link>
 
         <OnboardingDialog />

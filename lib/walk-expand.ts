@@ -12,6 +12,17 @@ const MAX_SECONDS = 45 * 60
 // cm → km: /100_000, km → hours: /WALK_SPEED, hours → seconds: *3600
 const CM_TO_SECONDS = 3600 / (100_000 * WALK_SPEED) // 0.0072
 
+interface StopWalkSnap {
+  nodeIdx: number
+  walkSeconds: number
+}
+
+let cachedStopSnapSource: {
+  graph: WalkingGraph
+  transitStops: ReadonlyMap<string, { lat: number; lon: number }>
+  snaps: Map<string, StopWalkSnap>
+} | null = null
+
 /**
  * Find the nearest walking graph node to a given coordinate.
  * Uses squared distance to avoid sqrt.
@@ -58,6 +69,36 @@ function fastDistKm(
   const dlat = (lat2 - lat1) * KM_PER_DEG_LAT
   const dlon = (lon2 - lon1) * KM_PER_DEG_LON
   return Math.sqrt(dlat * dlat + dlon * dlon)
+}
+
+function getTransitStopSnaps(
+  graph: WalkingGraph,
+  transitStops: ReadonlyMap<string, { lat: number; lon: number }>
+): Map<string, StopWalkSnap> {
+  if (
+    cachedStopSnapSource?.graph === graph &&
+    cachedStopSnapSource.transitStops === transitStops
+  ) {
+    return cachedStopSnapSource.snaps
+  }
+
+  const snaps = new Map<string, StopWalkSnap>()
+
+  for (const [key, stop] of transitStops) {
+    const nodeIdx = findNearestNode(graph, stop.lat, stop.lon, 0.09) // 0.3² = 0.09
+    if (nodeIdx < 0) continue
+
+    const nlat = graph.coords[nodeIdx * 2]
+    const nlon = graph.coords[nodeIdx * 2 + 1]
+    snaps.set(key, {
+      nodeIdx,
+      walkSeconds:
+        (fastDistKm(stop.lat, stop.lon, nlat, nlon) / WALK_SPEED) * 3600,
+    })
+  }
+
+  cachedStopSnapSource = { graph, transitStops, snaps }
+  return snaps
 }
 
 /** Specialized min-heap for walk Dijkstra — uses flat arrays to avoid object allocation */
@@ -137,6 +178,7 @@ export function expandWalking(
 ): GeoJSON.Feature[] {
   const best = new Float64Array(graph.nodeCount).fill(Infinity)
   const heap = new WalkHeap()
+  const stopSnaps = getTransitStopSnaps(graph, transitStops)
 
   // Seed 1: Origin point → nearest walk node
   const originNode = findNearestNode(graph, originLat, originLon, 0.25) // 0.5² = 0.25
@@ -154,21 +196,14 @@ export function expandWalking(
   // Seed 2: Each reachable transit stop → nearest walk node
   for (const [key, time] of transitTimes) {
     if (time >= MAX_SECONDS) continue
-    const stop = transitStops.get(key)
-    if (!stop) continue
+    const snap = stopSnaps.get(key)
+    if (!snap) continue
 
-    const nodeIdx = findNearestNode(graph, stop.lat, stop.lon, 0.09) // 0.3² = 0.09
-    if (nodeIdx < 0) continue
+    const totalTime = time + snap.walkSeconds
 
-    const nlat = graph.coords[nodeIdx * 2]
-    const nlon = graph.coords[nodeIdx * 2 + 1]
-    const walkToNode =
-      (fastDistKm(stop.lat, stop.lon, nlat, nlon) / WALK_SPEED) * 3600
-    const totalTime = time + walkToNode
-
-    if (totalTime < MAX_SECONDS && totalTime < best[nodeIdx]) {
-      best[nodeIdx] = totalTime
-      heap.push(totalTime, nodeIdx)
+    if (totalTime < MAX_SECONDS && totalTime < best[snap.nodeIdx]) {
+      best[snap.nodeIdx] = totalTime
+      heap.push(totalTime, snap.nodeIdx)
     }
   }
 
@@ -266,6 +301,7 @@ export function countReachableCells(
 ): number {
   bestBuf.fill(Infinity)
   const heap = new WalkHeap()
+  const stopSnaps = getTransitStopSnaps(graph, transitStops)
 
   // Seed 1: Origin point → nearest walk node
   const originNode = findNearestNode(graph, originLat, originLon, 0.25)
@@ -283,21 +319,14 @@ export function countReachableCells(
   // Seed 2: Each reachable transit stop → nearest walk node
   for (const [key, time] of transitTimes) {
     if (time >= maxSeconds) continue
-    const stop = transitStops.get(key)
-    if (!stop) continue
+    const snap = stopSnaps.get(key)
+    if (!snap) continue
 
-    const nodeIdx = findNearestNode(graph, stop.lat, stop.lon, 0.09)
-    if (nodeIdx < 0) continue
+    const totalTime = time + snap.walkSeconds
 
-    const nlat = graph.coords[nodeIdx * 2]
-    const nlon = graph.coords[nodeIdx * 2 + 1]
-    const walkToNode =
-      (fastDistKm(stop.lat, stop.lon, nlat, nlon) / WALK_SPEED) * 3600
-    const totalTime = time + walkToNode
-
-    if (totalTime < maxSeconds && totalTime < bestBuf[nodeIdx]) {
-      bestBuf[nodeIdx] = totalTime
-      heap.push(totalTime, nodeIdx)
+    if (totalTime < maxSeconds && totalTime < bestBuf[snap.nodeIdx]) {
+      bestBuf[snap.nodeIdx] = totalTime
+      heap.push(totalTime, snap.nodeIdx)
     }
   }
 

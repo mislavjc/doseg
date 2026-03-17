@@ -162,9 +162,9 @@ function makeWalkLeg(
 export function reconstructRoute(
   data: RoutingData,
   destLat: number,
-  destLon: number
+  destLon: number,
+  nearestKey: string | null = findNearestStop(data, destLat, destLon)
 ): Itinerary | null {
-  const nearestKey = findNearestStop(data, destLat, destLon)
   if (!nearestKey) return null
 
   // Trace predecessors back to origin

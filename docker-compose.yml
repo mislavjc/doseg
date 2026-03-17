@@ -19,6 +19,7 @@ services:
     environment:
       - OTP_URL=http://otp:8080
       - HOSTNAME=0.0.0.0
+      - DATA_DIR=/app/data
     volumes:
       - ./data:/app/data
     depends_on:

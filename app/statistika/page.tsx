@@ -38,8 +38,12 @@ interface ScoreData {
 
 let runningPromise: Promise<void> | null = null
 
+function getDataDir(): string {
+  return process.env.DATA_DIR || join(process.cwd(), "data")
+}
+
 async function ensureScores(): Promise<ScoreData | null> {
-  const scorePath = join(process.cwd(), "data/district-scores.json")
+  const scorePath = join(getDataDir(), "district-scores.json")
 
   if (existsSync(scorePath)) {
     try {
@@ -54,7 +58,7 @@ async function ensureScores(): Promise<ScoreData | null> {
     runningPromise = new Promise<void>((resolve, reject) => {
       const child = exec(
         "bun scripts/score-districts.ts",
-        { cwd: process.cwd(), timeout: 300_000 },
+        { cwd: process.cwd(), timeout: 300_000, env: { ...process.env, DATA_DIR: getDataDir() } },
         (err) => {
           runningPromise = null
           if (err) reject(err)
@@ -77,7 +81,7 @@ async function ensureScores(): Promise<ScoreData | null> {
 function loadDistrictGeoJSON(): GeoJSON.FeatureCollection | null {
   try {
     return JSON.parse(
-      readFileSync(join(process.cwd(), "data/districts.geojson"), "utf-8")
+      readFileSync(join(getDataDir(), "districts.geojson"), "utf-8")
     )
   } catch {
     return null
@@ -370,6 +374,7 @@ export default async function StatistikaPage() {
                 <DistrictRow
                   key={d.osmId}
                   district={d}
+                  feature={rawGeoJSON?.features.find((f) => f.properties?.osmId === d.osmId)}
                   totalGridCells={data.totalGridCells}
                   bandColor={band.color}
                   cityAvg={cityAvg}
@@ -435,7 +440,7 @@ export default async function StatistikaPage() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-svh bg-[#14141c]">
+    <div className="min-h-svh bg-background">
       <main
         id="main-content"
         className="mx-auto max-w-xl px-5 py-12 sm:py-20"
@@ -495,8 +500,86 @@ function InsightCard({
   )
 }
 
+function getSvgPath(feature: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>, size: number = 32): string {
+  if (!feature.geometry) return ""
+  
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+  const rings: [number, number][][] = []
+
+  const processPolygon = (polygon: GeoJSON.Position[][]) => {
+    polygon.forEach(ring => {
+      const pts = ring.map(coord => [coord[0], coord[1]] as [number, number])
+      pts.forEach(([x, y]) => {
+        if (x < minX) minX = x
+        if (x > maxX) maxX = x
+        if (y < minY) minY = y
+        if (y > maxY) maxY = y
+      })
+      rings.push(pts)
+    })
+  }
+
+  if (feature.geometry.type === "Polygon") {
+    processPolygon(feature.geometry.coordinates)
+  } else if (feature.geometry.type === "MultiPolygon") {
+    feature.geometry.coordinates.forEach(processPolygon)
+  }
+
+  if (rings.length === 0) return ""
+
+  const padding = 2
+  const innerSize = size - padding * 2
+
+  const w = maxX - minX
+  const h = maxY - minY
+  const scale = Math.min(innerSize / (w || 1), innerSize / (h || 1))
+  
+  const cx = minX + w / 2
+  const cy = minY + h / 2
+
+  let path = ""
+  for (const ring of rings) {
+    for (let i = 0; i < ring.length; i++) {
+      const px = padding + innerSize / 2 + (ring[i][0] - cx) * scale
+      const py = padding + innerSize / 2 - (ring[i][1] - cy) * scale
+      if (i === 0) {
+        path += `M ${px} ${py} `
+      } else {
+        path += `L ${px} ${py} `
+      }
+    }
+    path += "Z "
+  }
+
+  return path
+}
+
+function DistrictEmblem({ feature, rank, color }: { feature?: GeoJSON.Feature, rank: number, color: string }) {
+  if (!feature || !feature.geometry || (feature.geometry.type !== "Polygon" && feature.geometry.type !== "MultiPolygon")) {
+    return (
+      <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center">
+        <span className="text-[13px] font-semibold tabular-nums text-slate-400">{rank}</span>
+      </div>
+    )
+  }
+
+  const pathData = getSvgPath(feature as any, 40)
+  return (
+    <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center">
+      <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0 opacity-40">
+        <path d={pathData} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
+        <path d={pathData} fill={color} opacity="0.1" />
+      </svg>
+      <span className="relative z-10 text-[13px] font-semibold tabular-nums text-white drop-shadow-md">
+        {rank}
+      </span>
+    </div>
+  )
+}
+
 function DistrictRow({
   district: d,
+  feature,
   totalGridCells,
   bandColor,
   cityAvg,
@@ -504,6 +587,7 @@ function DistrictRow({
   index,
 }: {
   district: DistrictScore
+  feature?: GeoJSON.Feature
   totalGridCells: number
   bandColor: string
   cityAvg: number
@@ -524,20 +608,20 @@ function DistrictRow({
       style={{ animationDelay: `${index * 40}ms` }}
     >
       {/* Header: rank, name, score */}
-      <div className="flex items-baseline gap-3">
-        <span className="w-5 text-right text-[13px] tabular-nums text-slate-600">
-          {d.rank}
-        </span>
-        <span className="flex-1 text-[14px] font-medium text-slate-200">
-          {d.name}
-        </span>
-        <span className="text-[14px] font-semibold tabular-nums text-white">
-          {d.score}
-        </span>
+      <div className="flex items-center gap-3">
+        <DistrictEmblem feature={feature} rank={d.rank} color={bandColor} />
+        <div className="flex flex-1 items-baseline gap-3">
+          <span className="flex-1 text-[15px] font-medium text-slate-200">
+            {d.name}
+          </span>
+          <span className="text-[15px] font-semibold tabular-nums text-white">
+            {d.score}
+          </span>
+        </div>
       </div>
 
       {/* Score bar */}
-      <div className="mt-2 ml-8 h-1.5 rounded-full bg-white/[0.06]">
+      <div className="mt-2 ml-[52px] h-1.5 rounded-full bg-white/[0.06]">
         <div
           className="score-bar h-full rounded-full"
           style={{
@@ -550,13 +634,13 @@ function DistrictRow({
       </div>
 
       {/* Transit line pills */}
-      <div className="mt-2.5 ml-8 flex flex-wrap items-center gap-1">
+      <div className="mt-2.5 ml-[52px] flex flex-wrap items-center gap-1">
         {hasTram ? (
           <>
             {d.tramLines.map((line) => (
               <span
                 key={`t${line}`}
-                className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] bg-blue-500/20 px-1 text-[10px] font-semibold tabular-nums text-blue-400"
+                className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] bg-white/[0.08] px-1 text-[10px] font-semibold tabular-nums text-white"
               >
                 {line}
               </span>
@@ -568,7 +652,7 @@ function DistrictRow({
             )}
           </>
         ) : (
-          <span className="rounded-[4px] bg-purple-500/10 px-1.5 py-px text-[10px] font-medium text-purple-400/80">
+          <span className="rounded-[4px] bg-white/[0.06] px-1.5 py-px text-[10px] font-medium text-slate-300">
             Samo bus · {d.busLines.length}{" "}
             {d.busLines.length === 1 ? "linija" : "linija"}
           </span>
@@ -579,7 +663,7 @@ function DistrictRow({
       </div>
 
       {/* Stats row */}
-      <div className="mt-1.5 ml-8 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[12px]">
+      <div className="mt-1.5 ml-[52px] flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[12px]">
         <span className="text-slate-500">{reachPct}% grada dostupno</span>
         <span
           className={`tabular-nums ${vsAvg > 0 ? "text-emerald-600" : vsAvg < 0 ? "text-rose-500/70" : "text-slate-600"}`}

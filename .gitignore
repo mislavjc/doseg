@@ -43,3 +43,5 @@ data/walk-graph.bin
 
 # graphql-codegen output
 /generated
+tmp/
+squirrel.toml

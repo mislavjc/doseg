@@ -138,6 +138,18 @@
     0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
+/* Dynamic Island — centered pill */
+.island {
+  background: rgba(20, 20, 28, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 7px 12px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+}
+
 /* Origin marker */
 .origin-marker {
   position: relative;
@@ -174,6 +186,21 @@
   }
 }
 
+/* Live indicator dot */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 4px rgba(52, 211, 153, 0.6);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* Loading bar */
 .loading-bar {
   height: 2px;
@@ -189,6 +216,15 @@
   100% {
     background-position: -100% 0;
   }
+}
+
+/* Hide scrollbar in time picker columns */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* MapLibre overrides for dark theme */
@@ -241,5 +277,8 @@
   }
   .route-spinner {
     animation-duration: 1.5s;
+  }
+  .live-dot {
+    animation: none;
   }
 }

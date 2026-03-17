@@ -9,6 +9,9 @@
 		X-Frame-Options "DENY"
 		Referrer-Policy "strict-origin-when-cross-origin"
 	}
+	# X-Frame-Options DENY blocks <object> from loading SVGs; omit for embeddable assets
+	@embeddable path /district-map.svg
+	header @embeddable -X-Frame-Options
 
 	reverse_proxy app:3000
 }

@@ -2,12 +2,15 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
-const OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
+const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
+const EMBLEM_OUTPUT_PATH = join(process.cwd(), "public", "district-emblems.json")
 
 const VIEWBOX_WIDTH = 960
 const VIEWBOX_HEIGHT = 620
 const PADDING = 28
 const LABEL_MIN_AREA = 4000
+const EMBLEM_SIZE = 56
+const EMBLEM_PADDING = 4
 
 type Point = [number, number]
 type Ring = Point[]
@@ -167,6 +170,69 @@ function geometryToPath(
     .join("")
 }
 
+function geometryToEmblemPath(
+  geometry: GeoJSON.Geometry | null,
+  size: number = EMBLEM_SIZE
+): string {
+  const rawRings: Ring[] = []
+  let minLat = Infinity
+  let maxLat = -Infinity
+
+  for (const polygon of getPolygons(geometry)) {
+    for (const ring of polygon) {
+      const points = ring.map(([lon, lat]) => {
+        minLat = Math.min(minLat, lat)
+        maxLat = Math.max(maxLat, lat)
+        return [lon, lat] as Point
+      })
+      rawRings.push(points)
+    }
+  }
+
+  if (rawRings.length === 0) return ""
+
+  const midLat = (minLat + maxLat) / 2
+  const lonFactor = Math.cos((midLat * Math.PI) / 180)
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+
+  const projectedRings = rawRings.map((ring) =>
+    ring.map(([lon, lat]) => {
+      const point: Point = [lon * lonFactor, lat]
+      minX = Math.min(minX, point[0])
+      maxX = Math.max(maxX, point[0])
+      minY = Math.min(minY, point[1])
+      maxY = Math.max(maxY, point[1])
+      return point
+    })
+  )
+
+  const innerSize = size - EMBLEM_PADDING * 2
+  const width = Math.max(maxX - minX, 1e-6)
+  const height = Math.max(maxY - minY, 1e-6)
+  const scale = Math.min(innerSize / width, innerSize / height)
+  const centerX = minX + width / 2
+  const centerY = minY + height / 2
+
+  return projectedRings
+    .map((ring) =>
+      `${ring
+        .map(([x, y], index) => {
+          const px = roundCoord(
+            EMBLEM_PADDING + innerSize / 2 + (x - centerX) * scale
+          )
+          const py = roundCoord(
+            EMBLEM_PADDING + innerSize / 2 - (y - centerY) * scale
+          )
+          return `${index === 0 ? "M" : "L"}${px} ${py}`
+        })
+        .join("")}Z`
+    )
+    .join("")
+}
+
 function polygonArea(points: Point[]): number {
   let area = 0
   for (let i = 0; i < points.length; i++) {
@@ -294,6 +360,21 @@ function buildDistrictShapes(geojson: GeoJSON.FeatureCollection): DistrictShape[
   return shapes
 }
 
+function buildDistrictEmblems(
+  geojson: GeoJSON.FeatureCollection
+): Record<string, string> {
+  const emblems: Record<string, string> = {}
+
+  for (const [index, feature] of geojson.features.entries()) {
+    const osmId = Number(feature.properties?.osmId ?? index)
+    const path = geometryToEmblemPath(feature.geometry)
+    if (!path || Number.isNaN(osmId)) continue
+    emblems[String(osmId)] = path
+  }
+
+  return emblems
+}
+
 function buildDistrictMapSvg(geojson: GeoJSON.FeatureCollection): string {
   const shapes = buildDistrictShapes(geojson)
 
@@ -334,19 +415,29 @@ function main() {
   const scorePath = join(DATA_DIR, "district-scores.json")
   const geojsonPath = join(DATA_DIR, "districts.geojson")
 
-  if (!existsSync(scorePath) || !existsSync(geojsonPath)) {
-    console.warn("Skipping district SVG build: missing score or district data")
+  if (!existsSync(geojsonPath)) {
+    console.warn("Skipping district asset build: missing district data")
+    return
+  }
+
+  const rawGeojson = JSON.parse(readFileSync(geojsonPath, "utf-8")) as GeoJSON.FeatureCollection
+  mkdirSync(join(process.cwd(), "public"), { recursive: true })
+
+  const emblems = buildDistrictEmblems(rawGeojson)
+  writeFileSync(EMBLEM_OUTPUT_PATH, JSON.stringify(emblems))
+  console.log(`Wrote ${EMBLEM_OUTPUT_PATH}`)
+
+  if (!existsSync(scorePath)) {
+    console.warn("Skipping district SVG build: missing score data")
     return
   }
 
   const scoreData = JSON.parse(readFileSync(scorePath, "utf-8")) as ScoreData
-  const rawGeojson = JSON.parse(readFileSync(geojsonPath, "utf-8")) as GeoJSON.FeatureCollection
   const enrichedGeojson = enrichGeoJSON(rawGeojson, scoreData)
   const svg = buildDistrictMapSvg(enrichedGeojson)
 
-  mkdirSync(join(process.cwd(), "public"), { recursive: true })
-  writeFileSync(OUTPUT_PATH, svg)
-  console.log(`Wrote ${OUTPUT_PATH}`)
+  writeFileSync(MAP_OUTPUT_PATH, svg)
+  console.log(`Wrote ${MAP_OUTPUT_PATH}`)
 }
 
 main()

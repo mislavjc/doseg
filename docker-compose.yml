@@ -1,17 +1,74 @@
 services:
   otp:
-    image: opentripplanner/opentripplanner:latest
-    ports:
-      - "8080:8080"
+    image: opentripplanner/opentripplanner:2.9.0_2025-12-15T13-18
     volumes:
       - ./data:/var/opentripplanner
     command: --load --serve
+    environment:
+      - JAVA_TOOL_OPTIONS=-Xmx1536m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/otp/actuators/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    restart: unless-stopped
 
   app:
     build: .
-    ports:
-      - "3000:3000"
     environment:
       - OTP_URL=http://otp:8080
+    volumes:
+      - ./data/walk-graph.bin:/app/data/walk-graph.bin:ro
     depends_on:
-      - otp
+      otp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - /opt/doseg-certs:/etc/caddy/certs:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:2019/metrics || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

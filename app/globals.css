@@ -239,4 +239,7 @@
   .loading-bar {
     animation-duration: 4s;
   }
+  .route-spinner {
+    animation-duration: 1.5s;
+  }
 }

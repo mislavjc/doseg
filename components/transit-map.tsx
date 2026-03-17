@@ -4,9 +4,16 @@ import { useEffect, useRef, useState } from "react"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { motion, AnimatePresence, MotionConfig } from "motion/react"
+import { useQueryStates, parseAsFloat } from "nuqs"
 
-import { fetchIsochrone, fetchPlan, type Itinerary } from "@/lib/otp"
+import { fetchIsochrone, type Itinerary } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
+import {
+  parseRoutingData,
+  findNearestStop,
+  reconstructRoute,
+  type RoutingData,
+} from "@/lib/route-reconstruct"
 import { modeColor } from "@/lib/transit"
 import { RouteDetails } from "@/components/route-details"
 
@@ -46,16 +53,40 @@ export function TransitMap() {
   const mapRef = useRef<maplibregl.Map | null>(null)
   const markerRef = useRef<maplibregl.Marker | null>(null)
   const originRef = useRef<[number, number] | null>(null)
-  const hoverTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const planAbortRef = useRef<AbortController | null>(null)
   const isoAbortRef = useRef<AbortController | null>(null)
+  const routingDataRef = useRef<RoutingData | null>(null)
+  const lastNearestRef = useRef<string | null>(null)
+  const rafRef = useRef<number>(0)
+  const isTouchRef = useRef(false)
 
-  const [origin, setOrigin] = useState<[number, number] | null>(null)
+  const [coords, setCoords] = useQueryStates({
+    lat: parseAsFloat,
+    lon: parseAsFloat,
+  })
   const [route, setRoute] = useState<Itinerary | null>(null)
-  const [routeLoading, setRouteLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [mapReady, setMapReady] = useState(false)
 
+  const originLat = coords.lat
+  const originLon = coords.lon
+  const hasOrigin = originLat !== null && originLon !== null
+  const initialLoadRef = useRef(hasOrigin)
+
+  // ESC to clear origin
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && originRef.current) {
+        setCoords({ lat: null, lon: null })
+        setRoute(null)
+        setError(null)
+      }
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [setCoords])
+
+  // Map initialization (runs once)
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -66,6 +97,12 @@ export function TransitMap() {
       zoom: 12,
       attributionControl: false,
     })
+
+    map.getContainer().addEventListener(
+      "touchstart",
+      () => { isTouchRef.current = true },
+      { once: true, passive: true }
+    )
 
     map.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
@@ -193,105 +230,106 @@ export function TransitMap() {
         },
         layout: { "line-cap": "round", "line-join": "round" },
       })
-    })
 
-    // Click → set origin
-    map.on("click", (e) => {
-      const coords: [number, number] = [e.lngLat.lng, e.lngLat.lat]
-      originRef.current = coords
-      setOrigin(coords)
-      setRoute(null)
-      setRouteLoading(false)
-      setLoading(true)
-      setError(null)
-    })
+      // Shared destination preview handler
+      function handleDestination(lat: number, lng: number) {
+        const o = originRef.current
+        if (!o) return
 
-    // Hover → instant preview + debounced route fetch
-    map.on("mousemove", (e) => {
-      const o = originRef.current
-      if (!o) return
+        const dest: [number, number] = [lng, lat]
 
-      const dest: [number, number] = [e.lngLat.lng, e.lngLat.lat]
+        // Instant: update preview line + destination dot
+        const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+        if (previewSrc) {
+          previewSrc.setData({
+            type: "FeatureCollection",
+            features: [{
+              type: "Feature",
+              properties: {},
+              geometry: { type: "LineString", coordinates: [o, dest] },
+            }],
+          })
+        }
+        const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+        if (dotSrc) {
+          dotSrc.setData({
+            type: "FeatureCollection",
+            features: [{
+              type: "Feature",
+              properties: {},
+              geometry: { type: "Point", coordinates: dest },
+            }],
+          })
+        }
 
-      // Instant: update preview line + destination dot
-      const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-      if (previewSrc) {
-        previewSrc.setData({
-          type: "FeatureCollection",
-          features: [{
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [o, dest] },
-          }],
-        })
-      }
-      const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-      if (dotSrc) {
-        dotSrc.setData({
-          type: "FeatureCollection",
-          features: [{
-            type: "Feature",
-            properties: {},
-            geometry: { type: "Point", coordinates: dest },
-          }],
-        })
-      }
+        // Client-side route reconstruction (instant, no network)
+        const rd = routingDataRef.current
+        if (rd) {
+          const nearest = findNearestStop(rd, lat, lng)
+          const itinerary = reconstructRoute(rd, lat, lng)
 
-      // Debounced: fetch actual route
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
-
-      hoverTimerRef.current = setTimeout(async () => {
-        if (planAbortRef.current) planAbortRef.current.abort()
-        const controller = new AbortController()
-        planAbortRef.current = controller
-
-        setRouteLoading(true)
-
-        try {
-          const result = await fetchPlan(
-            {
-              fromLat: o[1],
-              fromLon: o[0],
-              toLat: e.lngLat.lat,
-              toLon: e.lngLat.lng,
-            },
-            controller.signal
-          )
-          if (controller.signal.aborted) return
-
-          if (result.itineraries.length > 0) {
-            const itinerary = pickBestItinerary(result.itineraries)
-            setRoute(itinerary)
-            setRouteLoading(false)
+          if (itinerary) {
             renderRoute(map, itinerary)
           } else {
-            setRouteLoading(false)
+            const routeSrc = map.getSource("route") as maplibregl.GeoJSONSource
+            if (routeSrc) routeSrc.setData(EMPTY_FC)
           }
-        } catch {
-          if (!controller.signal.aborted) setRouteLoading(false)
+          // Only re-render React panel when nearest stop changes
+          if (nearest !== lastNearestRef.current) {
+            lastNearestRef.current = nearest
+            setRoute(itinerary)
+          }
         }
-      }, 150)
-    })
+      }
 
-    // Clear preview when mouse leaves
-    map.on("mouseout", () => {
-      const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-      if (previewSrc) previewSrc.setData(EMPTY_FC)
-      const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-      if (dotSrc) dotSrc.setData(EMPTY_FC)
+      // Click → set origin, or show route on touch devices
+      map.on("click", (e) => {
+        if (originRef.current && isTouchRef.current) {
+          handleDestination(e.lngLat.lat, e.lngLat.lng)
+          return
+        }
+        originRef.current = [e.lngLat.lng, e.lngLat.lat]
+        setRoute(null)
+        setLoading(true)
+        setError(null)
+        setCoords({
+          lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
+          lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
+        })
+      })
+
+      // Mousemove → preview route (desktop, throttled via RAF)
+      map.on("mousemove", (e) => {
+        if (!originRef.current) return
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = requestAnimationFrame(() => {
+          handleDestination(e.lngLat.lat, e.lngLat.lng)
+        })
+      })
+
+      // Clear preview when mouse leaves
+      map.on("mouseout", () => {
+        const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+        if (previewSrc) previewSrc.setData(EMPTY_FC)
+        const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+        if (dotSrc) dotSrc.setData(EMPTY_FC)
+      })
+
+      setMapReady(true)
     })
 
     return () => {
       map.remove()
       mapRef.current = null
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
-      if (planAbortRef.current) planAbortRef.current.abort()
+      setMapReady(false)
+      cancelAnimationFrame(rafRef.current)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Origin change → fetch isochrone
   useEffect(() => {
     const map = mapRef.current
-    if (!map) return
+    if (!map || !mapReady) return
 
     if (markerRef.current) {
       markerRef.current.remove()
@@ -300,16 +338,32 @@ export function TransitMap() {
 
     const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
     if (routeSource) routeSource.setData(EMPTY_FC)
+    const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+    if (previewSrc) previewSrc.setData(EMPTY_FC)
+    const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+    if (dotSrc) dotSrc.setData(EMPTY_FC)
 
-    if (!origin) {
+    if (originLat === null || originLon === null) {
       const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
       if (isoSource) isoSource.setData(EMPTY_FC)
       map.getCanvas().style.cursor = ""
+      originRef.current = null
+      setRoute(null) // eslint-disable-line react-hooks/set-state-in-effect -- cleanup
       return
     }
 
-    // Crosshair cursor once origin is set
-    map.getCanvas().style.cursor = "crosshair"
+    const origin: [number, number] = [originLon, originLat]
+    originRef.current = origin
+
+    // Center map when loading from a shared URL
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false
+      map.jumpTo({ center: origin, zoom: 13 })
+    }
+
+    map.getCanvas().style.cursor = "progress"
+    routingDataRef.current = null
+    lastNearestRef.current = null
 
     markerRef.current = new maplibregl.Marker({
       element: createMarkerElement(),
@@ -321,26 +375,44 @@ export function TransitMap() {
     const controller = new AbortController()
     isoAbortRef.current = controller
 
-    fetchIsochrone({ lat: origin[1], lon: origin[0] }, controller.signal)
-      .then((geojson) => {
+    setLoading(true)
+    setError(null)
+    setRoute(null)
+
+    fetchIsochrone({ lat: originLat, lon: originLon }, controller.signal)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((geojson: any) => {
         if (controller.signal.aborted) return
         const isoSource = map.getSource(
           "isochrone"
         ) as maplibregl.GeoJSONSource
         if (isoSource) isoSource.setData(geojson)
+        if (geojson.routing) {
+          routingDataRef.current = parseRoutingData(
+            geojson.routing,
+            originLat,
+            originLon
+          )
+        }
         setLoading(false)
+        map.getCanvas().style.cursor = "crosshair"
       })
       .catch((err) => {
         if (controller.signal.aborted) return
         console.error("Isochrone fetch failed:", err)
-        setError("Could not load reachability data")
+        const msg =
+          err.message?.includes("502") || err.message?.includes("503")
+            ? "Transit service is temporarily unavailable"
+            : "Could not load reachability data"
+        setError(msg)
         setLoading(false)
+        map.getCanvas().style.cursor = "crosshair"
       })
 
     return () => {
       controller.abort()
     }
-  }, [origin])
+  }, [originLat, originLon, mapReady])
 
   const ease = [0.23, 1, 0.32, 1] as const
 
@@ -350,18 +422,34 @@ export function TransitMap() {
         <div ref={containerRef} className="h-full w-full" />
 
         <motion.div
-          className="panel absolute top-4 left-4"
+          className="panel absolute top-3 left-3 sm:top-4 sm:left-4"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2, ease }}
         >
-          <div className="text-[15px] font-semibold tracking-tight text-slate-100">
-            doseg
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-[15px] font-semibold tracking-tight text-slate-100">
+              doseg
+            </div>
+            <AnimatePresence>
+              {hasOrigin && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setCoords({ lat: null, lon: null })}
+                  className="text-[11px] text-slate-500 transition-colors hover:text-slate-300"
+                  aria-label="Clear origin"
+                >
+                  Reset
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
           <div className="mb-3 text-[11px] text-slate-400">
             Zagreb transit reachability
           </div>
-          <div className="mb-1 text-[10px] font-medium text-slate-500">
+          <div className="mb-1 text-[10px] font-medium text-slate-400">
             Trip duration
           </div>
           <div
@@ -371,7 +459,7 @@ export function TransitMap() {
                 "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
             }}
           />
-          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-500">
+          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-400">
             <span>0</span>
             <span>15</span>
             <span>30</span>
@@ -380,10 +468,10 @@ export function TransitMap() {
         </motion.div>
 
         <AnimatePresence>
-          {!origin && (
+          {!hasOrigin && (
             <motion.div
               key="hint"
-              className="panel absolute bottom-8 left-1/2 -translate-x-1/2"
+              className="panel absolute bottom-4 left-1/2 -translate-x-1/2 sm:bottom-8"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -401,11 +489,13 @@ export function TransitMap() {
             <motion.div
               key="loading"
               className="absolute top-0 right-0 left-0 z-10"
+              aria-live="polite"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease }}
             >
+              <span className="sr-only">Loading reachability data</span>
               <div className="loading-bar" />
             </motion.div>
           )}
@@ -415,7 +505,9 @@ export function TransitMap() {
           {error && (
             <motion.div
               key="error"
-              className="panel absolute top-5 left-1/2 -translate-x-1/2 text-[12px] text-red-400"
+              role="alert"
+              aria-live="assertive"
+              className="panel absolute top-5 left-1/2 z-10 -translate-x-1/2 text-[12px] text-red-400"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -427,22 +519,12 @@ export function TransitMap() {
         </AnimatePresence>
 
         <AnimatePresence>
-          {(route || routeLoading) && (
-            <RouteDetails itinerary={route} loading={routeLoading} />
+          {route && (
+            <RouteDetails itinerary={route} loading={false} />
           )}
         </AnimatePresence>
       </div>
     </MotionConfig>
-  )
-}
-
-function pickBestItinerary(itineraries: Itinerary[]): Itinerary {
-  const withTransit = itineraries.filter((it) =>
-    it.legs.some((l) => l.mode !== "WALK")
-  )
-  const candidates = withTransit.length > 0 ? withTransit : itineraries
-  return candidates.reduce((best, it) =>
-    it.duration < best.duration ? it : best
   )
 }
 
@@ -452,7 +534,8 @@ function renderRoute(map: maplibregl.Map, itinerary: Itinerary) {
     properties: { mode: leg.mode, route: leg.route || "" },
     geometry: {
       type: "LineString",
-      coordinates: decodePolyline(leg.legGeometry.points),
+      coordinates:
+        leg.legGeometry.coords ?? decodePolyline(leg.legGeometry.points),
     },
   }))
 

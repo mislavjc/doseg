@@ -29,7 +29,14 @@ let cached: WalkingGraph | null = null
 export function getWalkGraph(): WalkingGraph {
   if (cached) return cached
 
-  const buf = readFileSync(GRAPH_PATH)
+  let buf: Buffer
+  try {
+    buf = readFileSync(GRAPH_PATH)
+  } catch {
+    throw new Error(
+      `Walking graph not found at ${GRAPH_PATH}. Run "npm run build:walk-graph" to generate it.`
+    )
+  }
   const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
   let pos = 0
 

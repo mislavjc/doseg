@@ -1,0 +1,7 @@
+.git
+.next
+node_modules
+data
+.DS_Store
+*.pem
+.env*.local

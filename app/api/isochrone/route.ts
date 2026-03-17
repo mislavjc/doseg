@@ -23,6 +23,14 @@ interface PatternData {
   geometry: [number, number][]
   stopKeys: string[]
   mode: string
+  route: string
+}
+
+interface Predecessor {
+  fromKey: string
+  patternIdx: number
+  boardIdx: number
+  alightIdx: number
 }
 
 interface NearbyStop {
@@ -34,6 +42,7 @@ interface StopNode {
   lat: number
   lon: number
   key: string
+  name: string
   patterns: Array<{ patternIdx: number; stopIdx: number }>
   nearbyStops: NearbyStop[]
 }
@@ -48,7 +57,12 @@ let graphPromise: Promise<TransitGraph> | null = null
 
 async function getGraph(): Promise<TransitGraph> {
   if (cachedGraph) return cachedGraph
-  if (!graphPromise) graphPromise = buildGraph()
+  if (!graphPromise) {
+    graphPromise = buildGraph().catch((err) => {
+      graphPromise = null
+      throw err
+    })
+  }
   return graphPromise
 }
 
@@ -57,18 +71,16 @@ async function buildGraph(): Promise<TransitGraph> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: `{ patterns { route { mode } patternGeometry { points } stops { lat lon } } }`,
+      query: `{ patterns { route { mode shortName } patternGeometry { points } stops { name lat lon } } }`,
     }),
   })
 
   if (!res.ok) {
-    graphPromise = null
     throw new Error(`OTP pattern fetch failed: ${res.status}`)
   }
 
   const json = await res.json()
   if (!json.data?.patterns) {
-    graphPromise = null
     throw new Error("OTP returned no pattern data")
   }
 
@@ -92,6 +104,7 @@ async function buildGraph(): Promise<TransitGraph> {
           lat: s.lat,
           lon: s.lon,
           key,
+          name: s.name || "",
           patterns: [],
           nearbyStops: [],
         })
@@ -103,6 +116,7 @@ async function buildGraph(): Promise<TransitGraph> {
       geometry: decodePolyline(p.patternGeometry.points),
       stopKeys,
       mode: p.route?.mode || "BUS",
+      route: p.route?.shortName || "",
     })
   }
 
@@ -156,8 +170,9 @@ function computeTravelTimes(
   graph: TransitGraph,
   originLat: number,
   originLon: number
-): Map<string, number> {
+): { times: Map<string, number>; preds: Map<string, Predecessor> } {
   const best = new Map<string, number>()
+  const preds = new Map<string, Predecessor>()
   const heap = new MinHeap()
 
   // Seed: walk from origin to all stops within walking distance
@@ -165,30 +180,27 @@ function computeTravelTimes(
     const d = fastDistKm(originLat, originLon, stop.lat, stop.lon)
     if (d <= WALK_MAX_KM) {
       const walkTime = (d / WALK_SPEED) * 3600
-      if (walkTime <= MAX_SECONDS) {
-        best.set(key, walkTime)
-        heap.push({ time: walkTime, key })
-      }
+      best.set(key, walkTime)
+      heap.push({ time: walkTime, key })
     }
   }
 
+  // Explore full transit graph (no time cap) so client-side route
+  // reconstruction works for any destination. The isochrone
+  // *visualization* is capped at MAX_SECONDS in generateFeatures.
   while (heap.size > 0) {
     const { time, key } = heap.pop()!
 
     if (time > (best.get(key) ?? Infinity)) continue
-    if (time > MAX_SECONDS) break
 
     const stop = graph.stops.get(key)
     if (!stop) continue
 
-    // Board each pattern and ride forward
     for (const { patternIdx, stopIdx } of stop.patterns) {
       const pattern = graph.patterns[patternIdx]
       const speed = modeSpeed(pattern.mode)
 
       const boardTime = time + WAIT_SECONDS
-      if (boardTime > MAX_SECONDS) continue
-
       let travelTime = boardTime
       for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
         const prevStop = graph.stops.get(pattern.stopKeys[i - 1])!
@@ -200,30 +212,39 @@ function computeTravelTimes(
           nextStop.lon
         )
         travelTime += (segDist / speed) * 3600
-        if (travelTime > MAX_SECONDS) break
 
         const existing = best.get(pattern.stopKeys[i]) ?? Infinity
         if (travelTime < existing) {
           best.set(pattern.stopKeys[i], travelTime)
+          preds.set(pattern.stopKeys[i], {
+            fromKey: key,
+            patternIdx,
+            boardIdx: stopIdx,
+            alightIdx: i,
+          })
           heap.push({ time: travelTime, key: pattern.stopKeys[i] })
         }
       }
     }
 
-    // Walk to nearby stops (transfer)
     for (const { key: nearbyKey, distKm } of stop.nearbyStops) {
       const transferTime = time + (distKm / WALK_SPEED) * 3600
-      if (transferTime > MAX_SECONDS) continue
 
       const existing = best.get(nearbyKey) ?? Infinity
       if (transferTime < existing) {
         best.set(nearbyKey, transferTime)
+        preds.set(nearbyKey, {
+          fromKey: key,
+          patternIdx: -1,
+          boardIdx: 0,
+          alightIdx: 0,
+        })
         heap.push({ time: transferTime, key: nearbyKey })
       }
     }
   }
 
-  return best
+  return { times: best, preds }
 }
 
 const BUCKET_SECONDS = 60
@@ -290,7 +311,7 @@ export async function GET(request: NextRequest) {
   try {
     const graph = await getGraph()
     const walkGraph = getWalkGraph()
-    const travelTimes = computeTravelTimes(graph, lat, lon)
+    const { times: travelTimes, preds } = computeTravelTimes(graph, lat, lon)
     const transitFeatures = generateFeatures(graph, travelTimes)
 
     // Build stop coordinate map for walking expansion
@@ -309,9 +330,66 @@ export async function GET(request: NextRequest) {
 
     const features = [...transitFeatures, ...walkFeatures]
 
+    // Build routing payload for client-side route reconstruction
+    const usedPatterns = new Set<number>()
+    for (const pred of preds.values()) {
+      if (pred.patternIdx >= 0) usedPatterns.add(pred.patternIdx)
+    }
+
+    const patternMap = new Map<number, number>()
+    const routingPatterns: {
+      stopKeys: string[]
+      mode: string
+      route: string
+    }[] = []
+    for (const origIdx of usedPatterns) {
+      const p = graph.patterns[origIdx]
+      patternMap.set(origIdx, routingPatterns.length)
+      routingPatterns.push({
+        stopKeys: p.stopKeys,
+        mode: p.mode,
+        route: p.route,
+      })
+    }
+
+    const routingStops: {
+      key: string
+      lat: number
+      lon: number
+      name: string
+      time: number
+      pred: { fromKey: string; patternIdx: number; boardIdx: number; alightIdx: number } | null
+    }[] = []
+    for (const [key, time] of travelTimes) {
+      const stop = graph.stops.get(key)!
+      const pred = preds.get(key)
+      routingStops.push({
+        key,
+        lat: stop.lat,
+        lon: stop.lon,
+        name: stop.name,
+        time,
+        pred: pred
+          ? {
+              fromKey: pred.fromKey,
+              patternIdx:
+                pred.patternIdx >= 0
+                  ? patternMap.get(pred.patternIdx)!
+                  : -1,
+              boardIdx: pred.boardIdx,
+              alightIdx: pred.alightIdx,
+            }
+          : null,
+      })
+    }
+
     return NextResponse.json(
-      { type: "FeatureCollection", features } as GeoJSON.FeatureCollection,
-      { headers: { "Cache-Control": "public, max-age=300" } }
+      {
+        type: "FeatureCollection",
+        features,
+        routing: { stops: routingStops, patterns: routingPatterns },
+      },
+      { headers: { "Cache-Control": "private, max-age=300" } }
     )
   } catch (err) {
     const message =

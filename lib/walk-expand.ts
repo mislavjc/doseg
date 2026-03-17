@@ -1,8 +1,8 @@
 import type { WalkingGraph } from "./walk-graph"
 
-/** Round to 5 decimal places (~1m precision) */
-function round5(n: number): number {
-  return Math.round(n * 100000) / 100000
+/** Round to 4 decimal places (~10m precision, sufficient for map display) */
+function round4(n: number): number {
+  return Math.round(n * 10000) / 10000
 }
 
 // Precomputed for Zagreb latitude (~45.8°)
@@ -163,11 +163,15 @@ export function expandWalking(
     }
   }
 
-  // Dijkstra on walking graph
+  // Dijkstra on walking graph — track reached nodes for fast feature generation
+  const reached: number[] = []
+
   while (heap.size > 0) {
     const { time, nodeIdx } = heap.pop()
     if (time > best[nodeIdx]) continue
     if (time > MAX_SECONDS) break
+
+    reached.push(nodeIdx)
 
     const edgeStart = graph.offsets[nodeIdx]
     const edgeEnd = graph.offsets[nodeIdx + 1]
@@ -185,14 +189,13 @@ export function expandWalking(
     }
   }
 
-  // Batch edges into MultiLineStrings by 60-second time buckets
+  // Batch edges into MultiLineStrings by 60-second time buckets.
+  // Only iterate reached nodes (~20-30K) instead of all 422K.
   const BUCKET_SECONDS = 60
   const buckets = new Map<number, [number, number][][]>()
 
-  for (let nodeIdx = 0; nodeIdx < graph.nodeCount; nodeIdx++) {
+  for (const nodeIdx of reached) {
     const nodeTime = best[nodeIdx]
-    if (nodeTime === Infinity) continue
-
     const fromLat = graph.coords[nodeIdx * 2]
     const fromLon = graph.coords[nodeIdx * 2 + 1]
     const edgeStart = graph.offsets[nodeIdx]
@@ -221,8 +224,8 @@ export function expandWalking(
         buckets.set(bucket, lines)
       }
       lines.push([
-        [round5(fromLon), round5(fromLat)],
-        [round5(toLon), round5(toLat)],
+        [round4(fromLon), round4(fromLat)],
+        [round4(toLon), round4(toLat)],
       ])
     }
   }

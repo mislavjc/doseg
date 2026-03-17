@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 		"Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom u 30 minuta.",
 };
 
+export const dynamic = "force-dynamic";
+
 interface DistrictScore {
 	name: string;
 	osmId: number;

@@ -42,6 +42,18 @@ cd "$APP_DIR"
 # Write .env
 echo "DOMAIN=$DOMAIN" > .env
 
+wait_for_otp() {
+  echo "==> Waiting for OTP to become healthy..."
+  docker compose logs -f otp &
+  LOG_PID=$!
+  timeout 180 bash -c 'until docker compose ps otp | grep -q healthy; do sleep 5; done' || {
+    echo "WARNING: OTP did not become healthy within 3 minutes"
+    kill $LOG_PID 2>/dev/null
+    exit 1
+  }
+  kill $LOG_PID 2>/dev/null
+}
+
 # Download data and build graphs if not present
 if [ ! -f data/graph.obj ]; then
   echo "==> Setting up data files..."
@@ -50,27 +62,22 @@ else
   echo "==> Data files already present, skipping setup"
 fi
 
-# Build and start
-echo "==> Starting services..."
-docker compose up -d --build
-
-echo "==> Waiting for OTP to become healthy..."
-docker compose logs -f otp &
-LOG_PID=$!
-timeout 180 bash -c 'until docker compose ps otp | grep -q healthy; do sleep 5; done' || {
-  echo "WARNING: OTP did not become healthy within 3 minutes"
-  kill $LOG_PID 2>/dev/null
-  exit 1
-}
-kill $LOG_PID 2>/dev/null
-
-# Pre-generate district scores for /statistika (app container has Node, not Bun)
 if [ ! -f data/district-scores.json ]; then
+  echo "==> Starting OTP for district score generation..."
+  docker compose up -d --build otp
+  wait_for_otp
+
   echo "==> Generating district scores..."
   docker run --rm --network doseg_default -e OTP_URL=http://otp:8080 \
     -v "$PWD:/app" -w /app oven/bun:latest \
     sh -c "bun install --frozen-lockfile && bun scripts/score-districts.ts"
 fi
+
+# Build and start
+echo "==> Starting services..."
+docker compose up -d --build
+
+wait_for_otp
 
 echo ""
 echo "==> Deployed! Site should be live at https://$DOMAIN"

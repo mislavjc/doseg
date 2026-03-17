@@ -43,6 +43,11 @@ const TIME_COLOR_STOPS: maplibregl.ExpressionSpecification = [
   "#9333ea",
 ]
 
+type IsochroneResponse = GeoJSON.FeatureCollection & {
+  routing?: Parameters<typeof parseRoutingData>[0]
+  realtime?: boolean
+}
+
 function createMarkerElement(): HTMLDivElement {
   const el = document.createElement("div")
   el.className = "origin-marker"
@@ -61,6 +66,7 @@ export function TransitMap() {
   const isoAbortRef = useRef<AbortController | null>(null)
   const routingDataRef = useRef<RoutingData | null>(null)
   const lastNearestRef = useRef<string | null>(null)
+  const routeTailOriginRef = useRef<[number, number] | null>(null)
   const rafRef = useRef<number>(0)
   const isTouchRef = useRef(false)
 
@@ -238,6 +244,29 @@ export function TransitMap() {
         },
         layout: { "line-cap": "round", "line-join": "round" },
       })
+      map.addSource("route-tail", { type: "geojson", data: EMPTY_FC })
+      map.addLayer({
+        id: "route-tail-casing",
+        type: "line",
+        source: "route-tail",
+        paint: {
+          "line-color": "#fff",
+          "line-width": 8,
+          "line-opacity": 0.25,
+        },
+        layout: { "line-cap": "round", "line-join": "round" },
+      })
+      map.addLayer({
+        id: "route-tail",
+        type: "line",
+        source: "route-tail",
+        paint: {
+          "line-color": modeColor("WALK"),
+          "line-width": 3,
+          "line-dasharray": [1.5, 2],
+        },
+        layout: { "line-cap": "round", "line-join": "round" },
+      })
 
       // Shared destination preview handler
       function handleDestination(lat: number, lng: number) {
@@ -276,19 +305,29 @@ export function TransitMap() {
         const rd = routingDataRef.current
         if (rd) {
           const nearest = findNearestStop(rd, lat, lng)
-          const itinerary = reconstructRoute(rd, lat, lng, nearest)
+          const nearestChanged = nearest !== lastNearestRef.current
 
-          if (itinerary) {
-            renderRoute(map, itinerary)
-          } else {
-            const routeSrc = map.getSource("route") as maplibregl.GeoJSONSource
-            if (routeSrc) routeSrc.setData(EMPTY_FC)
-          }
-          // Only re-render React panel when nearest stop changes
-          if (nearest !== lastNearestRef.current) {
+          if (nearestChanged) {
+            const itinerary = reconstructRoute(rd, lat, lng, nearest)
+
+            if (itinerary) {
+              renderRouteBase(map, itinerary)
+              const tailStop = nearest ? rd.stops.get(nearest) : null
+              routeTailOriginRef.current = tailStop
+                ? [tailStop.lon, tailStop.lat]
+                : null
+            } else {
+              routeTailOriginRef.current = null
+              clearRenderedRoute(map)
+            }
+
+            renderRouteTail(map, routeTailOriginRef.current, dest)
             lastNearestRef.current = nearest
             setRoute(itinerary)
+            return
           }
+
+          renderRouteTail(map, routeTailOriginRef.current, dest)
         }
       }
 
@@ -333,9 +372,10 @@ export function TransitMap() {
       map.remove()
       mapRef.current = null
       setMapReady(false)
+      routeTailOriginRef.current = null
       cancelAnimationFrame(rafRef.current)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [setCoords])
 
   // Origin change → fetch isochrone
   useEffect(() => {
@@ -349,6 +389,8 @@ export function TransitMap() {
 
     const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
     if (routeSource) routeSource.setData(EMPTY_FC)
+    const routeTailSource = map.getSource("route-tail") as maplibregl.GeoJSONSource
+    if (routeTailSource) routeTailSource.setData(EMPTY_FC)
     const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
     if (previewSrc) previewSrc.setData(EMPTY_FC)
     const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
@@ -359,6 +401,7 @@ export function TransitMap() {
       if (isoSource) isoSource.setData(EMPTY_FC)
       map.getCanvas().style.cursor = ""
       originRef.current = null
+      routeTailOriginRef.current = null
       setRoute(null) // eslint-disable-line react-hooks/set-state-in-effect -- cleanup
       return
     }
@@ -375,6 +418,7 @@ export function TransitMap() {
     map.getCanvas().style.cursor = "progress"
     routingDataRef.current = null
     lastNearestRef.current = null
+    routeTailOriginRef.current = null
 
     markerRef.current = new maplibregl.Marker({
       element: createMarkerElement(),
@@ -391,8 +435,7 @@ export function TransitMap() {
     setRoute(null)
 
     fetchIsochrone({ lat: originLat, lon: originLon, time: effectiveTime }, controller.signal)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((geojson: any) => {
+      .then((geojson: IsochroneResponse) => {
         if (controller.signal.aborted) return
         const isoSource = map.getSource(
           "isochrone"
@@ -478,6 +521,7 @@ export function TransitMap() {
                   >
                     <div className="h-6 w-px bg-white/10 shrink-0" />
                     <button
+                      type="button"
                       onClick={() => setCoords({ lat: null, lon: null })}
                       className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 hover:bg-white/15 px-2 sm:px-2.5 text-slate-400 hover:text-slate-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
                       aria-label="Obriši ishodište"
@@ -552,7 +596,7 @@ export function TransitMap() {
           )}
         </AnimatePresence>
 
-        <div className="hidden sm:flex absolute top-[10px] right-[52px] z-10 items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-[12px]">
+        <div className="hidden sm:flex absolute top-[10px] right-[52px] z-10 items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
           <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Pomicanje</span>
           <KbdGroup>
             <Kbd>↑</Kbd>
@@ -565,10 +609,10 @@ export function TransitMap() {
         <Link
           href="/o-projektu"
           prefetch={false}
-          className="absolute top-[80px] right-[10px] z-10 flex h-[29px] w-[29px] items-center justify-center rounded-md bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-[12px] transition-colors hover:text-slate-200 sm:top-4 sm:left-4 sm:right-auto sm:bg-white/10 sm:h-auto sm:w-auto sm:rounded-full sm:px-2.5 sm:py-1 sm:text-[11px] sm:font-medium sm:shadow-none"
+          className="absolute top-[80px] right-[10px] z-10 flex h-[29px] w-[29px] items-center justify-center rounded-md bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md transition-colors hover:text-slate-200 sm:top-4 sm:left-4 sm:right-auto sm:bg-white/10 sm:h-auto sm:w-auto sm:rounded-full sm:px-2.5 sm:py-1 sm:text-[11px] sm:font-medium sm:shadow-none"
           aria-label="O projektu"
         >
-          <svg className="h-[18px] w-[18px] sm:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg aria-hidden="true" className="h-[18px] w-[18px] sm:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 16v-4" />
             <path d="M12 8h.01" />
@@ -582,7 +626,7 @@ export function TransitMap() {
   )
 }
 
-function renderRoute(map: maplibregl.Map, itinerary: Itinerary) {
+function buildRouteFeatureCollection(itinerary: Itinerary) {
   const features: GeoJSON.Feature[] = itinerary.legs.map((leg) => ({
     type: "Feature",
     properties: { mode: leg.mode, route: leg.route || "" },
@@ -593,8 +637,56 @@ function renderRoute(map: maplibregl.Map, itinerary: Itinerary) {
     },
   }))
 
+  return { type: "FeatureCollection", features } satisfies GeoJSON.FeatureCollection
+}
+
+function renderRouteBase(map: maplibregl.Map, itinerary: Itinerary) {
+  const baseLegs =
+    itinerary.legs.at(-1)?.mode === "WALK" && itinerary.legs.at(-1)?.to.name === ""
+      ? itinerary.legs.slice(0, -1)
+      : itinerary.legs
   const source = map.getSource("route") as maplibregl.GeoJSONSource
   if (source) {
-    source.setData({ type: "FeatureCollection", features })
+    source.setData(
+      baseLegs.length
+        ? buildRouteFeatureCollection({ ...itinerary, legs: baseLegs })
+        : EMPTY_FC
+    )
   }
+}
+
+function renderRouteTail(
+  map: maplibregl.Map,
+  tailOrigin: [number, number] | null,
+  dest: [number, number]
+) {
+  const source = map.getSource("route-tail") as maplibregl.GeoJSONSource
+  if (!source) return
+
+  if (!tailOrigin) {
+    source.setData(EMPTY_FC)
+    return
+  }
+
+  source.setData({
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: { mode: "WALK", route: "" },
+        geometry: {
+          type: "LineString",
+          coordinates: [tailOrigin, dest],
+        },
+      },
+    ],
+  })
+}
+
+function clearRenderedRoute(map: maplibregl.Map) {
+  const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
+  if (routeSource) routeSource.setData(EMPTY_FC)
+
+  const routeTailSource = map.getSource("route-tail") as maplibregl.GeoJSONSource
+  if (routeTailSource) routeTailSource.setData(EMPTY_FC)
 }

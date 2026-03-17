@@ -4,13 +4,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "portless doseg next dev --turbopack",
-    "build": "next build",
+    "dev": "bun scripts/build-district-map-svg.ts && portless doseg next dev --turbopack",
+    "build": "bun scripts/build-district-map-svg.ts && next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen.ts",
+    "build:district-map": "bun scripts/build-district-map-svg.ts",
     "build:walk-graph": "bun scripts/build-walk-graph.ts",
     "capture:og": "bun scripts/capture-og.ts",
     "score:districts": "bun scripts/score-districts.ts"

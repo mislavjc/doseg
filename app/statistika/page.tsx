@@ -1,11 +1,8 @@
-import { exec } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
-import DistrictMap from "@/components/district-map-lazy";
-
-export const dynamic = "force-dynamic";
+import DistrictMap from "@/components/district-map";
 
 export const metadata: Metadata = {
 	title: "Statistika — Doseg",
@@ -38,57 +35,14 @@ interface ScoreData {
 	districts: DistrictScore[];
 }
 
-let runningPromise: Promise<void> | null = null;
-
 function getDataDir(): string {
 	return process.env.DATA_DIR || join(process.cwd(), "data");
 }
 
-async function ensureScores(): Promise<ScoreData | null> {
+function loadScores(): ScoreData | null {
 	const scorePath = join(getDataDir(), "district-scores.json");
-
-	if (existsSync(scorePath)) {
-		try {
-			return JSON.parse(readFileSync(scorePath, "utf-8"));
-		} catch {
-			return null;
-		}
-	}
-
-	// Run scoring script if data doesn't exist (prevent concurrent runs)
-	if (!runningPromise) {
-		runningPromise = new Promise<void>((resolve, reject) => {
-			const child = exec(
-				"bun scripts/score-districts.ts",
-				{
-					cwd: process.cwd(),
-					timeout: 300_000,
-					env: { ...process.env, DATA_DIR: getDataDir() },
-				},
-				(err) => {
-					runningPromise = null;
-					if (err) reject(err);
-					else resolve();
-				},
-			);
-			child.stderr?.pipe(process.stderr);
-		});
-	}
-
 	try {
-		await runningPromise;
 		return JSON.parse(readFileSync(scorePath, "utf-8"));
-	} catch {
-		runningPromise = null;
-		return null;
-	}
-}
-
-function loadDistrictGeoJSON(): GeoJSON.FeatureCollection | null {
-	try {
-		return JSON.parse(
-			readFileSync(join(getDataDir(), "districts.geojson"), "utf-8"),
-		);
 	} catch {
 		return null;
 	}
@@ -101,27 +55,8 @@ function pct(cells: number, total: number): string {
 	return Math.round(p).toString();
 }
 
-/** Merge score data into GeoJSON feature properties. */
-function enrichGeoJSON(
-	geojson: GeoJSON.FeatureCollection,
-	data: ScoreData,
-): GeoJSON.FeatureCollection {
-	const scoreMap = new Map(data.districts.map((d) => [d.osmId, d]));
-	for (const f of geojson.features) {
-		const s = scoreMap.get(f.properties?.osmId);
-		if (s && f.properties) {
-			f.properties.score = s.score;
-			f.properties.rank = s.rank;
-			f.properties.reachPct = pct(s.avgReachableCells, data.totalGridCells);
-			f.properties.maxMinutes = data.maxMinutes;
-		}
-	}
-	return geojson;
-}
-
-export default async function StatistikaPage() {
-	const data = await ensureScores();
-	const rawGeoJSON = loadDistrictGeoJSON();
+export default function StatistikaPage() {
+	const data = loadScores();
 
 	if (!data) {
 		return (
@@ -145,8 +80,6 @@ export default async function StatistikaPage() {
 			</Shell>
 		);
 	}
-
-	const geojson = rawGeoJSON ? enrichGeoJSON(rawGeoJSON, data) : null;
 
 	// Derived insights
 	const totalPop = data.districts.reduce((s, d) => s + (d.population ?? 0), 0);
@@ -208,18 +141,16 @@ export default async function StatistikaPage() {
 			</p>
 
 			{/* Choropleth map */}
-			{geojson && (
-				<div className="mt-12 rounded-3xl overflow-hidden ring-1 ring-white/5 bg-white/2">
-					<DistrictMap geojson={geojson} />
-					<div className="px-5 py-4 border-t border-white/5">
-						<p className="text-[12px] font-medium text-slate-500 flex items-center gap-2">
-							<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-							Zeleno = bolja povezanost, ljubičasto = lošija. Pomakni miš preko
-							četvrti za detalje.
-						</p>
-					</div>
+			<div className="mt-12 rounded-3xl overflow-hidden ring-1 ring-white/5 bg-white/2">
+				<DistrictMap />
+				<div className="px-5 py-4 border-t border-white/5">
+					<p className="text-[12px] font-medium text-slate-500 flex items-center gap-2">
+						<span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+						Zeleno = bolja povezanost, ljubičasto = lošija. Zadrži pokazivač
+						ili fokusiraj četvrt za detalje.
+					</p>
 				</div>
-			)}
+			</div>
 
 			{/* Headline insights */}
 			<div className="mt-12 grid grid-cols-2 lg:grid-cols-4 border-y border-black/10 dark:border-white/10 divide-x divide-black/10 dark:divide-white/10 bg-black/2 dark:bg-white/2 rounded-sm overflow-hidden">
@@ -421,9 +352,6 @@ export default async function StatistikaPage() {
 								<DistrictCard
 									key={d.osmId}
 									district={d}
-									feature={rawGeoJSON?.features.find(
-										(f) => f.properties?.osmId === d.osmId,
-									)}
 									totalGridCells={data.totalGridCells}
 									bandColor={band.color}
 									cityAvg={cityAvg}
@@ -532,110 +460,22 @@ function BackLink() {
 	);
 }
 
-function getSvgPath(
-	feature: GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>,
-	size: number = 32,
-): string {
-	if (!feature.geometry) return "";
-
-	let minX = Infinity,
-		minY = Infinity,
-		maxX = -Infinity,
-		maxY = -Infinity;
-	const rings: [number, number][][] = [];
-
-	const processPolygon = (polygon: GeoJSON.Position[][]) => {
-		polygon.forEach((ring) => {
-			const pts = ring.map((coord) => [coord[0], coord[1]] as [number, number]);
-			pts.forEach(([x, y]) => {
-				if (x < minX) minX = x;
-				if (x > maxX) maxX = x;
-				if (y < minY) minY = y;
-				if (y > maxY) maxY = y;
-			});
-			rings.push(pts);
-		});
-	};
-
-	if (feature.geometry.type === "Polygon") {
-		processPolygon(feature.geometry.coordinates);
-	} else if (feature.geometry.type === "MultiPolygon") {
-		feature.geometry.coordinates.forEach(processPolygon);
-	}
-
-	if (rings.length === 0) return "";
-
-	const padding = 2;
-	const innerSize = size - padding * 2;
-
-	const w = maxX - minX;
-	const h = maxY - minY;
-	const scale = Math.min(innerSize / (w || 1), innerSize / (h || 1));
-
-	const cx = minX + w / 2;
-	const cy = minY + h / 2;
-
-	let path = "";
-	for (const ring of rings) {
-		for (let i = 0; i < ring.length; i++) {
-			const px = padding + innerSize / 2 + (ring[i][0] - cx) * scale;
-			const py = padding + innerSize / 2 - (ring[i][1] - cy) * scale;
-			if (i === 0) {
-				path += `M ${px} ${py} `;
-			} else {
-				path += `L ${px} ${py} `;
-			}
-		}
-		path += "Z ";
-	}
-
-	return path;
-}
-
 function DistrictEmblem({
-	feature,
 	rank,
 	color,
 }: {
-	feature?: GeoJSON.Feature;
 	rank: number;
 	color: string;
 }) {
-	if (
-		!feature ||
-		!feature.geometry ||
-		(feature.geometry.type !== "Polygon" &&
-			feature.geometry.type !== "MultiPolygon")
-	) {
-		return (
-			<div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
-				<span className="text-[16px] font-serif text-slate-400">{rank}</span>
-			</div>
-		);
-	}
-
-	const pathData = getSvgPath(
-		feature as GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon>,
-		56,
-	);
 	return (
 		<div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
-			<svg
-				width="56"
-				height="56"
-				viewBox="0 0 56 56"
-				className="absolute inset-0 opacity-100"
-				aria-hidden="true"
-			>
-				<path
-					d={pathData}
-					fill="none"
-					stroke={color}
-					strokeWidth="1.5"
-					strokeLinejoin="round"
-				/>
-				<path d={pathData} fill={color} opacity="0.1" />
-			</svg>
+			<div
+				className="absolute inset-0 rounded-2xl border"
+				style={{
+					borderColor: color,
+					backgroundColor: `${color}1a`,
+				}}
+			/>
 			<span className="relative z-10 text-[16px] font-serif tabular-nums text-slate-900 dark:text-white">
 				{rank}
 			</span>
@@ -645,7 +485,6 @@ function DistrictEmblem({
 
 function DistrictCard({
 	district: d,
-	feature,
 	totalGridCells,
 	bandColor,
 	cityAvg,
@@ -653,7 +492,6 @@ function DistrictCard({
 	index,
 }: {
 	district: DistrictScore;
-	feature?: GeoJSON.Feature;
 	totalGridCells: number;
 	bandColor: string;
 	cityAvg: number;
@@ -672,7 +510,7 @@ function DistrictCard({
 			style={{ animationDelay: `${index * 40}ms` }}
 		>
 			<div className="p-5 pb-4 flex items-start gap-4">
-				<DistrictEmblem feature={feature} rank={d.rank} color={bandColor} />
+				<DistrictEmblem rank={d.rank} color={bandColor} />
 				<div className="flex-1 pt-1.5">
 					<h4 className="text-[20px] font-serif text-slate-900 dark:text-slate-100 tracking-tight leading-none">
 						{d.name}

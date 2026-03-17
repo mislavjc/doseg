@@ -7,6 +7,7 @@ const KM_PER_DEG_LON = 111.32 * COS_LAT
 
 const WALK_SPEED = 5 // km/h
 const MAX_SECONDS = 45 * 60
+const MIN_RENDER_EDGE_METERS = 40
 
 // Pre-computed: converts edge distance in cm to walk time in seconds
 // cm → km: /100_000, km → hours: /WALK_SPEED, hours → seconds: *3600
@@ -250,7 +251,7 @@ export function expandWalking(
       const toIdx = edgeTargets[e]
       const toTime = best[toIdx]
       if (toTime === Infinity || toIdx <= nodeIdx) continue
-      if (edgeDistCm[e] < 2000) continue // skip < 20m edges
+      if (edgeDistCm[e] < MIN_RENDER_EDGE_METERS * 100) continue
 
       const ti2 = toIdx * 2
       const bucket =

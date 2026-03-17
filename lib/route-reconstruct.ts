@@ -31,6 +31,19 @@ export interface RoutingData {
   gridCellSize: number
   originLat: number
   originLon: number
+  routeTemplates: Map<string, RouteTemplate | null>
+}
+
+interface RouteTemplate {
+  baseLegs: Leg[]
+  tailFrom: {
+    name: string
+    lat: number
+    lon: number
+    time: number
+  }
+  baseWalkDistance: number
+  transfers: number
 }
 
 const GRID_CELL_SIZE = 0.005
@@ -86,6 +99,7 @@ export function parseRoutingData(
     gridCellSize: GRID_CELL_SIZE,
     originLat,
     originLon,
+    routeTemplates: new Map(),
   }
 }
 
@@ -106,7 +120,8 @@ export function findNearestStop(
       const cell = data.grid.get(`${cx + dx},${cy + dy}`)
       if (!cell) continue
       for (const key of cell) {
-        const stop = data.stops.get(key)!
+        const stop = data.stops.get(key)
+        if (!stop) continue
         const dlat = stop.lat - lat
         const dlon = stop.lon - lon
         const dist = dlat * dlat + dlon * dlon
@@ -138,6 +153,134 @@ function stopName(stop: RoutingStop): string {
   return stop.name || ""
 }
 
+function buildRouteTemplate(
+  data: RoutingData,
+  nearestKey: string
+): RouteTemplate | null {
+  // Trace predecessors back to origin
+  const chain: string[] = []
+  let current: string | null = nearestKey
+  const visited = new Set<string>()
+  while (current && !visited.has(current)) {
+    visited.add(current)
+    chain.push(current)
+    const stop = data.stops.get(current)
+    if (!stop?.pred) break
+    current = stop.pred.fromKey
+  }
+  chain.reverse()
+
+  if (chain.length === 0) return null
+
+  const firstStop = data.stops.get(chain[0])
+  const lastStop = data.stops.get(chain[chain.length - 1])
+  if (!firstStop || !lastStop) return null
+
+  const baseLegs: Leg[] = []
+
+  // Walk from origin to first stop
+  const originDist = distMeters(
+    data.originLat,
+    data.originLon,
+    firstStop.lat,
+    firstStop.lon
+  )
+  if (originDist > 10) {
+    baseLegs.push(
+      makeWalkLeg(
+        { name: "", lat: data.originLat, lon: data.originLon },
+        { name: stopName(firstStop), lat: firstStop.lat, lon: firstStop.lon },
+        originDist
+      )
+    )
+  }
+
+  // Process each step in the chain up to the nearest reachable stop
+  for (let i = 1; i < chain.length; i++) {
+    const stop = data.stops.get(chain[i])
+    if (!stop?.pred) return null
+
+    if (stop.pred.patternIdx === -1) {
+      // Walk transfer
+      const fromStop = data.stops.get(stop.pred.fromKey)
+      if (!fromStop) return null
+
+      const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
+      baseLegs.push(
+        makeWalkLeg(
+          { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
+          { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+          d
+        )
+      )
+      continue
+    }
+
+    // Transit leg — build geometry from intermediate stop coordinates
+    const pattern = data.patterns[stop.pred.patternIdx]
+    const boardStop = data.stops.get(stop.pred.fromKey)
+    if (!pattern || !boardStop) return null
+
+    const coords: [number, number][] = []
+    for (let si = stop.pred.boardIdx; si <= stop.pred.alightIdx; si++) {
+      const sk = pattern.stopKeys[si]
+      const s = data.stops.get(sk)
+      if (s) coords.push([s.lon, s.lat])
+    }
+    if (coords.length < 2) {
+      coords.length = 0
+      coords.push([boardStop.lon, boardStop.lat], [stop.lon, stop.lat])
+    }
+
+    const fromTime = data.stops.get(stop.pred.fromKey)?.time || 0
+    baseLegs.push({
+      mode: pattern.mode,
+      from: { name: stopName(boardStop), lat: boardStop.lat, lon: boardStop.lon },
+      to: { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+      duration: Math.round(stop.time - fromTime),
+      distance: Math.round(
+        distMeters(boardStop.lat, boardStop.lon, stop.lat, stop.lon)
+      ),
+      route: pattern.route || undefined,
+      delay: stop.delay,
+      legGeometry: {
+        points: "",
+        coords,
+      },
+    })
+  }
+
+  const baseWalkDistance = baseLegs
+    .filter((leg) => leg.mode === "WALK")
+    .reduce((sum, leg) => sum + leg.distance, 0)
+  const transitLegs = baseLegs.filter((leg) => leg.mode !== "WALK")
+
+  return {
+    baseLegs,
+    tailFrom: {
+      name: stopName(lastStop),
+      lat: lastStop.lat,
+      lon: lastStop.lon,
+      time: lastStop.time,
+    },
+    baseWalkDistance,
+    transfers: Math.max(0, transitLegs.length - 1),
+  }
+}
+
+function getRouteTemplate(
+  data: RoutingData,
+  nearestKey: string
+): RouteTemplate | null {
+  if (data.routeTemplates.has(nearestKey)) {
+    return data.routeTemplates.get(nearestKey) ?? null
+  }
+
+  const template = buildRouteTemplate(data, nearestKey)
+  data.routeTemplates.set(nearestKey, template)
+  return template
+}
+
 function makeWalkLeg(
   from: { name: string; lat: number; lon: number },
   to: { name: string; lat: number; lon: number },
@@ -166,100 +309,19 @@ export function reconstructRoute(
   nearestKey: string | null = findNearestStop(data, destLat, destLon)
 ): Itinerary | null {
   if (!nearestKey) return null
+  const template = getRouteTemplate(data, nearestKey)
+  if (!template) return null
 
-  // Trace predecessors back to origin
-  const chain: string[] = []
-  let current: string | null = nearestKey
-  const visited = new Set<string>()
-  while (current && !visited.has(current)) {
-    visited.add(current)
-    chain.push(current)
-    const stop = data.stops.get(current)
-    if (!stop?.pred) break
-    current = stop.pred.fromKey
-  }
-  chain.reverse()
-
-  if (chain.length === 0) return null
-
-  const legs: Leg[] = []
-
-  // Walk from origin to first stop
-  const firstStop = data.stops.get(chain[0])!
-  const originDist = distMeters(
-    data.originLat,
-    data.originLon,
-    firstStop.lat,
-    firstStop.lon
-  )
-  if (originDist > 10) {
-    legs.push(
-      makeWalkLeg(
-        { name: "", lat: data.originLat, lon: data.originLon },
-        { name: stopName(firstStop), lat: firstStop.lat, lon: firstStop.lon },
-        originDist
-      )
-    )
-  }
-
-  // Process each step in the chain
-  for (let i = 1; i < chain.length; i++) {
-    const stop = data.stops.get(chain[i])!
-    const pred = stop.pred!
-
-    if (pred.patternIdx === -1) {
-      // Walk transfer
-      const fromStop = data.stops.get(pred.fromKey)!
-      const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
-      legs.push(
-        makeWalkLeg(
-          { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
-          { name: stopName(stop), lat: stop.lat, lon: stop.lon },
-          d
-        )
-      )
-    } else {
-      // Transit leg — build geometry from intermediate stop coordinates
-      const pattern = data.patterns[pred.patternIdx]
-      const boardStop = data.stops.get(pred.fromKey)!
-
-      const coords: [number, number][] = []
-      for (let si = pred.boardIdx; si <= pred.alightIdx; si++) {
-        const sk = pattern.stopKeys[si]
-        const s = data.stops.get(sk)
-        if (s) coords.push([s.lon, s.lat])
-      }
-      if (coords.length < 2) {
-        coords.length = 0
-        coords.push([boardStop.lon, boardStop.lat], [stop.lon, stop.lat])
-      }
-
-      const fromTime = data.stops.get(pred.fromKey)?.time || 0
-      legs.push({
-        mode: pattern.mode,
-        from: { name: stopName(boardStop), lat: boardStop.lat, lon: boardStop.lon },
-        to: { name: stopName(stop), lat: stop.lat, lon: stop.lon },
-        duration: Math.round(stop.time - fromTime),
-        distance: Math.round(
-          distMeters(boardStop.lat, boardStop.lon, stop.lat, stop.lon)
-        ),
-        route: pattern.route || undefined,
-        delay: stop.delay,
-        legGeometry: {
-          points: "",
-          coords,
-        },
-      })
-    }
-  }
-
-  // Walk from last stop to destination
-  const lastStop = data.stops.get(chain[chain.length - 1])!
-  const destDist = distMeters(lastStop.lat, lastStop.lon, destLat, destLon)
+  const legs = template.baseLegs.slice()
+  const destDist = distMeters(template.tailFrom.lat, template.tailFrom.lon, destLat, destLon)
   if (destDist > 10) {
     legs.push(
       makeWalkLeg(
-        { name: stopName(lastStop), lat: lastStop.lat, lon: lastStop.lon },
+        {
+          name: template.tailFrom.name,
+          lat: template.tailFrom.lat,
+          lon: template.tailFrom.lon,
+        },
         { name: "", lat: destLat, lon: destLon },
         destDist
       )
@@ -268,15 +330,11 @@ export function reconstructRoute(
 
   if (legs.length === 0) return null
 
-  const walkDistance = legs
-    .filter((l) => l.mode === "WALK")
-    .reduce((sum, l) => sum + l.distance, 0)
-  const transitLegs = legs.filter((l) => l.mode !== "WALK")
-
   return {
-    duration: lastStop.time + Math.round(destDist / WALK_SPEED_MS),
-    walkDistance,
-    transfers: Math.max(0, transitLegs.length - 1),
+    duration: template.tailFrom.time + Math.round(destDist / WALK_SPEED_MS),
+    walkDistance:
+      template.baseWalkDistance + (destDist > 10 ? Math.round(destDist) : 0),
+    transfers: template.transfers,
     legs,
   }
 }

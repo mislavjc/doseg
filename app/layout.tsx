@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
-import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 import "./globals.css"
 
@@ -41,7 +40,7 @@ export default function RootLayout({
         >
           Preskoči na sadržaj
         </a>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        {children}
       </body>
     </html>
   )

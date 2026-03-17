@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server"
-import { gzipSync } from "node:zlib"
+import type { NextRequest } from "next/server"
+import { brotliCompressSync, constants as zlibConstants, gzipSync } from "node:zlib"
 
 import { getRealtimeData } from "@/lib/gtfs-rt"
 import { secondsOfDay } from "@/lib/zagreb-time"
@@ -12,11 +12,37 @@ import { expandWalking } from "@/lib/walk-expand"
 import { getWalkGraph } from "@/lib/walk-graph"
 
 const MAX_SECONDS = 45 * 60
+const TRANSIT_COORD_PRECISION = 4
+const TRANSIT_COORD_SCALE = 10 ** TRANSIT_COORD_PRECISION
+const BROTLI_QUALITY = 6
 
 // Pre-warm graph cache on module load so the first request is fast
 getGraph().catch(() => {})
 
 const BUCKET_SECONDS = 60
+
+function roundCoord(value: number): number {
+  return Math.round(value * TRANSIT_COORD_SCALE) / TRANSIT_COORD_SCALE
+}
+
+function quantizeTransitLine(
+  coords: [number, number][]
+): [number, number][] {
+  const quantized: [number, number][] = []
+  let lastLon = NaN
+  let lastLat = NaN
+
+  for (const [lon, lat] of coords) {
+    const qLon = roundCoord(lon)
+    const qLat = roundCoord(lat)
+    if (qLon === lastLon && qLat === lastLat) continue
+    quantized.push([qLon, qLat])
+    lastLon = qLon
+    lastLat = qLat
+  }
+
+  return quantized.length >= 2 ? quantized : []
+}
 
 function generateFeatures(
   graph: TransitGraph,
@@ -44,7 +70,7 @@ function generateFeatures(
       )
       if (endIdx <= startIdx) continue
 
-      const coords = geo.slice(startIdx, endIdx + 1)
+      const coords = quantizeTransitLine(geo.slice(startIdx, endIdx + 1))
       if (coords.length < 2) continue
 
       const bucket =
@@ -70,7 +96,7 @@ export async function GET(request: NextRequest) {
   const lat = parseFloat(searchParams.get("lat") || "")
   const lon = parseFloat(searchParams.get("lon") || "")
 
-  if (isNaN(lat) || isNaN(lon)) {
+  if (Number.isNaN(lat) || Number.isNaN(lon)) {
     return Response.json(
       { error: "lat and lon are required" },
       { status: 400 }
@@ -83,7 +109,7 @@ export async function GET(request: NextRequest) {
   if (timeStr) {
     const [h, m] = timeStr.split(":").map(Number)
     departureTime =
-      !isNaN(h) && !isNaN(m) ? h * 3600 + m * 60 : secondsOfDay()
+      !Number.isNaN(h) && !Number.isNaN(m) ? h * 3600 + m * 60 : secondsOfDay()
   } else {
     departureTime = secondsOfDay()
   }
@@ -153,9 +179,24 @@ export async function GET(request: NextRequest) {
       } | null
     }[] = []
     for (const [key, time] of travelTimes) {
-      const stop = graph.stops.get(key)!
+      const stop = graph.stops.get(key)
+      if (!stop) continue
       const pred = preds.get(key)
       const delay = delays.get(key)
+      const mappedPatternIdx =
+        pred && pred.patternIdx >= 0 ? patternMap.get(pred.patternIdx) : -1
+      if (pred?.patternIdx !== undefined && pred.patternIdx >= 0 && mappedPatternIdx === undefined) {
+        continue
+      }
+      const routingPred = pred
+        ? {
+            fromKey: pred.fromKey,
+            patternIdx: pred.patternIdx >= 0 ? (mappedPatternIdx ?? -1) : -1,
+            boardIdx: pred.boardIdx,
+            alightIdx: pred.alightIdx,
+          }
+        : null
+
       routingStops.push({
         key,
         lat: stop.lat,
@@ -163,17 +204,7 @@ export async function GET(request: NextRequest) {
         name: stop.name,
         time: Math.round(time),
         ...(delay !== undefined && { delay: Math.round(delay) }),
-        pred: pred
-          ? {
-              fromKey: pred.fromKey,
-              patternIdx:
-                pred.patternIdx >= 0
-                  ? patternMap.get(pred.patternIdx)!
-                  : -1,
-              boardIdx: pred.boardIdx,
-              alightIdx: pred.alightIdx,
-            }
-          : null,
+        pred: routingPred,
       })
     }
 
@@ -185,15 +216,27 @@ export async function GET(request: NextRequest) {
     })
     const tSerial = performance.now()
 
-    const acceptsGzip = request.headers
-      .get("accept-encoding")
-      ?.includes("gzip")
-    const body = acceptsGzip ? gzipSync(json) : json
+    const acceptEncoding = request.headers.get("accept-encoding") || ""
+    const prefersBrotli = acceptEncoding.includes("br")
+    const acceptsGzip = acceptEncoding.includes("gzip")
+    const body = prefersBrotli
+      ? brotliCompressSync(json, {
+          params: {
+            [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
+          },
+        })
+      : acceptsGzip
+        ? gzipSync(json)
+        : json
 
     return new Response(body, {
       headers: {
         "Content-Type": "application/json",
-        ...(acceptsGzip && { "Content-Encoding": "gzip" }),
+        ...(prefersBrotli
+          ? { "Content-Encoding": "br" }
+          : acceptsGzip
+            ? { "Content-Encoding": "gzip" }
+            : {}),
         "Cache-Control": "private, max-age=30",
         "Server-Timing": `graph;dur=${(tGraph - t0).toFixed(0)}, dijkstra;dur=${(tDijkstra - tLoad).toFixed(0)}, walk;dur=${(tWalk - tDijkstra).toFixed(0)}, serial;dur=${(tSerial - tWalk).toFixed(0)}, total;dur=${(tSerial - t0).toFixed(0)}`,
       },

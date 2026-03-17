@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { motion, AnimatePresence, MotionConfig } from "motion/react"
@@ -18,6 +19,7 @@ import { modeColor } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
 import { RouteDetails } from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
+import { OnboardingDialog } from "@/components/onboarding-dialog"
 
 const ZAGREB: [number, number] = [15.9819, 45.815]
 
@@ -413,8 +415,8 @@ export function TransitMap() {
         console.error("Isochrone fetch failed:", err)
         const msg =
           err.message?.includes("502") || err.message?.includes("503")
-            ? "Transit service is temporarily unavailable"
-            : "Could not load reachability data"
+            ? "Usluga javnog prijevoza je privremeno nedostupna"
+            : "Nije moguće učitati podatke o dosegu"
         setError(msg)
         setLoading(false)
         map.getCanvas().style.cursor = "crosshair"
@@ -469,7 +471,7 @@ export function TransitMap() {
                       "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
                   }}
                 />
-                <div className="mt-0.5 flex w-[240px] justify-between text-[9px] tabular-nums text-slate-500">
+                <div className="mt-0.5 flex w-[240px] justify-between text-[9px] tabular-nums text-slate-400">
                   <span>0</span>
                   <span>15</span>
                   <span>30</span>
@@ -486,12 +488,12 @@ export function TransitMap() {
                     transition={{ duration: 0.15 }}
                     onClick={() => setCoords({ lat: null, lon: null })}
                     className="flex h-6 shrink-0 items-center gap-1 rounded-full bg-white/10 px-2 text-[11px] font-medium text-slate-400 transition-colors hover:bg-white/20 hover:text-slate-200 sm:gap-1.5 sm:px-2.5"
-                    aria-label="Clear origin"
+                    aria-label="Obriši ishodište"
                   >
                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                       <path d="M1 1l6 6M7 1l-6 6" />
                     </svg>
-                    <span className="hidden sm:inline">Clear</span>
+                    <span className="hidden sm:inline">Obriši</span>
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -527,7 +529,7 @@ export function TransitMap() {
               transition={{ duration: 0.2, ease }}
             >
               <div className="text-[13px] text-slate-300">
-                Click anywhere to see how far you can go
+                Klikni bilo gdje da vidiš dokle možeš stići
               </div>
             </motion.div>
           )}
@@ -544,7 +546,7 @@ export function TransitMap() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease }}
             >
-              <span className="sr-only">Loading reachability data</span>
+              <span className="sr-only">Učitavanje podataka o dosegu</span>
               <div className="loading-bar" />
             </motion.div>
           )}
@@ -556,6 +558,15 @@ export function TransitMap() {
             <RouteDetails itinerary={route} loading={false} />
           )}
         </AnimatePresence>
+
+        <Link
+          href="/o-projektu"
+          className="absolute bottom-3 right-14 z-10 rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-slate-400 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-slate-200"
+        >
+          O projektu
+        </Link>
+
+        <OnboardingDialog />
       </div>
     </MotionConfig>
   )

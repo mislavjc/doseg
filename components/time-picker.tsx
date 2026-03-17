@@ -37,7 +37,7 @@ export function TimePicker({
         <span className="text-[13px] tabular-nums text-slate-200 transition-colors hover:text-white">
           {pad(displayH)}:{pad(displayM)}
         </span>
-        <span className="text-[9px] text-slate-500">depart</span>
+        <span className="text-[9px] text-slate-400">polazak</span>
       </PopoverTrigger>
       <PopoverContent
         side="bottom"

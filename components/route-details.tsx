@@ -23,7 +23,7 @@ function delayBadge(delay: number): { label: string; color: string } {
     return { label: `+${Math.round(delay / 60)}m`, color: "text-amber-400" }
   if (delay < -DELAY_THRESHOLD)
     return { label: `${Math.round(delay / 60)}m`, color: "text-sky-400" }
-  return { label: "on time", color: "text-emerald-400" }
+  return { label: "na vrijeme", color: "text-emerald-400" }
 }
 
 interface RouteDetailsProps {
@@ -45,7 +45,7 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
       {loading && !itinerary && (
         <div className="flex items-center gap-2">
           <div className="route-spinner" />
-          <span className="text-[12px] text-slate-400">Finding route…</span>
+          <span className="text-[12px] text-slate-400">Tražim rutu…</span>
         </div>
       )}
       {itinerary && (
@@ -56,15 +56,15 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
             </span>
             {loading && <div className="route-spinner" />}
           </div>
-          <div className="mt-0.5 flex gap-1.5 text-[11px] text-slate-500">
+          <div className="mt-0.5 flex gap-1.5 text-[11px] text-slate-400">
             {itinerary.transfers > 0 && (
               <span>
-                {itinerary.transfers} transfer
-                {itinerary.transfers > 1 ? "s" : ""}
+                {itinerary.transfers}{" "}
+                {itinerary.transfers === 1 ? "presjedanje" : "presjedanja"}
               </span>
             )}
             {itinerary.transfers > 0 && <span aria-hidden>·</span>}
-            <span>{formatDistance(itinerary.walkDistance)} walk</span>
+            <span>{formatDistance(itinerary.walkDistance)} hodanja</span>
           </div>
 
           <motion.div
@@ -104,10 +104,10 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                   {leg.route || modeLabel(leg.mode)}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-[12px] text-slate-400">
-                  {leg.from.name || "Start"} → {leg.to.name || "End"}
+                  {leg.from.name || "Početak"} → {leg.to.name || "Kraj"}
                 </span>
                 <span className="flex shrink-0 items-center gap-1.5">
-                  <span className="text-[11px] tabular-nums text-slate-500">
+                  <span className="text-[11px] tabular-nums text-slate-400">
                     {formatDuration(leg.duration)}
                   </span>
                   {leg.mode !== "WALK" && leg.delay !== undefined && (() => {

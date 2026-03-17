@@ -71,6 +71,9 @@ async function getGraph(): Promise<TransitGraph> {
   return graphPromise
 }
 
+// Pre-warm graph cache on module load so the first request is fast
+getGraph().catch(() => {})
+
 async function buildGraph(): Promise<TransitGraph> {
   const res = await fetch(`${OTP_URL}/otp/gtfs/v1`, {
     method: "POST",

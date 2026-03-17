@@ -11,7 +11,9 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen.ts",
-    "build:walk-graph": "bun scripts/build-walk-graph.ts"
+    "build:walk-graph": "bun scripts/build-walk-graph.ts",
+    "capture:og": "bun scripts/capture-og.ts",
+    "score:districts": "bun scripts/score-districts.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -41,6 +43,7 @@
     "eslint-config-next": "16.1.6",
     "graphql": "^16.13.1",
     "osm-pbf-parser": "^2.3.0",
+    "playwright": "^1.58.2",
     "postcss": "^8",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",

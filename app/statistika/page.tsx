@@ -1914,8 +1914,8 @@ export default function StatistikaPage() {
         <section id="vikend" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
-              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+              <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-violet-500" />
+              <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
                 Radni dan vs. subota
               </h2>
             </div>
@@ -2765,9 +2765,9 @@ export default function StatistikaPage() {
         <section id="matrica" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-full bg-cyan-500" />
-              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
-                Matrica putovanja između četvrti
+              <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-cyan-500" />
+              <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Matrica putovanja
               </h2>
             </div>
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">

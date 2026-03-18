@@ -188,7 +188,8 @@ function pickTerminalKey(
   for (const [key, time] of state.travelTimes) {
     const node = getNode(state, key)
     if (!node) continue
-    const score = time + distMeters(node.lat, node.lon, destLat, destLon) / WALK_SPEED_MS
+    const score =
+      time + distMeters(node.lat, node.lon, destLat, destLon) / WALK_SPEED_MS
     if (score < bestScore) {
       bestScore = score
       bestKey = key
@@ -271,12 +272,18 @@ export function buildAccurateItinerary(
     const pattern = state.graph.patterns[pred.patternIdx]
     if (!pattern) return null
 
+    // Use the Dijkstra's known arrival time at the boarding stop rather than
+    // accumulated street-routing elapsed time.  Accurate walk/bike legs can be
+    // slightly longer than the Dijkstra estimates, which shifts the clock and
+    // can cause the originally-selected transit departure to be missed.
+    const boardingArrival =
+      state.travelTimes.get(pred.fromKey) ?? elapsedSeconds
     const timing = computeTransitLegDuration(
       pattern,
       pred.boardIdx,
       pred.alightIdx,
       state.departureTime,
-      elapsedSeconds,
+      boardingArrival,
       state.rtData
     )
     if (!timing) return null
@@ -303,7 +310,10 @@ export function buildAccurateItinerary(
       },
     }
     legs.push(leg)
-    elapsedSeconds += leg.duration
+    // After a transit leg, sync elapsed time to the Dijkstra's arrival at the
+    // alight stop so that subsequent legs stay consistent with the graph.
+    const dijkstraAlight = state.travelTimes.get(chain[i])
+    elapsedSeconds = dijkstraAlight ?? boardingArrival + timing.durationSeconds
   }
 
   const terminalNode = getNode(state, terminalKey)

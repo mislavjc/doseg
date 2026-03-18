@@ -1,19 +1,43 @@
 # Doseg
 
-Interactive transit reachability map for Zagreb. Click anywhere to see how far you can travel by tram and bus in 15, 30, and 45 minutes — visualized as color-coded isochrone bands over the city map.
+Interactive transit reachability map for Zagreb. Click anywhere to see how far you can travel by tram, bus, and train in 15, 30, and 45 minutes — visualized as color-coded isochrone bands over the city map.
+
+## Features
+
+- **Isochrone map** — click any point to see reachable areas in 15/30/45 minutes, color-coded from green to purple
+- **Multimodal routing** — ZET tram and bus schedules, HZ (Croatian Railways) train routes, and BAJS bike-sharing stations, all in one graph
+- **Instant route preview** — hover (or tap on mobile) any destination to reconstruct the full route client-side, no extra network request
+- **BAJS bike-sharing layer** — toggle bike-sharing stations on the map with real-time availability (bikes, docks, station status)
+- **Departure time picker** — choose when you're leaving; isochrones and routes update accordingly
+- **Live transit delays** — real-time delay data from ZET's GTFS-RT feed, shown per leg in route details
+- **Walking-only comparison** — dashed ring overlay showing how far you get by walking alone, making it obvious where transit actually helps
+- **Export as image** — download button renders the current map state as a shareable PNG
+- **Elevation-aware walking** — SRTM elevation data factors into walking speed calculations for accurate isochrones in hilly areas
+- **District statistics page** (`/statistika`) — precomputed city-wide transit analytics:
+  - Neighbourhood tier list — every district ranked by 30-minute reachability score
+  - Best/worst connected neighbourhoods with detailed metrics
+  - Accessibility equity gap — what percentage of Zagreb's population lives in poorly-connected areas
+  - Maximum city reach — what percentage of the city is reachable from the best-connected district
+  - BAJS impact analysis — how bike-sharing improves each district's score, with equity assessment
+  - Transit desert score — flags areas >500m from nearest stop or with <2 trips/hour
+  - HZ train impact — per-district boost from adding railway access
+  - Per-district tram/bus line breakdowns, stop counts, headway times
+- **Onboarding dialog** — first-visit tutorial explaining isochrone bands and route preview
+- **About page** (`/o-projektu`)
 
 ## How it works
 
 1. You click a point on the map
-2. The server runs Dijkstra over ZET tram/bus schedules (via OpenTripPlanner) combined with a walking street network (from OpenStreetMap)
+2. The server runs Dijkstra over ZET tram/bus + HZ train schedules (via OpenTripPlanner) combined with an elevation-aware walking network and BAJS bike-sharing stations
 3. The result is a set of isochrone lines showing reachable areas, bucketed by travel time
 4. Hover (or tap on mobile) any destination to instantly reconstruct the full route — no extra network request needed, since the routing graph is shipped to the client
 
 ## Stack
 
 - **Frontend:** Next.js, React, MapLibre GL, Tailwind, Motion
-- **Transit data:** OpenTripPlanner with ZET GTFS feed
-- **Walking network:** Custom binary graph built from Croatia OSM extract (~422K nodes, CSR-encoded)
+- **Transit data:** OpenTripPlanner with ZET GTFS + HZ (HZPP) GTFS feeds
+- **Bike-sharing:** BAJS stations via GBFS API (nextbike), integrated into routing graph
+- **Walking network:** Custom binary graph built from Croatia OSM extract (~422K nodes, CSR-encoded), with SRTM elevation
 - **Infra:** Docker Compose (OTP + Next.js + Caddy reverse proxy)
 
 ## Development
@@ -52,27 +76,15 @@ Roughly ordered by how much sense they make next:
 
 ### Stats page
 
-A dedicated page with precomputed city-wide transit analytics. Computed by running the Dijkstra engine from a grid of sample points across Zagreb and aggregating results per neighbourhood (using OSM admin boundary polygons). Results only need recomputing when GTFS schedules update.
-
-- **Neighbourhood tier list** — rank every neighbourhood by average reachable area within 30 minutes. S-tier to F-tier, shareable, debatable.
-
-- **Best/worst connected neighbourhoods** — top and bottom 5, with isochrone previews showing why they rank where they do.
-
-- **Transit desert score** — flag areas where the nearest stop is >500m away or service frequency drops below 2 trips/hour. The gaps in Zagreb's network, quantified.
-
 - **Peak vs off-peak gap** — which neighbourhoods lose the most connectivity outside rush hour? Compute isochrones at 8am vs 10pm and show the delta.
 
 - **Tram vs bus dependency** — neighbourhoods that collapse if you remove one mode. How much of Zagreb is tram-only viable?
 
 - **Transfer penalty map** — where do you need 2+ transfers to reach the city centre (Trg bana Jelačića)? Single-seat rides vs painful connections.
 
-- **Equity score** — how evenly is transit access distributed across the city? Gini coefficient of reachable area across all sample points.
-
 - **Best/worst time to travel** — hour-by-hour reachability heatmap (6am–midnight). When does your neighbourhood come alive, when does it go dark?
 
 - **Walk gap** — how much further can you get with transit vs just walking? Some areas transit barely helps; others it's transformative.
-
-- **"Zagreb in 45 minutes"** — what percentage of the city is reachable from Trg bana Jelačića? A single headline number with a map.
 
 - **Most isolated stop** — the stop with the fewest destinations reachable within 30 minutes. The loneliest stop in Zagreb.
 
@@ -88,17 +100,9 @@ A dedicated page with precomputed city-wide transit analytics. Computed by runni
 
 - **POI overlay** — show hospitals, schools, parks, grocery stores within the reachable area (Overpass API). Turns the abstract isochrone into a concrete answer: "what can I actually get to in 15 minutes?"
 
-- **Bike/scooter integration** — Zagreb has bike-share. Extending the graph with cycling speeds would show how a bike leg at either end expands your reach dramatically.
-
-- **Walking-only comparison** — show a walking-only isochrone ring alongside the transit one. Makes it obvious where transit actually helps vs. where you'd be just as fast on foot. The walking graph is already there.
-
 - **Animated expansion** — play button that sweeps from 0 to 45 minutes, watching the isochrone grow in real-time. Visually striking and makes the data more intuitive.
 
-- **Export as image** — screenshot button that renders the current map state as a shareable PNG. Useful for blog posts, presentations, social media. MapLibre has `canvas.toDataURL()` built in.
-
 - **Commute evaluator** — pin your workplace, then explore commute times from any potential home. Reverse isochrone framed for apartment hunting.
-
-- **Elevation-aware walking** — Zagreb has hills. Factor DEM elevation data into walking speed calculations for more accurate isochrones in hilly areas like the upper town.
 
 ### Platform
 

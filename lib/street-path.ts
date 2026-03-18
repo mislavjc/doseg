@@ -93,11 +93,7 @@ export function distMeters(
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
-function appendCoord(
-  coords: [number, number][],
-  lon: number,
-  lat: number
-) {
+function appendCoord(coords: [number, number][], lon: number, lat: number) {
   const last = coords[coords.length - 1]
   if (last && last[0] === lon && last[1] === lat) return
   coords.push([lon, lat])
@@ -135,10 +131,7 @@ export function findNearestNode(
   return bestIdx
 }
 
-function getNodeCoords(
-  graph: WalkingGraph,
-  nodeIdx: number
-): [number, number] {
+function getNodeCoords(graph: WalkingGraph, nodeIdx: number): [number, number] {
   return [graph.coords[nodeIdx * 2], graph.coords[nodeIdx * 2 + 1]]
 }
 
@@ -246,7 +239,12 @@ export function findStreetPath(
   speedKmh: number,
   maxNodeDistKmSq: number = 0.25
 ): StreetPathResult | null {
-  const startNodeIdx = findNearestNode(graph, from.lat, from.lon, maxNodeDistKmSq)
+  const startNodeIdx = findNearestNode(
+    graph,
+    from.lat,
+    from.lon,
+    maxNodeDistKmSq
+  )
   const endNodeIdx = findNearestNode(graph, to.lat, to.lon, maxNodeDistKmSq)
   if (startNodeIdx < 0 || endNodeIdx < 0) return null
 
@@ -255,7 +253,13 @@ export function findStreetPath(
 
   const path =
     startNodeIdx === endNodeIdx
-      ? { coords: [[startNodeCoords[1], startNodeCoords[0]]] as [number, number][], weightedDistanceCm: 0 }
+      ? {
+          coords: [[startNodeCoords[1], startNodeCoords[0]]] as [
+            number,
+            number,
+          ][],
+          weightedDistanceCm: 0,
+        }
       : findPathBetweenNodes(graph, startNodeIdx, endNodeIdx)
   if (!path) return null
 

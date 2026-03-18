@@ -27,7 +27,11 @@ const GRID_CELL_SIZE = 0.002 // ~200m in degrees
 
 const cached = new Map<string, WalkingGraph>()
 
-function loadGraph(path: string, label: string, buildCommand: string): WalkingGraph {
+function loadGraph(
+  path: string,
+  label: string,
+  buildCommand: string
+): WalkingGraph {
   const existing = cached.get(path)
   if (existing) return existing
 

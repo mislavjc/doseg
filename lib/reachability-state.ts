@@ -67,7 +67,11 @@ export async function getReachabilityState(params: {
         console.error("BAJS routing data unavailable:", err)
       }
     }
-    const { times: travelTimes, preds, delays } = computeTravelTimes(
+    const {
+      times: travelTimes,
+      preds,
+      delays,
+    } = computeTravelTimes(
       graph,
       params.originLat,
       params.originLon,
@@ -75,6 +79,7 @@ export async function getReachabilityState(params: {
       rtData,
       {
         bajsStations: bajsData?.stations,
+        timeCap: 3600,
       }
     )
 

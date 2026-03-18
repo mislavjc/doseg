@@ -234,7 +234,7 @@ export function OnboardingDialog() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.76, duration: 0.25, ease }}
                   >
-                    <div className="flex flex-col gap-1.5 shrink-0">
+                    <div className="flex shrink-0 flex-col gap-1.5">
                       <div className="flex gap-1.5">
                         <div className="h-2.5 w-2.5 rounded-full border border-white/40 bg-amber-500/80" />
                         <div className="h-2.5 w-2.5 rounded-full border border-white/40 bg-orange-500/80" />
@@ -242,7 +242,8 @@ export function OnboardingDialog() {
                       </div>
                     </div>
                     <span className="text-[11px] leading-snug text-slate-500">
-                      Boje BAJS stanica označavaju broj slobodnih bicikala i mjesta
+                      Boje BAJS stanica označavaju broj slobodnih bicikala i
+                      mjesta
                     </span>
                   </motion.div>
                 </div>

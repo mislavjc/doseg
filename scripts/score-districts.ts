@@ -20,6 +20,7 @@ import {
   KM_PER_DEG_LAT,
   KM_PER_DEG_LON,
 } from "../lib/transit-graph"
+import { fastDistKm } from "../lib/geo"
 import { getWalkGraph } from "../lib/walk-graph"
 import { countReachableCells } from "../lib/walk-expand"
 import type { BajsStation } from "../lib/bajs"
@@ -314,7 +315,9 @@ async function main() {
 
   console.error("Fetching BAJS station locations...")
   const bajsStations = await fetchIdealBajsStations()
-  console.error(`  ${bajsStations.length} stations (idealized: 1 bike, 1 dock each)`)
+  console.error(
+    `  ${bajsStations.length} stations (idealized: 1 bike, 1 dock each)`
+  )
 
   // Build merged stop+station coordinate map for BAJS walk expansion
   const bajsStopMap = new Map<string, { lat: number; lon: number }>()
@@ -432,6 +435,36 @@ async function main() {
   const points = generateSamplePoints(districts, gridM / 1000, populatedCells)
   console.error(`  ${points.length} sample points in populated areas`)
 
+  // --- Transit desert metrics: distance to nearest stop per sample point ---
+  console.error("Computing transit desert metrics...")
+  const DETOUR_FACTOR = 1.3 // walking distance ≈ 1.3× air distance
+  const DESERT_THRESHOLD_KM = 0.5 / DETOUR_FACTOR // 500m walking ≈ 385m air
+  const stopCoords = [...transitGraph.stops.values()].map((s) => ({
+    lat: s.lat,
+    lon: s.lon,
+  }))
+  const districtDesertCount: number[] = districts.map(() => 0)
+  const districtNearestSum: number[] = districts.map(() => 0)
+  const districtPointCount: number[] = districts.map(() => 0)
+
+  for (const point of points) {
+    let minDistKm = Infinity
+    for (const stop of stopCoords) {
+      const d = fastDistKm(point.lat, point.lon, stop.lat, stop.lon)
+      if (d < minDistKm) minDistKm = d
+    }
+    districtPointCount[point.districtIdx]++
+    districtNearestSum[point.districtIdx] += minDistKm * 1000
+    if (minDistKm > DESERT_THRESHOLD_KM) {
+      districtDesertCount[point.districtIdx]++
+    }
+  }
+
+  const totalDesertPoints = districtDesertCount.reduce((a, b) => a + b, 0)
+  console.error(
+    `  ${totalDesertPoints} of ${points.length} points (${Math.round((totalDesertPoints / points.length) * 100)}%) are >500m from nearest stop`
+  )
+
   // Pre-allocate reusable buffer for walking Dijkstra
   const walkBuf = new Float64Array(walkGraph.nodeCount)
 
@@ -443,11 +476,13 @@ async function main() {
       bajsStations?: readonly BajsStation[]
       excludeModes?: ReadonlySet<import("../lib/transit").TransitMode>
       stopMap?: ReadonlyMap<string, { lat: number; lon: number }>
+      departureOverride?: number
     } = {}
   ) {
     const scores: number[][] = districts.map(() => [])
-    const best: { reached: number; lat: number; lon: number }[] =
-      districts.map(() => ({ reached: -1, lat: 0, lon: 0 }))
+    const best: { reached: number; lat: number; lon: number }[] = districts.map(
+      () => ({ reached: -1, lat: 0, lon: 0 })
+    )
     const t = performance.now()
     const stopMapForWalk = opts.stopMap ?? transitGraph.stops
 
@@ -459,7 +494,7 @@ async function main() {
         transitGraph,
         point.lat,
         point.lon,
-        departureSeconds,
+        opts.departureOverride ?? departureSeconds,
         maxSeconds,
         opts.bajsStations,
         opts.excludeModes
@@ -500,17 +535,24 @@ async function main() {
   const t0 = performance.now()
 
   // --- Pass 1: Bus+tram only (no rail, no BAJS) → base score ---
-  const pass1 = scoringPass("Pass 1/3: Scoring bus+tram only...", {
+  const pass1 = scoringPass("Pass 1/4: Scoring bus+tram only...", {
     excludeModes: EXCLUDE_RAIL,
   })
 
   // --- Pass 2: Bus+tram+train (no BAJS) → train boost ---
-  const pass2 = scoringPass("Pass 2/3: Scoring bus+tram+train...")
+  const pass2 = scoringPass("Pass 2/4: Scoring bus+tram+train...")
 
   // --- Pass 3: Bus+tram+train+BAJS → BAJS boost ---
-  const pass3 = scoringPass("Pass 3/3: Scoring bus+tram+train+BAJS...", {
+  const pass3 = scoringPass("Pass 3/4: Scoring bus+tram+train+BAJS...", {
     bajsStations,
     stopMap: bajsStopMap,
+  })
+
+  // --- Pass 4: Evening off-peak (21:00) bus+tram only → peak vs off-peak gap ---
+  const eveningDeparture = 21 * 3600
+  const pass4 = scoringPass("Pass 4/4: Scoring evening off-peak (21:00)...", {
+    excludeModes: EXCLUDE_RAIL,
+    departureOverride: eveningDeparture,
   })
 
   // Aggregate per district
@@ -518,6 +560,13 @@ async function main() {
     return scores.length > 0
       ? scores.reduce((a, b) => a + b, 0) / scores.length
       : 0
+  }
+
+  function stddev(scores: number[], avg: number): number {
+    if (scores.length < 2) return 0
+    const variance =
+      scores.reduce((s, v) => s + (v - avg) ** 2, 0) / scores.length
+    return Math.sqrt(variance)
   }
 
   function boostPct(base: number, boosted: number): number {
@@ -528,19 +577,42 @@ async function main() {
     const baseAvg = avgScore(pass1.scores[i])
     const trainAvg = avgScore(pass2.scores[i])
     const bajsAvg = avgScore(pass3.scores[i])
+    const eveningAvg = avgScore(pass4.scores[i])
+    const baseScores = pass1.scores[i]
     const best = pass2.best[i] // best point from full transit (with trains)
     const transit = districtTransit[i]
+    const peakOffpeakDrop =
+      baseAvg > 0 ? Math.round(((baseAvg - eveningAvg) / baseAvg) * 100) : 0
     return {
       name: d.name,
       osmId: d.osmId,
       population: d.population,
-      sampleCount: pass1.scores[i].length,
+      sampleCount: baseScores.length,
       avgReachableCells: Math.round(baseAvg),
+      minReachableCells:
+        baseScores.length > 0
+          ? baseScores.reduce((m, v) => Math.min(m, v), Infinity)
+          : 0,
+      maxReachableCells:
+        baseScores.length > 0
+          ? baseScores.reduce((m, v) => Math.max(m, v), -Infinity)
+          : 0,
+      stddevReachableCells: Math.round(stddev(baseScores, baseAvg)),
+      eveningAvgReachableCells: Math.round(eveningAvg),
+      peakOffpeakDrop,
       trainAvgReachableCells: Math.round(trainAvg),
       trainBoostPct: boostPct(baseAvg, trainAvg),
       bajsAvgReachableCells: Math.round(bajsAvg),
       bajsBoostPct: boostPct(trainAvg, bajsAvg),
       bajsStations: districtBajsStationCount[i],
+      desertPct:
+        districtPointCount[i] > 0
+          ? Math.round((districtDesertCount[i] / districtPointCount[i]) * 100)
+          : 0,
+      avgNearestStopM:
+        districtPointCount[i] > 0
+          ? Math.round(districtNearestSum[i] / districtPointCount[i])
+          : 0,
       bestPoint: { lat: +best.lat.toFixed(4), lon: +best.lon.toFixed(4) },
       tramLines: transit.tramLines,
       busLines: transit.busLines,
@@ -569,6 +641,7 @@ async function main() {
     totalSamplePoints: points.length,
     totalGridCells: walkGraph.grid.size,
     bajsTotalStations: bajsStations.length,
+    cityDesertPct: Math.round((totalDesertPoints / points.length) * 100),
     districts: ranked,
   }
 
@@ -580,14 +653,14 @@ async function main() {
 
   // Print summary table
   console.error(
-    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  Train  BAJS`
+    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  ±Std   Eve  Drop  Desert`
   )
-  console.error("─".repeat(72))
+  console.error("─".repeat(88))
   for (const d of ranked) {
-    const trainStr = d.trainBoostPct > 0 ? `+${d.trainBoostPct}%` : "—"
-    const bajsStr = d.bajsBoostPct > 0 ? `+${d.bajsBoostPct}%` : "—"
+    const dropStr = d.peakOffpeakDrop > 0 ? `-${d.peakOffpeakDrop}%` : "—"
+    const desertStr = d.desertPct > 0 ? `${d.desertPct}%` : "—"
     console.error(
-      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${trainStr.padStart(5)}  ${bajsStr.padStart(5)}`
+      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${d.stddevReachableCells.toString().padStart(4)}  ${d.eveningAvgReachableCells.toString().padStart(4)}  ${dropStr.padStart(4)}  ${desertStr.padStart(5)}`
     )
   }
 }

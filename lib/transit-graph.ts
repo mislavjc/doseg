@@ -362,7 +362,8 @@ export function computeTransitLegDuration(
 
   const boardDelay = tripRT ? getStopDelay(tripRT, boardIdx) : 0
   let durationSeconds =
-    result.waitSeconds + (pattern.stopOffsets[alightIdx] - pattern.stopOffsets[boardIdx])
+    result.waitSeconds +
+    (pattern.stopOffsets[alightIdx] - pattern.stopOffsets[boardIdx])
   let delaySeconds: number | undefined
 
   if (tripRT) {
@@ -518,9 +519,10 @@ export function computeTravelTimes(
       }
 
       if (bajsAdjacency) {
-        for (const { key: stationKey, distKm } of bajsAdjacency.stopWalkLinks.get(
-          key
-        ) ?? []) {
+        for (const {
+          key: stationKey,
+          distKm,
+        } of bajsAdjacency.stopWalkLinks.get(key) ?? []) {
           relax(stationKey, time + (distKm / WALK_SPEED) * 3600, {
             fromKey: key,
             kind: "WALK",
@@ -540,9 +542,10 @@ export function computeTravelTimes(
       }
 
       if (station.isRenting && station.bikesAvailable > 0) {
-        for (const { key: targetKey, distKm } of bajsAdjacency.stationBikeLinks.get(
-          key
-        ) ?? []) {
+        for (const {
+          key: targetKey,
+          distKm,
+        } of bajsAdjacency.stationBikeLinks.get(key) ?? []) {
           relax(
             targetKey,
             time +
@@ -691,7 +694,9 @@ export function computeAvgTravelTimes(
       }
 
       if (bajsAdj) {
-        for (const { key: stationKey, distKm } of bajsAdj.stopWalkLinks.get(key) ?? []) {
+        for (const { key: stationKey, distKm } of bajsAdj.stopWalkLinks.get(
+          key
+        ) ?? []) {
           const walkTime = time + (distKm / WALK_SPEED) * 3600
           const existing = best.get(stationKey) ?? Infinity
           if (walkTime < existing) {
@@ -703,7 +708,9 @@ export function computeAvgTravelTimes(
     }
 
     if (station && bajsAdj) {
-      for (const { key: stopKey, distKm } of bajsAdj.stationWalkLinks.get(key) ?? []) {
+      for (const { key: stopKey, distKm } of bajsAdj.stationWalkLinks.get(
+        key
+      ) ?? []) {
         const walkTime = time + (distKm / WALK_SPEED) * 3600
         const existing = best.get(stopKey) ?? Infinity
         if (walkTime < existing) {
@@ -713,9 +720,14 @@ export function computeAvgTravelTimes(
       }
 
       if (station.isRenting && station.bikesAvailable > 0) {
-        for (const { key: targetKey, distKm } of bajsAdj.stationBikeLinks.get(key) ?? []) {
+        for (const { key: targetKey, distKm } of bajsAdj.stationBikeLinks.get(
+          key
+        ) ?? []) {
           const bikeTime =
-            time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
+            time +
+            BAJS_PICKUP_SECONDS +
+            BAJS_DROPOFF_SECONDS +
+            (distKm / BAJS_SPEED) * 3600
           const existing = best.get(targetKey) ?? Infinity
           if (bikeTime < existing) {
             best.set(targetKey, bikeTime)

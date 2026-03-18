@@ -49,7 +49,11 @@ const BIKE_ALLOWED_VALUES = new Set([
   "destination",
 ])
 
-import { KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm as distKm } from "../lib/geo"
+import {
+  KM_PER_DEG_LAT,
+  KM_PER_DEG_LON,
+  fastDistKm as distKm,
+} from "../lib/geo"
 
 interface OsmItem {
   type: "node" | "way" | "relation"

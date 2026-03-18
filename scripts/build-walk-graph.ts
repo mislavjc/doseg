@@ -49,7 +49,11 @@ const WALKABLE_HIGHWAYS = new Set([
   "service",
 ])
 
-import { KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm as distKm } from "../lib/geo"
+import {
+  KM_PER_DEG_LAT,
+  KM_PER_DEG_LON,
+  fastDistKm as distKm,
+} from "../lib/geo"
 
 // --- SRTM elevation data ---
 

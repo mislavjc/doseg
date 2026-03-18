@@ -161,7 +161,9 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                   <span>{formatDistance(itinerary.walkDistance)} hodanja</span>
                   {itinerary.bikeDistance > 0 && <span aria-hidden>·</span>}
                   {itinerary.bikeDistance > 0 && (
-                    <span>{formatDistance(itinerary.bikeDistance)} BAJS voznje</span>
+                    <span>
+                      {formatDistance(itinerary.bikeDistance)} BAJS voznje
+                    </span>
                   )}
                 </div>
 

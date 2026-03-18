@@ -33,6 +33,7 @@ export interface IsochroneRoutingPayload {
 
 export type IsochroneResponse = FeatureCollection & {
   realtime?: boolean
+  walkRing?: FeatureCollection
 }
 
 export interface IsochroneRoutingResponse {
@@ -53,7 +54,7 @@ function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
 export async function fetchIsochrone(
   params: IsochroneParams,
   signal?: AbortSignal
-) : Promise<IsochroneResponse> {
+): Promise<IsochroneResponse> {
   const searchParams = buildIsochroneSearchParams(params)
   searchParams.set("routing", "0")
   const response = await fetch(`/api/isochrone?${searchParams.toString()}`, {

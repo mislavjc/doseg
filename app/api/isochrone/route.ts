@@ -75,9 +75,9 @@ function generateFeatures(
       const t1 = travelTimes.get(pattern.stopKeys[i])
       const t2 = travelTimes.get(pattern.stopKeys[i + 1])
 
-      if (t1 === undefined && t2 === undefined) continue
-      const time = Math.min(t1 ?? Infinity, t2 ?? Infinity)
-      if (time > MAX_SECONDS) continue
+      if (t1 === undefined || t2 === undefined) continue
+      if (t1 > MAX_SECONDS || t2 > MAX_SECONDS) continue
+      const time = Math.min(t1, t2)
 
       const startIdx = Math.round((i * (numPts - 1)) / (numStops - 1))
       const endIdx = Math.round(((i + 1) * (numPts - 1)) / (numStops - 1))
@@ -103,7 +103,9 @@ function generateFeatures(
   }))
 }
 
-function buildRoutingPayload(state: ReachabilityState): IsochroneRoutingPayload {
+function buildRoutingPayload(
+  state: ReachabilityState
+): IsochroneRoutingPayload {
   const graph = state.graph
   const preds = state.preds
   const delays = state.delays
@@ -248,6 +250,7 @@ export async function GET(request: NextRequest) {
     const tState = performance.now()
 
     let features: GeoJSON.Feature[] = []
+    let walkRingFeatures: GeoJSON.Feature[] = []
     let tWalk = tState
     if (routingMode !== "only") {
       const graph = state.graph
@@ -262,6 +265,15 @@ export async function GET(request: NextRequest) {
         lon
       )
       features = [...transitFeatures, ...walkFeatures]
+
+      // Walk-only ring: shows how far you get by just walking (no transit)
+      walkRingFeatures = expandWalking(
+        walkGraph,
+        new Map(),
+        graph.stops,
+        lat,
+        lon
+      )
       tWalk = performance.now()
     }
 
@@ -270,6 +282,11 @@ export async function GET(request: NextRequest) {
     const tPayload = performance.now()
     const realtime = state.rtData.size > 0
 
+    const walkRing =
+      walkRingFeatures.length > 0
+        ? { type: "FeatureCollection" as const, features: walkRingFeatures }
+        : undefined
+
     const payload =
       routingMode === "only"
         ? { routing, realtime }
@@ -277,12 +294,14 @@ export async function GET(request: NextRequest) {
           ? {
               type: "FeatureCollection" as const,
               features,
+              walkRing,
               routing,
               realtime,
             }
           : {
               type: "FeatureCollection" as const,
               features,
+              walkRing,
               realtime,
             }
     const { response, serializeMs } = jsonResponse(request, payload)

@@ -77,10 +77,12 @@ export function TransitMap() {
   const exactRouteTimerRef = useRef<number>(0)
   const exactRouteSeqRef = useRef(0)
   const routingDataRef = useRef<RoutingData | null>(null)
-  const handleDestinationRef = useRef<((lat: number, lng: number) => void) | null>(
+  const handleDestinationRef = useRef<
+    ((lat: number, lng: number) => void) | null
+  >(null)
+  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(
     null
   )
-  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(null)
   const lastNearestRef = useRef<string | null>(null)
   const routeTailOriginRef = useRef<[number, number] | null>(null)
   const rafRef = useRef<number>(0)
@@ -140,6 +142,7 @@ export function TransitMap() {
       center: ZAGREB,
       zoom: 12,
       attributionControl: false,
+      canvasContextAttributes: { preserveDrawingBuffer: true },
     })
 
     map.getContainer().addEventListener(
@@ -172,6 +175,7 @@ export function TransitMap() {
         id: "isochrone-core",
         type: "line",
         source: "isochrone",
+        filter: ["<=", ["get", "time"], 2700],
         paint: {
           "line-color": TIME_COLOR_STOPS,
           "line-width": [
@@ -197,6 +201,41 @@ export function TransitMap() {
             0.65,
           ],
           "line-blur": ["interpolate", ["linear"], ["zoom"], 10, 1, 14, 0.5],
+        },
+        layout: { "line-cap": "round", "line-join": "round" },
+      })
+
+      // Walk-ring: walking-only reach for comparison
+      map.addSource("walk-ring", { type: "geojson", data: EMPTY_FC })
+      map.addLayer({
+        id: "walk-ring",
+        type: "line",
+        source: "walk-ring",
+        paint: {
+          "line-color": TIME_COLOR_STOPS,
+          "line-width": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10,
+            0.8,
+            13,
+            1.2,
+            16,
+            2,
+          ],
+          "line-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10,
+            0.15,
+            13,
+            0.25,
+            16,
+            0.35,
+          ],
+          "line-dasharray": [2, 3],
         },
         layout: { "line-cap": "round", "line-join": "round" },
       })
@@ -632,6 +671,8 @@ export function TransitMap() {
     if (originLat === null || originLon === null) {
       const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
       if (isoSource) isoSource.setData(EMPTY_FC)
+      const walkRingSrc = map.getSource("walk-ring") as maplibregl.GeoJSONSource
+      if (walkRingSrc) walkRingSrc.setData(EMPTY_FC)
       map.getCanvas().style.cursor = ""
       originRef.current = null
       routeTailOriginRef.current = null
@@ -683,6 +724,12 @@ export function TransitMap() {
         if (isoController.signal.aborted) return
         const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
         if (isoSource) isoSource.setData(geojson)
+        const walkRingSrc = map.getSource(
+          "walk-ring"
+        ) as maplibregl.GeoJSONSource
+        if (walkRingSrc) {
+          walkRingSrc.setData(geojson.walkRing ?? EMPTY_FC)
+        }
         setLoading(false)
         map.getCanvas().style.cursor = "crosshair"
       })
@@ -883,19 +930,27 @@ export function TransitMap() {
               <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-1.5">
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Dostupno</span>
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
+                    Dostupno
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">0 bic.</span>
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
+                    0 bic.
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Puna</span>
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
+                    Puna
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Ne radi</span>
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
+                    Ne radi
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -959,6 +1014,47 @@ export function TransitMap() {
           </svg>
           <span className="hidden sm:inline">O projektu</span>
         </Link>
+
+        <AnimatePresence>
+          {hasOrigin && (
+            <motion.button
+              key="export"
+              type="button"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2, ease }}
+              className="absolute right-3 bottom-4 z-10 flex h-[36px] w-[36px] items-center justify-center rounded-xl bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md transition-colors hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
+              title="Spremi kao sliku"
+              aria-label="Spremi kartu kao PNG sliku"
+              onClick={() => {
+                const map = mapRef.current
+                if (!map) return
+                const canvas = map.getCanvas()
+                const link = document.createElement("a")
+                link.download = "doseg.png"
+                link.href = canvas.toDataURL("image/png")
+                link.click()
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         <OnboardingDialog />
       </div>

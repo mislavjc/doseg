@@ -3,6 +3,7 @@ import type { WalkingGraph } from "./walk-graph"
 
 const WALK_SPEED = 5 // km/h
 const MAX_SECONDS = 45 * 60
+const RENDER_CAP_SECONDS = MAX_SECONDS - 60 // trim fringe edges near boundary
 const MIN_RENDER_EDGE_METERS = 40
 
 // Pre-computed: converts edge distance in cm to walk time in seconds
@@ -55,7 +56,6 @@ function findNearestNode(
 
   return bestIdx
 }
-
 
 function getTransitStopSnaps(
   graph: WalkingGraph,
@@ -244,6 +244,7 @@ export function expandWalking(
       const toIdx = edgeTargets[e]
       const toTime = best[toIdx]
       if (toTime === Infinity || toIdx <= nodeIdx) continue
+      if (nodeTime > RENDER_CAP_SECONDS || toTime > RENDER_CAP_SECONDS) continue
       if (edgeDistCm[e] < MIN_RENDER_EDGE_METERS * 100) continue
 
       const ti2 = toIdx * 2

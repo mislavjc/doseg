@@ -23,6 +23,13 @@ interface DistrictScore {
   bajsAvgReachableCells: number
   bajsBoostPct: number
   bajsStations: number
+  minReachableCells?: number
+  maxReachableCells?: number
+  stddevReachableCells?: number
+  eveningAvgReachableCells?: number
+  peakOffpeakDrop?: number
+  desertPct?: number
+  avgNearestStopM?: number
   rank: number
   score: number
   bestPoint: { lat: number; lon: number }
@@ -41,6 +48,7 @@ interface ScoreData {
   totalSamplePoints: number
   totalGridCells: number
   bajsTotalStations: number
+  cityDesertPct?: number
   districts: DistrictScore[]
 }
 
@@ -77,6 +85,22 @@ function pct(cells: number, total: number): string {
   if (p < 0.1) return "<0,1"
   if (p < 1) return p.toFixed(1).replace(".", ",")
   return Math.round(p).toString()
+}
+
+/** Compute weighted percentage change between two district metrics. */
+function weightedPctChange(
+  districts: DistrictScore[],
+  baseValue: (d: DistrictScore) => number,
+  compValue: (d: DistrictScore) => number,
+  totalSamplePoints: number
+): number {
+  let baseW = 0
+  let compW = 0
+  for (const d of districts) {
+    baseW += baseValue(d) * d.sampleCount
+    compW += compValue(d) * d.sampleCount
+  }
+  return baseW > 0 ? Math.round(((compW - baseW) / baseW) * 100) : 0
 }
 
 export default function StatistikaPage() {
@@ -138,22 +162,46 @@ export default function StatistikaPage() {
   const hasBajs = (data.bajsTotalStations ?? 0) > 0
   const bajsTotalStations = data.bajsTotalStations ?? 0
   const cityBajsBoost = hasBajs
-    ? (() => {
-        const baseW = data.districts.reduce(
-          (s, d) => s + d.avgReachableCells * d.sampleCount,
-          0
-        )
-        const bajsW = data.districts.reduce(
-          (s, d) => s + (d.bajsAvgReachableCells ?? d.avgReachableCells) * d.sampleCount,
-          0
-        )
-        return Math.round(((bajsW - baseW) / baseW) * 100)
-      })()
+    ? weightedPctChange(
+        data.districts,
+        (d) => d.avgReachableCells,
+        (d) => d.bajsAvgReachableCells ?? d.avgReachableCells,
+        data.totalSamplePoints
+      )
     : 0
   const bajsRankedByBoost = hasBajs
-    ? [...data.districts].sort((a, b) => (b.bajsBoostPct ?? 0) - (a.bajsBoostPct ?? 0))
+    ? [...data.districts].sort(
+        (a, b) => (b.bajsBoostPct ?? 0) - (a.bajsBoostPct ?? 0)
+      )
     : []
   const topBajsBeneficiary = bajsRankedByBoost[0]
+
+  // Transit desert insights
+  const hasDesertData = data.districts.some((d) => d.desertPct !== undefined)
+  const desertDistricts = hasDesertData
+    ? [...data.districts]
+        .filter((d) => (d.desertPct ?? 0) > 0)
+        .sort((a, b) => (b.desertPct ?? 0) - (a.desertPct ?? 0))
+    : []
+  const lowFreqDistricts = data.districts.filter((d) => d.avgHeadwayMin >= 30)
+
+  // Peak vs off-peak insights
+  const hasEveningData = data.districts.some(
+    (d) => d.eveningAvgReachableCells !== undefined
+  )
+  const eveningRankedByDrop = hasEveningData
+    ? [...data.districts]
+        .filter((d) => (d.peakOffpeakDrop ?? 0) > 0)
+        .sort((a, b) => (b.peakOffpeakDrop ?? 0) - (a.peakOffpeakDrop ?? 0))
+    : []
+  const cityEveningDrop = hasEveningData
+    ? -weightedPctChange(
+        data.districts,
+        (d) => d.avgReachableCells,
+        (d) => d.eveningAvgReachableCells ?? d.avgReachableCells,
+        data.totalSamplePoints
+      )
+    : 0
 
   // Group by quality band
   const bands = [
@@ -274,8 +322,12 @@ export default function StatistikaPage() {
           <div className="flex items-baseline gap-1.5">
             <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
               {(() => {
-                const allTram = new Set(data.districts.flatMap((d) => d.tramLines))
-                const allBus = new Set(data.districts.flatMap((d) => d.busLines))
+                const allTram = new Set(
+                  data.districts.flatMap((d) => d.tramLines)
+                )
+                const allBus = new Set(
+                  data.districts.flatMap((d) => d.busLines)
+                )
                 return allTram.size + allBus.size
               })()}
             </span>
@@ -284,12 +336,17 @@ export default function StatistikaPage() {
             </span>
           </div>
           <div className="mt-2 text-[12px] leading-snug text-slate-500 dark:text-slate-400">
-            {data.districts.reduce((s, d) => s + d.stops, 0).toLocaleString("hr-HR")} stajališta ukupno.
+            {data.districts
+              .reduce((s, d) => s + d.stops, 0)
+              .toLocaleString("hr-HR")}{" "}
+            stajališta ukupno.
           </div>
         </div>
 
         {(() => {
-          const districtsWithTrains = data.districts.filter((d) => (d.trainLines?.length ?? 0) > 0).length
+          const districtsWithTrains = data.districts.filter(
+            (d) => (d.trainLines?.length ?? 0) > 0
+          ).length
           return districtsWithTrains > 0 ? (
             <div className="flex flex-col justify-between rounded-2xl bg-teal-50 p-6 shadow-sm ring-1 ring-teal-200/50 dark:bg-teal-950/20 dark:ring-teal-500/20">
               <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-teal-700 uppercase dark:text-teal-400">
@@ -304,7 +361,8 @@ export default function StatistikaPage() {
                 </span>
               </div>
               <div className="mt-2 text-[12px] leading-snug text-teal-700/80 dark:text-teal-400/80">
-                Rijedak interval (30–60 min) ograničava utjecaj na kratkim putovanjima.
+                Rijedak interval (30–60 min) ograničava utjecaj na kratkim
+                putovanjima.
               </div>
             </div>
           ) : null
@@ -336,10 +394,20 @@ export default function StatistikaPage() {
           <section className="flex flex-col rounded-3xl bg-slate-100 p-8 dark:bg-white/5">
             <div className="mb-6 flex items-center gap-3 text-slate-800 dark:text-slate-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-white/10">
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 16v-4"/>
-                  <path d="M12 8h.01"/>
+                <svg
+                  aria-hidden="true"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
                 </svg>
               </span>
               <h2 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
@@ -389,10 +457,20 @@ export default function StatistikaPage() {
           <section className="flex flex-col rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
             <div className="mb-6 flex items-center gap-3 text-rose-800 dark:text-rose-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-rose-500/20">
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-                  <path d="M12 9v4"/>
-                  <path d="M12 17h.01"/>
+                <svg
+                  aria-hidden="true"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
                 </svg>
               </span>
               <h2 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
@@ -420,6 +498,247 @@ export default function StatistikaPage() {
         </div>
       </div>
 
+      {/* Transit desert section */}
+      {(hasDesertData || lowFreqDistricts.length > 0) && (
+        <section className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-red-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Prometne pustinje
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Područja gdje je najbliža stanica udaljena više od 500 metara
+              zračne linije (realna pješačka udaljenost je 20-40% veća) ili gdje
+              prijevoz dolazi rjeđe od 2 puta na sat.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Desert ranking */}
+            {hasDesertData && desertDistricts.length > 0 && (
+              <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+                <div className="mb-2 flex items-baseline justify-between">
+                  <h3 className="font-sans text-[11px] font-bold tracking-widest text-red-700 uppercase dark:text-red-400">
+                    Daleko od stanice (&gt;500m)
+                  </h3>
+                  {data.cityDesertPct !== undefined && (
+                    <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">
+                      {data.cityDesertPct}% grada
+                    </span>
+                  )}
+                </div>
+                <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+                  Udio stanovnika u svakoj četvrti koji žive više od 500m od
+                  najbliže stanice javnog prijevoza.
+                </p>
+                <RankingList
+                  items={desertDistricts}
+                  value={(d) => d.desertPct ?? 0}
+                  label={(d) => `${d.desertPct}%`}
+                  trailing={(d) => `~${d.avgNearestStopM}m`}
+                  color={{
+                    text: "text-red-600",
+                    textDark: "text-red-400",
+                    bg: "bg-red-100",
+                    bgDark: "bg-red-900/30",
+                    bar: "bg-red-500",
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Summary + interpretation */}
+            {hasDesertData && (
+              <div className="flex flex-col rounded-3xl bg-red-50/50 p-8 dark:bg-red-950/10">
+                <div className="mb-6 flex items-center gap-3 text-red-800 dark:text-red-200">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-red-500/20">
+                    <svg
+                      aria-hidden="true"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  </span>
+                  <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                    Koliko je to loše?
+                  </h3>
+                </div>
+                <div className="mb-8 grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="font-serif text-[36px] leading-none text-red-600 tabular-nums dark:text-red-400">
+                      {data.cityDesertPct ?? 0}%
+                    </div>
+                    <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                      uzorkovanih točaka grada je
+                      <br />
+                      &gt;500m od stanice
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                      {desertDistricts.length}
+                    </div>
+                    <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                      od {data.districts.length} četvrti
+                      <br />
+                      ima barem jednu pustinjsku zonu
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                  <p>
+                    Najudaljenija četvrt je{" "}
+                    <strong className="font-medium text-slate-900 dark:text-slate-100">
+                      {desertDistricts[0]?.name}
+                    </strong>{" "}
+                    — {desertDistricts[0]?.desertPct}% uzorkovanih točaka je
+                    više od 500m zračne linije od najbliže stanice, s prosječnom
+                    udaljenošću od{" "}
+                    <strong className="font-medium text-slate-900 dark:text-slate-100">
+                      ~{desertDistricts[0]?.avgNearestStopM}m
+                    </strong>
+                    .
+                  </p>
+                  {lowFreqDistricts.length > 0 && (
+                    <p>
+                      Dodatno,{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {lowFreqDistricts.length}
+                      </strong>{" "}
+                      {lowFreqDistricts.length === 1
+                        ? "četvrt ima"
+                        : "četvrti imaju"}{" "}
+                      medijan intervala ≥30 min — manje od 2 polaska na sat (
+                      {lowFreqDistricts.map((d) => d.name).join(", ")}).
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Peak vs off-peak section */}
+      {hasEveningData && eveningRankedByDrop.length > 0 && (
+        <section className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-indigo-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Jutro vs. večer
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Koliko dostupnosti svaka četvrt gubi navečer (21:00) u usporedbi s
+              jutarnjim vršnim satom ({data.departureTime}). Ista mreža, manji
+              broj polazaka.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Drop ranking */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="mb-2 flex items-baseline justify-between">
+                <h3 className="font-sans text-[11px] font-bold tracking-widest text-indigo-700 uppercase dark:text-indigo-400">
+                  Najveći pad navečer
+                </h3>
+                <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">
+                  -{cityEveningDrop}% prosjek
+                </span>
+              </div>
+              <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+                Postotak smanjenja dosežnih ćelija u 30 minuta navečer u
+                usporedbi s jutarnjim vršnim satom.
+              </p>
+              <div className="space-y-3">
+                <RankingList
+                  items={eveningRankedByDrop}
+                  value={(d) => d.peakOffpeakDrop ?? 0}
+                  label={(d) => `-${d.peakOffpeakDrop}%`}
+                  trailing={(d) =>
+                    `${pct(d.eveningAvgReachableCells ?? d.avgReachableCells, data.totalGridCells)}%`
+                  }
+                  color={{
+                    text: "text-indigo-600",
+                    textDark: "text-indigo-400",
+                    bg: "bg-indigo-100",
+                    bgDark: "bg-indigo-900/30",
+                    bar: "bg-indigo-500",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Interpretation */}
+            <div className="flex flex-col rounded-3xl bg-indigo-50/50 p-8 dark:bg-indigo-950/10">
+              <div className="mb-6 flex items-center gap-3 text-indigo-800 dark:text-indigo-200">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-indigo-500/20">
+                  <svg
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                  </svg>
+                </span>
+                <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                  Što se događa navečer?
+                </h3>
+              </div>
+              <div className="mb-8 grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-indigo-600 tabular-nums dark:text-indigo-400">
+                    -{cityEveningDrop}%
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    prosječni pad dosega
+                    <br />u cijelom gradu
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                    -{eveningRankedByDrop[0]?.peakOffpeakDrop ?? 0}%
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    najgori pad
+                    <br />({eveningRankedByDrop[0]?.name ?? "—"})
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                <p>
+                  Gradski prosjek pada za{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {cityEveningDrop}%
+                  </strong>{" "}
+                  navečer. Najviše gube rubne četvrti koje ovise o rijetkim
+                  autobusnim linijama, dok centar s gustom tramvajskom mrežom
+                  zadržava većinu povezanosti.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* BAJS Impact section */}
       {hasBajs && (
         <section className="mt-16 sm:mt-20">
@@ -431,9 +750,9 @@ export default function StatistikaPage() {
               </h2>
             </div>
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-              Koliko se dostupnost svake četvrti poboljšava kada se uz javni prijevoz
-              koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje je svaka
-              stanica operativna s barem jednim biciklom.
+              Koliko se dostupnost svake četvrti poboljšava kada se uz javni
+              prijevoz koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje
+              je svaka stanica operativna s barem jednim biciklom.
             </p>
           </div>
 
@@ -451,7 +770,10 @@ export default function StatistikaPage() {
               </span>
             </div>
             <div className="mx-auto max-w-5xl">
-              <div className="w-full overflow-hidden" style={{ aspectRatio: "960/620" }}>
+              <div
+                className="w-full overflow-hidden"
+                style={{ aspectRatio: "960/620" }}
+              >
                 <img
                   src="/district-bajs-map.svg"
                   alt="Karta utjecaja BAJS bicikala po četvrtima. Tamniji amber označava veći dobitak u dostupnosti."
@@ -467,37 +789,19 @@ export default function StatistikaPage() {
               <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
                 Tko najviše profitira
               </h3>
-              <div className="space-y-3">
-                {bajsRankedByBoost.slice(0, 8).map((d, i) => {
-                  const maxBoost = bajsRankedByBoost[0]?.bajsBoostPct ?? 1
-                  return (
-                    <div key={d.osmId} className="flex items-center gap-3">
-                      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
-                        {i + 1}.
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-baseline justify-between gap-2">
-                          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">
-                            {d.name}
-                          </span>
-                          <span className="shrink-0 font-serif text-[14px] font-medium text-amber-600 tabular-nums dark:text-amber-400">
-                            +{d.bajsBoostPct}%
-                          </span>
-                        </div>
-                        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
-                          <div
-                            className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
-                            style={{ width: `${(d.bajsBoostPct / maxBoost) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-                      <span className="shrink-0 text-[11px] text-slate-400 dark:text-slate-500">
-                        {d.bajsStations} st.
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
+              <RankingList
+                items={bajsRankedByBoost}
+                value={(d) => d.bajsBoostPct ?? 0}
+                label={(d) => `+${d.bajsBoostPct}%`}
+                trailing={(d) => `${d.bajsStations} st.`}
+                color={{
+                  text: "text-amber-600",
+                  textDark: "text-amber-400",
+                  bg: "bg-amber-100",
+                  bgDark: "bg-amber-900/30",
+                  bar: "bg-amber-500",
+                }}
+              />
             </div>
 
             {/* BAJS equity analysis */}
@@ -505,9 +809,19 @@ export default function StatistikaPage() {
               <div className="flex-1 rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
                 <div className="mb-6 flex items-center gap-3 text-amber-800 dark:text-amber-200">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-amber-500/20">
-                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="m16 10-4 4-4-4"/>
+                    <svg
+                      aria-hidden="true"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="m16 10-4 4-4-4" />
                     </svg>
                   </span>
                   <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
@@ -517,10 +831,21 @@ export default function StatistikaPage() {
                 <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
                   <p>
                     {(() => {
-                      const topHalf = data.districts.slice(0, Math.floor(data.districts.length / 2))
-                      const bottomHalf = data.districts.slice(Math.floor(data.districts.length / 2))
-                      const topBoost = topHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) / topHalf.length
-                      const bottomBoost = bottomHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) / bottomHalf.length
+                      const topHalf = data.districts.slice(
+                        0,
+                        Math.floor(data.districts.length / 2)
+                      )
+                      const bottomHalf = data.districts.slice(
+                        Math.floor(data.districts.length / 2)
+                      )
+                      const topBoost =
+                        topHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) /
+                        topHalf.length
+                      const bottomBoost =
+                        bottomHalf.reduce(
+                          (s, d) => s + (d.bajsBoostPct ?? 0),
+                          0
+                        ) / bottomHalf.length
                       const narrows = bottomBoost > topBoost
                       return narrows ? (
                         <>
@@ -544,8 +869,9 @@ export default function StatistikaPage() {
                           <strong className="font-medium text-slate-900 dark:text-slate-100">
                             +{Math.round(bottomBoost)}%
                           </strong>
-                          . BAJS stanice su koncentrirane u centru — proširenje mreže
-                          prema rubnim četvrtima moglo bi smanjiti nejednakost.
+                          . BAJS stanice su koncentrirane u centru — proširenje
+                          mreže prema rubnim četvrtima moglo bi smanjiti
+                          nejednakost.
                         </>
                       )
                     })()}
@@ -575,7 +901,9 @@ export default function StatistikaPage() {
                   </div>
                   <div className="text-center">
                     <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
-                      {topBajsBeneficiary ? `+${topBajsBeneficiary.bajsBoostPct}%` : "—"}
+                      {topBajsBeneficiary
+                        ? `+${topBajsBeneficiary.bajsBoostPct}%`
+                        : "—"}
                     </div>
                     <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
                       max. dobitak ({topBajsBeneficiary?.name ?? "—"})
@@ -637,7 +965,11 @@ export default function StatistikaPage() {
               Algoritam
             </span>
             <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-              Dijkstrina pretraga nad <strong className="font-medium text-slate-900 dark:text-slate-200">ZET GTFS</strong> i pješačkom mrežom.
+              Dijkstrina pretraga nad{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                ZET GTFS
+              </strong>{" "}
+              i pješačkom mrežom.
             </p>
           </div>
           <div className="flex flex-col gap-2 border-l-2 border-cyan-500 pl-4">
@@ -645,8 +977,14 @@ export default function StatistikaPage() {
               Raster
             </span>
             <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-              <strong className="font-medium text-slate-900 dark:text-slate-200">{data.gridSpacingM}m</strong> razmak ·{" "}
-              <strong className="font-medium text-slate-900 dark:text-slate-200">{data.totalSamplePoints.toLocaleString("hr-HR")}</strong> uzoraka u naseljima.
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                {data.gridSpacingM}m
+              </strong>{" "}
+              razmak ·{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                {data.totalSamplePoints.toLocaleString("hr-HR")}
+              </strong>{" "}
+              uzoraka u naseljima.
             </p>
           </div>
           <div className="flex flex-col gap-2 border-l-2 border-blue-500 pl-4">
@@ -654,7 +992,11 @@ export default function StatistikaPage() {
               Metrika
             </span>
             <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-              Udio dosežnih ćelija od ukupno <strong className="font-medium text-slate-900 dark:text-slate-200">{data.totalGridCells.toLocaleString("hr-HR")}</strong> u gradu.
+              Udio dosežnih ćelija od ukupno{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                {data.totalGridCells.toLocaleString("hr-HR")}
+              </strong>{" "}
+              u gradu.
             </p>
           </div>
           <div className="flex flex-col gap-2 border-l-2 border-purple-500 pl-4">
@@ -662,7 +1004,11 @@ export default function StatistikaPage() {
               Vozni red
             </span>
             <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-              Jutarnji vršni sat (polazak: <strong className="font-medium text-slate-900 dark:text-slate-200">{data.departureTime}</strong>). Bez kašnjenja.
+              Jutarnji vršni sat (polazak:{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                {data.departureTime}
+              </strong>
+              ). Bez kašnjenja.
             </p>
           </div>
           {hasBajs && (
@@ -671,14 +1017,25 @@ export default function StatistikaPage() {
                 BAJS
               </span>
               <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-                Idealni scenarij: <strong className="font-medium text-slate-900 dark:text-slate-200">{bajsTotalStations}</strong> stanica, svaka s 1 biciklom. Brzina <strong className="font-medium text-slate-900 dark:text-slate-200">14 km/h</strong>.
+                Idealni scenarij:{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-200">
+                  {bajsTotalStations}
+                </strong>{" "}
+                stanica, svaka s 1 biciklom. Brzina{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-200">
+                  14 km/h
+                </strong>
+                .
               </p>
             </div>
           )}
         </div>
         <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">
           <p className="font-sans text-[11px] font-medium tracking-wide text-slate-500 dark:text-slate-400">
-            Zadnji izračun proveden: <span className="text-slate-700 dark:text-slate-300">{generatedLabel}</span>
+            Zadnji izračun proveden:{" "}
+            <span className="text-slate-700 dark:text-slate-300">
+              {generatedLabel}
+            </span>
           </p>
         </div>
       </section>
@@ -687,6 +1044,64 @@ export default function StatistikaPage() {
 }
 
 // --- Components ---
+
+function RankingList({
+  items,
+  value,
+  label,
+  trailing,
+  color,
+}: {
+  items: DistrictScore[]
+  value: (d: DistrictScore) => number
+  label: (d: DistrictScore) => string
+  trailing: (d: DistrictScore) => string
+  color: {
+    text: string
+    textDark: string
+    bg: string
+    bgDark: string
+    bar: string
+  }
+}) {
+  const maxVal = items.length > 0 ? value(items[0]) : 1
+  return (
+    <div className="space-y-3">
+      {items.slice(0, 8).map((d, i) => (
+        <div key={d.osmId} className="flex items-center gap-3">
+          <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
+            {i + 1}.
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-baseline justify-between gap-2">
+              <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                {d.name}
+              </span>
+              <span
+                className={`shrink-0 font-serif text-[14px] font-medium tabular-nums ${color.text} dark:${color.textDark}`}
+              >
+                {label(d)}
+              </span>
+            </div>
+            <div
+              className={`relative h-1.5 w-full overflow-hidden rounded-full ${color.bg} dark:${color.bgDark}`}
+            >
+              <div
+                className={`absolute inset-y-0 left-0 rounded-full ${color.bar}`}
+                style={{
+                  width: `${(value(d) / maxVal) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+          <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+            {trailing(d)}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -741,9 +1156,9 @@ function StatHero({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {maxMinutes} minuta
             </strong>{" "}
-            javnim prijevozom, hodanjem i BAJS bike-sharingom. U jednom jutarnjem
-            vršnom satu vidi se vrlo jasan urbani jaz između središta i rubova
-            grada — ali i koliko bicikli mogu pomoći.
+            javnim prijevozom, hodanjem i BAJS bike-sharingom. U jednom
+            jutarnjem vršnom satu vidi se vrlo jasan urbani jaz između središta
+            i rubova grada — ali i koliko bicikli mogu pomoći.
           </p>
           <div className="mt-10 flex flex-wrap gap-x-12 gap-y-8 border-t border-black/5 pt-8 dark:border-white/5">
             <HeroStat
@@ -770,7 +1185,18 @@ function StatHero({
               Jutarnji presjek
             </h2>
             <div className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 dark:bg-white/5">
-              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500">
+              <svg
+                aria-hidden="true"
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-slate-500"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
@@ -867,7 +1293,8 @@ function HeroDistrictSummary({
 }) {
   const radius = 16
   const circumference = 2 * Math.PI * radius
-  const strokeDashoffset = circumference - (district.score / 100) * circumference
+  const strokeDashoffset =
+    circumference - (district.score / 100) * circumference
 
   return (
     <div className="group relative flex items-center justify-between gap-4 rounded-2xl border border-black/5 p-3 transition-colors hover:bg-slate-50/50 dark:border-white/5 dark:hover:bg-white/2">
@@ -880,7 +1307,11 @@ function HeroDistrictSummary({
         </div>
       </div>
       <div className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-        <svg aria-hidden="true" className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 40 40">
+        <svg
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full -rotate-90"
+          viewBox="0 0 40 40"
+        >
           <circle
             cx="20"
             cy="20"
@@ -1022,7 +1453,11 @@ function DistrictCard({
     >
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <DistrictEmblem pathData={emblemPath} rank={d.rank} color={bandColor} />
+          <DistrictEmblem
+            pathData={emblemPath}
+            rank={d.rank}
+            color={bandColor}
+          />
           <h4 className="mt-5 font-serif text-[22px] leading-tight tracking-tight text-slate-900 dark:text-slate-100">
             {d.name}
           </h4>
@@ -1031,7 +1466,11 @@ function DistrictCard({
         {/* Circular Score */}
         <div className="flex flex-col items-end gap-1.5">
           <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
-            <svg aria-hidden="true" className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 64 64">
+            <svg
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full -rotate-90"
+              viewBox="0 0 64 64"
+            >
               <circle
                 cx="32"
                 cy="32"
@@ -1065,7 +1504,9 @@ function DistrictCard({
               Indeks
             </span>
             <span className="mt-0.5 block font-sans text-[9px] text-slate-500 dark:text-slate-400">
-              {d.score === 100 ? "Referentna točka" : `${d.score}% od ${bestDistrict}`}
+              {d.score === 100
+                ? "Referentna točka"
+                : `${d.score}% od ${bestDistrict}`}
             </span>
           </div>
         </div>
@@ -1074,37 +1515,45 @@ function DistrictCard({
       {/* Stats cluster */}
       <div className="mt-8 flex flex-wrap gap-2">
         <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 dark:bg-white/5">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
           <span className="font-serif text-[13px] font-medium text-slate-700 dark:text-slate-300">
-            {d.population ? (d.population / 1000).toFixed(1).replace(".", ",") + "k" : "N/A"}
+            {d.population
+              ? (d.population / 1000).toFixed(1).replace(".", ",") + "k"
+              : "N/A"}
+          </span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">
+            stan.
           </span>
         </div>
         <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 dark:bg-white/5">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
           <span className="font-serif text-[13px] font-medium text-slate-700 dark:text-slate-300">
             {d.stops}
           </span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">
+            stajališta
+          </span>
         </div>
         <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 dark:bg-white/5">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
           <span className="font-serif text-[13px] font-medium text-slate-700 dark:text-slate-300">
-            ~{Math.round(d.avgHeadwayMin)}m
+            ~{Math.round(d.avgHeadwayMin)} min
+          </span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">
+            interval
           </span>
         </div>
         {(d.trainLines?.length ?? 0) > 0 && (
           <div className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1.5 dark:bg-teal-900/20">
-            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-600 dark:text-teal-400">
+            <svg
+              aria-hidden="true"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-teal-600 dark:text-teal-400"
+            >
               <rect x="4" y="3" width="16" height="14" rx="2" />
               <path d="M4 11h16" />
               <path d="M12 3v8" />
@@ -1118,12 +1567,56 @@ function DistrictCard({
         )}
         {d.bajsStations > 0 && (
           <div className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 dark:bg-amber-900/20">
-            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="3"/>
+            <svg
+              aria-hidden="true"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-amber-600 dark:text-amber-400"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="3" />
             </svg>
             <span className="font-serif text-[13px] font-medium text-amber-700 dark:text-amber-400">
               {d.bajsStations} BAJS
+            </span>
+          </div>
+        )}
+        {(d.peakOffpeakDrop ?? 0) >= 30 && (
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-50 px-2.5 py-1.5 dark:bg-indigo-900/20">
+            <span className="font-serif text-[13px] font-medium text-indigo-600 dark:text-indigo-400">
+              -{d.peakOffpeakDrop}%
+            </span>
+            <span className="text-[10px] text-indigo-500 dark:text-indigo-400">
+              navečer
+            </span>
+          </div>
+        )}
+        {(d.desertPct ?? 0) >= 20 && (
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1.5 dark:bg-red-900/20">
+            <svg
+              aria-hidden="true"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-red-500 dark:text-red-400"
+            >
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <path d="M12 9v4" />
+              <path d="M12 17h.01" />
+            </svg>
+            <span className="font-serif text-[13px] font-medium text-red-600 dark:text-red-400">
+              {d.desertPct}% pustinja
             </span>
           </div>
         )}
@@ -1144,16 +1637,29 @@ function DistrictCard({
             style={{ width: `${reachPctNum}%`, backgroundColor: bandColor }}
           />
           <div
-            className="absolute bottom-0 top-0 w-[2px] bg-slate-900 dark:bg-white"
+            className="absolute top-0 bottom-0 w-[2px] bg-slate-900 dark:bg-white"
             style={{ left: `${cityReachPctNum}%` }}
             title="Prosjek grada"
           />
         </div>
-        <div className="mt-2 flex justify-end">
+        <div className="mt-2 flex items-baseline justify-between">
+          {d.minReachableCells !== undefined &&
+          d.maxReachableCells !== undefined ? (
+            <span className="font-sans text-[9px] text-slate-400 tabular-nums dark:text-slate-500">
+              {pct(d.minReachableCells, totalGridCells)}–
+              {pct(d.maxReachableCells, totalGridCells)}%
+            </span>
+          ) : (
+            <span />
+          )}
           <span
             className={`font-sans text-[9px] tracking-widest uppercase ${vsAvg > 0 ? "text-emerald-600 dark:text-emerald-500" : vsAvg < 0 ? "text-rose-600 dark:text-rose-400" : "text-slate-500 dark:text-slate-400"}`}
           >
-            {vsAvg > 0 ? `+${vsAvg}% iznad prosjeka` : vsAvg === 0 ? "Drži prosjek grada" : `${Math.abs(vsAvg)}% ispod prosjeka`}
+            {vsAvg > 0
+              ? `+${vsAvg}% iznad prosjeka`
+              : vsAvg === 0
+                ? "Drži prosjek grada"
+                : `${Math.abs(vsAvg)}% ispod prosjeka`}
           </span>
         </div>
 
@@ -1171,7 +1677,9 @@ function DistrictCard({
             <div className="relative h-2 w-full overflow-hidden rounded-full bg-teal-100 dark:bg-teal-900/30">
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-teal-500"
-                style={{ width: `${Math.min(((d.trainAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min(((d.trainAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%`,
+                }}
               />
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-teal-800/20 dark:bg-teal-300/20"
@@ -1195,7 +1703,9 @@ function DistrictCard({
             <div className="relative h-2 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
-                style={{ width: `${Math.min(((d.bajsAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min(((d.bajsAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%`,
+                }}
               />
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-amber-800/20 dark:bg-amber-300/20"
@@ -1211,8 +1721,10 @@ function DistrictCard({
           Linije
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
-          {d.tramLines.length === 0 && d.busLines.length === 0 && (d.trainLines?.length ?? 0) === 0 ? (
-            <span className="text-[12px] italic text-slate-500">
+          {d.tramLines.length === 0 &&
+          d.busLines.length === 0 &&
+          (d.trainLines?.length ?? 0) === 0 ? (
+            <span className="text-[12px] text-slate-500 italic">
               Nema linija
             </span>
           ) : (
@@ -1227,7 +1739,8 @@ function DistrictCard({
               ))}
               {d.busLines.length > 0 && (
                 <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 tabular-nums shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none">
-                  {d.busLines.length} {d.busLines.length === 1 ? "bus" : "buseva"}
+                  {d.busLines.length}{" "}
+                  {d.busLines.length === 1 ? "bus" : "buseva"}
                 </span>
               )}
               {(d.trainLines?.length ?? 0) > 0 && (

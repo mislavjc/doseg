@@ -3,7 +3,11 @@ import { join } from "node:path"
 
 const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
 const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
-const BAJS_MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-bajs-map.svg")
+const BAJS_MAP_OUTPUT_PATH = join(
+  process.cwd(),
+  "public",
+  "district-bajs-map.svg"
+)
 const EMBLEM_OUTPUT_PATH = join(
   process.cwd(),
   "public",

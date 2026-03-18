@@ -139,10 +139,7 @@ async function loadBajsData(): Promise<BajsData> {
     })
   }
 
-  const ttlSeconds = Math.min(
-    clampTtl(infoFeed.ttl),
-    clampTtl(statusFeed.ttl)
-  )
+  const ttlSeconds = Math.min(clampTtl(infoFeed.ttl), clampTtl(statusFeed.ttl))
   const stationMap = new Map(stations.map((station) => [station.key, station]))
 
   return {

@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server"
 
+import { jsonResponse } from "@/lib/api-response"
 import { buildAccurateItinerary } from "@/lib/accurate-itinerary"
 import { getReachabilityState } from "@/lib/reachability-state"
 import { secondsOfDay } from "@/lib/zagreb-time"
@@ -54,11 +55,12 @@ export async function GET(request: NextRequest) {
       return Response.json({ error: "Route not found" }, { status: 404 })
     }
 
-    return Response.json(itinerary, {
-      headers: {
-        "Cache-Control": "private, max-age=5",
-      },
-    })
+    const { response } = jsonResponse(
+      itinerary,
+      request,
+      "private, max-age=5"
+    )
+    return response
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal error"
     return Response.json({ error: message }, { status: 502 })

@@ -1,10 +1,6 @@
 import type { NextRequest } from "next/server"
-import {
-  brotliCompressSync,
-  constants as zlibConstants,
-  gzipSync,
-} from "node:zlib"
 
+import { jsonResponse } from "@/lib/api-response"
 import {
   getReachabilityState,
   type ReachabilityState,
@@ -18,7 +14,6 @@ import { getWalkGraph } from "@/lib/walk-graph"
 const MAX_SECONDS = 45 * 60
 const TRANSIT_COORD_PRECISION = 4
 const TRANSIT_COORD_SCALE = 10 ** TRANSIT_COORD_PRECISION
-const BROTLI_QUALITY = 6
 
 // Pre-warm graph cache on module load so the first request is fast
 getGraph().catch(() => {})
@@ -181,42 +176,6 @@ function buildRoutingPayload(
   return { nodes: routingNodes, patterns: routingPatterns }
 }
 
-function jsonResponse(
-  request: NextRequest,
-  payload: unknown
-): { response: Response; serializeMs: number } {
-  const t0 = performance.now()
-  const json = JSON.stringify(payload)
-
-  const acceptEncoding = request.headers.get("accept-encoding") || ""
-  const prefersBrotli = acceptEncoding.includes("br")
-  const acceptsGzip = acceptEncoding.includes("gzip")
-  const body = prefersBrotli
-    ? brotliCompressSync(json, {
-        params: {
-          [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
-        },
-      })
-    : acceptsGzip
-      ? gzipSync(json)
-      : json
-
-  return {
-    response: new Response(body, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(prefersBrotli
-          ? { "Content-Encoding": "br" }
-          : acceptsGzip
-            ? { "Content-Encoding": "gzip" }
-            : {}),
-        "Cache-Control": "private, max-age=30",
-      },
-    }),
-    serializeMs: performance.now() - t0,
-  }
-}
-
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
   const lat = parseFloat(searchParams.get("lat") || "")
@@ -304,7 +263,11 @@ export async function GET(request: NextRequest) {
               walkRing,
               realtime,
             }
-    const { response, serializeMs } = jsonResponse(request, payload)
+    const { response, serializeMs } = jsonResponse(
+      payload,
+      request,
+      "public, max-age=300, stale-while-revalidate=600"
+    )
     response.headers.set(
       "Server-Timing",
       `state;dur=${(tState - t0).toFixed(0)}, walk;dur=${(tWalk - tState).toFixed(0)}, payload;dur=${(tPayload - tWalk).toFixed(0)}, serial;dur=${serializeMs.toFixed(0)}, total;dur=${(tPayload - t0 + serializeMs).toFixed(0)}`

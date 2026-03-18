@@ -13,5 +13,11 @@
 	@embeddable path /district-map.svg
 	header @embeddable -X-Frame-Options
 
+	@nextStatic path /_next/static/*
+	header @nextStatic Cache-Control "public, max-age=31536000, immutable"
+
+	@assets path *.svg *.png *.ico *.webp
+	header @assets Cache-Control "public, max-age=604800"
+
 	reverse_proxy app:3000
 }

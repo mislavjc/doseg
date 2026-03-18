@@ -102,11 +102,13 @@ function IsochroneIllustration() {
 
 export function OnboardingDialog() {
   const [open, setOpen] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
 
   useEffect(() => {
     if (!localStorage.getItem(STORAGE_KEY)) {
       setOpen(true)
     }
+    setIsTouch(matchMedia("(hover: none)").matches)
   }, [])
 
   function dismiss() {
@@ -177,7 +179,9 @@ export function OnboardingDialog() {
                       </span>
                     </div>
                     <span className="text-[11px] leading-snug text-slate-500">
-                      Pomakni miš za detalje rute
+                      {isTouch
+                        ? "Dodirni za detalje rute"
+                        : "Pomakni miš za detalje rute"}
                     </span>
                   </motion.div>
 

@@ -219,7 +219,7 @@ export function TransitMap() {
             10,
           ],
           "circle-color": modeColor("BIKE"),
-          "circle-opacity": 0.15,
+          "circle-opacity": 0.1,
         },
       })
       map.addLayer({
@@ -241,21 +241,21 @@ export function TransitMap() {
           "circle-color": [
             "case",
             ["!", ["get", "isRenting"]],
-            "#64748b",
+            "rgba(148, 163, 184, 0.8)",
             ["==", ["get", "bikesAvailable"], 0],
-            "#f97316",
+            "rgba(249, 115, 22, 0.8)",
             ["<=", ["get", "bikesAvailable"], 2],
-            "#f59e0b",
-            modeColor("BIKE"),
+            "rgba(245, 158, 11, 0.8)",
+            "rgba(245, 158, 11, 0.8)",
           ],
-          "circle-stroke-width": 1.5,
+          "circle-stroke-width": 1,
           "circle-stroke-color": [
             "case",
             ["!", ["get", "isReturning"]],
-            "#ef4444",
+            "rgba(239, 68, 68, 0.8)",
             ["==", ["get", "docksAvailable"], 0],
-            "#ef4444",
-            "rgba(255,255,255,0.85)",
+            "rgba(239, 68, 68, 0.8)",
+            "rgba(255, 255, 255, 0.4)",
           ],
         },
       })
@@ -863,6 +863,40 @@ export function TransitMap() {
             >
               <div className="text-[13px] text-slate-300">
                 Klikni bilo gdje da vidiš dokle možeš stići
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {bajsEnabled && (
+            <motion.div
+              className="panel absolute top-[64px] left-1/2 z-10 w-max -translate-x-1/2 px-3 py-2 sm:top-[60px] sm:left-4 sm:w-[140px] sm:translate-x-0 sm:px-3 sm:py-2.5"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.2, ease }}
+            >
+              <div className="mb-2 hidden text-[9px] font-semibold tracking-wider text-slate-500 uppercase sm:block">
+                BAJS Stanice
+              </div>
+              <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-1.5">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Dostupno</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">0 bic.</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Puna</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
+                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">Ne radi</span>
+                </div>
               </div>
             </motion.div>
           )}

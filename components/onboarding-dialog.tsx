@@ -227,6 +227,24 @@ export function OnboardingDialog() {
                       Promijeni vrijeme polaska
                     </span>
                   </motion.div>
+
+                  <motion.div
+                    className="flex items-center gap-3 rounded-xl bg-white/[0.04] px-3.5 py-3"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.76, duration: 0.25, ease }}
+                  >
+                    <div className="flex flex-col gap-1.5 shrink-0">
+                      <div className="flex gap-1.5">
+                        <div className="h-2.5 w-2.5 rounded-full border border-white/40 bg-amber-500/80" />
+                        <div className="h-2.5 w-2.5 rounded-full border border-white/40 bg-orange-500/80" />
+                        <div className="h-2.5 w-2.5 rounded-full border border-red-500/80 bg-amber-500/80" />
+                      </div>
+                    </div>
+                    <span className="text-[11px] leading-snug text-slate-500">
+                      Boje BAJS stanica označavaju broj slobodnih bicikala i mjesta
+                    </span>
+                  </motion.div>
                 </div>
               </div>
 

@@ -7,7 +7,7 @@ import DistrictMap from "@/components/district-map"
 export const metadata: Metadata = {
   title: "Statistika - Doseg",
   description:
-    "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom u 30 minuta.",
+    "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
 }
 
 export const dynamic = "force-dynamic"
@@ -18,6 +18,9 @@ interface DistrictScore {
   population?: number
   sampleCount: number
   avgReachableCells: number
+  bajsAvgReachableCells: number
+  bajsBoostPct: number
+  bajsStations: number
   rank: number
   score: number
   bestPoint: { lat: number; lon: number }
@@ -34,6 +37,7 @@ interface ScoreData {
   maxMinutes: number
   totalSamplePoints: number
   totalGridCells: number
+  bajsTotalStations: number
   districts: DistrictScore[]
 }
 
@@ -127,6 +131,27 @@ export default function StatistikaPage() {
   )
   const cityAvg = weightedSum / data.totalSamplePoints
 
+  // BAJS insights
+  const hasBajs = (data.bajsTotalStations ?? 0) > 0
+  const bajsTotalStations = data.bajsTotalStations ?? 0
+  const cityBajsBoost = hasBajs
+    ? (() => {
+        const baseW = data.districts.reduce(
+          (s, d) => s + d.avgReachableCells * d.sampleCount,
+          0
+        )
+        const bajsW = data.districts.reduce(
+          (s, d) => s + (d.bajsAvgReachableCells ?? d.avgReachableCells) * d.sampleCount,
+          0
+        )
+        return Math.round(((bajsW - baseW) / baseW) * 100)
+      })()
+    : 0
+  const bajsRankedByBoost = hasBajs
+    ? [...data.districts].sort((a, b) => (b.bajsBoostPct ?? 0) - (a.bajsBoostPct ?? 0))
+    : []
+  const topBajsBeneficiary = bajsRankedByBoost[0]
+
   // Group by quality band
   const bands = [
     {
@@ -190,7 +215,7 @@ export default function StatistikaPage() {
       </section>
 
       {/* Headline insights */}
-      <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="flex flex-col justify-between rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
           <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
             Dobra povezanost
@@ -259,6 +284,25 @@ export default function StatistikaPage() {
             {data.districts.reduce((s, d) => s + d.stops, 0).toLocaleString("hr-HR")} stajališta ukupno.
           </div>
         </div>
+
+        {hasBajs && (
+          <div className="flex flex-col justify-between rounded-2xl bg-amber-50 p-6 shadow-sm ring-1 ring-amber-200/50 dark:bg-amber-950/20 dark:ring-amber-500/20">
+            <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+              BAJS bike-sharing
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                {bajsTotalStations}
+              </span>
+              <span className="text-[14px] text-amber-700 dark:text-amber-400">
+                stanica
+              </span>
+            </div>
+            <div className="mt-2 text-[12px] leading-snug text-amber-700/80 dark:text-amber-400/80">
+              Prosječno +{cityBajsBoost}% dosega za cijeli grad.
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-16 grid grid-cols-1 gap-12 sm:mt-20">
@@ -299,6 +343,20 @@ export default function StatistikaPage() {
                 </strong>{" "}
                 ima rezultat {worst.score} - samo {worstPct}%.
               </p>
+              {hasBajs && (
+                <p>
+                  Dodatno mjerimo utjecaj{" "}
+                  <strong className="font-medium text-amber-700 dark:text-amber-400">
+                    BAJS bike-sharinga
+                  </strong>{" "}
+                  — u idealnom scenariju (svaka stanica ima bicikl) prosječni
+                  stanovnik grada dobiva{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    +{cityBajsBoost}%
+                  </strong>{" "}
+                  veći doseg.
+                </p>
+              )}
             </div>
           </section>
 
@@ -337,6 +395,174 @@ export default function StatistikaPage() {
         </div>
       </div>
 
+      {/* BAJS Impact section */}
+      {hasBajs && (
+        <section className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Utjecaj BAJS bicikala
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Koliko se dostupnost svake četvrti poboljšava kada se uz javni prijevoz
+              koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje je svaka
+              stanica operativna s barem jednim biciklom.
+            </p>
+          </div>
+
+          {/* BAJS choropleth map */}
+          <div className="mb-10">
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[13px] text-slate-600 dark:text-slate-400">
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-[#d97706]" />
+                Tamnije = veći dobitak
+              </span>
+              <span className="hidden opacity-50 sm:inline-block">•</span>
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-[#94a3b8]" />
+                Sivo = bez utjecaja
+              </span>
+            </div>
+            <div className="mx-auto max-w-5xl">
+              <div className="w-full overflow-hidden" style={{ aspectRatio: "960/620" }}>
+                <img
+                  src="/district-bajs-map.svg"
+                  alt="Karta utjecaja BAJS bicikala po četvrtima. Tamniji amber označava veći dobitak u dostupnosti."
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Boost ranking */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+                Tko najviše profitira
+              </h3>
+              <div className="space-y-3">
+                {bajsRankedByBoost.slice(0, 8).map((d, i) => {
+                  const maxBoost = bajsRankedByBoost[0]?.bajsBoostPct ?? 1
+                  return (
+                    <div key={d.osmId} className="flex items-center gap-3">
+                      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
+                        {i + 1}.
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-baseline justify-between gap-2">
+                          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                            {d.name}
+                          </span>
+                          <span className="shrink-0 font-serif text-[14px] font-medium text-amber-600 tabular-nums dark:text-amber-400">
+                            +{d.bajsBoostPct}%
+                          </span>
+                        </div>
+                        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
+                          <div
+                            className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
+                            style={{ width: `${(d.bajsBoostPct / maxBoost) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <span className="shrink-0 text-[11px] text-slate-400 dark:text-slate-500">
+                        {d.bajsStations} st.
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* BAJS equity analysis */}
+            <div className="flex flex-col gap-6">
+              <div className="flex-1 rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
+                <div className="mb-6 flex items-center gap-3 text-amber-800 dark:text-amber-200">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-amber-500/20">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="m16 10-4 4-4-4"/>
+                    </svg>
+                  </span>
+                  <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                    Smanjuje li BAJS jaz?
+                  </h3>
+                </div>
+                <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                  <p>
+                    {(() => {
+                      const topHalf = data.districts.slice(0, Math.floor(data.districts.length / 2))
+                      const bottomHalf = data.districts.slice(Math.floor(data.districts.length / 2))
+                      const topBoost = topHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) / topHalf.length
+                      const bottomBoost = bottomHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) / bottomHalf.length
+                      const narrows = bottomBoost > topBoost
+                      return narrows ? (
+                        <>
+                          Da. Slabije povezane četvrti prosječno dobivaju{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            +{Math.round(bottomBoost)}%
+                          </strong>{" "}
+                          poboljšanja, dok bolje povezane dobivaju{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            +{Math.round(topBoost)}%
+                          </strong>
+                          . BAJS bicikli sužavaju jaz u dostupnosti.
+                        </>
+                      ) : (
+                        <>
+                          Ne u dovoljnoj mjeri. Bolje povezane četvrti dobivaju{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            +{Math.round(topBoost)}%
+                          </strong>{" "}
+                          poboljšanja, dok slabije povezane dobivaju{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            +{Math.round(bottomBoost)}%
+                          </strong>
+                          . BAJS stanice su koncentrirane u centru — proširenje mreže
+                          prema rubnim četvrtima moglo bi smanjiti nejednakost.
+                        </>
+                      )
+                    })()}
+                  </p>
+                </div>
+              </div>
+              <div className="flex-1 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+                <h3 className="mb-4 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+                  Ukupni utjecaj
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="font-serif text-[28px] leading-none text-amber-600 tabular-nums dark:text-amber-400">
+                      +{cityBajsBoost}%
+                    </div>
+                    <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                      prosječni dobitak
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                      {bajsTotalStations}
+                    </div>
+                    <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                      stanica u gradu
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                      {topBajsBeneficiary ? `+${topBajsBeneficiary.bajsBoostPct}%` : "—"}
+                    </div>
+                    <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                      max. dobitak ({topBajsBeneficiary?.name ?? "—"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* District ranking by band */}
       <div className="mt-20 space-y-20 lg:space-y-24">
         {bands.map((band) => (
@@ -366,7 +592,7 @@ export default function StatistikaPage() {
                   bandColor={band.color}
                   cityAvg={cityAvg}
                   bestDistrict={best.name}
-                  mapLink={`/?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=${data.departureTime}`}
+                  mapLink={`/?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=${data.departureTime}${d.bajsStations > 0 ? "&bajs=1" : ""}`}
                   index={d.rank - 1}
                 />
               ))}
@@ -380,7 +606,7 @@ export default function StatistikaPage() {
         <h2 className="mb-8 font-serif text-[24px] text-slate-900 dark:text-slate-100">
           Metodologija izračuna
         </h2>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
           <div className="flex flex-col gap-2 border-l-2 border-emerald-500 pl-4">
             <span className="font-sans text-[10px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
               Algoritam
@@ -414,6 +640,16 @@ export default function StatistikaPage() {
               Jutarnji vršni sat (polazak: <strong className="font-medium text-slate-900 dark:text-slate-200">{data.departureTime}</strong>). Bez kašnjenja.
             </p>
           </div>
+          {hasBajs && (
+            <div className="flex flex-col gap-2 border-l-2 border-amber-500 pl-4">
+              <span className="font-sans text-[10px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+                BAJS
+              </span>
+              <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
+                Idealni scenarij: <strong className="font-medium text-slate-900 dark:text-slate-200">{bajsTotalStations}</strong> stanica, svaka s 1 biciklom. Brzina <strong className="font-medium text-slate-900 dark:text-slate-200">14 km/h</strong>.
+              </p>
+            </div>
+          )}
         </div>
         <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">
           <p className="font-sans text-[11px] font-medium tracking-wide text-slate-500 dark:text-slate-400">
@@ -480,8 +716,9 @@ function StatHero({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {maxMinutes} minuta
             </strong>{" "}
-            javnim prijevozom i hodanjem. U jednom jutarnjem vršnom satu vidi se
-            vrlo jasan urbani jaz između središta i rubova grada.
+            javnim prijevozom, hodanjem i BAJS bike-sharingom. U jednom jutarnjem
+            vršnom satu vidi se vrlo jasan urbani jaz između središta i rubova
+            grada — ali i koliko bicikli mogu pomoći.
           </p>
           <div className="mt-10 flex flex-wrap gap-x-12 gap-y-8 border-t border-black/5 pt-8 dark:border-white/5">
             <HeroStat
@@ -840,6 +1077,17 @@ function DistrictCard({
             ~{Math.round(d.avgHeadwayMin)}m
           </span>
         </div>
+        {d.bajsStations > 0 && (
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 dark:bg-amber-900/20">
+            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span className="font-serif text-[13px] font-medium text-amber-700 dark:text-amber-400">
+              {d.bajsStations} BAJS
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="mt-8 flex-1">
@@ -869,6 +1117,31 @@ function DistrictCard({
             {vsAvg > 0 ? `+${vsAvg}% iznad prosjeka` : vsAvg === 0 ? "Drži prosjek grada" : `${Math.abs(vsAvg)}% ispod prosjeka`}
           </span>
         </div>
+
+        {/* BAJS boost bar */}
+        {d.bajsBoostPct > 0 && (
+          <div className="mt-4">
+            <div className="mb-1.5 flex items-end justify-between">
+              <span className="font-sans text-[10px] tracking-[0.15em] text-amber-600 uppercase dark:text-amber-400">
+                S BAJS biciklima
+              </span>
+              <span className="font-serif text-[13px] leading-none text-amber-600 tabular-nums dark:text-amber-400">
+                +{d.bajsBoostPct}%
+              </span>
+            </div>
+            <div className="relative h-2 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
+                style={{ width: `${Math.min(((d.bajsAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%` }}
+              />
+              {/* Ghost bar showing base for comparison */}
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-amber-800/20 dark:bg-amber-300/20"
+                style={{ width: `${reachPctNum}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">

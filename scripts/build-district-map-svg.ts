@@ -3,6 +3,7 @@ import { join } from "node:path"
 
 const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
 const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
+const BAJS_MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-bajs-map.svg")
 const EMBLEM_OUTPUT_PATH = join(
   process.cwd(),
   "public",
@@ -26,6 +27,9 @@ interface DistrictScore {
   population?: number
   sampleCount: number
   avgReachableCells: number
+  bajsAvgReachableCells?: number
+  bajsBoostPct?: number
+  bajsStations?: number
   rank: number
   score: number
   bestPoint: { lat: number; lon: number }
@@ -42,6 +46,7 @@ interface ScoreData {
   maxMinutes: number
   totalSamplePoints: number
   totalGridCells: number
+  bajsTotalStations?: number
   districts: DistrictScore[]
 }
 
@@ -52,6 +57,8 @@ interface DistrictProperties {
   reachPct?: string
   maxMinutes?: number
   population?: number
+  bajsBoostPct?: number
+  bajsStations?: number
 }
 
 interface Projector {
@@ -65,6 +72,8 @@ interface DistrictShape {
   reachPct: string
   maxMinutes?: number
   population?: number
+  bajsBoostPct?: number
+  bajsStations?: number
   path: string
   centroid: Point
   area: number
@@ -97,6 +106,8 @@ function enrichGeoJSON(
     )
     feature.properties.maxMinutes = data.maxMinutes
     feature.properties.population = score.population
+    feature.properties.bajsBoostPct = score.bajsBoostPct ?? 0
+    feature.properties.bajsStations = score.bajsStations ?? 0
   }
 
   return geojson
@@ -118,6 +129,14 @@ function scoreColor(score: number): string {
   if (score >= 50) return "#0891b2"
   if (score >= 25) return "#2563eb"
   return "#9333ea"
+}
+
+function bajsBoostColor(boostPct: number): string {
+  if (boostPct >= 40) return "#d97706"
+  if (boostPct >= 25) return "#f59e0b"
+  if (boostPct >= 10) return "#fbbf24"
+  if (boostPct > 0) return "#fcd34d"
+  return "#94a3b8"
 }
 
 function roundCoord(value: number): number {
@@ -365,6 +384,8 @@ function buildDistrictShapes(
       reachPct: properties.reachPct ?? "0",
       maxMinutes: properties.maxMinutes,
       population: properties.population,
+      bajsBoostPct: properties.bajsBoostPct,
+      bajsStations: properties.bajsStations,
       path,
       centroid,
       area,
@@ -425,6 +446,61 @@ ${districtsMarkup}
 </svg>`
 }
 
+function bajsFeatureTitle(shape: DistrictShape): string {
+  const boost = shape.bajsBoostPct ?? 0
+  const stations = shape.bajsStations ?? 0
+  const lines = [
+    shape.name,
+    boost > 0 ? `+${boost}% dosega s BAJS biciklima` : "Nema utjecaja BAJS-a",
+    `${stations} BAJS ${stations === 1 ? "stanica" : "stanica"}`,
+  ]
+
+  if (shape.population) {
+    lines.push(`${shape.population.toLocaleString("hr-HR")} stanovnika`)
+  }
+
+  return lines.join("\n")
+}
+
+function buildBajsMapSvg(geojson: GeoJSON.FeatureCollection): string {
+  const shapes = buildDistrictShapes(geojson)
+
+  const districtsMarkup = shapes
+    .map((shape) => {
+      const boost = shape.bajsBoostPct ?? 0
+      const stations = shape.bajsStations ?? 0
+      const labelLines = formatLabelLines(shape.name)
+      const labelMarkup =
+        shape.area >= LABEL_MIN_AREA
+          ? `<text class="label" x="${shape.centroid[0]}" y="${shape.centroid[1]}">${labelLines
+              .map(
+                (line, index) =>
+                  `<tspan x="${shape.centroid[0]}" dy="${index === 0 ? "-0.35em" : "1.1em"}">${escapeXml(line)}</tspan>`
+              )
+              .join(
+                ""
+              )}<tspan class="score" x="${shape.centroid[0]}" dy="1.15em">${boost > 0 ? `+${boost}%` : "—"}</tspan><tspan class="stations" x="${shape.centroid[0]}" dy="1.15em">${stations} st.</tspan></text>`
+          : ""
+
+      return `<g><path class="district" d="${shape.path}" fill="${bajsBoostColor(boost)}" tabindex="0"><title>${escapeXml(bajsFeatureTitle(shape))}</title></path>${labelMarkup}</g>`
+    })
+    .join("")
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="bajs-title bajs-desc">
+<title id="bajs-title">Karta utjecaja BAJS bicikala po četvrtima</title>
+<desc id="bajs-desc">Choropleth karta koja prikazuje koliko BAJS bike-sharing poboljšava dostupnost po gradskoj četvrti. Tamniji amber označava veće poboljšanje.</desc>
+<style>
+.district{fill-opacity:.50;stroke:rgba(226,232,240,.24);stroke-width:1.2;vector-effect:non-scaling-stroke;transition:fill-opacity .15s ease,stroke .15s ease;cursor:pointer;outline:none}
+.district:hover,.district:focus{fill-opacity:.75;stroke:rgba(255,255,255,.55)}
+.label{fill:rgba(203,213,225,.85);font:11px "Inter","Segoe UI",sans-serif;text-anchor:middle;pointer-events:none;user-select:none}
+.score{fill:#f8fafc;font-size:12px;font-weight:600}
+.stations{fill:rgba(203,213,225,.6);font-size:9px;font-weight:400}
+</style>
+${districtsMarkup}
+</svg>`
+}
+
 function main() {
   const scorePath = join(DATA_DIR, "district-scores.json")
   const geojsonPath = join(DATA_DIR, "districts.geojson")
@@ -450,10 +526,16 @@ function main() {
 
   const scoreData = JSON.parse(readFileSync(scorePath, "utf-8")) as ScoreData
   const enrichedGeojson = enrichGeoJSON(rawGeojson, scoreData)
-  const svg = buildDistrictMapSvg(enrichedGeojson)
 
+  const svg = buildDistrictMapSvg(enrichedGeojson)
   writeFileSync(MAP_OUTPUT_PATH, svg)
   console.log(`Wrote ${MAP_OUTPUT_PATH}`)
+
+  if (scoreData.bajsTotalStations && scoreData.bajsTotalStations > 0) {
+    const bajsSvg = buildBajsMapSvg(enrichedGeojson)
+    writeFileSync(BAJS_MAP_OUTPUT_PATH, bajsSvg)
+    console.log(`Wrote ${BAJS_MAP_OUTPUT_PATH}`)
+  }
 }
 
 main()

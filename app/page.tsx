@@ -11,7 +11,9 @@ const TransitMap = dynamic(
 export default function Page() {
   return (
     <main id="main-content">
-      <h1 className="sr-only">Doseg — karta dosega javnog prijevoza u Zagrebu</h1>
+      <h1 className="sr-only">
+        Doseg — karta dosega javnog prijevoza u Zagrebu
+      </h1>
       <NuqsAdapter>
         <TransitMap />
       </NuqsAdapter>

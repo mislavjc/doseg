@@ -31,10 +31,8 @@ export function TimePicker({
 
   return (
     <Popover>
-      <PopoverTrigger
-        className="flex cursor-pointer flex-col items-center outline-none"
-      >
-        <span className="text-[13px] tabular-nums text-slate-200 transition-colors hover:text-white">
+      <PopoverTrigger className="flex cursor-pointer flex-col items-center outline-none">
+        <span className="text-[13px] text-slate-200 tabular-nums transition-colors hover:text-white">
           {pad(displayH)}:{pad(displayM)}
         </span>
         <span className="text-[9px] text-slate-400">polazak</span>
@@ -82,13 +80,16 @@ function ScrollColumn({
   selectedRef.current = selected
 
   // Callback ref: scroll to selected item when the popover mounts the node
-  const attachRef = useCallback((node: HTMLDivElement | null) => {
-    if (!node) return
-    const idx = items.indexOf(selectedRef.current)
-    if (idx >= 0) {
-      node.scrollTop = idx * ITEM_H
-    }
-  }, [items])
+  const attachRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return
+      const idx = items.indexOf(selectedRef.current)
+      if (idx >= 0) {
+        node.scrollTop = idx * ITEM_H
+      }
+    },
+    [items]
+  )
 
   return (
     <div

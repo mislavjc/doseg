@@ -27,13 +27,10 @@ function Section({
 export default function AboutPage() {
   return (
     <div className="min-h-svh bg-background">
-      <main
-        id="main-content"
-        className="mx-auto max-w-3xl px-5 py-12 sm:py-24"
-      >
+      <main id="main-content" className="mx-auto max-w-3xl px-5 py-12 sm:py-24">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-500 transition-colors hover:text-slate-300 uppercase"
+          className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-500 uppercase transition-colors hover:text-slate-300"
         >
           <svg
             aria-hidden="true"
@@ -51,10 +48,10 @@ export default function AboutPage() {
           Natrag na kartu
         </Link>
 
-        <h1 className="mt-12 text-4xl sm:text-5xl font-bold tracking-tighter text-white">
+        <h1 className="mt-12 text-4xl font-bold tracking-tighter text-white sm:text-5xl">
           Doseg
         </h1>
-        <p className="mt-4 text-[16px] sm:text-[18px] leading-relaxed text-slate-400">
+        <p className="mt-4 text-[16px] leading-relaxed text-slate-400 sm:text-[18px]">
           Interaktivna karta dosega javnog prijevoza u Zagrebu. Klikni bilo gdje
           i vidi dokle možeš stići tramvajem ili busom u 15, 30 ili 45 minuta.
         </p>
@@ -63,29 +60,43 @@ export default function AboutPage() {
           <Section title="Kako radi">
             <p className="text-[14px] leading-relaxed text-slate-300">
               Klikom na kartu Doseg izračunava izokrone koristeći Dijkstrin
-              algoritam nad ZET-ovim voznim redom. Rute se rekonstruiraju
-              na klijentskoj strani, pa pregled prijelaza između linija
-              radi trenutno dok pomičeš miš.
+              algoritam nad ZET-ovim voznim redom. Rute se rekonstruiraju na
+              klijentskoj strani, pa pregled prijelaza između linija radi
+              trenutno dok pomičeš miš.
             </p>
           </Section>
 
           <Section title="Podaci">
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-[13px]">
               <div>
-                <span className="font-semibold text-slate-200 block mb-1">ZET GTFS</span>
-                <p className="text-slate-400 font-medium">vozni red tramvaja i buseva</p>
+                <span className="mb-1 block font-semibold text-slate-200">
+                  ZET GTFS
+                </span>
+                <p className="font-medium text-slate-400">
+                  vozni red tramvaja i buseva
+                </p>
               </div>
               <div>
-                <span className="font-semibold text-slate-200 block mb-1">ZET GTFS-RT</span>
-                <p className="text-slate-400 font-medium">kašnjenja u stvarnom vremenu</p>
+                <span className="mb-1 block font-semibold text-slate-200">
+                  ZET GTFS-RT
+                </span>
+                <p className="font-medium text-slate-400">
+                  kašnjenja u stvarnom vremenu
+                </p>
               </div>
               <div>
-                <span className="font-semibold text-slate-200 block mb-1">OpenStreetMap</span>
-                <p className="text-slate-400 font-medium">pješačka mreža</p>
+                <span className="mb-1 block font-semibold text-slate-200">
+                  OpenStreetMap
+                </span>
+                <p className="font-medium text-slate-400">pješačka mreža</p>
               </div>
               <div>
-                <span className="font-semibold text-slate-200 block mb-1">OpenTripPlanner</span>
-                <p className="text-slate-400 font-medium">server za rutiranje</p>
+                <span className="mb-1 block font-semibold text-slate-200">
+                  OpenTripPlanner
+                </span>
+                <p className="font-medium text-slate-400">
+                  server za rutiranje
+                </p>
               </div>
             </div>
           </Section>

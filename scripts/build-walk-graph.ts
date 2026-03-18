@@ -315,9 +315,7 @@ async function main() {
   writeFileSync(OUTPUT, buffer)
 
   const sizeMB = (totalSize / 1024 / 1024).toFixed(1)
-  console.log(
-    `Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`
-  )
+  console.log(`Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`)
 }
 
 main().catch((err) => {

@@ -25,7 +25,9 @@ async function main() {
   const map = await browser.newPage({ viewport: { width: W, height: H } })
 
   // Skip onboarding dialog
-  await map.goto("http://doseg.localhost:1355", { waitUntil: "domcontentloaded" })
+  await map.goto("http://doseg.localhost:1355", {
+    waitUntil: "domcontentloaded",
+  })
   await map.evaluate(() => localStorage.setItem("doseg-onboarded", "1"))
 
   console.log("1/4  Loading map...")
@@ -47,7 +49,7 @@ async function main() {
   // Hide dev-overlay & about link only
   await map.evaluate(() => {
     for (const el of document.querySelectorAll(
-      "nextjs-portal, a[href='/o-projektu']",
+      "nextjs-portal, a[href='/o-projektu']"
     )) {
       ;(el as HTMLElement).style.display = "none"
     }

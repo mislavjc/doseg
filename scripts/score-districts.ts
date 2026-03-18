@@ -128,11 +128,7 @@ async function extractPopulatedCells(): Promise<Set<string>> {
 }
 
 /** Check if a point is in or adjacent to a populated grid cell. */
-function isPopulated(
-  lat: number,
-  lon: number,
-  cells: Set<string>
-): boolean {
+function isPopulated(lat: number, lon: number, cells: Set<string>): boolean {
   const cx = Math.floor(lon / POP_CELL)
   const cy = Math.floor(lat / POP_CELL)
   for (let dx = -1; dx <= 1; dx++) {
@@ -348,17 +344,13 @@ async function main() {
       headways.length > 0 ? headways[Math.floor(headways.length / 2)] : 0
 
     districtTransit[di] = {
-      tramLines: [...tramRoutes].sort(
-        (a, b) => parseInt(a) - parseInt(b)
-      ),
+      tramLines: [...tramRoutes].sort((a, b) => parseInt(a) - parseInt(b)),
       busLines: [...busRoutes].sort((a, b) => parseInt(a) - parseInt(b)),
       stops: stopCount,
       avgHeadwayMin: Math.round(medianHw / 60),
     }
   }
-  console.error(
-    `  ${stopToDistrict.size} stops assigned to districts`
-  )
+  console.error(`  ${stopToDistrict.size} stops assigned to districts`)
 
   console.error("Generating sample grid...")
   const points = generateSamplePoints(districts, gridM / 1000, populatedCells)
@@ -418,9 +410,7 @@ async function main() {
   const results = districts.map((d, i) => {
     const scores = districtScores[i]
     const avg =
-      scores.length > 0
-        ? scores.reduce((a, b) => a + b, 0) / scores.length
-        : 0
+      scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
     const best = districtBest[i]
     const transit = districtTransit[i]
     return {
@@ -465,7 +455,9 @@ async function main() {
   console.error(`\nDone in ${elapsed}s → ${outPath}`)
 
   // Print summary table
-  console.error(`\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  Samples`)
+  console.error(
+    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  Samples`
+  )
   console.error("─".repeat(56))
   for (const d of ranked) {
     const bar = "█".repeat(Math.round(d.score / 5))

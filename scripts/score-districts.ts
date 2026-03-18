@@ -431,113 +431,111 @@ async function main() {
   // Pre-allocate reusable buffer for walking Dijkstra
   const walkBuf = new Float64Array(walkGraph.nodeCount)
 
-  // --- Pass 1: Transit-only scores ---
-  const districtScores: number[][] = districts.map(() => [])
-  const districtBest: { reached: number; lat: number; lon: number }[] =
-    districts.map(() => ({ reached: -1, lat: 0, lon: 0 }))
-  const t0 = performance.now()
+  const EXCLUDE_RAIL = new Set(["RAIL"] as const)
 
-  console.error("Pass 1/2: Scoring transit-only...")
-  for (let i = 0; i < points.length; i++) {
-    const point = points[i]
+  function scoringPass(
+    label: string,
+    opts: {
+      bajsStations?: readonly BajsStation[]
+      excludeModes?: ReadonlySet<import("../lib/transit").TransitMode>
+      stopMap?: ReadonlyMap<string, { lat: number; lon: number }>
+    } = {}
+  ) {
+    const scores: number[][] = districts.map(() => [])
+    const best: { reached: number; lat: number; lon: number }[] =
+      districts.map(() => ({ reached: -1, lat: 0, lon: 0 }))
+    const t = performance.now()
+    const stopMapForWalk = opts.stopMap ?? transitGraph.stops
 
-    const times = computeAvgTravelTimes(
-      transitGraph,
-      point.lat,
-      point.lon,
-      departureSeconds,
-      maxSeconds
-    )
+    console.error(label)
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i]
 
-    const reached = countReachableCells(
-      walkGraph,
-      times,
-      transitGraph.stops,
-      point.lat,
-      point.lon,
-      maxSeconds,
-      walkBuf
-    )
+      const times = computeAvgTravelTimes(
+        transitGraph,
+        point.lat,
+        point.lon,
+        departureSeconds,
+        maxSeconds,
+        opts.bajsStations,
+        opts.excludeModes
+      )
 
-    districtScores[point.districtIdx].push(reached)
+      const reached = countReachableCells(
+        walkGraph,
+        times,
+        stopMapForWalk,
+        point.lat,
+        point.lon,
+        maxSeconds,
+        walkBuf
+      )
 
-    if (reached > districtBest[point.districtIdx].reached) {
-      districtBest[point.districtIdx] = {
-        reached,
-        lat: point.lat,
-        lon: point.lon,
+      scores[point.districtIdx].push(reached)
+
+      if (reached > best[point.districtIdx].reached) {
+        best[point.districtIdx] = {
+          reached,
+          lat: point.lat,
+          lon: point.lon,
+        }
+      }
+
+      if ((i + 1) % 50 === 0 || i + 1 === points.length) {
+        const elapsed = ((performance.now() - t) / 1000).toFixed(1)
+        const rate = ((i + 1) / ((performance.now() - t) / 1000)).toFixed(1)
+        process.stderr.write(
+          `\r  ${i + 1}/${points.length} scored (${elapsed}s, ${rate} pts/s)`
+        )
       }
     }
-
-    if ((i + 1) % 50 === 0 || i + 1 === points.length) {
-      const elapsed = ((performance.now() - t0) / 1000).toFixed(1)
-      const rate = ((i + 1) / ((performance.now() - t0) / 1000)).toFixed(1)
-      process.stderr.write(
-        `\r  ${i + 1}/${points.length} scored (${elapsed}s, ${rate} pts/s)`
-      )
-    }
+    console.error()
+    return { scores, best }
   }
-  console.error()
 
-  // --- Pass 2: Transit + BAJS scores ---
-  const districtBajsScores: number[][] = districts.map(() => [])
-  const t1 = performance.now()
+  const t0 = performance.now()
 
-  console.error("Pass 2/2: Scoring transit + BAJS...")
-  for (let i = 0; i < points.length; i++) {
-    const point = points[i]
+  // --- Pass 1: Bus+tram only (no rail, no BAJS) → base score ---
+  const pass1 = scoringPass("Pass 1/3: Scoring bus+tram only...", {
+    excludeModes: EXCLUDE_RAIL,
+  })
 
-    const times = computeAvgTravelTimes(
-      transitGraph,
-      point.lat,
-      point.lon,
-      departureSeconds,
-      maxSeconds,
-      bajsStations
-    )
+  // --- Pass 2: Bus+tram+train (no BAJS) → train boost ---
+  const pass2 = scoringPass("Pass 2/3: Scoring bus+tram+train...")
 
-    const reached = countReachableCells(
-      walkGraph,
-      times,
-      bajsStopMap,
-      point.lat,
-      point.lon,
-      maxSeconds,
-      walkBuf
-    )
-
-    districtBajsScores[point.districtIdx].push(reached)
-
-    if ((i + 1) % 50 === 0 || i + 1 === points.length) {
-      const elapsed = ((performance.now() - t1) / 1000).toFixed(1)
-      const rate = ((i + 1) / ((performance.now() - t1) / 1000)).toFixed(1)
-      process.stderr.write(
-        `\r  ${i + 1}/${points.length} scored (${elapsed}s, ${rate} pts/s)`
-      )
-    }
-  }
-  console.error()
+  // --- Pass 3: Bus+tram+train+BAJS → BAJS boost ---
+  const pass3 = scoringPass("Pass 3/3: Scoring bus+tram+train+BAJS...", {
+    bajsStations,
+    stopMap: bajsStopMap,
+  })
 
   // Aggregate per district
+  function avgScore(scores: number[]): number {
+    return scores.length > 0
+      ? scores.reduce((a, b) => a + b, 0) / scores.length
+      : 0
+  }
+
+  function boostPct(base: number, boosted: number): number {
+    return base > 0 ? Math.round(((boosted - base) / base) * 100) : 0
+  }
+
   const results = districts.map((d, i) => {
-    const scores = districtScores[i]
-    const bajsScoresArr = districtBajsScores[i]
-    const avg =
-      scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
-    const bajsAvg =
-      bajsScoresArr.length > 0
-        ? bajsScoresArr.reduce((a, b) => a + b, 0) / bajsScoresArr.length
-        : 0
-    const best = districtBest[i]
+    const baseAvg = avgScore(pass1.scores[i])
+    const trainAvg = avgScore(pass2.scores[i])
+    const bajsAvg = avgScore(pass3.scores[i])
+    const best = pass2.best[i] // best point from full transit (with trains)
     const transit = districtTransit[i]
     return {
       name: d.name,
       osmId: d.osmId,
       population: d.population,
-      sampleCount: scores.length,
-      avgReachableCells: Math.round(avg),
+      sampleCount: pass1.scores[i].length,
+      avgReachableCells: Math.round(baseAvg),
+      trainAvgReachableCells: Math.round(trainAvg),
+      trainBoostPct: boostPct(baseAvg, trainAvg),
       bajsAvgReachableCells: Math.round(bajsAvg),
-      bajsBoostPct: avg > 0 ? Math.round(((bajsAvg - avg) / avg) * 100) : 0,
+      bajsBoostPct: boostPct(trainAvg, bajsAvg),
       bajsStations: districtBajsStationCount[i],
       bestPoint: { lat: +best.lat.toFixed(4), lon: +best.lon.toFixed(4) },
       tramLines: transit.tramLines,
@@ -577,12 +575,14 @@ async function main() {
 
   // Print summary table
   console.error(
-    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  BAJS   Boost`
+    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  Train  BAJS`
   )
-  console.error("─".repeat(64))
+  console.error("─".repeat(72))
   for (const d of ranked) {
+    const trainStr = d.trainBoostPct > 0 ? `+${d.trainBoostPct}%` : "—"
+    const bajsStr = d.bajsBoostPct > 0 ? `+${d.bajsBoostPct}%` : "—"
     console.error(
-      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${d.bajsAvgReachableCells.toString().padStart(5)}  +${d.bajsBoostPct}%`
+      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${trainStr.padStart(5)}  ${bajsStr.padStart(5)}`
     )
   }
 }

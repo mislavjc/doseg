@@ -18,6 +18,8 @@ interface DistrictScore {
   population?: number
   sampleCount: number
   avgReachableCells: number
+  trainAvgReachableCells?: number
+  trainBoostPct?: number
   bajsAvgReachableCells: number
   bajsBoostPct: number
   bajsStations: number
@@ -1118,6 +1120,30 @@ function DistrictCard({
           </span>
         </div>
 
+        {/* Train boost bar */}
+        {(d.trainBoostPct ?? 0) > 0 && (
+          <div className="mt-4">
+            <div className="mb-1.5 flex items-end justify-between">
+              <span className="font-sans text-[10px] tracking-[0.15em] text-teal-600 uppercase dark:text-teal-400">
+                S HŽ vlakovima
+              </span>
+              <span className="font-serif text-[13px] leading-none text-teal-600 tabular-nums dark:text-teal-400">
+                +{d.trainBoostPct}%
+              </span>
+            </div>
+            <div className="relative h-2 w-full overflow-hidden rounded-full bg-teal-100 dark:bg-teal-900/30">
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-teal-500"
+                style={{ width: `${Math.min(((d.trainAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%` }}
+              />
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-teal-800/20 dark:bg-teal-300/20"
+                style={{ width: `${reachPctNum}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* BAJS boost bar */}
         {d.bajsBoostPct > 0 && (
           <div className="mt-4">
@@ -1134,7 +1160,6 @@ function DistrictCard({
                 className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
                 style={{ width: `${Math.min(((d.bajsAvgReachableCells ?? d.avgReachableCells) / totalGridCells) * 100, 100)}%` }}
               />
-              {/* Ghost bar showing base for comparison */}
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-amber-800/20 dark:bg-amber-300/20"
                 style={{ width: `${reachPctNum}%` }}

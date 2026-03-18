@@ -611,7 +611,8 @@ export function computeAvgTravelTimes(
   originLon: number,
   departureTime: number,
   timeCap: number,
-  bajsStations?: readonly BajsStation[]
+  bajsStations?: readonly BajsStation[],
+  excludeModes?: ReadonlySet<TransitMode>
 ): Map<string, number> {
   const bajsAdj =
     bajsStations && bajsStations.length > 0
@@ -656,6 +657,7 @@ export function computeAvgTravelTimes(
     if (stop) {
       for (const { patternIdx, stopIdx } of stop.patterns) {
         const pattern = graph.patterns[patternIdx]
+        if (excludeModes?.has(pattern.mode)) continue
         const clockTime = departureTime + time
 
         const avgWait = getAvgWait(

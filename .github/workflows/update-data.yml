@@ -1,0 +1,83 @@
+name: Update GTFS data
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # every Monday at 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-gtfs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Save old checksums
+        run: |
+          if [ -f data/gtfs/checksums.sha256 ]; then
+            cp data/gtfs/checksums.sha256 /tmp/old-checksums.txt
+          else
+            touch /tmp/old-checksums.txt
+          fi
+
+      - name: Download ZET GTFS
+        run: |
+          mkdir -p data/gtfs
+          curl -fSL --retry 3 --retry-delay 5 \
+            -o data/gtfs/zet.zip \
+            "https://zet.hr/gtfs-scheduled/latest"
+          echo "ZET: $(du -h data/gtfs/zet.zip | cut -f1)"
+
+      - name: Download HZPP GTFS
+        run: |
+          curl -fSL --retry 3 --retry-delay 5 \
+            -o data/gtfs/hzpp.zip \
+            "https://www.hzpp.hr/gtfs/latest"
+          echo "HZPP: $(du -h data/gtfs/hzpp.zip | cut -f1)"
+
+      - name: Filter HZPP to Zagreb area
+        run: python3 scripts/filter-hzpp-gtfs.py data/gtfs/hzpp.zip data/gtfs/hzpp-zagreb.zip
+
+      - name: Check for changes
+        id: diff
+        run: |
+          cd data/gtfs
+          sha256sum zet.zip hzpp.zip hzpp-zagreb.zip > checksums.sha256
+          cat checksums.sha256
+
+          if diff -q /tmp/old-checksums.txt checksums.sha256 >/dev/null 2>&1; then
+            echo "No changes detected."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "GTFS feeds have changed."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
+          commit-message: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
+          body: |
+            Automated weekly GTFS data update.
+
+            **Downloads:**
+            - ZET: https://zet.hr/gtfs-scheduled/latest
+            - HZPP: https://www.hzpp.hr/gtfs/latest (filtered to Zagreb area)
+
+            The OTP graph and walk graph are **not** rebuilt by this workflow.
+            After merging, re-run `scripts/setup-data.sh` on the server (skipping the download steps)
+            or rebuild via `docker compose run --rm otp --build --save`.
+          branch: update-gtfs-data
+          delete-branch: true
+          add-paths: |
+            data/gtfs/zet.zip
+            data/gtfs/hzpp.zip
+            data/gtfs/hzpp-zagreb.zip
+            data/gtfs/checksums.sha256

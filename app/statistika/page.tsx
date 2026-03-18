@@ -43,6 +43,9 @@ interface DistrictScore {
   minReachableCells?: number
   maxReachableCells?: number
   stddevReachableCells?: number
+  medianReachableCells?: number
+  p25ReachableCells?: number
+  p75ReachableCells?: number
   eveningAvgReachableCells?: number
   peakOffpeakDrop?: number
   desertPct?: number
@@ -54,12 +57,16 @@ interface DistrictScore {
   busLines: string[]
   trainLines?: string[]
   stops: number
-  avgHeadwayMin: number
+  medianHeadwayMin?: number
+  avgHeadwayMin?: number
 }
 
 interface ScoreData {
   generatedAt: string
-  departureTime: string
+  departureTime?: string
+  departureWindow?: string
+  eveningWindow?: string
+  departureCount?: number
   gridSpacingM: number
   maxMinutes: number
   totalSamplePoints: number
@@ -108,29 +115,43 @@ function pct(cells: number, total: number): string {
   return Math.round(p).toString()
 }
 
-/** Compute Gini coefficient (inequality index) for a given metric across districts. */
+/** Population-weighted Gini coefficient via trapezoidal Lorenz curve. */
 function computeGini(
   districts: DistrictScore[],
   accessor: (d: DistrictScore) => number
 ): number {
-  const sorted = [...districts].sort((a, b) => accessor(a) - accessor(b))
-  const n = sorted.length
-  if (n === 0) return 0
-  const total = sorted.reduce((s, d) => s + accessor(d), 0)
-  if (total === 0) return 0
-  const wSum = sorted.reduce(
-    (s, d, i) => s + (2 * (i + 1) - n - 1) * accessor(d),
+  const sorted = [...districts]
+    .filter((d) => (d.population ?? 0) > 0)
+    .sort((a, b) => accessor(a) - accessor(b))
+  if (sorted.length === 0) return 0
+  const totalPop = sorted.reduce((s, d) => s + (d.population ?? 0), 0)
+  const totalWeighted = sorted.reduce(
+    (s, d) => s + (d.population ?? 0) * accessor(d),
     0
   )
-  return wSum / (n * total)
+  if (totalPop === 0 || totalWeighted === 0) return 0
+  let cumPop = 0
+  let cumAccess = 0
+  let area = 0
+  let prevX = 0
+  let prevY = 0
+  for (const d of sorted) {
+    cumPop += d.population ?? 0
+    cumAccess += (d.population ?? 0) * accessor(d)
+    const x = cumPop / totalPop
+    const y = cumAccess / totalWeighted
+    area += (x - prevX) * (prevY + y) / 2
+    prevX = x
+    prevY = y
+  }
+  return Math.max(0, 1 - 2 * area)
 }
 
 /** Compute weighted percentage change between two district metrics. */
 function weightedPctChange(
   districts: DistrictScore[],
   baseValue: (d: DistrictScore) => number,
-  compValue: (d: DistrictScore) => number,
-  totalSamplePoints: number
+  compValue: (d: DistrictScore) => number
 ): number {
   let baseW = 0
   let compW = 0
@@ -179,7 +200,10 @@ export default function StatistikaPage() {
   const worst = data.districts[data.districts.length - 1]
   const bestPct = pct(best.avgReachableCells, data.totalGridCells)
   const worstPct = pct(worst.avgReachableCells, data.totalGridCells)
-  const ratio = Math.round(best.avgReachableCells / worst.avgReachableCells)
+  const ratio =
+    worst.avgReachableCells > 0
+      ? Math.round(best.avgReachableCells / worst.avgReachableCells)
+      : Infinity
   const generatedLabel = new Date(data.generatedAt).toLocaleDateString(
     "hr-HR",
     {
@@ -188,6 +212,8 @@ export default function StatistikaPage() {
       year: "numeric",
     }
   )
+  const displayDepartureTime =
+    data.departureWindow ?? data.departureTime ?? "08:00"
 
   // Weighted city average
   const weightedSum = data.districts.reduce(
@@ -209,9 +235,8 @@ export default function StatistikaPage() {
   const cityBajsBoost = hasBajs
     ? weightedPctChange(
         data.districts,
-        (d) => d.avgReachableCells,
-        (d) => d.bajsAvgReachableCells ?? d.avgReachableCells,
-        data.totalSamplePoints
+        (d) => d.trainAvgReachableCells ?? d.avgReachableCells,
+        (d) => d.bajsAvgReachableCells ?? d.avgReachableCells
       )
     : 0
   const bajsRankedByBoost = hasBajs
@@ -228,7 +253,7 @@ export default function StatistikaPage() {
         .filter((d) => (d.desertPct ?? 0) > 0)
         .sort((a, b) => (b.desertPct ?? 0) - (a.desertPct ?? 0))
     : []
-  const lowFreqDistricts = data.districts.filter((d) => d.avgHeadwayMin >= 30)
+  const lowFreqDistricts = data.districts.filter((d) => (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) >= 30)
 
   // Tram dependency insight
   const tramlessDistricts = data.districts.filter((d) => d.tramLines.length === 0)
@@ -249,8 +274,7 @@ export default function StatistikaPage() {
     ? -weightedPctChange(
         data.districts,
         (d) => d.avgReachableCells,
-        (d) => d.eveningAvgReachableCells ?? d.avgReachableCells,
-        data.totalSamplePoints
+        (d) => d.eveningAvgReachableCells ?? d.avgReachableCells
       )
     : 0
 
@@ -262,12 +286,16 @@ export default function StatistikaPage() {
         .sort((a, b) => (b.stddevReachableCells ?? 0) - (a.stddevReachableCells ?? 0))
     : []
 
-  // Frequency data — districts sorted by headway
-  const freqRanked = [...data.districts].sort((a, b) => a.avgHeadwayMin - b.avgHeadwayMin)
+  // Frequency data - districts sorted by headway
+  const freqRanked = [...data.districts].sort(
+    (a, b) =>
+      (a.medianHeadwayMin ?? a.avgHeadwayMin ?? 0) -
+      (b.medianHeadwayMin ?? b.avgHeadwayMin ?? 0)
+  )
   const allTramLines = new Set(data.districts.flatMap((d) => d.tramLines))
   const allBusLines = new Set(data.districts.flatMap((d) => d.busLines))
   const totalLines = allTramLines.size + allBusLines.size
-  const maxHeadway = Math.max(...freqRanked.map((d) => d.avgHeadwayMin))
+  const maxHeadway = Math.max(...freqRanked.map((d) => (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0)))
 
   // Score vs density scatterplot data
   const densityData = data.districts.map((d) => ({
@@ -364,7 +392,7 @@ export default function StatistikaPage() {
       <StatHero
         best={best}
         bestPct={bestPct}
-        departureTime={data.departureTime}
+        departureTime={displayDepartureTime}
         generatedLabel={generatedLabel}
         maxMinutes={data.maxMinutes}
         ratio={ratio}
@@ -501,8 +529,8 @@ export default function StatistikaPage() {
                 </span>
               </div>
               <div className="mt-2 text-[12px] leading-snug text-teal-700/80 dark:text-teal-400/80">
-                Rijedak interval (30–60 min) ograničava utjecaj na kratkim
-                putovanjima.
+                Doprinos dosegu: <strong className="text-teal-800 dark:text-teal-300">0%</strong>.
+                Rijedak interval (30–60 min) troši cijeli budžet čekanja.
               </div>
             </div>
           ) : null
@@ -582,7 +610,7 @@ export default function StatistikaPage() {
                   <strong className="font-medium text-amber-700 dark:text-amber-400">
                     BAJS bike-sharinga
                   </strong>{" "}
-                  — u idealnom scenariju (svaka stanica ima bicikl) prosječni
+                  - u idealnom scenariju (svaka stanica ima bicikl) prosječni
                   stanovnik grada dobiva{" "}
                   <strong className="font-medium text-slate-900 dark:text-slate-100">
                     +{cityBajsBoost}%
@@ -639,7 +667,7 @@ export default function StatistikaPage() {
 
         {/* Gini coefficient + Lorenz curve */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Left panel — Lorenz curve SVG */}
+          {/* Left panel - Lorenz curve SVG */}
           <section id="lorenz" className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
             <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
               Lorenzova krivulja dostupnosti
@@ -691,7 +719,7 @@ export default function StatistikaPage() {
                         fillOpacity={0.3}
                       />
 
-                      {/* Diagonal — perfect equality */}
+                      {/* Diagonal - perfect equality */}
                       <line
                         x1={0}
                         y1={lih}
@@ -712,7 +740,7 @@ export default function StatistikaPage() {
                         strokeLinejoin="round"
                       />
 
-                      {/* Tick labels — X axis */}
+                      {/* Tick labels - X axis */}
                       {[0, 0.25, 0.5, 0.75, 1].map((v) => (
                         <text
                           key={`xt-${v}`}
@@ -725,7 +753,7 @@ export default function StatistikaPage() {
                         </text>
                       ))}
 
-                      {/* Tick labels — Y axis */}
+                      {/* Tick labels - Y axis */}
                       {[0, 0.25, 0.5, 0.75, 1].map((v) => (
                         <text
                           key={`yt-${v}`}
@@ -770,7 +798,7 @@ export default function StatistikaPage() {
             </p>
             <div className="sr-only">
               <table>
-                <caption>Lorenzova krivulja — podaci po četvrtima sortirani po dostupnosti</caption>
+                <caption>Lorenzova krivulja - podaci po četvrtima sortirani po dostupnosti</caption>
                 <thead>
                   <tr>
                     <th scope="col">Četvrt</th>
@@ -791,7 +819,7 @@ export default function StatistikaPage() {
             </div>
           </section>
 
-          {/* Right panel — Gini interpretation */}
+          {/* Right panel - Gini interpretation */}
           <section id="gini" className="flex flex-col rounded-3xl bg-emerald-50/50 p-8 dark:bg-emerald-950/10">
             <div className="mb-6 flex items-center gap-3 text-emerald-800 dark:text-emerald-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-emerald-500/20">
@@ -901,7 +929,7 @@ export default function StatistikaPage() {
                 .
               </p>
               <p>
-                Broj tramvajskih linija je najjači prediktor rezultata — četvrti
+                Broj tramvajskih linija je najjači prediktor rezultata - četvrti
                 s više od 10 linija prosječno imaju rezultat iznad 50.
               </p>
               <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[14px] text-rose-700/80 dark:text-rose-300/80">
@@ -919,6 +947,86 @@ export default function StatistikaPage() {
             </div>
           </section>
         )}
+
+        {/* HZ train - untapped potential */}
+        {(() => {
+          const withTrains = data.districts.filter(
+            (d) => (d.trainLines?.length ?? 0) > 0
+          )
+          const anyTrainBoost = withTrains.some(
+            (d) => (d.trainBoostPct ?? 0) > 0
+          )
+          return withTrains.length > 0 && !anyTrainBoost ? (
+            <section id="vlak" className="rounded-3xl bg-teal-50/50 p-8 dark:bg-teal-950/10">
+              <div className="mb-6 flex items-center gap-3 text-teal-800 dark:text-teal-200">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-teal-500/20">
+                  <svg
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                    <line x1="4" y1="22" x2="4" y2="15" />
+                  </svg>
+                </span>
+                <h2 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                  HŽ vlak - neiskorišten potencijal
+                </h2>
+              </div>
+              <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                <p>
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {withTrains.length} od {data.districts.length} četvrti
+                  </strong>{" "}
+                  ima pristup željezničkoj mreži - ali vlak ne poboljšava
+                  30-minutnu dostupnost ni u jednoj od njih. Doprinos
+                  vlaka je{" "}
+                  <strong className="font-medium text-teal-700 dark:text-teal-300">
+                    0%
+                  </strong>{" "}
+                  posvuda.
+                </p>
+                <p>
+                  Razlog je frekvencija. HŽ regionalni vlakovi voze svakih
+                  30–60 minuta. Uz prosječno čekanje od 15–30 minuta, putnik
+                  potroši većinu svog 30-minutnog budžeta samo čekajući na
+                  peronu. Kad vlak napokon stigne, preostalo vrijeme nije
+                  dovoljno da bi značajno proširilo doseg u usporedbi s
+                  tramvajem ili autobusom koji su već krenuli.
+                </p>
+                <p className="text-[14px] text-teal-700/80 dark:text-teal-400/80">
+                  Za usporedbu: tramvaj u vršnom satu dolazi svakih 4–6 minuta
+                  (prosječno čekanje ~2 min), što ostavlja 28 minuta za
+                  putovanje. Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo
+                  na ~7 min i vlak bi značajno proširio doseg perifernih
+                  četvrti poput Sesveta i Velike Gorice.
+                </p>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-[14px] text-teal-700/80 dark:text-teal-300/80">
+                {withTrains
+                  .sort((a, b) => b.score - a.score)
+                  .map((d) => (
+                    <span key={d.name}>
+                      {d.name}:{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {d.trainLines?.length ?? 0}
+                      </strong>{" "}
+                      linija, boost{" "}
+                      <strong className="font-medium text-teal-700 dark:text-teal-300">
+                        0%
+                      </strong>
+                    </span>
+                  ))}
+              </div>
+            </section>
+          ) : null
+        })()}
       </div>
 
       {/* Density vs connectivity scatterplot */}
@@ -932,7 +1040,7 @@ export default function StatistikaPage() {
           </div>
           <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
             Svaka točka je jedna gradska četvrt. Idealno bi gušće naseljene
-            četvrti trebale imati bolji javni prijevoz — ali to u Zagrebu često
+            četvrti trebale imati bolji javni prijevoz - ali to u Zagrebu često
             nije slučaj.
           </p>
         </div>
@@ -1126,7 +1234,7 @@ export default function StatistikaPage() {
             </div>
             <div className="sr-only">
               <table>
-                <caption>Gustoća vs. povezanost — podaci po četvrtima</caption>
+                <caption>Gustoća vs. povezanost - podaci po četvrtima</caption>
                 <thead>
                   <tr>
                     <th scope="col">Četvrt</th>
@@ -1190,7 +1298,9 @@ export default function StatistikaPage() {
                       ?.population ?? 0
                   ).toLocaleString("hr-HR")}
                 </strong>{" "}
-                stanovnika i rezultatom 15 je najveći primjer lošeg omjera
+                stanovnika i rezultatom{" "}
+                {densityData.find((d) => d.name === "Sesvete")?.score ?? 15}{" "}
+                je najveći primjer lošeg omjera
                 gustoće i povezanosti u gradu.
               </p>
               <p>
@@ -1201,7 +1311,7 @@ export default function StatistikaPage() {
                 <strong className="font-medium text-slate-900 dark:text-slate-100">
                   {(scatterDonjiGrad?.population ?? 0).toLocaleString("hr-HR")}
                 </strong>{" "}
-                stanovnika ali najgušću mrežu —{" "}
+                stanovnika ali najgušću mrežu -{" "}
                 <strong className="font-medium text-slate-900 dark:text-slate-100">
                   {scatterDonjiGrad?.tramLineCount ?? 0}
                 </strong>{" "}
@@ -1248,8 +1358,8 @@ export default function StatistikaPage() {
                   )}
                 </div>
                 <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-                  Udio stanovnika u svakoj četvrti koji žive više od 500m od
-                  najbliže stanice javnog prijevoza.
+                  Udio uzorkovanih točaka u svakoj četvrti udaljenijih više od
+                  500m od najbliže stanice javnog prijevoza.
                 </p>
                 <RankingList
                   items={desertDistricts}
@@ -1318,7 +1428,7 @@ export default function StatistikaPage() {
                     <strong className="font-medium text-slate-900 dark:text-slate-100">
                       {desertDistricts[0]?.name}
                     </strong>{" "}
-                    — {desertDistricts[0]?.desertPct}% uzorkovanih točaka je
+                    - {desertDistricts[0]?.desertPct}% uzorkovanih točaka je
                     više od 500m zračne linije od najbliže stanice, s prosječnom
                     udaljenošću od{" "}
                     <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -1335,7 +1445,7 @@ export default function StatistikaPage() {
                       {lowFreqDistricts.length === 1
                         ? "četvrt ima"
                         : "četvrti imaju"}{" "}
-                      medijan intervala ≥30 min — manje od 2 polaska na sat (
+                      medijan intervala ≥30 min - manje od 2 polaska na sat (
                       {lowFreqDistricts.map((d) => d.name).join(", ")}).
                     </p>
                   )}
@@ -1358,7 +1468,7 @@ export default function StatistikaPage() {
             </div>
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
               Koliko dostupnosti svaka četvrt gubi navečer (21:00) u usporedbi s
-              jutarnjim vršnim satom ({data.departureTime}). Ista mreža, manji
+              jutarnjim vršnim satom ({displayDepartureTime}). Ista mreža, manji
               broj polazaka.
             </p>
           </div>
@@ -1433,7 +1543,7 @@ export default function StatistikaPage() {
                   </div>
                   <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
                     najgori pad
-                    <br />({eveningRankedByDrop[0]?.name ?? "—"})
+                    <br />({eveningRankedByDrop[0]?.name ?? "-"})
                   </div>
                 </div>
               </div>
@@ -1582,9 +1692,11 @@ export default function StatistikaPage() {
                           <strong className="font-medium text-slate-900 dark:text-slate-100">
                             +{Math.round(bottomBoost)}%
                           </strong>
-                          . BAJS stanice su koncentrirane u centru — proširenje
+                          . BAJS stanice su koncentrirane u centru - proširenje
                           mreže prema rubnim četvrtima moglo bi smanjiti
-                          nejednakost.
+                          nejednakost. Četvrti bez vlastitih stanica mogu
+                          ipak imati mali dobitak jer stanovnici na rubu
+                          mogu doseći stanice u susjednoj četvrti.
                         </>
                       )
                     })()}
@@ -1616,10 +1728,10 @@ export default function StatistikaPage() {
                     <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
                       {topBajsBeneficiary
                         ? `+${topBajsBeneficiary.bajsBoostPct}%`
-                        : "—"}
+                        : "-"}
                     </div>
                     <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
-                      max. dobitak ({topBajsBeneficiary?.name ?? "—"})
+                      max. dobitak ({topBajsBeneficiary?.name ?? "-"})
                     </div>
                   </div>
                 </div>
@@ -1683,10 +1795,17 @@ export default function StatistikaPage() {
                           />
                         </div>
                       </div>
-                      <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
-                        {pct(d.minReachableCells ?? 0, data.totalGridCells)}–
-                        {pct(d.maxReachableCells ?? 0, data.totalGridCells)}%
-                      </span>
+                      <div className="flex shrink-0 flex-col items-end gap-0.5">
+                        <span className="text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+                          {pct(d.minReachableCells ?? 0, data.totalGridCells)}–
+                          {pct(d.maxReachableCells ?? 0, data.totalGridCells)}%
+                        </span>
+                        {d.p25ReachableCells != null && d.p75ReachableCells != null && (
+                          <span className="text-[10px] text-sky-500/70 tabular-nums dark:text-sky-400/60">
+                            IQR {pct(d.p25ReachableCells, data.totalGridCells)}–{pct(d.p75ReachableCells, data.totalGridCells)}%
+                          </span>
+                        )}
+                      </div>
                     </div>
                   )
                 })}
@@ -1733,7 +1852,7 @@ export default function StatistikaPage() {
                   <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
                     {(() => {
                       const d = varianceRanked[0]
-                      if (!d) return "—"
+                      if (!d) return "-"
                       const range =
                         (d.maxReachableCells ?? 0) - (d.minReachableCells ?? 0)
                       return range.toLocaleString("hr-HR")
@@ -1752,12 +1871,12 @@ export default function StatistikaPage() {
                   <strong className="font-medium text-slate-900 dark:text-slate-100">
                     {varianceRanked[0]?.name}
                   </strong>{" "}
-                  — neki stanovnici imaju odličnu povezanost javnim prijevozom,
+                  - neki stanovnici imaju odličnu povezanost javnim prijevozom,
                   dok susjedi 500 metara uzbrdo nemaju gotovo ništa.
                 </p>
                 <p>
                   Gornji grad-Medveščak i Črnomerec protežu se uz padinu
-                  Medvednice — donji dijelovi blizu centra imaju odličan
+                  Medvednice - donji dijelovi blizu centra imaju odličan
                   tramvajski pristup, dok su gornji dijelovi prometne pustinje.
                 </p>
               </div>
@@ -1791,13 +1910,13 @@ export default function StatistikaPage() {
               </h3>
               <div className="space-y-2">
                 {freqRanked.map((d, i) => {
-                  const barPct = maxHeadway > 0 ? (d.avgHeadwayMin / maxHeadway) * 100 : 0
+                  const barPct = maxHeadway > 0 ? ((d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) / maxHeadway) * 100 : 0
                   const barColor =
-                    d.avgHeadwayMin <= 1
+                    (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) <= 1
                       ? "bg-emerald-500"
-                      : d.avgHeadwayMin <= 2
+                      : (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) <= 2
                         ? "bg-cyan-500"
-                        : d.avgHeadwayMin <= 3
+                        : (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) <= 3
                           ? "bg-blue-500"
                           : "bg-purple-500"
                   return (
@@ -1815,7 +1934,7 @@ export default function StatistikaPage() {
                         />
                       </div>
                       <span className="w-10 shrink-0 text-right font-mono text-[13px] font-medium tabular-nums text-slate-900 dark:text-slate-100">
-                        {d.avgHeadwayMin.toFixed(1)}
+                        {(d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0).toFixed(1)}
                       </span>
                     </div>
                   )
@@ -1873,7 +1992,7 @@ export default function StatistikaPage() {
                   </strong>{" "}
                   imaju gustu tramvajsku mrežu koja prolazi svakih 4-5 minuta po
                   liniji. Rubne četvrti s intervalom od 3-4 minute ovise o
-                  rijetkim autobusnim linijama — čekanje od 15-30 minuta
+                  rijetkim autobusnim linijama - čekanje od 15-30 minuta
                   značajno umanjuje praktičnu dostupnost.
                 </p>
                 <p className="text-[13px] text-slate-500 dark:text-slate-400">
@@ -1915,7 +2034,7 @@ export default function StatistikaPage() {
                   bandColor={band.color}
                   cityAvg={cityAvg}
                   bestDistrict={best.name}
-                  mapLink={`/?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=${data.departureTime}${d.bajsStations > 0 ? "&bajs=1" : ""}`}
+                  mapLink={`/?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=08:00${d.bajsStations > 0 ? "&bajs=1" : ""}`}
                   index={d.rank - 1}
                 />
               ))}
@@ -1974,11 +2093,27 @@ export default function StatistikaPage() {
               Vozni red
             </span>
             <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-              Jutarnji vršni sat (polazak:{" "}
+              Prosjek od{" "}
               <strong className="font-medium text-slate-900 dark:text-slate-200">
-                {data.departureTime}
-              </strong>
-              ). Bez kašnjenja.
+                {data.departureCount ?? 1} polazaka
+              </strong>{" "}
+              u prozoru{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-200">
+                {displayDepartureTime}
+              </strong>{" "}
+              (vršni sat). Čekanje na stanicu modelirano kao pola intervala
+              dolaska linije. Bez kašnjenja u voznom redu.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 border-l-2 border-slate-400 pl-4">
+            <span className="font-sans text-[10px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Zašto 30 minuta?
+            </span>
+            <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
+              30 minuta je međunarodni standard za mjerenje dostupnosti javnog
+              prijevoza (OECD, EU Sustainable Mobility). Obuhvaća jednu
+              tramvajsku ili autobusnu dionicu s presjedanjem - tipično
+              svakodnevno putovanje u Zagrebu.
             </p>
           </div>
           {hasBajs && (
@@ -2022,8 +2157,8 @@ export default function StatistikaPage() {
             Preuzmi podatke (JSON)
           </a>
           <span className="text-[12px] leading-relaxed text-slate-500 dark:text-slate-400">
-            Svi izračunati podaci po četvrtima — rezultati, populacija, pustinjski indeks,
-            BAJS utjecaj, večernji pad — u strojno čitljivom JSON formatu. Slobodno za korištenje
+            Svi izračunati podaci po četvrtima - rezultati, populacija, pustinjski indeks,
+            BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu. Slobodno za korištenje
             uz navođenje izvora.
           </span>
         </div>
@@ -2141,7 +2276,7 @@ function StatHero({
             </strong>{" "}
             javnim prijevozom, hodanjem i BAJS bike-sharingom. U jednom
             jutarnjem vršnom satu vidi se vrlo jasan urbani jaz između središta
-            i rubova grada — ali i koliko bicikli mogu pomoći.
+            i rubova grada - ali i koliko bicikli mogu pomoći.
           </p>
           <div className="mt-10 flex flex-wrap gap-x-12 gap-y-8 border-t border-black/5 pt-8 dark:border-white/5">
             <HeroStat
@@ -2157,7 +2292,7 @@ function StatHero({
             <HeroStat
               color="#f59e0b"
               label="Raspon rezultata"
-              value={`${ratio}× između vrha i dna`}
+              value={`${ratio === Infinity ? "∞" : ratio}× između vrha i dna`}
             />
           </div>
         </div>
@@ -2516,7 +2651,7 @@ function DistrictCard({
         </div>
         <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 dark:bg-white/5">
           <span className="font-serif text-[13px] font-medium text-slate-700 dark:text-slate-300">
-            ~{Math.round(d.avgHeadwayMin)} min
+            ~{Math.round((d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0))} min
           </span>
           <span className="text-[10px] text-slate-500 dark:text-slate-400">
             interval

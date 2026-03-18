@@ -13,6 +13,8 @@
 
 import { createReadStream, readFileSync, writeFileSync } from "fs"
 import { join } from "path"
+import { Worker } from "worker_threads"
+import { cpus } from "os"
 
 import {
   getGraph,
@@ -43,6 +45,23 @@ const BBOX = {
 // Grid cell size for populated-area lookup (~300m)
 const POP_CELL = 0.003
 
+// Departure time windows for multi-departure averaging
+const MORNING_DEPARTURES = [
+  7 * 3600 + 30 * 60, // 07:30
+  7 * 3600 + 45 * 60, // 07:45
+  8 * 3600, // 08:00
+  8 * 3600 + 15 * 60, // 08:15
+  8 * 3600 + 30 * 60, // 08:30
+]
+
+const EVENING_DEPARTURES = [
+  20 * 3600 + 30 * 60, // 20:30
+  20 * 3600 + 45 * 60, // 20:45
+  21 * 3600, // 21:00
+  21 * 3600 + 15 * 60, // 21:15
+  21 * 3600 + 30 * 60, // 21:30
+]
+
 // --- CLI args ---
 
 function parseArgs() {
@@ -50,18 +69,21 @@ function parseArgs() {
   let time = "08:00"
   let gridM = 200
   let minutes = 30
+  let workers = Math.max(1, cpus().length - 1)
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--time" && args[i + 1]) time = args[++i]
     else if (args[i] === "--grid" && args[i + 1]) gridM = parseInt(args[++i])
     else if (args[i] === "--minutes" && args[i + 1])
       minutes = parseInt(args[++i])
+    else if (args[i] === "--workers" && args[i + 1])
+      workers = parseInt(args[++i])
   }
 
   const [h, m] = time.split(":").map(Number)
   const departureSeconds = h * 3600 + m * 60
 
-  return { time, gridM, minutes, departureSeconds }
+  return { time, gridM, minutes, departureSeconds, workers }
 }
 
 // --- Building extraction from OSM PBF ---
@@ -294,7 +316,8 @@ async function fetchIdealBajsStations(): Promise<BajsStation[]> {
 // --- Main ---
 
 async function main() {
-  const { time, gridM, minutes, departureSeconds } = parseArgs()
+  const { time, gridM, minutes, departureSeconds, workers: numWorkers } =
+    parseArgs()
   const maxSeconds = minutes * 60
 
   console.error("Extracting building footprints from OSM...")
@@ -350,14 +373,14 @@ async function main() {
     busLines: string[]
     trainLines: string[]
     stops: number
-    avgHeadwayMin: number
+    medianHeadwayMin: number
   }
   const districtTransit: TransitInfo[] = districts.map(() => ({
     tramLines: [],
     busLines: [],
     trainLines: [],
     stops: 0,
-    avgHeadwayMin: 0,
+    medianHeadwayMin: 0,
   }))
 
   // Assign each transit stop to a district
@@ -426,7 +449,7 @@ async function main() {
       busLines: [...busRoutes].sort((a, b) => parseInt(a) - parseInt(b)),
       trainLines: [...trainRoutes].sort(),
       stops: stopCount,
-      avgHeadwayMin: Math.round(medianHw / 60),
+      medianHeadwayMin: Math.round(medianHw / 60),
     }
   }
   console.error(`  ${stopToDistrict.size} stops assigned to districts`)
@@ -465,95 +488,140 @@ async function main() {
     `  ${totalDesertPoints} of ${points.length} points (${Math.round((totalDesertPoints / points.length) * 100)}%) are >500m from nearest stop`
   )
 
-  // Pre-allocate reusable buffer for walking Dijkstra
-  const walkBuf = new Float64Array(walkGraph.nodeCount)
+  // --- Parallel scoring with worker threads ---
 
-  const EXCLUDE_RAIL = new Set(["RAIL"] as const)
+  console.error(`\nSpawning ${numWorkers} scoring workers...`)
 
-  function scoringPass(
+  const workerPool: Worker[] = []
+  const readyPromises: Promise<void>[] = []
+  for (let i = 0; i < numWorkers; i++) {
+    const w = new Worker(join(import.meta.dir, "score-worker.ts"))
+    workerPool.push(w)
+    w.on("error", (err) => {
+      console.error(`Worker ${i} error:`, err)
+      process.exit(1)
+    })
+    readyPromises.push(
+      new Promise<void>((resolve) => {
+        w.once("message", (msg) => {
+          if (msg.type === "ready") resolve()
+        })
+      })
+    )
+    w.postMessage({
+      type: "init",
+      graph: transitGraph,
+      bajsStations,
+      bajsStopMap,
+    })
+  }
+  await Promise.all(readyPromises)
+  console.error(`  ${numWorkers} workers ready (each loaded walk graph)`)
+
+  type PassResult = {
+    scores: number[][]
+    best: { reached: number; lat: number; lon: number }[]
+  }
+
+  async function parallelScoringPass(
     label: string,
     opts: {
-      bajsStations?: readonly BajsStation[]
-      excludeModes?: ReadonlySet<import("../lib/transit").TransitMode>
-      stopMap?: ReadonlyMap<string, { lat: number; lon: number }>
-      departureOverride?: number
-    } = {}
-  ) {
+      departureTimes: number[]
+      useBajs?: boolean
+      excludeModes?: string[]
+    }
+  ): Promise<PassResult> {
     const scores: number[][] = districts.map(() => [])
-    const best: { reached: number; lat: number; lon: number }[] = districts.map(
-      () => ({ reached: -1, lat: 0, lon: 0 })
-    )
+    const best = districts.map(() => ({ reached: -1, lat: 0, lon: 0 }))
+
+    // Partition points across workers
+    const chunkSize = Math.ceil(points.length / numWorkers)
+    const chunks: SamplePoint[][] = []
+    for (let i = 0; i < numWorkers; i++) {
+      chunks.push(points.slice(i * chunkSize, (i + 1) * chunkSize))
+    }
+
     const t = performance.now()
-    const stopMapForWalk = opts.stopMap ?? transitGraph.stops
+    console.error(
+      `${label} (${opts.departureTimes.length} departures × ${numWorkers} workers)`
+    )
 
-    console.error(label)
-    for (let i = 0; i < points.length; i++) {
-      const point = points[i]
+    let doneWorkers = 0
+    const resultPromises = chunks.map(
+      (chunk, i) =>
+        new Promise<number[]>((resolve) => {
+          const handler = (msg: { type: string; scores?: number[] }) => {
+            if (msg.type === "result") {
+              workerPool[i].off("message", handler)
+              doneWorkers++
+              const elapsed = ((performance.now() - t) / 1000).toFixed(1)
+              process.stderr.write(
+                `\r  ${doneWorkers}/${numWorkers} workers done (${elapsed}s)`
+              )
+              resolve(msg.scores!)
+            }
+          }
+          workerPool[i].on("message", handler)
+          workerPool[i].postMessage({
+            type: "batch",
+            points: chunk,
+            departureTimes: opts.departureTimes,
+            maxSeconds,
+            useBajs: opts.useBajs ?? false,
+            excludeModes: opts.excludeModes ?? null,
+          })
+        })
+    )
 
-      const times = computeAvgTravelTimes(
-        transitGraph,
-        point.lat,
-        point.lon,
-        opts.departureOverride ?? departureSeconds,
-        maxSeconds,
-        opts.bajsStations,
-        opts.excludeModes
-      )
+    const results = await Promise.all(resultPromises)
+    console.error()
 
-      const reached = countReachableCells(
-        walkGraph,
-        times,
-        stopMapForWalk,
-        point.lat,
-        point.lon,
-        maxSeconds,
-        walkBuf
-      )
-
-      scores[point.districtIdx].push(reached)
-
-      if (reached > best[point.districtIdx].reached) {
-        best[point.districtIdx] = {
-          reached,
-          lat: point.lat,
-          lon: point.lon,
+    // Merge worker results into per-district arrays
+    for (let ci = 0; ci < chunks.length; ci++) {
+      const chunk = chunks[ci]
+      const chunkScores = results[ci]
+      for (let j = 0; j < chunk.length; j++) {
+        const point = chunk[j]
+        const reached = chunkScores[j]
+        scores[point.districtIdx].push(reached)
+        if (reached > best[point.districtIdx].reached) {
+          best[point.districtIdx] = {
+            reached,
+            lat: point.lat,
+            lon: point.lon,
+          }
         }
       }
-
-      if ((i + 1) % 50 === 0 || i + 1 === points.length) {
-        const elapsed = ((performance.now() - t) / 1000).toFixed(1)
-        const rate = ((i + 1) / ((performance.now() - t) / 1000)).toFixed(1)
-        process.stderr.write(
-          `\r  ${i + 1}/${points.length} scored (${elapsed}s, ${rate} pts/s)`
-        )
-      }
     }
-    console.error()
+
     return { scores, best }
   }
 
   const t0 = performance.now()
 
   // --- Pass 1: Bus+tram only (no rail, no BAJS) → base score ---
-  const pass1 = scoringPass("Pass 1/4: Scoring bus+tram only...", {
-    excludeModes: EXCLUDE_RAIL,
-  })
+  const pass1 = await parallelScoringPass(
+    "Pass 1/4: Scoring bus+tram only...",
+    { departureTimes: MORNING_DEPARTURES, excludeModes: ["RAIL"] }
+  )
 
   // --- Pass 2: Bus+tram+train (no BAJS) → train boost ---
-  const pass2 = scoringPass("Pass 2/4: Scoring bus+tram+train...")
+  const pass2 = await parallelScoringPass(
+    "Pass 2/4: Scoring bus+tram+train...",
+    { departureTimes: MORNING_DEPARTURES }
+  )
 
   // --- Pass 3: Bus+tram+train+BAJS → BAJS boost ---
-  const pass3 = scoringPass("Pass 3/4: Scoring bus+tram+train+BAJS...", {
-    bajsStations,
-    stopMap: bajsStopMap,
-  })
+  const pass3 = await parallelScoringPass(
+    "Pass 3/4: Scoring bus+tram+train+BAJS...",
+    { departureTimes: MORNING_DEPARTURES, useBajs: true }
+  )
 
-  // --- Pass 4: Evening off-peak (21:00) bus+tram only → peak vs off-peak gap ---
-  const eveningDeparture = 21 * 3600
-  const pass4 = scoringPass("Pass 4/4: Scoring evening off-peak (21:00)...", {
-    excludeModes: EXCLUDE_RAIL,
-    departureOverride: eveningDeparture,
-  })
+  // --- Pass 4: Evening off-peak bus+tram only → peak vs off-peak gap ---
+  const pass4 = await parallelScoringPass(
+    "Pass 4/4: Scoring evening off-peak...",
+    { departureTimes: EVENING_DEPARTURES, excludeModes: ["RAIL"] }
+  )
 
   // Aggregate per district
   function avgScore(scores: number[]): number {
@@ -567,6 +635,25 @@ async function main() {
     const variance =
       scores.reduce((s, v) => s + (v - avg) ** 2, 0) / scores.length
     return Math.sqrt(variance)
+  }
+
+  function median(scores: number[]): number {
+    if (scores.length === 0) return 0
+    const sorted = [...scores].sort((a, b) => a - b)
+    const mid = Math.floor(sorted.length / 2)
+    return sorted.length % 2 === 1
+      ? sorted[mid]
+      : (sorted[mid - 1] + sorted[mid]) / 2
+  }
+
+  function percentile(scores: number[], p: number): number {
+    if (scores.length === 0) return 0
+    const sorted = [...scores].sort((a, b) => a - b)
+    const idx = (p / 100) * (sorted.length - 1)
+    const lo = Math.floor(idx)
+    const hi = Math.ceil(idx)
+    if (lo === hi) return sorted[lo]
+    return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo)
   }
 
   function boostPct(base: number, boosted: number): number {
@@ -598,6 +685,9 @@ async function main() {
           ? baseScores.reduce((m, v) => Math.max(m, v), -Infinity)
           : 0,
       stddevReachableCells: Math.round(stddev(baseScores, baseAvg)),
+      medianReachableCells: Math.round(median(baseScores)),
+      p25ReachableCells: Math.round(percentile(baseScores, 25)),
+      p75ReachableCells: Math.round(percentile(baseScores, 75)),
       eveningAvgReachableCells: Math.round(eveningAvg),
       peakOffpeakDrop,
       trainAvgReachableCells: Math.round(trainAvg),
@@ -618,7 +708,7 @@ async function main() {
       busLines: transit.busLines,
       trainLines: transit.trainLines,
       stops: transit.stops,
-      avgHeadwayMin: transit.avgHeadwayMin,
+      medianHeadwayMin: transit.medianHeadwayMin,
     }
   })
 
@@ -635,7 +725,9 @@ async function main() {
 
   const output = {
     generatedAt: new Date().toISOString(),
-    departureTime: time,
+    departureWindow: "07:30-08:30",
+    eveningWindow: "20:30-21:30",
+    departureCount: MORNING_DEPARTURES.length,
     gridSpacingM: gridM,
     maxMinutes: minutes,
     totalSamplePoints: points.length,
@@ -644,6 +736,9 @@ async function main() {
     cityDesertPct: Math.round((totalDesertPoints / points.length) * 100),
     districts: ranked,
   }
+
+  // Terminate workers
+  for (const w of workerPool) w.terminate()
 
   const outPath = join(process.cwd(), "data/district-scores.json")
   writeFileSync(outPath, JSON.stringify(output, null, 2))

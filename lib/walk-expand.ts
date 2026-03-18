@@ -288,7 +288,8 @@ export function expandWalking(
  * Counting grid cells instead of raw nodes removes bias from street-network density:
  * downtown has 2-3x more nodes/km² than suburbs, but cells normalize to area.
  *
- * @param bestBuf - pre-allocated Float64Array(nodeCount) to avoid per-call allocation
+ * Expects bestBuf pre-filled with Infinity. Resets only touched nodes at end
+ * (avoids filling 422K entries every call — ~10x less memory traffic).
  */
 export function countReachableCells(
   graph: WalkingGraph,
@@ -299,7 +300,8 @@ export function countReachableCells(
   maxSeconds: number,
   bestBuf: Float64Array
 ): number {
-  bestBuf.fill(Infinity)
+  // Track touched nodes for targeted reset instead of bestBuf.fill(Infinity)
+  const touched: number[] = []
   const heap = new WalkHeap()
   const stopSnaps = getTransitStopSnaps(graph, transitStops)
 
@@ -311,6 +313,7 @@ export function countReachableCells(
     const walkTime =
       (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
     if (walkTime < maxSeconds) {
+      touched.push(originNode)
       bestBuf[originNode] = walkTime
       heap.push(walkTime, originNode)
     }
@@ -325,6 +328,7 @@ export function countReachableCells(
     const totalTime = time + snap.walkSeconds
 
     if (totalTime < maxSeconds && totalTime < bestBuf[snap.nodeIdx]) {
+      touched.push(snap.nodeIdx)
       bestBuf[snap.nodeIdx] = totalTime
       heap.push(totalTime, snap.nodeIdx)
     }
@@ -354,11 +358,17 @@ export function countReachableCells(
       const arrivalTime = time + edgeDistCm[e] * CM_TO_SECONDS
 
       if (arrivalTime < maxSeconds && arrivalTime < bestBuf[toIdx]) {
+        touched.push(toIdx)
         bestBuf[toIdx] = arrivalTime
         heap.push(arrivalTime, toIdx)
       }
     }
   }
 
-  return cells.size
+  const count = cells.size
+
+  // Reset only touched nodes back to Infinity (not all 422K)
+  for (let i = 0; i < touched.length; i++) bestBuf[touched[i]] = Infinity
+
+  return count
 }

@@ -22,6 +22,13 @@ Interactive transit reachability map for Zagreb. Click anywhere to see how far y
   - Transit desert score — flags areas >500m from nearest stop or with <2 trips/hour
   - HZ train impact — per-district boost from adding railway access
   - Per-district tram/bus line breakdowns, stop counts, headway times
+  - Transit Gini coefficient + Lorenz curve — inequality of transit access visualized
+  - Population-weighted city score — single headline number for the average resident
+  - Score vs density scatterplot — reveals equity failures in large suburban districts
+  - "Tram is king" insight — tram line count as strongest predictor of connectivity
+  - Frequency spectrum chart — every line sorted by peak headway
+  - Internal inequality ranking — min/max reachability spread within each district
+  - Downloadable open data — CSV/JSON export of all computed metrics
 - **Onboarding dialog** — first-visit tutorial explaining isochrone bands and route preview
 - **About page** (`/o-projektu`)
 
@@ -74,41 +81,67 @@ Caddy handles TLS, gzip/zstd compression, and security headers.
 
 Roughly ordered by how much sense they make next:
 
-### Stats page — quick wins (existing data, minimal computation)
+### Quick wins
 
-- **Transit Gini coefficient + Lorenz curve** — one chart showing inequality of transit access (Gini = 0.315). Plot cumulative % of population vs cumulative % of reachability. Key finding: BAJS bike-sharing slightly *worsens* equity (Gini +0.010) because stations concentrate in already well-served areas. Evening service is also less equitable than morning.
+- **Route commercial speed ranking** — all data exists in `TransitGraph.patterns`. Compute distance/time per pattern, render as sortable table on `/statistika`. Tram 13: 12.8 km/h. Bus 313: 46.5 km/h.
 
-- **Population-weighted city score** — "the average Zagrepchanin scores 39.7/100." A single headline number reframing the whole narrative. Currently the page shows per-district scores but never the city-wide weighted average.
+- **Share button** — copy current map URL (with lat/lon/time/bajs params) to clipboard. Toast confirmation.
 
-- **Score vs density scatterplot** — each district as a dot (X = population density, Y = score). Reveals Sesvete (71k people, score 15) as the biggest equity failure. Strong negative correlation: large suburban districts have many stops but terrible scores.
+- **Statistika static caching** — page is `force-dynamic` for no reason. Switch to ISR with `revalidate: 3600` for free CDN caching.
 
-- **"Tram is king" insight card** — no district without tram service scores above 39. Tram line count is the single strongest predictor of score (r=0.75). Five districts have zero trams and all score <=39.
+- **Arrival time in route details** — show "Dolazak: 14:32" alongside duration in the route panel.
 
-- **Frequency spectrum chart** — every line sorted by morning peak headway. Tram 7 runs every 1 minute, bus 311 every 2+ hours. Visual gut-punch showing the two-tier system.
+- **Evening Gini display** — `eveningGini` is already computed but never rendered. Add it to the existing Gini section.
 
-- **Internal inequality ranking** — Gornji grad-Medvescak has stddev 432: min 276, max 2101 reachable cells within the same district. Some residents have world-class transit while neighbours 500m uphill have nothing. Show the min/max range per district.
+- **Caddy static asset cache headers** — no `Cache-Control` for `/_next/static/*` or SVGs. Add `immutable, max-age=31536000` for hashed assets.
 
-- **Downloadable open data** — CSV/JSON download button for all computed metrics. Journalists and urban planners will use this and credit the tool.
+- **BAJS station popups** — click a bike station dot → popup with station name, bikes available, docks available, last updated.
 
-### Stats page — medium effort, high impact
+- **Onboarding copy fix** — dialog says "Pomakni miš" (move mouse) on touch devices. Detect touch and show "Dodirni za detalje rute" instead.
 
-- **Cross-district travel time matrix** — 17x17 heatmap showing travel time from district A to B at 08:00. Reveals painful corridors like Sesvete↔Tresnjevka (76 min avg, 1.7 transfers). Only needs ~289 OTP plan queries.
+- **Train impact narrative** — 10 districts have train access but ALL show 0% reachability boost. Surface this as an insight on `/statistika`.
+
+### Medium effort, high impact
+
+- **Cross-district travel time matrix** — 17x17 heatmap showing travel time from district A to B at 08:00. `computeAvgTravelTimes()` + district `bestPoint` data already exist. Only needs ~289 OTP plan queries.
+
+- **Dynamic OG images** — shared URLs with coordinates show a generic static image. Playwright capture infra exists; parameterize it to generate OG images per lat/lon/time on demand.
+
+- **GTFS-RT vehicle positions** — the RT feed has ~281 vehicle positions per snapshot, completely ignored. Show live tram/bus dots on the map with bearing and speed.
+
+- **GTFS-RT service alerts** — disruptions, cancellations, and detours sitting in the feed, never parsed. Show as a banner on affected routes.
+
+- **POI overlay** — Overpass API for hospitals, schools, parks within isochrone. Turns abstract reachability into "what can I actually reach in 15 minutes?"
+
+- **Auto-update GTFS** — no CI/CD, GTFS is manually fetched. Add GitHub Actions or systemd timer for weekly download + OTP graph rebuild + district score recomputation.
+
+- **Weekend reachability collapse** — run the scoring pipeline against Saturday/Sunday GTFS schedules. Show "weekend penalty" per district. Some may lose 40-50% reach.
 
 - **Network bottleneck analysis** — Crnomerec has 228 unique bridge connections; it's the sole link between the entire western bus network and trams. If it goes down, 22 bus routes lose tram access. Show the hub-and-spoke fragility.
 
-- **Weekend reachability collapse** — run the scoring pipeline against Saturday/Sunday GTFS schedules. Some districts may lose 40-50% of reach on weekends. Show as a "weekend penalty" metric per district.
+- **"Last tram home" per district** — what time does transit effectively stop serving each district? Map colored by the latest departure that still gets you to Trg bana Jelacica.
 
-- **"Last tram home" per district** — what time does transit effectively stop serving each district? Map colored by the latest departure that still gets you to Trg bana Jelacica. Reveals which districts get stranded earliest.
-
-- **Route commercial speed ranking** — tram 13: 12.8 km/h. Bus 313: 46.5 km/h. Show how fast each line actually moves. Mode averages: rail 39 km/h, bus 25 km/h, tram 15 km/h.
-
-- **Nearest hospital/school by transit** — "from Sesvete, 3 hospitals reachable in 30 min. From Donji grad, 15." Use Overpass API POIs (21 hospitals, 276 schools, 455 parks in the Zagreb bbox) + existing isochrone engine.
+- **Nearest hospital/school by transit** — "from Sesvete, 3 hospitals reachable in 30 min. From Donji grad, 15." Overpass API POIs + existing isochrone engine.
 
 - **Multimodal hub map** — show the 63 multimodal stops, highlight the 5 critical bottlenecks. There is only 1 tram-rail interchange in all of Zagreb (Horvati). Zero 3-mode hubs.
 
 - **Walk distance histogram** — not just "desert %", show the full cumulative distribution. Donji grad: 95% of residents within 200m of a stop. Brezovica: only 37% within 500m.
 
-- **"Rate my commute"** — enter home and work address, see transit options, compare to city average. Geocoding + OTP plan query + comparison to precomputed district scores.
+### Polish
+
+- **Touch targets** — export button (36x36) and info button (29x29) are below the 44px minimum. Increase sizes.
+
+- **Motion.js lazy-load** — 1.3MB bundle loaded eagerly. It's only needed on the map page; ensure it's fully code-split behind the existing `dynamic()` import.
+
+- **OG image optimization** — `og.png` is 701KB unoptimized PNG. Convert to optimized WebP/JPEG, target <200KB.
+
+- **Map container a11y** — add `role="application"` to the map `<div>` so screen readers understand it's interactive.
+
+- **Route details `aria-expanded`** — the collapsible route panel has no ARIA state. Add `aria-expanded` to the toggle button.
+
+- **API response compression** — isochrone endpoint uses Brotli but route and BAJS endpoints don't. Normalize compression across all API routes.
+
+- **Isochrone cache duration** — currently 30 seconds. Increase to 5 minutes with `stale-while-revalidate` for repeat clicks near the same origin.
 
 ### Stats page — high effort, very high impact
 
@@ -130,11 +163,11 @@ Roughly ordered by how much sense they make next:
 
 - **"Where should we meet?"** — two people each pick their origin, the app computes both isochrones and highlights the overlap. The sweet spot (lowest combined travel time) becomes the suggested meeting area. Shareable URLs already support one origin — extend to encode both, so each person can share their starting point.
 
-- **POI overlay** — show hospitals, schools, parks, grocery stores within the reachable area (Overpass API). Turns the abstract isochrone into a concrete answer: "what can I actually get to in 15 minutes?"
-
 - **Animated expansion** — play button that sweeps from 0 to 45 minutes, watching the isochrone grow in real-time. Visually striking and makes the data more intuitive.
 
 - **Commute evaluator** — pin your workplace, then explore commute times from any potential home. Reverse isochrone framed for apartment hunting.
+
+- **"Rate my commute"** — enter home and work address, see transit options, compare to city average. Geocoding + OTP plan query + comparison to precomputed district scores.
 
 ### Platform
 

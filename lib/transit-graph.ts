@@ -80,6 +80,7 @@ interface BajsAdjacency {
 }
 
 let cachedGraph: TransitGraph | null = null
+let cachedGraphDate: string | undefined = undefined
 let graphPromise: Promise<TransitGraph> | null = null
 let cachedBajsAdjacency: {
   graph: TransitGraph
@@ -87,10 +88,17 @@ let cachedBajsAdjacency: {
   adjacency: BajsAdjacency
 } | null = null
 
-export async function getGraph(): Promise<TransitGraph> {
-  if (cachedGraph) return cachedGraph
-  if (!graphPromise) {
-    graphPromise = buildGraph().catch((err) => {
+/**
+ * Build or return a cached transit graph from OTP.
+ * @param serviceDate Optional GTFS service date (YYYY-MM-DD) to filter trips.
+ *   When provided, only trips active on that date are included, giving correct
+ *   weekday vs weekend schedules. When omitted, all trips are returned (legacy behavior).
+ */
+export async function getGraph(serviceDate?: string): Promise<TransitGraph> {
+  if (cachedGraph && cachedGraphDate === serviceDate) return cachedGraph
+  if (!graphPromise || cachedGraphDate !== serviceDate) {
+    cachedGraphDate = serviceDate
+    graphPromise = buildGraph(serviceDate).catch((err) => {
       graphPromise = null
       throw err
     })
@@ -98,12 +106,13 @@ export async function getGraph(): Promise<TransitGraph> {
   return graphPromise
 }
 
-async function buildGraph(): Promise<TransitGraph> {
+async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
+  const tripsArg = serviceDate ? `(serviceDate: "${serviceDate}")` : ""
   const res = await fetch(`${OTP_URL}/otp/gtfs/v1`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } trips { gtfsId stoptimes { scheduledDeparture } } } }`,
+      query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } trips${tripsArg} { gtfsId stoptimes { scheduledDeparture } } } }`,
     }),
   })
 

@@ -8,7 +8,11 @@
  *
  * Requires OTP to be running (docker compose up otp).
  *
- * Usage: bun scripts/score-districts.ts [--time HH:MM] [--grid METERS] [--minutes N]
+ * Usage: bun scripts/score-districts.ts [--time HH:MM] [--grid METERS] [--minutes N] [--day DAYNAME]
+ *
+ * --day accepts a day of the week (monday, tuesday, ..., sunday).
+ * When set, the OTP query filters trips to the GTFS service calendar for that day,
+ * giving correct weekday vs weekend schedules. Output includes the day in the filename.
  */
 
 import { createReadStream, readFileSync, writeFileSync } from "fs"
@@ -64,12 +68,39 @@ const EVENING_DEPARTURES = [
 
 // --- CLI args ---
 
+const VALID_DAYS = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+] as const
+type DayName = (typeof VALID_DAYS)[number]
+
+/** Find the next occurrence of the given day of the week from today. Returns YYYY-MM-DD. */
+function nextDateForDay(day: DayName): string {
+  const targetIdx = VALID_DAYS.indexOf(day)
+  const today = new Date()
+  const todayIdx = today.getDay() // 0=Sunday
+  let daysAhead = targetIdx - todayIdx
+  if (daysAhead <= 0) daysAhead += 7
+  const target = new Date(today)
+  target.setDate(today.getDate() + daysAhead)
+  const yyyy = target.getFullYear()
+  const mm = String(target.getMonth() + 1).padStart(2, "0")
+  const dd = String(target.getDate()).padStart(2, "0")
+  return `${yyyy}-${mm}-${dd}`
+}
+
 function parseArgs() {
   const args = process.argv.slice(2)
   let time = "08:00"
   let gridM = 200
   let minutes = 30
   let workers = Math.max(1, cpus().length - 1)
+  let day: DayName | undefined
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--time" && args[i + 1]) time = args[++i]
@@ -78,12 +109,25 @@ function parseArgs() {
       minutes = parseInt(args[++i])
     else if (args[i] === "--workers" && args[i + 1])
       workers = parseInt(args[++i])
+    else if (args[i] === "--day" && args[i + 1]) {
+      const val = args[++i].toLowerCase() as DayName
+      if (!VALID_DAYS.includes(val)) {
+        console.error(
+          `Invalid --day value: "${val}". Expected one of: ${VALID_DAYS.join(", ")}`
+        )
+        process.exit(1)
+      }
+      day = val
+    }
   }
 
   const [h, m] = time.split(":").map(Number)
   const departureSeconds = h * 3600 + m * 60
 
-  return { time, gridM, minutes, departureSeconds, workers }
+  // Compute GTFS service date when --day is specified
+  const serviceDate = day ? nextDateForDay(day) : undefined
+
+  return { time, gridM, minutes, departureSeconds, workers, day, serviceDate }
 }
 
 // --- Building extraction from OSM PBF ---
@@ -316,9 +360,20 @@ async function fetchIdealBajsStations(): Promise<BajsStation[]> {
 // --- Main ---
 
 async function main() {
-  const { time, gridM, minutes, departureSeconds, workers: numWorkers } =
-    parseArgs()
+  const {
+    time,
+    gridM,
+    minutes,
+    departureSeconds,
+    workers: numWorkers,
+    day,
+    serviceDate,
+  } = parseArgs()
   const maxSeconds = minutes * 60
+
+  if (day) {
+    console.error(`Day: ${day} (service date: ${serviceDate})`)
+  }
 
   console.error("Extracting building footprints from OSM...")
   const populatedCells = await extractPopulatedCells()
@@ -331,7 +386,7 @@ async function main() {
   )
 
   console.error("Building transit graph from OTP...")
-  const transitGraph = await getGraph()
+  const transitGraph = await getGraph(serviceDate)
   console.error(
     `  ${transitGraph.patterns.length} patterns, ${transitGraph.stops.size} stops`
   )
@@ -725,6 +780,7 @@ async function main() {
 
   const output = {
     generatedAt: new Date().toISOString(),
+    ...(day ? { day, serviceDate } : {}),
     departureWindow: "07:30-08:30",
     eveningWindow: "20:30-21:30",
     departureCount: MORNING_DEPARTURES.length,
@@ -740,7 +796,10 @@ async function main() {
   // Terminate workers
   for (const w of workerPool) w.terminate()
 
-  const outPath = join(process.cwd(), "data/district-scores.json")
+  const outFile = day
+    ? `district-scores-${day}.json`
+    : "district-scores.json"
+  const outPath = join(process.cwd(), `data/${outFile}`)
   writeFileSync(outPath, JSON.stringify(output, null, 2))
 
   const elapsed = ((performance.now() - t0) / 1000).toFixed(1)

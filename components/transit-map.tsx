@@ -104,6 +104,8 @@ export function TransitMap() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [mapReady, setMapReady] = useState(false)
+  const [showStatsCta, setShowStatsCta] = useState(false)
+  const statsCtaDismissedRef = useRef(false)
 
   const originLat = coords.lat
   const originLon = coords.lon
@@ -732,6 +734,12 @@ export function TransitMap() {
         }
         setLoading(false)
         map.getCanvas().style.cursor = "crosshair"
+        if (
+          !statsCtaDismissedRef.current &&
+          !localStorage.getItem("doseg-stats-cta")
+        ) {
+          setShowStatsCta(true)
+        }
       })
       .catch((err) => {
         if (isoController.signal.aborted) return
@@ -908,8 +916,17 @@ export function TransitMap() {
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
               transition={{ duration: 0.2, ease }}
             >
-              <div className="text-[13px] text-slate-300">
-                Klikni bilo gdje da vidiš dokle možeš stići
+              <div className="flex flex-col items-center gap-2">
+                <div className="text-[13px] text-slate-300">
+                  Klikni bilo gdje da vidiš dokle možeš stići
+                </div>
+                <Link
+                  href="/statistika"
+                  prefetch={false}
+                  className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
+                >
+                  ili pogledaj statistiku po četvrtima &rarr;
+                </Link>
               </div>
             </motion.div>
           )}
@@ -1014,6 +1031,59 @@ export function TransitMap() {
           </svg>
           <span className="hidden sm:inline">O projektu</span>
         </Link>
+
+        <AnimatePresence>
+          {showStatsCta && hasOrigin && (
+            <motion.div
+              key="stats-cta"
+              className="panel absolute bottom-8 left-1/2 z-10 -translate-x-1/2 sm:bottom-8"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.3, delay: 0.5, ease }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-[12px] text-slate-400">
+                  Kako se tvoja četvrt uspoređuje?
+                </span>
+                <Link
+                  href="/statistika"
+                  prefetch={false}
+                  className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
+                  onClick={() => {
+                    localStorage.setItem("doseg-stats-cta", "1")
+                    statsCtaDismissedRef.current = true
+                  }}
+                >
+                  Statistika &rarr;
+                </Link>
+                <button
+                  type="button"
+                  className="text-slate-500 transition-colors hover:text-slate-300"
+                  aria-label="Zatvori"
+                  onClick={() => {
+                    localStorage.setItem("doseg-stats-cta", "1")
+                    statsCtaDismissedRef.current = true
+                    setShowStatsCta(false)
+                  }}
+                >
+                  <svg
+                    aria-hidden="true"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 8 8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  >
+                    <path d="M1 1l6 6M7 1l-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {hasOrigin && (

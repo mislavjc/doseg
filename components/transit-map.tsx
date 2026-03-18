@@ -106,6 +106,16 @@ export function TransitMap() {
   const [mapReady, setMapReady] = useState(false)
   const [showStatsCta, setShowStatsCta] = useState(false)
   const statsCtaDismissedRef = useRef(false)
+  const [linkCopied, setLinkCopied] = useState(false)
+  const [vehiclePositions, setVehiclePositions] = useState<
+    GeoJSON.FeatureCollection
+  >(EMPTY_FC)
+  const [vehiclesEnabled, setVehiclesEnabled] = useState(false)
+  const [poiEnabled, setPoiEnabled] = useState(false)
+  const [layersOpen, setLayersOpen] = useState(false)
+  const poiAbortRef = useRef<AbortController | null>(null)
+  const vehicleIntervalRef = useRef<number>(0)
+  const prevVehiclesJsonRef = useRef("")
 
   const originLat = coords.lat
   const originLon = coords.lon
@@ -299,6 +309,232 @@ export function TransitMap() {
             "rgba(255, 255, 255, 0.4)",
           ],
         },
+      })
+
+      // Vehicle positions layer
+      map.addSource("vehicle-positions", { type: "geojson", data: EMPTY_FC })
+      map.addLayer({
+        id: "vehicle-positions",
+        type: "circle",
+        source: "vehicle-positions",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10,
+            2,
+            13,
+            4,
+            16,
+            5,
+          ],
+          "circle-color": "#22d3ee",
+          "circle-opacity": 0.85,
+          "circle-stroke-width": 0.5,
+          "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+        },
+      })
+
+      // Vehicle line number labels
+      map.addLayer({
+        id: "vehicle-labels",
+        type: "symbol",
+        source: "vehicle-positions",
+        minzoom: 12,
+        layout: {
+          "text-field": ["get", "line"],
+          "text-size": 9,
+          "text-offset": [0, -1.2],
+          "text-allow-overlap": false,
+          "text-ignore-placement": false,
+          "text-font": ["Open Sans Bold"],
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "rgba(0, 0, 0, 0.7)",
+          "text-halo-width": 1,
+        },
+      })
+
+      // POI layer: colored circles with category letter
+      map.addSource("poi", { type: "geojson", data: EMPTY_FC })
+      map.addLayer({
+        id: "poi-bg",
+        type: "circle",
+        source: "poi",
+        paint: {
+          "circle-radius": [
+            "interpolate", ["linear"], ["zoom"],
+            10, 5,
+            13, 8,
+            16, 11,
+          ],
+          "circle-color": [
+            "match",
+            ["get", "category"],
+            "hospital", "#ef4444",
+            "school", "#3b82f6",
+            "park", "#22c55e",
+            "pharmacy", "#f97316",
+            "supermarket", "#eab308",
+            "#94a3b8",
+          ],
+          "circle-opacity": 0.9,
+          "circle-stroke-width": 1.5,
+          "circle-stroke-color": "rgba(255, 255, 255, 0.6)",
+        },
+      })
+      // POI category letter on circle
+      map.addLayer({
+        id: "poi-layer",
+        type: "symbol",
+        source: "poi",
+        layout: {
+          "text-field": [
+            "match",
+            ["get", "category"],
+            "hospital", "H",
+            "school", "Š",
+            "park", "P",
+            "pharmacy", "Lj",
+            "supermarket", "S",
+            "?",
+          ],
+          "text-size": [
+            "interpolate", ["linear"], ["zoom"],
+            10, 7,
+            13, 9,
+            16, 11,
+          ],
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+          "text-font": ["Open Sans Bold"],
+        },
+        paint: {
+          "text-color": "#ffffff",
+        },
+      })
+      // POI name labels (visible at higher zoom)
+      map.addLayer({
+        id: "poi-labels",
+        type: "symbol",
+        source: "poi",
+        minzoom: 14,
+        layout: {
+          "text-field": ["get", "name"],
+          "text-size": 10,
+          "text-offset": [0, 1.6],
+          "text-anchor": "top",
+          "text-allow-overlap": false,
+          "text-ignore-placement": false,
+          "text-max-width": 12,
+          "text-font": ["Open Sans Regular"],
+        },
+        paint: {
+          "text-color": "#e2e8f0",
+          "text-halo-color": "rgba(0, 0, 0, 0.8)",
+          "text-halo-width": 1,
+        },
+      })
+
+      // POI click popup
+      map.on("click", "poi-layer", (e) => {
+        if (!e.features || e.features.length === 0) return
+        e.originalEvent.stopPropagation()
+        const f = e.features[0]
+        const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [
+          number,
+          number,
+        ]
+        const p = f.properties as Record<string, unknown>
+        const name = String(p.name ?? "Ustanova")
+        const category = String(p.category ?? "")
+        const categoryLabels: Record<string, string> = {
+          hospital: "Bolnica",
+          school: "Škola",
+          park: "Park",
+          pharmacy: "Ljekarna",
+          supermarket: "Supermarket",
+        }
+        const categoryColors: Record<string, string> = {
+          hospital: "#ef4444",
+          school: "#3b82f6",
+          park: "#22c55e",
+          pharmacy: "#f97316",
+          supermarket: "#eab308",
+        }
+        const label = categoryLabels[category] ?? category
+        const color = categoryColors[category] ?? "#94a3b8"
+
+        new maplibregl.Popup({
+          closeButton: true,
+          closeOnClick: true,
+          className: "poi-popup",
+          maxWidth: "220px",
+        })
+          .setLngLat(coords)
+          .setHTML(
+            `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
+              `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
+              `<div style="color:${color};font-size:11px">${label}</div>` +
+              `</div>`
+          )
+          .addTo(map)
+      })
+      map.on("mouseenter", "poi-layer", () => {
+        map.getCanvas().style.cursor = "pointer"
+      })
+      map.on("mouseleave", "poi-layer", () => {
+        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
+      })
+      map.on("mouseenter", "poi-labels", () => {
+        map.getCanvas().style.cursor = "pointer"
+      })
+      map.on("mouseleave", "poi-labels", () => {
+        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
+      })
+
+      // BAJS station click popup
+      map.on("click", "bajs-stations", (e) => {
+        if (!e.features || e.features.length === 0) return
+        e.originalEvent.stopPropagation()
+        const f = e.features[0]
+        const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [number, number]
+        const p = f.properties as Record<string, unknown>
+        const name = String(p.name ?? "Stanica")
+        const bikes = Number(p.bikesAvailable ?? 0)
+        const docks = Number(p.docksAvailable ?? 0)
+        const isRenting = p.isRenting !== false && p.isRenting !== "false" && p.isRenting !== 0
+        const isReturning = p.isReturning !== false && p.isReturning !== "false" && p.isReturning !== 0
+
+        let status = "Aktivna"
+        if (!isRenting && !isReturning) status = "Ne radi"
+        else if (!isRenting) status = "Ne iznajmljuje"
+        else if (!isReturning) status = "Ne prima bicikle"
+
+        new maplibregl.Popup({
+          closeButton: true,
+          closeOnClick: true,
+          className: "bajs-popup",
+          maxWidth: "220px",
+        })
+          .setLngLat(coords)
+          .setHTML(
+            `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
+              `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
+              `<div>${bikes} bicikala</div>` +
+              `<div>${docks} mjesta</div>` +
+              `<div style="margin-top:4px;color:${status === "Aktivna" ? "#4ade80" : "#f87171"};font-size:11px">${status}</div>` +
+            `</div>`
+          )
+          .addTo(map)
+      })
+      map.on("mouseenter", "bajs-stations", () => {
+        map.getCanvas().style.cursor = "pointer"
+      })
+      map.on("mouseleave", "bajs-stations", () => {
+        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
       })
 
       // Preview line: instant straight line from origin to cursor
@@ -599,6 +835,10 @@ export function TransitMap() {
       if (exactRouteTimerRef.current) {
         window.clearTimeout(exactRouteTimerRef.current)
       }
+      if (vehicleIntervalRef.current) {
+        window.clearInterval(vehicleIntervalRef.current)
+      }
+      if (poiAbortRef.current) poiAbortRef.current.abort()
       map.remove()
       mapRef.current = null
       handleDestinationRef.current = null
@@ -639,6 +879,122 @@ export function TransitMap() {
       controller.abort()
     }
   }, [bajsEnabled, mapReady])
+
+  // Live vehicle positions: fetch when enabled, refresh every 30s
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady || !vehiclesEnabled) {
+      if (vehicleIntervalRef.current) {
+        window.clearInterval(vehicleIntervalRef.current)
+        vehicleIntervalRef.current = 0
+      }
+      setVehiclePositions(EMPTY_FC)
+      return
+    }
+
+    let aborted = false
+
+    function fetchVehicles() {
+      fetch("/api/vehicles")
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          return res.json()
+        })
+        .then((vehicles: Array<{ tripId: string; routeId?: string | null; lat: number; lon: number; bearing?: number; speed?: number }>) => {
+          if (aborted) return
+          const fc: GeoJSON.FeatureCollection = {
+            type: "FeatureCollection",
+            features: vehicles.map((v) => {
+              // Extract line number from routeId like "ZET_6" → "6", or from tripId
+              const line = v.routeId
+                ? v.routeId.replace(/^[A-Z]+_/, "")
+                : v.tripId.split("_")[0] ?? ""
+              return {
+                type: "Feature" as const,
+                geometry: { type: "Point" as const, coordinates: [v.lon, v.lat] },
+                properties: { tripId: v.tripId, line, bearing: v.bearing ?? 0, speed: v.speed ?? 0 },
+              }
+            }),
+          }
+          const json = JSON.stringify(fc.features)
+          if (json === prevVehiclesJsonRef.current) return
+          prevVehiclesJsonRef.current = json
+          setVehiclePositions(fc)
+        })
+        .catch((err) => {
+          if (aborted) return
+          console.error("Vehicle positions fetch failed:", err)
+        })
+    }
+
+    fetchVehicles()
+    vehicleIntervalRef.current = window.setInterval(fetchVehicles, 30_000)
+
+    return () => {
+      aborted = true
+      if (vehicleIntervalRef.current) {
+        window.clearInterval(vehicleIntervalRef.current)
+        vehicleIntervalRef.current = 0
+      }
+    }
+  }, [mapReady, vehiclesEnabled])
+
+  // Update vehicle positions source when data changes
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady) return
+    const source = map.getSource(
+      "vehicle-positions"
+    ) as maplibregl.GeoJSONSource
+    if (source) source.setData(vehiclePositions)
+  }, [vehiclePositions, mapReady])
+
+  // POI overlay: fetch when enabled, clear when disabled
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady) return
+
+    const source = map.getSource("poi") as maplibregl.GeoJSONSource
+    if (!source) return
+
+    if (!poiEnabled) {
+      source.setData(EMPTY_FC)
+      return
+    }
+
+    if (poiAbortRef.current) poiAbortRef.current.abort()
+    const controller = new AbortController()
+    poiAbortRef.current = controller
+
+    fetch("/api/poi?categories=hospital,school,park,pharmacy", {
+      signal: controller.signal,
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.json()
+      })
+      .then((pois: Array<{ id: number; name: string; lat: number; lon: number; category: string }>) => {
+        if (controller.signal.aborted) return
+        const fc: GeoJSON.FeatureCollection = {
+          type: "FeatureCollection",
+          features: pois.map((p) => ({
+            type: "Feature" as const,
+            geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] },
+            properties: { name: p.name, category: p.category },
+          })),
+        }
+        source.setData(fc)
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return
+        console.error("POI fetch failed:", err)
+        source.setData(EMPTY_FC)
+      })
+
+    return () => {
+      controller.abort()
+    }
+  }, [poiEnabled, mapReady])
 
   // Origin change → fetch isochrone
   useEffect(() => {
@@ -794,191 +1150,14 @@ export function TransitMap() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative h-svh w-full">
-        <div ref={containerRef} className="h-full w-full" />
+        <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
 
-        {/* Dynamic Island */}
-        <div className="pointer-events-none absolute top-3 right-0 left-0 z-10 flex flex-col items-center gap-2 sm:top-4">
-          <motion.div
-            className="island pointer-events-auto"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, ease }}
-          >
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-1.5">
-                <TimePicker
-                  value={effectiveTime}
-                  onChange={(v) => setTime(v)}
-                />
-              </div>
-
-              {/* Divider */}
-              <div className="h-6 w-px bg-white/10" />
-
-              <button
-                type="button"
-                onClick={() => setBajs(bajsEnabled ? null : "1")}
-                aria-pressed={bajsEnabled}
-                className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
-                  bajsEnabled
-                    ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
-                    : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
-                }`}
-                title="Ukljuci BAJS stanice i bicikl u izracun rute"
-              >
-                <span>BAJS</span>
-                <span className="hidden text-[9px] font-medium text-slate-400 sm:inline">
-                  + tram/bus
-                </span>
-              </button>
-
-              <div className="h-6 w-px bg-white/10" />
-
-              <div className="flex flex-col justify-center py-0.5">
-                <div
-                  className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
-                  style={{
-                    background:
-                      "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
-                  }}
-                />
-                <div className="mt-1 flex w-[140px] justify-between text-[9px] leading-none font-medium text-slate-400 tabular-nums sm:w-[200px]">
-                  <span>0</span>
-                  <span>15</span>
-                  <span>30</span>
-                  <span>45m</span>
-                </div>
-              </div>
-
-              <AnimatePresence>
-                {hasOrigin && (
-                  <motion.div
-                    key="close"
-                    initial={{ opacity: 0, width: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, width: "auto", scale: 1 }}
-                    exit={{ opacity: 0, width: 0, scale: 0.9 }}
-                    className="flex items-center gap-2 overflow-hidden sm:gap-3"
-                  >
-                    <div className="h-6 w-px shrink-0 bg-white/10" />
-                    <button
-                      type="button"
-                      onClick={() => setCoords({ lat: null, lon: null })}
-                      className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 px-2 text-slate-400 transition-colors hover:bg-white/15 hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none sm:px-2.5"
-                      aria-label="Obriši ishodište"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        width="8"
-                        height="8"
-                        viewBox="0 0 8 8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      >
-                        <path d="M1 1l6 6M7 1l-6 6" />
-                      </svg>
-                      <span className="ml-1.5 hidden text-[11px] font-medium sm:inline">
-                        Obriši
-                      </span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                key="error"
-                role="alert"
-                aria-live="assertive"
-                className="island pointer-events-auto text-[12px] text-red-400"
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
-                transition={{ duration: 0.2, ease }}
-              >
-                {error}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <AnimatePresence>
-          {!hasOrigin && (
-            <motion.div
-              key="hint"
-              className="panel absolute bottom-8 left-1/2 -translate-x-1/2 sm:bottom-8"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.2, ease }}
-            >
-              <div className="flex flex-col items-center gap-2">
-                <div className="text-[13px] text-slate-300">
-                  Klikni bilo gdje da vidiš dokle možeš stići
-                </div>
-                <Link
-                  href="/statistika"
-                  prefetch={false}
-                  className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
-                >
-                  ili pogledaj statistiku po četvrtima &rarr;
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {bajsEnabled && (
-            <motion.div
-              className="panel absolute top-[64px] left-1/2 z-10 w-max -translate-x-1/2 px-3 py-2 sm:top-[60px] sm:left-4 sm:w-[140px] sm:translate-x-0 sm:px-3 sm:py-2.5"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.2, ease }}
-            >
-              <div className="mb-2 hidden text-[9px] font-semibold tracking-wider text-slate-500 uppercase sm:block">
-                BAJS Stanice
-              </div>
-              <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-1.5">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
-                    Dostupno
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
-                    0 bic.
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
-                    Puna
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
-                  <span className="text-[9px] font-medium text-slate-300 sm:text-[10px]">
-                    Ne radi
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
+        {/* Loading bar — spans full width, outside grid padding */}
         <AnimatePresence>
           {loading && (
             <motion.div
               key="loading"
-              className="absolute top-0 right-0 left-0 z-10"
+              className="absolute top-0 right-0 left-0 z-20"
               aria-live="polite"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -991,140 +1170,412 @@ export function TransitMap() {
           )}
         </AnimatePresence>
 
+        {/* Layer legend — outside grid to avoid column sizing shifts */}
         <AnimatePresence>
-          {(route || routeLoading) && (
-            <RouteDetails itinerary={route} loading={routeLoading} />
-          )}
-        </AnimatePresence>
-
-        <div className="absolute top-[10px] right-[52px] z-10 hidden items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md sm:flex">
-          <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
-            Pomicanje
-          </span>
-          <KbdGroup>
-            <Kbd>↑</Kbd>
-            <Kbd>↓</Kbd>
-            <Kbd>←</Kbd>
-            <Kbd>→</Kbd>
-          </KbdGroup>
-        </div>
-
-        <Link
-          href="/o-projektu"
-          prefetch={false}
-          className="absolute top-[80px] right-[10px] z-10 flex h-[29px] w-[29px] items-center justify-center rounded-md bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md transition-colors hover:text-slate-200 sm:top-4 sm:right-auto sm:left-4 sm:h-auto sm:w-auto sm:rounded-full sm:bg-white/10 sm:px-2.5 sm:py-1 sm:text-[11px] sm:font-medium sm:shadow-none"
-          aria-label="O projektu"
-        >
-          <svg
-            aria-hidden="true"
-            className="h-[18px] w-[18px] sm:hidden"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
-          <span className="hidden sm:inline">O projektu</span>
-        </Link>
-
-        <AnimatePresence>
-          {showStatsCta && hasOrigin && (
+          {(bajsEnabled || poiEnabled) && (
             <motion.div
-              key="stats-cta"
-              className="panel absolute bottom-8 left-1/2 z-10 -translate-x-1/2 sm:bottom-8"
+              className="panel pointer-events-auto absolute bottom-6 left-3 z-10 flex flex-col gap-2 px-3 py-2 sm:bottom-4 sm:left-4"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.3, delay: 0.5, ease }}
+              transition={{ duration: 0.2, ease }}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-[12px] text-slate-400">
-                  Kako se tvoja četvrt uspoređuje?
-                </span>
-                <Link
-                  href="/statistika"
-                  prefetch={false}
-                  className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
-                  onClick={() => {
-                    localStorage.setItem("doseg-stats-cta", "1")
-                    statsCtaDismissedRef.current = true
-                  }}
-                >
-                  Statistika &rarr;
-                </Link>
-                <button
-                  type="button"
-                  className="text-slate-500 transition-colors hover:text-slate-300"
-                  aria-label="Zatvori"
-                  onClick={() => {
-                    localStorage.setItem("doseg-stats-cta", "1")
-                    statsCtaDismissedRef.current = true
-                    setShowStatsCta(false)
-                  }}
-                >
-                  <svg
-                    aria-hidden="true"
-                    width="10"
-                    height="10"
-                    viewBox="0 0 8 8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  >
-                    <path d="M1 1l6 6M7 1l-6 6" />
-                  </svg>
-                </button>
-              </div>
+              {bajsEnabled && (
+                <div className="flex flex-col gap-1">
+                  <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">BAJS</div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-1">
+                      <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
+                      <span className="text-[9px] font-medium text-slate-300">Dostupno</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
+                      <span className="text-[9px] font-medium text-slate-300">0 bic.</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
+                      <span className="text-[9px] font-medium text-slate-300">Puna</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
+                      <span className="text-[9px] font-medium text-slate-300">Ne radi</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {bajsEnabled && poiEnabled && <div className="h-px bg-white/10" />}
+              {poiEnabled && (
+                <div className="flex flex-col gap-1">
+                  <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">Ustanove</div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-1">
+                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-white">H</div>
+                      <span className="text-[9px] font-medium text-slate-300">Bolnica</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-white">Š</div>
+                      <span className="text-[9px] font-medium text-slate-300">Škola</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-white">P</div>
+                      <span className="text-[9px] font-medium text-slate-300">Park</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-white">Lj</div>
+                      <span className="text-[9px] font-medium text-slate-300">Ljekarna</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {hasOrigin && (
-            <motion.button
-              key="export"
-              type="button"
+        {/* HUD overlay grid — all map UI lives here, no overlap */}
+        <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-6 sm:p-4">
+
+          {/* === TOP ROW === */}
+
+          {/* Top-left: About link (desktop only — mobile gets it bottom-left) */}
+          <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:block">
+            <Link
+              href="/o-projektu"
+              className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
+              aria-label="O projektu"
+            >
+              O projektu
+            </Link>
+          </div>
+
+          {/* Top-center: Dynamic Island + error overlay */}
+          <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center">
+            <motion.div
+              className="island pointer-events-auto"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2, ease }}
-              className="absolute right-3 bottom-4 z-10 flex h-[36px] w-[36px] items-center justify-center rounded-xl bg-[rgba(30,30,30,0.85)] text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md transition-colors hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
-              title="Spremi kao sliku"
-              aria-label="Spremi kartu kao PNG sliku"
-              onClick={() => {
-                const map = mapRef.current
-                if (!map) return
-                const canvas = map.getCanvas()
-                const link = document.createElement("a")
-                link.download = "doseg.png"
-                link.href = canvas.toDataURL("image/png")
-                link.click()
-              }}
+              transition={{ duration: 0.3, ease }}
             >
-              <svg
-                aria-hidden="true"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </motion.button>
-          )}
-        </AnimatePresence>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5">
+                  <TimePicker
+                    value={effectiveTime}
+                    onChange={(v) => setTime(v)}
+                  />
+                </div>
+
+                {/* Divider */}
+                <div className="h-6 w-px bg-white/10" />
+
+                <button
+                  type="button"
+                  onClick={() => setBajs(bajsEnabled ? null : "1")}
+                  aria-pressed={bajsEnabled}
+                  className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+                    bajsEnabled
+                      ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
+                      : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+                  }`}
+                  title="Ukljuci BAJS stanice i bicikl u izracun rute"
+                >
+                  <span>BAJS</span>
+                  <span className="hidden text-[9px] font-medium text-slate-400 sm:inline">
+                    + tram/bus
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setLayersOpen((v) => !v)}
+                  className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+                    layersOpen || vehiclesEnabled || poiEnabled
+                      ? "bg-slate-500/20 text-slate-200 ring-1 ring-slate-400/40"
+                      : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+                  }`}
+                >
+                  <svg
+                    aria-hidden="true"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z" />
+                    <path d="M2 12l8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
+                    <path d="M2 17l8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
+                  </svg>
+                  <span className="hidden sm:inline">Slojevi</span>
+                  {!layersOpen && (vehiclesEnabled || poiEnabled) && (
+                    <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-500/80 text-[8px] font-bold text-white">
+                      {(vehiclesEnabled ? 1 : 0) + (poiEnabled ? 1 : 0)}
+                    </span>
+                  )}
+                </button>
+
+                <div className="h-6 w-px bg-white/10" />
+
+                <div className="flex flex-col justify-center py-0.5">
+                  <div
+                    className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
+                    style={{
+                      background:
+                        "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+                    }}
+                  />
+                  <div className="mt-1 flex w-[140px] justify-between text-[9px] leading-none font-medium text-slate-400 tabular-nums sm:w-[200px]">
+                    <span>0</span>
+                    <span>15</span>
+                    <span>30</span>
+                    <span>45m</span>
+                  </div>
+                </div>
+
+                <AnimatePresence>
+                  {hasOrigin && (
+                    <motion.div
+                      key="close"
+                      initial={{ opacity: 0, width: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, width: "auto", scale: 1 }}
+                      exit={{ opacity: 0, width: 0, scale: 0.9 }}
+                      className="flex items-center gap-2 overflow-hidden sm:gap-3"
+                    >
+                      <div className="h-6 w-px shrink-0 bg-white/10" />
+                      <button
+                        type="button"
+                        onClick={() => setCoords({ lat: null, lon: null })}
+                        className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 px-2 text-slate-400 transition-colors hover:bg-white/15 hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none sm:px-2.5"
+                        aria-label="Obriši ishodište"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          width="8"
+                          height="8"
+                          viewBox="0 0 8 8"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        >
+                          <path d="M1 1l6 6M7 1l-6 6" />
+                        </svg>
+                        <span className="ml-1.5 hidden text-[11px] font-medium sm:inline">
+                          Obriši
+                        </span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Expanding layer toggles */}
+              <AnimatePresence>
+                {layersOpen && (
+                  <motion.div
+                    key="layers"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex items-center justify-center gap-2 border-t border-white/10 px-3 pt-2 pb-0.5">
+                      <button
+                        type="button"
+                        onClick={() => setVehiclesEnabled((v) => !v)}
+                        className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+                          vehiclesEnabled
+                            ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
+                            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+                        }`}
+                      >
+                        <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="3" />
+                          <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
+                        </svg>
+                        Vozila uživo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPoiEnabled((v) => !v)}
+                        className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+                          poiEnabled
+                            ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/40"
+                            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+                        }`}
+                      >
+                        <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                          <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                        Ustanove
+                      </button>
+                      <div className="h-4 w-px bg-white/10" />
+                      <Link
+                        href="/o-projektu"
+                        className="flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold text-slate-500 transition-colors hover:text-slate-300"
+                      >
+                        O projektu
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  key="error"
+                  role="alert"
+                  aria-live="assertive"
+                  className="island pointer-events-auto text-[12px] text-red-400"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
+                  transition={{ duration: 0.2, ease }}
+                >
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Top-right: Keyboard hints (desktop only) */}
+          <div className="pointer-events-auto col-start-3 row-start-1 hidden self-start sm:flex items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
+            <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+              Pomicanje
+            </span>
+            <KbdGroup>
+              <Kbd>↑</Kbd>
+              <Kbd>↓</Kbd>
+              <Kbd>←</Kbd>
+              <Kbd>→</Kbd>
+            </KbdGroup>
+          </div>
+
+          {/* === MIDDLE ROW — empty, map shows through === */}
+
+          {/* === BOTTOM ROW === */}
+
+          {/* Bottom-left: placeholder to preserve grid structure */}
+          <div className="col-start-1 row-start-3" />
+
+          {/* Bottom-center: Hint text / Stats CTA / Route details */}
+          <div className="col-start-1 col-span-full row-start-3 self-end justify-self-stretch sm:col-start-2 sm:col-span-1 sm:justify-self-center">
+            <AnimatePresence>
+              {!hasOrigin && (
+                <motion.div
+                  key="hint"
+                  className="panel pointer-events-auto"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+                  transition={{ duration: 0.2, ease }}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="text-[13px] text-slate-300">
+                      Klikni bilo gdje da vidiš dokle možeš stići
+                    </div>
+                    <Link
+                      href="/statistika"
+                      prefetch={false}
+                      className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
+                    >
+                      ili pogledaj statistiku po četvrtima &rarr;
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {showStatsCta && hasOrigin && (
+                <motion.div
+                  key="stats-cta"
+                  className="panel pointer-events-auto"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+                  transition={{ duration: 0.3, delay: 0.5, ease }}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-[12px] text-slate-400">
+                      Kako se tvoja četvrt uspoređuje?
+                    </span>
+                    <Link
+                      href="/statistika"
+                      prefetch={false}
+                      className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
+                      onClick={() => {
+                        localStorage.setItem("doseg-stats-cta", "1")
+                        statsCtaDismissedRef.current = true
+                      }}
+                    >
+                      Statistika &rarr;
+                    </Link>
+                    <button
+                      type="button"
+                      className="text-slate-500 transition-colors hover:text-slate-300"
+                      aria-label="Zatvori"
+                      onClick={() => {
+                        localStorage.setItem("doseg-stats-cta", "1")
+                        statsCtaDismissedRef.current = true
+                        setShowStatsCta(false)
+                      }}
+                    >
+                      <svg
+                        aria-hidden="true"
+                        width="10"
+                        height="10"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      >
+                        <path d="M1 1l6 6M7 1l-6 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {(route || routeLoading) && (
+                <RouteDetails
+                  itinerary={route}
+                  loading={routeLoading}
+                  departureTime={effectiveTime}
+                  className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
+                  onShare={() => {
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                      setLinkCopied(true)
+                      setTimeout(() => setLinkCopied(false), 2000)
+                    })
+                  }}
+                  onExport={() => {
+                    const map = mapRef.current
+                    if (!map) return
+                    const canvas = map.getCanvas()
+                    const link = document.createElement("a")
+                    link.download = "doseg.png"
+                    link.href = canvas.toDataURL("image/png")
+                    link.click()
+                  }}
+                  shareConfirm={linkCopied}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Bottom-right: empty placeholder */}
+          <div className="col-start-3 row-start-3" />
+
+        </div>{/* end HUD overlay grid */}
 
         <OnboardingDialog />
       </div>

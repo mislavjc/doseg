@@ -240,6 +240,16 @@
   color: rgba(255, 255, 255, 0.4) !important;
 }
 
+.maplibregl-ctrl-top-right {
+  top: 96px !important;
+}
+
+@media (min-width: 640px) {
+  .maplibregl-ctrl-top-right {
+    top: 100px !important;
+  }
+}
+
 .maplibregl-ctrl-group {
   background: rgba(30, 30, 30, 0.85) !important;
   backdrop-filter: blur(12px) !important;
@@ -326,6 +336,31 @@
   font-size: 11px;
 }
 .district-popup .maplibregl-popup-tip {
+  border-top-color: rgba(30, 30, 30, 0.92) !important;
+  border-bottom-color: rgba(30, 30, 30, 0.92) !important;
+}
+
+/* BAJS station popup */
+.bajs-popup .maplibregl-popup-content {
+  background: rgba(30, 30, 30, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.bajs-popup .maplibregl-popup-close-button {
+  color: #94a3b8;
+  font-size: 16px;
+  padding: 2px 6px;
+}
+.bajs-popup .maplibregl-popup-close-button:hover {
+  color: #e2e8f0;
+  background: transparent;
+}
+.bajs-popup .maplibregl-popup-tip {
   border-top-color: rgba(30, 30, 30, 0.92) !important;
   border-bottom-color: rgba(30, 30, 30, 0.92) !important;
 }

@@ -27,9 +27,23 @@ function delayBadge(delay: number): { label: string; color: string } {
   return { label: "na vrijeme", color: "text-emerald-400" }
 }
 
+function formatArrivalTime(departureTime: string, durationSeconds: number): string {
+  const [h, m] = departureTime.split(":").map(Number)
+  const depMinutes = h * 60 + m
+  const arrMinutes = depMinutes + Math.round(durationSeconds / 60)
+  const arrH = Math.floor(arrMinutes / 60) % 24
+  const arrM = arrMinutes % 60
+  return `${String(arrH).padStart(2, "0")}:${String(arrM).padStart(2, "0")}`
+}
+
 interface RouteDetailsProps {
   itinerary: Itinerary | null
   loading: boolean
+  departureTime?: string
+  className?: string
+  onShare?: () => void
+  onExport?: () => void
+  shareConfirm?: boolean
 }
 
 const ease = [0.23, 1, 0.32, 1] as const
@@ -50,12 +64,14 @@ function legDescription(leg: Itinerary["legs"][number]): string {
   return `${from} → ${to}`
 }
 
-export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
+export function RouteDetails({ itinerary, loading, departureTime, className, onShare, onExport, shareConfirm }: RouteDetailsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <motion.div
-      className="panel absolute right-3 bottom-8 left-3 cursor-pointer sm:right-auto sm:bottom-8 sm:left-4 sm:w-[280px]"
+      className={className ?? "panel absolute right-3 bottom-8 left-3 cursor-pointer sm:right-auto sm:bottom-8 sm:left-4 sm:w-[280px]"}
+      role="button"
+      aria-expanded={isExpanded}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -71,11 +87,44 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
       {itinerary && (
         <>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
-              {formatDuration(itinerary.duration)}
-            </span>
-            <div className="flex items-center gap-2">
+            <div>
+              <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
+                {formatDuration(itinerary.duration)}
+              </span>
+              {departureTime && (
+                <p className="text-[11px] text-slate-400 tabular-nums">
+                  Dolazak: {formatArrivalTime(departureTime, itinerary.duration)}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5">
               {loading && <div className="route-spinner" />}
+              {onShare && (
+                <button
+                  type="button"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white/10 hover:text-slate-300"
+                  onClick={(e) => { e.stopPropagation(); onShare() }}
+                  aria-label="Dijeli"
+                  title="Kopiraj poveznicu"
+                >
+                  {shareConfirm ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                  )}
+                </button>
+              )}
+              {onExport && (
+                <button
+                  type="button"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white/10 hover:text-slate-300"
+                  onClick={(e) => { e.stopPropagation(); onExport() }}
+                  aria-label="Spremi kartu"
+                  title="Spremi kao sliku"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                </button>
+              )}
               <svg
                 className={`h-4 w-4 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                 fill="none"

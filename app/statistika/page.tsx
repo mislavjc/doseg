@@ -524,40 +524,40 @@ export default function StatistikaPage() {
     "Brezovica": "Brez",
   }
 
-  // Weekend penalty data
-  const weekendPenalties = (() => {
+  // Weekend comparison data (positive change = Saturday is better)
+  const weekendComparison = (() => {
     if (!saturdayData) return null
-    const penalties = data.districts.map((wd) => {
+    const items = data.districts.map((wd) => {
       const sat = saturdayData.districts.find((sd) => sd.name === wd.name)
       const weekdayScore = wd.score
       const weekendScore = sat?.score ?? 0
-      const penalty =
+      const change =
         weekdayScore > 0
-          ? ((weekdayScore - weekendScore) / weekdayScore) * 100
+          ? ((weekendScore - weekdayScore) / weekdayScore) * 100
           : 0
       return {
         name: wd.name,
         weekdayScore,
         weekendScore,
-        penalty: Math.round(penalty * 10) / 10,
+        change: Math.round(change * 10) / 10,
         population: wd.population ?? 0,
       }
     })
-    penalties.sort((a, b) => b.penalty - a.penalty)
-    return penalties
+    items.sort((a, b) => b.change - a.change)
+    return items
   })()
-  const cityWeekendPenalty = (() => {
-    if (!weekendPenalties) return 0
+  const cityWeekendChange = (() => {
+    if (!weekendComparison) return 0
     let wdWeighted = 0
     let weWeighted = 0
     let totalP = 0
-    for (const p of weekendPenalties) {
+    for (const p of weekendComparison) {
       wdWeighted += p.weekdayScore * p.population
       weWeighted += p.weekendScore * p.population
       totalP += p.population
     }
     return totalP > 0 && wdWeighted > 0
-      ? Math.round(((wdWeighted - weWeighted) / wdWeighted) * 1000) / 10
+      ? Math.round(((weWeighted - wdWeighted) / wdWeighted) * 1000) / 10
       : 0
   })()
 
@@ -1909,19 +1909,21 @@ export default function StatistikaPage() {
         </section>
       )}
 
-      {/* Weekend connectivity drop */}
-      {weekendPenalties && weekendPenalties.length > 0 && (
+      {/* Weekend vs weekday comparison */}
+      {weekendComparison && weekendComparison.length > 0 && (
         <section id="vikend" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
               <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
-                Vikend pad povezanosti
+                Radni dan vs. subota
               </h2>
             </div>
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-              Koliko se povezanost smanjuje subotom u usporedbi s radnim danom.
-              Manje polazaka znači dulje čekanje i manji doseg za sve četvrti.
+              Usporedba rezultata dostupnosti radnim danom i subotom.
+              {cityWeekendChange > 0
+                ? " Iznenađujuće — subotom je povezanost u prosjeku bolja jer manji promet ubrzava vožnju."
+                : " Manji broj polazaka subotom smanjuje doseg većine četvrti."}
             </p>
           </div>
 
@@ -1930,23 +1932,22 @@ export default function StatistikaPage() {
             <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
               <div className="mb-2 flex items-baseline justify-between">
                 <h3 className="font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
-                  Pad rezultata po četvrti
+                  Promjena rezultata subotom
                 </h3>
                 <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">
-                  prosjek -{fmtHR(cityWeekendPenalty, 1)}%
+                  prosjek {cityWeekendChange > 0 ? "+" : ""}{fmtHR(cityWeekendChange, 1)}%
                 </span>
               </div>
               <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-                Postotak smanjenja rezultata subotom u usporedbi s radnim danom.
+                Postotak promjene rezultata subotom u usporedbi s radnim danom.
               </p>
               <div className="space-y-2.5">
-                {weekendPenalties.map((p, i) => {
-                  const maxPenalty = weekendPenalties[0]?.penalty ?? 1
-                  const barPct = maxPenalty > 0 ? (p.penalty / maxPenalty) * 100 : 0
-                  // Color: big drop = red-ish, small drop = green-ish
-                  const hue = Math.round(120 - (p.penalty / Math.max(maxPenalty, 1)) * 120)
-                  const barColor = `hsl(${hue}, 65%, 45%)`
-                  const barBg = `hsl(${hue}, 50%, 92%)`
+                {weekendComparison.map((p, i) => {
+                  const maxAbsChange = Math.max(...weekendComparison.map((x) => Math.abs(x.change)), 1)
+                  const barPct = (Math.abs(p.change) / maxAbsChange) * 100
+                  const isPositive = p.change >= 0
+                  const barColor = isPositive ? "hsl(142, 65%, 40%)" : "hsl(0, 65%, 45%)"
+                  const barBg = isPositive ? "hsl(142, 40%, 92%)" : "hsl(0, 40%, 92%)"
                   return (
                     <div key={p.name} className="flex items-center gap-3">
                       <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
@@ -1961,7 +1962,7 @@ export default function StatistikaPage() {
                             className="shrink-0 font-serif text-[14px] font-medium tabular-nums"
                             style={{ color: barColor }}
                           >
-                            -{fmtHR(p.penalty, 1)}%
+                            {p.change > 0 ? "+" : ""}{fmtHR(p.change, 1)}%
                           </span>
                         </div>
                         <div
@@ -2011,51 +2012,87 @@ export default function StatistikaPage() {
               <div className="mb-8 grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="font-serif text-[36px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
-                    -{fmtHR(cityWeekendPenalty, 1)}%
+                    {cityWeekendChange > 0 ? "+" : ""}{fmtHR(cityWeekendChange, 1)}%
                   </div>
                   <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
-                    pop. ponderiran
-                    <br />prosječni pad
+                    pop. ponderirana
+                    <br />prosječna promjena
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
-                    -{fmtHR(weekendPenalties[0]?.penalty ?? 0, 1)}%
+                    {weekendComparison[0]?.change > 0 ? "+" : ""}{fmtHR(weekendComparison[0]?.change ?? 0, 1)}%
                   </div>
                   <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
-                    najgori pad
-                    <br />({weekendPenalties[0]?.name ?? "-"})
+                    najveća promjena
+                    <br />({weekendComparison[0]?.name ?? "-"})
                   </div>
                 </div>
               </div>
               <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-                <p>
-                  Subotom grad gubi prosječno{" "}
-                  <strong className="font-medium text-slate-900 dark:text-slate-100">
-                    {fmtHR(cityWeekendPenalty, 1)}%
-                  </strong>{" "}
-                  povezanosti. Najviše gube{" "}
-                  <strong className="font-medium text-slate-900 dark:text-slate-100">
-                    {weekendPenalties.slice(0, 3).map((p) => p.name).join(", ")}
-                  </strong>{" "}
-                  - četvrti koje ovise o autobusnim linijama s rijetkim vikendom voznim redom.
-                </p>
-                {weekendPenalties.length > 3 && (() => {
-                  const resilient = [...weekendPenalties].sort((a, b) => a.penalty - b.penalty).slice(0, 3)
-                  return (
+                {cityWeekendChange > 0 ? (
+                  <>
                     <p>
-                      Najotpornije su{" "}
+                      Iznenađujuće — subotom je povezanost u prosjeku{" "}
                       <strong className="font-medium text-slate-900 dark:text-slate-100">
-                        {resilient.map((p) => p.name).join(", ")}
-                      </strong>{" "}
-                      - gusta tramvajska mreža održava povezanost i vikendom.
+                        bolja za {fmtHR(cityWeekendChange, 1)}%
+                      </strong>.
+                      Manji promet ubrzava tramvaje i autobuse, a kraća čekanja
+                      na ključnim stajalištima kompenziraju rjeđi vozni red.
                     </p>
-                  )
-                })()}
-                <p className="text-[13px] text-violet-700/80 dark:text-violet-400/80">
-                  Zaključak: vikend vozni red dramatično smanjuje mobilnost rubnih četvrti.
-                  Gradski centar s tramvajima ostaje relativno dobro povezan.
-                </p>
+                    <p>
+                      Najviše profitiraju{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {weekendComparison.slice(0, 3).map((p) => p.name).join(", ")}
+                      </strong>{" "}
+                      — četvrti gdje radnim danom gužva usporava promet.
+                    </p>
+                    {(() => {
+                      const worst = [...weekendComparison].sort((a, b) => a.change - b.change).slice(0, 3)
+                      const hasNegative = worst.some((p) => p.change < 0)
+                      return hasNegative ? (
+                        <p>
+                          Ipak,{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            {worst.filter((p) => p.change < 0).map((p) => p.name).join(", ")}
+                          </strong>{" "}
+                          gube subotom — ovise o linijama koje vikendom voze rjeđe.
+                        </p>
+                      ) : (
+                        <p>
+                          Sve četvrti imaju jednaku ili bolju povezanost subotom
+                          — rijetka pozitivna priča u javnom prijevozu.
+                        </p>
+                      )
+                    })()}
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      Subotom grad gubi prosječno{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {fmtHR(Math.abs(cityWeekendChange), 1)}%
+                      </strong>{" "}
+                      povezanosti. Najviše gube{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {weekendComparison.slice(-3).map((p) => p.name).join(", ")}
+                      </strong>{" "}
+                      — četvrti koje ovise o autobusnim linijama s rijetkim vikend voznim redom.
+                    </p>
+                    {(() => {
+                      const resilient = weekendComparison.slice(0, 3)
+                      return (
+                        <p>
+                          Najotpornije su{" "}
+                          <strong className="font-medium text-slate-900 dark:text-slate-100">
+                            {resilient.map((p) => p.name).join(", ")}
+                          </strong>{" "}
+                          — gusta tramvajska mreža održava povezanost i vikendom.
+                        </p>
+                      )
+                    })()}
+                  </>
+                )}
               </div>
             </div>
           </div>

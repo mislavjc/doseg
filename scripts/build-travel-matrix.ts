@@ -97,7 +97,7 @@ async function queryPlan(
       ) {
         itineraries {
           duration
-          transfers
+          numberOfTransfers
           walkDistance
           legs {
             mode
@@ -129,7 +129,7 @@ async function queryPlan(
   const it = itineraries[0]
   return {
     durationMin: Math.round(it.duration / 60),
-    transfers: it.transfers,
+    transfers: it.numberOfTransfers,
     walkDistanceM: Math.round(it.walkDistance),
   }
 }

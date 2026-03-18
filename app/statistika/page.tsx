@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
 import Link from "next/link"
@@ -100,6 +100,36 @@ function loadDistrictEmblems(): DistrictEmblems {
   }
 }
 
+interface TravelMatrix {
+  generatedAt: string
+  departureTime: string
+  date: string
+  districts: string[]
+  matrix: number[][]
+  transferMatrix: number[][]
+  walkDistanceMatrix: number[][]
+}
+
+function loadTravelMatrix(): TravelMatrix | null {
+  const matrixPath = join(getDataDir(), "travel-matrix.json")
+  if (!existsSync(matrixPath)) return null
+  try {
+    return JSON.parse(readFileSync(matrixPath, "utf-8"))
+  } catch {
+    return null
+  }
+}
+
+function loadSaturdayScores(): ScoreData | null {
+  const satPath = join(getDataDir(), "district-scores-saturday.json")
+  if (!existsSync(satPath)) return null
+  try {
+    return JSON.parse(readFileSync(satPath, "utf-8"))
+  } catch {
+    return null
+  }
+}
+
 /** Format number with Croatian decimal comma. */
 function fmtHR(n: number, decimals = 0): string {
   return decimals > 0
@@ -189,6 +219,8 @@ export default function StatistikaPage() {
   }
 
   const districtEmblems = loadDistrictEmblems()
+  const travelMatrix = loadTravelMatrix()
+  const saturdayData = loadSaturdayScores()
 
   // Derived insights
   const totalPop = data.districts.reduce((s, d) => s + (d.population ?? 0), 0)
@@ -437,6 +469,97 @@ export default function StatistikaPage() {
       districts: data.districts.filter((d) => d.score < 25),
     },
   ].filter((b) => b.districts.length > 0)
+
+  // Travel matrix insights
+  const matrixWorstCorridor = (() => {
+    if (!travelMatrix) return null
+    let worstTime = 0
+    let worstFrom = ""
+    let worstTo = ""
+    for (let i = 0; i < travelMatrix.matrix.length; i++) {
+      for (let j = 0; j < travelMatrix.matrix[i].length; j++) {
+        if (i !== j && travelMatrix.matrix[i][j] > worstTime) {
+          worstTime = travelMatrix.matrix[i][j]
+          worstFrom = travelMatrix.districts[i]
+          worstTo = travelMatrix.districts[j]
+        }
+      }
+    }
+    return { from: worstFrom, to: worstTo, time: worstTime }
+  })()
+  const matrixBestPair = (() => {
+    if (!travelMatrix) return null
+    let bestTime = Infinity
+    let bestFrom = ""
+    let bestTo = ""
+    for (let i = 0; i < travelMatrix.matrix.length; i++) {
+      for (let j = 0; j < travelMatrix.matrix[i].length; j++) {
+        if (i !== j && travelMatrix.matrix[i][j] > 0 && travelMatrix.matrix[i][j] < bestTime) {
+          bestTime = travelMatrix.matrix[i][j]
+          bestFrom = travelMatrix.districts[i]
+          bestTo = travelMatrix.districts[j]
+        }
+      }
+    }
+    return { from: bestFrom, to: bestTo, time: bestTime }
+  })()
+  // Abbreviations for matrix column headers
+  const districtAbbrev: Record<string, string> = {
+    "Donji grad": "DG",
+    "Gornji grad-Medveščak": "GGM",
+    "Trnje": "Trn",
+    "Maksimir": "Maks",
+    "Peščenica-Žitnjak": "PŽ",
+    "Novi Zagreb - istok": "NZI",
+    "Novi Zagreb - zapad": "NZZ",
+    "Trešnjevka - sjever": "TrS",
+    "Trešnjevka - jug": "TrJ",
+    "Črnomerec": "Črn",
+    "Gornja Dubrava": "GD",
+    "Donja Dubrava": "DD",
+    "Stenjevec": "Sten",
+    "Podsused-Vrapče": "PV",
+    "Podsljeme": "Pods",
+    "Sesvete": "Sesv",
+    "Brezovica": "Brez",
+  }
+
+  // Weekend penalty data
+  const weekendPenalties = (() => {
+    if (!saturdayData) return null
+    const penalties = data.districts.map((wd) => {
+      const sat = saturdayData.districts.find((sd) => sd.name === wd.name)
+      const weekdayScore = wd.score
+      const weekendScore = sat?.score ?? 0
+      const penalty =
+        weekdayScore > 0
+          ? ((weekdayScore - weekendScore) / weekdayScore) * 100
+          : 0
+      return {
+        name: wd.name,
+        weekdayScore,
+        weekendScore,
+        penalty: Math.round(penalty * 10) / 10,
+        population: wd.population ?? 0,
+      }
+    })
+    penalties.sort((a, b) => b.penalty - a.penalty)
+    return penalties
+  })()
+  const cityWeekendPenalty = (() => {
+    if (!weekendPenalties) return 0
+    let wdWeighted = 0
+    let weWeighted = 0
+    let totalP = 0
+    for (const p of weekendPenalties) {
+      wdWeighted += p.weekdayScore * p.population
+      weWeighted += p.weekendScore * p.population
+      totalP += p.population
+    }
+    return totalP > 0 && wdWeighted > 0
+      ? Math.round(((wdWeighted - weWeighted) / wdWeighted) * 1000) / 10
+      : 0
+  })()
 
   return (
     <Shell>
@@ -1786,6 +1909,159 @@ export default function StatistikaPage() {
         </section>
       )}
 
+      {/* Weekend connectivity drop */}
+      {weekendPenalties && weekendPenalties.length > 0 && (
+        <section id="vikend" className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Vikend pad povezanosti
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Koliko se povezanost smanjuje subotom u usporedbi s radnim danom.
+              Manje polazaka znači dulje čekanje i manji doseg za sve četvrti.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Bar chart */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="mb-2 flex items-baseline justify-between">
+                <h3 className="font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
+                  Pad rezultata po četvrti
+                </h3>
+                <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">
+                  prosjek -{fmtHR(cityWeekendPenalty, 1)}%
+                </span>
+              </div>
+              <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+                Postotak smanjenja rezultata subotom u usporedbi s radnim danom.
+              </p>
+              <div className="space-y-2.5">
+                {weekendPenalties.map((p, i) => {
+                  const maxPenalty = weekendPenalties[0]?.penalty ?? 1
+                  const barPct = maxPenalty > 0 ? (p.penalty / maxPenalty) * 100 : 0
+                  // Color: big drop = red-ish, small drop = green-ish
+                  const hue = Math.round(120 - (p.penalty / Math.max(maxPenalty, 1)) * 120)
+                  const barColor = `hsl(${hue}, 65%, 45%)`
+                  const barBg = `hsl(${hue}, 50%, 92%)`
+                  return (
+                    <div key={p.name} className="flex items-center gap-3">
+                      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
+                        {i + 1}.
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-baseline justify-between gap-2">
+                          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                            {p.name}
+                          </span>
+                          <span
+                            className="shrink-0 font-serif text-[14px] font-medium tabular-nums"
+                            style={{ color: barColor }}
+                          >
+                            -{fmtHR(p.penalty, 1)}%
+                          </span>
+                        </div>
+                        <div
+                          className="relative h-1.5 w-full overflow-hidden rounded-full"
+                          style={{ backgroundColor: barBg }}
+                        >
+                          <div
+                            className="absolute inset-y-0 left-0 rounded-full"
+                            style={{ width: `${barPct}%`, backgroundColor: barColor }}
+                          />
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+                          Radni dan: {p.weekdayScore} → Subota: {p.weekendScore}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Interpretation */}
+            <div className="flex flex-col rounded-3xl bg-violet-50/50 p-8 dark:bg-violet-950/10">
+              <div className="mb-6 flex items-center gap-3 text-violet-800 dark:text-violet-200">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-violet-500/20">
+                  <svg
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </span>
+                <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                  Što se događa vikendom?
+                </h3>
+              </div>
+              <div className="mb-8 grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+                    -{fmtHR(cityWeekendPenalty, 1)}%
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    pop. ponderiran
+                    <br />prosječni pad
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                    -{fmtHR(weekendPenalties[0]?.penalty ?? 0, 1)}%
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    najgori pad
+                    <br />({weekendPenalties[0]?.name ?? "-"})
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                <p>
+                  Subotom grad gubi prosječno{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {fmtHR(cityWeekendPenalty, 1)}%
+                  </strong>{" "}
+                  povezanosti. Najviše gube{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {weekendPenalties.slice(0, 3).map((p) => p.name).join(", ")}
+                  </strong>{" "}
+                  - četvrti koje ovise o autobusnim linijama s rijetkim vikendom voznim redom.
+                </p>
+                {weekendPenalties.length > 3 && (() => {
+                  const resilient = [...weekendPenalties].sort((a, b) => a.penalty - b.penalty).slice(0, 3)
+                  return (
+                    <p>
+                      Najotpornije su{" "}
+                      <strong className="font-medium text-slate-900 dark:text-slate-100">
+                        {resilient.map((p) => p.name).join(", ")}
+                      </strong>{" "}
+                      - gusta tramvajska mreža održava povezanost i vikendom.
+                    </p>
+                  )
+                })()}
+                <p className="text-[13px] text-violet-700/80 dark:text-violet-400/80">
+                  Zaključak: vikend vozni red dramatično smanjuje mobilnost rubnih četvrti.
+                  Gradski centar s tramvajima ostaje relativno dobro povezan.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* BAJS Impact section */}
       {hasBajs && (
         <section id="bajs" className="mt-16 sm:mt-20">
@@ -2446,6 +2722,170 @@ export default function StatistikaPage() {
           </div>
         </div>
       </section>
+
+      {/* Cross-district travel time heatmap */}
+      {travelMatrix && (
+        <section id="matrica" className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-cyan-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Matrica putovanja između četvrti
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Vrijeme putovanja javnim prijevozom između središta svake četvrti,
+              polazak u {travelMatrix.departureTime ?? "08:00"}.
+              Boja označava trajanje - od zelene (brzo) do crvene (sporo).
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+            <h3 className="mb-4 font-sans text-[11px] font-bold tracking-widest text-cyan-700 uppercase dark:text-cyan-400">
+              Vrijeme putovanja u minutama
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
+                <thead>
+                  <tr>
+                    <th className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-900/40 dark:text-slate-400">
+                      <span className="sr-only">Iz / U</span>
+                    </th>
+                    {travelMatrix.districts.map((name, ci) => (
+                      <th
+                        key={ci}
+                        className="min-w-[44px] p-1 text-center font-medium text-slate-500 dark:text-slate-400"
+                        title={name}
+                      >
+                        {districtAbbrev[name] ?? name.slice(0, 4)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {travelMatrix.districts.map((rowName, ri) => (
+                    <tr key={ri} className="group/row">
+                      <th
+                        className="sticky left-0 z-10 whitespace-nowrap bg-white p-1 pr-2 text-left font-medium text-slate-700 group-hover/row:bg-cyan-50 dark:bg-zinc-900/40 dark:text-slate-300 dark:group-hover/row:bg-cyan-950/20"
+                        scope="row"
+                      >
+                        {districtAbbrev[rowName] ?? rowName.slice(0, 4)}
+                      </th>
+                      {travelMatrix.matrix[ri].map((time, ci) => {
+                        const transfers = travelMatrix.transferMatrix[ri]?.[ci] ?? 0
+                        const isDiag = ri === ci
+                        let bg: string
+                        let textColor: string
+                        if (isDiag) {
+                          bg = "#f1f5f9"
+                          textColor = "#94a3b8"
+                        } else if (time < 0) {
+                          bg = "#e2e8f0"
+                          textColor = "#94a3b8"
+                        } else if (time < 20) {
+                          bg = "#bbf7d0"
+                          textColor = "#166534"
+                        } else if (time < 40) {
+                          bg = "#fef08a"
+                          textColor = "#854d0e"
+                        } else if (time < 60) {
+                          bg = "#fed7aa"
+                          textColor = "#9a3412"
+                        } else {
+                          bg = "#fecaca"
+                          textColor = "#991b1b"
+                        }
+                        return (
+                          <td
+                            key={ci}
+                            className="min-w-[44px] p-0.5 text-center group-hover/row:brightness-95"
+                            title={`${rowName} → ${travelMatrix.districts[ci]}: ${isDiag ? "ista četvrt" : time < 0 ? "nema rute" : `${time} min, ${transfers} presjedanja`}`}
+                          >
+                            <div
+                              className="flex flex-col items-center justify-center rounded px-1 py-0.5"
+                              style={{ backgroundColor: bg, color: textColor }}
+                            >
+                              <span className="font-serif text-[12px] font-medium tabular-nums leading-tight">
+                                {isDiag ? "—" : time < 0 ? "×" : time}
+                              </span>
+                              {!isDiag && time > 0 && (
+                                <span className="text-[9px] leading-tight opacity-60">
+                                  {transfers}p
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#bbf7d0" }} />
+                &lt;20 min
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fef08a" }} />
+                20–40 min
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fed7aa" }} />
+                40–60 min
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fecaca" }} />
+                &gt;60 min
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#e2e8f0" }} />
+                nema rute
+              </span>
+              <span className="text-[10px] italic">p = presjedanja</span>
+            </div>
+          </div>
+
+          {/* Insights */}
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {matrixWorstCorridor && matrixWorstCorridor.time > 0 && (
+              <div className="rounded-2xl bg-red-50/50 p-5 dark:bg-red-950/10">
+                <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-red-700 uppercase dark:text-red-400">
+                  Najdulje putovanje
+                </div>
+                <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {matrixWorstCorridor.from} → {matrixWorstCorridor.to}
+                  </strong>{" "}
+                  traje{" "}
+                  <strong className="font-medium text-red-700 dark:text-red-400">
+                    {matrixWorstCorridor.time} minuta
+                  </strong>{" "}
+                  javnim prijevozom.
+                </p>
+              </div>
+            )}
+            {matrixBestPair && matrixBestPair.time < Infinity && (
+              <div className="rounded-2xl bg-emerald-50/50 p-5 dark:bg-emerald-950/10">
+                <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
+                  Najbrža veza
+                </div>
+                <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {matrixBestPair.from} → {matrixBestPair.to}
+                  </strong>{" "}
+                  traje samo{" "}
+                  <strong className="font-medium text-emerald-700 dark:text-emerald-400">
+                    {matrixBestPair.time} minuta
+                  </strong>
+                  .
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* District ranking by band */}
       <div className="mt-20 space-y-20 lg:space-y-24">

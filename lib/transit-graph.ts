@@ -107,12 +107,14 @@ export async function getGraph(serviceDate?: string): Promise<TransitGraph> {
 }
 
 async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
-  const tripsArg = serviceDate ? `(serviceDate: "${serviceDate}")` : ""
+  const tripsField = serviceDate
+    ? `tripsForDate(serviceDate: "${serviceDate}") { gtfsId stoptimes { scheduledDeparture } }`
+    : `trips { gtfsId stoptimes { scheduledDeparture } }`
   const res = await fetch(`${OTP_URL}/otp/gtfs/v1`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } trips${tripsArg} { gtfsId stoptimes { scheduledDeparture } } } }`,
+      query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } ${tripsField} } }`,
     }),
   })
 
@@ -156,8 +158,9 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
     }
 
     // Extract departure time + trip ID from each trip's first stop
+    const trips = p.tripsForDate ?? p.trips ?? []
     const tripDeps: Array<{ dep: number; tripId: string }> = []
-    for (const trip of p.trips ?? []) {
+    for (const trip of trips) {
       const st = trip.stoptimes?.[0]
       if (st?.scheduledDeparture != null) {
         // Strip OTP feed prefix: "1:tripId" → "tripId"
@@ -180,7 +183,7 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
     // Collect offset samples per stop position from evenly-spaced trips
     // (5 is sufficient for a robust median; avoids processing 100+ trips)
     const offsetSamples: number[][] = Array.from({ length: nStops }, () => [])
-    const allTrips = p.trips ?? []
+    const allTrips = trips
     const sampleCount = Math.min(5, allTrips.length)
     const tripSample =
       sampleCount === allTrips.length

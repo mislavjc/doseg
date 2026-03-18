@@ -2012,7 +2012,7 @@ export default function StatistikaPage() {
           <a
             href="/api/open-data"
             download="doseg-district-scores.json"
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-colors hover:bg-slate-800 active:scale-[0.97] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.97] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
           >
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -2314,7 +2314,7 @@ function HeroDistrictSummary({
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            className="transition-all duration-1000 ease-out"
+            className="transition-[stroke-dashoffset] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
           />
         </svg>
         <div className="flex flex-col items-center text-center">
@@ -2331,7 +2331,7 @@ function BackLink() {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2 text-[13px] font-medium tracking-wide text-slate-600 transition-colors hover:text-slate-900 active:scale-[0.97] dark:text-slate-500 dark:hover:text-slate-300"
+      className="inline-flex items-center gap-2 text-[13px] font-medium tracking-wide text-slate-600 transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-slate-900 active:scale-[0.97] dark:text-slate-500 dark:hover:text-slate-300"
     >
       <svg
         aria-hidden="true"
@@ -2432,7 +2432,6 @@ function DistrictCard({
   return (
     <div
       className="relative flex flex-col overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10"
-      style={{ animationDelay: `${index * 40}ms` }}
     >
       <div className="relative flex items-start justify-between gap-4">
         <div>
@@ -2473,7 +2472,7 @@ function DistrictCard({
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                className="transition-all duration-1000 ease-out"
+                className="transition-[stroke-dashoffset] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
               />
             </svg>
             <div className="flex flex-col items-center text-center">
@@ -2738,7 +2737,7 @@ function DistrictCard({
 
       <Link
         href={mapLink}
-        className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-xl bg-slate-50 py-3.5 font-sans text-[10px] font-bold tracking-[0.2em] text-slate-600 uppercase transition-colors hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+        className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-xl bg-slate-50 py-3.5 font-sans text-[10px] font-bold tracking-[0.2em] text-slate-600 uppercase transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-100 active:scale-[0.97] dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
       >
         Istraži područje
         <span aria-hidden="true">&rarr;</span>

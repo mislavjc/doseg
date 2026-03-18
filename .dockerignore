@@ -1,7 +1,8 @@
 .git
 .next
 node_modules
-data
+data/*
+!data/district-scores.json
 .DS_Store
 *.pem
 .env*.local

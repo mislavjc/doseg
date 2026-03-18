@@ -345,12 +345,14 @@ async function main() {
   interface TransitInfo {
     tramLines: string[]
     busLines: string[]
+    trainLines: string[]
     stops: number
     avgHeadwayMin: number
   }
   const districtTransit: TransitInfo[] = districts.map(() => ({
     tramLines: [],
     busLines: [],
+    trainLines: [],
     stops: 0,
     avgHeadwayMin: 0,
   }))
@@ -370,6 +372,7 @@ async function main() {
   for (let di = 0; di < districts.length; di++) {
     const tramRoutes = new Set<string>()
     const busRoutes = new Set<string>()
+    const trainRoutes = new Set<string>()
     const headways: number[] = []
     let stopCount = 0
 
@@ -384,8 +387,8 @@ async function main() {
       for (const { patternIdx, stopIdx } of stop.patterns) {
         const pattern = transitGraph.patterns[patternIdx]
 
-        // Deduplicate routes by shortName
         if (pattern.mode === "TRAM") tramRoutes.add(pattern.route)
+        else if (pattern.mode === "RAIL") trainRoutes.add(pattern.route)
         else busRoutes.add(pattern.route)
 
         // Compute headway for this pattern at this stop (if not seen)
@@ -418,6 +421,7 @@ async function main() {
     districtTransit[di] = {
       tramLines: [...tramRoutes].sort((a, b) => parseInt(a) - parseInt(b)),
       busLines: [...busRoutes].sort((a, b) => parseInt(a) - parseInt(b)),
+      trainLines: [...trainRoutes].sort(),
       stops: stopCount,
       avgHeadwayMin: Math.round(medianHw / 60),
     }
@@ -540,6 +544,7 @@ async function main() {
       bestPoint: { lat: +best.lat.toFixed(4), lon: +best.lon.toFixed(4) },
       tramLines: transit.tramLines,
       busLines: transit.busLines,
+      trainLines: transit.trainLines,
       stops: transit.stops,
       avgHeadwayMin: transit.avgHeadwayMin,
     }

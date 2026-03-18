@@ -28,6 +28,7 @@ interface DistrictScore {
   bestPoint: { lat: number; lon: number }
   tramLines: string[]
   busLines: string[]
+  trainLines?: string[]
   stops: number
   avgHeadwayMin: number
 }
@@ -286,6 +287,28 @@ export default function StatistikaPage() {
             {data.districts.reduce((s, d) => s + d.stops, 0).toLocaleString("hr-HR")} stajališta ukupno.
           </div>
         </div>
+
+        {(() => {
+          const districtsWithTrains = data.districts.filter((d) => (d.trainLines?.length ?? 0) > 0).length
+          return districtsWithTrains > 0 ? (
+            <div className="flex flex-col justify-between rounded-2xl bg-teal-50 p-6 shadow-sm ring-1 ring-teal-200/50 dark:bg-teal-950/20 dark:ring-teal-500/20">
+              <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-teal-700 uppercase dark:text-teal-400">
+                HŽ vlakovi
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                  {districtsWithTrains}
+                </span>
+                <span className="text-[14px] text-teal-700 dark:text-teal-400">
+                  / {data.districts.length} četvrti
+                </span>
+              </div>
+              <div className="mt-2 text-[12px] leading-snug text-teal-700/80 dark:text-teal-400/80">
+                Rijedak interval (30–60 min) ograničava utjecaj na kratkim putovanjima.
+              </div>
+            </div>
+          ) : null
+        })()}
 
         {hasBajs && (
           <div className="flex flex-col justify-between rounded-2xl bg-amber-50 p-6 shadow-sm ring-1 ring-amber-200/50 dark:bg-amber-950/20 dark:ring-amber-500/20">
@@ -1079,6 +1102,20 @@ function DistrictCard({
             ~{Math.round(d.avgHeadwayMin)}m
           </span>
         </div>
+        {(d.trainLines?.length ?? 0) > 0 && (
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1.5 dark:bg-teal-900/20">
+            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-600 dark:text-teal-400">
+              <rect x="4" y="3" width="16" height="14" rx="2" />
+              <path d="M4 11h16" />
+              <path d="M12 3v8" />
+              <circle cx="8" cy="20" r="1" />
+              <circle cx="16" cy="20" r="1" />
+            </svg>
+            <span className="font-serif text-[13px] font-medium text-teal-700 dark:text-teal-400">
+              HŽ
+            </span>
+          </div>
+        )}
         {d.bajsStations > 0 && (
           <div className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 dark:bg-amber-900/20">
             <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400">
@@ -1171,10 +1208,10 @@ function DistrictCard({
 
       <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">
         <span className="mb-3 block font-sans text-[10px] tracking-[0.15em] text-slate-500 uppercase dark:text-slate-400">
-          Linije ({d.tramLines.length + d.busLines.length})
+          Linije
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
-          {d.tramLines.length === 0 && d.busLines.length === 0 ? (
+          {d.tramLines.length === 0 && d.busLines.length === 0 && (d.trainLines?.length ?? 0) === 0 ? (
             <span className="text-[12px] italic text-slate-500">
               Nema linija
             </span>
@@ -1188,17 +1225,14 @@ function DistrictCard({
                   {line}
                 </span>
               ))}
-              {d.busLines.slice(0, 10).map((line) => (
-                <span
-                  key={`b${line}`}
-                  className="inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-md border border-slate-200 bg-white px-1.5 text-[11px] font-medium text-slate-600 tabular-nums shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none"
-                >
-                  {line}
+              {d.busLines.length > 0 && (
+                <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 tabular-nums shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none">
+                  {d.busLines.length} {d.busLines.length === 1 ? "bus" : "buseva"}
                 </span>
-              ))}
-              {d.busLines.length > 10 && (
-                <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-dashed border-slate-300 bg-transparent px-2 text-[11px] font-medium text-slate-500 dark:border-white/20 dark:text-slate-400">
-                  +{d.busLines.length - 10}
+              )}
+              {(d.trainLines?.length ?? 0) > 0 && (
+                <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-teal-600/20 bg-teal-50 px-2 text-[11px] font-medium text-teal-700 dark:border-teal-400/20 dark:bg-teal-500/10 dark:text-teal-400">
+                  HŽ vlak
                 </span>
               )}
             </>

@@ -74,23 +74,55 @@ Caddy handles TLS, gzip/zstd compression, and security headers.
 
 Roughly ordered by how much sense they make next:
 
-### Stats page
+### Stats page — quick wins (existing data, minimal computation)
 
-- **Peak vs off-peak gap** — which neighbourhoods lose the most connectivity outside rush hour? Compute isochrones at 8am vs 10pm and show the delta.
+- **Transit Gini coefficient + Lorenz curve** — one chart showing inequality of transit access (Gini = 0.315). Plot cumulative % of population vs cumulative % of reachability. Key finding: BAJS bike-sharing slightly *worsens* equity (Gini +0.010) because stations concentrate in already well-served areas. Evening service is also less equitable than morning.
 
-- **Tram vs bus dependency** — neighbourhoods that collapse if you remove one mode. How much of Zagreb is tram-only viable?
+- **Population-weighted city score** — "the average Zagrepchanin scores 39.7/100." A single headline number reframing the whole narrative. Currently the page shows per-district scores but never the city-wide weighted average.
 
-- **Transfer penalty map** — where do you need 2+ transfers to reach the city centre (Trg bana Jelačića)? Single-seat rides vs painful connections.
+- **Score vs density scatterplot** — each district as a dot (X = population density, Y = score). Reveals Sesvete (71k people, score 15) as the biggest equity failure. Strong negative correlation: large suburban districts have many stops but terrible scores.
 
-- **Best/worst time to travel** — hour-by-hour reachability heatmap (6am–midnight). When does your neighbourhood come alive, when does it go dark?
+- **"Tram is king" insight card** — no district without tram service scores above 39. Tram line count is the single strongest predictor of score (r=0.75). Five districts have zero trams and all score <=39.
 
-- **Walk gap** — how much further can you get with transit vs just walking? Some areas transit barely helps; others it's transformative.
+- **Frequency spectrum chart** — every line sorted by morning peak headway. Tram 7 runs every 1 minute, bus 311 every 2+ hours. Visual gut-punch showing the two-tier system.
 
-- **Most isolated stop** — the stop with the fewest destinations reachable within 30 minutes. The loneliest stop in Zagreb.
+- **Internal inequality ranking** — Gornji grad-Medvescak has stddev 432: min 276, max 2101 reachable cells within the same district. Some residents have world-class transit while neighbours 500m uphill have nothing. Show the min/max range per district.
 
-- **Best-connected stop** — the opposite. Which single stop gives you the most city?
+- **Downloadable open data** — CSV/JSON download button for all computed metrics. Journalists and urban planners will use this and credit the tool.
 
-- **Real-time reliability** — average delay by line and neighbourhood, computed from GTFS-RT data over time. Which lines are chronically late?
+### Stats page — medium effort, high impact
+
+- **Cross-district travel time matrix** — 17x17 heatmap showing travel time from district A to B at 08:00. Reveals painful corridors like Sesvete↔Tresnjevka (76 min avg, 1.7 transfers). Only needs ~289 OTP plan queries.
+
+- **Network bottleneck analysis** — Crnomerec has 228 unique bridge connections; it's the sole link between the entire western bus network and trams. If it goes down, 22 bus routes lose tram access. Show the hub-and-spoke fragility.
+
+- **Weekend reachability collapse** — run the scoring pipeline against Saturday/Sunday GTFS schedules. Some districts may lose 40-50% of reach on weekends. Show as a "weekend penalty" metric per district.
+
+- **"Last tram home" per district** — what time does transit effectively stop serving each district? Map colored by the latest departure that still gets you to Trg bana Jelacica. Reveals which districts get stranded earliest.
+
+- **Route commercial speed ranking** — tram 13: 12.8 km/h. Bus 313: 46.5 km/h. Show how fast each line actually moves. Mode averages: rail 39 km/h, bus 25 km/h, tram 15 km/h.
+
+- **Nearest hospital/school by transit** — "from Sesvete, 3 hospitals reachable in 30 min. From Donji grad, 15." Use Overpass API POIs (21 hospitals, 276 schools, 455 parks in the Zagreb bbox) + existing isochrone engine.
+
+- **Multimodal hub map** — show the 63 multimodal stops, highlight the 5 critical bottlenecks. There is only 1 tram-rail interchange in all of Zagreb (Horvati). Zero 3-mode hubs.
+
+- **Walk distance histogram** — not just "desert %", show the full cumulative distribution. Donji grad: 95% of residents within 200m of a stop. Brezovica: only 37% within 500m.
+
+- **"Rate my commute"** — enter home and work address, see transit options, compare to city average. Geocoding + OTP plan query + comparison to precomputed district scores.
+
+### Stats page — high effort, very high impact
+
+- **"What if" line simulator** — draw a hypothetical new bus route, see how district scores change. Public participation gold. Requires route editor UI + re-scoring.
+
+- **Line removal impact** — remove each line and re-score all districts. "Tram 11 removal drops 4 districts by >10 points." Reveals which infrastructure is most critical. Needs N re-computations.
+
+- **Real-time reliability tracker** — accumulate GTFS-RT delays over weeks. "Tram 6 is late >5 min 23% of the time at Crnomerec." The RT feed already has 503 trip updates + 281 vehicle positions per snapshot.
+
+- **Animated time-of-day slider** — watch the city "breathe": isochrone expanding at 06:00, steady at 08:00, shrinking at 23:00. Pre-compute ~20 hourly snapshots.
+
+- **Cycling infrastructure coverage per district** — Zagreb Open Data has 2,889 cycling path segments with surface type and length. Show km of bike lanes per km² per district. Donji grad has dense cycling infra; Sesvete has almost none.
+
+- **BAJS station placement optimizer** — identify locations where adding a new station would most improve district scores. "Put one station HERE, Podsused gains +8%." Iterative simulation using the scoring engine.
 
 ### Map features
 

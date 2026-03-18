@@ -1922,7 +1922,7 @@ export default function StatistikaPage() {
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
               Usporedba rezultata dostupnosti radnim danom i subotom.
               {cityWeekendChange > 0
-                ? " Iznenađujuće — subotom je povezanost u prosjeku bolja jer manji promet ubrzava vožnju."
+                ? " Iznenađujuće, subotom je povezanost u prosjeku bolja jer manji promet ubrzava vožnju."
                 : " Manji broj polazaka subotom smanjuje doseg većine četvrti."}
             </p>
           </div>
@@ -2033,7 +2033,7 @@ export default function StatistikaPage() {
                 {cityWeekendChange > 0 ? (
                   <>
                     <p>
-                      Iznenađujuće — subotom je povezanost u prosjeku{" "}
+                      Iznenađujuće, subotom je povezanost u prosjeku{" "}
                       <strong className="font-medium text-slate-900 dark:text-slate-100">
                         bolja za {fmtHR(cityWeekendChange, 1)}%
                       </strong>.
@@ -2045,7 +2045,7 @@ export default function StatistikaPage() {
                       <strong className="font-medium text-slate-900 dark:text-slate-100">
                         {weekendComparison.slice(0, 3).map((p) => p.name).join(", ")}
                       </strong>{" "}
-                      — četvrti gdje radnim danom gužva usporava promet.
+                     ,četvrti gdje radnim danom gužva usporava promet.
                     </p>
                     {(() => {
                       const worst = [...weekendComparison].sort((a, b) => a.change - b.change).slice(0, 3)
@@ -2056,12 +2056,12 @@ export default function StatistikaPage() {
                           <strong className="font-medium text-slate-900 dark:text-slate-100">
                             {worst.filter((p) => p.change < 0).map((p) => p.name).join(", ")}
                           </strong>{" "}
-                          gube subotom — ovise o linijama koje vikendom voze rjeđe.
+                          gube subotom,ovise o linijama koje vikendom voze rjeđe.
                         </p>
                       ) : (
                         <p>
                           Sve četvrti imaju jednaku ili bolju povezanost subotom
-                          — rijetka pozitivna priča u javnom prijevozu.
+                         ,rijetka pozitivna priča u javnom prijevozu.
                         </p>
                       )
                     })()}
@@ -2077,7 +2077,7 @@ export default function StatistikaPage() {
                       <strong className="font-medium text-slate-900 dark:text-slate-100">
                         {weekendComparison.slice(-3).map((p) => p.name).join(", ")}
                       </strong>{" "}
-                      — četvrti koje ovise o autobusnim linijama s rijetkim vikend voznim redom.
+                     ,četvrti koje ovise o autobusnim linijama s rijetkim vikend voznim redom.
                     </p>
                     {(() => {
                       const resilient = weekendComparison.slice(0, 3)
@@ -2087,7 +2087,7 @@ export default function StatistikaPage() {
                           <strong className="font-medium text-slate-900 dark:text-slate-100">
                             {resilient.map((p) => p.name).join(", ")}
                           </strong>{" "}
-                          — gusta tramvajska mreža održava povezanost i vikendom.
+                         ,gusta tramvajska mreža održava povezanost i vikendom.
                         </p>
                       )
                     })()}
@@ -2782,7 +2782,7 @@ export default function StatistikaPage() {
               Vrijeme putovanja u minutama
             </h3>
             <div className="overflow-x-auto">
-              <table className="w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
+              <table className="mx-auto w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
                 <thead>
                   <tr>
                     <th className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-900/40 dark:text-slate-400">

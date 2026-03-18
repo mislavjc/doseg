@@ -7,7 +7,7 @@ services:
       - ./data:/var/opentripplanner
     command: --build --serve
     environment:
-      - JAVA_TOOL_OPTIONS=-Xmx1536m
+      - JAVA_TOOL_OPTIONS=-Xmx1024m
     healthcheck:
       test: ["CMD-SHELL", "exec wget -qO- http://localhost:8080/otp/ || exit 1"]
       interval: 30s

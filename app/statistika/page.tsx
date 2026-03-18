@@ -255,6 +255,16 @@ export default function StatistikaPage() {
     : []
   const lowFreqDistricts = data.districts.filter((d) => (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0) >= 30)
 
+  // Walk distance to nearest stop
+  const hasStopDistData = data.districts.some((d) => d.avgNearestStopM !== undefined)
+  const stopDistSorted = hasStopDistData
+    ? [...data.districts]
+        .filter((d) => d.avgNearestStopM !== undefined)
+        .sort((a, b) => (a.avgNearestStopM ?? 0) - (b.avgNearestStopM ?? 0))
+    : []
+  const maxStopDist = Math.max(...stopDistSorted.map((d) => d.avgNearestStopM ?? 0), 1)
+  const stopDistOver400 = stopDistSorted.filter((d) => (d.avgNearestStopM ?? 0) > 400)
+
   // Tram dependency insight
   const tramlessDistricts = data.districts.filter((d) => d.tramLines.length === 0)
   const bestTramless = tramlessDistricts.length > 0
@@ -296,6 +306,48 @@ export default function StatistikaPage() {
   const allBusLines = new Set(data.districts.flatMap((d) => d.busLines))
   const totalLines = allTramLines.size + allBusLines.size
   const maxHeadway = Math.max(...freqRanked.map((d) => (d.medianHeadwayMin ?? d.avgHeadwayMin ?? 0)))
+
+  // Line speed data: build a per-line summary from district data
+  // We know from the transit config: tram ~18 km/h, bus ~16 km/h, train ~40 km/h
+  const TRAM_SPEED_KMH = 18
+  const BUS_SPEED_KMH = 16
+  const TRAIN_SPEED_KMH = 40
+  const lineDistrictMap = new Map<string, { type: "tram" | "bus" | "train"; districts: string[] }>()
+  for (const d of data.districts) {
+    for (const line of d.tramLines) {
+      if (!lineDistrictMap.has(line)) lineDistrictMap.set(line, { type: "tram", districts: [] })
+      lineDistrictMap.get(line)!.districts.push(d.name)
+    }
+    for (const line of d.busLines) {
+      if (!lineDistrictMap.has(line)) lineDistrictMap.set(line, { type: "bus", districts: [] })
+      lineDistrictMap.get(line)!.districts.push(d.name)
+    }
+    for (const line of d.trainLines ?? []) {
+      const short = line.split(" - ").pop() ?? line
+      if (!lineDistrictMap.has(short)) lineDistrictMap.set(short, { type: "train", districts: [] })
+      lineDistrictMap.get(short)!.districts.push(d.name)
+    }
+  }
+  // Build sorted line speed table
+  const lineSpeedRows = Array.from(lineDistrictMap.entries())
+    .map(([name, info]) => ({
+      name,
+      type: info.type,
+      speed: info.type === "tram" ? TRAM_SPEED_KMH : info.type === "train" ? TRAIN_SPEED_KMH : BUS_SPEED_KMH,
+      districtCount: info.districts.length,
+    }))
+    .sort((a, b) => b.speed - a.speed || b.districtCount - a.districtCount)
+
+  // Aggregate speed stats
+  const tramLineCount = lineSpeedRows.filter((l) => l.type === "tram").length
+  const busLineCount = lineSpeedRows.filter((l) => l.type === "bus").length
+  const trainLineCount = lineSpeedRows.filter((l) => l.type === "train").length
+  const avgTramCoverage = tramLineCount > 0
+    ? Math.round(lineSpeedRows.filter((l) => l.type === "tram").reduce((s, l) => s + l.districtCount, 0) / tramLineCount)
+    : 0
+  const avgBusCoverage = busLineCount > 0
+    ? Math.round(lineSpeedRows.filter((l) => l.type === "bus").reduce((s, l) => s + l.districtCount, 0) / busLineCount)
+    : 0
 
   // Score vs density scatterplot data
   const densityData = data.districts.map((d) => ({
@@ -1456,6 +1508,177 @@ export default function StatistikaPage() {
         </section>
       )}
 
+      {/* Walk distance to nearest stop section */}
+      {hasStopDistData && stopDistSorted.length > 0 && (
+        <section id="udaljenost-stajalista" className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
+              <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Udaljenost do najbližeg stajališta
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Prosječna udaljenost pješačenja do najbliže stanice javnog
+              prijevoza. Urbanistički standard od{" "}
+              <strong className="font-medium text-slate-700 dark:text-slate-300">
+                400 metara
+              </strong>{" "}
+              smatra se ugodnom pješačkom udaljenošću - sve iznad toga
+              odvraća ljude od korištenja javnog prijevoza.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Horizontal bar chart */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+                Prosječna udaljenost po četvrti (m)
+              </h3>
+              <div className="space-y-2">
+                {stopDistSorted.map((d, i) => {
+                  const meters = d.avgNearestStopM ?? 0
+                  const barPct = (meters / maxStopDist) * 100
+                  const thresholdPct = (400 / maxStopDist) * 100
+                  const barColor =
+                    meters < 200
+                      ? "bg-emerald-500"
+                      : meters <= 400
+                        ? "bg-yellow-500"
+                        : meters <= 500
+                          ? "bg-orange-500"
+                          : "bg-red-500"
+                  return (
+                    <div key={d.osmId} className="flex items-center gap-3">
+                      <span className="w-5 shrink-0 text-right font-mono text-[11px] text-slate-400 dark:text-slate-500">
+                        {i + 1}
+                      </span>
+                      <span className="w-[7.5rem] shrink-0 truncate text-[13px] text-slate-700 dark:text-slate-300">
+                        {d.name}
+                      </span>
+                      <div className="relative h-5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
+                        <div
+                          className={`absolute inset-y-0 left-0 rounded-full ${barColor}`}
+                          style={{ width: `${barPct}%` }}
+                        />
+                        {/* 400m comfort threshold line */}
+                        <div
+                          className="absolute inset-y-0 w-px border-l-2 border-dashed border-slate-400 dark:border-slate-500"
+                          style={{ left: `${thresholdPct}%` }}
+                          title="400m"
+                        />
+                      </div>
+                      <span className="w-12 shrink-0 text-right font-mono text-[13px] font-medium tabular-nums text-slate-900 dark:text-slate-100">
+                        {Math.round(meters)}m
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  &lt;200m
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-yellow-500" />
+                  200-400m
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-orange-500" />
+                  400-500m
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />
+                  &gt;500m
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-3.5 w-px border-l-2 border-dashed border-slate-400" />
+                  400m prag
+                </span>
+              </div>
+            </div>
+
+            {/* Interpretation */}
+            <div className="flex flex-col rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
+              <div className="mb-6 flex items-center gap-3 text-amber-800 dark:text-amber-200">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-amber-500/20">
+                  <svg
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </span>
+                <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                  Koliko daleko pješačimo?
+                </h3>
+              </div>
+              <div className="mb-8 grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-emerald-600 tabular-nums dark:text-emerald-400">
+                    ~{Math.round(stopDistSorted[0]?.avgNearestStopM ?? 0)}m
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    {stopDistSorted[0]?.name}
+                    <br />
+                    najbliže stanice
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="font-serif text-[36px] leading-none text-red-600 tabular-nums dark:text-red-400">
+                    ~{Math.round(stopDistSorted[stopDistSorted.length - 1]?.avgNearestStopM ?? 0)}m
+                  </div>
+                  <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                    {stopDistSorted[stopDistSorted.length - 1]?.name}
+                    <br />
+                    najudaljenije stanice
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                <p>
+                  Stanovnici{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {stopDistSorted[0]?.name}
+                  </strong>{" "}
+                  u prosjeku pješače samo ~{Math.round(stopDistSorted[0]?.avgNearestStopM ?? 0)}m
+                  do najbliže stanice, dok stanovnici{" "}
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {stopDistSorted[stopDistSorted.length - 1]?.name}
+                  </strong>{" "}
+                  moraju prijeći ~{Math.round(stopDistSorted[stopDistSorted.length - 1]?.avgNearestStopM ?? 0)}m
+                  - {Math.round((stopDistSorted[stopDistSorted.length - 1]?.avgNearestStopM ?? 0) / (stopDistSorted[0]?.avgNearestStopM ?? 1))}x
+                  više.
+                </p>
+                <p>
+                  <strong className="font-medium text-slate-900 dark:text-slate-100">
+                    {stopDistOver400.length}
+                  </strong>{" "}
+                  od {stopDistSorted.length} četvrti prelazi prag od 400m ugodne
+                  pješačke udaljenosti
+                  {stopDistOver400.length > 0 && (
+                    <>
+                      {" "}({stopDistOver400.map((d) => d.name).join(", ")})
+                    </>
+                  )}
+                  . Iznad tog praga, značajno opada spremnost građana da koriste
+                  javni prijevoz kao svakodnevni oblik putovanja.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Peak vs off-peak section */}
       {hasEveningData && eveningRankedByDrop.length > 0 && (
         <section id="vrsni-sat" className="mt-16 sm:mt-20">
@@ -2004,6 +2227,225 @@ export default function StatistikaPage() {
           </div>
         </section>
       )}
+
+      {/* Line speed section */}
+      <section id="brzina" className="mt-16 sm:mt-20">
+        <div className="mb-10 flex flex-col items-center text-center">
+          <div className="mb-4 flex items-center gap-2">
+            <span className="inline-block h-3 w-3 rounded-full bg-orange-500" />
+            <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+              Brzina linija
+            </h2>
+          </div>
+          <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Komercijalna brzina prometnih sredstava - koliko brzo se vozilo
+            kreće uključujući zaustavljanja na stanicama. Brži mod znači veći
+            doseg u istih 30 minuta.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Speed comparison cards */}
+          <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+            <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-orange-700 uppercase dark:text-orange-400">
+              Komercijalna brzina po modu
+            </h3>
+            <div className="space-y-4">
+              {/* Tram */}
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-900/20">
+                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-rose-600 dark:text-rose-400">
+                    <rect x="4" y="3" width="16" height="14" rx="2" />
+                    <path d="M12 3v14" />
+                    <path d="M4 10h16" />
+                    <path d="M7 21l2-4" />
+                    <path d="M17 21l-2-4" />
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-baseline justify-between">
+                    <span className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                      Tramvaj
+                    </span>
+                    <span className="font-serif text-[18px] font-medium text-rose-600 tabular-nums dark:text-rose-400">
+                      {TRAM_SPEED_KMH} km/h
+                    </span>
+                  </div>
+                  <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-rose-100 dark:bg-rose-900/30">
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-full bg-rose-500"
+                      style={{ width: `${(TRAM_SPEED_KMH / TRAIN_SPEED_KMH) * 100}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    {tramLineCount} linija, prosj. {avgTramCoverage} četvrti po liniji
+                  </div>
+                </div>
+              </div>
+
+              {/* Bus */}
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20">
+                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400">
+                    <path d="M8 6v6" />
+                    <path d="M15 6v6" />
+                    <path d="M2 12h19.6" />
+                    <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
+                    <circle cx="7" cy="18" r="2" />
+                    <path d="M9 18h5" />
+                    <circle cx="16" cy="18" r="2" />
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex items-baseline justify-between">
+                    <span className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                      Autobus
+                    </span>
+                    <span className="font-serif text-[18px] font-medium text-blue-600 tabular-nums dark:text-blue-400">
+                      {BUS_SPEED_KMH} km/h
+                    </span>
+                  </div>
+                  <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-blue-100 dark:bg-blue-900/30">
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-full bg-blue-500"
+                      style={{ width: `${(BUS_SPEED_KMH / TRAIN_SPEED_KMH) * 100}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    {busLineCount} linija, prosj. {avgBusCoverage} četvrti po liniji
+                  </div>
+                </div>
+              </div>
+
+              {/* Train */}
+              {trainLineCount > 0 && (
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 dark:bg-teal-900/20">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-600 dark:text-teal-400">
+                      <rect x="4" y="3" width="16" height="14" rx="2" />
+                      <path d="M4 11h16" />
+                      <path d="M12 3v8" />
+                      <circle cx="8" cy="20" r="1" />
+                      <circle cx="16" cy="20" r="1" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex items-baseline justify-between">
+                      <span className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                        HŽ vlak
+                      </span>
+                      <span className="font-serif text-[18px] font-medium text-teal-600 tabular-nums dark:text-teal-400">
+                        {TRAIN_SPEED_KMH} km/h
+                      </span>
+                    </div>
+                    <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-teal-100 dark:bg-teal-900/30">
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-full bg-teal-500"
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                      {trainLineCount} linija - ali doprinos dosegu 0% zbog rijetkog intervala
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Walking + BAJS for context */}
+              <div className="mt-2 border-t border-black/5 pt-4 dark:border-white/5">
+                <div className="flex items-center justify-between text-[13px] text-slate-500 dark:text-slate-400">
+                  <span>Hodanje</span>
+                  <span className="font-serif tabular-nums">5 km/h</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-[13px] text-slate-500 dark:text-slate-400">
+                  <span>BAJS bicikl</span>
+                  <span className="font-serif tabular-nums">14 km/h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interpretation */}
+          <div className="flex flex-col rounded-3xl bg-orange-50/50 p-8 dark:bg-orange-950/10">
+            <div className="mb-6 flex items-center gap-3 text-orange-800 dark:text-orange-200">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-orange-500/20">
+                <svg
+                  aria-hidden="true"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+              </span>
+              <h3 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">
+                Brzina vs. frekvencija
+              </h3>
+            </div>
+            <div className="mb-8 grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <div className="font-serif text-[36px] leading-none text-orange-600 tabular-nums dark:text-orange-400">
+                  {TRAM_SPEED_KMH}
+                </div>
+                <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                  km/h tramvaj
+                  <br />(komercijalna brzina)
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+                  9 km
+                </div>
+                <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
+                  doseg tramvajem
+                  <br />u 30 min
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+              <p>
+                Tramvaj je samo{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-100">
+                  {Math.round(((TRAM_SPEED_KMH - BUS_SPEED_KMH) / BUS_SPEED_KMH) * 100)}% brži
+                </strong>{" "}
+                od autobusa, ali dominira u dosegu zahvaljujući{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-100">
+                  frekvenciji
+                </strong>
+                . Tramvaj dolazi svakih 4-6 minuta (prosječno čekanje ~2 min),
+                dok autobus često vozi svakih 15-30 minuta.
+              </p>
+              <p>
+                U 30-minutnom budžetu, putnik autobusom prosječno čeka{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-100">
+                  7-15 minuta
+                </strong>{" "}
+                na polazak - to je polovica budžeta izgubljena prije nego što se
+                uopće počne kretati. Tramvajski putnik u istom periodu koristi
+                28 od 30 minuta na stvarno putovanje.
+              </p>
+              <p>
+                HŽ vlak je nominalno najbrži ({TRAIN_SPEED_KMH} km/h), ali
+                s intervalom od 30-60 minuta{" "}
+                <strong className="font-medium text-slate-900 dark:text-slate-100">
+                  cijeli budžet odlazi na čekanje
+                </strong>
+                . Brzina bez frekvencije ne donosi ništa.
+              </p>
+              <p className="text-[13px] text-orange-700/80 dark:text-orange-400/80">
+                Zaključak: za 30-minutnu dostupnost, frekvencija je
+                važnija od brzine. Jedna tramvajska linija svakih 5 min
+                vrijedi više od brzog vlaka svakih 45 min.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* District ranking by band */}
       <div className="mt-20 space-y-20 lg:space-y-24">

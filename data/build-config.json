@@ -1,7 +1,7 @@
 {
   "osm": [
     {
-      "source": "osm/croatia.osm.pbf"
+      "source": "osm/zagreb.osm.pbf"
     }
   ],
   "transitFeeds": [

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-18T15:17:34.327Z",
+  "generatedAt": "2026-03-18T20:09:48.857Z",
   "departureWindow": "07:30-08:30",
   "eveningWindow": "20:30-21:30",
   "departureCount": 5,
@@ -105,7 +105,7 @@
         "Čakovec - Zagreb Glavni kolodvor"
       ],
       "stops": 55,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 1,
       "score": 100
     },
@@ -175,7 +175,7 @@
       ],
       "trainLines": [],
       "stops": 74,
-      "avgHeadwayMin": 2,
+      "medianHeadwayMin": 2,
       "rank": 2,
       "score": 84
     },
@@ -248,7 +248,7 @@
         "Čakovec - Zagreb Glavni kolodvor"
       ],
       "stops": 57,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 3,
       "score": 60
     },
@@ -314,7 +314,7 @@
         "Zagreb Glavni kolodvor - Volinja"
       ],
       "stops": 99,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 4,
       "score": 57
     },
@@ -377,7 +377,7 @@
       ],
       "trainLines": [],
       "stops": 129,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 5,
       "score": 52
     },
@@ -440,7 +440,7 @@
       ],
       "trainLines": [],
       "stops": 84,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 6,
       "score": 50
     },
@@ -501,7 +501,7 @@
         "Zaprešić - Vinkovci"
       ],
       "stops": 49,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 7,
       "score": 43
     },
@@ -565,7 +565,7 @@
         "Čakovec - Zagreb Glavni kolodvor"
       ],
       "stops": 61,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 8,
       "score": 42
     },
@@ -634,7 +634,7 @@
       ],
       "trainLines": [],
       "stops": 138,
-      "avgHeadwayMin": 1,
+      "medianHeadwayMin": 1,
       "rank": 9,
       "score": 41
     },
@@ -712,7 +712,7 @@
         "Zagreb Glavni kolodvor - Volinja"
       ],
       "stops": 168,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 10,
       "score": 36
     },
@@ -784,7 +784,7 @@
         "Zaprešić - Vinkovci"
       ],
       "stops": 143,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 11,
       "score": 34
     },
@@ -850,7 +850,7 @@
         "Čakovec - Zagreb Glavni kolodvor"
       ],
       "stops": 128,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 12,
       "score": 32
     },
@@ -918,7 +918,7 @@
       ],
       "trainLines": [],
       "stops": 133,
-      "avgHeadwayMin": 2,
+      "medianHeadwayMin": 2,
       "rank": 13,
       "score": 30
     },
@@ -996,7 +996,7 @@
       ],
       "trainLines": [],
       "stops": 208,
-      "avgHeadwayMin": 2,
+      "medianHeadwayMin": 2,
       "rank": 14,
       "score": 21
     },
@@ -1071,7 +1071,7 @@
         "Zaprešić - Vinkovci"
       ],
       "stops": 313,
-      "avgHeadwayMin": 2,
+      "medianHeadwayMin": 2,
       "rank": 15,
       "score": 18
     },
@@ -1117,7 +1117,7 @@
         "Zagreb Glavni kolodvor - Rijeka"
       ],
       "stops": 110,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 16,
       "score": 15
     },
@@ -1159,7 +1159,7 @@
       ],
       "trainLines": [],
       "stops": 103,
-      "avgHeadwayMin": 3,
+      "medianHeadwayMin": 3,
       "rank": 17,
       "score": 14
     }

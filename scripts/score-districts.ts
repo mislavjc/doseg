@@ -22,6 +22,8 @@ import {
 } from "../lib/transit-graph"
 import { getWalkGraph } from "../lib/walk-graph"
 import { countReachableCells } from "../lib/walk-expand"
+import type { BajsStation } from "../lib/bajs"
+import { bajsStationKey } from "../lib/bajs"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const createParser = require("osm-pbf-parser")
@@ -242,6 +244,52 @@ function generateSamplePoints(
   return points
 }
 
+// --- BAJS station loading ---
+
+const STATION_INFORMATION_URL =
+  "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json"
+
+interface StationInfoFeed {
+  data?: {
+    stations?: Array<{
+      station_id: string
+      name: string
+      short_name?: string
+      lat: number
+      lon: number
+      is_virtual_station?: boolean
+      capacity?: number
+    }>
+  }
+}
+
+/** Fetch station locations and return idealized BajsStations (1 bike, 1 dock each). */
+async function fetchIdealBajsStations(): Promise<BajsStation[]> {
+  const res = await fetch(STATION_INFORMATION_URL)
+  if (!res.ok) throw new Error(`BAJS feed: ${res.status}`)
+  const feed = (await res.json()) as StationInfoFeed
+  const stations = feed.data?.stations
+  if (!stations) throw new Error("BAJS feed returned no station data")
+
+  return stations
+    .filter((s) => !s.is_virtual_station)
+    .map((s) => ({
+      key: bajsStationKey(s.station_id),
+      stationId: s.station_id,
+      shortName: s.short_name ?? "",
+      name: s.name,
+      lat: s.lat,
+      lon: s.lon,
+      capacity: s.capacity ?? 10,
+      bikesAvailable: 1,
+      docksAvailable: 1,
+      isInstalled: true,
+      isRenting: true,
+      isReturning: true,
+      lastReported: Math.floor(Date.now() / 1000),
+    }))
+}
+
 // --- Main ---
 
 async function main() {
@@ -264,9 +312,33 @@ async function main() {
     `  ${transitGraph.patterns.length} patterns, ${transitGraph.stops.size} stops`
   )
 
+  console.error("Fetching BAJS station locations...")
+  const bajsStations = await fetchIdealBajsStations()
+  console.error(`  ${bajsStations.length} stations (idealized: 1 bike, 1 dock each)`)
+
+  // Build merged stop+station coordinate map for BAJS walk expansion
+  const bajsStopMap = new Map<string, { lat: number; lon: number }>()
+  for (const [key, stop] of transitGraph.stops) {
+    bajsStopMap.set(key, { lat: stop.lat, lon: stop.lon })
+  }
+  for (const station of bajsStations) {
+    bajsStopMap.set(station.key, { lat: station.lat, lon: station.lon })
+  }
+
   console.error("Loading districts...")
   const districts = loadDistricts()
   console.error(`  ${districts.length} districts`)
+
+  // Count BAJS stations per district
+  const districtBajsStationCount: number[] = districts.map(() => 0)
+  for (const station of bajsStations) {
+    for (let i = 0; i < districts.length; i++) {
+      if (pointInPolygon(station.lon, station.lat, districts[i].ring)) {
+        districtBajsStationCount[i]++
+        break
+      }
+    }
+  }
 
   // Compute per-district transit metadata
   console.error("Computing transit info per district...")
@@ -359,12 +431,13 @@ async function main() {
   // Pre-allocate reusable buffer for walking Dijkstra
   const walkBuf = new Float64Array(walkGraph.nodeCount)
 
-  // Score each sample point, track best point per district
+  // --- Pass 1: Transit-only scores ---
   const districtScores: number[][] = districts.map(() => [])
   const districtBest: { reached: number; lat: number; lon: number }[] =
     districts.map(() => ({ reached: -1, lat: 0, lon: 0 }))
   const t0 = performance.now()
 
+  console.error("Pass 1/2: Scoring transit-only...")
   for (let i = 0; i < points.length; i++) {
     const point = points[i]
 
@@ -406,11 +479,55 @@ async function main() {
   }
   console.error()
 
+  // --- Pass 2: Transit + BAJS scores ---
+  const districtBajsScores: number[][] = districts.map(() => [])
+  const t1 = performance.now()
+
+  console.error("Pass 2/2: Scoring transit + BAJS...")
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i]
+
+    const times = computeAvgTravelTimes(
+      transitGraph,
+      point.lat,
+      point.lon,
+      departureSeconds,
+      maxSeconds,
+      bajsStations
+    )
+
+    const reached = countReachableCells(
+      walkGraph,
+      times,
+      bajsStopMap,
+      point.lat,
+      point.lon,
+      maxSeconds,
+      walkBuf
+    )
+
+    districtBajsScores[point.districtIdx].push(reached)
+
+    if ((i + 1) % 50 === 0 || i + 1 === points.length) {
+      const elapsed = ((performance.now() - t1) / 1000).toFixed(1)
+      const rate = ((i + 1) / ((performance.now() - t1) / 1000)).toFixed(1)
+      process.stderr.write(
+        `\r  ${i + 1}/${points.length} scored (${elapsed}s, ${rate} pts/s)`
+      )
+    }
+  }
+  console.error()
+
   // Aggregate per district
   const results = districts.map((d, i) => {
     const scores = districtScores[i]
+    const bajsScoresArr = districtBajsScores[i]
     const avg =
       scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
+    const bajsAvg =
+      bajsScoresArr.length > 0
+        ? bajsScoresArr.reduce((a, b) => a + b, 0) / bajsScoresArr.length
+        : 0
     const best = districtBest[i]
     const transit = districtTransit[i]
     return {
@@ -419,6 +536,9 @@ async function main() {
       population: d.population,
       sampleCount: scores.length,
       avgReachableCells: Math.round(avg),
+      bajsAvgReachableCells: Math.round(bajsAvg),
+      bajsBoostPct: avg > 0 ? Math.round(((bajsAvg - avg) / avg) * 100) : 0,
+      bajsStations: districtBajsStationCount[i],
       bestPoint: { lat: +best.lat.toFixed(4), lon: +best.lon.toFixed(4) },
       tramLines: transit.tramLines,
       busLines: transit.busLines,
@@ -427,7 +547,7 @@ async function main() {
     }
   })
 
-  // Sort descending
+  // Sort descending by base score
   results.sort((a, b) => b.avgReachableCells - a.avgReachableCells)
 
   // Normalize to 0-100 scale
@@ -445,6 +565,7 @@ async function main() {
     maxMinutes: minutes,
     totalSamplePoints: points.length,
     totalGridCells: walkGraph.grid.size,
+    bajsTotalStations: bajsStations.length,
     districts: ranked,
   }
 
@@ -456,13 +577,12 @@ async function main() {
 
   // Print summary table
   console.error(
-    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  Samples`
+    `\n${"#".padStart(3)}  ${"District".padEnd(28)} Score  Cells  BAJS   Boost`
   )
-  console.error("─".repeat(56))
+  console.error("─".repeat(64))
   for (const d of ranked) {
-    const bar = "█".repeat(Math.round(d.score / 5))
     console.error(
-      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${d.sampleCount}`
+      `${d.rank.toString().padStart(3)}  ${d.name.padEnd(28)} ${d.score.toString().padStart(3)}  ${d.avgReachableCells.toString().padStart(5)}  ${d.bajsAvgReachableCells.toString().padStart(5)}  +${d.bajsBoostPct}%`
     )
   }
 }

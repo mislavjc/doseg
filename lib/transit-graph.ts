@@ -623,8 +623,13 @@ export function computeAvgTravelTimes(
   originLat: number,
   originLon: number,
   departureTime: number,
-  timeCap: number
+  timeCap: number,
+  bajsStations?: readonly BajsStation[]
 ): Map<string, number> {
+  const bajsAdj =
+    bajsStations && bajsStations.length > 0
+      ? buildBajsAdjacency(graph, bajsStations)
+      : null
   const best = new Map<string, number>()
   const heap = new MinHeap()
 
@@ -637,45 +642,97 @@ export function computeAvgTravelTimes(
     }
   }
 
+  if (bajsAdj) {
+    for (const station of bajsAdj.stationsByKey.values()) {
+      if (!station.isRenting || station.bikesAvailable <= 0) continue
+      const distKm = fastDistKm(originLat, originLon, station.lat, station.lon)
+      if (distKm > WALK_MAX_KM) continue
+      const walkTime = (distKm / WALK_SPEED) * 3600
+      const existing = best.get(station.key) ?? Infinity
+      if (walkTime < existing) {
+        best.set(station.key, walkTime)
+        heap.push({ time: walkTime, key: station.key })
+      }
+    }
+  }
+
   while (heap.size > 0) {
     const { time, key } = heap.pop()!
     if (time > timeCap) break
     if (time > (best.get(key) ?? Infinity)) continue
 
     const stop = graph.stops.get(key)
-    if (!stop) continue
+    const station = bajsAdj?.stationsByKey.get(key)
 
-    for (const { patternIdx, stopIdx } of stop.patterns) {
-      const pattern = graph.patterns[patternIdx]
-      const clockTime = departureTime + time
+    if (!stop && !station) continue
 
-      const avgWait = getAvgWait(
-        pattern.departures,
-        pattern.stopOffsets[stopIdx],
-        clockTime
-      )
-      if (avgWait === null) continue
+    if (stop) {
+      for (const { patternIdx, stopIdx } of stop.patterns) {
+        const pattern = graph.patterns[patternIdx]
+        const clockTime = departureTime + time
 
-      const boardTime = time + avgWait
-      const boardOffset = pattern.stopOffsets[stopIdx]
+        const avgWait = getAvgWait(
+          pattern.departures,
+          pattern.stopOffsets[stopIdx],
+          clockTime
+        )
+        if (avgWait === null) continue
 
-      for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
-        const travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
-        const existing = best.get(pattern.stopKeys[i]) ?? Infinity
-        if (travelTime < existing) {
-          best.set(pattern.stopKeys[i], travelTime)
-          heap.push({ time: travelTime, key: pattern.stopKeys[i] })
+        const boardTime = time + avgWait
+        const boardOffset = pattern.stopOffsets[stopIdx]
+
+        for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
+          const travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
+          const existing = best.get(pattern.stopKeys[i]) ?? Infinity
+          if (travelTime < existing) {
+            best.set(pattern.stopKeys[i], travelTime)
+            heap.push({ time: travelTime, key: pattern.stopKeys[i] })
+          }
+        }
+      }
+
+      for (const { key: nearbyKey, distKm } of stop.nearbyStops) {
+        const transferTime =
+          time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY
+        const existing = best.get(nearbyKey) ?? Infinity
+        if (transferTime < existing) {
+          best.set(nearbyKey, transferTime)
+          heap.push({ time: transferTime, key: nearbyKey })
+        }
+      }
+
+      if (bajsAdj) {
+        for (const { key: stationKey, distKm } of bajsAdj.stopWalkLinks.get(key) ?? []) {
+          const walkTime = time + (distKm / WALK_SPEED) * 3600
+          const existing = best.get(stationKey) ?? Infinity
+          if (walkTime < existing) {
+            best.set(stationKey, walkTime)
+            heap.push({ time: walkTime, key: stationKey })
+          }
         }
       }
     }
 
-    for (const { key: nearbyKey, distKm } of stop.nearbyStops) {
-      const transferTime =
-        time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY
-      const existing = best.get(nearbyKey) ?? Infinity
-      if (transferTime < existing) {
-        best.set(nearbyKey, transferTime)
-        heap.push({ time: transferTime, key: nearbyKey })
+    if (station && bajsAdj) {
+      for (const { key: stopKey, distKm } of bajsAdj.stationWalkLinks.get(key) ?? []) {
+        const walkTime = time + (distKm / WALK_SPEED) * 3600
+        const existing = best.get(stopKey) ?? Infinity
+        if (walkTime < existing) {
+          best.set(stopKey, walkTime)
+          heap.push({ time: walkTime, key: stopKey })
+        }
+      }
+
+      if (station.isRenting && station.bikesAvailable > 0) {
+        for (const { key: targetKey, distKm } of bajsAdj.stationBikeLinks.get(key) ?? []) {
+          const bikeTime =
+            time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
+          const existing = best.get(targetKey) ?? Infinity
+          if (bikeTime < existing) {
+            best.set(targetKey, bikeTime)
+            heap.push({ time: bikeTime, key: targetKey })
+          }
+        }
       }
     }
   }

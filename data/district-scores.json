@@ -1,10 +1,11 @@
 {
-  "generatedAt": "2026-03-17T19:43:59.258Z",
+  "generatedAt": "2026-03-18T01:47:53.808Z",
   "departureTime": "08:00",
   "gridSpacingM": 200,
   "maxMinutes": 30,
   "totalSamplePoints": 10678,
   "totalGridCells": 18535,
+  "bajsTotalStations": 170,
   "districts": [
     {
       "name": "Donji grad",
@@ -12,6 +13,9 @@
       "population": 31209,
       "sampleCount": 76,
       "avgReachableCells": 1848,
+      "bajsAvgReachableCells": 2164,
+      "bajsBoostPct": 17,
+      "bajsStations": 19,
       "bestPoint": {
         "lat": 45.8062,
         "lon": 15.9923
@@ -50,6 +54,9 @@
       "population": 40539,
       "sampleCount": 186,
       "avgReachableCells": 1474,
+      "bajsAvgReachableCells": 1911,
+      "bajsBoostPct": 30,
+      "bajsStations": 21,
       "bestPoint": {
         "lat": 45.8044,
         "lon": 15.9948
@@ -104,6 +111,9 @@
       "population": 55425,
       "sampleCount": 143,
       "avgReachableCells": 1197,
+      "bajsAvgReachableCells": 1754,
+      "bajsBoostPct": 47,
+      "bajsStations": 11,
       "bestPoint": {
         "lat": 45.8026,
         "lon": 15.9639
@@ -146,6 +156,9 @@
       "population": 26423,
       "sampleCount": 254,
       "avgReachableCells": 1048,
+      "bajsAvgReachableCells": 1258,
+      "bajsBoostPct": 20,
+      "bajsStations": 6,
       "bestPoint": {
         "lat": 45.8134,
         "lon": 15.9768
@@ -193,6 +206,9 @@
       "population": 66674,
       "sampleCount": 245,
       "avgReachableCells": 924,
+      "bajsAvgReachableCells": 1365,
+      "bajsBoostPct": 48,
+      "bajsStations": 18,
       "bestPoint": {
         "lat": 45.7865,
         "lon": 15.951
@@ -240,6 +256,9 @@
       "population": 47356,
       "sampleCount": 376,
       "avgReachableCells": 808,
+      "bajsAvgReachableCells": 1038,
+      "bajsBoostPct": 28,
+      "bajsStations": 10,
       "bestPoint": {
         "lat": 45.8152,
         "lon": 15.9974
@@ -293,6 +312,9 @@
       "population": 55898,
       "sampleCount": 396,
       "avgReachableCells": 720,
+      "bajsAvgReachableCells": 1027,
+      "bajsBoostPct": 43,
+      "bajsStations": 16,
       "bestPoint": {
         "lat": 45.7775,
         "lon": 16
@@ -335,6 +357,9 @@
       "population": 33537,
       "sampleCount": 253,
       "avgReachableCells": 718,
+      "bajsAvgReachableCells": 932,
+      "bajsBoostPct": 30,
+      "bajsStations": 2,
       "bestPoint": {
         "lat": 45.8224,
         "lon": 16.0386
@@ -365,6 +390,9 @@
       "population": 51390,
       "sampleCount": 280,
       "avgReachableCells": 642,
+      "bajsAvgReachableCells": 973,
+      "bajsBoostPct": 51,
+      "bajsStations": 15,
       "bestPoint": {
         "lat": 45.8116,
         "lon": 15.9072
@@ -400,6 +428,9 @@
       "population": 53023,
       "sampleCount": 823,
       "avgReachableCells": 606,
+      "bajsAvgReachableCells": 850,
+      "bajsBoostPct": 40,
+      "bajsStations": 13,
       "bestPoint": {
         "lat": 45.8152,
         "lon": 16.0129
@@ -438,6 +469,9 @@
       "population": 38084,
       "sampleCount": 455,
       "avgReachableCells": 583,
+      "bajsAvgReachableCells": 726,
+      "bajsBoostPct": 25,
+      "bajsStations": 6,
       "bestPoint": {
         "lat": 45.8134,
         "lon": 15.9562
@@ -490,6 +524,9 @@
       "population": 44910,
       "sampleCount": 642,
       "avgReachableCells": 460,
+      "bajsAvgReachableCells": 618,
+      "bajsBoostPct": 34,
+      "bajsStations": 9,
       "bestPoint": {
         "lat": 45.8134,
         "lon": 15.9072
@@ -527,6 +564,9 @@
       "population": 63917,
       "sampleCount": 1421,
       "avgReachableCells": 457,
+      "bajsAvgReachableCells": 568,
+      "bajsBoostPct": 24,
+      "bajsStations": 13,
       "bestPoint": {
         "lat": 45.7775,
         "lon": 15.9536
@@ -576,6 +616,9 @@
       "population": 58255,
       "sampleCount": 939,
       "avgReachableCells": 371,
+      "bajsAvgReachableCells": 428,
+      "bajsBoostPct": 15,
+      "bajsStations": 5,
       "bestPoint": {
         "lat": 45.8242,
         "lon": 16.0361
@@ -638,6 +681,9 @@
       "population": 70800,
       "sampleCount": 2327,
       "avgReachableCells": 279,
+      "bajsAvgReachableCells": 290,
+      "bajsBoostPct": 4,
+      "bajsStations": 4,
       "bestPoint": {
         "lat": 45.8278,
         "lon": 16.1056
@@ -680,6 +726,9 @@
       "population": 18974,
       "sampleCount": 894,
       "avgReachableCells": 252,
+      "bajsAvgReachableCells": 266,
+      "bajsBoostPct": 5,
+      "bajsStations": 2,
       "bestPoint": {
         "lat": 45.844,
         "lon": 15.9742
@@ -706,6 +755,9 @@
       "population": 12046,
       "sampleCount": 968,
       "avgReachableCells": 217,
+      "bajsAvgReachableCells": 217,
+      "bajsBoostPct": 0,
+      "bajsStations": 0,
       "bestPoint": {
         "lat": 45.7218,
         "lon": 15.9253

@@ -22,10 +22,9 @@ async function refresh(): Promise<void> {
     if (!res.ok) throw new Error(`GTFS-RT fetch failed: ${res.status}`)
 
     const buf = await res.arrayBuffer()
-    const feed =
-      GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-        new Uint8Array(buf)
-      )
+    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+      new Uint8Array(buf)
+    )
 
     const rt = new Map<string, TripRT>()
 
@@ -35,8 +34,7 @@ async function refresh(): Promise<void> {
 
       const stopTimes: StopTimeRT[] = []
       for (const stu of tu.stopTimeUpdate) {
-        const delay =
-          stu.arrival?.delay ?? stu.departure?.delay ?? 0
+        const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
         stopTimes.push({
           stopSequence: stu.stopSequence ?? 0,
           arrivalDelay: delay,

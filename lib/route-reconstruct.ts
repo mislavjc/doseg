@@ -1,6 +1,7 @@
 import type { Itinerary, Leg } from "@/lib/otp"
 
 interface RoutingStop {
+  kind: "STOP" | "BAJS"
   lat: number
   lon: number
   name: string
@@ -8,9 +9,10 @@ interface RoutingStop {
   delay?: number // RT delay in seconds at this stop
   pred: {
     fromKey: string
-    patternIdx: number
-    boardIdx: number
-    alightIdx: number
+    kind: "WALK" | "TRANSIT" | "BIKE"
+    patternIdx?: number
+    boardIdx?: number
+    alightIdx?: number
   } | null
 }
 
@@ -43,6 +45,7 @@ interface RouteTemplate {
     time: number
   }
   baseWalkDistance: number
+  baseBikeDistance: number
   transfers: number
 }
 
@@ -65,15 +68,16 @@ function distMeters(
 }
 
 export function parseRoutingData(
-  json: { stops: RoutingStopInput[]; patterns: RoutingPattern[] },
+  json: { nodes: RoutingStopInput[]; patterns: RoutingPattern[] },
   originLat: number,
   originLon: number
 ): RoutingData {
   const stops = new Map<string, RoutingStop>()
   const grid = new Map<string, string[]>()
 
-  for (const s of json.stops) {
+  for (const s of json.nodes) {
     stops.set(s.key, {
+      kind: s.kind,
       lat: s.lat,
       lon: s.lon,
       name: s.name || "",
@@ -112,20 +116,22 @@ export function findNearestStop(
   const cy = Math.floor(lat / data.gridCellSize)
 
   let bestKey: string | null = null
+  let bestScore = Infinity
   let bestDist = Infinity
 
-  // Fast grid search (~2km radius)
-  for (let dx = -4; dx <= 4; dx++) {
-    for (let dy = -4; dy <= 4; dy++) {
+  // Prefer the reachable node with the lowest arrival time plus final walking time.
+  // A wider search window matters more once BAJS stations are part of the network.
+  for (let dx = -8; dx <= 8; dx++) {
+    for (let dy = -8; dy <= 8; dy++) {
       const cell = data.grid.get(`${cx + dx},${cy + dy}`)
       if (!cell) continue
       for (const key of cell) {
         const stop = data.stops.get(key)
         if (!stop) continue
-        const dlat = stop.lat - lat
-        const dlon = stop.lon - lon
-        const dist = dlat * dlat + dlon * dlon
-        if (dist < bestDist) {
+        const dist = distMeters(stop.lat, stop.lon, lat, lon)
+        const score = stop.time + dist / WALK_SPEED_MS
+        if (score < bestScore || (score === bestScore && dist < bestDist)) {
+          bestScore = score
           bestDist = dist
           bestKey = key
         }
@@ -136,10 +142,10 @@ export function findNearestStop(
   // Fallback: scan all stops when cursor is outside the grid radius
   if (!bestKey) {
     for (const [key, stop] of data.stops) {
-      const dlat = stop.lat - lat
-      const dlon = stop.lon - lon
-      const dist = dlat * dlat + dlon * dlon
-      if (dist < bestDist) {
+      const dist = distMeters(stop.lat, stop.lon, lat, lon)
+      const score = stop.time + dist / WALK_SPEED_MS
+      if (score < bestScore || (score === bestScore && dist < bestDist)) {
+        bestScore = score
         bestDist = dist
         bestKey = key
       }
@@ -199,12 +205,10 @@ function buildRouteTemplate(
   for (let i = 1; i < chain.length; i++) {
     const stop = data.stops.get(chain[i])
     if (!stop?.pred) return null
+    const fromStop = data.stops.get(stop.pred.fromKey)
+    if (!fromStop) return null
 
-    if (stop.pred.patternIdx === -1) {
-      // Walk transfer
-      const fromStop = data.stops.get(stop.pred.fromKey)
-      if (!fromStop) return null
-
+    if (stop.pred.kind === "WALK") {
       const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
       baseLegs.push(
         makeWalkLeg(
@@ -216,10 +220,31 @@ function buildRouteTemplate(
       continue
     }
 
+    if (stop.pred.kind === "BIKE") {
+      const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
+      baseLegs.push(
+        makeBikeLeg(
+          { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
+          { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+          d,
+          Math.round(stop.time - fromStop.time)
+        )
+      )
+      continue
+    }
+
+    if (
+      stop.pred.patternIdx === undefined ||
+      stop.pred.boardIdx === undefined ||
+      stop.pred.alightIdx === undefined
+    ) {
+      return null
+    }
+
     // Transit leg — build geometry from intermediate stop coordinates
     const pattern = data.patterns[stop.pred.patternIdx]
-    const boardStop = data.stops.get(stop.pred.fromKey)
-    if (!pattern || !boardStop) return null
+    const boardStop = fromStop
+    if (!pattern) return null
 
     const coords: [number, number][] = []
     for (let si = stop.pred.boardIdx; si <= stop.pred.alightIdx; si++) {
@@ -232,10 +257,14 @@ function buildRouteTemplate(
       coords.push([boardStop.lon, boardStop.lat], [stop.lon, stop.lat])
     }
 
-    const fromTime = data.stops.get(stop.pred.fromKey)?.time || 0
+    const fromTime = fromStop.time || 0
     baseLegs.push({
       mode: pattern.mode,
-      from: { name: stopName(boardStop), lat: boardStop.lat, lon: boardStop.lon },
+      from: {
+        name: stopName(boardStop),
+        lat: boardStop.lat,
+        lon: boardStop.lon,
+      },
       to: { name: stopName(stop), lat: stop.lat, lon: stop.lon },
       duration: Math.round(stop.time - fromTime),
       distance: Math.round(
@@ -253,7 +282,12 @@ function buildRouteTemplate(
   const baseWalkDistance = baseLegs
     .filter((leg) => leg.mode === "WALK")
     .reduce((sum, leg) => sum + leg.distance, 0)
-  const transitLegs = baseLegs.filter((leg) => leg.mode !== "WALK")
+  const baseBikeDistance = baseLegs
+    .filter((leg) => leg.mode === "BIKE")
+    .reduce((sum, leg) => sum + leg.distance, 0)
+  const transitLegs = baseLegs.filter(
+    (leg) => leg.mode !== "WALK" && leg.mode !== "BIKE"
+  )
 
   return {
     baseLegs,
@@ -264,6 +298,7 @@ function buildRouteTemplate(
       time: lastStop.time,
     },
     baseWalkDistance,
+    baseBikeDistance,
     transfers: Math.max(0, transitLegs.length - 1),
   }
 }
@@ -302,6 +337,28 @@ function makeWalkLeg(
   }
 }
 
+function makeBikeLeg(
+  from: { name: string; lat: number; lon: number },
+  to: { name: string; lat: number; lon: number },
+  dist: number,
+  duration: number
+): Leg {
+  return {
+    mode: "BIKE",
+    from,
+    to,
+    duration,
+    distance: Math.round(dist),
+    legGeometry: {
+      points: "",
+      coords: [
+        [from.lon, from.lat],
+        [to.lon, to.lat],
+      ],
+    },
+  }
+}
+
 export function reconstructRoute(
   data: RoutingData,
   destLat: number,
@@ -313,7 +370,12 @@ export function reconstructRoute(
   if (!template) return null
 
   const legs = template.baseLegs.slice()
-  const destDist = distMeters(template.tailFrom.lat, template.tailFrom.lon, destLat, destLon)
+  const destDist = distMeters(
+    template.tailFrom.lat,
+    template.tailFrom.lon,
+    destLat,
+    destLon
+  )
   if (destDist > 10) {
     legs.push(
       makeWalkLeg(
@@ -334,6 +396,7 @@ export function reconstructRoute(
     duration: template.tailFrom.time + Math.round(destDist / WALK_SPEED_MS),
     walkDistance:
       template.baseWalkDistance + (destDist > 10 ? Math.round(destDist) : 0),
+    bikeDistance: template.baseBikeDistance,
     transfers: template.transfers,
     legs,
   }

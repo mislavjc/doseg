@@ -1,13 +1,17 @@
 import type { NextRequest } from "next/server"
-import { brotliCompressSync, constants as zlibConstants, gzipSync } from "node:zlib"
-
-import { getRealtimeData } from "@/lib/gtfs-rt"
-import { secondsOfDay } from "@/lib/zagreb-time"
 import {
-  getGraph,
-  computeTravelTimes,
-  type TransitGraph,
-} from "@/lib/transit-graph"
+  brotliCompressSync,
+  constants as zlibConstants,
+  gzipSync,
+} from "node:zlib"
+
+import {
+  getReachabilityState,
+  type ReachabilityState,
+} from "@/lib/reachability-state"
+import type { IsochroneRoutingPayload } from "@/lib/otp"
+import { secondsOfDay } from "@/lib/zagreb-time"
+import { getGraph, type TransitGraph } from "@/lib/transit-graph"
 import { expandWalking } from "@/lib/walk-expand"
 import { getWalkGraph } from "@/lib/walk-graph"
 
@@ -21,13 +25,20 @@ getGraph().catch(() => {})
 
 const BUCKET_SECONDS = 60
 
+type RoutingMode = "full" | "features" | "only"
+
+function parseRoutingMode(searchParams: URLSearchParams): RoutingMode {
+  const routing = searchParams.get("routing")
+  if (routing === "0") return "features"
+  if (routing === "only") return "only"
+  return "full"
+}
+
 function roundCoord(value: number): number {
   return Math.round(value * TRANSIT_COORD_SCALE) / TRANSIT_COORD_SCALE
 }
 
-function quantizeTransitLine(
-  coords: [number, number][]
-): [number, number][] {
+function quantizeTransitLine(coords: [number, number][]): [number, number][] {
   const quantized: [number, number][] = []
   let lastLon = NaN
   let lastLat = NaN
@@ -65,16 +76,13 @@ function generateFeatures(
       if (time > MAX_SECONDS) continue
 
       const startIdx = Math.round((i * (numPts - 1)) / (numStops - 1))
-      const endIdx = Math.round(
-        ((i + 1) * (numPts - 1)) / (numStops - 1)
-      )
+      const endIdx = Math.round(((i + 1) * (numPts - 1)) / (numStops - 1))
       if (endIdx <= startIdx) continue
 
       const coords = quantizeTransitLine(geo.slice(startIdx, endIdx + 1))
       if (coords.length < 2) continue
 
-      const bucket =
-        Math.floor(time / BUCKET_SECONDS) * BUCKET_SECONDS
+      const bucket = Math.floor(time / BUCKET_SECONDS) * BUCKET_SECONDS
       let lines = buckets.get(bucket)
       if (!lines) {
         lines = []
@@ -91,16 +99,125 @@ function generateFeatures(
   }))
 }
 
+function buildRoutingPayload(state: ReachabilityState): IsochroneRoutingPayload {
+  const graph = state.graph
+  const preds = state.preds
+  const delays = state.delays
+  const bajsStationsByKey = state.bajsData?.stationMap ?? new Map()
+
+  const usedPatterns = new Set<number>()
+  for (const pred of preds.values()) {
+    if (pred.kind === "TRANSIT" && pred.patternIdx !== undefined) {
+      usedPatterns.add(pred.patternIdx)
+    }
+  }
+
+  const patternMap = new Map<number, number>()
+  const routingPatterns: IsochroneRoutingPayload["patterns"] = []
+  for (const origIdx of usedPatterns) {
+    const p = graph.patterns[origIdx]
+    patternMap.set(origIdx, routingPatterns.length)
+    routingPatterns.push({
+      stopKeys: p.stopKeys,
+      mode: p.mode,
+      route: p.route,
+    })
+  }
+
+  const routingNodes: IsochroneRoutingPayload["nodes"] = []
+  for (const [key, time] of state.travelTimes) {
+    const stop = graph.stops.get(key)
+    const station = bajsStationsByKey.get(key)
+    const node = stop ?? station
+    if (!node) continue
+
+    const pred = preds.get(key)
+    const delay = delays.get(key)
+    const mappedPatternIdx =
+      pred?.kind === "TRANSIT" && pred.patternIdx !== undefined
+        ? patternMap.get(pred.patternIdx)
+        : undefined
+
+    if (
+      pred?.kind === "TRANSIT" &&
+      pred.patternIdx !== undefined &&
+      mappedPatternIdx === undefined
+    ) {
+      continue
+    }
+
+    const routingPred = pred
+      ? {
+          fromKey: pred.fromKey,
+          kind: pred.kind,
+          ...(pred.kind === "TRANSIT"
+            ? {
+                patternIdx: mappedPatternIdx,
+                boardIdx: pred.boardIdx,
+                alightIdx: pred.alightIdx,
+              }
+            : {}),
+        }
+      : null
+
+    routingNodes.push({
+      key,
+      kind: stop ? "STOP" : "BAJS",
+      lat: node.lat,
+      lon: node.lon,
+      name: node.name,
+      time: Math.round(time),
+      ...(delay !== undefined && { delay: Math.round(delay) }),
+      pred: routingPred,
+    })
+  }
+
+  return { nodes: routingNodes, patterns: routingPatterns }
+}
+
+function jsonResponse(
+  request: NextRequest,
+  payload: unknown
+): { response: Response; serializeMs: number } {
+  const t0 = performance.now()
+  const json = JSON.stringify(payload)
+
+  const acceptEncoding = request.headers.get("accept-encoding") || ""
+  const prefersBrotli = acceptEncoding.includes("br")
+  const acceptsGzip = acceptEncoding.includes("gzip")
+  const body = prefersBrotli
+    ? brotliCompressSync(json, {
+        params: {
+          [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
+        },
+      })
+    : acceptsGzip
+      ? gzipSync(json)
+      : json
+
+  return {
+    response: new Response(body, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(prefersBrotli
+          ? { "Content-Encoding": "br" }
+          : acceptsGzip
+            ? { "Content-Encoding": "gzip" }
+            : {}),
+        "Cache-Control": "private, max-age=30",
+      },
+    }),
+    serializeMs: performance.now() - t0,
+  }
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
   const lat = parseFloat(searchParams.get("lat") || "")
   const lon = parseFloat(searchParams.get("lon") || "")
 
   if (Number.isNaN(lat) || Number.isNaN(lon)) {
-    return Response.json(
-      { error: "lat and lon are required" },
-      { status: 400 }
-    )
+    return Response.json({ error: "lat and lon are required" }, { status: 400 })
   }
 
   // Parse departure time (HH:MM → seconds since midnight), default to now
@@ -113,137 +230,65 @@ export async function GET(request: NextRequest) {
   } else {
     departureTime = secondsOfDay()
   }
+  const useBajs = searchParams.get("bajs") === "1"
+  const routingMode = parseRoutingMode(searchParams)
 
   try {
     const t0 = performance.now()
-    const graph = await getGraph()
-    const tGraph = performance.now()
-    const rtData = getRealtimeData()
-    const walkGraph = getWalkGraph()
-    const tLoad = performance.now()
-    const { times: travelTimes, preds, delays } = computeTravelTimes(
-      graph,
-      lat,
-      lon,
+    const state = await getReachabilityState({
+      originLat: lat,
+      originLon: lon,
       departureTime,
-      rtData
-    )
-    const tDijkstra = performance.now()
-    const transitFeatures = generateFeatures(graph, travelTimes)
-
-    const walkFeatures = expandWalking(
-      walkGraph,
-      travelTimes,
-      graph.stops,
-      lat,
-      lon
-    )
-    const tWalk = performance.now()
-
-    const features = [...transitFeatures, ...walkFeatures]
-
-    // Build routing payload for client-side route reconstruction
-    const usedPatterns = new Set<number>()
-    for (const pred of preds.values()) {
-      if (pred.patternIdx >= 0) usedPatterns.add(pred.patternIdx)
-    }
-
-    const patternMap = new Map<number, number>()
-    const routingPatterns: {
-      stopKeys: string[]
-      mode: string
-      route: string
-    }[] = []
-    for (const origIdx of usedPatterns) {
-      const p = graph.patterns[origIdx]
-      patternMap.set(origIdx, routingPatterns.length)
-      routingPatterns.push({
-        stopKeys: p.stopKeys,
-        mode: p.mode,
-        route: p.route,
-      })
-    }
-
-    const routingStops: {
-      key: string
-      lat: number
-      lon: number
-      name: string
-      time: number
-      delay?: number
-      pred: {
-        fromKey: string
-        patternIdx: number
-        boardIdx: number
-        alightIdx: number
-      } | null
-    }[] = []
-    for (const [key, time] of travelTimes) {
-      const stop = graph.stops.get(key)
-      if (!stop) continue
-      const pred = preds.get(key)
-      const delay = delays.get(key)
-      const mappedPatternIdx =
-        pred && pred.patternIdx >= 0 ? patternMap.get(pred.patternIdx) : -1
-      if (pred?.patternIdx !== undefined && pred.patternIdx >= 0 && mappedPatternIdx === undefined) {
-        continue
-      }
-      const routingPred = pred
-        ? {
-            fromKey: pred.fromKey,
-            patternIdx: pred.patternIdx >= 0 ? (mappedPatternIdx ?? -1) : -1,
-            boardIdx: pred.boardIdx,
-            alightIdx: pred.alightIdx,
-          }
-        : null
-
-      routingStops.push({
-        key,
-        lat: stop.lat,
-        lon: stop.lon,
-        name: stop.name,
-        time: Math.round(time),
-        ...(delay !== undefined && { delay: Math.round(delay) }),
-        pred: routingPred,
-      })
-    }
-
-    const json = JSON.stringify({
-      type: "FeatureCollection",
-      features,
-      routing: { stops: routingStops, patterns: routingPatterns },
-      realtime: rtData.size > 0,
+      useBajs,
     })
-    const tSerial = performance.now()
+    const tState = performance.now()
 
-    const acceptEncoding = request.headers.get("accept-encoding") || ""
-    const prefersBrotli = acceptEncoding.includes("br")
-    const acceptsGzip = acceptEncoding.includes("gzip")
-    const body = prefersBrotli
-      ? brotliCompressSync(json, {
-          params: {
-            [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
-          },
-        })
-      : acceptsGzip
-        ? gzipSync(json)
-        : json
+    let features: GeoJSON.Feature[] = []
+    let tWalk = tState
+    if (routingMode !== "only") {
+      const graph = state.graph
+      const travelTimes = state.travelTimes
+      const walkGraph = getWalkGraph()
+      const transitFeatures = generateFeatures(graph, travelTimes)
+      const walkFeatures = expandWalking(
+        walkGraph,
+        travelTimes,
+        graph.stops,
+        lat,
+        lon
+      )
+      features = [...transitFeatures, ...walkFeatures]
+      tWalk = performance.now()
+    }
 
-    return new Response(body, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(prefersBrotli
-          ? { "Content-Encoding": "br" }
-          : acceptsGzip
-            ? { "Content-Encoding": "gzip" }
-            : {}),
-        "Cache-Control": "private, max-age=30",
-        "Server-Timing": `graph;dur=${(tGraph - t0).toFixed(0)}, dijkstra;dur=${(tDijkstra - tLoad).toFixed(0)}, walk;dur=${(tWalk - tDijkstra).toFixed(0)}, serial;dur=${(tSerial - tWalk).toFixed(0)}, total;dur=${(tSerial - t0).toFixed(0)}`,
-      },
-    })
+    const routing =
+      routingMode === "features" ? undefined : buildRoutingPayload(state)
+    const tPayload = performance.now()
+    const realtime = state.rtData.size > 0
+
+    const payload =
+      routingMode === "only"
+        ? { routing, realtime }
+        : routing
+          ? {
+              type: "FeatureCollection" as const,
+              features,
+              routing,
+              realtime,
+            }
+          : {
+              type: "FeatureCollection" as const,
+              features,
+              realtime,
+            }
+    const { response, serializeMs } = jsonResponse(request, payload)
+    response.headers.set(
+      "Server-Timing",
+      `state;dur=${(tState - t0).toFixed(0)}, walk;dur=${(tWalk - tState).toFixed(0)}, payload;dur=${(tPayload - tWalk).toFixed(0)}, serial;dur=${serializeMs.toFixed(0)}, total;dur=${(tPayload - t0 + serializeMs).toFixed(0)}`
+    )
+    return response
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Internal error"
+    const message = err instanceof Error ? err.message : "Internal error"
     return Response.json({ error: message }, { status: 502 })
   }
 }

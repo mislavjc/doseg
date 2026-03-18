@@ -1,3 +1,4 @@
+import type { BajsStation } from "./bajs"
 import { getStopDelay, type TripRT } from "./gtfs-rt"
 import { MinHeap } from "./min-heap"
 import { decodePolyline } from "./polyline"
@@ -9,6 +10,11 @@ const MAX_WAIT = 60 * 60
 export const WALK_SPEED = 5 // km/h
 export const WALK_MAX_KM = 1.2
 const TRANSFER_MAX_KM = 0.3
+const BAJS_TRANSFER_MAX_KM = 0.35
+const BAJS_BIKE_MAX_KM = 6
+export const BAJS_SPEED = 14 // km/h
+export const BAJS_PICKUP_SECONDS = 60
+export const BAJS_DROPOFF_SECONDS = 30
 
 // Precomputed for Zagreb latitude (~45.8°)
 export const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
@@ -46,13 +52,36 @@ export interface TransitGraph {
 
 export interface Predecessor {
   fromKey: string
-  patternIdx: number
-  boardIdx: number
-  alightIdx: number
+  kind: "WALK" | "TRANSIT" | "BIKE"
+  patternIdx?: number
+  boardIdx?: number
+  alightIdx?: number
+}
+
+export interface ComputeTravelTimesOptions {
+  timeCap?: number
+  bajsStations?: readonly BajsStation[]
+}
+
+interface NearbyNode {
+  key: string
+  distKm: number
+}
+
+interface BajsAdjacency {
+  stationsByKey: Map<string, BajsStation>
+  stopWalkLinks: Map<string, NearbyNode[]>
+  stationWalkLinks: Map<string, NearbyNode[]>
+  stationBikeLinks: Map<string, NearbyNode[]>
 }
 
 let cachedGraph: TransitGraph | null = null
 let graphPromise: Promise<TransitGraph> | null = null
+let cachedBajsAdjacency: {
+  graph: TransitGraph
+  stations: readonly BajsStation[]
+  adjacency: BajsAdjacency
+} | null = null
 
 export async function getGraph(): Promise<TransitGraph> {
   if (cachedGraph) return cachedGraph
@@ -182,6 +211,101 @@ async function buildGraph(): Promise<TransitGraph> {
   return cachedGraph
 }
 
+function buildBajsAdjacency(
+  graph: TransitGraph,
+  stations: readonly BajsStation[]
+): BajsAdjacency {
+  if (
+    cachedBajsAdjacency?.graph === graph &&
+    cachedBajsAdjacency.stations === stations
+  ) {
+    return cachedBajsAdjacency.adjacency
+  }
+
+  const activeStations = stations.filter((station) => station.isInstalled)
+  const stationsByKey = new Map(
+    activeStations.map((station) => [station.key, station])
+  )
+  const stopWalkLinks = new Map<string, NearbyNode[]>()
+  const stationWalkLinks = new Map<string, NearbyNode[]>()
+  const stationBikeLinks = new Map<string, NearbyNode[]>()
+
+  for (const station of activeStations) {
+    stationWalkLinks.set(station.key, [])
+    stationBikeLinks.set(station.key, [])
+  }
+
+  for (const [stopKey, stop] of graph.stops) {
+    const walkLinks: NearbyNode[] = []
+
+    for (const station of activeStations) {
+      const distKm = fastDistKm(stop.lat, stop.lon, station.lat, station.lon)
+      if (distKm > BAJS_TRANSFER_MAX_KM) continue
+
+      walkLinks.push({ key: station.key, distKm })
+      stationWalkLinks.get(station.key)?.push({ key: stopKey, distKm })
+    }
+
+    if (walkLinks.length > 0) {
+      stopWalkLinks.set(stopKey, walkLinks)
+    }
+  }
+
+  for (let i = 0; i < activeStations.length; i++) {
+    const fromStation = activeStations[i]
+
+    for (let j = i + 1; j < activeStations.length; j++) {
+      const toStation = activeStations[j]
+      const distKm = fastDistKm(
+        fromStation.lat,
+        fromStation.lon,
+        toStation.lat,
+        toStation.lon
+      )
+      if (distKm > BAJS_BIKE_MAX_KM) continue
+
+      if (
+        fromStation.isRenting &&
+        fromStation.bikesAvailable > 0 &&
+        toStation.isReturning &&
+        toStation.docksAvailable > 0
+      ) {
+        stationBikeLinks.get(fromStation.key)?.push({
+          key: toStation.key,
+          distKm,
+        })
+      }
+
+      if (
+        toStation.isRenting &&
+        toStation.bikesAvailable > 0 &&
+        fromStation.isReturning &&
+        fromStation.docksAvailable > 0
+      ) {
+        stationBikeLinks.get(toStation.key)?.push({
+          key: fromStation.key,
+          distKm,
+        })
+      }
+    }
+  }
+
+  const adjacency = {
+    stationsByKey,
+    stopWalkLinks,
+    stationWalkLinks,
+    stationBikeLinks,
+  }
+
+  cachedBajsAdjacency = {
+    graph,
+    stations,
+    adjacency,
+  }
+
+  return adjacency
+}
+
 export function fastDistKm(
   lat1: number,
   lon1: number,
@@ -223,11 +347,54 @@ function getNextWait(
   return wait <= MAX_WAIT ? { waitSeconds: wait, tripIndex: lo } : null
 }
 
+export function computeTransitLegDuration(
+  pattern: PatternData,
+  boardIdx: number,
+  alightIdx: number,
+  departureTime: number,
+  arrivalSeconds: number,
+  rtData: Map<string, TripRT>
+): { durationSeconds: number; delaySeconds?: number } | null {
+  const clockTime = departureTime + arrivalSeconds
+  const result = getNextWait(
+    pattern.departures,
+    pattern.stopOffsets[boardIdx],
+    clockTime
+  )
+  if (result === null) return null
+
+  let tripRT: TripRT | undefined
+  for (
+    let ti = result.tripIndex;
+    ti >= Math.max(0, result.tripIndex - 3);
+    ti--
+  ) {
+    tripRT = rtData.get(pattern.tripIds[ti])
+    if (tripRT) break
+  }
+
+  const boardDelay = tripRT ? getStopDelay(tripRT, boardIdx) : 0
+  let durationSeconds =
+    result.waitSeconds + (pattern.stopOffsets[alightIdx] - pattern.stopOffsets[boardIdx])
+  let delaySeconds: number | undefined
+
+  if (tripRT) {
+    delaySeconds = getStopDelay(tripRT, alightIdx)
+    durationSeconds += delaySeconds - boardDelay
+  }
+
+  return {
+    durationSeconds: Math.round(durationSeconds),
+    ...(delaySeconds !== undefined ? { delaySeconds } : {}),
+  }
+}
+
 /**
- * Run transit Dijkstra from an origin point over the transit graph.
- * Returns travel times to all reachable stops, predecessor chain, and delays.
+ * Run the interactive reachability search from an origin point.
+ * Returns travel times to all reachable transit stops and optional BAJS stations,
+ * plus predecessor chains and RT delays for transit alight nodes.
  *
- * @param timeCap - optional time limit in seconds. Stops beyond this are not explored.
+ * @param options.timeCap - optional time limit in seconds. Nodes beyond this are not explored.
  *   Default: Infinity (explore everything, needed for client-side route reconstruction).
  */
 export function computeTravelTimes(
@@ -236,16 +403,30 @@ export function computeTravelTimes(
   originLon: number,
   departureTime: number,
   rtData: Map<string, TripRT>,
-  timeCap: number = Infinity
+  options: ComputeTravelTimesOptions = {}
 ): {
   times: Map<string, number>
   preds: Map<string, Predecessor>
   delays: Map<string, number>
 } {
+  const timeCap = options.timeCap ?? Infinity
+  const bajsAdjacency =
+    options.bajsStations && options.bajsStations.length > 0
+      ? buildBajsAdjacency(graph, options.bajsStations)
+      : null
   const best = new Map<string, number>()
   const preds = new Map<string, Predecessor>()
   const delays = new Map<string, number>() // delay in seconds at alight stop
   const heap = new MinHeap()
+
+  function relax(key: string, time: number, pred: Predecessor) {
+    const existing = best.get(key) ?? Infinity
+    if (time >= existing) return
+
+    best.set(key, time)
+    preds.set(key, pred)
+    heap.push({ time, key })
+  }
 
   // Seed: walk from origin to all stops within walking distance
   for (const [key, stop] of graph.stops) {
@@ -257,6 +438,22 @@ export function computeTravelTimes(
     }
   }
 
+  if (bajsAdjacency) {
+    for (const station of bajsAdjacency.stationsByKey.values()) {
+      if (!station.isRenting || station.bikesAvailable <= 0) continue
+
+      const distKm = fastDistKm(originLat, originLon, station.lat, station.lon)
+      if (distKm > WALK_MAX_KM) continue
+
+      const walkTime = (distKm / WALK_SPEED) * 3600
+      const existing = best.get(station.key) ?? Infinity
+      if (walkTime < existing) {
+        best.set(station.key, walkTime)
+        heap.push({ time: walkTime, key: station.key })
+      }
+    }
+  }
+
   while (heap.size > 0) {
     const { time, key } = heap.pop()!
 
@@ -264,75 +461,113 @@ export function computeTravelTimes(
     if (time > (best.get(key) ?? Infinity)) continue
 
     const stop = graph.stops.get(key)
-    if (!stop) continue
+    const station = bajsAdjacency?.stationsByKey.get(key)
 
-    for (const { patternIdx, stopIdx } of stop.patterns) {
-      const pattern = graph.patterns[patternIdx]
+    if (!stop && !station) continue
 
-      const clockTime = departureTime + time
-      const result = getNextWait(
-        pattern.departures,
-        pattern.stopOffsets[stopIdx],
-        clockTime
-      )
-      if (result === null) continue
+    if (stop) {
+      for (const { patternIdx, stopIdx } of stop.patterns) {
+        const pattern = graph.patterns[patternIdx]
 
-      const boardTime = time + result.waitSeconds
-      const boardOffset = pattern.stopOffsets[stopIdx]
+        const clockTime = departureTime + time
+        const result = getNextWait(
+          pattern.departures,
+          pattern.stopOffsets[stopIdx],
+          clockTime
+        )
+        if (result === null) continue
 
-      // Look up GTFS-RT delay data. The selected trip likely hasn't started
-      // yet (not in RT feed), so also check recent trips on the same pattern
-      // as a proxy for current conditions on this route.
-      let tripRT: TripRT | undefined
-      for (
-        let ti = result.tripIndex;
-        ti >= Math.max(0, result.tripIndex - 3);
-        ti--
-      ) {
-        tripRT = rtData.get(pattern.tripIds[ti])
-        if (tripRT) break
-      }
+        const boardTime = time + result.waitSeconds
+        const boardOffset = pattern.stopOffsets[stopIdx]
 
-      const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
-
-      for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
-        let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
-
-        // Apply real-time delay adjustment if available
-        if (tripRT) {
-          travelTime += getStopDelay(tripRT, i) - boardDelay
+        // Look up GTFS-RT delay data. The selected trip likely hasn't started
+        // yet (not in RT feed), so also check recent trips on the same pattern
+        // as a proxy for current conditions on this route.
+        let tripRT: TripRT | undefined
+        for (
+          let ti = result.tripIndex;
+          ti >= Math.max(0, result.tripIndex - 3);
+          ti--
+        ) {
+          tripRT = rtData.get(pattern.tripIds[ti])
+          if (tripRT) break
         }
 
-        const existing = best.get(pattern.stopKeys[i]) ?? Infinity
-        if (travelTime < existing) {
-          best.set(pattern.stopKeys[i], travelTime)
-          preds.set(pattern.stopKeys[i], {
-            fromKey: key,
-            patternIdx,
-            boardIdx: stopIdx,
-            alightIdx: i,
-          })
+        const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
+
+        for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
+          let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
+
+          // Apply real-time delay adjustment if available
           if (tripRT) {
-            delays.set(pattern.stopKeys[i], getStopDelay(tripRT, i))
+            travelTime += getStopDelay(tripRT, i) - boardDelay
           }
-          heap.push({ time: travelTime, key: pattern.stopKeys[i] })
+
+          const existing = best.get(pattern.stopKeys[i]) ?? Infinity
+          if (travelTime < existing) {
+            best.set(pattern.stopKeys[i], travelTime)
+            preds.set(pattern.stopKeys[i], {
+              fromKey: key,
+              kind: "TRANSIT",
+              patternIdx,
+              boardIdx: stopIdx,
+              alightIdx: i,
+            })
+            if (tripRT) {
+              delays.set(pattern.stopKeys[i], getStopDelay(tripRT, i))
+            }
+            heap.push({ time: travelTime, key: pattern.stopKeys[i] })
+          }
         }
       }
     }
 
-    for (const { key: nearbyKey, distKm } of stop.nearbyStops) {
-      const transferTime = time + (distKm / WALK_SPEED) * 3600
-
-      const existing = best.get(nearbyKey) ?? Infinity
-      if (transferTime < existing) {
-        best.set(nearbyKey, transferTime)
-        preds.set(nearbyKey, {
+    if (stop) {
+      for (const { key: nearbyKey, distKm } of stop.nearbyStops) {
+        relax(nearbyKey, time + (distKm / WALK_SPEED) * 3600, {
           fromKey: key,
-          patternIdx: -1,
-          boardIdx: 0,
-          alightIdx: 0,
+          kind: "WALK",
         })
-        heap.push({ time: transferTime, key: nearbyKey })
+      }
+
+      if (bajsAdjacency) {
+        for (const { key: stationKey, distKm } of bajsAdjacency.stopWalkLinks.get(
+          key
+        ) ?? []) {
+          relax(stationKey, time + (distKm / WALK_SPEED) * 3600, {
+            fromKey: key,
+            kind: "WALK",
+          })
+        }
+      }
+    }
+
+    if (station && bajsAdjacency) {
+      for (const { key: stopKey, distKm } of bajsAdjacency.stationWalkLinks.get(
+        key
+      ) ?? []) {
+        relax(stopKey, time + (distKm / WALK_SPEED) * 3600, {
+          fromKey: key,
+          kind: "WALK",
+        })
+      }
+
+      if (station.isRenting && station.bikesAvailable > 0) {
+        for (const { key: targetKey, distKm } of bajsAdjacency.stationBikeLinks.get(
+          key
+        ) ?? []) {
+          relax(
+            targetKey,
+            time +
+              BAJS_PICKUP_SECONDS +
+              BAJS_DROPOFF_SECONDS +
+              (distKm / BAJS_SPEED) * 3600,
+            {
+              fromKey: key,
+              kind: "BIKE",
+            }
+          )
+        }
       }
     }
   }
@@ -425,8 +660,7 @@ export function computeAvgTravelTimes(
       const boardOffset = pattern.stopOffsets[stopIdx]
 
       for (let i = stopIdx + 1; i < pattern.stopKeys.length; i++) {
-        const travelTime =
-          boardTime + (pattern.stopOffsets[i] - boardOffset)
+        const travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
         const existing = best.get(pattern.stopKeys[i]) ?? Infinity
         if (travelTime < existing) {
           best.set(pattern.stopKeys[i], travelTime)

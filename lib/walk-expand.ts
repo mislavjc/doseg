@@ -142,8 +142,12 @@ class WalkHeap {
     while (i > 0) {
       const parent = (i - 1) >> 1
       if (t[parent] <= t[i]) break
-      const tt = t[parent]; t[parent] = t[i]; t[i] = tt
-      const tn = nd[parent]; nd[parent] = nd[i]; nd[i] = tn
+      const tt = t[parent]
+      t[parent] = t[i]
+      t[i] = tt
+      const tn = nd[parent]
+      nd[parent] = nd[i]
+      nd[i] = tn
       i = parent
     }
   }
@@ -159,8 +163,12 @@ class WalkHeap {
       if (l < n && t[l] < t[s]) s = l
       if (r < n && t[r] < t[s]) s = r
       if (s === i) break
-      const tt = t[s]; t[s] = t[i]; t[i] = tt
-      const tn = nd[s]; nd[s] = nd[i]; nd[i] = tn
+      const tt = t[s]
+      t[s] = t[i]
+      t[i] = tt
+      const tn = nd[s]
+      nd[s] = nd[i]
+      nd[i] = tn
       i = s
     }
   }
@@ -255,8 +263,7 @@ export function expandWalking(
 
       const ti2 = toIdx * 2
       const bucket =
-        Math.floor(Math.min(nodeTime, toTime) / BUCKET_SECONDS) *
-        BUCKET_SECONDS
+        Math.floor(Math.min(nodeTime, toTime) / BUCKET_SECONDS) * BUCKET_SECONDS
 
       let lines = buckets.get(bucket)
       if (!lines) {
@@ -264,8 +271,14 @@ export function expandWalking(
         buckets.set(bucket, lines)
       }
       lines.push([
-        [Math.round(fromLon * 10000) / 10000, Math.round(fromLat * 10000) / 10000],
-        [Math.round(coords[ti2 + 1] * 10000) / 10000, Math.round(coords[ti2] * 10000) / 10000],
+        [
+          Math.round(fromLon * 10000) / 10000,
+          Math.round(fromLat * 10000) / 10000,
+        ],
+        [
+          Math.round(coords[ti2 + 1] * 10000) / 10000,
+          Math.round(coords[ti2] * 10000) / 10000,
+        ],
       ])
     }
   }

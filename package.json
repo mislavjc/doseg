@@ -13,6 +13,7 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "build:district-map": "bun scripts/build-district-map-svg.ts",
     "build:walk-graph": "bun scripts/build-walk-graph.ts",
+    "build:bike-graph": "bun scripts/build-bike-graph.ts",
     "capture:og": "bun scripts/capture-og.ts",
     "score:districts": "bun scripts/score-districts.ts"
   },

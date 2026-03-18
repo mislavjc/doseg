@@ -34,12 +34,28 @@ interface RouteDetailsProps {
 
 const ease = [0.23, 1, 0.32, 1] as const
 
+function legDescription(leg: Itinerary["legs"][number]): string {
+  const from = leg.from.name || "Početak"
+  const to = leg.to.name || "Kraj"
+
+  if (
+    leg.mode === "WALK" &&
+    leg.from.name &&
+    leg.to.name &&
+    leg.from.name === leg.to.name
+  ) {
+    return `Presjedanje kod ${to}`
+  }
+
+  return `${from} → ${to}`
+}
+
 export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <motion.div
-      className="panel absolute bottom-8 left-3 right-3 sm:bottom-8 sm:left-4 sm:right-auto sm:w-[280px] cursor-pointer"
+      className="panel absolute right-3 bottom-8 left-3 cursor-pointer sm:right-auto sm:bottom-8 sm:left-4 sm:w-[280px]"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -55,31 +71,49 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
       {itinerary && (
         <>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-semibold tabular-nums tracking-tight text-slate-100">
+            <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
               {formatDuration(itinerary.duration)}
             </span>
             <div className="flex items-center gap-2">
               {loading && <div className="route-spinner" />}
-              <svg 
-                className={`w-4 h-4 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                className={`h-4 w-4 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
-          
+
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             {itinerary.legs.map((leg, i) => {
               const isWalk = leg.mode === "WALK"
               return (
                 <div key={i} className="flex items-center gap-1.5">
-                  {i > 0 && <span className="text-[10px] text-slate-600">›</span>}
+                  {i > 0 && (
+                    <span className="text-[10px] text-slate-600">›</span>
+                  )}
                   {isWalk ? (
-                    <div className="flex items-center justify-center w-5 h-5 rounded bg-white/5" title="Hodanje">
-                      <svg className="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <div
+                      className="flex h-5 w-5 items-center justify-center rounded bg-white/5"
+                      title="Hodanje"
+                    >
+                      <svg
+                        className="h-3.5 w-3.5 text-slate-400"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <circle cx="12" cy="5" r="1.5" />
                         <path d="M12 7.5v4.5" />
                         <path d="M12 12l-2.5 5M12 12l2.5 5" />
@@ -114,21 +148,24 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                 }}
                 className="overflow-hidden"
               >
-                <div className="flex gap-1.5 text-[11px] text-slate-400 mb-3">
+                <div className="mb-3 flex gap-1.5 text-[11px] text-slate-400">
                   {itinerary.transfers > 0 && (
                     <span>
                       {itinerary.transfers}{" "}
-                      {itinerary.transfers === 1 ? "presjedanje" : "presjedanja"}
+                      {itinerary.transfers === 1
+                        ? "presjedanje"
+                        : "presjedanja"}
                     </span>
                   )}
                   {itinerary.transfers > 0 && <span aria-hidden>·</span>}
                   <span>{formatDistance(itinerary.walkDistance)} hodanja</span>
+                  {itinerary.bikeDistance > 0 && <span aria-hidden>·</span>}
+                  {itinerary.bikeDistance > 0 && (
+                    <span>{formatDistance(itinerary.bikeDistance)} BAJS voznje</span>
+                  )}
                 </div>
 
-                <div
-                  className="flex flex-col gap-0.5"
-                  role="list"
-                >
+                <div className="flex flex-col gap-0.5" role="list">
                   {itinerary.legs.map((leg, i) => (
                     <div
                       key={i}
@@ -148,20 +185,24 @@ export function RouteDetails({ itinerary, loading }: RouteDetailsProps) {
                         {leg.route || modeLabel(leg.mode)}
                       </span>
                       <span className="min-w-0 flex-1 truncate text-[12px] text-slate-400">
-                        {leg.from.name || "Početak"} → {leg.to.name || "Kraj"}
+                        {legDescription(leg)}
                       </span>
                       <span className="flex shrink-0 items-center gap-1.5">
-                        <span className="text-[11px] tabular-nums text-slate-400">
+                        <span className="text-[11px] text-slate-400 tabular-nums">
                           {formatDuration(leg.duration)}
                         </span>
-                        {leg.mode !== "WALK" && leg.delay !== undefined && (() => {
-                          const badge = delayBadge(leg.delay)
-                          return (
-                            <span className={`text-[9px] font-medium tabular-nums ${badge.color}`}>
-                              {badge.label}
-                            </span>
-                          )
-                        })()}
+                        {leg.mode !== "WALK" &&
+                          leg.delay !== undefined &&
+                          (() => {
+                            const badge = delayBadge(leg.delay)
+                            return (
+                              <span
+                                className={`text-[9px] font-medium tabular-nums ${badge.color}`}
+                              >
+                                {badge.label}
+                              </span>
+                            )
+                          })()}
                       </span>
                     </div>
                   ))}

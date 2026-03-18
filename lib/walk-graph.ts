@@ -21,20 +21,22 @@ export interface WalkingGraph {
   gridCellSize: number
 }
 
-const GRAPH_PATH = join(process.cwd(), "data/walk-graph.bin")
+const WALK_GRAPH_PATH = join(process.cwd(), "data/walk-graph.bin")
+const BIKE_GRAPH_PATH = join(process.cwd(), "data/bike-graph.bin")
 const GRID_CELL_SIZE = 0.002 // ~200m in degrees
 
-let cached: WalkingGraph | null = null
+const cached = new Map<string, WalkingGraph>()
 
-export function getWalkGraph(): WalkingGraph {
-  if (cached) return cached
+function loadGraph(path: string, label: string, buildCommand: string): WalkingGraph {
+  const existing = cached.get(path)
+  if (existing) return existing
 
   let buf: Buffer
   try {
-    buf = readFileSync(GRAPH_PATH)
+    buf = readFileSync(path)
   } catch {
     throw new Error(
-      `Walking graph not found at ${GRAPH_PATH}. Run "npm run build:walk-graph" to generate it.`
+      `${label} graph not found at ${path}. Run "${buildCommand}" to generate it.`
     )
   }
   const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
@@ -80,7 +82,7 @@ export function getWalkGraph(): WalkingGraph {
     cell.push(i)
   }
 
-  cached = {
+  const graph = {
     nodeCount,
     edgeCount,
     coords,
@@ -91,5 +93,14 @@ export function getWalkGraph(): WalkingGraph {
     gridCellSize: GRID_CELL_SIZE,
   }
 
-  return cached
+  cached.set(path, graph)
+  return graph
+}
+
+export function getWalkGraph(): WalkingGraph {
+  return loadGraph(WALK_GRAPH_PATH, "Walking", "npm run build:walk-graph")
+}
+
+export function getBikeGraph(): WalkingGraph {
+  return loadGraph(BIKE_GRAPH_PATH, "Bike", "bun scripts/build-bike-graph.ts")
 }

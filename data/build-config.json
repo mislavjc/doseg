@@ -8,6 +8,10 @@
     {
       "type": "gtfs",
       "source": "gtfs/zet.zip"
+    },
+    {
+      "type": "gtfs",
+      "source": "gtfs/hzpp-zagreb.zip"
     }
   ]
 }

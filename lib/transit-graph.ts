@@ -2,7 +2,10 @@ import type { BajsStation } from "./bajs"
 import { getStopDelay, type TripRT } from "./gtfs-rt"
 import { MinHeap } from "./min-heap"
 import { decodePolyline } from "./polyline"
-import { modeSpeed } from "./transit"
+import { COS_LAT, KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm } from "./geo"
+import { modeSpeed, type TransitMode } from "./transit"
+
+export { COS_LAT, KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm }
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_WAIT = 60 * 60
@@ -16,15 +19,10 @@ export const BAJS_SPEED = 14 // km/h
 export const BAJS_PICKUP_SECONDS = 60
 export const BAJS_DROPOFF_SECONDS = 30
 
-// Precomputed for Zagreb latitude (~45.8°)
-export const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
-export const KM_PER_DEG_LAT = 111.32
-export const KM_PER_DEG_LON = 111.32 * COS_LAT
-
 export interface PatternData {
   geometry: [number, number][]
   stopKeys: string[]
-  mode: string
+  mode: TransitMode
   route: string
   departures: number[] // sorted departure seconds from first stop
   tripIds: string[] // GTFS trip IDs, parallel to departures
@@ -99,7 +97,7 @@ async function buildGraph(): Promise<TransitGraph> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query: `{ patterns { route { mode shortName } patternGeometry { points } stops { name lat lon } trips { gtfsId stoptimes { scheduledDeparture } } } }`,
+      query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } trips { gtfsId stoptimes { scheduledDeparture } } } }`,
     }),
   })
 
@@ -155,7 +153,7 @@ async function buildGraph(): Promise<TransitGraph> {
     const tripIds = tripDeps.map((td) => td.tripId)
 
     // Cumulative travel time offset from first stop to each subsequent stop
-    const mode = p.route?.mode || "BUS"
+    const mode = (p.route?.mode || "BUS") as TransitMode
     const speed = modeSpeed(mode)
     const stopOffsets = [0]
     for (let i = 1; i < p.stops.length; i++) {
@@ -169,7 +167,7 @@ async function buildGraph(): Promise<TransitGraph> {
       geometry: decodePolyline(p.patternGeometry.points),
       stopKeys,
       mode,
-      route: p.route?.shortName || "",
+      route: p.route?.shortName || p.route?.longName || "",
       departures,
       tripIds,
       stopOffsets,
@@ -304,17 +302,6 @@ function buildBajsAdjacency(
   }
 
   return adjacency
-}
-
-export function fastDistKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const dlat = (lat2 - lat1) * KM_PER_DEG_LAT
-  const dlon = (lon2 - lon1) * KM_PER_DEG_LON
-  return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
 /**

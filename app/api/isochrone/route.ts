@@ -62,6 +62,10 @@ function generateFeatures(
   const buckets = new Map<number, [number, number][][]>()
 
   for (const pattern of graph.patterns) {
+    // Skip rail — straight-line shapes between stops look bad on the map;
+    // walking expansion from train stations provides the actual reachability.
+    if (pattern.mode === "RAIL") continue
+
     const geo = pattern.geometry
     const numStops = pattern.stopKeys.length
     const numPts = geo.length

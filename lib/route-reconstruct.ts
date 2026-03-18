@@ -51,7 +51,8 @@ interface RouteTemplate {
 
 const GRID_CELL_SIZE = 0.005
 
-const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
+import { COS_LAT } from "./geo"
+
 const M_PER_DEG_LAT = 111320
 const M_PER_DEG_LON = 111320 * COS_LAT
 const WALK_SPEED_MS = 5 / 3.6

@@ -49,21 +49,7 @@ const WALKABLE_HIGHWAYS = new Set([
   "service",
 ])
 
-// Precomputed for Zagreb latitude
-const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
-const KM_PER_DEG_LAT = 111.32
-const KM_PER_DEG_LON = 111.32 * COS_LAT
-
-function distKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const dlat = (lat2 - lat1) * KM_PER_DEG_LAT
-  const dlon = (lon2 - lon1) * KM_PER_DEG_LON
-  return Math.sqrt(dlat * dlat + dlon * dlon)
-}
+import { KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm as distKm } from "../lib/geo"
 
 // --- SRTM elevation data ---
 

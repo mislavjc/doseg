@@ -1,9 +1,5 @@
+import { KM_PER_DEG_LAT, KM_PER_DEG_LON } from "./geo"
 import type { WalkingGraph } from "./walk-graph"
-
-// Precomputed for Zagreb latitude (~45.8°)
-const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
-const KM_PER_DEG_LAT = 111.32
-const KM_PER_DEG_LON = 111.32 * COS_LAT
 
 interface PathCacheEntry {
   coords: [number, number][]

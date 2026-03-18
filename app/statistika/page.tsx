@@ -13,9 +13,21 @@ export const metadata: Metadata = {
   title: "Statistika - Doseg",
   description:
     "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+  openGraph: {
+    title: "Statistika - Doseg",
+    description:
+      "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Statistika - Doseg",
+    description:
+      "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+  },
 }
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 interface DistrictScore {
   name: string
@@ -89,19 +101,21 @@ function fmtHR(n: number, decimals = 0): string {
 }
 
 function pct(cells: number, total: number): string {
+  if (total === 0) return "0"
   const p = (cells / total) * 100
   if (p < 0.1) return "<0,1"
   if (p < 1) return fmtHR(p, 1)
   return Math.round(p).toString()
 }
 
-/** Compute Gini coefficient for a given metric across districts. */
+/** Compute Gini coefficient (inequality index) for a given metric across districts. */
 function computeGini(
   districts: DistrictScore[],
   accessor: (d: DistrictScore) => number
 ): number {
   const sorted = [...districts].sort((a, b) => accessor(a) - accessor(b))
   const n = sorted.length
+  if (n === 0) return 0
   const total = sorted.reduce((s, d) => s + accessor(d), 0)
   if (total === 0) return 0
   const wSum = sorted.reduce(
@@ -184,7 +198,9 @@ export default function StatistikaPage() {
 
   // Population-weighted city score
   const cityWeightedScore = Math.round(
-    data.districts.reduce((s, d) => s + d.score * (d.population ?? 0), 0) / totalPop
+    totalPop > 0
+      ? data.districts.reduce((s, d) => s + d.score * (d.population ?? 0), 0) / totalPop
+      : 0
   )
 
   // BAJS insights
@@ -356,7 +372,7 @@ export default function StatistikaPage() {
       />
 
       {/* Choropleth map */}
-      <section className="mt-20 sm:mt-32">
+      <section id="karta" className="mt-20 sm:mt-32">
         <div className="mb-10 flex flex-col items-center text-center">
           <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
             Karta područja
@@ -419,7 +435,7 @@ export default function StatistikaPage() {
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
-              {Math.round((poorPop / totalPop) * 100)}%
+              {totalPop > 0 ? Math.round((poorPop / totalPop) * 100) : 0}%
             </span>
             <span className="text-[14px] text-slate-500 dark:text-slate-400">
               stanovnika
@@ -515,7 +531,7 @@ export default function StatistikaPage() {
       <div className="mt-16 grid grid-cols-1 gap-12 sm:mt-20">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* What the score means */}
-          <section className="flex flex-col rounded-3xl bg-slate-100 p-8 dark:bg-white/5">
+          <section id="metodika" className="flex flex-col rounded-3xl bg-slate-100 p-8 dark:bg-white/5">
             <div className="mb-6 flex items-center gap-3 text-slate-800 dark:text-slate-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-white/10">
                 <svg
@@ -578,7 +594,7 @@ export default function StatistikaPage() {
           </section>
 
           {/* Accessibility gap */}
-          <section className="flex flex-col rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
+          <section id="jaz" className="flex flex-col rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
             <div className="mb-6 flex items-center gap-3 text-rose-800 dark:text-rose-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-rose-500/20">
                 <svg
@@ -604,12 +620,12 @@ export default function StatistikaPage() {
             <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
               Samo{" "}
               <strong className="font-medium text-slate-900 dark:text-slate-100">
-                {Math.round((goodPop / totalPop) * 100)}%
+                {totalPop > 0 ? Math.round((goodPop / totalPop) * 100) : 0}%
               </strong>{" "}
               Zagrepčana ({goodPop.toLocaleString("hr-HR")} stan.) živi u
               četvrtima s rezultatom ≥50. Istovremeno,{" "}
               <strong className="font-medium text-slate-900 dark:text-slate-100">
-                {Math.round((poorPop / totalPop) * 100)}%
+                {totalPop > 0 ? Math.round((poorPop / totalPop) * 100) : 0}%
               </strong>{" "}
               ({poorPop.toLocaleString("hr-HR")} stan.) živi u četvrtima gdje je
               rezultat ispod 25 - to uključuje{" "}
@@ -624,7 +640,7 @@ export default function StatistikaPage() {
         {/* Gini coefficient + Lorenz curve */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Left panel — Lorenz curve SVG */}
-          <section className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <section id="lorenz" className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
             <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
               Lorenzova krivulja dostupnosti
             </div>
@@ -752,10 +768,31 @@ export default function StatistikaPage() {
             <p className="mt-4 text-center text-[13px] leading-snug text-slate-500 dark:text-slate-400">
               Što je krivulja dalje od dijagonale, to je nejednakost veća.
             </p>
+            <div className="sr-only">
+              <table>
+                <caption>Lorenzova krivulja — podaci po četvrtima sortirani po dostupnosti</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Četvrt</th>
+                    <th scope="col">Rezultat</th>
+                    <th scope="col">Populacija</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {popSorted.map((d) => (
+                    <tr key={d.osmId}>
+                      <td>{d.name}</td>
+                      <td>{d.score}</td>
+                      <td>{(d.population ?? 0).toLocaleString("hr-HR")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
 
           {/* Right panel — Gini interpretation */}
-          <section className="flex flex-col rounded-3xl bg-emerald-50/50 p-8 dark:bg-emerald-950/10">
+          <section id="gini" className="flex flex-col rounded-3xl bg-emerald-50/50 p-8 dark:bg-emerald-950/10">
             <div className="mb-6 flex items-center gap-3 text-emerald-800 dark:text-emerald-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-emerald-500/20">
                 <svg
@@ -826,7 +863,7 @@ export default function StatistikaPage() {
 
         {/* Tram is king */}
         {tramlessDistricts.length > 0 && (
-          <section className="rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
+          <section id="tramvaj" className="rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
             <div className="mb-6 flex items-center gap-3 text-rose-800 dark:text-rose-200">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-rose-500/20">
                 <svg
@@ -885,7 +922,7 @@ export default function StatistikaPage() {
       </div>
 
       {/* Density vs connectivity scatterplot */}
-      <section className="mt-16 sm:mt-20">
+      <section id="gustoca" className="mt-16 sm:mt-20">
         <div className="mb-10 flex flex-col items-center text-center">
           <div className="mb-4 flex items-center gap-2">
             <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
@@ -989,22 +1026,42 @@ export default function StatistikaPage() {
                 </text>
 
                 {/* Data points */}
-                {densityData.map((d) => (
-                  <circle
-                    key={d.name}
-                    cx={scatterXScale(d.density)}
-                    cy={scatterYScale(d.score)}
-                    r={scatterRScale(d.population)}
-                    fill={d.hasTram ? "#16a34a" : "#8b5cf6"}
-                    fillOpacity={0.6}
-                    stroke={d.hasTram ? "#15803d" : "#7c3aed"}
-                    strokeWidth={0.5}
-                  >
-                    <title>
-                      {`${d.name}: rezultat ${d.score}, gustoća ${Math.round(d.density)}, ${d.population} stan.`}
-                    </title>
-                  </circle>
-                ))}
+                {densityData.map((d) => {
+                  const cx = scatterXScale(d.density)
+                  const cy = scatterYScale(d.score)
+                  const r = scatterRScale(d.population)
+                  const title = `${d.name}: rezultat ${d.score}, gustoća ${Math.round(d.density)}, ${d.population} stan.`
+                  if (d.hasTram) {
+                    return (
+                      <circle
+                        key={d.name}
+                        cx={cx}
+                        cy={cy}
+                        r={r}
+                        fill="#16a34a"
+                        fillOpacity={0.6}
+                        stroke="#15803d"
+                        strokeWidth={0.5}
+                      >
+                        <title>{title}</title>
+                      </circle>
+                    )
+                  }
+                  // Diamond shape for no-tram districts
+                  const s = r * 1.2
+                  return (
+                    <polygon
+                      key={d.name}
+                      points={`${cx},${cy - s} ${cx + s},${cy} ${cx},${cy + s} ${cx - s},${cy}`}
+                      fill="#8b5cf6"
+                      fillOpacity={0.6}
+                      stroke="#7c3aed"
+                      strokeWidth={0.5}
+                    >
+                      <title>{title}</title>
+                    </polygon>
+                  )
+                })}
 
                 {/* Outlier labels */}
                 {scatterDonjiGrad && (
@@ -1058,12 +1115,39 @@ export default function StatistikaPage() {
             <div className="mt-3 flex items-center justify-center gap-6 text-[12px] text-slate-500 dark:text-slate-400">
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-green-600 opacity-70" />
-                Ima tramvaj
+                Ima tramvaj (krug)
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-violet-500 opacity-70" />
-                Bez tramvaja
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                  <polygon points="5,0 10,5 5,10 0,5" fill="#8b5cf6" fillOpacity="0.7" />
+                </svg>
+                Bez tramvaja (romb)
               </span>
+            </div>
+            <div className="sr-only">
+              <table>
+                <caption>Gustoća vs. povezanost — podaci po četvrtima</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Četvrt</th>
+                    <th scope="col">Rezultat</th>
+                    <th scope="col">Gustoća (stan./uzorak)</th>
+                    <th scope="col">Populacija</th>
+                    <th scope="col">Tramvaj</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {densityData.map((d) => (
+                    <tr key={d.name}>
+                      <td>{d.name}</td>
+                      <td>{d.score}</td>
+                      <td>{Math.round(d.density)}</td>
+                      <td>{d.population.toLocaleString("hr-HR")}</td>
+                      <td>{d.hasTram ? "Da" : "Ne"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -1134,7 +1218,7 @@ export default function StatistikaPage() {
 
       {/* Transit desert section */}
       {(hasDesertData || lowFreqDistricts.length > 0) && (
-        <section className="mt-16 sm:mt-20">
+        <section id="pustinje" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-red-500" />
@@ -1264,7 +1348,7 @@ export default function StatistikaPage() {
 
       {/* Peak vs off-peak section */}
       {hasEveningData && eveningRankedByDrop.length > 0 && (
-        <section className="mt-16 sm:mt-20">
+        <section id="vrsni-sat" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-indigo-500" />
@@ -1371,7 +1455,7 @@ export default function StatistikaPage() {
 
       {/* BAJS Impact section */}
       {hasBajs && (
-        <section className="mt-16 sm:mt-20">
+        <section id="bajs" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
@@ -1408,6 +1492,7 @@ export default function StatistikaPage() {
                   src="/district-bajs-map.svg"
                   alt="Karta utjecaja BAJS bicikala po četvrtima. Tamniji amber označava veći dobitak u dostupnosti."
                   className="h-full w-full object-contain"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -1546,7 +1631,7 @@ export default function StatistikaPage() {
 
       {/* Internal inequality section */}
       {hasVarianceData && varianceRanked.length > 0 && (
-        <section className="mt-16 sm:mt-20">
+        <section id="varijacija" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-sky-500" />
@@ -1683,7 +1768,7 @@ export default function StatistikaPage() {
 
       {/* Frequency spectrum section */}
       {freqRanked.length > 0 && (
-        <section className="mt-16 sm:mt-20">
+        <section id="frekvencija" className="mt-16 sm:mt-20">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="mb-4 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-blue-500" />
@@ -1840,7 +1925,7 @@ export default function StatistikaPage() {
       </div>
 
       {/* Methodology */}
-      <section className="mt-24 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 sm:p-12 dark:bg-zinc-900/40 dark:ring-white/10">
+      <section id="metodologija" className="mt-24 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 sm:p-12 dark:bg-zinc-900/40 dark:ring-white/10">
         <h2 className="mb-8 font-serif text-[24px] text-slate-900 dark:text-slate-100">
           Metodologija izračuna
         </h2>
@@ -2037,7 +2122,7 @@ function StatHero({
         <div className="flex-1">
           <div className="inline-flex flex-wrap items-center gap-2 px-1 text-[11px] font-medium tracking-[0.18em] text-slate-500 uppercase dark:text-slate-400">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
             </span>
             Zagreb
@@ -2195,7 +2280,7 @@ function HeroDistrictSummary({
     circumference - (district.score / 100) * circumference
 
   return (
-    <div className="group relative flex items-center justify-between gap-4 rounded-2xl border border-black/5 p-3 transition-colors hover:bg-slate-50/50 dark:border-white/5 dark:hover:bg-white/2">
+    <div className="group relative flex items-center justify-between gap-4 rounded-2xl border border-black/5 p-3 transition-colors hover:bg-slate-50/50 dark:border-white/5 dark:hover:bg-white/2" aria-label={`${label}: ${district.name}, rezultat ${district.score} od 100`}>
       <div className="min-w-0 flex-1 pl-1">
         <div className="font-sans text-[9px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
           {label}
@@ -2363,7 +2448,7 @@ function DistrictCard({
 
         {/* Circular Score */}
         <div className="flex flex-col items-end gap-1.5">
-          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
+          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center" role="img" aria-label={`Rezultat ${d.score} od 100`}>
             <svg
               aria-hidden="true"
               className="absolute inset-0 h-full w-full -rotate-90"

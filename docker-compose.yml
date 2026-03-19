@@ -16,6 +16,30 @@ services:
       retries: 5
     restart: unless-stopped
 
+  isochrone:
+    build: ./scoring
+    environment:
+      - OTP_URL=http://otp:8080
+      - DATA_DIR=/app/data
+      - PORT=3001
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      otp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3001/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 512M
+    restart: unless-stopped
+
   app:
     build: .
     environment:

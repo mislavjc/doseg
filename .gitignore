@@ -41,6 +41,10 @@ data/osm/*.osm.pbf
 data/graph.obj
 data/walk-graph.bin
 data/srtm/
+data/transit-graph.json
+
+# rust
+/scoring/target
 
 # graphql-codegen output
 /generated

@@ -1,0 +1,23 @@
+query GetPatterns {
+  patterns {
+    route {
+      mode
+      shortName
+      longName
+    }
+    patternGeometry {
+      points
+    }
+    stops {
+      name
+      lat
+      lon
+    }
+    trips {
+      gtfsId
+      stoptimes {
+        scheduledDeparture
+      }
+    }
+  }
+}

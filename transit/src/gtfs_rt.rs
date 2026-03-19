@@ -95,11 +95,25 @@ pub fn get_stop_delay(trip: &TripRT, stop_idx: usize) -> i32 {
 
 /// Fetch and parse the GTFS-RT feed, returning a map of trip_id → TripRT.
 fn fetch_and_parse() -> Option<HashMap<String, TripRT>> {
-    let resp = ureq::get(ZET_RT_URL).call().ok()?;
+    let resp = match ureq::get(ZET_RT_URL).call() {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("GTFS-RT: fetch failed: {}", e);
+            return None;
+        }
+    };
     let mut buf = Vec::new();
-    resp.into_reader().read_to_end(&mut buf).ok()?;
-
-    let feed = FeedMessage::decode(buf.as_slice()).ok()?;
+    if let Err(e) = resp.into_reader().read_to_end(&mut buf) {
+        eprintln!("GTFS-RT: read failed: {}", e);
+        return None;
+    }
+    let feed = match FeedMessage::decode(buf.as_slice()) {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("GTFS-RT: protobuf decode failed: {}", e);
+            return None;
+        }
+    };
     let mut rt = HashMap::new();
 
     for entity in &feed.entity {
@@ -148,11 +162,17 @@ pub fn spawn_refresh_task(store: RtStore) {
     tokio::spawn(async move {
         loop {
             let result = tokio::task::spawn_blocking(|| fetch_and_parse()).await;
-            if let Ok(Some(data)) = result {
-                let count = data.len();
-                *store.write().unwrap() = data;
-                if count > 0 {
+            match result {
+                Ok(Some(data)) => {
+                    let count = data.len();
+                    *store.write().unwrap() = data;
                     eprintln!("GTFS-RT: refreshed {} trip updates", count);
+                }
+                Ok(None) => {
+                    // Error already logged in fetch_and_parse
+                }
+                Err(e) => {
+                    eprintln!("GTFS-RT: spawn_blocking failed: {}", e);
                 }
             }
             tokio::time::sleep(REFRESH_INTERVAL).await;

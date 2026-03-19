@@ -45,7 +45,6 @@ const RENDER_CAP_SECONDS: f64 = MAX_SECONDS - 60.0;
 const MIN_RENDER_EDGE_METERS: f64 = 40.0;
 const CM_TO_SECONDS: f64 = 0.0072;
 const BUCKET_SECONDS: f64 = 60.0;
-const TRANSIT_COORD_PRECISION: i32 = 4;
 const TRANSIT_COORD_SCALE: f64 = 10_000.0; // 10^4
 
 const WALK_MAX_KM: f64 = 1.2;
@@ -285,7 +284,7 @@ fn compute_travel_times(
     let mut node_keys: Vec<String> = Vec::new();
     let mut key_to_node: HashMap<String, u32> = HashMap::new();
 
-    let mut get_or_insert_node = |key: &str, keys: &mut Vec<String>, k2n: &mut HashMap<String, u32>| -> u32 {
+    let get_or_insert_node = |key: &str, keys: &mut Vec<String>, k2n: &mut HashMap<String, u32>| -> u32 {
         if let Some(&idx) = k2n.get(key) {
             idx
         } else {
@@ -349,7 +348,7 @@ fn compute_travel_times(
         let is_stop = stop_by_key.contains_key(key.as_str());
         let is_station = use_bajs
             && bajs_adj
-                .map_or(false, |adj| adj.stations_by_key.contains_key(key.as_str()));
+                .is_some_and(|adj| adj.stations_by_key.contains_key(key.as_str()));
 
         if is_stop {
             let stop = stop_by_key[key.as_str()];

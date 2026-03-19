@@ -2,7 +2,9 @@ use serde::Deserialize;
 
 use crate::geo::fast_dist_km;
 
+#[allow(dead_code)]
 const BAJS_TRANSFER_MAX_KM: f64 = 0.35;
+#[allow(dead_code)]
 const BAJS_BIKE_MAX_KM: f64 = 6.0;
 
 /// BAJS station from the transit graph JSON dump.
@@ -22,12 +24,14 @@ pub struct BajsStation {
 
 /// Index-based link to a node.
 #[derive(Clone)]
+#[allow(dead_code)]
 pub struct IndexedLink {
     pub idx: usize,
     pub dist_km: f64,
 }
 
 /// Indexed BAJS adjacency for scoring Dijkstra.
+#[allow(dead_code)]
 pub struct IndexedBajsAdjacency {
     pub bajs_count: usize,
     pub stations: Vec<BajsStation>,
@@ -41,6 +45,7 @@ pub struct IndexedBajsAdjacency {
 
 /// Build indexed BAJS adjacency structure for scoring.
 /// All stations are treated as idealized (1 bike, 1 dock, installed+renting+returning).
+#[allow(dead_code)]
 pub fn build_bajs_adjacency_indexed(
     stop_coords: &[(f64, f64)], // (lat, lon) for each transit stop
     stop_count: usize,

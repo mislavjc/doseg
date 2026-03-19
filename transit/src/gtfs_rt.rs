@@ -203,7 +203,7 @@ fn fetch_and_parse() -> Option<HashMap<String, TripRT>> {
 pub fn spawn_refresh_task(store: RtStore, last_refresh: RtLastRefresh) {
     tokio::spawn(async move {
         loop {
-            let result = tokio::task::spawn_blocking(|| fetch_and_parse()).await;
+            let result = tokio::task::spawn_blocking(fetch_and_parse).await;
             match result {
                 Ok(Some(data)) => {
                     let count = data.len();

@@ -53,6 +53,7 @@ impl FlatHeap {
         }
     }
 
+    #[allow(dead_code)]
     pub fn clear(&mut self) {
         self.times.clear();
         self.nodes.clear();

@@ -4,6 +4,7 @@ use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::heap::FlatHeap;
 use crate::walk_graph::{WalkGraph, GRID_CELL_SIZE};
 /// cm → seconds: 3600 / (100_000 * 5) = 0.0072
+#[allow(dead_code)]
 const CM_TO_SECONDS: f64 = 0.0072;
 
 /// Snap info: a transit stop snapped to the nearest walk graph node.
@@ -61,6 +62,7 @@ pub fn snap_stops(
 }
 
 /// Thread-local state for walk Dijkstra. Allocated once per thread, reused across calls.
+#[allow(dead_code)]
 pub struct WalkExpandState {
     pub best_buf: Vec<f64>,
     pub heap: FlatHeap,
@@ -68,6 +70,7 @@ pub struct WalkExpandState {
     pub touched: Vec<u32>,
 }
 
+#[allow(dead_code)]
 impl WalkExpandState {
     pub fn new(node_count: usize) -> Self {
         Self {
@@ -83,6 +86,7 @@ impl WalkExpandState {
 ///
 /// `transit_times` is indexed by stop idx (and optionally BAJS station idx after stop_count).
 /// Uses thread-local WalkExpandState for zero-allocation reuse.
+#[allow(dead_code)]
 pub fn count_reachable_cells(
     graph: &WalkGraph,
     transit_times: &[f64],

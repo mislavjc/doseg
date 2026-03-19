@@ -279,11 +279,11 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
                 Some(v) => v as f64,
                 None => continue,
             };
-            for si in 1..n_stops {
-                if let Some(dep) = trip.stoptimes[si] {
-                    let offset = dep as f64 - base;
+            for (stoptime, samples) in trip.stoptimes.iter().zip(offset_samples.iter_mut()).skip(1) {
+                if let Some(dep) = stoptime {
+                    let offset = *dep as f64 - base;
                     if offset >= 0.0 {
-                        offset_samples[si].push(offset);
+                        samples.push(offset);
                     }
                 }
             }

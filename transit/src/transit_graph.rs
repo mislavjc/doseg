@@ -5,10 +5,15 @@ use serde::Deserialize;
 use crate::bajs::{BajsStation, IndexedBajsAdjacency};
 use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::heap::FlatHeap;
+#[allow(dead_code)]
 const WALK_MAX_KM: f64 = 1.2;
+#[allow(dead_code)]
 const TRANSFER_PENALTY: f64 = 120.0; // 2 minutes
+#[allow(dead_code)]
 const BAJS_PICKUP_SECONDS: f64 = 60.0;
+#[allow(dead_code)]
 const BAJS_DROPOFF_SECONDS: f64 = 30.0;
+#[allow(dead_code)]
 const BAJS_BIKE_SPEED: f64 = 14.0; // km/h
 /// Grid cell size for stop spatial index (~1.5km, must be >= WALK_MAX_KM in degrees)
 const STOP_GRID_CELL: f64 = 0.015; // ~1.5km in degrees
@@ -85,6 +90,7 @@ pub struct PatternData {
     pub geometry_encoded: Option<String>,
     /// GTFS trip IDs, parallel to departures (for GTFS-RT delay lookup)
     #[serde(skip)]
+    #[allow(dead_code)]
     pub trip_ids: Vec<String>,
 }
 
@@ -122,6 +128,7 @@ impl TransitGraphJson {
 
 /// Compute average headway at a stop for a pattern near the given clock time.
 /// Returns headway/2 (average wait) or None if no service.
+#[allow(dead_code)]
 fn get_avg_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<f64> {
     if departures.is_empty() {
         return None;
@@ -151,6 +158,7 @@ fn get_avg_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option
 /// Writes best travel times into `best_buf` (indexed by stop idx, and BAJS station idx after stop_count).
 /// `best_buf` must be pre-filled with INFINITY and will be reset before returning.
 /// Returns a Vec with the results (reuses `best_buf` internally but copies out).
+#[allow(dead_code, clippy::too_many_arguments)]
 pub fn compute_avg_travel_times(
     graph: &TransitGraphJson,
     origin_lat: f64,
@@ -313,12 +321,14 @@ pub fn compute_avg_travel_times(
 }
 
 /// Thread-local state for transit Dijkstra.
+#[allow(dead_code)]
 pub struct TransitState {
     pub best: Vec<f64>,
     pub heap: FlatHeap,
     pub touched: Vec<usize>,
 }
 
+#[allow(dead_code)]
 impl TransitState {
     pub fn new(capacity: usize) -> Self {
         Self {

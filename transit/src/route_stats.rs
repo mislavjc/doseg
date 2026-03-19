@@ -12,7 +12,6 @@ use crate::transit_graph::{Mode, PatternData, TransitGraphJson};
 
 /// Per-route aggregate built from the busiest pattern.
 struct RouteAgg {
-    mode: Mode,
     mode_str: String,
     max_dist_km: f64,
     max_stops: usize,
@@ -93,7 +92,6 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
     for pattern in &graph.patterns {
         let key = format!("{}:{}", pattern.mode, pattern.route);
         let agg = route_map.entry(key).or_insert_with(|| RouteAgg {
-            mode: pattern.mode_enum,
             mode_str: pattern.mode.clone(),
             max_dist_km: 0.0,
             max_stops: 0,

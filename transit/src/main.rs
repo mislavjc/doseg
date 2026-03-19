@@ -168,6 +168,7 @@ fn num_cpus() -> usize {
 }
 
 /// Run one scoring pass: for each point, average reachable cell count across departures.
+#[allow(clippy::too_many_arguments)]
 fn scoring_pass(
     label: &str,
     points: &[SamplePoint],
@@ -232,8 +233,8 @@ fn scoring_pass(
         .map(|point| {
             // Thread-local state for walk + transit Dijkstra
             thread_local! {
-                static WALK_STATE: std::cell::RefCell<Option<walk_expand::WalkExpandState>> = std::cell::RefCell::new(None);
-                static TRANSIT_STATE: std::cell::RefCell<Option<TransitState>> = std::cell::RefCell::new(None);
+                static WALK_STATE: std::cell::RefCell<Option<walk_expand::WalkExpandState>> = const { std::cell::RefCell::new(None) };
+                static TRANSIT_STATE: std::cell::RefCell<Option<TransitState>> = const { std::cell::RefCell::new(None) };
             }
 
             WALK_STATE.with(|state_cell| {
@@ -421,7 +422,7 @@ fn main() {
         })
         .collect();
 
-    for di in 0..districts.len() {
+    for (di, dt) in district_transit.iter_mut().enumerate() {
         let mut tram_routes: HashSet<String> = HashSet::new();
         let mut bus_routes: HashSet<String> = HashSet::new();
         let mut train_routes: HashSet<String> = HashSet::new();
@@ -471,13 +472,13 @@ fn main() {
         };
 
         let mut tram_vec: Vec<String> = tram_routes.into_iter().collect();
-        tram_vec.sort_by(|a, b| a.parse::<i32>().unwrap_or(999).cmp(&b.parse::<i32>().unwrap_or(999)));
+        tram_vec.sort_by_key(|a| a.parse::<i32>().unwrap_or(999));
         let mut bus_vec: Vec<String> = bus_routes.into_iter().collect();
-        bus_vec.sort_by(|a, b| a.parse::<i32>().unwrap_or(999).cmp(&b.parse::<i32>().unwrap_or(999)));
+        bus_vec.sort_by_key(|a| a.parse::<i32>().unwrap_or(999));
         let mut train_vec: Vec<String> = train_routes.into_iter().collect();
         train_vec.sort();
 
-        district_transit[di] = TransitInfo {
+        *dt = TransitInfo {
             tram_lines: tram_vec,
             bus_lines: bus_vec,
             train_lines: train_vec,

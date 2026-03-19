@@ -39,10 +39,8 @@ pub fn extract_populated_cells(path: &Path) -> HashSet<(i32, i32)> {
                 if let Element::Node(ref node) = element {
                     let lat = node.lat();
                     let lon = node.lon();
-                    if lat >= BBOX.min_lat
-                        && lat <= BBOX.max_lat
-                        && lon >= BBOX.min_lon
-                        && lon <= BBOX.max_lon
+                    if (BBOX.min_lat..=BBOX.max_lat).contains(&lat)
+                        && (BBOX.min_lon..=BBOX.max_lon).contains(&lon)
                     {
                         map.insert(node.id(), (lat, lon));
                     }
@@ -50,10 +48,8 @@ pub fn extract_populated_cells(path: &Path) -> HashSet<(i32, i32)> {
                 if let Element::DenseNode(node) = element {
                     let lat = node.lat();
                     let lon = node.lon();
-                    if lat >= BBOX.min_lat
-                        && lat <= BBOX.max_lat
-                        && lon >= BBOX.min_lon
-                        && lon <= BBOX.max_lon
+                    if (BBOX.min_lat..=BBOX.max_lat).contains(&lat)
+                        && (BBOX.min_lon..=BBOX.max_lon).contains(&lon)
                     {
                         map.insert(node.id(), (lat, lon));
                     }

@@ -67,10 +67,14 @@ if [ ! -f data/district-scores.json ]; then
   docker compose up -d --build otp
   wait_for_otp
 
-  echo "==> Generating district scores..."
-  docker run --rm --network doseg_default -e OTP_URL=http://otp:8080 \
-    -v "$PWD:/app" -w /app oven/bun:latest \
-    sh -c "bun install --frozen-lockfile && bun scripts/score-districts.ts"
+  echo "==> Installing Rust toolchain (if needed)..."
+  if ! command -v cargo &>/dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    . "$HOME/.cargo/env"
+  fi
+
+  echo "==> Building and running district scoring..."
+  cd scoring && cargo build --release && cargo run --release && cd ..
 fi
 
 # Build and start

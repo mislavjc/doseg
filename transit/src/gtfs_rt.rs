@@ -110,10 +110,7 @@ pub struct RtHealth {
 /// Get health info: trip count + seconds since last successful refresh.
 pub fn get_rt_health(store: &RtStore, last_refresh: &RtLastRefresh) -> RtHealth {
     let trip_count = store.read().unwrap().len();
-    let stale_sec = last_refresh
-        .read()
-        .unwrap()
-        .map(|t| t.elapsed().as_secs());
+    let stale_sec = last_refresh.read().unwrap().map(|t| t.elapsed().as_secs());
     RtHealth {
         trip_count,
         stale_sec,

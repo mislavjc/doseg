@@ -79,7 +79,12 @@ pub fn point_in_polygon(lon: f64, lat: f64, ring: &[(f64, f64)]) -> bool {
 }
 
 /// Check if a point is in or adjacent to a populated grid cell.
-fn is_populated(lat: f64, lon: f64, cells: &std::collections::HashSet<(i32, i32)>, pop_cell: f64) -> bool {
+fn is_populated(
+    lat: f64,
+    lon: f64,
+    cells: &std::collections::HashSet<(i32, i32)>,
+    pop_cell: f64,
+) -> bool {
     let cx = (lon / pop_cell).floor() as i32;
     let cy = (lat / pop_cell).floor() as i32;
     for dx in -1..=1 {
@@ -109,10 +114,18 @@ pub fn generate_sample_points(
 
     for d in districts {
         for &(lon, lat) in &d.ring {
-            if lat < min_lat { min_lat = lat; }
-            if lat > max_lat { max_lat = lat; }
-            if lon < min_lon { min_lon = lon; }
-            if lon > max_lon { max_lon = lon; }
+            if lat < min_lat {
+                min_lat = lat;
+            }
+            if lat > max_lat {
+                max_lat = lat;
+            }
+            if lon < min_lon {
+                min_lon = lon;
+            }
+            if lon > max_lon {
+                max_lon = lon;
+            }
         }
     }
 

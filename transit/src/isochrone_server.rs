@@ -1,12 +1,12 @@
 mod bajs;
+#[allow(dead_code)]
+mod districts;
 mod geo;
 mod gtfs_rt;
 mod heap;
-mod otp;
 #[allow(dead_code)]
 mod osm;
-#[allow(dead_code)]
-mod districts;
+mod otp;
 #[allow(dead_code)]
 mod route_stats;
 mod transit_graph;
@@ -29,8 +29,8 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::Router;
 use serde::{Deserialize, Serialize};
-use ts_rs::TS;
 use tower_http::compression::CompressionLayer;
+use ts_rs::TS;
 
 use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::heap::FlatHeap;
@@ -284,16 +284,17 @@ fn compute_travel_times(
     let mut node_keys: Vec<String> = Vec::new();
     let mut key_to_node: HashMap<String, u32> = HashMap::new();
 
-    let get_or_insert_node = |key: &str, keys: &mut Vec<String>, k2n: &mut HashMap<String, u32>| -> u32 {
-        if let Some(&idx) = k2n.get(key) {
-            idx
-        } else {
-            let idx = keys.len() as u32;
-            keys.push(key.to_string());
-            k2n.insert(key.to_string(), idx);
-            idx
-        }
-    };
+    let get_or_insert_node =
+        |key: &str, keys: &mut Vec<String>, k2n: &mut HashMap<String, u32>| -> u32 {
+            if let Some(&idx) = k2n.get(key) {
+                idx
+            } else {
+                let idx = keys.len() as u32;
+                keys.push(key.to_string());
+                k2n.insert(key.to_string(), idx);
+                idx
+            }
+        };
 
     // Seed: walk from origin to all stops within walking distance
     for stop in &graph.stops {
@@ -346,9 +347,8 @@ fn compute_travel_times(
         }
 
         let is_stop = stop_by_key.contains_key(key.as_str());
-        let is_station = use_bajs
-            && bajs_adj
-                .is_some_and(|adj| adj.stations_by_key.contains_key(key.as_str()));
+        let is_station =
+            use_bajs && bajs_adj.is_some_and(|adj| adj.stations_by_key.contains_key(key.as_str()));
 
         if is_stop {
             let stop = stop_by_key[key.as_str()];
@@ -400,7 +400,10 @@ fn compute_travel_times(
                         travel_time += gtfs_rt::get_stop_delay(rt, i) as f64 - board_delay;
                     }
 
-                    let existing = best.get(dest_key.as_str()).copied().unwrap_or(f64::INFINITY);
+                    let existing = best
+                        .get(dest_key.as_str())
+                        .copied()
+                        .unwrap_or(f64::INFINITY);
                     if travel_time < existing {
                         best.insert(dest_key.clone(), travel_time);
                         preds.insert(
@@ -423,7 +426,10 @@ fn compute_travel_times(
             for ns in &stop.nearby_stop_indices {
                 let nearby_key = &graph.stops[ns.idx].key;
                 let walk_time = time + (ns.dist_km / WALK_SPEED) * 3600.0;
-                let existing = best.get(nearby_key.as_str()).copied().unwrap_or(f64::INFINITY);
+                let existing = best
+                    .get(nearby_key.as_str())
+                    .copied()
+                    .unwrap_or(f64::INFINITY);
                 if walk_time < existing {
                     best.insert(nearby_key.clone(), walk_time);
                     preds.insert(
@@ -447,8 +453,7 @@ fn compute_travel_times(
                     if let Some(links) = adj.stop_walk_links.get(key.as_str()) {
                         for link in links {
                             let walk_time = time + (link.dist_km / WALK_SPEED) * 3600.0;
-                            let existing =
-                                best.get(&link.key).copied().unwrap_or(f64::INFINITY);
+                            let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
                             if walk_time < existing {
                                 best.insert(link.key.clone(), walk_time);
                                 preds.insert(
@@ -461,11 +466,8 @@ fn compute_travel_times(
                                         alight_idx: None,
                                     },
                                 );
-                                let ni = get_or_insert_node(
-                                    &link.key,
-                                    &mut node_keys,
-                                    &mut key_to_node,
-                                );
+                                let ni =
+                                    get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
                                 heap.push(walk_time, ni);
                             }
                         }
@@ -639,9 +641,7 @@ fn generate_transit_features(
         .into_iter()
         .map(|(time, lines)| GeoJsonFeature {
             kind: "Feature",
-            properties: FeatureProperties {
-                time: time as f64,
-            },
+            properties: FeatureProperties { time: time as f64 },
             geometry: FeatureGeometry {
                 kind: "MultiLineString",
                 coordinates: lines,
@@ -776,9 +776,7 @@ fn generate_walk_features(
         .into_iter()
         .map(|(time, lines)| GeoJsonFeature {
             kind: "Feature",
-            properties: FeatureProperties {
-                time: time as f64,
-            },
+            properties: FeatureProperties { time: time as f64 },
             geometry: FeatureGeometry {
                 kind: "MultiLineString",
                 coordinates: lines,
@@ -981,7 +979,8 @@ async fn handle_isochrone(
             axum::http::StatusCode::BAD_REQUEST,
             [(header::CONTENT_TYPE, "application/json")],
             r#"{"error":"lat must be [-90,90], lon must be [-180,180]"}"#.to_string(),
-        ).into_response();
+        )
+            .into_response();
     }
 
     let departure_time = if let Some(ref time_str) = params.time {
@@ -1086,7 +1085,8 @@ async fn handle_isochrone(
         serde_json::to_string(&RoutingOnlyResponse {
             routing,
             realtime: has_realtime,
-        }).unwrap()
+        })
+        .unwrap()
     } else {
         let response = IsochroneResponse {
             kind: "FeatureCollection",
@@ -1111,10 +1111,16 @@ async fn handle_isochrone(
     );
 
     let mut response = (
-        [(header::CONTENT_TYPE, "application/json"),
-         (header::CACHE_CONTROL, "public, max-age=300, stale-while-revalidate=600")],
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (
+                header::CACHE_CONTROL,
+                "public, max-age=300, stale-while-revalidate=600",
+            ),
+        ],
         json,
-    ).into_response();
+    )
+        .into_response();
     response.headers_mut().insert(
         header::HeaderName::from_static("server-timing"),
         header::HeaderValue::from_str(&timing).unwrap(),
@@ -1122,9 +1128,7 @@ async fn handle_isochrone(
     response
 }
 
-async fn handle_health(
-    State(state): State<Arc<AppState>>,
-) -> Response {
+async fn handle_health(State(state): State<Arc<AppState>>) -> Response {
     let health = gtfs_rt::get_rt_health(&state.rt_store, &state.rt_last_refresh);
     let body = match health.stale_sec {
         Some(sec) => format!(
@@ -1136,10 +1140,7 @@ async fn handle_health(
             health.trip_count
         ),
     };
-    (
-        [(header::CONTENT_TYPE, "application/json")],
-        body,
-    ).into_response()
+    ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
 #[tokio::main]
@@ -1185,23 +1186,21 @@ async fn main() {
     );
 
     // Snap transit stops to walk graph
-    let stop_coords: Vec<(f64, f64)> = transit_graph
-        .stops
-        .iter()
-        .map(|s| (s.lat, s.lon))
-        .collect();
+    let stop_coords: Vec<(f64, f64)> = transit_graph.stops.iter().map(|s| (s.lat, s.lon)).collect();
     let stop_snaps = snap_stops(&walk_graph, &stop_coords);
     let snapped_count = stop_snaps.iter().filter(|s| s.is_some()).count();
     println!(
         "Snapped {}/{} transit stops to walk graph",
-        snapped_count,
-        transit_graph.stop_count
+        snapped_count, transit_graph.stop_count
     );
 
     // Build BAJS adjacency
     let bajs_adjacency = build_bajs_adjacency(&transit_graph);
     if let Some(ref adj) = bajs_adjacency {
-        println!("BAJS adjacency built: {} stations", adj.stations_by_key.len());
+        println!(
+            "BAJS adjacency built: {} stations",
+            adj.stations_by_key.len()
+        );
     }
 
     // Start GTFS-RT background refresh

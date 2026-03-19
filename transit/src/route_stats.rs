@@ -38,9 +38,15 @@ fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
             idx += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
-            if b < 0x20 { break; }
+            if b < 0x20 {
+                break;
+            }
         }
-        lat += if result & 1 != 0 { !(result >> 1) } else { result >> 1 };
+        lat += if result & 1 != 0 {
+            !(result >> 1)
+        } else {
+            result >> 1
+        };
 
         // Decode longitude
         shift = 0;
@@ -50,9 +56,15 @@ fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
             idx += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
-            if b < 0x20 { break; }
+            if b < 0x20 {
+                break;
+            }
         }
-        lng += if result & 1 != 0 { !(result >> 1) } else { result >> 1 };
+        lng += if result & 1 != 0 {
+            !(result >> 1)
+        } else {
+            result >> 1
+        };
 
         points.push((lat as f64 / 1e5, lng as f64 / 1e5));
     }
@@ -138,10 +150,10 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         // than reality since trips from different days interleave at the same time-of-day.
         // Multiply by 7 to approximate single-day headway.
         let hw_factor = if day_filtered { 1.0 } else { 7.0 };
-        let peak_headway = compute_headway(&agg.best_departures, Some(7.0 * 3600.0), Some(9.0 * 3600.0))
-            .map(|h| h * hw_factor);
-        let avg_headway = compute_headway(&agg.best_departures, None, None)
-            .map(|h| h * hw_factor);
+        let peak_headway =
+            compute_headway(&agg.best_departures, Some(7.0 * 3600.0), Some(9.0 * 3600.0))
+                .map(|h| h * hw_factor);
+        let avg_headway = compute_headway(&agg.best_departures, None, None).map(|h| h * hw_factor);
 
         // When graph includes all service days, normalize to single-day estimate
         let daily_dep = if day_filtered {
@@ -195,9 +207,15 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         for sp in &stop.patterns {
             let p = &graph.patterns[sp.pattern_idx];
             match p.mode_enum {
-                Mode::Tram => { stop_routes[si].0.insert(p.route.clone()); }
-                Mode::Bus | Mode::Other => { stop_routes[si].1.insert(p.route.clone()); }
-                Mode::Rail => { stop_routes[si].2.insert(p.route.clone()); }
+                Mode::Tram => {
+                    stop_routes[si].0.insert(p.route.clone());
+                }
+                Mode::Bus | Mode::Other => {
+                    stop_routes[si].1.insert(p.route.clone());
+                }
+                Mode::Rail => {
+                    stop_routes[si].2.insert(p.route.clone());
+                }
             }
         }
     }
@@ -232,13 +250,21 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
             if ns.dist_km > 0.2 || assigned.contains(&ns.idx) {
                 continue;
             }
-            let ns_total = stop_routes[ns.idx].0.len() + stop_routes[ns.idx].1.len() + stop_routes[ns.idx].2.len();
+            let ns_total = stop_routes[ns.idx].0.len()
+                + stop_routes[ns.idx].1.len()
+                + stop_routes[ns.idx].2.len();
             if ns_total == 0 {
                 continue;
             }
-            for r in &stop_routes[ns.idx].0 { cluster_tram.insert(r.clone()); }
-            for r in &stop_routes[ns.idx].1 { cluster_bus.insert(r.clone()); }
-            for r in &stop_routes[ns.idx].2 { cluster_rail.insert(r.clone()); }
+            for r in &stop_routes[ns.idx].0 {
+                cluster_tram.insert(r.clone());
+            }
+            for r in &stop_routes[ns.idx].1 {
+                cluster_bus.insert(r.clone());
+            }
+            for r in &stop_routes[ns.idx].2 {
+                cluster_rail.insert(r.clone());
+            }
             assigned.insert(ns.idx);
         }
 
@@ -247,10 +273,18 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         let has_bus = !cluster_bus.is_empty();
         let has_rail = !cluster_rail.is_empty();
 
-        if has_tram && has_bus { multimodal[0] += 1; }
-        if has_tram && has_rail { multimodal[1] += 1; }
-        if has_bus && has_rail { multimodal[2] += 1; }
-        if has_tram && has_bus && has_rail { multimodal[3] += 1; }
+        if has_tram && has_bus {
+            multimodal[0] += 1;
+        }
+        if has_tram && has_rail {
+            multimodal[1] += 1;
+        }
+        if has_bus && has_rail {
+            multimodal[2] += 1;
+        }
+        if has_tram && has_bus && has_rail {
+            multimodal[3] += 1;
+        }
 
         let mut tram_vec: Vec<String> = cluster_tram.into_iter().collect();
         tram_vec.sort();
@@ -313,13 +347,19 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
 
     eprintln!(
         "  {} routes ({} tram, {} bus, {} rail), {} stops, {} daily departures",
-        routes.len(), tram_count, bus_count, rail_count,
-        graph.stops.len(), total_departures,
+        routes.len(),
+        tram_count,
+        bus_count,
+        rail_count,
+        graph.stops.len(),
+        total_departures,
     );
     eprintln!(
         "  Top hub: {} ({} routes)",
-        hubs.first().map_or("-", |h| h["name"].as_str().unwrap_or("-")),
-        hubs.first().map_or(0, |h| h["routeCount"].as_u64().unwrap_or(0)),
+        hubs.first()
+            .map_or("-", |h| h["name"].as_str().unwrap_or("-")),
+        hubs.first()
+            .map_or(0, |h| h["routeCount"].as_u64().unwrap_or(0)),
     );
     eprintln!(
         "  Multimodal: {} tram-bus, {} tram-rail, {} three-mode",
@@ -337,9 +377,17 @@ fn find_stop_name(graph: &TransitGraphJson, si: usize) -> &str {
     }
 }
 
-fn compute_headway(departures: &[f64], start_sec: Option<f64>, end_sec: Option<f64>) -> Option<f64> {
+fn compute_headway(
+    departures: &[f64],
+    start_sec: Option<f64>,
+    end_sec: Option<f64>,
+) -> Option<f64> {
     let filtered: Vec<f64> = match (start_sec, end_sec) {
-        (Some(s), Some(e)) => departures.iter().filter(|&&d| d >= s && d <= e).copied().collect(),
+        (Some(s), Some(e)) => departures
+            .iter()
+            .filter(|&&d| d >= s && d <= e)
+            .copied()
+            .collect(),
         _ => departures.to_vec(),
     };
     if filtered.len() < 2 {

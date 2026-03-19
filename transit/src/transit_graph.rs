@@ -245,12 +245,14 @@ pub fn compute_avg_travel_times(
                 }
 
                 let clock_time = departure_time + time;
-                let avg_wait =
-                    match get_avg_wait(&pattern.departures, pattern.stop_offsets[sp.stop_idx], clock_time)
-                    {
-                        Some(w) => w,
-                        None => continue,
-                    };
+                let avg_wait = match get_avg_wait(
+                    &pattern.departures,
+                    pattern.stop_offsets[sp.stop_idx],
+                    clock_time,
+                ) {
+                    Some(w) => w,
+                    None => continue,
+                };
 
                 let board_time = time + avg_wait;
                 let board_offset = pattern.stop_offsets[sp.stop_idx];
@@ -305,7 +307,10 @@ pub fn compute_avg_travel_times(
 
             // Bike to other stations
             for link in &adj.station_bike_links[bi] {
-                let bike_time = time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (link.dist_km / BAJS_BIKE_SPEED) * 3600.0;
+                let bike_time = time
+                    + BAJS_PICKUP_SECONDS
+                    + BAJS_DROPOFF_SECONDS
+                    + (link.dist_km / BAJS_BIKE_SPEED) * 3600.0;
                 if bike_time < best[link.idx] {
                     touched.push(link.idx);
                     best[link.idx] = bike_time;

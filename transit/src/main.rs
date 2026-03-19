@@ -8,8 +8,8 @@ mod bajs;
 mod districts;
 mod geo;
 mod heap;
-mod otp;
 mod osm;
+mod otp;
 mod route_stats;
 mod transit_graph;
 mod walk_expand;
@@ -52,7 +52,13 @@ const DETOUR_FACTOR: f64 = 1.3;
 const DESERT_THRESHOLD_KM: f64 = 0.5 / DETOUR_FACTOR;
 
 const VALID_DAYS: &[&str] = &[
-    "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
 ];
 
 struct Args {
@@ -77,7 +83,20 @@ fn days_to_ymd(days: i64) -> (i64, usize, i64) {
         y += 1;
     }
     let leap = is_leap(y);
-    let mdays = [31, if leap { 29 } else { 28 }, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let mdays = [
+        31,
+        if leap { 29 } else { 28 },
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+    ];
     let mut month = 0;
     for (mi, &md) in mdays.iter().enumerate() {
         if remaining < md {
@@ -133,7 +152,11 @@ fn parse_args() -> Args {
             "--day" if i + 1 < args.len() => {
                 let val = args[i + 1].to_lowercase();
                 if !VALID_DAYS.contains(&val.as_str()) {
-                    eprintln!("Invalid --day value: \"{}\". Expected one of: {}", val, VALID_DAYS.join(", "));
+                    eprintln!(
+                        "Invalid --day value: \"{}\". Expected one of: {}",
+                        val,
+                        VALID_DAYS.join(", ")
+                    );
                     std::process::exit(1);
                 }
                 day = Some(val);
@@ -190,11 +213,7 @@ fn scoring_pass(
     );
 
     let bajs_adj = if use_bajs && !graph.bajs_stations.is_empty() {
-        let stop_coords: Vec<(f64, f64)> = graph
-            .stops
-            .iter()
-            .map(|s| (s.lat, s.lon))
-            .collect();
+        let stop_coords: Vec<(f64, f64)> = graph.stops.iter().map(|s| (s.lat, s.lon)).collect();
         Some(Arc::new(build_bajs_adjacency_indexed(
             &stop_coords,
             graph.stop_count,
@@ -205,7 +224,9 @@ fn scoring_pass(
     };
 
     // Build extended stop snaps that include BAJS station snaps
-    let extended_snaps: Vec<Option<walk_expand::StopSnap>> = if use_bajs && !graph.bajs_stations.is_empty() {
+    let extended_snaps: Vec<Option<walk_expand::StopSnap>> = if use_bajs
+        && !graph.bajs_stations.is_empty()
+    {
         let mut snaps = stop_snaps.to_vec();
         for station in &graph.bajs_stations {
             let snap = walk_expand::find_nearest_node(walk_graph, station.lat, station.lon, 0.09)
@@ -214,7 +235,9 @@ fn scoring_pass(
                     let nlon = walk_graph.lon(node_idx);
                     walk_expand::StopSnap {
                         node_idx,
-                        walk_seconds: (fast_dist_km(station.lat, station.lon, nlat, nlon) / WALK_SPEED) * 3600.0,
+                        walk_seconds: (fast_dist_km(station.lat, station.lon, nlat, nlon)
+                            / WALK_SPEED)
+                            * 3600.0,
                     }
                 });
             snaps.push(snap);
@@ -286,28 +309,42 @@ fn scoring_pass(
 }
 
 fn avg(v: &[f64]) -> f64 {
-    if v.is_empty() { return 0.0; }
+    if v.is_empty() {
+        return 0.0;
+    }
     v.iter().sum::<f64>() / v.len() as f64
 }
 
 fn stddev(v: &[f64], mean: f64) -> f64 {
-    if v.len() < 2 { return 0.0; }
+    if v.len() < 2 {
+        return 0.0;
+    }
     let variance = v.iter().map(|x| (x - mean).powi(2)).sum::<f64>() / v.len() as f64;
     variance.sqrt()
 }
 
 fn median(sorted: &[f64]) -> f64 {
-    if sorted.is_empty() { return 0.0; }
+    if sorted.is_empty() {
+        return 0.0;
+    }
     let mid = sorted.len() / 2;
-    if sorted.len() % 2 == 1 { sorted[mid] } else { (sorted[mid - 1] + sorted[mid]) / 2.0 }
+    if sorted.len() % 2 == 1 {
+        sorted[mid]
+    } else {
+        (sorted[mid - 1] + sorted[mid]) / 2.0
+    }
 }
 
 fn percentile(sorted: &[f64], p: f64) -> f64 {
-    if sorted.is_empty() { return 0.0; }
+    if sorted.is_empty() {
+        return 0.0;
+    }
     let idx = (p / 100.0) * (sorted.len() - 1) as f64;
     let lo = idx.floor() as usize;
     let hi = idx.ceil() as usize;
-    if lo == hi { return sorted[lo]; }
+    if lo == hi {
+        return sorted[lo];
+    }
     sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo as f64)
 }
 
@@ -334,7 +371,11 @@ fn main() {
         .unwrap();
 
     if let Some(ref day) = args.day {
-        eprintln!("Day: {} (service date: {})", day, args.service_date.as_ref().unwrap());
+        eprintln!(
+            "Day: {} (service date: {})",
+            day,
+            args.service_date.as_ref().unwrap()
+        );
     }
 
     let data_dir = Path::new("../data");
@@ -355,10 +396,7 @@ fn main() {
     );
 
     eprintln!("Building transit graph from OTP...");
-    let mut graph = otp::fetch_and_build_graph(
-        &args.otp_url,
-        args.service_date.as_deref(),
-    );
+    let mut graph = otp::fetch_and_build_graph(&args.otp_url, args.service_date.as_deref());
     eprintln!(
         "  {} patterns, {} stops",
         graph.patterns.len(),
@@ -373,7 +411,11 @@ fn main() {
     );
 
     // Compute route-level stats (before heavy scoring passes)
-    route_stats::compute_and_write(&graph, &data_dir.join("route-stats.json"), args.service_date.is_some());
+    route_stats::compute_and_write(
+        &graph,
+        &data_dir.join("route-stats.json"),
+        args.service_date.is_some(),
+    );
 
     eprintln!("Loading districts...");
     let districts = load_districts(&districts_path);
@@ -441,9 +483,15 @@ fn main() {
             for sp in &stop.patterns {
                 let pattern = &graph.patterns[sp.pattern_idx];
                 match pattern.mode_enum {
-                    transit_graph::Mode::Tram => { tram_routes.insert(pattern.route.clone()); }
-                    transit_graph::Mode::Rail => { train_routes.insert(pattern.route.clone()); }
-                    _ => { bus_routes.insert(pattern.route.clone()); }
+                    transit_graph::Mode::Tram => {
+                        tram_routes.insert(pattern.route.clone());
+                    }
+                    transit_graph::Mode::Rail => {
+                        train_routes.insert(pattern.route.clone());
+                    }
+                    _ => {
+                        bus_routes.insert(pattern.route.clone());
+                    }
                 }
 
                 if seen_patterns.insert(sp.pattern_idx) {
@@ -492,12 +540,8 @@ fn main() {
 
     // Generate sample points
     eprintln!("Generating sample grid...");
-    let points = generate_sample_points(
-        &districts,
-        args.grid_m / 1000.0,
-        &populated_cells,
-        POP_CELL,
-    );
+    let points =
+        generate_sample_points(&districts, args.grid_m / 1000.0, &populated_cells, POP_CELL);
     eprintln!("  {} sample points in populated areas", points.len());
 
     // Transit desert metrics (spatial grid for fast nearest-stop lookup)

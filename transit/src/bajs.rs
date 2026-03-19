@@ -71,10 +71,7 @@ pub fn build_bajs_adjacency_indexed(
                 idx: stop_count + bi,
                 dist_km,
             });
-            station_to_stop_links[bi].push(IndexedLink {
-                idx: si,
-                dist_km,
-            });
+            station_to_stop_links[bi].push(IndexedLink { idx: si, dist_km });
         }
 
         if !links.is_empty() {

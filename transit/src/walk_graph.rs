@@ -49,9 +49,8 @@ impl WalkGraph {
         // `coords.as_mut_ptr() as *mut u8` is valid for `coords_bytes` (= n_coords * 8) bytes.
         // The source slice `data[coords_start..]` comes from a separate mmap region, so
         // source and destination do not overlap. Both are byte-aligned.
-        let coords_byte_slice = unsafe {
-            std::slice::from_raw_parts(coords.as_mut_ptr() as *mut u8, coords_bytes)
-        };
+        let coords_byte_slice =
+            unsafe { std::slice::from_raw_parts(coords.as_mut_ptr() as *mut u8, coords_bytes) };
         unsafe {
             std::ptr::copy_nonoverlapping(
                 data[coords_start..].as_ptr(),

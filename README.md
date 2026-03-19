@@ -107,23 +107,25 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 bun install
 ```
 
-Start the Rust isochrone service (requires Rust toolchain):
+Start everything with one command (requires [mprocs](https://github.com/pvolok/mprocs)):
 
 ```bash
-cd transit
-cargo run --release --bin isochrone-server
+mprocs
 ```
 
-This needs OTP running for the initial transit graph fetch:
+This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server. Logs for all processes are visible in the mprocs TUI.
+
+Or start manually:
 
 ```bash
-docker compose up otp
-```
+# 1. SSH tunnel to OTP (uses the production OTP instance)
+ssh -NL 8080:<otp-container-ip>:8080 netcup
 
-Start Next.js:
+# 2. Rust isochrone service
+OTP_URL=http://localhost:8080 DATA_DIR=data PORT=3002 cargo run --release --bin isochrone-server --manifest-path transit/Cargo.toml
 
-```bash
-bun run dev
+# 3. Next.js (proxies /api/isochrone to Rust on port 3002)
+bun dev
 ```
 
 ### Other commands

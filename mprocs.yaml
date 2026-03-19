@@ -1,0 +1,11 @@
+procs:
+  next:
+    shell: "bun dev"
+    env:
+      ISOCHRONE_URL: "http://localhost:3002"
+
+  isochrone:
+    shell: "OTP_URL=http://localhost:8080 DATA_DIR=data PORT=3002 transit/target/release/isochrone-server"
+
+  otp-tunnel:
+    shell: "ssh -NL 8080:$(ssh netcup docker inspect doseg-otp-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'):8080 netcup"

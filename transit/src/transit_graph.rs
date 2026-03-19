@@ -59,6 +59,8 @@ pub struct StopNode {
     pub lat: f64,
     pub lon: f64,
     pub key: String,
+    #[serde(default)]
+    pub name: String,
     pub idx: usize,
     pub patterns: Vec<StopPattern>,
     #[serde(rename = "nearbyStopIndices")]
@@ -78,6 +80,12 @@ pub struct PatternData {
     /// Pre-computed mode enum (populated by build_mode_enums)
     #[serde(skip)]
     pub mode_enum: Mode,
+    /// Encoded polyline geometry from OTP (for route distance calculation)
+    #[serde(skip)]
+    pub geometry_encoded: Option<String>,
+    /// GTFS trip IDs, parallel to departures (for GTFS-RT delay lookup)
+    #[serde(skip)]
+    pub trip_ids: Vec<String>,
 }
 
 /// Complete transit graph deserialized from JSON.

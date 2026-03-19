@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   isochrone:
-    build: ./scoring
+    build: ./transit
     environment:
       - OTP_URL=http://otp:8080
       - DATA_DIR=/app/data

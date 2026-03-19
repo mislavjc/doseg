@@ -1,5 +1,6 @@
 mod bajs;
 mod geo;
+mod gtfs_rt;
 mod heap;
 mod otp;
 #[allow(dead_code)]
@@ -62,6 +63,7 @@ struct AppState {
     transit_graph: TransitGraphJson,
     walk_graph: WalkGraph,
     stop_snaps: Vec<Option<StopSnap>>,
+    rt_store: gtfs_rt::RtStore,
     /// Decoded polyline geometries per pattern: Vec<Vec<[lon, lat]>>
     pattern_geometries: Vec<Vec<[f64; 2]>>,
     /// Pre-built BAJS adjacency for the idealized stations
@@ -272,6 +274,7 @@ fn compute_travel_times(
     departure_time: f64,
     use_bajs: bool,
     bajs_adj: Option<&BajsAdjacency>,
+    rt_data: &HashMap<String, gtfs_rt::TripRT>,
 ) -> TravelTimeResult {
     let time_cap = 3600.0; // 1 hour
     let mut best: HashMap<String, f64> = HashMap::new();
@@ -355,7 +358,7 @@ fn compute_travel_times(
                 let pattern = &graph.patterns[sp.pattern_idx];
                 let clock_time = departure_time + time;
 
-                let (wait_seconds, _trip_index) = match get_next_wait(
+                let (wait_seconds, trip_index) = match get_next_wait(
                     &pattern.departures,
                     pattern.stop_offsets[sp.stop_idx],
                     clock_time,
@@ -367,11 +370,35 @@ fn compute_travel_times(
                 let board_time = time + wait_seconds;
                 let board_offset = pattern.stop_offsets[sp.stop_idx];
 
+                // GTFS-RT: look up delay data for this trip (or recent trips as fallback)
+                let trip_rt = if !rt_data.is_empty() && !pattern.trip_ids.is_empty() {
+                    let mut found = None;
+                    let start = trip_index.min(pattern.trip_ids.len().saturating_sub(1));
+                    for ti in (start.saturating_sub(3)..=start).rev() {
+                        if let Some(rt) = rt_data.get(&pattern.trip_ids[ti]) {
+                            found = Some(rt);
+                            break;
+                        }
+                    }
+                    found
+                } else {
+                    None
+                };
+
+                let board_delay = trip_rt
+                    .map(|rt| gtfs_rt::get_stop_delay(rt, sp.stop_idx) as f64)
+                    .unwrap_or(0.0);
+
                 // Use stop_indices to get destination stop keys
                 for i in (sp.stop_idx + 1)..pattern.stop_indices.len() {
                     let dest_idx = pattern.stop_indices[i];
                     let dest_key = &graph.stops[dest_idx].key;
-                    let travel_time = board_time + (pattern.stop_offsets[i] - board_offset);
+                    let mut travel_time = board_time + (pattern.stop_offsets[i] - board_offset);
+
+                    // Apply real-time delay adjustment
+                    if let Some(rt) = trip_rt {
+                        travel_time += gtfs_rt::get_stop_delay(rt, i) as f64 - board_delay;
+                    }
 
                     let existing = best.get(dest_key.as_str()).copied().unwrap_or(f64::INFINITY);
                     if travel_time < existing {
@@ -962,18 +989,29 @@ async fn handle_isochrone(
         8.0 * 3600.0
     };
 
+    // Snap coordinates to 3 decimal places (~100m) for Cloudflare cache hits
+    let lat = (params.lat * 1000.0).round() / 1000.0;
+    let lon = (params.lon * 1000.0).round() / 1000.0;
+
+    // Snap departure time to 5-minute intervals for better cache hits
+    let departure_time = (departure_time / 300.0).round() * 300.0;
+
     let use_bajs = params.bajs.as_deref() == Some("1");
     let routing_mode = params.routing.as_deref().unwrap_or("full");
 
     // 1. Compute travel times
+    let rt_data = state.rt_store.read().unwrap();
     let result = compute_travel_times(
         &state.transit_graph,
-        params.lat,
-        params.lon,
+        lat,
+        lon,
         departure_time,
         use_bajs,
         state.bajs_adjacency.as_ref(),
+        &rt_data,
     );
+    let has_realtime = !rt_data.is_empty();
+    drop(rt_data);
     let t_state = Instant::now();
 
     // 2. Generate features
@@ -992,8 +1030,8 @@ async fn handle_isochrone(
             &result.times,
             &state.stop_snaps,
             &state.transit_graph.stops,
-            params.lat,
-            params.lon,
+            lat,
+            lon,
         );
         features.extend(transit_features);
         features.extend(walk_features);
@@ -1005,8 +1043,8 @@ async fn handle_isochrone(
             &empty_times,
             &state.stop_snaps,
             &state.transit_graph.stops,
-            params.lat,
-            params.lon,
+            lat,
+            lon,
         );
         t_walk = Instant::now();
     } else {
@@ -1038,7 +1076,7 @@ async fn handle_isochrone(
     let json = if routing_mode == "only" {
         serde_json::to_string(&RoutingOnlyResponse {
             routing,
-            realtime: false,
+            realtime: has_realtime,
         }).unwrap()
     } else {
         let response = IsochroneResponse {
@@ -1046,7 +1084,7 @@ async fn handle_isochrone(
             features,
             walk_ring,
             routing,
-            realtime: false,
+            realtime: has_realtime,
         };
         serde_json::to_string(&response).unwrap()
     };
@@ -1141,10 +1179,16 @@ async fn main() {
         println!("BAJS adjacency built: {} stations", adj.stations_by_key.len());
     }
 
+    // Start GTFS-RT background refresh
+    let rt_store = gtfs_rt::new_rt_store();
+    gtfs_rt::spawn_refresh_task(rt_store.clone());
+    println!("GTFS-RT background refresh started (30s interval)");
+
     let state = Arc::new(AppState {
         transit_graph,
         walk_graph,
         stop_snaps,
+        rt_store,
         pattern_geometries,
         bajs_adjacency,
     });

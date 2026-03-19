@@ -36,6 +36,7 @@ struct RawPattern {
     route_short_name: String,
     route_long_name: String,
     has_geometry: bool,
+    geometry_points: Option<String>,
     stops: Vec<RawStop>,
     trips: Vec<RawTrip>,
 }
@@ -80,6 +81,7 @@ fn build_raw_pattern(
     route_short_name: Option<String>,
     route_long_name: Option<String>,
     has_geometry: bool,
+    geometry_points: Option<String>,
     stops: Vec<RawStop>,
     trips: Vec<RawTrip>,
 ) -> RawPattern {
@@ -88,6 +90,7 @@ fn build_raw_pattern(
         route_short_name: route_short_name.unwrap_or_default(),
         route_long_name: route_long_name.unwrap_or_default(),
         has_geometry,
+        geometry_points,
         stops,
         trips,
     }
@@ -111,11 +114,14 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
         .flatten()
         .map(|p| {
             let route = p.route;
+            let geom_points = p.pattern_geometry.and_then(|g| g.points);
+            let has_geom = geom_points.is_some();
             build_raw_pattern(
                 route.mode.map(|m| format!("{:?}", m)),
                 route.short_name,
                 route.long_name,
-                p.pattern_geometry.map_or(false, |g| g.points.is_some()),
+                has_geom,
+                geom_points,
                 p.stops
                     .unwrap_or_default()
                     .into_iter()
@@ -163,11 +169,14 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
         .flatten()
         .map(|p| {
             let route = p.route;
+            let geom_points = p.pattern_geometry.and_then(|g| g.points);
+            let has_geom = geom_points.is_some();
             build_raw_pattern(
                 route.mode.map(|m| format!("{:?}", m)),
                 route.short_name,
                 route.long_name,
-                p.pattern_geometry.map_or(false, |g| g.points.is_some()),
+                has_geom,
+                geom_points,
                 p.stops
                     .unwrap_or_default()
                     .into_iter()
@@ -219,6 +228,7 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
                 lat: s.lat,
                 lon: s.lon,
                 key,
+                name: s.name.clone(),
                 idx: 0,
                 patterns: Vec::new(),
                 nearby_stop_indices: Vec::new(),
@@ -243,6 +253,7 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
         }
         trip_deps.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
         let departures: Vec<f64> = trip_deps.iter().map(|(d, _)| *d).collect();
+        let trip_ids: Vec<String> = trip_deps.iter().map(|(_, id)| id.clone()).collect();
 
         // Compute cumulative stop offsets (median of sampled trip stoptimes)
         let n_stops = p.stops.len();
@@ -311,6 +322,8 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
             route,
             departures,
             stop_offsets,
+            geometry_encoded: p.geometry_points.clone(),
+            trip_ids,
         });
         pattern_stop_keys.push(stop_keys);
     }

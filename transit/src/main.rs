@@ -10,6 +10,7 @@ mod geo;
 mod heap;
 mod otp;
 mod osm;
+mod route_stats;
 mod transit_graph;
 mod walk_expand;
 mod walk_graph;
@@ -369,6 +370,9 @@ fn main() {
         "  {} stations (idealized: 1 bike, 1 dock each)",
         graph.bajs_stations.len()
     );
+
+    // Compute route-level stats (before heavy scoring passes)
+    route_stats::compute_and_write(&graph, &data_dir.join("route-stats.json"), args.service_date.is_some());
 
     eprintln!("Loading districts...");
     let districts = load_districts(&districts_path);
@@ -877,7 +881,7 @@ fn main() {
 }
 
 /// Simple ISO 8601 timestamp without pulling in chrono.
-fn chrono_now_iso() -> String {
+pub fn chrono_now_iso() -> String {
     use std::time::SystemTime;
     let dur = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)

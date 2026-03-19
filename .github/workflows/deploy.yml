@@ -18,12 +18,32 @@ jobs:
           host: 152.53.46.164
           username: root
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 10m
           script: |
+            set -e
             cd /opt/doseg
+
+            # Save rollback point
+            PREV_SHA=$(git rev-parse HEAD)
+
             git fetch origin main
             git reset --hard origin/main
-            docker compose up -d --build --remove-orphans
+
+            DOCKER_BUILDKIT=1 docker compose up -d --build --remove-orphans
             docker image prune -f
-            # Wait for health
-            sleep 30
-            curl -sf http://localhost/api/health || echo "WARNING: health check failed"
+
+            # Poll health checks (up to 2 minutes)
+            for i in $(seq 1 24); do
+              if curl -sf http://localhost/api/health > /dev/null 2>&1; then
+                echo "Health check passed after ${i}x5s"
+                exit 0
+              fi
+              echo "Waiting for health... ($i/24)"
+              sleep 5
+            done
+
+            # Rollback on failure
+            echo "Health check failed — rolling back to $PREV_SHA"
+            git reset --hard "$PREV_SHA"
+            docker compose up -d --build --remove-orphans
+            exit 1

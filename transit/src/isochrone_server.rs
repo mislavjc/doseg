@@ -45,8 +45,8 @@ const RENDER_CAP_SECONDS: f64 = MAX_SECONDS - 60.0;
 const MIN_RENDER_EDGE_METERS: f64 = 40.0;
 const CM_TO_SECONDS: f64 = 0.0072;
 const BUCKET_SECONDS: f64 = 60.0;
-const TRANSIT_COORD_PRECISION: i32 = 4;
-const TRANSIT_COORD_SCALE: f64 = 10_000.0; // 10^4
+const TRANSIT_COORD_PRECISION: i32 = 3;
+const TRANSIT_COORD_SCALE: f64 = 1_000.0; // 10^3
 
 const WALK_MAX_KM: f64 = 1.2;
 const MAX_WAIT: f64 = 3600.0;
@@ -64,6 +64,7 @@ struct AppState {
     walk_graph: WalkGraph,
     stop_snaps: Vec<Option<StopSnap>>,
     rt_store: gtfs_rt::RtStore,
+    rt_last_refresh: gtfs_rt::RtLastRefresh,
     /// Decoded polyline geometries per pattern: Vec<Vec<[lon, lat]>>
     pattern_geometries: Vec<Vec<[f64; 2]>>,
     /// Pre-built BAJS adjacency for the idealized stations
@@ -758,12 +759,12 @@ fn generate_walk_features(
                 ((node_time.min(to_time) / BUCKET_SECONDS).floor() * BUCKET_SECONDS) as i64;
 
             let from = [
-                (from_lon * 10000.0).round() / 10000.0,
-                (from_lat * 10000.0).round() / 10000.0,
+                (from_lon * 1000.0).round() / 1000.0,
+                (from_lat * 1000.0).round() / 1000.0,
             ];
             let to = [
-                (coords[ti2 + 1] * 10000.0).round() / 10000.0,
-                (coords[ti2] * 10000.0).round() / 10000.0,
+                (coords[ti2 + 1] * 1000.0).round() / 1000.0,
+                (coords[ti2] * 1000.0).round() / 1000.0,
             ];
 
             buckets.entry(bucket).or_default().push(vec![from, to]);
@@ -975,6 +976,15 @@ async fn handle_isochrone(
 ) -> Response {
     let t0 = Instant::now();
 
+    // Validate inputs
+    if params.lat < -90.0 || params.lat > 90.0 || params.lon < -180.0 || params.lon > 180.0 {
+        return (
+            axum::http::StatusCode::BAD_REQUEST,
+            [(header::CONTENT_TYPE, "application/json")],
+            r#"{"error":"lat must be [-90,90], lon must be [-180,180]"}"#.to_string(),
+        ).into_response();
+    }
+
     let departure_time = if let Some(ref time_str) = params.time {
         let parts: Vec<&str> = time_str.split(':').collect();
         if parts.len() == 2 {
@@ -1113,8 +1123,24 @@ async fn handle_isochrone(
     response
 }
 
-async fn handle_health() -> &'static str {
-    r#"{"status":"ok"}"#
+async fn handle_health(
+    State(state): State<Arc<AppState>>,
+) -> Response {
+    let health = gtfs_rt::get_rt_health(&state.rt_store, &state.rt_last_refresh);
+    let body = match health.stale_sec {
+        Some(sec) => format!(
+            r#"{{"status":"ok","gtfsRt":{{"tripCount":{},"staleSec":{}}}}}"#,
+            health.trip_count, sec
+        ),
+        None => format!(
+            r#"{{"status":"ok","gtfsRt":{{"tripCount":{},"staleSec":null}}}}"#,
+            health.trip_count
+        ),
+    };
+    (
+        [(header::CONTENT_TYPE, "application/json")],
+        body,
+    ).into_response()
 }
 
 #[tokio::main]
@@ -1181,7 +1207,8 @@ async fn main() {
 
     // Start GTFS-RT background refresh
     let rt_store = gtfs_rt::new_rt_store();
-    gtfs_rt::spawn_refresh_task(rt_store.clone());
+    let rt_last_refresh = gtfs_rt::new_rt_last_refresh();
+    gtfs_rt::spawn_refresh_task(rt_store.clone(), rt_last_refresh.clone());
     println!("GTFS-RT background refresh started (30s interval)");
 
     let state = Arc::new(AppState {
@@ -1189,6 +1216,7 @@ async fn main() {
         walk_graph,
         stop_snaps,
         rt_store,
+        rt_last_refresh,
         pattern_geometries,
         bajs_adjacency,
     });

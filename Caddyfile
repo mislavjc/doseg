@@ -4,10 +4,13 @@
 	encode zstd gzip
 
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "DENY"
+		X-XSS-Protection "1; mode=block"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://plausible.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://gbfs.nextbike.net https://overpass-api.de https://*.maplibre.org https://*.maptiler.com wss://*.maplibre.org; worker-src 'self' blob:; object-src 'none'; frame-ancestors 'none'"
 	}
 	# X-Frame-Options DENY blocks <object> from loading SVGs; omit for embeddable assets
 	@embeddable path /district-map.svg

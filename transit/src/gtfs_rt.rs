@@ -5,7 +5,7 @@
 
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use prost::Message;
 
@@ -94,6 +94,32 @@ pub fn new_rt_store() -> RtStore {
     Arc::new(RwLock::new(HashMap::new()))
 }
 
+/// Shared timestamp of last successful GTFS-RT refresh.
+pub type RtLastRefresh = Arc<RwLock<Option<Instant>>>;
+
+pub fn new_rt_last_refresh() -> RtLastRefresh {
+    Arc::new(RwLock::new(None))
+}
+
+/// Health information about the GTFS-RT feed.
+pub struct RtHealth {
+    pub trip_count: usize,
+    pub stale_sec: Option<u64>,
+}
+
+/// Get health info: trip count + seconds since last successful refresh.
+pub fn get_rt_health(store: &RtStore, last_refresh: &RtLastRefresh) -> RtHealth {
+    let trip_count = store.read().unwrap().len();
+    let stale_sec = last_refresh
+        .read()
+        .unwrap()
+        .map(|t| t.elapsed().as_secs());
+    RtHealth {
+        trip_count,
+        stale_sec,
+    }
+}
+
 /// Find the delay for a given stop index in a trip's RT data.
 /// GTFS-RT stop_sequence is 1-based; pattern stopIdx is 0-based.
 /// Per spec, delays propagate forward until overridden.
@@ -174,7 +200,7 @@ fn fetch_and_parse() -> Option<HashMap<String, TripRT>> {
 }
 
 /// Spawn a background task that refreshes RT data every 30 seconds.
-pub fn spawn_refresh_task(store: RtStore) {
+pub fn spawn_refresh_task(store: RtStore, last_refresh: RtLastRefresh) {
     tokio::spawn(async move {
         loop {
             let result = tokio::task::spawn_blocking(|| fetch_and_parse()).await;
@@ -182,6 +208,7 @@ pub fn spawn_refresh_task(store: RtStore) {
                 Ok(Some(data)) => {
                     let count = data.len();
                     *store.write().unwrap() = data;
+                    *last_refresh.write().unwrap() = Some(Instant::now());
                     eprintln!("GTFS-RT: refreshed {} trip updates", count);
                 }
                 Ok(None) => {

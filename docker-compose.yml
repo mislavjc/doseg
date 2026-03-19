@@ -1,8 +1,6 @@
 services:
   otp:
     image: opentripplanner/opentripplanner:2.9.0_2025-12-15T13-18
-    ports:
-      - "8080:8080"
     volumes:
       - ./data:/var/opentripplanner
     command: --build --serve
@@ -14,6 +12,11 @@ services:
       timeout: 5s
       start_period: 300s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
     restart: unless-stopped
 
   isochrone:

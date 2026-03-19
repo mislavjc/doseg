@@ -759,12 +759,12 @@ fn generate_walk_features(
                 ((node_time.min(to_time) / BUCKET_SECONDS).floor() * BUCKET_SECONDS) as i64;
 
             let from = [
-                (from_lon * 1000.0).round() / 1000.0,
-                (from_lat * 1000.0).round() / 1000.0,
+                (from_lon * 10000.0).round() / 10000.0,
+                (from_lat * 10000.0).round() / 10000.0,
             ];
             let to = [
-                (coords[ti2 + 1] * 1000.0).round() / 1000.0,
-                (coords[ti2] * 1000.0).round() / 1000.0,
+                (coords[ti2 + 1] * 10000.0).round() / 10000.0,
+                (coords[ti2] * 10000.0).round() / 10000.0,
             ];
 
             buckets.entry(bucket).or_default().push(vec![from, to]);

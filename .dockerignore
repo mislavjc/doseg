@@ -5,6 +5,7 @@ data/*
 !data/district-scores.json
 !data/district-scores-saturday.json
 !data/travel-matrix.json
+!data/route-stats.json
 .DS_Store
 *.pem
 .env*.local

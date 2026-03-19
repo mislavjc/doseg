@@ -44,7 +44,7 @@ data/srtm/
 data/transit-graph.json
 
 # rust
-/scoring/target
+/transit/target
 
 # graphql-codegen output
 /generated

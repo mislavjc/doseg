@@ -120,6 +120,63 @@ function loadTravelMatrix(): TravelMatrix | null {
   }
 }
 
+interface RouteInfo {
+  name: string
+  mode: "TRAM" | "BUS" | "RAIL"
+  distanceKm: number
+  stops: number
+  dailyDepartures: number
+  firstDeparture?: string
+  lastDeparture?: string
+  serviceHours?: number
+  depPerHour?: number
+  travelTimeMin: number
+  commercialSpeedKmh: number
+  peakHeadwayMin: number | null
+  avgHeadwayMin: number | null
+  patterns: number
+}
+
+interface TransferHub {
+  name: string
+  lat: number
+  lon: number
+  routeCount: number
+  tramRoutes: string[]
+  busRoutes: string[]
+  railRoutes: string[]
+}
+
+interface RouteStats {
+  generatedAt: string
+  summary: {
+    totalRoutes: number
+    tramRoutes: number
+    busRoutes: number
+    railRoutes: number
+    totalStops: number
+    totalDailyDepartures: number
+  }
+  routes: RouteInfo[]
+  transferHubs: TransferHub[]
+  multimodalConnections: {
+    tramBus: number
+    tramRail: number
+    busRail: number
+    threeMode: number
+  }
+}
+
+function loadRouteStats(): RouteStats | null {
+  const statsPath = join(getDataDir(), "route-stats.json")
+  if (!existsSync(statsPath)) return null
+  try {
+    return JSON.parse(readFileSync(statsPath, "utf-8"))
+  } catch {
+    return null
+  }
+}
+
 function loadSaturdayScores(): ScoreData | null {
   const satPath = join(getDataDir(), "district-scores-saturday.json")
   if (!existsSync(satPath)) return null
@@ -221,6 +278,7 @@ export default function StatistikaPage() {
   const districtEmblems = loadDistrictEmblems()
   const travelMatrix = loadTravelMatrix()
   const saturdayData = loadSaturdayScores()
+  const routeStats = loadRouteStats()
 
   // Derived insights
   const totalPop = data.districts.reduce((s, d) => s + (d.population ?? 0), 0)
@@ -560,6 +618,20 @@ export default function StatistikaPage() {
       ? Math.round(((weWeighted - wdWeighted) / wdWeighted) * 1000) / 10
       : 0
   })()
+
+  // Route stats derived insights (exclude intercity rail — unreliable distances, separate HŽ section covers impact)
+  const urbanRoutes = routeStats?.routes.filter((r) => r.mode !== "RAIL") ?? []
+  const tramRoutes = urbanRoutes.filter((r) => r.mode === "TRAM")
+  const busRoutes = urbanRoutes.filter((r) => r.mode === "BUS")
+  const longestTram = [...tramRoutes].sort((a, b) => b.distanceKm - a.distanceKm)[0]
+  const shortestTram = [...tramRoutes].sort((a, b) => a.distanceKm - b.distanceKm)[0]
+  const longestBus = [...busRoutes].sort((a, b) => b.distanceKm - a.distanceKm)[0]
+  const shortestBus = [...busRoutes].sort((a, b) => a.distanceKm - b.distanceKm)[0]
+  const busiestRoute = [...urbanRoutes].sort((a, b) => b.dailyDepartures - a.dailyDepartures)[0]
+  const mostStopsTram = [...tramRoutes].sort((a, b) => b.stops - a.stops)[0]
+  const mostStopsBus = [...busRoutes].sort((a, b) => b.stops - a.stops)[0]
+  const fastestBus = [...busRoutes].sort((a, b) => b.commercialSpeedKmh - a.commercialSpeedKmh)[0]
+  const slowestBus = [...busRoutes].filter((r) => r.commercialSpeedKmh > 0).sort((a, b) => a.commercialSpeedKmh - b.commercialSpeedKmh)[0]
 
   return (
     <Shell>
@@ -2759,6 +2831,228 @@ export default function StatistikaPage() {
           </div>
         </div>
       </section>
+
+      {/* Route statistics */}
+      {routeStats && (
+        <section id="linije" className="mt-16 sm:mt-20">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
+              <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+                Statistika linija
+              </h2>
+            </div>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Pregled {tramRoutes.length + busRoutes.length} ZET linija javnog
+              prijevoza — duljina, frekvencija, brzina i prijenosna čvorišta.
+            </p>
+          </div>
+
+          {/* Summary cards */}
+          <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+                {tramRoutes.length + busRoutes.length}
+              </div>
+              <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">ZET linija</div>
+              <div className="mt-1 text-[11px] text-slate-500">{tramRoutes.length} tram · {busRoutes.length} bus</div>
+            </div>
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+                {routeStats.summary.totalStops.toLocaleString("hr-HR")}
+              </div>
+              <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">stanica</div>
+            </div>
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+                {routeStats.summary.totalDailyDepartures.toLocaleString("hr-HR")}
+              </div>
+              <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">polazaka dnevno</div>
+            </div>
+            {busiestRoute && (
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+                <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+                  {busiestRoute.name}
+                </div>
+                <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">najprometnija linija</div>
+                <div className="mt-1 text-[11px] text-slate-500">{busiestRoute.dailyDepartures} pol/dan · {fmtHR(busiestRoute.depPerHour ?? 0, 1)} pol/sat</div>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Frequency ranking (dep/hour within service window) */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
+                Najčešće linije (polazaka/sat)
+              </h3>
+              <div className="space-y-3">
+                {(() => {
+                  const sorted = [...urbanRoutes].sort((a, b) => (b.depPerHour ?? 0) - (a.depPerHour ?? 0)).slice(0, 10)
+                  const maxDph = sorted[0]?.depPerHour ?? 1
+                  return sorted.map((r, i) => (
+                    <div key={`freq-${i}`}>
+                      <div className="flex items-center gap-3">
+                        <span className={`flex h-7 w-10 shrink-0 items-center justify-center rounded-md text-[12px] font-bold text-white ${
+                          r.mode === "TRAM" ? "bg-rose-500" : r.mode === "RAIL" ? "bg-teal-500" : "bg-blue-500"
+                        }`}>{r.name}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="relative h-5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                            <div className={`absolute inset-y-0 left-0 rounded-full ${
+                              r.mode === "TRAM" ? "bg-rose-400" : r.mode === "RAIL" ? "bg-teal-400" : "bg-blue-400"
+                            }`} style={{ width: `${((r.depPerHour ?? 0) / maxDph) * 100}%` }} />
+                          </div>
+                        </div>
+                        <span className="w-12 shrink-0 text-right font-serif text-[13px] tabular-nums text-slate-700 dark:text-slate-300">
+                          {fmtHR(r.depPerHour ?? 0, 1)}
+                        </span>
+                      </div>
+                      <div className="mt-0.5 ml-[52px] flex gap-2 text-[10px] text-slate-400 dark:text-slate-500">
+                        <span>{r.firstDeparture ?? "—"}–{r.lastDeparture ?? "—"}</span>
+                        <span>·</span>
+                        <span>{r.dailyDepartures} pol/dan</span>
+                        <span>·</span>
+                        <span>{fmtHR(r.serviceHours ?? 0, 1)}h</span>
+                      </div>
+                    </div>
+                  ))
+                })()}
+              </div>
+              <div className="mt-4 text-[11px] text-slate-500 dark:text-slate-400">
+                Polazaka po satu unutar operativnog razdoblja linije
+              </div>
+            </div>
+
+            {/* Longest/shortest routes */}
+            <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+              <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
+                Najduže i najkraće linije
+              </h3>
+              <div className="space-y-5">
+                <div>
+                  <div className="mb-2 text-[13px] font-medium text-rose-600 dark:text-rose-400">Tramvaj</div>
+                  {longestTram && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najduža: linija {longestTram.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(longestTram.distanceKm, 1)} km</span></div>}
+                  {shortestTram && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najkraća: linija {shortestTram.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(shortestTram.distanceKm, 1)} km</span></div>}
+                  {mostStopsTram && <div className="mt-1 flex items-baseline justify-between text-[13px] text-slate-500 dark:text-slate-400"><span>Najviše stanica: linija {mostStopsTram.name}</span><span className="tabular-nums">{mostStopsTram.stops}</span></div>}
+                </div>
+                <div>
+                  <div className="mb-2 text-[13px] font-medium text-blue-600 dark:text-blue-400">Autobus</div>
+                  {longestBus && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najduža: linija {longestBus.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(longestBus.distanceKm, 1)} km</span></div>}
+                  {shortestBus && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najkraća: linija {shortestBus.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(shortestBus.distanceKm, 1)} km</span></div>}
+                  {mostStopsBus && <div className="mt-1 flex items-baseline justify-between text-[13px] text-slate-500 dark:text-slate-400"><span>Najviše stanica: linija {mostStopsBus.name}</span><span className="tabular-nums">{mostStopsBus.stops}</span></div>}
+                </div>
+              </div>
+              {fastestBus && slowestBus && (
+                <div className="mt-6 border-t border-black/5 pt-4 text-[13px] text-slate-600 dark:border-white/5 dark:text-slate-400">
+                  Najbrži bus: <strong className="text-slate-900 dark:text-slate-100">{fastestBus.name}</strong> ({fmtHR(fastestBus.commercialSpeedKmh, 1)} km/h) · najsporiji: <strong className="text-slate-900 dark:text-slate-100">{slowestBus.name}</strong> ({fmtHR(slowestBus.commercialSpeedKmh, 1)} km/h)
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Transfer hubs */}
+          <div className="mt-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+            <h3 className="mb-8 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
+              Prijenosna čvorišta
+            </h3>
+
+            {/* Hero: #1 hub */}
+            {(() => {
+              const top = routeStats.transferHubs[0]
+              if (!top) return null
+              const total = top.routeCount
+              const r = 38
+              const circ = 2 * Math.PI * r
+              const segments = [
+                { count: top.tramRoutes.length, color: "#fb7185" },
+                { count: top.busRoutes.length, color: "#60a5fa" },
+                { count: top.railRoutes.length, color: "#2dd4bf" },
+              ].filter(s => s.count > 0)
+              let offset = 0
+              return (
+                <div className="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:gap-8">
+                  <div className="relative shrink-0">
+                    <svg width="100" height="100" viewBox="0 0 100 100" className="rotate-[-90deg]">
+                      <circle cx="50" cy="50" r={r} fill="none" stroke="currentColor" strokeWidth="8" className="text-slate-100 dark:text-zinc-800" />
+                      {segments.map((seg, si) => {
+                        const dash = (seg.count / total) * circ
+                        const el = (
+                          <circle key={si} cx="50" cy="50" r={r} fill="none" stroke={seg.color} strokeWidth="8"
+                            strokeDasharray={`${dash} ${circ - dash}`}
+                            strokeDashoffset={-offset}
+                            strokeLinecap="round" />
+                        )
+                        offset += dash
+                        return el
+                      })}
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{total}</span>
+                      <span className="text-[9px] text-slate-400">linija</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-medium tracking-wide text-violet-600 uppercase dark:text-violet-400">#1 čvorište</div>
+                    <div className="mt-1 font-serif text-[22px] leading-tight text-slate-900 dark:text-slate-100">{top.name}</div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {top.tramRoutes.map(r => <span key={`t-${r}`} className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700 dark:bg-rose-500/20 dark:text-rose-300">{r}</span>)}
+                      {top.busRoutes.map(r => <span key={`b-${r}`} className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-500/20 dark:text-blue-300">{r}</span>)}
+                      {top.railRoutes.slice(0, 6).map(r => <span key={`r-${r}`} className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700 dark:bg-teal-500/20 dark:text-teal-300">{r}</span>)}
+                      {top.railRoutes.length > 6 && <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-zinc-700 dark:text-slate-400">+{top.railRoutes.length - 6}</span>}
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* Rest of the hubs */}
+            <div className="space-y-1.5">
+              {routeStats.transferHubs.slice(1, 10).map((hub, i) => {
+                const maxRoutes = routeStats.transferHubs[0].routeCount
+                return (
+                  <div key={`hub-${i}`} className="group flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-white/3">
+                    <span className="w-5 shrink-0 text-center font-serif text-[15px] text-slate-300 dark:text-slate-600">
+                      {i + 2}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <span className="truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">{hub.name}</span>
+                        <span className="shrink-0 text-[11px] tabular-nums text-slate-400 dark:text-slate-500">{hub.routeCount}</span>
+                      </div>
+                      <div className="mt-1 flex h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
+                        <div className="flex" style={{ width: `${(hub.routeCount / maxRoutes) * 100}%` }}>
+                          {hub.tramRoutes.length > 0 && <div className="h-full bg-rose-400" style={{ width: `${(hub.tramRoutes.length / hub.routeCount) * 100}%` }} />}
+                          {hub.busRoutes.length > 0 && <div className="h-full bg-blue-400" style={{ width: `${(hub.busRoutes.length / hub.routeCount) * 100}%` }} />}
+                          {hub.railRoutes.length > 0 && <div className="h-full bg-teal-400" style={{ width: `${(hub.railRoutes.length / hub.routeCount) * 100}%` }} />}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 gap-1">
+                      {hub.tramRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-100 px-1.5 text-[9px] font-bold tabular-nums text-rose-600 dark:bg-rose-500/20 dark:text-rose-300">{hub.tramRoutes.length}</span>}
+                      {hub.busRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-100 px-1.5 text-[9px] font-bold tabular-nums text-blue-600 dark:bg-blue-500/20 dark:text-blue-300">{hub.busRoutes.length}</span>}
+                      {hub.railRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-teal-100 px-1.5 text-[9px] font-bold tabular-nums text-teal-600 dark:bg-teal-500/20 dark:text-teal-300">{hub.railRoutes.length}</span>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Multimodal stats footer */}
+            <div className="mt-6 flex items-center gap-6 border-t border-black/5 pt-5 dark:border-white/5">
+              <div className="flex items-center gap-4 text-[11px] text-slate-400 dark:text-slate-500">
+                <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-rose-400" />tram</span>
+                <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-blue-400" />bus</span>
+                <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-teal-400" />vlak</span>
+              </div>
+              <div className="ml-auto flex gap-5 text-[12px] text-slate-600 dark:text-slate-400">
+                <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.tramBus}</span> <span className="text-[10px]">tram-bus</span></div>
+                <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.tramRail}</span> <span className="text-[10px]">tram-vlak</span></div>
+                <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.threeMode}</span> <span className="text-[10px]">3 moda</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Cross-district travel time heatmap */}
       {travelMatrix && (

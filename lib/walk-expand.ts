@@ -21,6 +21,10 @@ let cachedStopSnapSource: {
   snaps: Map<string, StopWalkSnap>
 } | null = null
 
+// Reusable best buffer for expandWalking (avoids 3.4MB alloc+fill per call)
+let expandBestBuf: Float64Array | null = null
+let expandBestBufSize = 0
+
 /**
  * Find the nearest walking graph node to a given coordinate.
  * Uses squared distance to avoid sqrt.
@@ -170,7 +174,13 @@ export function expandWalking(
   originLat: number,
   originLon: number
 ): GeoJSON.Feature[] {
-  const best = new Float64Array(graph.nodeCount).fill(Infinity)
+  // Reuse best buffer (avoids 3.4MB alloc+fill per call)
+  if (!expandBestBuf || expandBestBufSize < graph.nodeCount) {
+    expandBestBuf = new Float64Array(graph.nodeCount).fill(Infinity)
+    expandBestBufSize = graph.nodeCount
+  }
+  const best = expandBestBuf
+  const touched: number[] = []
   const heap = new WalkHeap()
   const stopSnaps = getTransitStopSnaps(graph, transitStops)
 
@@ -182,6 +192,7 @@ export function expandWalking(
     const walkTime =
       (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
     if (walkTime < MAX_SECONDS) {
+      touched.push(originNode)
       best[originNode] = walkTime
       heap.push(walkTime, originNode)
     }
@@ -196,6 +207,7 @@ export function expandWalking(
     const totalTime = time + snap.walkSeconds
 
     if (totalTime < MAX_SECONDS && totalTime < best[snap.nodeIdx]) {
+      touched.push(snap.nodeIdx)
       best[snap.nodeIdx] = totalTime
       heap.push(totalTime, snap.nodeIdx)
     }
@@ -221,6 +233,7 @@ export function expandWalking(
       const arrivalTime = time + edgeDistCm[e] * CM_TO_SECONDS
 
       if (arrivalTime < MAX_SECONDS && arrivalTime < best[toIdx]) {
+        touched.push(toIdx)
         best[toIdx] = arrivalTime
         heap.push(arrivalTime, toIdx)
       }
@@ -277,6 +290,9 @@ export function expandWalking(
       geometry: { type: "MultiLineString", coordinates: lines },
     })
   }
+
+  // Reset only touched nodes (not all 422K)
+  for (let i = 0; i < touched.length; i++) best[touched[i]] = Infinity
 
   return features
 }

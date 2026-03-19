@@ -16,7 +16,8 @@ const REFRESH_INTERVAL: Duration = Duration::from_secs(30);
 
 #[derive(Clone, Message)]
 pub struct FeedMessage {
-    #[prost(message, repeated, tag = "1")]
+    // tag 1: FeedHeader header (skipped)
+    #[prost(message, repeated, tag = "2")]
     pub entity: Vec<FeedEntity>,
 }
 
@@ -24,8 +25,12 @@ pub struct FeedMessage {
 pub struct FeedEntity {
     #[prost(string, tag = "1")]
     pub id: String,
+    #[prost(bool, optional, tag = "2")]
+    pub is_deleted: Option<bool>,
     #[prost(message, optional, tag = "3")]
     pub trip_update: Option<TripUpdate>,
+    // tag 4: VehiclePosition (skipped via prost unknown field handling)
+    // tag 5: Alert (skipped)
 }
 
 #[derive(Clone, Message)]
@@ -34,12 +39,17 @@ pub struct TripUpdate {
     pub trip: Option<TripDescriptor>,
     #[prost(message, repeated, tag = "2")]
     pub stop_time_update: Vec<StopTimeUpdate>,
+    // tag 3: uint64 timestamp (skipped)
+    // tag 4: StopTimeUpdate delay (skipped)
 }
 
 #[derive(Clone, Message)]
 pub struct TripDescriptor {
     #[prost(string, optional, tag = "1")]
     pub trip_id: Option<String>,
+    #[prost(string, optional, tag = "5")]
+    pub route_id: Option<String>,
+    // tag 2: string route_id, tag 3: uint32 direction_id, tag 4: string start_time, etc.
 }
 
 #[derive(Clone, Message)]
@@ -50,12 +60,18 @@ pub struct StopTimeUpdate {
     pub arrival: Option<StopTimeEvent>,
     #[prost(message, optional, tag = "3")]
     pub departure: Option<StopTimeEvent>,
+    #[prost(string, optional, tag = "4")]
+    pub stop_id: Option<String>,
 }
 
 #[derive(Clone, Message)]
 pub struct StopTimeEvent {
+    #[prost(int64, optional, tag = "1")]
+    pub time: Option<i64>,
     #[prost(int32, optional, tag = "2")]
     pub delay: Option<i32>,
+    #[prost(int32, optional, tag = "3")]
+    pub uncertainty: Option<i32>,
 }
 
 // --- Parsed trip RT data ---

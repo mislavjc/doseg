@@ -1002,15 +1002,27 @@ async fn handle_isochrone(
         None
     };
 
-    let response = IsochroneResponse {
-        r#type: "FeatureCollection",
-        features,
-        walk_ring,
-        routing,
-        realtime: false, // Rust version doesn't have GTFS-RT yet
+    let json = if routing_mode == "only" {
+        // routing=only: return { routing, realtime } only (matches TS behavior)
+        #[derive(Serialize)]
+        struct RoutingOnlyResponse {
+            routing: Option<RoutingPayload>,
+            realtime: bool,
+        }
+        serde_json::to_string(&RoutingOnlyResponse {
+            routing,
+            realtime: false,
+        }).unwrap()
+    } else {
+        let response = IsochroneResponse {
+            r#type: "FeatureCollection",
+            features,
+            walk_ring,
+            routing,
+            realtime: false,
+        };
+        serde_json::to_string(&response).unwrap()
     };
-
-    let json = serde_json::to_string(&response).unwrap();
     let t_serial = Instant::now();
 
     let state_ms = t_state.duration_since(t0).as_millis();

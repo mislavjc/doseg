@@ -11,7 +11,7 @@ const nextConfig = {
       },
       {
         source: "/api/isochrone",
-        destination: `${process.env.ISOCHRONE_URL || "http://localhost:3001"}/api/isochrone`,
+        destination: `${process.env.ISOCHRONE_URL || "http://localhost:3002"}/api/isochrone`,
       },
     ]
   },

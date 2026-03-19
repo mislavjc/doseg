@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "O projektu — Doseg",
+  title: "O projektu | Doseg",
   description:
     "Kako radi Doseg, interaktivna karta dosega javnog prijevoza u Zagrebu.",
 }
@@ -113,7 +113,7 @@ export default function AboutPage() {
               <p>
                 Teški dio posla radi{" "}
                 <span className="font-semibold text-slate-200">Rust servis</span>{" "}
-                (axum) — Dijkstrin algoritam po transit grafu, zatim ekspanzija
+                (axum). Dijkstrin algoritam po transit grafu, zatim ekspanzija
                 pješačkom mrežom od 422K čvorova iz OpenStreetMapa.
               </p>
               <p>
@@ -123,7 +123,7 @@ export default function AboutPage() {
               </p>
               <p>
                 <span className="font-semibold text-slate-200">ts-rs</span>{" "}
-                generira TypeScript tipove iz Rust structova — jedan izvor
+                generira TypeScript tipove iz Rust structova, jedan izvor
                 istine za cijeli stack.
               </p>
               <p>
@@ -150,7 +150,7 @@ export default function AboutPage() {
                   Izokrona
                 </span>
                 <p className="font-medium text-slate-400">
-                  40&thinsp;ms po zahtjevu (Rust) vs 244&thinsp;ms (Node.js) — 6x brže
+                  40&thinsp;ms po zahtjevu (Rust) vs 244&thinsp;ms (Node.js), 6x brže
                 </p>
               </div>
               <div>
@@ -166,7 +166,7 @@ export default function AboutPage() {
                   GeoJSON odgovor
                 </span>
                 <p className="font-medium text-slate-400">
-                  2.5&thinsp;MB — transit linije + pješačka mreža
+                  2.5&thinsp;MB, transit linije + pješačka mreža
                 </p>
               </div>
               <div>

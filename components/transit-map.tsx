@@ -1153,7 +1153,7 @@ export function TransitMap() {
       <div className="relative h-svh w-full">
         <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
 
-        {/* Loading bar — spans full width, outside grid padding */}
+        {/* Loading bar: spans full width, outside grid padding */}
         <AnimatePresence>
           {loading && (
             <motion.div
@@ -1171,7 +1171,7 @@ export function TransitMap() {
           )}
         </AnimatePresence>
 
-        {/* Layer legend — outside grid to avoid column sizing shifts */}
+        {/* Layer legend: outside grid to avoid column sizing shifts */}
         <AnimatePresence>
           {(bajsEnabled || poiEnabled) && (
             <motion.div
@@ -1232,12 +1232,12 @@ export function TransitMap() {
           )}
         </AnimatePresence>
 
-        {/* HUD overlay grid — all map UI lives here, no overlap */}
+        {/* HUD overlay grid: all map UI lives here, no overlap */}
         <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-6 sm:p-4">
 
           {/* === TOP ROW === */}
 
-          {/* Top-left: About link (desktop only — mobile gets it bottom-left) */}
+          {/* Top-left: About link (desktop only, mobile gets it bottom-left) */}
           <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:block">
             <Link
               href="/o-projektu"
@@ -1457,7 +1457,7 @@ export function TransitMap() {
             </KbdGroup>
           </div>
 
-          {/* === MIDDLE ROW — empty, map shows through === */}
+          {/* === MIDDLE ROW: empty, map shows through === */}
 
           {/* === BOTTOM ROW === */}
 

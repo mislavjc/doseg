@@ -1,6 +1,6 @@
 /**
  * Serialize `data` to JSON and return a `Response` with cache headers.
- * Compression is handled by the reverse proxy (Caddy) — doing it here
+ * Compression is handled by the reverse proxy (Caddy); doing it here
  * wastes CPU on the single-core app container.
  */
 export function jsonResponse(

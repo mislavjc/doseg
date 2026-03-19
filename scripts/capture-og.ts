@@ -97,7 +97,7 @@ async function main() {
     "
   />
 
-  <!-- branding — bottom right -->
+  <!-- branding: bottom right -->
   <div style="
     position:fixed; z-index:2;
     bottom:28px; right:40px;

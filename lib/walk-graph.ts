@@ -48,13 +48,13 @@ function loadGraph(
   const nodeCount = view.getUint32(0, true)
   const edgeCount = view.getUint32(4, true)
 
-  // Read node coordinates — bulk copy via DataView
+  // Read node coordinates: bulk copy via DataView
   const coordsBytes = nodeCount * 2 * 8
   const coords = new Float64Array(nodeCount * 2)
   const coordSrc = new Uint8Array(buf.buffer, buf.byteOffset + 8, coordsBytes)
   new Uint8Array(coords.buffer).set(coordSrc)
 
-  // Read CSR offsets — bulk copy
+  // Read CSR offsets: bulk copy
   const offsetsStart = 8 + coordsBytes
   const offsetsBytes = (nodeCount + 1) * 4
   const offsets = new Uint32Array(nodeCount + 1)
@@ -62,7 +62,7 @@ function loadGraph(
     new Uint8Array(buf.buffer, buf.byteOffset + offsetsStart, offsetsBytes)
   )
 
-  // Read edges — interleaved [target, dist, target, dist, ...], deinterleave
+  // Read edges: interleaved [target, dist, target, dist, ...], deinterleave
   const edgesStart = offsetsStart + offsetsBytes
   const edgeTargets = new Uint32Array(edgeCount)
   const edgeDistCm = new Uint32Array(edgeCount)

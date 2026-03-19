@@ -238,7 +238,7 @@ function buildRouteTemplate(
       return null
     }
 
-    // Transit leg — build geometry from intermediate stop coordinates
+    // Transit leg: build geometry from intermediate stop coordinates
     if (stop.pred.patternIdx == null || stop.pred.boardIdx == null || stop.pred.alightIdx == null) {
       return null
     }

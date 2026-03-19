@@ -51,7 +51,7 @@ export function AlertsBanner() {
         const data: Alert[] = await res.json()
         if (!cancelled) setAlerts(data)
       } catch {
-        // Silently ignore — banner just won't show
+        // Silently ignore; banner just won't show
       }
     }
 
@@ -99,7 +99,7 @@ export function AlertsBanner() {
               </span>
               {firstAlert.headerText && (
                 <span className="text-amber-100/80">
-                  {" \u2014 "}
+                  {": "}
                   {firstAlert.headerText}
                 </span>
               )}
@@ -137,7 +137,7 @@ export function AlertsBanner() {
                         </span>
                         {alert.headerText && (
                           <span className="text-amber-100/80">
-                            {" \u2014 "}
+                            {": "}
                             {alert.headerText}
                           </span>
                         )}

@@ -619,7 +619,7 @@ export default function StatistikaPage() {
       : 0
   })()
 
-  // Route stats derived insights (exclude intercity rail — unreliable distances, separate HŽ section covers impact)
+  // Route stats derived insights (exclude intercity rail: unreliable distances, separate HŽ section covers impact)
   const urbanRoutes = routeStats?.routes.filter((r) => r.mode !== "RAIL") ?? []
   const tramRoutes = urbanRoutes.filter((r) => r.mode === "TRAM")
   const busRoutes = urbanRoutes.filter((r) => r.mode === "BUS")
@@ -2844,7 +2844,7 @@ export default function StatistikaPage() {
             </div>
             <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
               Pregled {tramRoutes.length + busRoutes.length} ZET linija javnog
-              prijevoza — duljina, frekvencija, brzina i prijenosna čvorišta.
+              prijevoza: duljina, frekvencija, brzina i prijenosna čvorišta.
             </p>
           </div>
 
@@ -2908,7 +2908,7 @@ export default function StatistikaPage() {
                         </span>
                       </div>
                       <div className="mt-0.5 ml-[52px] flex gap-2 text-[10px] text-slate-400 dark:text-slate-500">
-                        <span>{r.firstDeparture ?? "—"}–{r.lastDeparture ?? "—"}</span>
+                        <span>{r.firstDeparture ?? "-"}–{r.lastDeparture ?? "-"}</span>
                         <span>·</span>
                         <span>{r.dailyDepartures} pol/dan</span>
                         <span>·</span>
@@ -3137,7 +3137,7 @@ export default function StatistikaPage() {
                               style={{ backgroundColor: bg, color: textColor }}
                             >
                               <span className="font-serif text-[12px] font-medium tabular-nums leading-tight">
-                                {isDiag ? "—" : time < 0 ? "×" : time}
+                                {isDiag ? "-" : time < 0 ? "×" : time}
                               </span>
                               {!isDiag && time > 0 && (
                                 <span className="text-[9px] leading-tight opacity-60">

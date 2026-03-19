@@ -17,7 +17,7 @@ function formatDistance(meters: number): string {
   return `${(meters / 1000).toFixed(1)} km`
 }
 
-const DELAY_THRESHOLD = 30 // seconds — below this is "on time"
+const DELAY_THRESHOLD = 30 // seconds; below this is "on time"
 
 function delayBadge(delay: number): { label: string; color: string } {
   if (delay > DELAY_THRESHOLD)

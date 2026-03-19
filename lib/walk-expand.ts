@@ -91,7 +91,7 @@ function getTransitStopSnaps(
   return snaps
 }
 
-/** Specialized min-heap for walk Dijkstra — uses flat arrays to avoid object allocation */
+/** Specialized min-heap for walk Dijkstra. Uses flat arrays to avoid object allocation. */
 class WalkHeap {
   private times: number[] = []
   private nodes: number[] = []
@@ -213,7 +213,7 @@ export function expandWalking(
     }
   }
 
-  // Dijkstra on walking graph — track reached nodes for fast feature generation
+  // Dijkstra on walking graph: track reached nodes for fast feature generation
   const reached: number[] = []
   const { offsets, edgeTargets, edgeDistCm } = graph
 
@@ -305,7 +305,7 @@ export function expandWalking(
  * downtown has 2-3x more nodes/km² than suburbs, but cells normalize to area.
  *
  * Expects bestBuf pre-filled with Infinity. Resets only touched nodes at end
- * (avoids filling 422K entries every call — ~10x less memory traffic).
+ * (avoids filling 422K entries every call, ~10x less memory traffic).
  */
 export function countReachableCells(
   graph: WalkingGraph,
@@ -350,7 +350,7 @@ export function countReachableCells(
     }
   }
 
-  // Dijkstra on walking graph — count unique grid cells reached
+  // Dijkstra on walking graph: count unique grid cells reached
   const cells = new Set<number>()
   const { offsets, edgeTargets, edgeDistCm, coords, gridCellSize } = graph
 

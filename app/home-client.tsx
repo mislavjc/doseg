@@ -14,7 +14,7 @@ export function HomeClient() {
   return (
     <main id="main-content" className="relative">
       <h1 className="sr-only">
-        Doseg — karta dosega javnog prijevoza u Zagrebu
+        Doseg: karta dosega javnog prijevoza u Zagrebu
       </h1>
       <NuqsAdapter>
         <TransitMap />

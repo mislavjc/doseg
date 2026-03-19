@@ -483,7 +483,7 @@ function buildBajsMapSvg(geojson: GeoJSON.FeatureCollection): string {
               )
               .join(
                 ""
-              )}<tspan class="score" x="${shape.centroid[0]}" dy="1.15em">${boost > 0 ? `+${boost}%` : "—"}</tspan><tspan class="stations" x="${shape.centroid[0]}" dy="1.15em">${stations} st.</tspan></text>`
+              )}<tspan class="score" x="${shape.centroid[0]}" dy="1.15em">${boost > 0 ? `+${boost}%` : "-"}</tspan><tspan class="stations" x="${shape.centroid[0]}" dy="1.15em">${stations} st.</tspan></text>`
           : ""
 
       return `<g><path class="district" d="${shape.path}" fill="${bajsBoostColor(boost)}" tabindex="0"><title>${escapeXml(bajsFeatureTitle(shape))}</title></path>${labelMarkup}</g>`

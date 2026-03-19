@@ -21,7 +21,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const ogQuery = ogParams.toString()
   const ogUrl = ogQuery ? `/api/og?${ogQuery}` : "/api/og"
 
-  const title = "Doseg — Zagreb Transit Reachability"
+  const title = "Doseg | Zagreb Transit Reachability"
   const description =
     "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle mozes stici tramvajem i busom u 15, 30 ili 45 minuta."
 

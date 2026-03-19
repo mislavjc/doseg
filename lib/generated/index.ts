@@ -1,5 +1,5 @@
 // Re-export all generated types from Rust (via ts-rs).
-// Do not edit — regenerate with: cd scoring && cargo test --release
+// Do not edit. Regenerate with: cd scoring && cargo test --release
 
 export type { FeatureGeometry } from "./FeatureGeometry"
 export type { FeatureProperties } from "./FeatureProperties"

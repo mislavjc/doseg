@@ -1,4 +1,8 @@
 import type { Itinerary, Leg } from "@/lib/otp"
+import type {
+  RoutingNode,
+  RoutingPattern,
+} from "@/lib/generated"
 
 interface RoutingStop {
   kind: "STOP" | "BAJS"
@@ -10,21 +14,13 @@ interface RoutingStop {
   pred: {
     fromKey: string
     kind: "WALK" | "TRANSIT" | "BIKE"
-    patternIdx?: number
-    boardIdx?: number
-    alightIdx?: number
+    patternIdx?: number | null
+    boardIdx?: number | null
+    alightIdx?: number | null
   } | null
 }
 
-interface RoutingStopInput extends RoutingStop {
-  key: string
-}
-
-interface RoutingPattern {
-  stopKeys: string[]
-  mode: string
-  route: string
-}
+type RoutingStopInput = RoutingNode
 
 export interface RoutingData {
   stops: Map<string, RoutingStop>
@@ -83,7 +79,7 @@ export function parseRoutingData(
       lon: s.lon,
       name: s.name || "",
       time: s.time,
-      delay: s.delay,
+      delay: (s as RoutingStop & { delay?: number }).delay,
       pred: s.pred,
     })
     const cx = Math.floor(s.lon / GRID_CELL_SIZE)
@@ -243,6 +239,9 @@ function buildRouteTemplate(
     }
 
     // Transit leg — build geometry from intermediate stop coordinates
+    if (stop.pred.patternIdx == null || stop.pred.boardIdx == null || stop.pred.alightIdx == null) {
+      return null
+    }
     const pattern = data.patterns[stop.pred.patternIdx]
     const boardStop = fromStop
     if (!pattern) return null

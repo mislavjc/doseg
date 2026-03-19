@@ -1,4 +1,9 @@
 import type { FeatureCollection } from "geojson"
+import type {
+  IsochroneResponse as RustIsochroneResponse,
+  RoutingOnlyResponse,
+  RoutingPayload,
+} from "./generated"
 
 export interface IsochroneParams {
   lat: number
@@ -7,39 +12,10 @@ export interface IsochroneParams {
   bajs?: boolean
 }
 
-export interface IsochroneRoutingPayload {
-  nodes: {
-    key: string
-    kind: "STOP" | "BAJS"
-    lat: number
-    lon: number
-    name: string
-    time: number
-    delay?: number
-    pred: {
-      fromKey: string
-      kind: "WALK" | "TRANSIT" | "BIKE"
-      patternIdx?: number
-      boardIdx?: number
-      alightIdx?: number
-    } | null
-  }[]
-  patterns: {
-    stopKeys: string[]
-    mode: string
-    route: string
-  }[]
-}
-
-export type IsochroneResponse = FeatureCollection & {
-  realtime?: boolean
-  walkRing?: FeatureCollection
-}
-
-export interface IsochroneRoutingResponse {
-  routing: IsochroneRoutingPayload
-  realtime?: boolean
-}
+// Re-export Rust-generated types as the canonical source of truth
+export type IsochroneRoutingPayload = RoutingPayload
+export type IsochroneResponse = RustIsochroneResponse
+export type IsochroneRoutingResponse = RoutingOnlyResponse
 
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({

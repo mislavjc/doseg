@@ -1121,6 +1121,7 @@ export function TransitMap() {
     )
       .then((response) => {
         if (routingController.signal.aborted) return
+        if (!response.routing) return
         routingDataRef.current = parseRoutingData(
           response.routing,
           originLat,

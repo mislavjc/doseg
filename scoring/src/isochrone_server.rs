@@ -28,6 +28,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::Router;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 use tower_http::compression::CompressionLayer;
 
 use crate::geo::{fast_dist_km, WALK_SPEED};
@@ -534,21 +535,28 @@ fn quantize_transit_line(coords: &[[f64; 2]]) -> Vec<[f64; 2]> {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct GeoJsonFeature {
-    r#type: &'static str,
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"Feature\"")]
+    kind: &'static str,
     properties: FeatureProperties,
     geometry: FeatureGeometry,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct FeatureProperties {
     time: f64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct FeatureGeometry {
-    r#type: &'static str,
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"MultiLineString\"")]
+    kind: &'static str,
     coordinates: Vec<Vec<[f64; 2]>>,
 }
 
@@ -603,12 +611,12 @@ fn generate_transit_features(
     buckets
         .into_iter()
         .map(|(time, lines)| GeoJsonFeature {
-            r#type: "Feature",
+            kind: "Feature",
             properties: FeatureProperties {
                 time: time as f64,
             },
             geometry: FeatureGeometry {
-                r#type: "MultiLineString",
+                kind: "MultiLineString",
                 coordinates: lines,
             },
         })
@@ -740,12 +748,12 @@ fn generate_walk_features(
     buckets
         .into_iter()
         .map(|(time, lines)| GeoJsonFeature {
-            r#type: "Feature",
+            kind: "Feature",
             properties: FeatureProperties {
                 time: time as f64,
             },
             geometry: FeatureGeometry {
-                r#type: "MultiLineString",
+                kind: "MultiLineString",
                 coordinates: lines,
             },
         })
@@ -754,16 +762,19 @@ fn generate_walk_features(
 
 // --- Routing payload ---
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct RoutingPayload {
     nodes: Vec<RoutingNode>,
     patterns: Vec<RoutingPattern>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct RoutingNode {
     key: String,
-    kind: &'static str,
+    #[ts(type = "\"STOP\" | \"BAJS\"")]
+    kind: String,
     lat: f64,
     lon: f64,
     name: String,
@@ -772,22 +783,30 @@ struct RoutingNode {
     pred: Option<RoutingPred>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct RoutingPred {
     #[serde(rename = "fromKey")]
+    #[ts(rename = "fromKey")]
     from_key: String,
+    #[ts(type = "\"WALK\" | \"TRANSIT\" | \"BIKE\"")]
     kind: String,
     #[serde(rename = "patternIdx", skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "patternIdx")]
     pattern_idx: Option<usize>,
     #[serde(rename = "boardIdx", skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "boardIdx")]
     board_idx: Option<usize>,
     #[serde(rename = "alightIdx", skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "alightIdx")]
     alight_idx: Option<usize>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct RoutingPattern {
     #[serde(rename = "stopKeys")]
+    #[ts(rename = "stopKeys")]
     stop_keys: Vec<String>,
     mode: String,
     route: String,
@@ -862,7 +881,7 @@ fn build_routing_payload(
 
         routing_nodes.push(RoutingNode {
             key: key.clone(),
-            kind,
+            kind: kind.to_string(),
             lat,
             lon,
             name,
@@ -879,21 +898,35 @@ fn build_routing_payload(
 
 // --- Response types ---
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct IsochroneResponse {
-    r#type: &'static str,
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"FeatureCollection\"")]
+    kind: &'static str,
     features: Vec<GeoJsonFeature>,
     #[serde(rename = "walkRing", skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "walkRing")]
     walk_ring: Option<WalkRingResponse>,
     #[serde(skip_serializing_if = "Option::is_none")]
     routing: Option<RoutingPayload>,
     realtime: bool,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
 struct WalkRingResponse {
-    r#type: &'static str,
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"FeatureCollection\"")]
+    kind: &'static str,
     features: Vec<GeoJsonFeature>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+struct RoutingOnlyResponse {
+    routing: Option<RoutingPayload>,
+    realtime: bool,
 }
 
 // --- Request params ---
@@ -995,7 +1028,7 @@ async fn handle_isochrone(
 
     let walk_ring = if !walk_ring_features.is_empty() {
         Some(WalkRingResponse {
-            r#type: "FeatureCollection",
+            kind: "FeatureCollection",
             features: walk_ring_features,
         })
     } else {
@@ -1003,19 +1036,13 @@ async fn handle_isochrone(
     };
 
     let json = if routing_mode == "only" {
-        // routing=only: return { routing, realtime } only (matches TS behavior)
-        #[derive(Serialize)]
-        struct RoutingOnlyResponse {
-            routing: Option<RoutingPayload>,
-            realtime: bool,
-        }
         serde_json::to_string(&RoutingOnlyResponse {
             routing,
             realtime: false,
         }).unwrap()
     } else {
         let response = IsochroneResponse {
-            r#type: "FeatureCollection",
+            kind: "FeatureCollection",
             features,
             walk_ring,
             routing,

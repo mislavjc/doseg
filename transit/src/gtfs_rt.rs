@@ -26,7 +26,8 @@ pub struct FeedMessage {
 pub struct FeedHeader {
     #[prost(string, tag = "1")]
     pub gtfs_realtime_version: String,
-    #[prost(uint64, optional, tag = "2")]
+    // tag 2: Incrementality enum (skipped)
+    #[prost(uint64, optional, tag = "3")]
     pub timestamp: Option<u64>,
 }
 

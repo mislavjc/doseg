@@ -8,6 +8,7 @@ mod bajs;
 mod districts;
 mod geo;
 mod heap;
+mod network_stats;
 mod osm;
 mod otp;
 mod route_stats;
@@ -21,6 +22,8 @@ use std::sync::Arc;
 use std::time::Instant;
 
 use rayon::prelude::*;
+use serde::Serialize;
+use ts_rs::TS;
 
 use crate::bajs::build_bajs_adjacency_indexed;
 use crate::districts::{generate_sample_points, load_districts, point_in_polygon, SamplePoint};
@@ -360,6 +363,97 @@ fn js_round(x: f64) -> i64 {
     (x + 0.5).floor() as i64
 }
 
+// ---------------------------------------------------------------------------
+// Output types (exported to TypeScript via ts-rs)
+// ---------------------------------------------------------------------------
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DistrictScoresOutput {
+    pub generated_at: String,
+    pub departure_window: String,
+    pub evening_window: String,
+    pub departure_count: usize,
+    #[ts(type = "number")]
+    pub grid_spacing_m: i64,
+    #[ts(type = "number")]
+    pub max_minutes: i64,
+    pub total_sample_points: usize,
+    pub total_grid_cells: usize,
+    pub bajs_total_stations: usize,
+    #[ts(type = "number")]
+    pub city_desert_pct: i64,
+    pub districts: Vec<District>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub day: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub service_date: Option<String>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct District {
+    pub name: String,
+    #[ts(type = "number")]
+    pub osm_id: i64,
+    #[ts(type = "number | null")]
+    pub population: Option<i64>,
+    pub sample_count: usize,
+    #[ts(type = "number")]
+    pub avg_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub min_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub max_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub stddev_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub median_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub p25_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub p75_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub evening_avg_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub peak_offpeak_drop: i64,
+    #[ts(type = "number")]
+    pub train_avg_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub train_boost_pct: i64,
+    #[ts(type = "number")]
+    pub bajs_avg_reachable_cells: i64,
+    #[ts(type = "number")]
+    pub bajs_boost_pct: i64,
+    #[ts(type = "number")]
+    pub bajs_stations: i64,
+    #[ts(type = "number")]
+    pub desert_pct: i64,
+    #[ts(type = "number")]
+    pub avg_nearest_stop_m: i64,
+    pub best_point: BestPoint,
+    pub tram_lines: Vec<String>,
+    pub bus_lines: Vec<String>,
+    pub train_lines: Vec<String>,
+    #[ts(type = "number")]
+    pub stops: i64,
+    #[ts(type = "number")]
+    pub median_headway_min: i64,
+    #[ts(type = "number")]
+    pub rank: i64,
+    #[ts(type = "number")]
+    pub score: i64,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+pub struct BestPoint {
+    pub lat: f64,
+    pub lon: f64,
+}
+
 fn main() {
     let args = parse_args();
     let max_seconds = args.minutes * 60.0;
@@ -414,6 +508,14 @@ fn main() {
     route_stats::compute_and_write(
         &graph,
         &data_dir.join("route-stats.json"),
+        args.service_date.is_some(),
+    );
+
+    // Compute network-wide stats (hourly heatmap, fleet, dead-ends, etc.)
+    network_stats::compute_and_write(
+        &graph,
+        data_dir,
+        &data_dir.join("network-stats.json"),
         args.service_date.is_some(),
     );
 
@@ -827,60 +929,59 @@ fn main() {
         r.score = js_round(r.avg_reachable_cells as f64 / max_score as f64 * 100.0);
     }
 
-    // Build JSON output
-    let district_json: Vec<serde_json::Value> = results
+    // Build typed output
+    let district_json: Vec<District> = results
         .iter()
-        .map(|r| {
-            serde_json::json!({
-                "name": r.name,
-                "osmId": r.osm_id,
-                "population": r.population,
-                "sampleCount": r.sample_count,
-                "avgReachableCells": r.avg_reachable_cells,
-                "minReachableCells": r.min_reachable_cells,
-                "maxReachableCells": r.max_reachable_cells,
-                "stddevReachableCells": r.stddev_reachable_cells,
-                "medianReachableCells": r.median_reachable_cells,
-                "p25ReachableCells": r.p25_reachable_cells,
-                "p75ReachableCells": r.p75_reachable_cells,
-                "eveningAvgReachableCells": r.evening_avg_reachable_cells,
-                "peakOffpeakDrop": r.peak_offpeak_drop,
-                "trainAvgReachableCells": r.train_avg_reachable_cells,
-                "trainBoostPct": r.train_boost_pct,
-                "bajsAvgReachableCells": r.bajs_avg_reachable_cells,
-                "bajsBoostPct": r.bajs_boost_pct,
-                "bajsStations": r.bajs_stations,
-                "desertPct": r.desert_pct,
-                "avgNearestStopM": r.avg_nearest_stop_m,
-                "bestPoint": { "lat": r.best_lat, "lon": r.best_lon },
-                "tramLines": r.tram_lines,
-                "busLines": r.bus_lines,
-                "trainLines": r.train_lines,
-                "stops": r.transit_stops,
-                "medianHeadwayMin": r.median_headway_min,
-                "rank": r.rank,
-                "score": r.score,
-            })
+        .map(|r| District {
+            name: r.name.clone(),
+            osm_id: r.osm_id,
+            population: r.population,
+            sample_count: r.sample_count,
+            avg_reachable_cells: r.avg_reachable_cells,
+            min_reachable_cells: r.min_reachable_cells,
+            max_reachable_cells: r.max_reachable_cells,
+            stddev_reachable_cells: r.stddev_reachable_cells,
+            median_reachable_cells: r.median_reachable_cells,
+            p25_reachable_cells: r.p25_reachable_cells,
+            p75_reachable_cells: r.p75_reachable_cells,
+            evening_avg_reachable_cells: r.evening_avg_reachable_cells,
+            peak_offpeak_drop: r.peak_offpeak_drop,
+            train_avg_reachable_cells: r.train_avg_reachable_cells,
+            train_boost_pct: r.train_boost_pct,
+            bajs_avg_reachable_cells: r.bajs_avg_reachable_cells,
+            bajs_boost_pct: r.bajs_boost_pct,
+            bajs_stations: r.bajs_stations,
+            desert_pct: r.desert_pct,
+            avg_nearest_stop_m: r.avg_nearest_stop_m,
+            best_point: BestPoint {
+                lat: r.best_lat,
+                lon: r.best_lon,
+            },
+            tram_lines: r.tram_lines.clone(),
+            bus_lines: r.bus_lines.clone(),
+            train_lines: r.train_lines.clone(),
+            stops: r.transit_stops,
+            median_headway_min: r.median_headway_min,
+            rank: r.rank,
+            score: r.score,
         })
         .collect();
 
-    let mut output = serde_json::json!({
-        "generatedAt": chrono_now_iso(),
-        "departureWindow": "07:30-08:30",
-        "eveningWindow": "20:30-21:30",
-        "departureCount": MORNING_DEPARTURES.len(),
-        "gridSpacingM": args.grid_m as i64,
-        "maxMinutes": args.minutes as i64,
-        "totalSamplePoints": points.len(),
-        "totalGridCells": walk_graph.grid.len(),
-        "bajsTotalStations": graph.bajs_stations.len(),
-        "cityDesertPct": js_round(total_desert as f64 / points.len() as f64 * 100.0),
-        "districts": district_json,
-    });
-    if let Some(ref day) = args.day {
-        output["day"] = serde_json::json!(day);
-        output["serviceDate"] = serde_json::json!(args.service_date);
-    }
+    let output = DistrictScoresOutput {
+        generated_at: chrono_now_iso(),
+        departure_window: "07:30-08:30".to_string(),
+        evening_window: "20:30-21:30".to_string(),
+        departure_count: MORNING_DEPARTURES.len(),
+        grid_spacing_m: args.grid_m as i64,
+        max_minutes: args.minutes as i64,
+        total_sample_points: points.len(),
+        total_grid_cells: walk_graph.grid.len(),
+        bajs_total_stations: graph.bajs_stations.len(),
+        city_desert_pct: js_round(total_desert as f64 / points.len() as f64 * 100.0),
+        districts: district_json,
+        day: args.day.clone(),
+        service_date: args.service_date.clone(),
+    };
 
     let out_file = if let Some(ref day) = args.day {
         format!("district-scores-{}.json", day)

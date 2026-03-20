@@ -7,8 +7,82 @@
 
 use std::collections::{HashMap, HashSet};
 
+use serde::Serialize;
+use ts_rs::TS;
+
 use crate::geo::fast_dist_km;
 use crate::transit_graph::{Mode, PatternData, TransitGraphJson};
+
+// ---------------------------------------------------------------------------
+// Output types (exported to TypeScript via ts-rs)
+// ---------------------------------------------------------------------------
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct RouteStatsOutput {
+    pub generated_at: String,
+    pub summary: RouteStatsSummary,
+    pub routes: Vec<RouteStatsRoute>,
+    pub transfer_hubs: Vec<TransferHub>,
+    pub multimodal_connections: MultimodalConnections,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct RouteStatsSummary {
+    pub total_routes: usize,
+    pub tram_routes: usize,
+    pub bus_routes: usize,
+    pub rail_routes: usize,
+    pub total_stops: usize,
+    pub total_daily_departures: u64,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct RouteStatsRoute {
+    pub name: String,
+    pub mode: String,
+    pub distance_km: f64,
+    pub stops: usize,
+    pub daily_departures: usize,
+    pub first_departure: String,
+    pub last_departure: String,
+    pub service_hours: f64,
+    pub dep_per_hour: f64,
+    pub travel_time_min: f64,
+    pub commercial_speed_kmh: f64,
+    pub peak_headway_min: Option<f64>,
+    pub avg_headway_min: Option<f64>,
+    pub patterns: usize,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct TransferHub {
+    pub name: String,
+    pub key: String,
+    pub lat: f64,
+    pub lon: f64,
+    pub route_count: usize,
+    pub tram_routes: Vec<String>,
+    pub bus_routes: Vec<String>,
+    pub rail_routes: Vec<String>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct MultimodalConnections {
+    pub tram_bus: u32,
+    pub tram_rail: u32,
+    pub bus_rail: u32,
+    pub three_mode: u32,
+}
 
 /// Per-route aggregate built from the busiest pattern.
 struct RouteAgg {
@@ -22,7 +96,7 @@ struct RouteAgg {
 }
 
 /// Decode a Google Encoded Polyline into (lat, lon) pairs.
-fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
+pub(crate) fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
     let mut points = Vec::new();
     let bytes = encoded.as_bytes();
     let mut idx = 0;
@@ -72,7 +146,7 @@ fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
 }
 
 /// Compute path distance from encoded polyline geometry.
-fn polyline_distance_km(encoded: &str) -> f64 {
+pub(crate) fn polyline_distance_km(encoded: &str) -> f64 {
     let points = decode_polyline(encoded);
     let mut dist = 0.0;
     for i in 1..points.len() {
@@ -82,7 +156,7 @@ fn polyline_distance_km(encoded: &str) -> f64 {
 }
 
 /// Compute route distance from stop-to-stop haversine (fallback).
-fn stop_distance_km(pattern: &PatternData, graph: &TransitGraphJson) -> f64 {
+pub(crate) fn stop_distance_km(pattern: &PatternData, graph: &TransitGraphJson) -> f64 {
     let mut dist = 0.0;
     for i in 1..pattern.stop_indices.len() {
         let a = &graph.stops[pattern.stop_indices[i - 1]];
@@ -136,7 +210,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
     }
 
     // Build route info list
-    let mut routes: Vec<serde_json::Value> = Vec::new();
+    let mut routes: Vec<RouteStatsRoute> = Vec::new();
 
     for (key, agg) in &route_map {
         let travel_time_min = agg.max_travel_time_sec / 60.0;
@@ -174,30 +248,26 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
 
         let name = key.split(':').nth(1).unwrap_or(key).to_string();
 
-        routes.push(serde_json::json!({
-            "name": name,
-            "mode": agg.mode_str,
-            "distanceKm": round2(agg.max_dist_km),
-            "stops": agg.max_stops,
-            "dailyDepartures": daily_dep,
-            "firstDeparture": format_time(first_dep_sec),
-            "lastDeparture": format_time(last_dep_sec),
-            "serviceHours": round1(service_hours),
-            "depPerHour": round1(dep_per_hour),
-            "travelTimeMin": round1(travel_time_min),
-            "commercialSpeedKmh": round1(commercial_speed),
-            "peakHeadwayMin": peak_headway.map(round1),
-            "avgHeadwayMin": avg_headway.map(round1),
-            "patterns": agg.pattern_count,
-        }));
+        routes.push(RouteStatsRoute {
+            name,
+            mode: agg.mode_str.clone(),
+            distance_km: round2(agg.max_dist_km),
+            stops: agg.max_stops,
+            daily_departures: daily_dep,
+            first_departure: format_time(first_dep_sec),
+            last_departure: format_time(last_dep_sec),
+            service_hours: round1(service_hours),
+            dep_per_hour: round1(dep_per_hour),
+            travel_time_min: round1(travel_time_min),
+            commercial_speed_kmh: round1(commercial_speed),
+            peak_headway_min: peak_headway.map(round1),
+            avg_headway_min: avg_headway.map(round1),
+            patterns: agg.pattern_count,
+        });
     }
 
     // Sort by daily departures descending
-    routes.sort_by(|a, b| {
-        let da = a["dailyDepartures"].as_u64().unwrap_or(0);
-        let db = b["dailyDepartures"].as_u64().unwrap_or(0);
-        db.cmp(&da)
-    });
+    routes.sort_by(|a, b| b.daily_departures.cmp(&a.daily_departures));
 
     // Transfer hub analysis
     let mut stop_routes: Vec<(HashSet<String>, HashSet<String>, HashSet<String>)> =
@@ -222,7 +292,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
 
     // Cluster nearby stops (within 200m) into hubs
     let mut assigned: HashSet<usize> = HashSet::new();
-    let mut hubs: Vec<serde_json::Value> = Vec::new();
+    let mut hubs: Vec<TransferHub> = Vec::new();
     let mut multimodal = [0u32; 4]; // tram-bus, tram-rail, bus-rail, three-mode
 
     let mut stop_order: Vec<usize> = (0..graph.stops.len()).collect();
@@ -294,76 +364,69 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         rail_vec.sort();
 
         let stop = &graph.stops[si];
-        hubs.push(serde_json::json!({
-            "name": find_stop_name(graph, si),
-            "key": stop.key,
-            "lat": stop.lat,
-            "lon": stop.lon,
-            "routeCount": route_count,
-            "tramRoutes": tram_vec,
-            "busRoutes": bus_vec,
-            "railRoutes": rail_vec,
-        }));
+        hubs.push(TransferHub {
+            name: find_stop_name(graph, si).to_string(),
+            key: stop.key.clone(),
+            lat: stop.lat,
+            lon: stop.lon,
+            route_count,
+            tram_routes: tram_vec,
+            bus_routes: bus_vec,
+            rail_routes: rail_vec,
+        });
     }
 
-    hubs.sort_by(|a, b| {
-        let ra = a["routeCount"].as_u64().unwrap_or(0);
-        let rb = b["routeCount"].as_u64().unwrap_or(0);
-        rb.cmp(&ra)
-    });
+    hubs.sort_by(|a, b| b.route_count.cmp(&a.route_count));
     hubs.truncate(30);
 
     // Summary
-    let tram_count = routes.iter().filter(|r| r["mode"] == "TRAM").count();
-    let bus_count = routes.iter().filter(|r| r["mode"] == "BUS").count();
-    let rail_count = routes.iter().filter(|r| r["mode"] == "RAIL").count();
-    let total_departures: u64 = routes
-        .iter()
-        .map(|r| r["dailyDepartures"].as_u64().unwrap_or(0))
-        .sum();
+    let tram_count = routes.iter().filter(|r| r.mode == "TRAM").count();
+    let bus_count = routes.iter().filter(|r| r.mode == "BUS").count();
+    let rail_count = routes.iter().filter(|r| r.mode == "RAIL").count();
+    let total_departures: u64 = routes.iter().map(|r| r.daily_departures as u64).sum();
 
-    let output = serde_json::json!({
-        "generatedAt": crate::chrono_now_iso(),
-        "summary": {
-            "totalRoutes": routes.len(),
-            "tramRoutes": tram_count,
-            "busRoutes": bus_count,
-            "railRoutes": rail_count,
-            "totalStops": graph.stops.len(),
-            "totalDailyDepartures": total_departures,
+    let output = RouteStatsOutput {
+        generated_at: crate::chrono_now_iso(),
+        summary: RouteStatsSummary {
+            total_routes: routes.len(),
+            tram_routes: tram_count,
+            bus_routes: bus_count,
+            rail_routes: rail_count,
+            total_stops: graph.stops.len(),
+            total_daily_departures: total_departures,
         },
-        "routes": routes,
-        "transferHubs": hubs,
-        "multimodalConnections": {
-            "tramBus": multimodal[0],
-            "tramRail": multimodal[1],
-            "busRail": multimodal[2],
-            "threeMode": multimodal[3],
+        routes,
+        transfer_hubs: hubs,
+        multimodal_connections: MultimodalConnections {
+            tram_bus: multimodal[0],
+            tram_rail: multimodal[1],
+            bus_rail: multimodal[2],
+            three_mode: multimodal[3],
         },
-    });
+    };
 
     let json_str = serde_json::to_string_pretty(&output).expect("JSON serialization failed");
     std::fs::write(out_path, json_str).expect("Cannot write route-stats.json");
 
     eprintln!(
         "  {} routes ({} tram, {} bus, {} rail), {} stops, {} daily departures",
-        routes.len(),
+        output.summary.total_routes,
         tram_count,
         bus_count,
         rail_count,
-        graph.stops.len(),
+        output.summary.total_stops,
         total_departures,
     );
     eprintln!(
         "  Top hub: {} ({} routes)",
-        hubs.first()
-            .map_or("-", |h| h["name"].as_str().unwrap_or("-")),
-        hubs.first()
-            .map_or(0, |h| h["routeCount"].as_u64().unwrap_or(0)),
+        output.transfer_hubs.first().map_or("-", |h| &h.name),
+        output.transfer_hubs.first().map_or(0, |h| h.route_count),
     );
     eprintln!(
         "  Multimodal: {} tram-bus, {} tram-rail, {} three-mode",
-        multimodal[0], multimodal[1], multimodal[3],
+        output.multimodal_connections.tram_bus,
+        output.multimodal_connections.tram_rail,
+        output.multimodal_connections.three_mode,
     );
     eprintln!("  Written to {}", out_path.display());
 }
@@ -404,10 +467,10 @@ fn format_time(seconds: f64) -> String {
     format!("{:02}:{:02}", h, m)
 }
 
-fn round1(v: f64) -> f64 {
+pub(crate) fn round1(v: f64) -> f64 {
     (v * 10.0).round() / 10.0
 }
 
-fn round2(v: f64) -> f64 {
+pub(crate) fn round2(v: f64) -> f64 {
     (v * 100.0).round() / 100.0
 }

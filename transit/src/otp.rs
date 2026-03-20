@@ -213,7 +213,7 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
     let mut pattern_stop_keys: Vec<Vec<String>> = Vec::new();
 
     for p in &raw_patterns {
-        if !p.has_geometry || p.stops.len() < 2 {
+        if p.stops.len() < 2 {
             continue;
         }
 

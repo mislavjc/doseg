@@ -26,6 +26,8 @@ tokio = { version = "1", features = ["full"] }
 tower-http = { version = "0.6", features = ["compression-full", "cors"] }
 ts-rs = { version = "10", features = ["serde-compat"] }
 prost = "0.13"
+zip = "2"
+csv = "1"
 
 [profile.release]
 lto = true

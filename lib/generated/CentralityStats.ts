@@ -3,4 +3,32 @@ import type { AveragePathLength } from "./AveragePathLength";
 import type { CentralityStop } from "./CentralityStop";
 import type { NetworkDiameter } from "./NetworkDiameter";
 
-export type CentralityStats = { generatedAt: string, departureTime: string, stopCount: number, computationSeconds: number, betweenness: Array<CentralityStop>, closeness: Array<CentralityStop>, networkDiameter: NetworkDiameter, averagePathLength: AveragePathLength, };
+export type CentralityStats = { generatedAt: string, 
+/**
+ * Departure time used for Dijkstra
+ */
+departureTime: string, 
+/**
+ * Number of transit stops analyzed
+ */
+stopCount: number, 
+/**
+ * Wall-clock computation time
+ */
+computationSeconds: number, 
+/**
+ * Top stops by betweenness centrality
+ */
+betweenness: Array<CentralityStop>, 
+/**
+ * Top stops by closeness centrality
+ */
+closeness: Array<CentralityStop>, 
+/**
+ * Longest shortest path in the network
+ */
+networkDiameter: NetworkDiameter, 
+/**
+ * Mean of all pairwise shortest paths
+ */
+averagePathLength: AveragePathLength, };

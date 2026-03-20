@@ -3,4 +3,40 @@ import type { NightGap } from "./NightGap";
 import type { ServiceBucket } from "./ServiceBucket";
 import type { ServiceSpanByMode } from "./ServiceSpanByMode";
 
-export type ServiceSpan = { earliestDeparture: string, latestDeparture: string, firstMorningDeparture: string, lastEveningDeparture: string, firstServiceHistogram: Array<ServiceBucket>, lastServiceHistogram: Array<ServiceBucket>, byMode: Array<ServiceSpanByMode>, hasRail: boolean, nightGap: NightGap, };
+export type ServiceSpan = { 
+/**
+ * System-wide earliest departure (raw, may be post-midnight night owl)
+ */
+earliestDeparture: string, 
+/**
+ * System-wide latest departure (raw, may wrap past 24h)
+ */
+latestDeparture: string, 
+/**
+ * First morning departure (04:00-10:00 range) - "when does the city wake up"
+ */
+firstMorningDeparture: string, 
+/**
+ * Last evening departure from origin stops (18:00+) - "when does service end"
+ */
+lastEveningDeparture: string, 
+/**
+ * Histogram: when stops get their first service (30-min buckets)
+ */
+firstServiceHistogram: Array<ServiceBucket>, 
+/**
+ * Histogram: when stops lose their last service (30-min buckets)
+ */
+lastServiceHistogram: Array<ServiceBucket>, 
+/**
+ * Per-mode breakdown
+ */
+byMode: Array<ServiceSpanByMode>, 
+/**
+ * Whether any rail departures exist
+ */
+hasRail: boolean, 
+/**
+ * Night service gap analysis
+ */
+nightGap: NightGap, };

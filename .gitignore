@@ -50,3 +50,10 @@ data/transit-graph.json
 /generated
 tmp/
 squirrel.toml
+
+# wrangler local state
+.wrangler/
+
+# runtime artifacts
+mprocs.log
+data/gtfs-rt.db*

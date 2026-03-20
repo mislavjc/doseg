@@ -37,6 +37,7 @@ Key design decisions:
 - **Coordinate snapping**: origin lat/lon snapped to 3 decimal places (~100m), departure time to 5-minute intervals. This collapses nearby requests into identical cache keys for Cloudflare CDN hits.
 - **ts-rs type generation**: response types are defined once in Rust with `#[derive(TS)]` and exported to `lib/generated/*.ts`. The TypeScript frontend imports these directly, so the API contract is enforced at compile time on both sides.
 - **GTFS-RT realtime delays**: a background task fetches ZET's protobuf feed every 30 seconds. The Dijkstra loop applies per-stop delay adjustments from the latest snapshot, and the response includes a `realtime` flag so the UI can indicate live data.
+- **RT persistence**: every 60 seconds, route-level delay aggregates are written to a SQLite database (WAL mode, separate writer thread). Stop-level delays are sampled every 5 minutes. Data is kept for 1 year raw, then compacted to hourly aggregates. Query endpoints (`/api/rt/history`, `/api/rt/stops`, `/api/rt/alerts`, `/api/rt/summary`) serve historical data. Daily backups to Cloudflare R2 via GitHub Actions.
 - **BAJS bike-sharing**: idealized station availability (1 bike, 1 dock always present) integrated into the routing graph as walk + bike edges.
 
 ### Rust scoring CLI
@@ -91,7 +92,7 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 | Layer | Technology |
 |-------|-----------|
 | Frontend | Next.js 16, React 19, MapLibre GL, Tailwind 4, Motion |
-| Isochrone service | Rust, axum, tokio, rayon, ts-rs, prost (protobuf) |
+| Isochrone service | Rust, axum, tokio, rayon, ts-rs, prost (protobuf), rusqlite |
 | Transit routing | OpenTripPlanner 2.9 with ZET + HZPP GTFS feeds |
 | Realtime | ZET GTFS-RT protobuf feed (trip updates + vehicle positions) |
 | Bike-sharing | BAJS/nextbike via GBFS API |
@@ -99,7 +100,8 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 | Reverse proxy | Caddy 2 (TLS, compression, security headers, path-based routing) |
 | CDN | Cloudflare (coordinate-snapped cache keys) |
 | Containers | Docker Compose (4 services: OTP, isochrone, app, Caddy) |
-| CI/CD | GitHub Actions, auto-deploy on push to main, weekly GTFS data update PRs |
+| RT history DB | SQLite (WAL mode), daily backups to Cloudflare R2 |
+| CI/CD | GitHub Actions: auto-deploy on push, weekly GTFS data updates, daily RT DB backup |
 
 ## Development
 
@@ -168,7 +170,7 @@ Roughly ordered by how much sense they make next:
 
 - **Line removal impact**: remove each line and re-score all districts. "Tram 11 removal drops 4 districts by >10 points." Reveals which infrastructure is most critical. Needs N re-computations.
 
-- **Real-time reliability tracker**: accumulate GTFS-RT delays over weeks. "Tram 6 is late >5 min 23% of the time at Crnomerec." The RT feed already has 503 trip updates + 281 vehicle positions per snapshot.
+- **Real-time reliability tracker**: RT data is now being persisted to SQLite (route-level every 60s, stop-level every 5 min). Query endpoints are live. Next: build frontend dashboards showing punctuality trends, delay corridors, and fleet deployment over time.
 
 - **Animated time-of-day slider**: watch the city "breathe": isochrone expanding at 06:00, steady at 08:00, shrinking at 23:00. Pre-compute ~20 hourly snapshots.
 

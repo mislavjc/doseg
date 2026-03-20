@@ -46,23 +46,16 @@ function parseArgs() {
   return { time, date, concurrency }
 }
 
+import type { District, DistrictScoresOutput } from "../lib/generated"
+
 // --- District data ---
 
-interface DistrictScore {
-  name: string
-  bestPoint: { lat: number; lon: number }
-}
-
-interface DistrictScoresFile {
-  districts: DistrictScore[]
-}
-
-function loadDistricts(): DistrictScore[] {
+function loadDistricts(): District[] {
   const raw = readFileSync(
     join(process.cwd(), "data/district-scores.json"),
     "utf-8"
   )
-  const data = JSON.parse(raw) as DistrictScoresFile
+  const data = JSON.parse(raw) as DistrictScoresOutput
   return data.districts
 }
 
@@ -74,15 +67,15 @@ interface PlanResult {
   walkDistanceM: number
 }
 
-async function queryPlan(
+function buildPlanQuery(
   fromLat: number,
   fromLon: number,
   toLat: number,
   toLon: number,
   date: string,
   time: string
-): Promise<PlanResult | null> {
-  const query = `
+): string {
+  return `
     {
       plan(
         from: { lat: ${fromLat}, lon: ${fromLon} }
@@ -108,6 +101,17 @@ async function queryPlan(
       }
     }
   `
+}
+
+async function queryPlan(
+  fromLat: number,
+  fromLon: number,
+  toLat: number,
+  toLon: number,
+  date: string,
+  time: string
+): Promise<PlanResult | null> {
+  const query = buildPlanQuery(fromLat, fromLon, toLat, toLon, date, time)
 
   const res = await fetch(`${OTP_URL}/otp/gtfs/v1`, {
     method: "POST",
@@ -163,43 +167,24 @@ async function runWithConcurrency<T>(
 
 // --- Main ---
 
-async function main() {
-  const { time, date, concurrency } = parseArgs()
+interface PairResult {
+  i: number
+  j: number
+  result: PlanResult | null
+}
 
-  console.error("Loading district data...")
-  const districts = loadDistricts()
-  console.error(`  ${districts.length} districts loaded`)
-  console.error(`  Date: ${date}, Time: ${time}, Concurrency: ${concurrency}`)
-
+function buildPairTasks(
+  districts: DistrictScore[],
+  date: string,
+  time: string
+): (() => Promise<PairResult>)[] {
   const n = districts.length
-  const totalPairs = n * n
-  const names = districts.map((d) => d.name)
-
-  // Initialize matrix with -1 (no route)
-  const matrix: number[][] = Array.from({ length: n }, () =>
-    new Array(n).fill(-1)
-  )
-  const transferMatrix: number[][] = Array.from({ length: n }, () =>
-    new Array(n).fill(-1)
-  )
-  const walkMatrix: number[][] = Array.from({ length: n }, () =>
-    new Array(n).fill(-1)
-  )
-
-  // Build task list for all pairs
-  interface PairResult {
-    i: number
-    j: number
-    result: PlanResult | null
-  }
-
   const tasks: (() => Promise<PairResult>)[] = []
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       const fromD = districts[i]
       const toD = districts[j]
       if (i === j) {
-        // Same district: zero travel time
         tasks.push(async () => ({
           i,
           j,
@@ -220,8 +205,55 @@ async function main() {
       }
     }
   }
+  return tasks
+}
 
-  console.error(`\nComputing ${totalPairs} district pairs...`)
+function fillMatrices(
+  results: PairResult[],
+  n: number
+): { matrix: number[][]; transferMatrix: number[][]; walkMatrix: number[][]; noRouteCount: number } {
+  const matrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
+  const transferMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
+  const walkMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
+  let noRouteCount = 0
+
+  for (const { i, j, result } of results) {
+    if (result) {
+      matrix[i][j] = result.durationMin
+      transferMatrix[i][j] = result.transfers
+      walkMatrix[i][j] = result.walkDistanceM
+    } else {
+      noRouteCount++
+    }
+  }
+
+  return { matrix, transferMatrix, walkMatrix, noRouteCount }
+}
+
+function printSummaryTable(names: string[], matrix: number[][]) {
+  console.error(`\n${"From \\ To".padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`)
+  console.error("\u2500".repeat(22 + names.length * 6))
+  for (let i = 0; i < names.length; i++) {
+    const row = matrix[i]
+      .map((v) => (v === -1 ? "  --" : v.toString().padStart(6)))
+      .join("")
+    console.error(`${names[i].padEnd(22)}${row}`)
+  }
+}
+
+async function main() {
+  const { time, date, concurrency } = parseArgs()
+
+  console.error("Loading district data...")
+  const districts = loadDistricts()
+  console.error(`  ${districts.length} districts loaded`)
+  console.error(`  Date: ${date}, Time: ${time}, Concurrency: ${concurrency}`)
+
+  const n = districts.length
+  const names = districts.map((d) => d.name)
+  const tasks = buildPairTasks(districts, date, time)
+
+  console.error(`\nComputing ${n * n} district pairs...`)
   const t0 = performance.now()
 
   const results = await runWithConcurrency(
@@ -231,22 +263,9 @@ async function main() {
       process.stderr.write(`\r  Computing ${done}/${total}...`)
     }
   )
-  console.error() // newline after progress
+  console.error()
 
-  // Fill matrices
-  let noRouteCount = 0
-  for (const { i, j, result } of results) {
-    if (result) {
-      matrix[i][j] = result.durationMin
-      transferMatrix[i][j] = result.transfers
-      walkMatrix[i][j] = result.walkDistanceM
-    } else {
-      noRouteCount++
-      matrix[i][j] = -1
-      transferMatrix[i][j] = -1
-      walkMatrix[i][j] = -1
-    }
-  }
+  const { matrix, transferMatrix, walkMatrix, noRouteCount } = fillMatrices(results, n)
 
   const elapsed = ((performance.now() - t0) / 1000).toFixed(1)
   console.error(`\nDone in ${elapsed}s`)
@@ -254,7 +273,6 @@ async function main() {
     console.error(`  ${noRouteCount} pairs had no route found`)
   }
 
-  // Output
   const output = {
     generatedAt: new Date().toISOString(),
     departureTime: time,
@@ -269,15 +287,7 @@ async function main() {
   writeFileSync(outPath, JSON.stringify(output, null, 2))
   console.error(`\nWritten to ${outPath}`)
 
-  // Print summary table
-  console.error(`\n${"From \\ To".padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`)
-  console.error("─".repeat(22 + names.length * 6))
-  for (let i = 0; i < n; i++) {
-    const row = matrix[i]
-      .map((v) => (v === -1 ? "  --" : v.toString().padStart(6)))
-      .join("")
-    console.error(`${names[i].padEnd(22)}${row}`)
-  }
+  printSummaryTable(names, matrix)
 }
 
 main().catch((err) => {

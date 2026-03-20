@@ -49,20 +49,8 @@ const BIKE_ALLOWED_VALUES = new Set([
   "destination",
 ])
 
-import {
-  KM_PER_DEG_LAT,
-  KM_PER_DEG_LON,
-  fastDistKm as distKm,
-} from "../lib/geo"
-
-interface OsmItem {
-  type: "node" | "way" | "relation"
-  id: number
-  lat?: number
-  lon?: number
-  tags?: Record<string, string>
-  refs?: number[]
-}
+import { fastDistKm as distKm } from "../lib/geo"
+import type { OsmItem, Edge } from "./shared-types"
 
 interface BikeableWay {
   refs: number[]
@@ -122,12 +110,11 @@ function getDirection(tags: Record<string, string>) {
   return { forward, backward }
 }
 
-async function main() {
-  console.log("Collecting bikeable ways and all nodes within bbox...")
-  const nodeCoords = new Map<number, { lat: number; lon: number }>()
-  const bikeableWays: BikeableWay[] = []
-
-  await new Promise<void>((resolve, reject) => {
+function parseOsmData(
+  nodeCoords: Map<number, { lat: number; lon: number }>,
+  bikeableWays: BikeableWay[]
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
     createReadStream(INPUT)
       .pipe(createParser())
       .pipe(
@@ -160,13 +147,12 @@ async function main() {
       .on("finish", resolve)
       .on("error", reject)
   })
+}
 
-  console.log(
-    `  ${nodeCoords.size} nodes in bbox, ${bikeableWays.length} bikeable ways`
-  )
-
-  console.log("Building graph...")
-
+function filterValidWays(
+  bikeableWays: BikeableWay[],
+  nodeCoords: Map<number, { lat: number; lon: number }>
+): { usedNodeIds: Set<number>; validWays: BikeableWay[] } {
   const usedNodeIds = new Set<number>()
   const validWays: BikeableWay[] = []
 
@@ -196,25 +182,14 @@ async function main() {
     }
   }
 
-  console.log(
-    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
-  )
+  return { usedNodeIds, validWays }
+}
 
-  const nodeIdToIdx = new Map<number, number>()
-  const nodeList: { lat: number; lon: number }[] = []
-
-  for (const id of usedNodeIds) {
-    const coord = nodeCoords.get(id)
-    if (!coord) continue
-    nodeIdToIdx.set(id, nodeList.length)
-    nodeList.push(coord)
-  }
-
-  interface Edge {
-    from: number
-    to: number
-    distCm: number
-  }
+function buildEdges(
+  validWays: BikeableWay[],
+  nodeIdToIdx: Map<number, number>,
+  nodeList: { lat: number; lon: number }[]
+): Edge[] {
   const edges: Edge[] = []
 
   for (const way of validWays) {
@@ -234,8 +209,13 @@ async function main() {
     }
   }
 
-  console.log(`  ${edges.length} directed edges`)
+  return edges
+}
 
+function writeBinaryGraph(
+  nodeList: { lat: number; lon: number }[],
+  edges: Edge[]
+) {
   edges.sort((a, b) => a.from - b.from)
 
   const nodeCount = nodeList.length
@@ -244,8 +224,6 @@ async function main() {
 
   for (const e of edges) offsets[e.from + 1]++
   for (let i = 1; i <= nodeCount; i++) offsets[i] += offsets[i - 1]
-
-  console.log(`Writing ${OUTPUT}...`)
 
   const headerSize = 8
   const nodesSize = nodeCount * 16
@@ -285,6 +263,41 @@ async function main() {
 
   const sizeMB = (totalSize / 1024 / 1024).toFixed(1)
   console.log(`Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`)
+}
+
+async function main() {
+  console.log("Collecting bikeable ways and all nodes within bbox...")
+  const nodeCoords = new Map<number, { lat: number; lon: number }>()
+  const bikeableWays: BikeableWay[] = []
+
+  await parseOsmData(nodeCoords, bikeableWays)
+
+  console.log(
+    `  ${nodeCoords.size} nodes in bbox, ${bikeableWays.length} bikeable ways`
+  )
+
+  console.log("Building graph...")
+  const { usedNodeIds, validWays } = filterValidWays(bikeableWays, nodeCoords)
+
+  console.log(
+    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
+  )
+
+  const nodeIdToIdx = new Map<number, number>()
+  const nodeList: { lat: number; lon: number }[] = []
+
+  for (const id of usedNodeIds) {
+    const coord = nodeCoords.get(id)
+    if (!coord) continue
+    nodeIdToIdx.set(id, nodeList.length)
+    nodeList.push(coord)
+  }
+
+  const edges = buildEdges(validWays, nodeIdToIdx, nodeList)
+  console.log(`  ${edges.length} directed edges`)
+
+  console.log(`Writing ${OUTPUT}...`)
+  writeBinaryGraph(nodeList, edges)
 }
 
 main().catch((err) => {

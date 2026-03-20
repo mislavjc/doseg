@@ -25,34 +25,10 @@ type Point = [number, number]
 type Ring = Point[]
 type PolygonRings = Ring[]
 
-interface DistrictScore {
-  name: string
-  osmId: number
-  population?: number
-  sampleCount: number
-  avgReachableCells: number
-  bajsAvgReachableCells?: number
-  bajsBoostPct?: number
-  bajsStations?: number
-  rank: number
-  score: number
-  bestPoint: { lat: number; lon: number }
-  tramLines: string[]
-  busLines: string[]
-  stops: number
-  avgHeadwayMin: number
-}
-
-interface ScoreData {
-  generatedAt: string
-  departureTime: string
-  gridSpacingM: number
-  maxMinutes: number
-  totalSamplePoints: number
-  totalGridCells: number
-  bajsTotalStations?: number
-  districts: DistrictScore[]
-}
+import type {
+  District as DistrictScore,
+  DistrictScoresOutput as ScoreData,
+} from "../lib/generated"
 
 interface DistrictProperties {
   name?: string
@@ -207,10 +183,9 @@ function geometryToPath(
     .join("")
 }
 
-function geometryToEmblemPath(
-  geometry: GeoJSON.Geometry | null,
-  size: number = EMBLEM_SIZE
-): string {
+function collectEmblemRings(
+  geometry: GeoJSON.Geometry | null
+): { rawRings: Ring[]; minLat: number; maxLat: number } {
   const rawRings: Ring[] = []
   let minLat = Infinity
   let maxLat = -Infinity
@@ -226,8 +201,10 @@ function geometryToEmblemPath(
     }
   }
 
-  if (rawRings.length === 0) return ""
+  return { rawRings, minLat, maxLat }
+}
 
+function projectEmblemRings(rawRings: Ring[], minLat: number, maxLat: number) {
   const midLat = (minLat + maxLat) / 2
   const lonFactor = Math.cos((midLat * Math.PI) / 180)
   let minX = Infinity
@@ -244,6 +221,22 @@ function geometryToEmblemPath(
       maxY = Math.max(maxY, point[1])
       return point
     })
+  )
+
+  return { projectedRings, minX, maxX, minY, maxY }
+}
+
+function geometryToEmblemPath(
+  geometry: GeoJSON.Geometry | null,
+  size: number = EMBLEM_SIZE
+): string {
+  const { rawRings, minLat, maxLat } = collectEmblemRings(geometry)
+  if (rawRings.length === 0) return ""
+
+  const { projectedRings, minX, maxX, minY, maxY } = projectEmblemRings(
+    rawRings,
+    minLat,
+    maxLat
   )
 
   const innerSize = size - EMBLEM_PADDING * 2

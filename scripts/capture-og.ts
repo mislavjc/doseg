@@ -11,20 +11,9 @@ const OUTPUT = "public/og.png"
 const W = 1200
 const H = 630
 
-async function main() {
-  const browser = await chromium.launch({
-    args: [
-      "--use-gl=angle",
-      "--use-angle=metal",
-      "--enable-webgl",
-      "--ignore-gpu-blocklist",
-    ],
-  })
-
-  // ── Step 1: capture the live map with a route ──
+async function captureMapScreenshot(browser: import("playwright").Browser) {
   const map = await browser.newPage({ viewport: { width: W, height: H } })
 
-  // Skip onboarding dialog
   await map.goto("http://doseg.localhost:1355", {
     waitUntil: "domcontentloaded",
   })
@@ -46,7 +35,6 @@ async function main() {
     .catch(() => {})
   await map.waitForTimeout(800)
 
-  // Hide dev-overlay & about link only
   await map.evaluate(() => {
     for (const el of document.querySelectorAll(
       "nextjs-portal, a[href='/o-projektu']"
@@ -55,50 +43,11 @@ async function main() {
     }
   })
 
-  const raw = await map.screenshot({ type: "png" })
-  console.log("3/4  Composing final image...")
+  return map.screenshot({ type: "png" })
+}
 
-  // ── Step 2: compose tilted product shot ──
-  const comp = await browser.newPage({ viewport: { width: W, height: H } })
-  const b64 = raw.toString("base64")
-
-  await comp.setContent(`<!DOCTYPE html>
-<html><head>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-<style>* { margin:0; padding:0; box-sizing:border-box; }</style>
-</head>
-<body style="
-  width:${W}px; height:${H}px;
-  background:#08080f;
-  overflow:hidden;
-  perspective:2200px;
-  display:flex; align-items:center; justify-content:center;
-  font-family:Inter,-apple-system,sans-serif;
-">
-  <!-- subtle color glow behind card -->
-  <div style="
-    position:fixed; z-index:0;
-    width:700px; height:450px; left:250px; top:90px;
-    background:radial-gradient(ellipse, rgba(22,163,106,0.13) 0%, rgba(8,145,178,0.05) 40%, transparent 75%);
-    filter:blur(50px);
-  "></div>
-
-  <!-- tilted map screenshot -->
-  <img
-    src="data:image/png;base64,${b64}"
-    width="${W}" height="${H}"
-    style="
-      position:relative; z-index:1;
-      transform: rotateY(-4.5deg) rotateX(2.5deg) scale(0.84);
-      border-radius:14px;
-      box-shadow:
-        0 40px 100px rgba(0,0,0,0.55),
-        0 0 0 1px rgba(255,255,255,0.07);
-    "
-  />
-
-  <!-- branding: bottom right -->
-  <div style="
+function brandingHtml(): string {
+  return `<div style="
     position:fixed; z-index:2;
     bottom:28px; right:40px;
     text-align:right;
@@ -117,8 +66,62 @@ async function main() {
       margin-top:10px; margin-left:auto;
       background:linear-gradient(to right,#16a34a,#0891b2,#2563eb,#9333ea);
     "></div>
-  </div>
-</body></html>`)
+  </div>`
+}
+
+function compositeHtml(b64: string): string {
+  return `<!DOCTYPE html>
+<html><head>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>* { margin:0; padding:0; box-sizing:border-box; }</style>
+</head>
+<body style="
+  width:${W}px; height:${H}px;
+  background:#08080f;
+  overflow:hidden;
+  perspective:2200px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:Inter,-apple-system,sans-serif;
+">
+  <div style="
+    position:fixed; z-index:0;
+    width:700px; height:450px; left:250px; top:90px;
+    background:radial-gradient(ellipse, rgba(22,163,106,0.13) 0%, rgba(8,145,178,0.05) 40%, transparent 75%);
+    filter:blur(50px);
+  "></div>
+  <img
+    src="data:image/png;base64,${b64}"
+    width="${W}" height="${H}"
+    style="
+      position:relative; z-index:1;
+      transform: rotateY(-4.5deg) rotateX(2.5deg) scale(0.84);
+      border-radius:14px;
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(255,255,255,0.07);
+    "
+  />
+  ${brandingHtml()}
+</body></html>`
+}
+
+async function main() {
+  const browser = await chromium.launch({
+    args: [
+      "--use-gl=angle",
+      "--use-angle=metal",
+      "--enable-webgl",
+      "--ignore-gpu-blocklist",
+    ],
+  })
+
+  const raw = await captureMapScreenshot(browser)
+  console.log("3/4  Composing final image...")
+
+  const comp = await browser.newPage({ viewport: { width: W, height: H } })
+  const b64 = raw.toString("base64")
+
+  await comp.setContent(compositeHtml(b64))
 
   await comp
     .waitForFunction(() => document.fonts.ready.then(() => true), {

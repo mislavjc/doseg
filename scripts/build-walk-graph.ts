@@ -13,6 +13,7 @@
  */
 
 import { createReadStream, readFileSync, writeFileSync } from "fs"
+import type { OsmItem, Edge } from "./shared-types"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const createParser = require("osm-pbf-parser")
@@ -49,11 +50,7 @@ const WALKABLE_HIGHWAYS = new Set([
   "service",
 ])
 
-import {
-  KM_PER_DEG_LAT,
-  KM_PER_DEG_LON,
-  fastDistKm as distKm,
-} from "../lib/geo"
+import { fastDistKm as distKm } from "../lib/geo"
 
 // --- SRTM elevation data ---
 
@@ -105,21 +102,11 @@ function toblerFactor(slope: number): number {
   return Math.exp(-3.5 * (Math.abs(slope + 0.05) - 0.05))
 }
 
-interface OsmItem {
-  type: "node" | "way" | "relation"
-  id: number
-  lat?: number
-  lon?: number
-  tags?: Record<string, string>
-  refs?: number[]
-}
-
-async function main() {
-  console.log("Collecting walkable ways and all nodes within bbox...")
-  const nodeCoords = new Map<number, { lat: number; lon: number }>()
-  const walkableWays: { refs: number[] }[] = []
-
-  await new Promise<void>((resolve, reject) => {
+function parseOsmData(
+  nodeCoords: Map<number, { lat: number; lon: number }>,
+  walkableWays: { refs: number[] }[]
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
     createReadStream(INPUT)
       .pipe(createParser())
       .pipe(
@@ -150,28 +137,22 @@ async function main() {
       .on("finish", resolve)
       .on("error", reject)
   })
+}
 
-  console.log(
-    `  ${nodeCoords.size} nodes in bbox, ${walkableWays.length} walkable ways`
-  )
-
-  // Build adjacency list
-  // Only include ways where ALL referenced nodes are in our bbox node set
-  console.log("Building graph...")
-
-  // Assign compact indices to nodes that are actually used by walkable ways
+function filterValidWays(
+  walkableWays: { refs: number[] }[],
+  nodeCoords: Map<number, { lat: number; lon: number }>
+): { usedNodeIds: Set<number>; validWays: number[][] } {
   const usedNodeIds = new Set<number>()
   const validWays: number[][] = []
 
   for (const way of walkableWays) {
-    // Check that at least some consecutive pair of nodes are both in bbox
     const validRefs: number[] = []
     for (const ref of way.refs) {
       if (nodeCoords.has(ref)) {
         validRefs.push(ref)
         usedNodeIds.add(ref)
       } else {
-        // Break the way at nodes outside bbox
         if (validRefs.length >= 2) {
           validWays.push([...validRefs])
         }
@@ -183,35 +164,18 @@ async function main() {
     }
   }
 
-  console.log(
-    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
-  )
+  return { usedNodeIds, validWays }
+}
 
-  // Assign compact indices
-  const nodeIdToIdx = new Map<number, number>()
-  const nodeList: { lat: number; lon: number }[] = []
 
-  for (const id of usedNodeIds) {
-    const coord = nodeCoords.get(id)!
-    nodeIdToIdx.set(id, nodeList.length)
-    nodeList.push(coord)
-  }
-
-  // Load SRTM elevation data
-  console.log("Loading SRTM elevation data...")
-  const srtmTiles = loadSRTMTiles()
-  const hasElevation = srtmTiles.size > 0
-  if (hasElevation) {
-    console.log(`  ${srtmTiles.size} tiles loaded`)
-  }
-
-  // Build edge list (bidirectional, elevation-adjusted)
-  interface Edge {
-    from: number
-    to: number
-    distCm: number
-  }
+function buildEdges(
+  validWays: number[][],
+  nodeIdToIdx: Map<number, number>,
+  nodeList: { lat: number; lon: number }[],
+  srtmTiles: Map<string, Int16Array>
+): Edge[] {
   const edges: Edge[] = []
+  const hasElevation = srtmTiles.size > 0
 
   for (const refs of validWays) {
     for (let i = 0; i < refs.length - 1; i++) {
@@ -222,20 +186,17 @@ async function main() {
       const d = distKm(fromCoord.lat, fromCoord.lon, toCoord.lat, toCoord.lon)
 
       if (!hasElevation || d < 0.01) {
-        // No elevation data or edge too short (<10m) for reliable gradient
         const distCm = Math.round(d * 100000)
         edges.push({ from: fromIdx, to: toIdx, distCm })
         edges.push({ from: toIdx, to: fromIdx, distCm })
       } else {
         const elevFrom = getElevation(fromCoord.lat, fromCoord.lon, srtmTiles)
         const elevTo = getElevation(toCoord.lat, toCoord.lon, srtmTiles)
-        const rise = elevTo - elevFrom // meters
-        const run = d * 1000 // km to meters
+        const rise = elevTo - elevFrom
+        const run = d * 1000
         const slope = rise / run
 
-        // Forward (from→to): equivalent flat distance accounting for terrain
         const fwd = Math.round((d / toblerFactor(slope)) * 100000)
-        // Reverse (to→from): opposite slope
         const rev = Math.round((d / toblerFactor(-slope)) * 100000)
 
         edges.push({ from: fromIdx, to: toIdx, distCm: fwd })
@@ -244,12 +205,15 @@ async function main() {
     }
   }
 
-  console.log(`  ${edges.length} directed edges`)
+  return edges
+}
 
-  // Sort edges by fromIdx for CSR format
+function writeBinaryGraph(
+  nodeList: { lat: number; lon: number }[],
+  edges: Edge[]
+) {
   edges.sort((a, b) => a.from - b.from)
 
-  // Build CSR offsets
   const nodeCount = nodeList.length
   const edgeCount = edges.length
   const offsets = new Uint32Array(nodeCount + 1)
@@ -261,9 +225,6 @@ async function main() {
     offsets[i] += offsets[i - 1]
   }
 
-  // Write binary file
-  console.log(`Writing ${OUTPUT}...`)
-
   const headerSize = 8
   const nodesSize = nodeCount * 16
   const offsetsSize = (nodeCount + 1) * 4
@@ -274,13 +235,11 @@ async function main() {
   const view = new DataView(buffer.buffer)
   let pos = 0
 
-  // Header
   view.setUint32(pos, nodeCount, true)
   pos += 4
   view.setUint32(pos, edgeCount, true)
   pos += 4
 
-  // Nodes
   for (const node of nodeList) {
     view.setFloat64(pos, node.lat, true)
     pos += 8
@@ -288,13 +247,11 @@ async function main() {
     pos += 8
   }
 
-  // CSR offsets
   for (let i = 0; i <= nodeCount; i++) {
     view.setUint32(pos, offsets[i], true)
     pos += 4
   }
 
-  // Edges
   for (const e of edges) {
     view.setUint32(pos, e.to, true)
     pos += 4
@@ -306,6 +263,46 @@ async function main() {
 
   const sizeMB = (totalSize / 1024 / 1024).toFixed(1)
   console.log(`Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`)
+}
+
+async function main() {
+  console.log("Collecting walkable ways and all nodes within bbox...")
+  const nodeCoords = new Map<number, { lat: number; lon: number }>()
+  const walkableWays: { refs: number[] }[] = []
+
+  await parseOsmData(nodeCoords, walkableWays)
+
+  console.log(
+    `  ${nodeCoords.size} nodes in bbox, ${walkableWays.length} walkable ways`
+  )
+
+  console.log("Building graph...")
+  const { usedNodeIds, validWays } = filterValidWays(walkableWays, nodeCoords)
+
+  console.log(
+    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
+  )
+
+  const nodeIdToIdx = new Map<number, number>()
+  const nodeList: { lat: number; lon: number }[] = []
+
+  for (const id of usedNodeIds) {
+    const coord = nodeCoords.get(id)!
+    nodeIdToIdx.set(id, nodeList.length)
+    nodeList.push(coord)
+  }
+
+  console.log("Loading SRTM elevation data...")
+  const srtmTiles = loadSRTMTiles()
+  if (srtmTiles.size > 0) {
+    console.log(`  ${srtmTiles.size} tiles loaded`)
+  }
+
+  const edges = buildEdges(validWays, nodeIdToIdx, nodeList, srtmTiles)
+  console.log(`  ${edges.length} directed edges`)
+
+  console.log(`Writing ${OUTPUT}...`)
+  writeBinaryGraph(nodeList, edges)
 }
 
 main().catch((err) => {

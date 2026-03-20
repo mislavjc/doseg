@@ -25,3 +25,5 @@ jobs:
           workspaces: transit
       - run: cargo clippy --manifest-path transit/Cargo.toml -- -D warnings
       - run: cargo fmt --manifest-path transit/Cargo.toml -- --check
+      - run: cargo install cargo-audit --quiet
+      - run: cargo audit --file transit/Cargo.lock

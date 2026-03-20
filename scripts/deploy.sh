@@ -39,6 +39,10 @@ fi
 
 cd "$APP_DIR"
 
+# Run server hardening (idempotent)
+echo "==> Running server hardening..."
+bash "$APP_DIR/server/harden.sh"
+
 # Write .env
 echo "DOMAIN=$DOMAIN" > .env
 

@@ -103,8 +103,17 @@ impl RtDb {
 
         let write_stops = ts % 300 == 0;
 
-        if let Err(e) = self.ingest_inner(ts, snap, write_stops) {
-            eprintln!("RT DB: ingest error: {}", e);
+        match self.ingest_inner(ts, snap, write_stops) {
+            Ok(()) => {
+                if self.last_written_ts <= ts + 300 {
+                    eprintln!(
+                        "RT DB: wrote ts={} routes={}",
+                        ts,
+                        snap.trips.iter().filter(|t| !t.route_id.is_empty()).count()
+                    );
+                }
+            }
+            Err(e) => eprintln!("RT DB: ingest error: {}", e),
         }
     }
 
@@ -699,6 +708,14 @@ pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Rec
         let mut ingest_count = 0u64;
 
         for snapshot in rx.iter() {
+            if ingest_count < 5 {
+                eprintln!(
+                    "RT DB: received snapshot ts={} trips={} alerts={}",
+                    snapshot.timestamp,
+                    snapshot.trips.len(),
+                    snapshot.alerts.len()
+                );
+            }
             db.ingest(&snapshot);
             ingest_count += 1;
 

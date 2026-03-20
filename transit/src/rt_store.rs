@@ -301,6 +301,251 @@ pub fn open_reader(path: &Path) -> rusqlite::Result<Connection> {
     Ok(conn)
 }
 
+// --- Query functions for API endpoints ---
+
+use serde::Serialize;
+
+#[derive(Serialize)]
+pub struct HistoryPoint {
+    pub ts: i64,
+    #[serde(rename = "avgDelay")]
+    pub avg_delay: f64,
+    #[serde(rename = "maxDelay")]
+    pub max_delay: i32,
+    #[serde(rename = "onTimePct")]
+    pub on_time_pct: f64,
+    #[serde(rename = "tripCount")]
+    pub trip_count: i32,
+}
+
+#[derive(Serialize)]
+pub struct HistoryResponse {
+    pub route: String,
+    pub from: i64,
+    pub to: i64,
+    pub points: Vec<HistoryPoint>,
+}
+
+#[derive(Serialize)]
+pub struct StopDelay {
+    pub seq: i32,
+    pub delay: i32,
+}
+
+#[derive(Serialize)]
+pub struct TripStops {
+    #[serde(rename = "tripId")]
+    pub trip_id: String,
+    pub stops: Vec<StopDelay>,
+}
+
+#[derive(Serialize)]
+pub struct StopsResponse {
+    pub route: String,
+    pub ts: i64,
+    pub trips: Vec<TripStops>,
+}
+
+#[derive(Serialize)]
+pub struct AlertRecord {
+    #[serde(rename = "firstSeen")]
+    pub first_seen: i64,
+    pub cause: String,
+    pub effect: String,
+    pub header: Option<String>,
+    pub description: Option<String>,
+    #[serde(rename = "routeIds")]
+    pub route_ids: Vec<String>,
+}
+
+#[derive(Serialize)]
+pub struct AlertsResponse {
+    pub alerts: Vec<AlertRecord>,
+}
+
+#[derive(Serialize)]
+pub struct SummaryResponse {
+    #[serde(rename = "snapshotCount")]
+    pub snapshot_count: i64,
+    #[serde(rename = "routeCount")]
+    pub route_count: i64,
+    #[serde(rename = "firstTs")]
+    pub first_ts: Option<i64>,
+    #[serde(rename = "lastTs")]
+    pub last_ts: Option<i64>,
+    #[serde(rename = "alertCount")]
+    pub alert_count: i64,
+}
+
+pub fn query_history(
+    conn: &Connection,
+    route: &str,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<HistoryResponse> {
+    // Try raw snapshots first, fall back to hourly_agg for old data
+    let mut points = Vec::new();
+
+    let mut stmt = conn.prepare_cached(
+        "SELECT ts, avg_delay, max_delay, on_time_pct, trip_count
+         FROM snapshots WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
+         ORDER BY ts",
+    )?;
+    let rows = stmt.query_map(params![route, from, to], |row| {
+        Ok(HistoryPoint {
+            ts: row.get(0)?,
+            avg_delay: row.get(1)?,
+            max_delay: row.get(2)?,
+            on_time_pct: row.get(3)?,
+            trip_count: row.get(4)?,
+        })
+    })?;
+    for row in rows {
+        points.push(row?);
+    }
+
+    // Also check hourly_agg for data that's been compacted
+    let mut stmt = conn.prepare_cached(
+        "SELECT hour_ts, avg_delay, max_delay, on_time_pct, samples
+         FROM hourly_agg WHERE route_id = ?1 AND hour_ts >= ?2 AND hour_ts < ?3
+         ORDER BY hour_ts",
+    )?;
+    let rows = stmt.query_map(params![route, from, to], |row| {
+        Ok(HistoryPoint {
+            ts: row.get(0)?,
+            avg_delay: row.get(1)?,
+            max_delay: row.get(2)?,
+            on_time_pct: row.get(3)?,
+            trip_count: row.get(4)?,
+        })
+    })?;
+    for row in rows {
+        points.push(row?);
+    }
+
+    // Sort by timestamp (mix of raw + compacted)
+    points.sort_by_key(|p| p.ts);
+
+    Ok(HistoryResponse {
+        route: route.to_string(),
+        from,
+        to,
+        points,
+    })
+}
+
+pub fn query_stops(
+    conn: &Connection,
+    route: &str,
+    ts: i64,
+) -> rusqlite::Result<StopsResponse> {
+    // Find the nearest 5-min boundary
+    let snap_ts = (ts / 300) * 300;
+
+    let mut stmt = conn.prepare_cached(
+        "SELECT trip_id, stop_sequence, delay
+         FROM stop_delays WHERE route_id = ?1 AND ts = ?2
+         ORDER BY trip_id, stop_sequence",
+    )?;
+
+    let mut trips: Vec<TripStops> = Vec::new();
+    let mut current_trip: Option<TripStops> = None;
+
+    let rows = stmt.query_map(params![route, snap_ts], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, i32>(1)?,
+            row.get::<_, i32>(2)?,
+        ))
+    })?;
+
+    for row in rows {
+        let (trip_id, seq, delay) = row?;
+        match current_trip {
+            Some(ref mut t) if t.trip_id == trip_id => {
+                t.stops.push(StopDelay { seq, delay });
+            }
+            _ => {
+                if let Some(t) = current_trip.take() {
+                    trips.push(t);
+                }
+                current_trip = Some(TripStops {
+                    trip_id,
+                    stops: vec![StopDelay { seq, delay }],
+                });
+            }
+        }
+    }
+    if let Some(t) = current_trip {
+        trips.push(t);
+    }
+
+    Ok(StopsResponse {
+        route: route.to_string(),
+        ts: snap_ts,
+        trips,
+    })
+}
+
+pub fn query_alerts(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<AlertsResponse> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT first_seen, cause, effect, header, description, route_ids
+         FROM alerts WHERE first_seen >= ?1 AND first_seen < ?2
+         ORDER BY first_seen DESC",
+    )?;
+
+    let mut alerts = Vec::new();
+    let rows = stmt.query_map(params![from, to], |row| {
+        let route_ids_str: String = row.get::<_, Option<String>>(5)?.unwrap_or_default();
+        Ok(AlertRecord {
+            first_seen: row.get(0)?,
+            cause: row.get(1)?,
+            effect: row.get(2)?,
+            header: row.get(3)?,
+            description: row.get(4)?,
+            route_ids: route_ids_str
+                .split(',')
+                .filter(|s| !s.is_empty())
+                .map(String::from)
+                .collect(),
+        })
+    })?;
+
+    for row in rows {
+        alerts.push(row?);
+    }
+
+    Ok(AlertsResponse { alerts })
+}
+
+pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
+    let snapshot_count: i64 =
+        conn.query_row("SELECT COUNT(*) FROM snapshots", [], |r| r.get(0))?;
+    let route_count: i64 = conn.query_row(
+        "SELECT COUNT(DISTINCT route_id) FROM snapshots",
+        [],
+        |r| r.get(0),
+    )?;
+    let first_ts: Option<i64> =
+        conn.query_row("SELECT MIN(ts) FROM snapshots", [], |r| r.get(0))?;
+    let last_ts: Option<i64> =
+        conn.query_row("SELECT MAX(ts) FROM snapshots", [], |r| r.get(0))?;
+    let alert_count: i64 =
+        conn.query_row("SELECT COUNT(*) FROM alerts", [], |r| r.get(0))?;
+
+    Ok(SummaryResponse {
+        snapshot_count,
+        route_count,
+        first_ts,
+        last_ts,
+        alert_count,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

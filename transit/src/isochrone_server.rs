@@ -70,6 +70,8 @@ struct AppState {
     pattern_geometries: Vec<Vec<[f64; 2]>>,
     /// Pre-built BAJS adjacency for the idealized stations
     bajs_adjacency: Option<BajsAdjacency>,
+    /// Read-only SQLite connection for RT history queries
+    rt_db_reader: Option<tokio::sync::Mutex<rusqlite::Connection>>,
 }
 
 // --- BAJS adjacency (string-keyed, matching TS interactive Dijkstra) ---
@@ -1145,6 +1147,182 @@ async fn handle_health(State(state): State<Arc<AppState>>) -> Response {
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
+// --- RT history API handlers ---
+
+#[derive(Deserialize)]
+struct RtHistoryParams {
+    route: String,
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+async fn handle_rt_history(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<RtHistoryParams>,
+) -> Response {
+    let db = match &state.rt_db_reader {
+        Some(db) => db,
+        None => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                [(header::CONTENT_TYPE, "application/json")],
+                r#"{"error":"RT database not available"}"#.to_string(),
+            )
+                .into_response()
+        }
+    };
+
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 86400); // default: last 24h
+
+    let conn = db.lock().await;
+    let result = rt_store::query_history(&conn, &params.route, from, to);
+    drop(conn);
+
+    match result {
+        Ok(resp) => (
+            [(header::CONTENT_TYPE, "application/json"),
+             (header::CACHE_CONTROL, "public, max-age=60")],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
+#[derive(Deserialize)]
+struct RtStopsParams {
+    route: String,
+    ts: i64,
+}
+
+async fn handle_rt_stops(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<RtStopsParams>,
+) -> Response {
+    let db = match &state.rt_db_reader {
+        Some(db) => db,
+        None => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                [(header::CONTENT_TYPE, "application/json")],
+                r#"{"error":"RT database not available"}"#.to_string(),
+            )
+                .into_response()
+        }
+    };
+
+    let conn = db.lock().await;
+    let result = rt_store::query_stops(&conn, &params.route, params.ts);
+    drop(conn);
+
+    match result {
+        Ok(resp) => (
+            [(header::CONTENT_TYPE, "application/json"),
+             (header::CACHE_CONTROL, "public, max-age=300")],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
+#[derive(Deserialize)]
+struct RtAlertsParams {
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+async fn handle_rt_alerts(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<RtAlertsParams>,
+) -> Response {
+    let db = match &state.rt_db_reader {
+        Some(db) => db,
+        None => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                [(header::CONTENT_TYPE, "application/json")],
+                r#"{"error":"RT database not available"}"#.to_string(),
+            )
+                .into_response()
+        }
+    };
+
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 7 * 86400); // default: last 7 days
+
+    let conn = db.lock().await;
+    let result = rt_store::query_alerts(&conn, from, to);
+    drop(conn);
+
+    match result {
+        Ok(resp) => (
+            [(header::CONTENT_TYPE, "application/json"),
+             (header::CACHE_CONTROL, "public, max-age=60")],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
+async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
+    let db = match &state.rt_db_reader {
+        Some(db) => db,
+        None => {
+            return (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                [(header::CONTENT_TYPE, "application/json")],
+                r#"{"error":"RT database not available"}"#.to_string(),
+            )
+                .into_response()
+        }
+    };
+
+    let conn = db.lock().await;
+    let result = rt_store::query_summary(&conn);
+    drop(conn);
+
+    match result {
+        Ok(resp) => (
+            [(header::CONTENT_TYPE, "application/json"),
+             (header::CACHE_CONTROL, "public, max-age=30")],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".to_string());
@@ -1212,10 +1390,18 @@ async fn main() {
     let rt_db_dir = std::env::var("RT_DB_DIR").unwrap_or_else(|_| data_dir.clone());
     let db_path = std::path::Path::new(&rt_db_dir).join("gtfs-rt.db");
     let (db_tx, db_rx) = std::sync::mpsc::sync_channel::<gtfs_rt::RtSnapshot>(4);
-    rt_store::spawn_writer_thread(db_path, db_rx);
+    rt_store::spawn_writer_thread(db_path.clone(), db_rx);
 
     gtfs_rt::spawn_refresh_task(rt_store.clone(), rt_last_refresh.clone(), Some(db_tx));
     println!("GTFS-RT background refresh started (30s interval, persisting to SQLite)");
+
+    // Open read-only DB connection for API queries (may fail on first startup)
+    let rt_db_reader = rt_store::open_reader(&db_path)
+        .map(|conn| {
+            println!("RT DB: reader connection opened");
+            tokio::sync::Mutex::new(conn)
+        })
+        .ok();
 
     let state = Arc::new(AppState {
         transit_graph,
@@ -1225,11 +1411,16 @@ async fn main() {
         rt_last_refresh,
         pattern_geometries,
         bajs_adjacency,
+        rt_db_reader,
     });
 
     let app = Router::new()
         .route("/api/isochrone", get(handle_isochrone))
         .route("/isochrone", get(handle_isochrone))
+        .route("/api/rt/history", get(handle_rt_history))
+        .route("/api/rt/stops", get(handle_rt_stops))
+        .route("/api/rt/alerts", get(handle_rt_alerts))
+        .route("/api/rt/summary", get(handle_rt_summary))
         .route("/health", get(handle_health))
         .layer(CompressionLayer::new())
         .with_state(state);

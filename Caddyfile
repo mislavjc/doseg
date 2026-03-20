@@ -22,7 +22,7 @@
 	@assets path *.svg *.png *.ico *.webp
 	header @assets Cache-Control "public, max-age=604800"
 
-	@isochrone path /api/isochrone
+	@isochrone path /api/isochrone /api/rt/*
 	reverse_proxy @isochrone isochrone:3001
 
 	reverse_proxy app:3000

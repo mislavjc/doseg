@@ -16,9 +16,18 @@ const REFRESH_INTERVAL: Duration = Duration::from_secs(30);
 
 #[derive(Clone, Message)]
 pub struct FeedMessage {
-    // tag 1: FeedHeader header (skipped)
+    #[prost(message, optional, tag = "1")]
+    pub header: Option<FeedHeader>,
     #[prost(message, repeated, tag = "2")]
     pub entity: Vec<FeedEntity>,
+}
+
+#[derive(Clone, Message)]
+pub struct FeedHeader {
+    #[prost(string, tag = "1")]
+    pub gtfs_realtime_version: String,
+    #[prost(uint64, optional, tag = "2")]
+    pub timestamp: Option<u64>,
 }
 
 #[derive(Clone, Message)]
@@ -30,7 +39,8 @@ pub struct FeedEntity {
     #[prost(message, optional, tag = "3")]
     pub trip_update: Option<TripUpdate>,
     // tag 4: VehiclePosition (skipped via prost unknown field handling)
-    // tag 5: Alert (skipped)
+    #[prost(message, optional, tag = "5")]
+    pub alert: Option<Alert>,
 }
 
 #[derive(Clone, Message)]
@@ -72,6 +82,91 @@ pub struct StopTimeEvent {
     pub delay: Option<i32>,
     #[prost(int32, optional, tag = "3")]
     pub uncertainty: Option<i32>,
+}
+
+#[derive(Clone, Message)]
+pub struct Alert {
+    #[prost(message, repeated, tag = "1")]
+    pub active_period: Vec<TimeRange>,
+    #[prost(message, repeated, tag = "5")]
+    pub informed_entity: Vec<EntitySelector>,
+    #[prost(int32, optional, tag = "6")]
+    pub cause: Option<i32>,
+    #[prost(int32, optional, tag = "7")]
+    pub effect: Option<i32>,
+    #[prost(message, optional, tag = "10")]
+    pub header_text: Option<TranslatedString>,
+    #[prost(message, optional, tag = "11")]
+    pub description_text: Option<TranslatedString>,
+}
+
+#[derive(Clone, Message)]
+pub struct TimeRange {
+    #[prost(uint64, optional, tag = "1")]
+    pub start: Option<u64>,
+    #[prost(uint64, optional, tag = "2")]
+    pub end: Option<u64>,
+}
+
+#[derive(Clone, Message)]
+pub struct EntitySelector {
+    #[prost(string, optional, tag = "1")]
+    pub agency_id: Option<String>,
+    #[prost(string, optional, tag = "2")]
+    pub route_id: Option<String>,
+    #[prost(int32, optional, tag = "3")]
+    pub route_type: Option<i32>,
+    #[prost(message, optional, tag = "4")]
+    pub trip: Option<TripDescriptor>,
+    #[prost(string, optional, tag = "5")]
+    pub stop_id: Option<String>,
+}
+
+#[derive(Clone, Message)]
+pub struct TranslatedString {
+    #[prost(message, repeated, tag = "1")]
+    pub translation: Vec<Translation>,
+}
+
+#[derive(Clone, Message)]
+pub struct Translation {
+    #[prost(string, tag = "1")]
+    pub text: String,
+    #[prost(string, optional, tag = "2")]
+    pub language: Option<String>,
+}
+
+// --- Snapshot types for SQLite persistence ---
+
+pub struct RtSnapshot {
+    pub timestamp: i64,
+    pub trips: Vec<SnapshotTrip>,
+    pub alerts: Vec<SnapshotAlert>,
+}
+
+pub struct SnapshotTrip {
+    pub trip_id: String,
+    pub route_id: String,
+    pub stop_times: Vec<SnapshotStopTime>,
+}
+
+pub struct SnapshotStopTime {
+    pub stop_sequence: u16,
+    pub delay: i32,
+}
+
+pub struct SnapshotAlert {
+    pub cause: String,
+    pub effect: String,
+    pub header: Option<String>,
+    pub description: Option<String>,
+    pub route_ids: Vec<String>,
+    pub stop_ids: Vec<String>,
+}
+
+pub struct FeedParseResult {
+    pub trips: HashMap<String, TripRT>,
+    pub snapshot: RtSnapshot,
 }
 
 // --- Parsed trip RT data ---
@@ -132,8 +227,46 @@ pub fn get_stop_delay(trip: &TripRT, stop_idx: usize) -> i32 {
     delay
 }
 
-/// Fetch and parse the GTFS-RT feed, returning a map of trip_id → TripRT.
-fn fetch_and_parse() -> Option<HashMap<String, TripRT>> {
+/// Strip OTP feed prefix: "1:something" → "something"
+fn strip_prefix(s: &str) -> &str {
+    s.find(':').map_or(s, |i| &s[i + 1..])
+}
+
+fn cause_str(v: i32) -> &'static str {
+    match v {
+        2 => "OTHER_CAUSE",
+        3 => "TECHNICAL_PROBLEM",
+        4 => "STRIKE",
+        5 => "DEMONSTRATION",
+        6 => "ACCIDENT",
+        7 => "HOLIDAY",
+        8 => "WEATHER",
+        9 => "MAINTENANCE",
+        10 => "CONSTRUCTION",
+        11 => "POLICE_ACTIVITY",
+        12 => "MEDICAL_EMERGENCY",
+        _ => "UNKNOWN_CAUSE",
+    }
+}
+
+fn effect_str(v: i32) -> &'static str {
+    match v {
+        1 => "NO_SERVICE",
+        2 => "REDUCED_SERVICE",
+        3 => "SIGNIFICANT_DELAYS",
+        4 => "DETOUR",
+        5 => "ADDITIONAL_SERVICE",
+        6 => "MODIFIED_SERVICE",
+        7 => "OTHER_EFFECT",
+        9 => "STOP_MOVED",
+        10 => "NO_EFFECT",
+        11 => "ACCESSIBILITY_ISSUE",
+        _ => "UNKNOWN_EFFECT",
+    }
+}
+
+/// Fetch and parse the GTFS-RT feed.
+fn fetch_and_parse() -> Option<FeedParseResult> {
     let resp = match ureq::get(ZET_RT_URL).call() {
         Ok(r) => r,
         Err(e) => {
@@ -153,60 +286,147 @@ fn fetch_and_parse() -> Option<HashMap<String, TripRT>> {
             return None;
         }
     };
+
+    let timestamp = feed
+        .header
+        .as_ref()
+        .and_then(|h| h.timestamp)
+        .map(|t| t as i64)
+        .unwrap_or_else(|| {
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs() as i64
+        });
+
     let mut rt = HashMap::new();
+    let mut snapshot_trips = Vec::new();
+    let mut snapshot_alerts = Vec::new();
 
     for entity in &feed.entity {
-        let tu = match &entity.trip_update {
-            Some(tu) => tu,
-            None => continue,
-        };
-        let trip_id = match tu.trip.as_ref().and_then(|t| t.trip_id.as_ref()) {
-            Some(id) => id,
-            None => continue,
-        };
-        if tu.stop_time_update.is_empty() {
-            continue;
+        // Parse trip updates
+        if let Some(tu) = &entity.trip_update {
+            let trip_id = match tu.trip.as_ref().and_then(|t| t.trip_id.as_ref()) {
+                Some(id) => id,
+                None => continue,
+            };
+            if tu.stop_time_update.is_empty() {
+                continue;
+            }
+
+            let mut stop_times: Vec<StopTimeRT> = tu
+                .stop_time_update
+                .iter()
+                .map(|stu| {
+                    let delay = stu
+                        .arrival
+                        .as_ref()
+                        .and_then(|a| a.delay)
+                        .or_else(|| stu.departure.as_ref().and_then(|d| d.delay))
+                        .unwrap_or(0);
+                    StopTimeRT {
+                        stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,
+                        arrival_delay: delay,
+                    }
+                })
+                .collect();
+            stop_times.sort_by_key(|s| s.stop_sequence);
+
+            let raw_id = strip_prefix(trip_id);
+            rt.insert(raw_id.to_string(), TripRT { stop_times });
+
+            // Build snapshot trip
+            let route_id = tu
+                .trip
+                .as_ref()
+                .and_then(|t| t.route_id.as_ref())
+                .map(|r| strip_prefix(r).to_string())
+                .unwrap_or_default();
+
+            snapshot_trips.push(SnapshotTrip {
+                trip_id: raw_id.to_string(),
+                route_id,
+                stop_times: tu
+                    .stop_time_update
+                    .iter()
+                    .map(|stu| {
+                        let delay = stu
+                            .arrival
+                            .as_ref()
+                            .and_then(|a| a.delay)
+                            .or_else(|| stu.departure.as_ref().and_then(|d| d.delay))
+                            .unwrap_or(0);
+                        SnapshotStopTime {
+                            stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,
+                            delay,
+                        }
+                    })
+                    .collect(),
+            });
         }
 
-        let mut stop_times: Vec<StopTimeRT> = tu
-            .stop_time_update
-            .iter()
-            .map(|stu| {
-                let delay = stu
-                    .arrival
-                    .as_ref()
-                    .and_then(|a| a.delay)
-                    .or_else(|| stu.departure.as_ref().and_then(|d| d.delay))
-                    .unwrap_or(0);
-                StopTimeRT {
-                    stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,
-                    arrival_delay: delay,
+        // Parse alerts
+        if let Some(alert) = &entity.alert {
+            let mut route_ids = Vec::new();
+            let mut stop_ids = Vec::new();
+            for ie in &alert.informed_entity {
+                if let Some(ref rid) = ie.route_id {
+                    route_ids.push(strip_prefix(rid).to_string());
                 }
-            })
-            .collect();
-        stop_times.sort_by_key(|s| s.stop_sequence);
+                if let Some(ref sid) = ie.stop_id {
+                    stop_ids.push(strip_prefix(sid).to_string());
+                }
+            }
 
-        // Strip OTP feed prefix: "1:tripId" → "tripId"
-        let raw_id = trip_id
-            .find(':')
-            .map_or(trip_id.as_str(), |i| &trip_id[i + 1..]);
-        rt.insert(raw_id.to_string(), TripRT { stop_times });
+            snapshot_alerts.push(SnapshotAlert {
+                cause: cause_str(alert.cause.unwrap_or(1)).to_string(),
+                effect: effect_str(alert.effect.unwrap_or(8)).to_string(),
+                header: alert
+                    .header_text
+                    .as_ref()
+                    .and_then(|t| t.translation.first())
+                    .map(|t| t.text.clone()),
+                description: alert
+                    .description_text
+                    .as_ref()
+                    .and_then(|t| t.translation.first())
+                    .map(|t| t.text.clone()),
+                route_ids,
+                stop_ids,
+            });
+        }
     }
 
-    Some(rt)
+    Some(FeedParseResult {
+        trips: rt,
+        snapshot: RtSnapshot {
+            timestamp,
+            trips: snapshot_trips,
+            alerts: snapshot_alerts,
+        },
+    })
 }
 
 /// Spawn a background task that refreshes RT data every 30 seconds.
-pub fn spawn_refresh_task(store: RtStore, last_refresh: RtLastRefresh) {
+/// If `db_tx` is provided, snapshots are sent to the SQLite writer thread.
+pub fn spawn_refresh_task(
+    store: RtStore,
+    last_refresh: RtLastRefresh,
+    db_tx: Option<std::sync::mpsc::SyncSender<RtSnapshot>>,
+) {
     tokio::spawn(async move {
         loop {
             let result = tokio::task::spawn_blocking(fetch_and_parse).await;
             match result {
-                Ok(Some(data)) => {
-                    let count = data.len();
-                    *store.write().unwrap() = data;
+                Ok(Some(feed_result)) => {
+                    let count = feed_result.trips.len();
+                    *store.write().unwrap() = feed_result.trips;
                     *last_refresh.write().unwrap() = Some(Instant::now());
                     eprintln!("GTFS-RT: refreshed {} trip updates", count);
+
+                    if let Some(ref tx) = db_tx {
+                        let _ = tx.try_send(feed_result.snapshot);
+                    }
                 }
                 Ok(None) => {
                     // Error already logged in fetch_and_parse

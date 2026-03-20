@@ -5,6 +5,8 @@ mod geo;
 mod gtfs_rt;
 mod heap;
 #[allow(dead_code)]
+mod rt_store;
+#[allow(dead_code)]
 mod osm;
 mod otp;
 #[allow(dead_code)]
@@ -1203,11 +1205,17 @@ async fn main() {
         );
     }
 
-    // Start GTFS-RT background refresh
+    // Start GTFS-RT background refresh + SQLite persistence
     let rt_store = gtfs_rt::new_rt_store();
     let rt_last_refresh = gtfs_rt::new_rt_last_refresh();
-    gtfs_rt::spawn_refresh_task(rt_store.clone(), rt_last_refresh.clone());
-    println!("GTFS-RT background refresh started (30s interval)");
+
+    let rt_db_dir = std::env::var("RT_DB_DIR").unwrap_or_else(|_| data_dir.clone());
+    let db_path = std::path::Path::new(&rt_db_dir).join("gtfs-rt.db");
+    let (db_tx, db_rx) = std::sync::mpsc::sync_channel::<gtfs_rt::RtSnapshot>(4);
+    rt_store::spawn_writer_thread(db_path, db_rx);
+
+    gtfs_rt::spawn_refresh_task(rt_store.clone(), rt_last_refresh.clone(), Some(db_tx));
+    println!("GTFS-RT background refresh started (30s interval, persisting to SQLite)");
 
     let state = Arc::new(AppState {
         transit_graph,

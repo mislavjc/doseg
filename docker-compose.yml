@@ -24,9 +24,11 @@ services:
     environment:
       - OTP_URL=http://otp:8080
       - DATA_DIR=/app/data
+      - RT_DB_DIR=/app/rt-db
       - PORT=3001
     volumes:
       - ./data:/app/data
+      - rt_db:/app/rt-db
     depends_on:
       otp:
         condition: service_healthy
@@ -98,3 +100,4 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  rt_db:

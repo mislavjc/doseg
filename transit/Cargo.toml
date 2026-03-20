@@ -28,6 +28,10 @@ ts-rs = { version = "10", features = ["serde-compat"] }
 prost = "0.13"
 zip = "2"
 csv = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+[dev-dependencies]
+tempfile = "3"
 
 [profile.release]
 lto = true

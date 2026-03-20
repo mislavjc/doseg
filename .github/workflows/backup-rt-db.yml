@@ -12,32 +12,31 @@ jobs:
       - name: Create backup on server
         uses: appleboy/ssh-action@v1
         with:
-          host: 152.53.46.164
-          username: root
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           command_timeout: 5m
           script: bash /opt/doseg/scripts/backup-rt-db-local.sh
 
-      - name: Download backup from server
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H 152.53.46.164 >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-          DATE=$(date -u +%Y-%m-%d)
-          scp root@152.53.46.164:/opt/doseg-backups/gtfs-rt-${DATE}.db.zst /tmp/gtfs-rt-${DATE}.db.zst
-          ls -lh /tmp/gtfs-rt-${DATE}.db.zst
-
-      - name: Refresh dev data (GTFS + walk graph)
+      - name: Download backup and dev data from server
         run: |
-          scp root@152.53.46.164:/opt/doseg/data/gtfs/zet.zip /tmp/zet.zip
-          scp root@152.53.46.164:/opt/doseg/data/walk-graph.bin /tmp/walk-graph.bin
+          DATE=$(date -u +%Y-%m-%d)
+          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg-backups/gtfs-rt-${DATE}.db.zst /tmp/gtfs-rt-${DATE}.db.zst
+          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg/data/gtfs/zet.zip /tmp/zet.zip
+          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg/data/walk-graph.bin /tmp/walk-graph.bin
+          ls -lh /tmp/gtfs-rt-${DATE}.db.zst /tmp/zet.zip /tmp/walk-graph.bin
 
       - name: Upload to R2
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 4b193c5e8516cbd44815cc1b7ce108c6
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           npm install -g wrangler
           DATE=$(date -u +%Y-%m-%d)

@@ -460,7 +460,7 @@ fn compute_headway(
     Some(total_gap / (filtered.len() - 1) as f64 / 60.0)
 }
 
-fn format_time(seconds: f64) -> String {
+pub fn format_time(seconds: f64) -> String {
     let total = seconds as u32;
     let h = total / 3600;
     let m = (total % 3600) / 60;

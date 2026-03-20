@@ -31,6 +31,7 @@ pub struct NetworkStatsOutput {
     pub fleet: Option<Fleet>,
     pub weekend_service: Option<WeekendService>,
     pub directional_asymmetry: Option<Vec<DirectionalAsymmetryEntry>>,
+    pub service_span: Option<ServiceSpan>,
 }
 
 #[derive(Serialize, TS)]
@@ -145,6 +146,77 @@ pub struct DirectionalAsymmetryEntry {
     pub outbound_trips: usize,
     pub inbound_trips: usize,
     pub ratio: f64,
+}
+
+// ---------------------------------------------------------------------------
+// 1.3 + 1.4 Service span: first/last service + night gap
+// ---------------------------------------------------------------------------
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ServiceSpan {
+    /// System-wide earliest departure (raw, may be post-midnight night owl)
+    pub earliest_departure: String,
+    /// System-wide latest departure (raw, may wrap past 24h)
+    pub latest_departure: String,
+    /// First morning departure (04:00-10:00 range) - "when does the city wake up"
+    pub first_morning_departure: String,
+    /// Last evening departure from origin stops (18:00+) - "when does service end"
+    pub last_evening_departure: String,
+    /// Histogram: when stops get their first service (30-min buckets)
+    pub first_service_histogram: Vec<ServiceBucket>,
+    /// Histogram: when stops lose their last service (30-min buckets)
+    pub last_service_histogram: Vec<ServiceBucket>,
+    /// Per-mode breakdown
+    pub by_mode: Vec<ServiceSpanByMode>,
+    /// Whether any rail departures exist
+    pub has_rail: bool,
+    /// Night service gap analysis
+    pub night_gap: NightGap,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ServiceBucket {
+    /// Bucket label, e.g. "04:30"
+    pub label: String,
+    pub stop_count: usize,
+    pub tram_stops: usize,
+    pub bus_stops: usize,
+    pub rail_stops: usize,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ServiceSpanByMode {
+    pub mode: String,
+    pub earliest_departure: String,
+    pub latest_departure: String,
+    pub routes_before_5am: usize,
+    pub routes_after_midnight: usize,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct NightGap {
+    /// Stops with no service after 22:00
+    pub stops_dark_by_22: usize,
+    /// Stops with no service after 23:00
+    pub stops_dark_by_23: usize,
+    /// Total stops analyzed
+    pub total_stops: usize,
+    /// Percentage of stops dark by 23:00
+    pub pct_dark_by_23: f64,
+    /// Routes with last departure before 22:00
+    pub routes_ending_before_22: Vec<String>,
+    /// Routes with last departure before 23:00
+    pub routes_ending_before_23: Vec<String>,
+    /// Routes running past midnight
+    pub routes_past_midnight: Vec<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -879,6 +951,341 @@ fn compute_weekend_and_direction(parsed: &GtfsParsed) -> WeekendAndDirection {
 }
 
 // ---------------------------------------------------------------------------
+// 1.3 + 1.4 Service span computation
+// ---------------------------------------------------------------------------
+
+fn secs_to_hhmm(secs: f64) -> String {
+    let h = (secs / 3600.0).floor() as u32;
+    let m = ((secs % 3600.0) / 60.0).floor() as u32;
+    // Wrap GTFS 25:xx → 01:xx for display
+    format!("{:02}:{:02}", h % 24, m)
+}
+
+use crate::route_stats::format_time as secs_to_hhmm_raw;
+
+fn compute_service_span(
+    graph: &TransitGraphJson,
+    route_groups: &[(String, RouteGroup)],
+) -> ServiceSpan {
+    // Per-stop: find earliest and latest departure time, and dominant mode
+    #[derive(Clone)]
+    struct StopSpanInfo {
+        earliest: f64,
+        latest: f64,
+        has_tram: bool,
+        has_bus: bool,
+        has_rail: bool,
+    }
+
+    let mut stop_spans: Vec<Option<StopSpanInfo>> = vec![None; graph.stops.len()];
+
+    for (si, stop) in graph.stops.iter().enumerate() {
+        let mut earliest = f64::INFINITY;
+        let mut latest = f64::NEG_INFINITY;
+        let mut has_tram = false;
+        let mut has_bus = false;
+        let mut has_rail = false;
+
+        for sp in &stop.patterns {
+            let pattern = &graph.patterns[sp.pattern_idx];
+            let offset = pattern.stop_offsets[sp.stop_idx];
+
+            match pattern.mode_enum {
+                Mode::Tram => has_tram = true,
+                Mode::Bus | Mode::Other => has_bus = true,
+                Mode::Rail => has_rail = true,
+            }
+
+            if let Some(&first_dep) = pattern.departures.first() {
+                let t = first_dep + offset;
+                if t < earliest {
+                    earliest = t;
+                }
+            }
+            if let Some(&last_dep) = pattern.departures.last() {
+                let t = last_dep + offset;
+                if t > latest {
+                    latest = t;
+                }
+            }
+        }
+
+        if earliest < f64::INFINITY {
+            stop_spans[si] = Some(StopSpanInfo {
+                earliest,
+                latest,
+                has_tram,
+                has_bus,
+                has_rail,
+            });
+        }
+    }
+
+    // System-wide extremes
+    let mut sys_earliest = f64::INFINITY;
+    let mut sys_latest = f64::NEG_INFINITY;
+    for info in stop_spans.iter().flatten() {
+        if info.earliest < sys_earliest {
+            sys_earliest = info.earliest;
+        }
+        if info.latest > sys_latest {
+            sys_latest = info.latest;
+        }
+    }
+
+    // Build first-service histogram (30-min buckets from 03:00 to 08:00)
+    let first_buckets_start: f64 = 3.0 * 3600.0; // 03:00
+    let first_buckets_end: f64 = 8.0 * 3600.0; // 08:00
+    let bucket_size: f64 = 1800.0; // 30 minutes
+    let n_first_buckets =
+        ((first_buckets_end - first_buckets_start) / bucket_size).ceil() as usize;
+    let mut first_hist: Vec<(usize, usize, usize, usize)> = vec![(0, 0, 0, 0); n_first_buckets];
+
+    // Build last-service histogram (30-min buckets from 19:00 to 02:00 next day)
+    let last_buckets_start: f64 = 19.0 * 3600.0;
+    let last_buckets_end: f64 = 26.0 * 3600.0; // 02:00 next day
+    let n_last_buckets = ((last_buckets_end - last_buckets_start) / bucket_size).ceil() as usize;
+    let mut last_hist: Vec<(usize, usize, usize, usize)> = vec![(0, 0, 0, 0); n_last_buckets];
+
+    // Night gap counters
+    let cutoff_22 = 22.0 * 3600.0;
+    let cutoff_23 = 23.0 * 3600.0;
+    let mut dark_by_22 = 0usize;
+    let mut dark_by_23 = 0usize;
+    let mut total_with_service = 0usize;
+
+    for info in stop_spans.iter().flatten() {
+        total_with_service += 1;
+
+        // First service histogram
+        let bucket_idx = if info.earliest < first_buckets_start {
+            0
+        } else if info.earliest >= first_buckets_end {
+            n_first_buckets - 1
+        } else {
+            ((info.earliest - first_buckets_start) / bucket_size).floor() as usize
+        };
+        if bucket_idx < n_first_buckets {
+            first_hist[bucket_idx].0 += 1;
+            if info.has_tram {
+                first_hist[bucket_idx].1 += 1;
+            }
+            if info.has_bus {
+                first_hist[bucket_idx].2 += 1;
+            }
+            if info.has_rail {
+                first_hist[bucket_idx].3 += 1;
+            }
+        }
+
+        // Last service histogram
+        let last_bucket = if info.latest < last_buckets_start {
+            0
+        } else if info.latest >= last_buckets_end {
+            n_last_buckets - 1
+        } else {
+            ((info.latest - last_buckets_start) / bucket_size).floor() as usize
+        };
+        if last_bucket < n_last_buckets {
+            last_hist[last_bucket].0 += 1;
+            if info.has_tram {
+                last_hist[last_bucket].1 += 1;
+            }
+            if info.has_bus {
+                last_hist[last_bucket].2 += 1;
+            }
+            if info.has_rail {
+                last_hist[last_bucket].3 += 1;
+            }
+        }
+
+        // Night gap
+        if info.latest < cutoff_22 {
+            dark_by_22 += 1;
+        }
+        if info.latest < cutoff_23 {
+            dark_by_23 += 1;
+        }
+    }
+
+    // Convert histograms to ServiceBucket
+    let first_service_histogram: Vec<ServiceBucket> = (0..n_first_buckets)
+        .map(|i| {
+            let t = first_buckets_start + i as f64 * bucket_size;
+            ServiceBucket {
+                label: secs_to_hhmm(t),
+                stop_count: first_hist[i].0,
+                tram_stops: first_hist[i].1,
+                bus_stops: first_hist[i].2,
+                rail_stops: first_hist[i].3,
+            }
+        })
+        .collect();
+
+    let last_service_histogram: Vec<ServiceBucket> = (0..n_last_buckets)
+        .map(|i| {
+            let t = last_buckets_start + i as f64 * bucket_size;
+            ServiceBucket {
+                label: secs_to_hhmm(t),
+                stop_count: last_hist[i].0,
+                tram_stops: last_hist[i].1,
+                bus_stops: last_hist[i].2,
+                rail_stops: last_hist[i].3,
+            }
+        })
+        .collect();
+
+    // Per-mode stats - use origin-stop departures with morning/evening windows
+    // (morning_earliest, evening_latest, routes_before_5am, routes_after_midnight)
+    let mut mode_stats: HashMap<String, (f64, f64, usize, usize)> = HashMap::new();
+
+    for (_key, group) in route_groups {
+        let mode_str = &group.mode_str;
+        let mut route_morning = f64::INFINITY;
+        let mut route_evening = f64::NEG_INFINITY;
+
+        for &pi in &group.pattern_indices {
+            let p = &graph.patterns[pi];
+            // Use origin departures only (no offset)
+            for &dep in &p.departures {
+                if dep >= 3.0 * 3600.0 && dep <= 10.0 * 3600.0 && dep < route_morning {
+                    route_morning = dep;
+                }
+                if dep >= 18.0 * 3600.0 && dep <= 25.0 * 3600.0 && dep > route_evening {
+                    route_evening = dep;
+                }
+            }
+        }
+
+        let entry = mode_stats
+            .entry(mode_str.clone())
+            .or_insert((f64::INFINITY, f64::NEG_INFINITY, 0, 0));
+        if route_morning < entry.0 {
+            entry.0 = route_morning;
+        }
+        if route_evening > entry.1 {
+            entry.1 = route_evening;
+        }
+        if route_morning < 5.0 * 3600.0 {
+            entry.2 += 1;
+        }
+        if route_evening > 24.0 * 3600.0 {
+            entry.3 += 1;
+        }
+    }
+
+    let by_mode: Vec<ServiceSpanByMode> = {
+        let mut modes: Vec<_> = mode_stats.into_iter().collect();
+        modes.sort_by_key(|(m, _)| match m.as_str() {
+            "TRAM" => 0,
+            "BUS" => 1,
+            "RAIL" => 2,
+            _ => 3,
+        });
+        modes
+            .into_iter()
+            .map(|(mode, (morning, evening, b5, am))| ServiceSpanByMode {
+                mode,
+                earliest_departure: secs_to_hhmm(morning),
+                latest_departure: secs_to_hhmm(evening),
+                routes_before_5am: b5,
+                routes_after_midnight: am,
+            })
+            .collect()
+    };
+
+    // Routes ending before 22:00, 23:00, or running past midnight
+    let mut routes_before_22: Vec<String> = Vec::new();
+    let mut routes_before_23: Vec<String> = Vec::new();
+    let mut routes_past_midnight: Vec<String> = Vec::new();
+
+    for (key, group) in route_groups {
+        let name = key.split(':').nth(1).unwrap_or(key).to_string();
+        let mut route_latest = f64::NEG_INFINITY;
+
+        for &pi in &group.pattern_indices {
+            let p = &graph.patterns[pi];
+            if let Some(&last) = p.departures.last() {
+                let t = last + p.stop_offsets.last().copied().unwrap_or(0.0);
+                if t > route_latest {
+                    route_latest = t;
+                }
+            }
+        }
+
+        if route_latest < cutoff_22 {
+            routes_before_22.push(name.clone());
+        }
+        if route_latest < cutoff_23 {
+            routes_before_23.push(name.clone());
+        }
+        if route_latest > 24.0 * 3600.0 {
+            routes_past_midnight.push(name.clone());
+        }
+    }
+
+    routes_before_22.sort();
+    routes_before_23.sort();
+    routes_past_midnight.sort();
+
+    let pct_dark = if total_with_service > 0 {
+        round1(dark_by_23 as f64 / total_with_service as f64 * 100.0)
+    } else {
+        0.0
+    };
+
+    // Narrative-friendly morning/evening times: scan origin-stop departures only
+    let mut first_morning = f64::INFINITY; // earliest dep between 03:00-10:00
+    let mut last_evening = f64::NEG_INFINITY; // latest dep between 18:00-24:00
+    let mut any_rail = false;
+
+    for p in &graph.patterns {
+        if p.mode_enum == Mode::Rail && !p.departures.is_empty() {
+            any_rail = true;
+        }
+        // Only look at origin stop departures (offset = 0) for system-wide times
+        for &dep in &p.departures {
+            if dep >= 3.0 * 3600.0 && dep <= 10.0 * 3600.0 && dep < first_morning {
+                first_morning = dep;
+            }
+            // Cap at 25:00 to capture late-night departures up to 01:00 AM
+            // but exclude GTFS post-midnight continuation trips (e.g. 28:45)
+            if dep >= 18.0 * 3600.0 && dep <= 25.0 * 3600.0 && dep > last_evening {
+                last_evening = dep;
+            }
+        }
+    }
+
+    ServiceSpan {
+        earliest_departure: secs_to_hhmm(sys_earliest),
+        latest_departure: secs_to_hhmm_raw(sys_latest),
+        first_morning_departure: if first_morning < f64::INFINITY {
+            secs_to_hhmm(first_morning)
+        } else {
+            secs_to_hhmm(sys_earliest)
+        },
+        last_evening_departure: if last_evening > f64::NEG_INFINITY {
+            secs_to_hhmm(last_evening)
+        } else {
+            secs_to_hhmm(sys_latest)
+        },
+        first_service_histogram,
+        last_service_histogram,
+        by_mode,
+        has_rail: any_rail,
+        night_gap: NightGap {
+            stops_dark_by_22: dark_by_22,
+            stops_dark_by_23: dark_by_23,
+            total_stops: total_with_service,
+            pct_dark_by_23: pct_dark,
+            routes_ending_before_22: routes_before_22,
+            routes_ending_before_23: routes_before_23,
+            routes_past_midnight,
+        },
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------
 
@@ -1031,6 +1438,18 @@ pub fn compute_and_write(
         direction_val = Some(wd.direction);
     }
 
+    // 1.3 + 1.4 Service span (first/last service + night gap)
+    let service_span_val = Some(compute_service_span(graph, &route_groups));
+    if let Some(ref ss) = service_span_val {
+        eprintln!(
+            "  Service span: {} – {}, {} stops dark by 23:00 ({:.0}%)",
+            ss.earliest_departure,
+            ss.latest_departure,
+            ss.night_gap.stops_dark_by_23,
+            ss.night_gap.pct_dark_by_23,
+        );
+    }
+
     // Build output
     let output = NetworkStatsOutput {
         generated_at: crate::chrono_now_iso(),
@@ -1045,6 +1464,7 @@ pub fn compute_and_write(
         fleet: fleet_val,
         weekend_service: weekend_val,
         directional_asymmetry: direction_val,
+        service_span: service_span_val,
     };
 
     let json = serde_json::to_string_pretty(&output).expect("JSON serialization failed");

@@ -5,6 +5,7 @@
 //! BAJS refers to the Zagreb bike-share system (NextBike HD).
 
 mod bajs;
+mod centrality;
 mod districts;
 mod geo;
 mod heap;
@@ -71,6 +72,7 @@ struct Args {
     day: Option<String>,
     service_date: Option<String>,
     otp_url: String,
+    centrality: bool,
 }
 
 /// Convert days since Unix epoch (1970-01-01) to (year, month 1-based, day 1-based).
@@ -136,6 +138,7 @@ fn parse_args() -> Args {
     let mut workers = num_cpus().saturating_sub(1).max(1);
     let mut day: Option<String> = None;
     let mut otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".into());
+    let mut centrality = false;
 
     let mut i = 1;
     while i < args.len() {
@@ -169,6 +172,10 @@ fn parse_args() -> Args {
                 otp_url = args[i + 1].clone();
                 i += 2;
             }
+            "--centrality" => {
+                centrality = true;
+                i += 1;
+            }
             _ => {
                 i += 1;
             }
@@ -184,6 +191,7 @@ fn parse_args() -> Args {
         day,
         service_date,
         otp_url,
+        centrality,
     }
 }
 
@@ -518,6 +526,11 @@ fn main() {
         &data_dir.join("network-stats.json"),
         args.service_date.is_some(),
     );
+
+    // Compute centrality metrics (if requested — heavy computation)
+    if args.centrality {
+        centrality::compute_and_write(&graph, &data_dir.join("centrality-stats.json"));
+    }
 
     eprintln!("Loading districts...");
     let districts = load_districts(&districts_path);

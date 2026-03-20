@@ -6,9 +6,9 @@ use crate::bajs::{BajsStation, IndexedBajsAdjacency};
 use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::heap::FlatHeap;
 #[allow(dead_code)]
-const WALK_MAX_KM: f64 = 1.2;
+pub const WALK_MAX_KM: f64 = 1.2;
 #[allow(dead_code)]
-const TRANSFER_PENALTY: f64 = 120.0; // 2 minutes
+pub const TRANSFER_PENALTY: f64 = 120.0; // 2 minutes
 #[allow(dead_code)]
 const BAJS_PICKUP_SECONDS: f64 = 60.0;
 #[allow(dead_code)]
@@ -129,7 +129,7 @@ impl TransitGraphJson {
 /// Compute average headway at a stop for a pattern near the given clock time.
 /// Returns headway/2 (average wait) or None if no service.
 #[allow(dead_code)]
-fn get_avg_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<f64> {
+pub fn get_avg_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<f64> {
     if departures.is_empty() {
         return None;
     }

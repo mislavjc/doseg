@@ -5,12 +5,12 @@ mod geo;
 mod gtfs_rt;
 mod heap;
 #[allow(dead_code)]
-mod rt_store;
-#[allow(dead_code)]
 mod osm;
 mod otp;
 #[allow(dead_code)]
 mod route_stats;
+#[allow(dead_code)]
+mod rt_store;
 mod transit_graph;
 mod walk_expand;
 mod walk_graph;
@@ -1185,8 +1185,10 @@ async fn handle_rt_history(
 
     match result {
         Ok(resp) => (
-            [(header::CONTENT_TYPE, "application/json"),
-             (header::CACHE_CONTROL, "public, max-age=60")],
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=60"),
+            ],
             serde_json::to_string(&resp).unwrap(),
         )
             .into_response(),
@@ -1227,8 +1229,10 @@ async fn handle_rt_stops(
 
     match result {
         Ok(resp) => (
-            [(header::CONTENT_TYPE, "application/json"),
-             (header::CACHE_CONTROL, "public, max-age=300")],
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=300"),
+            ],
             serde_json::to_string(&resp).unwrap(),
         )
             .into_response(),
@@ -1276,8 +1280,10 @@ async fn handle_rt_alerts(
 
     match result {
         Ok(resp) => (
-            [(header::CONTENT_TYPE, "application/json"),
-             (header::CACHE_CONTROL, "public, max-age=60")],
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=60"),
+            ],
             serde_json::to_string(&resp).unwrap(),
         )
             .into_response(),
@@ -1309,8 +1315,10 @@ async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
 
     match result {
         Ok(resp) => (
-            [(header::CONTENT_TYPE, "application/json"),
-             (header::CACHE_CONTROL, "public, max-age=30")],
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=30"),
+            ],
             serde_json::to_string(&resp).unwrap(),
         )
             .into_response(),

@@ -108,12 +108,7 @@ impl RtDb {
         }
     }
 
-    fn ingest_inner(
-        &self,
-        ts: i64,
-        snap: &RtSnapshot,
-        write_stops: bool,
-    ) -> rusqlite::Result<()> {
+    fn ingest_inner(&self, ts: i64, snap: &RtSnapshot, write_stops: bool) -> rusqlite::Result<()> {
         let tx = self.conn.unchecked_transaction()?;
 
         // Group trips by route_id
@@ -434,11 +429,7 @@ pub fn query_history(
     })
 }
 
-pub fn query_stops(
-    conn: &Connection,
-    route: &str,
-    ts: i64,
-) -> rusqlite::Result<StopsResponse> {
+pub fn query_stops(conn: &Connection, route: &str, ts: i64) -> rusqlite::Result<StopsResponse> {
     // Find the nearest 5-min boundary
     let snap_ts = (ts / 300) * 300;
 
@@ -487,11 +478,7 @@ pub fn query_stops(
     })
 }
 
-pub fn query_alerts(
-    conn: &Connection,
-    from: i64,
-    to: i64,
-) -> rusqlite::Result<AlertsResponse> {
+pub fn query_alerts(conn: &Connection, from: i64, to: i64) -> rusqlite::Result<AlertsResponse> {
     let mut stmt = conn.prepare_cached(
         "SELECT first_seen, cause, effect, header, description, route_ids
          FROM alerts WHERE first_seen >= ?1 AND first_seen < ?2
@@ -523,19 +510,15 @@ pub fn query_alerts(
 }
 
 pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
-    let snapshot_count: i64 =
-        conn.query_row("SELECT COUNT(*) FROM snapshots", [], |r| r.get(0))?;
-    let route_count: i64 = conn.query_row(
-        "SELECT COUNT(DISTINCT route_id) FROM snapshots",
-        [],
-        |r| r.get(0),
-    )?;
+    let snapshot_count: i64 = conn.query_row("SELECT COUNT(*) FROM snapshots", [], |r| r.get(0))?;
+    let route_count: i64 =
+        conn.query_row("SELECT COUNT(DISTINCT route_id) FROM snapshots", [], |r| {
+            r.get(0)
+        })?;
     let first_ts: Option<i64> =
         conn.query_row("SELECT MIN(ts) FROM snapshots", [], |r| r.get(0))?;
-    let last_ts: Option<i64> =
-        conn.query_row("SELECT MAX(ts) FROM snapshots", [], |r| r.get(0))?;
-    let alert_count: i64 =
-        conn.query_row("SELECT COUNT(*) FROM alerts", [], |r| r.get(0))?;
+    let last_ts: Option<i64> = conn.query_row("SELECT MAX(ts) FROM snapshots", [], |r| r.get(0))?;
+    let alert_count: i64 = conn.query_row("SELECT COUNT(*) FROM alerts", [], |r| r.get(0))?;
 
     Ok(SummaryResponse {
         snapshot_count,
@@ -701,10 +684,7 @@ mod tests {
 }
 
 /// Spawn a dedicated OS thread that receives snapshots and writes to SQLite.
-pub fn spawn_writer_thread(
-    db_path: std::path::PathBuf,
-    rx: std::sync::mpsc::Receiver<RtSnapshot>,
-) {
+pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Receiver<RtSnapshot>) {
     std::thread::spawn(move || {
         let mut db = match RtDb::open(&db_path) {
             Ok(db) => db,

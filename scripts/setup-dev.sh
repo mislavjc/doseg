@@ -29,7 +29,7 @@ fi
 if [ ! -f data/gtfs/zet.zip ]; then
   echo "==> Downloading GTFS feed..."
   mkdir -p data/gtfs
-  curl -fSL -o data/gtfs/zet.zip "https://zet.hr/gtfs-scheduled/latest"
+  curl -fSL -o data/gtfs/zet.zip "$DATA_CDN/gtfs/zet.zip"
   echo "    Downloaded $(du -h data/gtfs/zet.zip | cut -f1)"
 else
   echo "==> GTFS data already exists"

@@ -35,7 +35,6 @@ struct RawPattern {
     route_mode: String,
     route_short_name: String,
     route_long_name: String,
-    has_geometry: bool,
     geometry_points: Option<String>,
     stops: Vec<RawStop>,
     trips: Vec<RawTrip>,
@@ -80,7 +79,6 @@ fn build_raw_pattern(
     route_mode: Option<String>,
     route_short_name: Option<String>,
     route_long_name: Option<String>,
-    has_geometry: bool,
     geometry_points: Option<String>,
     stops: Vec<RawStop>,
     trips: Vec<RawTrip>,
@@ -89,7 +87,6 @@ fn build_raw_pattern(
         route_mode: route_mode.unwrap_or_else(|| "BUS".into()),
         route_short_name: route_short_name.unwrap_or_default(),
         route_long_name: route_long_name.unwrap_or_default(),
-        has_geometry,
         geometry_points,
         stops,
         trips,
@@ -115,12 +112,10 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
         .map(|p| {
             let route = p.route;
             let geom_points = p.pattern_geometry.and_then(|g| g.points);
-            let has_geom = geom_points.is_some();
             build_raw_pattern(
                 route.mode.map(|m| format!("{:?}", m)),
                 route.short_name,
                 route.long_name,
-                has_geom,
                 geom_points,
                 p.stops
                     .unwrap_or_default()
@@ -170,12 +165,10 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
         .map(|p| {
             let route = p.route;
             let geom_points = p.pattern_geometry.and_then(|g| g.points);
-            let has_geom = geom_points.is_some();
             build_raw_pattern(
                 route.mode.map(|m| format!("{:?}", m)),
                 route.short_name,
                 route.long_name,
-                has_geom,
                 geom_points,
                 p.stops
                     .unwrap_or_default()

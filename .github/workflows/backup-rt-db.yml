@@ -32,7 +32,15 @@ jobs:
       - name: Upload to R2
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 4b193c5e8516cbd44815cc1b7ce108c6
         run: |
           npm install -g wrangler
           DATE=$(date -u +%Y-%m-%d)
-          wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" --file "/tmp/gtfs-rt-${DATE}.db.zst" --remote
+          wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
+            --file "/tmp/gtfs-rt-${DATE}.db.zst" \
+            --remote 2>&1 || {
+            echo "wrangler put failed, trying with explicit pipe..."
+            wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
+              --file "/tmp/gtfs-rt-${DATE}.db.zst" \
+              --remote
+          }

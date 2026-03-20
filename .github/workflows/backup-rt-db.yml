@@ -35,4 +35,5 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          packageManager: npm
           command: r2 object put doseg-backups/gtfs-rt-$(date -u +%Y-%m-%d).db.zst --file /tmp/gtfs-rt-$(date -u +%Y-%m-%d).db.zst --remote

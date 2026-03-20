@@ -1037,8 +1037,7 @@ fn compute_service_span(
     let first_buckets_start: f64 = 3.0 * 3600.0; // 03:00
     let first_buckets_end: f64 = 8.0 * 3600.0; // 08:00
     let bucket_size: f64 = 1800.0; // 30 minutes
-    let n_first_buckets =
-        ((first_buckets_end - first_buckets_start) / bucket_size).ceil() as usize;
+    let n_first_buckets = ((first_buckets_end - first_buckets_start) / bucket_size).ceil() as usize;
     let mut first_hist: Vec<(usize, usize, usize, usize)> = vec![(0, 0, 0, 0); n_first_buckets];
 
     // Build last-service histogram (30-min buckets from 19:00 to 02:00 next day)
@@ -1157,9 +1156,10 @@ fn compute_service_span(
             }
         }
 
-        let entry = mode_stats
-            .entry(mode_str.clone())
-            .or_insert((f64::INFINITY, f64::NEG_INFINITY, 0, 0));
+        let entry =
+            mode_stats
+                .entry(mode_str.clone())
+                .or_insert((f64::INFINITY, f64::NEG_INFINITY, 0, 0));
         if route_morning < entry.0 {
             entry.0 = route_morning;
         }

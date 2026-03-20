@@ -244,11 +244,7 @@ fn stop_routes(graph: &TransitGraphJson, stop_idx: usize) -> Vec<String> {
 // Deduplicate stops by name (OTP has multiple entries per physical stop)
 // ---------------------------------------------------------------------------
 
-fn dedup_top_stops(
-    graph: &TransitGraphJson,
-    scores: &[f64],
-    limit: usize,
-) -> Vec<CentralityStop> {
+fn dedup_top_stops(graph: &TransitGraphJson, scores: &[f64], limit: usize) -> Vec<CentralityStop> {
     use std::collections::HashMap;
 
     // Group stop indices by name, keeping the one with the highest score
@@ -361,9 +357,9 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &Path) {
         }
         if reachable > 0 && sum_dist > 0.0 {
             // Wasserman-Faust normalization for disconnected graphs
-            closeness[source] = (reachable as f64 / (n - 1) as f64)
-                * (reachable as f64 / sum_dist)
-                * 3600.0; // Scale to per-hour for readability
+            closeness[source] =
+                (reachable as f64 / (n - 1) as f64) * (reachable as f64 / sum_dist) * 3600.0;
+            // Scale to per-hour for readability
         }
     }
 

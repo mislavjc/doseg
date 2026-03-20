@@ -9,7 +9,7 @@ import type {
   WeekendService,
   DirectionalAsymmetryEntry,
   RouteStatsOutput,
-  RouteStatsRoute,
+  ServiceSpan,
 } from "@/lib/generated"
 
 function loadNetworkStats(): NetworkStatsOutput | null {
@@ -531,6 +531,165 @@ function WeekendAsymmetrySection({
 }
 
 // ---------------------------------------------------------------------------
+// Shared: stacked-bar histogram for service span
+// ---------------------------------------------------------------------------
+function ServiceHistogram({ data, max, title, subtitle, titleColor, hasRail }: {
+  data: ServiceSpan["firstServiceHistogram"]
+  max: number
+  title: string
+  subtitle: string
+  titleColor: string
+  hasRail: boolean
+}) {
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className={`mb-1 font-sans text-[11px] font-bold tracking-widest uppercase ${titleColor}`}>{title}</div>
+      <div className="mb-4 text-[12px] text-slate-500 dark:text-slate-400">{subtitle}</div>
+      <div className="space-y-1">
+        {data.map((bucket) => (
+          <div key={bucket.label} className="flex items-center gap-2">
+            <span className="w-10 shrink-0 text-right font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400">{bucket.label}</span>
+            <div className="flex-1">
+              <div className="flex h-5 items-center gap-px">
+                {bucket.tramStops > 0 && (
+                  <div className="h-full rounded-l bg-rose-400 dark:bg-rose-500" style={{ width: `${(bucket.tramStops / max) * 100}%` }} />
+                )}
+                {bucket.busStops > 0 && (
+                  <div className={`h-full bg-blue-400 dark:bg-blue-500 ${bucket.tramStops === 0 ? "rounded-l" : ""}`} style={{ width: `${(bucket.busStops / max) * 100}%` }} />
+                )}
+                {bucket.railStops > 0 && (
+                  <div className="h-full rounded-r bg-emerald-400 dark:bg-emerald-500" style={{ width: `${(bucket.railStops / max) * 100}%` }} />
+                )}
+              </div>
+            </div>
+            <span className="w-8 text-right font-mono text-[10px] tabular-nums text-slate-400">{bucket.stopCount}</span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 flex gap-4 text-[10px] text-slate-500 dark:text-slate-400">
+        <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-sm bg-rose-400" /> tramvaj</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-sm bg-blue-400" /> autobus</span>
+        {hasRail && <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-sm bg-emerald-400" /> vlak</span>}
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// 6. First & Last Service (1.4 + 1.3)
+// ---------------------------------------------------------------------------
+function ServiceSpanSection({ span }: { span: ServiceSpan }) {
+  const { firstServiceHistogram, lastServiceHistogram, nightGap, byMode } = span
+  const maxFirst = Math.max(...firstServiceHistogram.map((b) => b.stopCount), 1)
+  const maxLast = Math.max(...lastServiceHistogram.map((b) => b.stopCount), 1)
+
+  const tramMode = byMode.find((m) => m.mode === "TRAM")
+  const busMode = byMode.find((m) => m.mode === "BUS")
+  const hasRail = span.hasRail
+
+  return (
+    <section className="mt-24">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
+        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+          Kad se Zagreb budi i gasi
+        </h2>
+      </div>
+      <p className="mb-10 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+        Kada stajalište dobije prvi polazak ujutro, a kada ostaje bez usluge navečer.
+        Zagreb ne spava u isto vrijeme - neke četvrti gube prijevoz satima prije ostatka grada.
+      </p>
+
+      {/* Big numbers */}
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-amber-600 dark:text-amber-400">
+            {span.firstMorningDeparture}
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">prvi jutarnji polazak</div>
+          {tramMode && (
+            <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+              Tramvaj {tramMode.earliestDeparture} · Autobus {busMode?.earliestDeparture ?? "-"}
+            </div>
+          )}
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-indigo-600 dark:text-indigo-400">
+            {span.lastEveningDeparture}
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">zadnji večernji polazak</div>
+          {tramMode && (
+            <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+              Tramvaj {tramMode.latestDeparture} · Autobus {busMode?.latestDeparture ?? "-"}
+            </div>
+          )}
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-red-600 dark:text-red-400">
+            {Math.round(nightGap.pctDarkBy23)}%
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">stanica u mraku do 23h</div>
+          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            {fmtDots(nightGap.stopsDarkBy23)} od {fmtDots(nightGap.totalStops)} stanica
+          </div>
+        </div>
+      </div>
+
+      {/* Histogram pair */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ServiceHistogram data={firstServiceHistogram} max={maxFirst} title="Buđenje mreže" subtitle="Koliko stanica dobije prvi polazak u svakom polusatu" titleColor="text-amber-600 dark:text-amber-400" hasRail={hasRail} />
+        <ServiceHistogram data={lastServiceHistogram} max={maxLast} title="Gašenje mreže" subtitle="Kada stanice gube zadnji polazak navečer" titleColor="text-indigo-600 dark:text-indigo-400" hasRail={hasRail} />
+      </div>
+
+      {/* Night gap details */}
+      {(nightGap.routesPastMidnight.length > 0 || nightGap.routesEndingBefore23.length > 0) && (
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {nightGap.routesPastMidnight.length > 0 && (
+            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-emerald-600 uppercase dark:text-emerald-400">Usluga nakon ponoći</div>
+              <div className="mb-3 text-[12px] text-slate-500 dark:text-slate-400">{nightGap.routesPastMidnight.length} linija čija usluga prelazi ponoć</div>
+              <div className="flex flex-wrap gap-1.5">
+                {nightGap.routesPastMidnight.slice(0, 30).map((route) => (
+                  <span key={route} className="inline-flex h-6 items-center rounded-md bg-emerald-100 px-2 text-[11px] font-semibold tabular-nums text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">{route}</span>
+                ))}
+                {nightGap.routesPastMidnight.length > 30 && (
+                  <span className="inline-flex h-6 items-center px-1 text-[11px] text-slate-400">+{nightGap.routesPastMidnight.length - 30}</span>
+                )}
+              </div>
+            </div>
+          )}
+          {nightGap.routesEndingBefore23.length > 0 && (
+            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+              <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">Gašenje prije 23h</div>
+              <div className="mb-3 text-[12px] text-slate-500 dark:text-slate-400">{nightGap.routesEndingBefore23.length} linija završava radni dan do 23:00</div>
+              <div className="flex flex-wrap gap-1.5">
+                {nightGap.routesEndingBefore23.slice(0, 20).map((route) => (
+                  <span key={route} className="inline-flex h-6 items-center rounded-md bg-red-100 px-2 text-[11px] font-semibold tabular-nums text-red-800 dark:bg-red-900/40 dark:text-red-300">{route}</span>
+                ))}
+                {nightGap.routesEndingBefore23.length > 20 && (
+                  <span className="inline-flex h-6 items-center px-1 text-[11px] text-slate-400">+{nightGap.routesEndingBefore23.length - 20}</span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <Insight>
+        Jutarnji prijevoz počinje u <strong>{span.firstMorningDeparture}</strong>, a zadnji večernji
+        polazak kreće u <strong>{span.lastEveningDeparture}</strong>.
+        {" "}Do 23 sata, <strong>{Math.round(nightGap.pctDarkBy23)}%</strong> stanica ({fmtDots(nightGap.stopsDarkBy23)}) već
+        nema nijedan polazak.
+        {nightGap.routesEndingBefore23.length > 0 && (
+          <> Čak {nightGap.routesEndingBefore23.length} linija završava uslugu prije 23:00.</>
+        )}
+        {" "}Ako propustite zadnji polazak, na velikom dijelu mreže nemate alternativu osim taksija.
+      </Insight>
+    </section>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 export default function NetworkStatsSection() {
@@ -550,6 +709,7 @@ export default function NetworkStatsSection() {
         weekendService={data.weekendService}
         asymmetry={data.directionalAsymmetry}
       />
+      {data.serviceSpan && <ServiceSpanSection span={data.serviceSpan} />}
     </div>
   )
 }

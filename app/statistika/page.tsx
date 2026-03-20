@@ -630,6 +630,8 @@ function StatistikaContentSections({ data, all }: { data: ScoreData; all: Return
       <RouteStatsSection routeStats={all.routeStats} routes={all.routes} freq={all.freq} />
       <NetworkStatsSection />
       <TravelMatrixSection travelMatrix={all.travelMatrix} matrix={all.matrix} />
+      <TransferDependencySection travelMatrix={all.travelMatrix} />
+      <CentralitySection />
       <DistrictBandsSection data={data} bands={all.bands} districtEmblems={all.districtEmblems} base={all.base} />
       <MethodologySection data={data} base={all.base} bajs={all.bajs} />
     </>
@@ -3083,6 +3085,269 @@ function TravelMatrixInsights({ matrix }: { matrix: ReturnType<typeof computeMat
         </div>
       )}
     </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Transfer Dependency Distribution (1.14)
+// ---------------------------------------------------------------------------
+
+function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatrix | null }) {
+  if (!travelMatrix?.transferMatrix) return null
+
+  const n = travelMatrix.districts.length
+  const buckets: Record<string, { count: number; pairs: { from: string; to: string; time: number }[] }> = {
+    "0": { count: 0, pairs: [] },
+    "1": { count: 0, pairs: [] },
+    "2+": { count: 0, pairs: [] },
+  }
+  let totalPairs = 0
+  let totalTransfers = 0
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue
+      const time = travelMatrix.matrix[i]?.[j] ?? -1
+      if (time <= 0) continue
+      const transfers = travelMatrix.transferMatrix[i]?.[j] ?? 0
+      totalPairs++
+      totalTransfers += transfers
+      if (transfers === 0) {
+        buckets["0"].count++
+      } else if (transfers === 1) {
+        buckets["1"].count++
+      } else {
+        buckets["2+"].count++
+        buckets["2+"].pairs.push({ from: travelMatrix.districts[i], to: travelMatrix.districts[j], time })
+      }
+    }
+  }
+
+  if (totalPairs === 0) return null
+
+  const avgTransfers = (totalTransfers / totalPairs).toFixed(1).replace(".", ",")
+  const directPct = Math.round((buckets["0"].count / totalPairs) * 100)
+  const onePct = Math.round((buckets["1"].count / totalPairs) * 100)
+  const twoPlusPct = Math.round((buckets["2+"].count / totalPairs) * 100)
+
+  // Sort 2+ pairs by time descending
+  const worstPairs = [...buckets["2+"].pairs].sort((a, b) => b.time - a.time).slice(0, 6)
+
+  const barData = [
+    { label: "Izravno", count: buckets["0"].count, pct: directPct, color: "bg-emerald-400 dark:bg-emerald-500" },
+    { label: "1 presjedanje", count: buckets["1"].count, pct: onePct, color: "bg-amber-400 dark:bg-amber-500" },
+    { label: "2+ presjedanja", count: buckets["2+"].count, pct: twoPlusPct, color: "bg-red-400 dark:bg-red-500" },
+  ]
+
+  return (
+    <section className="mt-16 sm:mt-20">
+      <div className="mb-10 flex flex-col items-center text-center">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-violet-500" />
+          <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Ovisnost o presjedanjima</h2>
+        </div>
+        <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Koliko presjedanja zahtijeva tipično putovanje između zagrebačkih četvrti?
+          Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
+        </p>
+      </div>
+
+      {/* Stacked bar */}
+      <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+        <div className="mb-6 flex h-12 overflow-hidden rounded-xl">
+          {barData.map((d) => (
+            d.pct > 0 && (
+              <div key={d.label} className={`${d.color} flex items-center justify-center transition-all`} style={{ width: `${d.pct}%` }}>
+                {d.pct >= 8 && <span className="text-[12px] font-bold text-white">{d.pct}%</span>}
+              </div>
+            )
+          ))}
+        </div>
+        <div className="flex flex-wrap justify-center gap-6">
+          {barData.map((d) => (
+            <div key={d.label} className="text-center">
+              <div className="flex items-center gap-1.5">
+                <span className={`inline-block h-3 w-3 rounded-sm ${d.color}`} />
+                <span className="text-[12px] font-medium text-slate-700 dark:text-slate-300">{d.label}</span>
+              </div>
+              <div className="mt-1 font-serif text-[20px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{d.count}</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">parova ({d.pct}%)</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 text-center">
+          <span className="text-[13px] text-slate-600 dark:text-slate-400">
+            Prosječno presjedanja po putovanju: <strong className="font-medium text-slate-900 dark:text-slate-100">{avgTransfers}</strong>
+          </span>
+        </div>
+      </div>
+
+      {/* Worst corridors */}
+      {worstPairs.length > 0 && (
+        <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">Koridori s 2+ presjedanja</div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {worstPairs.map((pair, i) => (
+              <div key={i} className="flex items-center justify-between rounded-xl bg-red-50/50 px-4 py-3 dark:bg-red-950/10">
+                <span className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
+                  {pair.from} → {pair.to}
+                </span>
+                <span className="ml-2 font-serif text-[14px] font-medium tabular-nums text-red-700 dark:text-red-400">{pair.time} min</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6 rounded-2xl border border-violet-200/50 bg-violet-50/50 px-5 py-4 dark:border-violet-800/30 dark:bg-violet-950/20">
+        <p className="text-[13px] leading-relaxed text-violet-900 dark:text-violet-200">
+          Od {totalPairs} mogućih parova četvrti, <strong>{directPct}%</strong> je dostupno izravno bez presjedanja,{" "}
+          <strong>{onePct}%</strong> zahtijeva jedno presjedanje, a <strong>{twoPlusPct}%</strong> zahtijeva dva ili više.
+          {worstPairs.length > 0 && (
+            <> Najgori koridor (<strong>{worstPairs[0].from} → {worstPairs[0].to}</strong>) traje{" "}
+              <strong>{worstPairs[0].time} minuta</strong> - svako presjedanje dodaje nepredvidivo čekanje.</>
+          )}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Centrality Analysis (1.16-1.19)
+// ---------------------------------------------------------------------------
+
+function loadCentralityStats(): import("@/lib/generated").CentralityStats | null {
+  const statsPath = join(getDataDir(), "centrality-stats.json")
+  if (!existsSync(statsPath)) return null
+  try {
+    return JSON.parse(readFileSync(statsPath, "utf-8"))
+  } catch {
+    return null
+  }
+}
+
+function CentralityRanking({ stops, title, subtitle, color, scoreDecimals }: {
+  stops: import("@/lib/generated").CentralityStop[]
+  title: string
+  subtitle: string
+  color: "red" | "emerald"
+  scoreDecimals: number
+}) {
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className={`mb-1 font-sans text-[11px] font-bold tracking-widest uppercase text-${color}-600 dark:text-${color}-400`}>{title}</div>
+      <div className="mb-4 text-[12px] text-slate-500 dark:text-slate-400">{subtitle}</div>
+      <div className="space-y-2">
+        {stops.slice(0, 10).map((stop) => {
+          const barW = stops[0].score > 0 ? (stop.score / stops[0].score) * 100 : 0
+          return (
+            <div key={stop.key}>
+              <div className="mb-1 flex items-baseline justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-${color}-100 text-[10px] font-bold text-${color}-700 dark:bg-${color}-900/40 dark:text-${color}-300`}>{stop.rank}</span>
+                  <span className="text-[12px] font-medium text-slate-800 dark:text-slate-200">{stop.name}</span>
+                </div>
+                <span className="font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400">{stop.score.toFixed(scoreDecimals)}</span>
+              </div>
+              <div className={`h-1.5 overflow-hidden rounded-full bg-${color}-100 dark:bg-${color}-900/20`}>
+                <div className={`h-full rounded-full bg-${color}-400 dark:bg-${color}-500`} style={{ width: `${barW}%` }} />
+              </div>
+              <div className="mt-0.5 flex flex-wrap gap-1">
+                {stop.routes.slice(0, 6).map((r) => (
+                  <span key={r} className="text-[9px] text-slate-400 dark:text-slate-500">{r}</span>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function CentralitySection() {
+  const data = loadCentralityStats()
+  if (!data) return null
+
+  const { betweenness, closeness, networkDiameter, averagePathLength } = data
+
+  return (
+    <section className="mt-16 sm:mt-20">
+      <div className="mb-10 flex flex-col items-center text-center">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-fuchsia-500" />
+          <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Centralnost mreže</h2>
+        </div>
+        <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Analiza grafa otkriva kritične točke mreže - stanice čijim zatvaranjem bi se cijelom sustavu
+          dramatično pogoršala povezanost, i stanice koje najbolje pokrivaju cijeli grad.
+        </p>
+      </div>
+
+      {/* Diameter + average path big numbers */}
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+            {networkDiameter.minutes}
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">minuta - mrežni dijametar</div>
+          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            {networkDiameter.fromStop} → {networkDiameter.toStop}
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+            {averagePathLength.minutes}
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">min prosječno putovanje</div>
+          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            srednja vrijednost svih najkraćih puteva
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+            {averagePathLength.reachablePct}%
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">parova povezano</div>
+          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            {averagePathLength.reachablePairs.toLocaleString("hr")} od {averagePathLength.totalPairs.toLocaleString("hr")}
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+            {data.stopCount.toLocaleString("hr")}
+          </div>
+          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">analiziranih stanica</div>
+          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            izračun trajao {data.computationSeconds}s
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <CentralityRanking stops={betweenness} title="Betweenness centralnost" subtitle="Kritične točke - stanice kroz koje prolazi najviše najkraćih puteva" color="red" scoreDecimals={4} />
+        <CentralityRanking stops={closeness} title="Closeness centralnost" subtitle="Najbolje povezane stanice - najbrži prosječni pristup cijeloj mreži" color="emerald" scoreDecimals={2} />
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-fuchsia-200/50 bg-fuchsia-50/50 px-5 py-4 dark:border-fuchsia-800/30 dark:bg-fuchsia-950/20">
+        <p className="text-[13px] leading-relaxed text-fuchsia-900 dark:text-fuchsia-200">
+          <strong>Betweenness centralnost</strong> otkriva kritične točke mreže.
+          {betweenness[0] && (<>
+            {" "}Stajalište <strong>{betweenness[0].name}</strong> je najvažnije čvorište -
+            najveći udio svih najkraćih puteva prolazi upravo kroz njega.
+            Ako se ta stanica zatvori, tisuće putnika mora tražiti alternativnu rutu.
+          </>)}
+          {" "}<strong>Closeness centralnost</strong> pokazuje odakle je najbrže doći svugdje.
+          {closeness[0] && (<>
+            {" "}<strong>{closeness[0].name}</strong> ima najpovoljniji prosječni pristup cijeloj mreži.
+          </>)}
+          {" "}Mrežni dijametar od <strong>{networkDiameter.minutes} minuta</strong>{" "}
+          ({networkDiameter.fromStop} → {networkDiameter.toStop}) označava najdulje moguće putovanje unutar sustava.
+        </p>
+      </div>
+    </section>
   )
 }
 

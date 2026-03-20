@@ -9,8 +9,6 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Create backup on server
         uses: appleboy/ssh-action@v1
         with:
@@ -32,8 +30,9 @@ jobs:
           ls -lh /tmp/gtfs-rt-${DATE}.db.zst
 
       - name: Upload to R2
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          packageManager: npm
-          command: r2 object put doseg-backups/gtfs-rt-$(date -u +%Y-%m-%d).db.zst --file /tmp/gtfs-rt-$(date -u +%Y-%m-%d).db.zst --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          npm install -g wrangler
+          DATE=$(date -u +%Y-%m-%d)
+          wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" --file "/tmp/gtfs-rt-${DATE}.db.zst" --remote

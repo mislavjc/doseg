@@ -23,8 +23,8 @@ No new sources needed. Just smarter use of GTFS static feed + transit graph.
 | ---- | -------------------------------- | ---------------------------------------------------------------------------------------- | ------ |
 | 1.1  | Hourly frequency heatmap         | 24h × routes departure matrix (bin departures into hourly buckets)                       | [x]    |
 | 1.2  | Headway regularity (CV)          | `stddev(headway)/mean(headway)` per route — clock-face vs chaotic                        | [x]    |
-| 1.3  | Night service gap analysis       | Dijkstra at 23:00–23:30, which districts lose all transit                                | [ ]    |
-| 1.4  | Time-to-first-service map        | For each grid point, earliest possible departure. "When does your neighborhood wake up?" | [ ]    |
+| 1.3  | Night service gap analysis       | Dijkstra at 23:00–23:30, which districts lose all transit                                | [x]    |
+| 1.4  | Time-to-first-service map        | For each grid point, earliest possible departure. "When does your neighborhood wake up?" | [x]    |
 | 1.5  | Vehicle-km/day by mode           | Tram: 28,744, Bus: 78,754 (total: 107,498)                                               | [x]    |
 | 1.6  | Fleet size from block_id         | 478 blocks (181 tram, 297 bus)                                                            | [x]    |
 | 1.7  | Interlining map                  | 90 blocks serve multiple routes — operational dependencies                               | [x]    |
@@ -34,12 +34,12 @@ No new sources needed. Just smarter use of GTFS static feed + transit graph.
 | 1.11 | Weekend service ratio            | Saturday/Sunday/weekday trip counts per route. 16 weekday-only routes                    | [x]    |
 | 1.12 | Seasonal variation               | School vs summer schedule differences (calendar_dates.txt)                               | [ ]    |
 | 1.13 | Directional asymmetry            | Outbound/inbound ratio — 13 routes with >20% asymmetry                                  | [x]    |
-| 1.14 | Transfer dependency distribution | "X% direct, Y% 1 transfer, Z% 2+" across all district pairs                              | [ ]    |
+| 1.14 | Transfer dependency distribution | "X% direct, Y% 1 transfer, Z% 2+" across all district pairs                              | [x]    |
 | 1.15 | Dead-end stops                   | 1,405 stops with single route (1,333 bus, 25 tram, 47 rail)                              | [x]    |
-| 1.16 | Betweenness centrality           | All-pairs Dijkstra (~107s Rust) reveals critical bottleneck stops                        | [ ]    |
-| 1.17 | Closeness centrality             | Which stops can reach the entire network fastest                                         | [ ]    |
-| 1.18 | Network diameter                 | Longest shortest path in the network                                                     | [ ]    |
-| 1.19 | Average path length              | Mean of all shortest paths — characterizes overall network quality                       | [ ]    |
+| 1.16 | Betweenness centrality           | All-pairs Dijkstra (~107s Rust) reveals critical bottleneck stops                        | [x]    |
+| 1.17 | Closeness centrality             | Which stops can reach the entire network fastest                                         | [x]    |
+| 1.18 | Network diameter                 | Longest shortest path in the network                                                     | [x]    |
+| 1.19 | Average path length              | Mean of all shortest paths — characterizes overall network quality                       | [x]    |
 | 1.20 | Peak-to-base ratio               | How commuter-oriented vs all-day each route is                                           | [x]    |
 
 

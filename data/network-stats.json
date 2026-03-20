@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T02:24:15.000Z",
+  "generatedAt": "2026-03-20T05:03:12.000Z",
   "vehicleKm": {
     "tram": 36180,
     "bus": 82400,
@@ -9076,8 +9076,8 @@
     "total": 1436,
     "byMode": {
       "RAIL": 47,
-      "TRAM": 24,
-      "BUS": 1365
+      "BUS": 1365,
+      "TRAM": 24
     },
     "stops": [
       {
@@ -19142,145 +19142,67 @@
     "interlinedBlocks": 90,
     "interlinedExamples": [
       {
-        "blockId": "16802",
+        "blockId": "12901",
         "routes": [
-          "120",
-          "168"
+          "129",
+          "149"
         ]
       },
       {
-        "blockId": "11101",
+        "blockId": "22401",
         "routes": [
-          "110",
-          "111",
-          "112",
-          "160",
-          "161",
-          "162",
-          "163",
-          "164",
-          "168"
+          "213",
+          "224",
+          "230"
         ]
       },
       {
-        "blockId": "12202",
-        "routes": [
-          "122",
-          "123"
-        ]
-      },
-      {
-        "blockId": "17604",
+        "blockId": "17606",
         "routes": [
           "176",
           "177"
         ]
       },
       {
-        "blockId": "16001",
+        "blockId": "30803",
         "routes": [
-          "110",
-          "160",
-          "162",
-          "163",
-          "164"
+          "307",
+          "308",
+          "313"
         ]
       },
       {
-        "blockId": "22601",
+        "blockId": "27201",
         "routes": [
-          "213",
-          "226"
-        ]
-      },
-      {
-        "blockId": "26303",
-        "routes": [
-          "263",
+          "224",
+          "264",
+          "270",
+          "272",
           "273"
         ]
       },
       {
-        "blockId": "12002",
+        "blockId": "12001",
         "routes": [
           "120",
-          "127",
-          "128",
-          "131",
-          "176",
           "177"
         ]
       },
       {
-        "blockId": "14201",
+        "blockId": "31501",
         "routes": [
-          "142",
-          "143"
+          "268",
+          "307",
+          "308",
+          "311",
+          "315"
         ]
       },
       {
-        "blockId": "12501",
+        "blockId": "10203",
         "routes": [
-          "116",
-          "125"
-        ]
-      },
-      {
-        "blockId": "17602",
-        "routes": [
-          "176",
-          "177"
-        ]
-      },
-      {
-        "blockId": "27001",
-        "routes": [
-          "270",
-          "274"
-        ]
-      },
-      {
-        "blockId": "16103",
-        "routes": [
-          "110",
-          "161"
-        ]
-      },
-      {
-        "blockId": "13201",
-        "routes": [
-          "111",
-          "132",
-          "160"
-        ]
-      },
-      {
-        "blockId": "18201",
-        "routes": [
-          "174",
-          "182"
-        ]
-      },
-      {
-        "blockId": "16801",
-        "routes": [
-          "162",
-          "164",
-          "168"
-        ]
-      },
-      {
-        "blockId": "21201",
-        "routes": [
-          "212",
-          "269"
-        ]
-      },
-      {
-        "blockId": "20201",
-        "routes": [
-          "201",
-          "202"
+          "102",
+          "103"
         ]
       },
       {
@@ -19293,10 +19215,83 @@
         ]
       },
       {
-        "blockId": "10102",
+        "blockId": "21601",
+        "routes": [
+          "216",
+          "276"
+        ]
+      },
+      {
+        "blockId": "26303",
+        "routes": [
+          "263",
+          "273"
+        ]
+      },
+      {
+        "blockId": "23001",
+        "routes": [
+          "216",
+          "230",
+          "232",
+          "261"
+        ]
+      },
+      {
+        "blockId": "10902",
+        "routes": [
+          "109",
+          "124"
+        ]
+      },
+      {
+        "blockId": "10101",
         "routes": [
           "101",
-          "103"
+          "130"
+        ]
+      },
+      {
+        "blockId": "13201",
+        "routes": [
+          "111",
+          "132",
+          "160"
+        ]
+      },
+      {
+        "blockId": "20101",
+        "routes": [
+          "201",
+          "202"
+        ]
+      },
+      {
+        "blockId": "27001",
+        "routes": [
+          "270",
+          "274"
+        ]
+      },
+      {
+        "blockId": "23101",
+        "routes": [
+          "231",
+          "270"
+        ]
+      },
+      {
+        "blockId": "21603",
+        "routes": [
+          "216",
+          "276"
+        ]
+      },
+      {
+        "blockId": "21704",
+        "routes": [
+          "216",
+          "217"
         ]
       }
     ]
@@ -20431,5 +20426,454 @@
       "inboundTrips": 112,
       "ratio": 0.78
     }
-  ]
+  ],
+  "serviceSpan": {
+    "earliestDeparture": "00:30",
+    "latestDeparture": "29:22",
+    "firstMorningDeparture": "03:10",
+    "lastEveningDeparture": "01:00",
+    "firstServiceHistogram": [
+      {
+        "label": "03:00",
+        "stopCount": 44,
+        "tramStops": 0,
+        "busStops": 44,
+        "railStops": 0
+      },
+      {
+        "label": "03:30",
+        "stopCount": 33,
+        "tramStops": 8,
+        "busStops": 25,
+        "railStops": 0
+      },
+      {
+        "label": "04:00",
+        "stopCount": 682,
+        "tramStops": 100,
+        "busStops": 582,
+        "railStops": 0
+      },
+      {
+        "label": "04:30",
+        "stopCount": 1250,
+        "tramStops": 132,
+        "busStops": 1118,
+        "railStops": 0
+      },
+      {
+        "label": "05:00",
+        "stopCount": 243,
+        "tramStops": 20,
+        "busStops": 223,
+        "railStops": 0
+      },
+      {
+        "label": "05:30",
+        "stopCount": 43,
+        "tramStops": 1,
+        "busStops": 42,
+        "railStops": 0
+      },
+      {
+        "label": "06:00",
+        "stopCount": 39,
+        "tramStops": 0,
+        "busStops": 39,
+        "railStops": 0
+      },
+      {
+        "label": "06:30",
+        "stopCount": 20,
+        "tramStops": 0,
+        "busStops": 20,
+        "railStops": 0
+      },
+      {
+        "label": "07:00",
+        "stopCount": 36,
+        "tramStops": 0,
+        "busStops": 36,
+        "railStops": 0
+      },
+      {
+        "label": "07:30",
+        "stopCount": 43,
+        "tramStops": 2,
+        "busStops": 41,
+        "railStops": 0
+      }
+    ],
+    "lastServiceHistogram": [
+      {
+        "label": "19:00",
+        "stopCount": 60,
+        "tramStops": 1,
+        "busStops": 59,
+        "railStops": 0
+      },
+      {
+        "label": "19:30",
+        "stopCount": 4,
+        "tramStops": 0,
+        "busStops": 4,
+        "railStops": 0
+      },
+      {
+        "label": "20:00",
+        "stopCount": 16,
+        "tramStops": 0,
+        "busStops": 16,
+        "railStops": 0
+      },
+      {
+        "label": "20:30",
+        "stopCount": 24,
+        "tramStops": 0,
+        "busStops": 24,
+        "railStops": 0
+      },
+      {
+        "label": "21:00",
+        "stopCount": 15,
+        "tramStops": 0,
+        "busStops": 15,
+        "railStops": 0
+      },
+      {
+        "label": "21:30",
+        "stopCount": 23,
+        "tramStops": 0,
+        "busStops": 23,
+        "railStops": 0
+      },
+      {
+        "label": "22:00",
+        "stopCount": 56,
+        "tramStops": 0,
+        "busStops": 56,
+        "railStops": 0
+      },
+      {
+        "label": "22:30",
+        "stopCount": 119,
+        "tramStops": 0,
+        "busStops": 119,
+        "railStops": 0
+      },
+      {
+        "label": "23:00",
+        "stopCount": 352,
+        "tramStops": 9,
+        "busStops": 343,
+        "railStops": 0
+      },
+      {
+        "label": "23:30",
+        "stopCount": 595,
+        "tramStops": 8,
+        "busStops": 587,
+        "railStops": 0
+      },
+      {
+        "label": "00:00",
+        "stopCount": 520,
+        "tramStops": 9,
+        "busStops": 511,
+        "railStops": 0
+      },
+      {
+        "label": "00:30",
+        "stopCount": 258,
+        "tramStops": 7,
+        "busStops": 251,
+        "railStops": 0
+      },
+      {
+        "label": "01:00",
+        "stopCount": 35,
+        "tramStops": 0,
+        "busStops": 35,
+        "railStops": 0
+      },
+      {
+        "label": "01:30",
+        "stopCount": 356,
+        "tramStops": 229,
+        "busStops": 127,
+        "railStops": 0
+      }
+    ],
+    "byMode": [
+      {
+        "mode": "TRAM",
+        "earliestDeparture": "03:53",
+        "latestDeparture": "00:52",
+        "routesBefore5am": 15,
+        "routesAfterMidnight": 17
+      },
+      {
+        "mode": "BUS",
+        "earliestDeparture": "03:10",
+        "latestDeparture": "01:00",
+        "routesBefore5am": 107,
+        "routesAfterMidnight": 41
+      },
+      {
+        "mode": "RAIL",
+        "earliestDeparture": "15:00",
+        "latestDeparture": "00:00",
+        "routesBefore5am": 0,
+        "routesAfterMidnight": 0
+      }
+    ],
+    "hasRail": false,
+    "nightGap": {
+      "stopsDarkBy22": 142,
+      "stopsDarkBy23": 317,
+      "totalStops": 2433,
+      "pctDarkBy23": 13.0,
+      "routesEndingBefore22": [
+        "104",
+        "106",
+        "108",
+        "122",
+        "144",
+        "148",
+        "151",
+        "211",
+        "228",
+        "236",
+        "238",
+        "239",
+        "267",
+        "275",
+        "278",
+        "283",
+        "313",
+        "330",
+        "Golubovec - Varaždin",
+        "Gornja Stubica - Zabok",
+        "Harmica - Dugo Selo",
+        "Harmica - Ivanić Grad",
+        "Harmica - Zagreb Glavni kolodvor",
+        "Hromec - Zabok",
+        "Hromec - Zagreb Glavni kolodvor",
+        "Ivanić Grad - Savski Marof",
+        "Kotoriba - Zabok",
+        "Novoselec - Harmica",
+        "Osijek - Split",
+        "Osijek - Zagreb Glavni kolodvor",
+        "Pula - Zagreb Glavni kolodvor",
+        "Rijeka - Zagreb Glavni kolodvor",
+        "Savski Marof - Novska",
+        "Split - Osijek",
+        "Split - Zagreb Glavni kolodvor",
+        "Tovarnik - Zagreb Glavni kolodvor",
+        "Varaždin - Golubovec",
+        "Vinkovci - Zaprešić",
+        "Volinja - Zagreb Glavni kolodvor",
+        "Vukovar - Zagreb Glavni kolodvor",
+        "Zabok - Gornja Stubica",
+        "Zabok - Kotoriba",
+        "Zabok - Mala Subotica",
+        "Zagreb Glavni kolodvor - Bjelovar",
+        "Zagreb Glavni kolodvor - Duga Resa",
+        "Zagreb Glavni kolodvor - Hromec",
+        "Zagreb Glavni kolodvor - Karlovac",
+        "Zagreb Glavni kolodvor - Kloštar",
+        "Zagreb Glavni kolodvor - Koprivnica",
+        "Zagreb Glavni kolodvor - Krapina",
+        "Zagreb Glavni kolodvor - Križevci",
+        "Zagreb Glavni kolodvor - Novoselec",
+        "Zagreb Glavni kolodvor - Ogulin",
+        "Zagreb Glavni kolodvor - Požega",
+        "Zagreb Glavni kolodvor - Pula",
+        "Zagreb Glavni kolodvor - Rijeka",
+        "Zagreb Glavni kolodvor - Sisak Caprag",
+        "Zagreb Glavni kolodvor - Slavonski Brod",
+        "Zagreb Glavni kolodvor - Sunja",
+        "Zagreb Glavni kolodvor - Tovarnik",
+        "Zagreb Glavni kolodvor - Varaždin",
+        "Zagreb Glavni kolodvor - Velika Gorica",
+        "Zagreb Glavni kolodvor - Virovitica",
+        "Zagreb Glavni kolodvor - Volinja",
+        "Zagreb Glavni kolodvor - Vukovar",
+        "Zagreb Glavni kolodvor - Zabok",
+        "Zagreb Glavni kolodvor - Čakovec",
+        "Zagreb Glavni kolodvor - Đurmanec",
+        "Zaprešić - Vinkovci",
+        "Čakovec - Zagreb Glavni kolodvor"
+      ],
+      "routesEndingBefore23": [
+        "104",
+        "106",
+        "108",
+        "122",
+        "138",
+        "143",
+        "144",
+        "148",
+        "150",
+        "151",
+        "182",
+        "207",
+        "211",
+        "214",
+        "225",
+        "228",
+        "236",
+        "238",
+        "239",
+        "267",
+        "275",
+        "278",
+        "283",
+        "308",
+        "313",
+        "330",
+        "Golubovec - Varaždin",
+        "Gornja Stubica - Zabok",
+        "Harmica - Dugo Selo",
+        "Harmica - Ivanić Grad",
+        "Harmica - Zagreb Glavni kolodvor",
+        "Hromec - Zabok",
+        "Hromec - Zagreb Glavni kolodvor",
+        "Ivanić Grad - Savski Marof",
+        "Kotoriba - Zabok",
+        "Novoselec - Harmica",
+        "Osijek - Split",
+        "Osijek - Zagreb Glavni kolodvor",
+        "Pula - Zagreb Glavni kolodvor",
+        "Rijeka - Zagreb Glavni kolodvor",
+        "Savski Marof - Novska",
+        "Split - Osijek",
+        "Split - Zagreb Glavni kolodvor",
+        "Tovarnik - Zagreb Glavni kolodvor",
+        "Varaždin - Golubovec",
+        "Vinkovci - Zaprešić",
+        "Volinja - Zagreb Glavni kolodvor",
+        "Vukovar - Zagreb Glavni kolodvor",
+        "Zabok - Gornja Stubica",
+        "Zabok - Kotoriba",
+        "Zabok - Mala Subotica",
+        "Zagreb Glavni kolodvor - Bjelovar",
+        "Zagreb Glavni kolodvor - Duga Resa",
+        "Zagreb Glavni kolodvor - Hromec",
+        "Zagreb Glavni kolodvor - Karlovac",
+        "Zagreb Glavni kolodvor - Kloštar",
+        "Zagreb Glavni kolodvor - Koprivnica",
+        "Zagreb Glavni kolodvor - Krapina",
+        "Zagreb Glavni kolodvor - Križevci",
+        "Zagreb Glavni kolodvor - Novoselec",
+        "Zagreb Glavni kolodvor - Ogulin",
+        "Zagreb Glavni kolodvor - Požega",
+        "Zagreb Glavni kolodvor - Pula",
+        "Zagreb Glavni kolodvor - Rijeka",
+        "Zagreb Glavni kolodvor - Sisak Caprag",
+        "Zagreb Glavni kolodvor - Slavonski Brod",
+        "Zagreb Glavni kolodvor - Sunja",
+        "Zagreb Glavni kolodvor - Tovarnik",
+        "Zagreb Glavni kolodvor - Varaždin",
+        "Zagreb Glavni kolodvor - Velika Gorica",
+        "Zagreb Glavni kolodvor - Virovitica",
+        "Zagreb Glavni kolodvor - Volinja",
+        "Zagreb Glavni kolodvor - Vukovar",
+        "Zagreb Glavni kolodvor - Zabok",
+        "Zagreb Glavni kolodvor - Čakovec",
+        "Zagreb Glavni kolodvor - Đurmanec",
+        "Zaprešić - Vinkovci",
+        "Čakovec - Zagreb Glavni kolodvor"
+      ],
+      "routesPastMidnight": [
+        "1",
+        "11",
+        "110",
+        "111",
+        "114",
+        "115",
+        "116",
+        "117",
+        "118",
+        "119",
+        "12",
+        "120",
+        "121",
+        "123",
+        "125",
+        "126",
+        "127",
+        "128",
+        "129",
+        "13",
+        "132",
+        "133",
+        "136",
+        "14",
+        "146",
+        "149",
+        "15",
+        "159",
+        "161",
+        "162",
+        "163",
+        "164",
+        "166",
+        "168",
+        "17",
+        "172",
+        "176",
+        "177",
+        "2",
+        "202",
+        "203",
+        "205",
+        "209",
+        "210",
+        "212",
+        "215",
+        "216",
+        "217",
+        "220",
+        "221",
+        "223",
+        "224",
+        "226",
+        "227",
+        "230",
+        "231",
+        "232",
+        "233",
+        "234",
+        "237",
+        "241",
+        "262",
+        "263",
+        "264",
+        "268",
+        "269",
+        "270",
+        "271",
+        "272",
+        "273",
+        "274",
+        "276",
+        "279",
+        "281",
+        "282",
+        "290",
+        "3",
+        "31",
+        "32",
+        "33",
+        "34",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ]
+    }
+  }
 }

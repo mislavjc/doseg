@@ -1148,10 +1148,10 @@ fn compute_service_span(
             let p = &graph.patterns[pi];
             // Use origin departures only (no offset)
             for &dep in &p.departures {
-                if dep >= 3.0 * 3600.0 && dep <= 10.0 * 3600.0 && dep < route_morning {
+                if (3.0 * 3600.0..=10.0 * 3600.0).contains(&dep) && dep < route_morning {
                     route_morning = dep;
                 }
-                if dep >= 18.0 * 3600.0 && dep <= 25.0 * 3600.0 && dep > route_evening {
+                if (18.0 * 3600.0..=25.0 * 3600.0).contains(&dep) && dep > route_evening {
                     route_evening = dep;
                 }
             }
@@ -1245,12 +1245,12 @@ fn compute_service_span(
         }
         // Only look at origin stop departures (offset = 0) for system-wide times
         for &dep in &p.departures {
-            if dep >= 3.0 * 3600.0 && dep <= 10.0 * 3600.0 && dep < first_morning {
+            if (3.0 * 3600.0..=10.0 * 3600.0).contains(&dep) && dep < first_morning {
                 first_morning = dep;
             }
             // Cap at 25:00 to capture late-night departures up to 01:00 AM
             // but exclude GTFS post-midnight continuation trips (e.g. 28:45)
-            if dep >= 18.0 * 3600.0 && dep <= 25.0 * 3600.0 && dep > last_evening {
+            if (18.0 * 3600.0..=25.0 * 3600.0).contains(&dep) && dep > last_evening {
                 last_evening = dep;
             }
         }

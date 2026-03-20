@@ -281,16 +281,16 @@ impl RtDb {
     }
 }
 
-/// Open a read-only connection for API queries.
+/// Open a connection for API queries.
+/// Uses read-write mode because read-only connections cannot see WAL data.
 pub fn open_reader(path: &Path) -> rusqlite::Result<Connection> {
-    let conn = Connection::open_with_flags(
-        path,
-        rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
-    )?;
+    let conn = Connection::open(path)?;
     conn.execute_batch(
         "
+        PRAGMA journal_mode=WAL;
         PRAGMA busy_timeout=5000;
         PRAGMA cache_size=-64000;
+        PRAGMA query_only=ON;
     ",
     )?;
     Ok(conn)

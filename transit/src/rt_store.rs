@@ -478,7 +478,7 @@ pub fn spawn_writer_thread(
             ingest_count += 1;
 
             // Run maintenance every ~1000 ingests (~16 hours at 60s intervals)
-            if ingest_count % 1000 == 0 {
+            if ingest_count.is_multiple_of(1000) {
                 db.maintain(snapshot.timestamp);
             }
         }

@@ -77,10 +77,10 @@ pub struct StopTimeUpdate {
 
 #[derive(Clone, Message)]
 pub struct StopTimeEvent {
-    #[prost(int64, optional, tag = "1")]
-    pub time: Option<i64>,
-    #[prost(int32, optional, tag = "2")]
+    #[prost(int32, optional, tag = "1")]
     pub delay: Option<i32>,
+    #[prost(int64, optional, tag = "2")]
+    pub time: Option<i64>,
     #[prost(int32, optional, tag = "3")]
     pub uncertainty: Option<i32>,
 }

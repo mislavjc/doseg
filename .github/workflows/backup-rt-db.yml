@@ -29,6 +29,11 @@ jobs:
           scp root@152.53.46.164:/opt/doseg-backups/gtfs-rt-${DATE}.db.zst /tmp/gtfs-rt-${DATE}.db.zst
           ls -lh /tmp/gtfs-rt-${DATE}.db.zst
 
+      - name: Refresh dev data (GTFS + walk graph)
+        run: |
+          scp root@152.53.46.164:/opt/doseg/data/gtfs/zet.zip /tmp/zet.zip
+          scp root@152.53.46.164:/opt/doseg/data/walk-graph.bin /tmp/walk-graph.bin
+
       - name: Upload to R2
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -37,10 +42,8 @@ jobs:
           npm install -g wrangler
           DATE=$(date -u +%Y-%m-%d)
           wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
-            --file "/tmp/gtfs-rt-${DATE}.db.zst" \
-            --remote 2>&1 || {
-            echo "wrangler put failed, trying with explicit pipe..."
-            wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
-              --file "/tmp/gtfs-rt-${DATE}.db.zst" \
-              --remote
-          }
+            --file "/tmp/gtfs-rt-${DATE}.db.zst" --remote
+          wrangler r2 object put "doseg-data-eu/gtfs/zet.zip" \
+            --file "/tmp/zet.zip" --remote
+          wrangler r2 object put "doseg-data-eu/walk-graph.bin" \
+            --file "/tmp/walk-graph.bin" --remote

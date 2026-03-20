@@ -105,28 +105,40 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 
 ## Development
 
+### Prerequisites
+
+- [bun](https://bun.sh/) (package manager + runtime)
+- [Rust](https://rustup.rs/) (isochrone server)
+- [Docker](https://docs.docker.com/get-docker/) (for OTP, or full-stack local)
+- [mprocs](https://github.com/pvolok/mprocs) (optional, runs all processes in one terminal)
+- [portless](https://github.com/nicholasgasior/portless) (optional, gives `doseg.localhost:1355` instead of `localhost:3000`)
+
+### Quick start
+
 ```bash
-bun install
+./scripts/setup-dev.sh
 ```
 
-Start everything with one command (requires [mprocs](https://github.com/pvolok/mprocs)):
+This installs dependencies, downloads data files (walk graph, GTFS), and builds the Rust isochrone server. If you have SSH access to the production server (`netcup`), it downloads pre-built data; otherwise it builds from source.
+
+Then start everything:
 
 ```bash
 mprocs
 ```
 
-This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server. Logs for all processes are visible in the mprocs TUI.
+This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server.
 
-Or start manually:
+### Without SSH access to the server
+
+If you don't have SSH access, run OTP locally:
 
 ```bash
-# 1. SSH tunnel to OTP (uses the production OTP instance)
-ssh -NL 8080:<otp-container-ip>:8080 netcup
+docker compose up -d otp                   # starts OTP, builds graph (~2 min first time)
+docker compose exec otp wget -qO- http://localhost:8080/otp/  # verify it's ready
 
-# 2. Rust isochrone service
+# In separate terminals:
 OTP_URL=http://localhost:8080 DATA_DIR=data PORT=3002 cargo run --release --bin isochrone-server --manifest-path transit/Cargo.toml
-
-# 3. Next.js (proxies /api/isochrone to Rust on port 3002)
 bun dev
 ```
 
@@ -135,7 +147,7 @@ bun dev
 ```bash
 bun run typecheck              # type-check without emitting
 bun run format                 # prettier
-cd transit && cargo test       # run ts-rs export + generate lib/generated/*.ts
+cargo test --manifest-path transit/Cargo.toml  # rust tests
 bun run build:walk-graph       # rebuild walking graph from OSM PBF
 bun run build:bike-graph       # rebuild bike-sharing graph
 ```

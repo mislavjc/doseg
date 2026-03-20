@@ -3,6 +3,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+DATA_CDN="https://pub-e91a4280dfda4c0598b3507d352cf417.r2.dev"
+
 echo "==> Setting up doseg development environment"
 echo ""
 
@@ -16,19 +18,9 @@ fi
 
 # 2. Walk graph (needed by isochrone server)
 if [ ! -f data/walk-graph.bin ]; then
-  echo "==> Downloading walk-graph.bin from server..."
-  if ssh -o ConnectTimeout=5 netcup "test -f /opt/doseg/data/walk-graph.bin" 2>/dev/null; then
-    scp netcup:/opt/doseg/data/walk-graph.bin data/walk-graph.bin
-    echo "    Downloaded $(du -h data/walk-graph.bin | cut -f1)"
-  else
-    echo "    No SSH access to server. Building from OSM data..."
-    if [ ! -f data/osm/croatia.osm.pbf ]; then
-      echo "    Downloading Croatia OSM extract (~300MB)..."
-      mkdir -p data/osm
-      curl -fSL -o data/osm/croatia.osm.pbf "https://download.geofabrik.de/europe/croatia-latest.osm.pbf"
-    fi
-    bun scripts/build-walk-graph.ts
-  fi
+  echo "==> Downloading walk-graph.bin (~15MB)..."
+  curl -fSL -o data/walk-graph.bin "$DATA_CDN/walk-graph.bin"
+  echo "    Downloaded $(du -h data/walk-graph.bin | cut -f1)"
 else
   echo "==> Walk graph already exists"
 fi

@@ -199,29 +199,109 @@ function pickTerminalKey(
   return bestKey
 }
 
-export function buildAccurateItinerary(
+function buildTransitLeg(
   state: ReachabilityState,
-  destLat: number,
-  destLon: number,
-  preferredKey?: string | null
-): Itinerary | null {
-  const terminalKey = pickTerminalKey(state, destLat, destLon, preferredKey)
-  if (!terminalKey) return null
+  pred: { fromKey: string; patternIdx?: number; boardIdx?: number; alightIdx?: number },
+  fromNode: RouteNode,
+  node: RouteNode,
+  elapsedSeconds: number
+): { leg: Leg; newElapsed: number; chainKey: string } | null {
+  if (
+    pred.patternIdx === undefined ||
+    pred.boardIdx === undefined ||
+    pred.alightIdx === undefined
+  ) {
+    return null
+  }
 
-  const chain = buildChain(state, terminalKey)
-  if (chain.length === 0) return null
+  const pattern = state.graph.patterns[pred.patternIdx]
+  if (!pattern) return null
 
+  // Use the Dijkstra's known arrival time at the boarding stop rather than
+  // accumulated street-routing elapsed time.  Accurate walk/bike legs can be
+  // slightly longer than the Dijkstra estimates, which shifts the clock and
+  // can cause the originally-selected transit departure to be missed.
+  const boardingArrival =
+    state.travelTimes.get(pred.fromKey) ?? elapsedSeconds
+  const timing = computeTransitLegDuration(
+    pattern,
+    pred.boardIdx,
+    pred.alightIdx,
+    state.departureTime,
+    boardingArrival,
+    state.rtData
+  )
+  if (!timing) return null
+
+  const fromPlace: Place = { name: fromNode.name, lat: fromNode.lat, lon: fromNode.lon }
+  const toPlace: Place = { name: node.name, lat: node.lat, lon: node.lon }
+
+  const transitCoords = extractTransitStopGeometry(
+    state,
+    pattern.stopKeys,
+    pred.boardIdx,
+    pred.alightIdx,
+    fromNode,
+    node
+  )
+  const leg: Leg = {
+    mode: pattern.mode,
+    from: fromPlace,
+    to: toPlace,
+    duration: timing.durationSeconds,
+    distance: sumCoordsDistance(transitCoords),
+    route: pattern.route || undefined,
+    delay: timing.delaySeconds,
+    legGeometry: { points: "", coords: transitCoords },
+  }
+
+  return { leg, newElapsed: boardingArrival + timing.durationSeconds, chainKey: "" }
+}
+
+function processChainStep(
+  state: ReachabilityState,
+  chainKey: string,
+  elapsedSeconds: number
+): { leg: Leg; newElapsed: number } | null {
+  const node = getNode(state, chainKey)
+  const pred = state.preds.get(chainKey)
+  const fromNode = pred ? getNode(state, pred.fromKey) : null
+  if (!node || !pred || !fromNode) return null
+
+  const fromPlace: Place = { name: fromNode.name, lat: fromNode.lat, lon: fromNode.lon }
+  const toPlace: Place = { name: node.name, lat: node.lat, lon: node.lon }
+
+  if (pred.kind === "WALK") {
+    const leg = makeWalkLeg(fromPlace, toPlace)
+    return { leg, newElapsed: elapsedSeconds + leg.duration }
+  }
+
+  if (pred.kind === "BIKE") {
+    const leg = makeBikeLeg(fromPlace, toPlace)
+    leg.duration += BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS
+    return { leg, newElapsed: elapsedSeconds + leg.duration }
+  }
+
+  const result = buildTransitLeg(state, pred, fromNode, node, elapsedSeconds)
+  if (!result) return null
+
+  // After a transit leg, sync elapsed time to the Dijkstra's arrival at the
+  // alight stop so that subsequent legs stay consistent with the graph.
+  const dijkstraAlight = state.travelTimes.get(chainKey)
+  return { leg: result.leg, newElapsed: dijkstraAlight ?? result.newElapsed }
+}
+
+function buildLegsFromChain(
+  state: ReachabilityState,
+  chain: string[]
+): { legs: Leg[]; elapsedSeconds: number } | null {
   const firstNode = getNode(state, chain[0])
   if (!firstNode) return null
 
   const legs: Leg[] = []
   let elapsedSeconds = 0
 
-  const origin: Place = {
-    name: "",
-    lat: state.originLat,
-    lon: state.originLon,
-  }
+  const origin: Place = { name: "", lat: state.originLat, lon: state.originLon }
 
   if (distMeters(origin.lat, origin.lon, firstNode.lat, firstNode.lon) > 10) {
     const leg = makeWalkLeg(origin, firstNode)
@@ -230,114 +310,31 @@ export function buildAccurateItinerary(
   }
 
   for (let i = 1; i < chain.length; i++) {
-    const node = getNode(state, chain[i])
-    const pred = state.preds.get(chain[i])
-    const fromNode = pred ? getNode(state, pred.fromKey) : null
-    if (!node || !pred || !fromNode) return null
-
-    const fromPlace: Place = {
-      name: fromNode.name,
-      lat: fromNode.lat,
-      lon: fromNode.lon,
-    }
-    const toPlace: Place = {
-      name: node.name,
-      lat: node.lat,
-      lon: node.lon,
-    }
-
-    if (pred.kind === "WALK") {
-      const leg = makeWalkLeg(fromPlace, toPlace)
-      legs.push(leg)
-      elapsedSeconds += leg.duration
-      continue
-    }
-
-    if (pred.kind === "BIKE") {
-      const leg = makeBikeLeg(fromPlace, toPlace)
-      leg.duration += BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS
-      legs.push(leg)
-      elapsedSeconds += leg.duration
-      continue
-    }
-
-    if (
-      pred.patternIdx === undefined ||
-      pred.boardIdx === undefined ||
-      pred.alightIdx === undefined
-    ) {
-      return null
-    }
-
-    const pattern = state.graph.patterns[pred.patternIdx]
-    if (!pattern) return null
-
-    // Use the Dijkstra's known arrival time at the boarding stop rather than
-    // accumulated street-routing elapsed time.  Accurate walk/bike legs can be
-    // slightly longer than the Dijkstra estimates, which shifts the clock and
-    // can cause the originally-selected transit departure to be missed.
-    const boardingArrival =
-      state.travelTimes.get(pred.fromKey) ?? elapsedSeconds
-    const timing = computeTransitLegDuration(
-      pattern,
-      pred.boardIdx,
-      pred.alightIdx,
-      state.departureTime,
-      boardingArrival,
-      state.rtData
-    )
-    if (!timing) return null
-
-    const transitCoords = extractTransitStopGeometry(
-      state,
-      pattern.stopKeys,
-      pred.boardIdx,
-      pred.alightIdx,
-      fromNode,
-      node
-    )
-    const leg: Leg = {
-      mode: pattern.mode,
-      from: fromPlace,
-      to: toPlace,
-      duration: timing.durationSeconds,
-      distance: sumCoordsDistance(transitCoords),
-      route: pattern.route || undefined,
-      delay: timing.delaySeconds,
-      legGeometry: {
-        points: "",
-        coords: transitCoords,
-      },
-    }
-    legs.push(leg)
-    // After a transit leg, sync elapsed time to the Dijkstra's arrival at the
-    // alight stop so that subsequent legs stay consistent with the graph.
-    const dijkstraAlight = state.travelTimes.get(chain[i])
-    elapsedSeconds = dijkstraAlight ?? boardingArrival + timing.durationSeconds
+    const step = processChainStep(state, chain[i], elapsedSeconds)
+    if (!step) return null
+    legs.push(step.leg)
+    elapsedSeconds = step.newElapsed
   }
 
-  const terminalNode = getNode(state, terminalKey)
-  if (!terminalNode) return null
+  return { legs, elapsedSeconds }
+}
 
-  const destination: Place = {
-    name: "",
-    lat: destLat,
-    lon: destLon,
-  }
+function appendFinalWalkLeg(
+  legs: Leg[],
+  terminalNode: RouteNode,
+  destLat: number,
+  destLon: number
+): number {
+  if (distMeters(terminalNode.lat, terminalNode.lon, destLat, destLon) <= 10) return 0
+  const leg = makeWalkLeg(
+    { name: terminalNode.name, lat: terminalNode.lat, lon: terminalNode.lon },
+    { name: "", lat: destLat, lon: destLon }
+  )
+  legs.push(leg)
+  return leg.duration
+}
 
-  if (distMeters(terminalNode.lat, terminalNode.lon, destLat, destLon) > 10) {
-    const leg = makeWalkLeg(
-      {
-        name: terminalNode.name,
-        lat: terminalNode.lat,
-        lon: terminalNode.lon,
-      },
-      destination
-    )
-    legs.push(leg)
-    elapsedSeconds += leg.duration
-  }
-
+function summarizeLegs(legs: Leg[], elapsedSeconds: number): Itinerary {
   const walkDistance = legs
     .filter((leg) => leg.mode === "WALK")
     .reduce((sum, leg) => sum + leg.distance, 0)
@@ -355,4 +352,31 @@ export function buildAccurateItinerary(
     transfers: Math.max(0, transitLegs.length - 1),
     legs,
   }
+}
+
+export function buildAccurateItinerary(
+  state: ReachabilityState,
+  destLat: number,
+  destLon: number,
+  preferredKey?: string | null
+): Itinerary | null {
+  const terminalKey = pickTerminalKey(state, destLat, destLon, preferredKey)
+  if (!terminalKey) return null
+
+  const chain = buildChain(state, terminalKey)
+  if (chain.length === 0) return null
+
+  const result = buildLegsFromChain(state, chain)
+  if (!result) return null
+
+  const terminalNode = getNode(state, terminalKey)
+  if (!terminalNode) return null
+
+  result.elapsedSeconds += appendFinalWalkLeg(
+    result.legs, terminalNode, destLat, destLon
+  )
+
+  if (result.legs.length === 0) return null
+
+  return summarizeLegs(result.legs, result.elapsedSeconds)
 }

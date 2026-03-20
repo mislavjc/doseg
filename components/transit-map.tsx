@@ -65,7 +65,980 @@ function createMarkerElement(): HTMLDivElement {
   return el
 }
 
-export function TransitMap() {
+function addIsochroneLayer(map: maplibregl.Map) {
+  map.addSource("isochrone", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "isochrone-core",
+    type: "line",
+    source: "isochrone",
+    filter: ["<=", ["get", "time"], 2700],
+    paint: {
+      "line-color": TIME_COLOR_STOPS,
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        1,
+        13,
+        1.5,
+        16,
+        2.5,
+      ],
+      "line-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        0.4,
+        13,
+        0.5,
+        16,
+        0.65,
+      ],
+      "line-blur": ["interpolate", ["linear"], ["zoom"], 10, 1, 14, 0.5],
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+}
+
+function addWalkRingLayer(map: maplibregl.Map) {
+  map.addSource("walk-ring", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "walk-ring",
+    type: "line",
+    source: "walk-ring",
+    paint: {
+      "line-color": TIME_COLOR_STOPS,
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        0.8,
+        13,
+        1.2,
+        16,
+        2,
+      ],
+      "line-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        0.15,
+        13,
+        0.25,
+        16,
+        0.35,
+      ],
+      "line-dasharray": [2, 3],
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+}
+
+function addBajsLayers(map: maplibregl.Map) {
+  map.addSource("bajs", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "bajs-stations-halo",
+    type: "circle",
+    source: "bajs",
+    paint: {
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        4,
+        13,
+        7,
+        16,
+        10,
+      ],
+      "circle-color": modeColor("BIKE"),
+      "circle-opacity": 0.1,
+    },
+  })
+  addBajsStationsLayer(map)
+}
+
+function addBajsStationsLayer(map: maplibregl.Map) {
+  map.addLayer({
+    id: "bajs-stations",
+    type: "circle",
+    source: "bajs",
+    paint: {
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        2.5,
+        13,
+        4.5,
+        16,
+        6.5,
+      ],
+      "circle-color": [
+        "case",
+        ["!", ["get", "isRenting"]],
+        "rgba(148, 163, 184, 0.8)",
+        ["==", ["get", "bikesAvailable"], 0],
+        "rgba(249, 115, 22, 0.8)",
+        ["<=", ["get", "bikesAvailable"], 2],
+        "rgba(245, 158, 11, 0.8)",
+        "rgba(245, 158, 11, 0.8)",
+      ],
+      "circle-stroke-width": 1,
+      "circle-stroke-color": [
+        "case",
+        ["!", ["get", "isReturning"]],
+        "rgba(239, 68, 68, 0.8)",
+        ["==", ["get", "docksAvailable"], 0],
+        "rgba(239, 68, 68, 0.8)",
+        "rgba(255, 255, 255, 0.4)",
+      ],
+    },
+  })
+}
+
+function addVehicleLayers(map: maplibregl.Map) {
+  map.addSource("vehicle-positions", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "vehicle-positions",
+    type: "circle",
+    source: "vehicle-positions",
+    paint: {
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        2,
+        13,
+        4,
+        16,
+        5,
+      ],
+      "circle-color": "#22d3ee",
+      "circle-opacity": 0.85,
+      "circle-stroke-width": 0.5,
+      "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+    },
+  })
+  map.addLayer({
+    id: "vehicle-labels",
+    type: "symbol",
+    source: "vehicle-positions",
+    minzoom: 12,
+    layout: {
+      "text-field": ["get", "line"],
+      "text-size": 9,
+      "text-offset": [0, -1.2],
+      "text-allow-overlap": false,
+      "text-ignore-placement": false,
+      "text-font": ["Open Sans Bold"],
+    },
+    paint: {
+      "text-color": "#ffffff",
+      "text-halo-color": "rgba(0, 0, 0, 0.7)",
+      "text-halo-width": 1,
+    },
+  })
+}
+
+function addPoiSourceAndLayers(map: maplibregl.Map) {
+  map.addSource("poi", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "poi-bg",
+    type: "circle",
+    source: "poi",
+    paint: {
+      "circle-radius": [
+        "interpolate", ["linear"], ["zoom"],
+        10, 5,
+        13, 8,
+        16, 11,
+      ],
+      "circle-color": [
+        "match",
+        ["get", "category"],
+        "hospital", "#ef4444",
+        "school", "#3b82f6",
+        "park", "#22c55e",
+        "pharmacy", "#f97316",
+        "supermarket", "#eab308",
+        "#94a3b8",
+      ],
+      "circle-opacity": 0.9,
+      "circle-stroke-width": 1.5,
+      "circle-stroke-color": "rgba(255, 255, 255, 0.6)",
+    },
+  })
+  addPoiSymbolLayers(map)
+}
+
+function addPoiSymbolLayers(map: maplibregl.Map) {
+  map.addLayer({
+    id: "poi-layer",
+    type: "symbol",
+    source: "poi",
+    layout: {
+      "text-field": [
+        "match",
+        ["get", "category"],
+        "hospital", "H",
+        "school", "Š",
+        "park", "P",
+        "pharmacy", "Lj",
+        "supermarket", "S",
+        "?",
+      ],
+      "text-size": [
+        "interpolate", ["linear"], ["zoom"],
+        10, 7,
+        13, 9,
+        16, 11,
+      ],
+      "text-allow-overlap": true,
+      "text-ignore-placement": true,
+      "text-font": ["Open Sans Bold"],
+    },
+    paint: {
+      "text-color": "#ffffff",
+    },
+  })
+  addPoiNameLabels(map)
+}
+
+function addPoiNameLabels(map: maplibregl.Map) {
+  map.addLayer({
+    id: "poi-labels",
+    type: "symbol",
+    source: "poi",
+    minzoom: 14,
+    layout: {
+      "text-field": ["get", "name"],
+      "text-size": 10,
+      "text-offset": [0, 1.6],
+      "text-anchor": "top",
+      "text-allow-overlap": false,
+      "text-ignore-placement": false,
+      "text-max-width": 12,
+      "text-font": ["Open Sans Regular"],
+    },
+    paint: {
+      "text-color": "#e2e8f0",
+      "text-halo-color": "rgba(0, 0, 0, 0.8)",
+      "text-halo-width": 1,
+    },
+  })
+}
+
+function addPoiClickHandler(
+  map: maplibregl.Map,
+  originRef: React.RefObject<[number, number] | null>
+) {
+  map.on("click", "poi-layer", (e) => {
+    if (!e.features || e.features.length === 0) return
+    e.originalEvent.stopPropagation()
+    const f = e.features[0]
+    const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [
+      number,
+      number,
+    ]
+    const p = f.properties as Record<string, unknown>
+    const name = String(p.name ?? "Ustanova")
+    const category = String(p.category ?? "")
+    showPoiPopup(map, coords, name, category)
+  })
+  map.on("mouseenter", "poi-layer", () => {
+    map.getCanvas().style.cursor = "pointer"
+  })
+  map.on("mouseleave", "poi-layer", () => {
+    map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
+  })
+  map.on("mouseenter", "poi-labels", () => {
+    map.getCanvas().style.cursor = "pointer"
+  })
+  map.on("mouseleave", "poi-labels", () => {
+    map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
+  })
+}
+
+function showPoiPopup(
+  map: maplibregl.Map,
+  coords: [number, number],
+  name: string,
+  category: string
+) {
+  const categoryLabels: Record<string, string> = {
+    hospital: "Bolnica",
+    school: "Škola",
+    park: "Park",
+    pharmacy: "Ljekarna",
+    supermarket: "Supermarket",
+  }
+  const categoryColors: Record<string, string> = {
+    hospital: "#ef4444",
+    school: "#3b82f6",
+    park: "#22c55e",
+    pharmacy: "#f97316",
+    supermarket: "#eab308",
+  }
+  const label = categoryLabels[category] ?? category
+  const color = categoryColors[category] ?? "#94a3b8"
+
+  new maplibregl.Popup({
+    closeButton: true,
+    closeOnClick: true,
+    className: "poi-popup",
+    maxWidth: "220px",
+  })
+    .setLngLat(coords)
+    .setHTML(
+      `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
+        `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
+        `<div style="color:${color};font-size:11px">${label}</div>` +
+        `</div>`
+    )
+    .addTo(map)
+}
+
+function addBajsClickHandler(
+  map: maplibregl.Map,
+  originRef: React.RefObject<[number, number] | null>
+) {
+  map.on("click", "bajs-stations", (e) => {
+    if (!e.features || e.features.length === 0) return
+    e.originalEvent.stopPropagation()
+    const f = e.features[0]
+    const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [number, number]
+    const p = f.properties as Record<string, unknown>
+    showBajsPopup(map, coords, p)
+  })
+  map.on("mouseenter", "bajs-stations", () => {
+    map.getCanvas().style.cursor = "pointer"
+  })
+  map.on("mouseleave", "bajs-stations", () => {
+    map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
+  })
+}
+
+function showBajsPopup(
+  map: maplibregl.Map,
+  coords: [number, number],
+  p: Record<string, unknown>
+) {
+  const name = String(p.name ?? "Stanica")
+  const bikes = Number(p.bikesAvailable ?? 0)
+  const docks = Number(p.docksAvailable ?? 0)
+  const isRenting = p.isRenting !== false && p.isRenting !== "false" && p.isRenting !== 0
+  const isReturning = p.isReturning !== false && p.isReturning !== "false" && p.isReturning !== 0
+
+  let status = "Aktivna"
+  if (!isRenting && !isReturning) status = "Ne radi"
+  else if (!isRenting) status = "Ne iznajmljuje"
+  else if (!isReturning) status = "Ne prima bicikle"
+
+  new maplibregl.Popup({
+    closeButton: true,
+    closeOnClick: true,
+    className: "bajs-popup",
+    maxWidth: "220px",
+  })
+    .setLngLat(coords)
+    .setHTML(
+      `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
+        `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
+        `<div>${bikes} bicikala</div>` +
+        `<div>${docks} mjesta</div>` +
+        `<div style="margin-top:4px;color:${status === "Aktivna" ? "#4ade80" : "#f87171"};font-size:11px">${status}</div>` +
+      `</div>`
+    )
+    .addTo(map)
+}
+
+function addPreviewLayers(map: maplibregl.Map) {
+  map.addSource("preview", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "preview-line",
+    type: "line",
+    source: "preview",
+    paint: {
+      "line-color": "rgba(255, 255, 255, 0.25)",
+      "line-width": 1.5,
+      "line-dasharray": [4, 4],
+    },
+    layout: { "line-cap": "round" },
+  })
+  map.addSource("dest-dot", {
+    type: "geojson",
+    data: EMPTY_FC,
+  })
+  map.addLayer({
+    id: "dest-dot",
+    type: "circle",
+    source: "dest-dot",
+    paint: {
+      "circle-radius": 4,
+      "circle-color": "rgba(255, 255, 255, 0.7)",
+      "circle-stroke-width": 1.5,
+      "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+    },
+  })
+}
+
+function addRouteSourceAndLayers(map: maplibregl.Map) {
+  map.addSource("route", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "route-casing",
+    type: "line",
+    source: "route",
+    paint: {
+      "line-color": "#fff",
+      "line-width": 8,
+      "line-opacity": 0.25,
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+  addRouteModeLayers(map)
+  addRouteTailLayers(map)
+}
+
+function addRouteModeLayers(map: maplibregl.Map) {
+  map.addLayer({
+    id: "route-walk",
+    type: "line",
+    source: "route",
+    filter: ["==", ["get", "mode"], "WALK"],
+    paint: {
+      "line-color": modeColor("WALK"),
+      "line-width": 3,
+      "line-dasharray": [1.5, 2],
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+  map.addLayer({
+    id: "route-bike",
+    type: "line",
+    source: "route",
+    filter: ["==", ["get", "mode"], "BIKE"],
+    paint: {
+      "line-color": modeColor("BIKE"),
+      "line-width": 3.5,
+      "line-dasharray": [0.8, 1.4],
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+  addRouteTransitLayer(map)
+}
+
+function addRouteTransitLayer(map: maplibregl.Map) {
+  map.addLayer({
+    id: "route-transit",
+    type: "line",
+    source: "route",
+    filter: [
+      "all",
+      ["!=", ["get", "mode"], "WALK"],
+      ["!=", ["get", "mode"], "BIKE"],
+    ],
+    paint: {
+      "line-color": [
+        "match",
+        ["get", "mode"],
+        "BIKE",
+        modeColor("BIKE"),
+        "TRAM",
+        modeColor("TRAM"),
+        "BUS",
+        modeColor("BUS"),
+        "#e2e8f0",
+      ],
+      "line-width": 4,
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+}
+
+function addRouteTailLayers(map: maplibregl.Map) {
+  map.addSource("route-tail", { type: "geojson", data: EMPTY_FC })
+  map.addLayer({
+    id: "route-tail-casing",
+    type: "line",
+    source: "route-tail",
+    paint: {
+      "line-color": "#fff",
+      "line-width": 8,
+      "line-opacity": 0.25,
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+  map.addLayer({
+    id: "route-tail",
+    type: "line",
+    source: "route-tail",
+    paint: {
+      "line-color": modeColor("WALK"),
+      "line-width": 3,
+      "line-dasharray": [1.5, 2],
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  })
+}
+
+function addAllMapSources(map: maplibregl.Map) {
+  if (map.getLayer("background")) {
+    map.setPaintProperty("background", "background-color", "#1a1a24")
+  }
+  addIsochroneLayer(map)
+  addWalkRingLayer(map)
+  addBajsLayers(map)
+  addVehicleLayers(map)
+  addPoiSourceAndLayers(map)
+  addPreviewLayers(map)
+  addRouteSourceAndLayers(map)
+}
+
+function updatePreviewAndDot(
+  map: maplibregl.Map,
+  origin: [number, number],
+  dest: [number, number],
+  isTouch: boolean
+) {
+  if (!isTouch) {
+    const previewSrc = map.getSource(
+      "preview"
+    ) as maplibregl.GeoJSONSource
+    if (previewSrc) {
+      previewSrc.setData({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "LineString", coordinates: [origin, dest] },
+          },
+        ],
+      })
+    }
+  }
+  const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+  if (dotSrc) {
+    dotSrc.setData({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {},
+          geometry: { type: "Point", coordinates: dest },
+        },
+      ],
+    })
+  }
+}
+
+function reconstructAndRenderRoute(
+  map: maplibregl.Map,
+  rd: RoutingData,
+  lat: number,
+  lng: number,
+  nearest: string | null,
+  dest: [number, number],
+  routeTailOriginRef: React.MutableRefObject<[number, number] | null>,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void
+) {
+  const itinerary = reconstructRoute(rd, lat, lng, nearest)
+
+  if (itinerary) {
+    renderRouteBase(map, itinerary)
+    const tailStop = nearest ? rd.stops.get(nearest) : null
+    routeTailOriginRef.current = tailStop
+      ? [tailStop.lon, tailStop.lat]
+      : null
+  } else {
+    routeTailOriginRef.current = null
+    clearRenderedRoute(map)
+    setRoute(null)
+    setRouteLoading(false)
+  }
+
+  renderRouteTail(map, routeTailOriginRef.current, dest)
+}
+
+interface ScheduleExactRouteOpts {
+  map: maplibregl.Map
+  originRef: React.RefObject<[number, number] | null>
+  effectiveTimeRef: React.RefObject<string>
+  bajsEnabledRef: React.RefObject<boolean>
+  exactRouteTimerRef: React.MutableRefObject<number>
+  exactRouteAbortRef: React.MutableRefObject<AbortController | null>
+  exactRouteSeqRef: React.MutableRefObject<number>
+  routeTailOriginRef: React.MutableRefObject<[number, number] | null>
+  setRoute: (r: Itinerary | null) => void
+  setRouteLoading: (l: boolean) => void
+}
+
+function scheduleExactRoute(
+  destLat: number,
+  destLon: number,
+  preferredKey: string | null,
+  opts: ScheduleExactRouteOpts
+) {
+  const origin = opts.originRef.current
+  if (!origin) return
+
+  if (opts.exactRouteTimerRef.current) {
+    window.clearTimeout(opts.exactRouteTimerRef.current)
+  }
+  if (opts.exactRouteAbortRef.current) {
+    opts.exactRouteAbortRef.current.abort()
+  }
+
+  const requestSeq = ++opts.exactRouteSeqRef.current
+  opts.setRouteLoading(true)
+  opts.exactRouteTimerRef.current = window.setTimeout(() => {
+    const controller = new AbortController()
+    opts.exactRouteAbortRef.current = controller
+
+    fetchExactRoute(
+      {
+        originLat: origin[1],
+        originLon: origin[0],
+        destLat,
+        destLon,
+        time: opts.effectiveTimeRef.current,
+        bajs: opts.bajsEnabledRef.current,
+        preferredKey,
+      },
+      controller.signal
+    )
+      .then((itinerary) => {
+        if (
+          controller.signal.aborted ||
+          requestSeq !== opts.exactRouteSeqRef.current
+        ) {
+          return
+        }
+        renderFullRoute(opts.map, itinerary)
+        opts.routeTailOriginRef.current = null
+        opts.setRoute(itinerary)
+        opts.setRouteLoading(false)
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return
+        console.error("Exact route fetch failed:", err)
+        opts.setRouteLoading(false)
+      })
+  }, 160)
+}
+
+interface HandleDestinationOpts {
+  map: maplibregl.Map
+  originRef: React.RefObject<[number, number] | null>
+  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  isTouchRef: React.RefObject<boolean>
+  routingDataRef: React.RefObject<RoutingData | null>
+  lastNearestRef: React.MutableRefObject<string | null>
+  routeTailOriginRef: React.MutableRefObject<[number, number] | null>
+  exactRouteOpts: ScheduleExactRouteOpts
+  setRoute: (r: Itinerary | null) => void
+  setRouteLoading: (l: boolean) => void
+}
+
+function handleDestinationAt(
+  lat: number,
+  lng: number,
+  opts: HandleDestinationOpts
+) {
+  const o = opts.originRef.current
+  if (!o) return
+
+  opts.pendingDestinationRef.current = { lat, lng }
+  const dest: [number, number] = [lng, lat]
+
+  updatePreviewAndDot(opts.map, o, dest, opts.isTouchRef.current)
+
+  const rd = opts.routingDataRef.current
+  if (!rd) return
+
+  const nearest = findNearestStop(rd, lat, lng)
+  const nearestChanged = nearest !== opts.lastNearestRef.current
+
+  if (nearestChanged) {
+    reconstructAndRenderRoute(
+      opts.map, rd, lat, lng, nearest, dest,
+      opts.routeTailOriginRef, opts.setRoute, opts.setRouteLoading
+    )
+    opts.lastNearestRef.current = nearest
+  } else {
+    renderRouteTail(opts.map, opts.routeTailOriginRef.current, dest)
+  }
+
+  opts.setRoute(null)
+  scheduleExactRoute(lat, lng, nearest, opts.exactRouteOpts)
+}
+
+function clearMapOnMouseOut(
+  map: maplibregl.Map,
+  exactRouteTimerRef: React.MutableRefObject<number>,
+  exactRouteAbortRef: React.MutableRefObject<AbortController | null>,
+  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>,
+  setRouteLoading: (l: boolean) => void
+) {
+  const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+  if (previewSrc) previewSrc.setData(EMPTY_FC)
+  const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+  if (dotSrc) dotSrc.setData(EMPTY_FC)
+  if (exactRouteTimerRef.current) {
+    window.clearTimeout(exactRouteTimerRef.current)
+  }
+  if (exactRouteAbortRef.current) {
+    exactRouteAbortRef.current.abort()
+  }
+  pendingDestinationRef.current = null
+  setRouteLoading(false)
+}
+
+function cleanupMapInit(
+  map: maplibregl.Map,
+  refs: {
+    bajsAbortRef: React.MutableRefObject<AbortController | null>
+    routingAbortRef: React.MutableRefObject<AbortController | null>
+    exactRouteAbortRef: React.MutableRefObject<AbortController | null>
+    exactRouteTimerRef: React.MutableRefObject<number>
+    vehicleIntervalRef: React.MutableRefObject<number>
+    poiAbortRef: React.MutableRefObject<AbortController | null>
+    mapRef: React.MutableRefObject<maplibregl.Map | null>
+    handleDestinationRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>
+    routeTailOriginRef: React.MutableRefObject<[number, number] | null>
+    rafRef: React.MutableRefObject<number>
+  },
+  setMapReady: (v: boolean) => void
+) {
+  if (refs.bajsAbortRef.current) refs.bajsAbortRef.current.abort()
+  if (refs.routingAbortRef.current) refs.routingAbortRef.current.abort()
+  if (refs.exactRouteAbortRef.current) refs.exactRouteAbortRef.current.abort()
+  if (refs.exactRouteTimerRef.current) {
+    window.clearTimeout(refs.exactRouteTimerRef.current)
+  }
+  if (refs.vehicleIntervalRef.current) {
+    window.clearInterval(refs.vehicleIntervalRef.current)
+  }
+  if (refs.poiAbortRef.current) refs.poiAbortRef.current.abort()
+  map.remove()
+  refs.mapRef.current = null
+  refs.handleDestinationRef.current = null
+  setMapReady(false)
+  refs.routeTailOriginRef.current = null
+  cancelAnimationFrame(refs.rafRef.current)
+}
+
+type VehicleRecord = {
+  tripId: string
+  routeId?: string | null
+  lat: number
+  lon: number
+  bearing?: number
+  speed?: number
+}
+
+function buildVehicleFeatureCollection(
+  vehicles: VehicleRecord[]
+): GeoJSON.FeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: vehicles.map((v) => {
+      const line = v.routeId
+        ? v.routeId.replace(/^[A-Z]+_/, "")
+        : v.tripId.split("_")[0] ?? ""
+      return {
+        type: "Feature" as const,
+        geometry: { type: "Point" as const, coordinates: [v.lon, v.lat] },
+        properties: { tripId: v.tripId, line, bearing: v.bearing ?? 0, speed: v.speed ?? 0 },
+      }
+    }),
+  }
+}
+
+function resetOriginMapState(
+  map: maplibregl.Map,
+  refs: {
+    markerRef: React.MutableRefObject<maplibregl.Marker | null>
+    exactRouteAbortRef: React.MutableRefObject<AbortController | null>
+    exactRouteTimerRef: React.MutableRefObject<number>
+    routingAbortRef: React.MutableRefObject<AbortController | null>
+    exactRouteSeqRef: React.MutableRefObject<number>
+    pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+    routingDataRef: React.MutableRefObject<RoutingData | null>
+  },
+  setRouteLoading: (l: boolean) => void
+) {
+  if (refs.markerRef.current) {
+    refs.markerRef.current.remove()
+    refs.markerRef.current = null
+  }
+
+  const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
+  if (routeSource) routeSource.setData(EMPTY_FC)
+  const routeTailSource = map.getSource(
+    "route-tail"
+  ) as maplibregl.GeoJSONSource
+  if (routeTailSource) routeTailSource.setData(EMPTY_FC)
+  if (refs.exactRouteAbortRef.current) refs.exactRouteAbortRef.current.abort()
+  if (refs.exactRouteTimerRef.current) {
+    window.clearTimeout(refs.exactRouteTimerRef.current)
+  }
+  if (refs.routingAbortRef.current) refs.routingAbortRef.current.abort()
+  refs.exactRouteSeqRef.current++
+  const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+  if (previewSrc) previewSrc.setData(EMPTY_FC)
+  const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+  if (dotSrc) dotSrc.setData(EMPTY_FC)
+  setRouteLoading(false)
+  refs.pendingDestinationRef.current = null
+  refs.routingDataRef.current = null
+}
+
+function clearOriginFromMap(
+  map: maplibregl.Map,
+  originRef: React.MutableRefObject<[number, number] | null>,
+  routeTailOriginRef: React.MutableRefObject<[number, number] | null>,
+  setRoute: (r: Itinerary | null) => void
+) {
+  const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
+  if (isoSource) isoSource.setData(EMPTY_FC)
+  const walkRingSrc = map.getSource("walk-ring") as maplibregl.GeoJSONSource
+  if (walkRingSrc) walkRingSrc.setData(EMPTY_FC)
+  map.getCanvas().style.cursor = ""
+  originRef.current = null
+  routeTailOriginRef.current = null
+  setRoute(null)
+}
+
+function handleIsochroneSuccess(
+  map: maplibregl.Map,
+  geojson: IsochroneResponse,
+  statsCtaDismissedRef: React.RefObject<boolean>,
+  setLoading: (l: boolean) => void,
+  setShowStatsCta: (v: boolean) => void
+) {
+  const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
+  if (isoSource) isoSource.setData(geojson)
+  const walkRingSrc = map.getSource(
+    "walk-ring"
+  ) as maplibregl.GeoJSONSource
+  if (walkRingSrc) {
+    walkRingSrc.setData(geojson.walkRing ?? EMPTY_FC)
+  }
+  setLoading(false)
+  map.getCanvas().style.cursor = "crosshair"
+  if (
+    !statsCtaDismissedRef.current &&
+    !localStorage.getItem("doseg-stats-cta")
+  ) {
+    setShowStatsCta(true)
+  }
+}
+
+function handleIsochroneError(
+  map: maplibregl.Map,
+  err: Error,
+  routingController: AbortController,
+  setError: (e: string | null) => void,
+  setLoading: (l: boolean) => void
+) {
+  console.error("Isochrone fetch failed:", err)
+  routingController.abort()
+  const msg =
+    err.message?.includes("502") || err.message?.includes("503")
+      ? "Usluga javnog prijevoza je privremeno nedostupna"
+      : "Nije moguće učitati podatke o dosegu"
+  setError(msg)
+  setLoading(false)
+  map.getCanvas().style.cursor = "crosshair"
+}
+
+function startIsochroneFetches(
+  map: maplibregl.Map,
+  originLat: number,
+  originLon: number,
+  effectiveTime: string,
+  bajsEnabled: boolean,
+  isoController: AbortController,
+  routingController: AbortController,
+  statsCtaDismissedRef: React.RefObject<boolean>,
+  routingDataRef: React.MutableRefObject<RoutingData | null>,
+  pendingDestinationRef: React.RefObject<{ lat: number; lng: number } | null>,
+  handleDestinationRef: React.RefObject<((lat: number, lng: number) => void) | null>,
+  setLoading: (l: boolean) => void,
+  setShowStatsCta: (v: boolean) => void,
+  setError: (e: string | null) => void
+) {
+  fetchIsochrone(
+    { lat: originLat, lon: originLon, time: effectiveTime, bajs: bajsEnabled },
+    isoController.signal
+  )
+    .then((geojson: IsochroneResponse) => {
+      if (isoController.signal.aborted) return
+      handleIsochroneSuccess(map, geojson, statsCtaDismissedRef, setLoading, setShowStatsCta)
+    })
+    .catch((err) => {
+      if (isoController.signal.aborted) return
+      handleIsochroneError(map, err, routingController, setError, setLoading)
+    })
+
+  fetchIsochroneRouting(
+    { lat: originLat, lon: originLon, time: effectiveTime, bajs: bajsEnabled },
+    routingController.signal
+  )
+    .then((response) => {
+      if (routingController.signal.aborted) return
+      if (!response.routing) return
+      routingDataRef.current = parseRoutingData(response.routing, originLat, originLon)
+      const pendingDestination = pendingDestinationRef.current
+      if (pendingDestination && handleDestinationRef.current) {
+        handleDestinationRef.current(pendingDestination.lat, pendingDestination.lng)
+      }
+    })
+    .catch((err) => {
+      if (routingController.signal.aborted) return
+      console.error("Isochrone routing fetch failed:", err)
+    })
+}
+
+type MapRefs = {
+  containerRef: React.RefObject<HTMLDivElement | null>
+  mapRef: React.MutableRefObject<maplibregl.Map | null>
+  markerRef: React.MutableRefObject<maplibregl.Marker | null>
+  originRef: React.MutableRefObject<[number, number] | null>
+  isoAbortRef: React.MutableRefObject<AbortController | null>
+  routingAbortRef: React.MutableRefObject<AbortController | null>
+  bajsAbortRef: React.MutableRefObject<AbortController | null>
+  exactRouteAbortRef: React.MutableRefObject<AbortController | null>
+  exactRouteTimerRef: React.MutableRefObject<number>
+  exactRouteSeqRef: React.MutableRefObject<number>
+  routingDataRef: React.MutableRefObject<RoutingData | null>
+  handleDestinationRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>
+  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  lastNearestRef: React.MutableRefObject<string | null>
+  routeTailOriginRef: React.MutableRefObject<[number, number] | null>
+  rafRef: React.MutableRefObject<number>
+  isTouchRef: React.MutableRefObject<boolean>
+  effectiveTimeRef: React.MutableRefObject<string>
+  bajsEnabledRef: React.MutableRefObject<boolean>
+  statsCtaDismissedRef: React.MutableRefObject<boolean>
+  poiAbortRef: React.MutableRefObject<AbortController | null>
+  vehicleIntervalRef: React.MutableRefObject<number>
+  prevVehiclesJsonRef: React.MutableRefObject<string>
+  initialLoadRef: React.MutableRefObject<boolean>
+}
+
+
+function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; hasOrigin: boolean }): MapRefs {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const markerRef = useRef<maplibregl.Marker | null>(null)
@@ -77,60 +1050,36 @@ export function TransitMap() {
   const exactRouteTimerRef = useRef<number>(0)
   const exactRouteSeqRef = useRef(0)
   const routingDataRef = useRef<RoutingData | null>(null)
-  const handleDestinationRef = useRef<
-    ((lat: number, lng: number) => void) | null
-  >(null)
-  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(
-    null
-  )
+  const handleDestinationRef = useRef<((lat: number, lng: number) => void) | null>(null)
+  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(null)
   const lastNearestRef = useRef<string | null>(null)
   const routeTailOriginRef = useRef<[number, number] | null>(null)
   const rafRef = useRef<number>(0)
   const isTouchRef = useRef(false)
-
-  const [coords, setCoords] = useQueryStates({
-    lat: parseAsFloat,
-    lon: parseAsFloat,
-  })
-  const [time, setTime] = useQueryState("t", parseAsString)
-  const [bajs, setBajs] = useQueryState("bajs", parseAsString)
-  const [defaultTime] = useState(formatTime)
-  const effectiveTime = time ?? defaultTime
-  const bajsEnabled = bajs === "1"
-  const effectiveTimeRef = useRef(effectiveTime)
-  const bajsEnabledRef = useRef(bajsEnabled)
-  const [route, setRoute] = useState<Itinerary | null>(null)
-  const [routeLoading, setRouteLoading] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [mapReady, setMapReady] = useState(false)
-  const [showStatsCta, setShowStatsCta] = useState(false)
+  const effectiveTimeRef = useRef(s.effectiveTime)
+  const bajsEnabledRef = useRef(s.bajsEnabled)
   const statsCtaDismissedRef = useRef(false)
-  const [linkCopied, setLinkCopied] = useState(false)
-  const [vehiclePositions, setVehiclePositions] = useState<
-    GeoJSON.FeatureCollection
-  >(EMPTY_FC)
-  const [vehiclesEnabled, setVehiclesEnabled] = useState(false)
-  const [poiEnabled, setPoiEnabled] = useState(false)
-  const [layersOpen, setLayersOpen] = useState(false)
   const poiAbortRef = useRef<AbortController | null>(null)
   const vehicleIntervalRef = useRef<number>(0)
   const prevVehiclesJsonRef = useRef("")
+  const initialLoadRef = useRef(s.hasOrigin)
 
-  const originLat = coords.lat
-  const originLon = coords.lon
-  const hasOrigin = originLat !== null && originLon !== null
-  const initialLoadRef = useRef(hasOrigin)
+  return {
+    containerRef, mapRef, markerRef, originRef, isoAbortRef, routingAbortRef,
+    bajsAbortRef, exactRouteAbortRef, exactRouteTimerRef, exactRouteSeqRef,
+    routingDataRef, handleDestinationRef, pendingDestinationRef, lastNearestRef,
+    routeTailOriginRef, rafRef, isTouchRef, effectiveTimeRef, bajsEnabledRef,
+    statsCtaDismissedRef, poiAbortRef, vehicleIntervalRef, prevVehiclesJsonRef, initialLoadRef,
+  }
+}
 
-  useEffect(() => {
-    effectiveTimeRef.current = effectiveTime
-  }, [effectiveTime])
-
-  useEffect(() => {
-    bajsEnabledRef.current = bajsEnabled
-  }, [bajsEnabled])
-
-  // ESC to clear origin
+function useEscapeKey(
+  originRef: React.RefObject<[number, number] | null>,
+  setCoords: SetCoords,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void,
+  setError: (e: string | null) => void
+) {
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && originRef.current) {
@@ -142,712 +1091,152 @@ export function TransitMap() {
     }
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [setCoords])
+  }, [setCoords, originRef, setRoute, setRouteLoading, setError])
+}
 
-  // Map initialization (runs once)
+function useMapInit(
+  refs: MapRefs,
+  setMapReady: (v: boolean) => void,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void,
+  setLoading: (l: boolean) => void,
+  setError: (e: string | null) => void,
+  setCoords: SetCoords
+) {
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!refs.containerRef.current) return
 
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-      center: ZAGREB,
-      zoom: 12,
-      attributionControl: false,
-      canvasContextAttributes: { preserveDrawingBuffer: true },
-    })
-
-    map.getContainer().addEventListener(
-      "touchstart",
-      () => {
-        isTouchRef.current = true
-      },
-      { once: true, passive: true }
-    )
-
-    map.addControl(
-      new maplibregl.NavigationControl({ showCompass: false }),
-      "top-right"
-    )
-    map.addControl(
-      new maplibregl.AttributionControl({ compact: true }),
-      "bottom-right"
-    )
+    const map = createMap(refs.containerRef.current, refs.isTouchRef)
 
     map.on("load", () => {
-      mapRef.current = map
-
-      // Lighten the dark basemap slightly
-      if (map.getLayer("background")) {
-        map.setPaintProperty("background", "background-color", "#1a1a24")
-      }
-
-      map.addSource("isochrone", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "isochrone-core",
-        type: "line",
-        source: "isochrone",
-        filter: ["<=", ["get", "time"], 2700],
-        paint: {
-          "line-color": TIME_COLOR_STOPS,
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            1,
-            13,
-            1.5,
-            16,
-            2.5,
-          ],
-          "line-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            0.4,
-            13,
-            0.5,
-            16,
-            0.65,
-          ],
-          "line-blur": ["interpolate", ["linear"], ["zoom"], 10, 1, 14, 0.5],
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-
-      // Walk-ring: walking-only reach for comparison
-      map.addSource("walk-ring", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "walk-ring",
-        type: "line",
-        source: "walk-ring",
-        paint: {
-          "line-color": TIME_COLOR_STOPS,
-          "line-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            0.8,
-            13,
-            1.2,
-            16,
-            2,
-          ],
-          "line-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            0.15,
-            13,
-            0.25,
-            16,
-            0.35,
-          ],
-          "line-dasharray": [2, 3],
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-
-      map.addSource("bajs", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "bajs-stations-halo",
-        type: "circle",
-        source: "bajs",
-        paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            4,
-            13,
-            7,
-            16,
-            10,
-          ],
-          "circle-color": modeColor("BIKE"),
-          "circle-opacity": 0.1,
-        },
-      })
-      map.addLayer({
-        id: "bajs-stations",
-        type: "circle",
-        source: "bajs",
-        paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            2.5,
-            13,
-            4.5,
-            16,
-            6.5,
-          ],
-          "circle-color": [
-            "case",
-            ["!", ["get", "isRenting"]],
-            "rgba(148, 163, 184, 0.8)",
-            ["==", ["get", "bikesAvailable"], 0],
-            "rgba(249, 115, 22, 0.8)",
-            ["<=", ["get", "bikesAvailable"], 2],
-            "rgba(245, 158, 11, 0.8)",
-            "rgba(245, 158, 11, 0.8)",
-          ],
-          "circle-stroke-width": 1,
-          "circle-stroke-color": [
-            "case",
-            ["!", ["get", "isReturning"]],
-            "rgba(239, 68, 68, 0.8)",
-            ["==", ["get", "docksAvailable"], 0],
-            "rgba(239, 68, 68, 0.8)",
-            "rgba(255, 255, 255, 0.4)",
-          ],
-        },
-      })
-
-      // Vehicle positions layer
-      map.addSource("vehicle-positions", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "vehicle-positions",
-        type: "circle",
-        source: "vehicle-positions",
-        paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            10,
-            2,
-            13,
-            4,
-            16,
-            5,
-          ],
-          "circle-color": "#22d3ee",
-          "circle-opacity": 0.85,
-          "circle-stroke-width": 0.5,
-          "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
-        },
-      })
-
-      // Vehicle line number labels
-      map.addLayer({
-        id: "vehicle-labels",
-        type: "symbol",
-        source: "vehicle-positions",
-        minzoom: 12,
-        layout: {
-          "text-field": ["get", "line"],
-          "text-size": 9,
-          "text-offset": [0, -1.2],
-          "text-allow-overlap": false,
-          "text-ignore-placement": false,
-          "text-font": ["Open Sans Bold"],
-        },
-        paint: {
-          "text-color": "#ffffff",
-          "text-halo-color": "rgba(0, 0, 0, 0.7)",
-          "text-halo-width": 1,
-        },
-      })
-
-      // POI layer: colored circles with category letter
-      map.addSource("poi", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "poi-bg",
-        type: "circle",
-        source: "poi",
-        paint: {
-          "circle-radius": [
-            "interpolate", ["linear"], ["zoom"],
-            10, 5,
-            13, 8,
-            16, 11,
-          ],
-          "circle-color": [
-            "match",
-            ["get", "category"],
-            "hospital", "#ef4444",
-            "school", "#3b82f6",
-            "park", "#22c55e",
-            "pharmacy", "#f97316",
-            "supermarket", "#eab308",
-            "#94a3b8",
-          ],
-          "circle-opacity": 0.9,
-          "circle-stroke-width": 1.5,
-          "circle-stroke-color": "rgba(255, 255, 255, 0.6)",
-        },
-      })
-      // POI category letter on circle
-      map.addLayer({
-        id: "poi-layer",
-        type: "symbol",
-        source: "poi",
-        layout: {
-          "text-field": [
-            "match",
-            ["get", "category"],
-            "hospital", "H",
-            "school", "Š",
-            "park", "P",
-            "pharmacy", "Lj",
-            "supermarket", "S",
-            "?",
-          ],
-          "text-size": [
-            "interpolate", ["linear"], ["zoom"],
-            10, 7,
-            13, 9,
-            16, 11,
-          ],
-          "text-allow-overlap": true,
-          "text-ignore-placement": true,
-          "text-font": ["Open Sans Bold"],
-        },
-        paint: {
-          "text-color": "#ffffff",
-        },
-      })
-      // POI name labels (visible at higher zoom)
-      map.addLayer({
-        id: "poi-labels",
-        type: "symbol",
-        source: "poi",
-        minzoom: 14,
-        layout: {
-          "text-field": ["get", "name"],
-          "text-size": 10,
-          "text-offset": [0, 1.6],
-          "text-anchor": "top",
-          "text-allow-overlap": false,
-          "text-ignore-placement": false,
-          "text-max-width": 12,
-          "text-font": ["Open Sans Regular"],
-        },
-        paint: {
-          "text-color": "#e2e8f0",
-          "text-halo-color": "rgba(0, 0, 0, 0.8)",
-          "text-halo-width": 1,
-        },
-      })
-
-      // POI click popup
-      map.on("click", "poi-layer", (e) => {
-        if (!e.features || e.features.length === 0) return
-        e.originalEvent.stopPropagation()
-        const f = e.features[0]
-        const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [
-          number,
-          number,
-        ]
-        const p = f.properties as Record<string, unknown>
-        const name = String(p.name ?? "Ustanova")
-        const category = String(p.category ?? "")
-        const categoryLabels: Record<string, string> = {
-          hospital: "Bolnica",
-          school: "Škola",
-          park: "Park",
-          pharmacy: "Ljekarna",
-          supermarket: "Supermarket",
-        }
-        const categoryColors: Record<string, string> = {
-          hospital: "#ef4444",
-          school: "#3b82f6",
-          park: "#22c55e",
-          pharmacy: "#f97316",
-          supermarket: "#eab308",
-        }
-        const label = categoryLabels[category] ?? category
-        const color = categoryColors[category] ?? "#94a3b8"
-
-        new maplibregl.Popup({
-          closeButton: true,
-          closeOnClick: true,
-          className: "poi-popup",
-          maxWidth: "220px",
-        })
-          .setLngLat(coords)
-          .setHTML(
-            `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
-              `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
-              `<div style="color:${color};font-size:11px">${label}</div>` +
-              `</div>`
-          )
-          .addTo(map)
-      })
-      map.on("mouseenter", "poi-layer", () => {
-        map.getCanvas().style.cursor = "pointer"
-      })
-      map.on("mouseleave", "poi-layer", () => {
-        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
-      })
-      map.on("mouseenter", "poi-labels", () => {
-        map.getCanvas().style.cursor = "pointer"
-      })
-      map.on("mouseleave", "poi-labels", () => {
-        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
-      })
-
-      // BAJS station click popup
-      map.on("click", "bajs-stations", (e) => {
-        if (!e.features || e.features.length === 0) return
-        e.originalEvent.stopPropagation()
-        const f = e.features[0]
-        const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [number, number]
-        const p = f.properties as Record<string, unknown>
-        const name = String(p.name ?? "Stanica")
-        const bikes = Number(p.bikesAvailable ?? 0)
-        const docks = Number(p.docksAvailable ?? 0)
-        const isRenting = p.isRenting !== false && p.isRenting !== "false" && p.isRenting !== 0
-        const isReturning = p.isReturning !== false && p.isReturning !== "false" && p.isReturning !== 0
-
-        let status = "Aktivna"
-        if (!isRenting && !isReturning) status = "Ne radi"
-        else if (!isRenting) status = "Ne iznajmljuje"
-        else if (!isReturning) status = "Ne prima bicikle"
-
-        new maplibregl.Popup({
-          closeButton: true,
-          closeOnClick: true,
-          className: "bajs-popup",
-          maxWidth: "220px",
-        })
-          .setLngLat(coords)
-          .setHTML(
-            `<div style="font-family:system-ui,sans-serif;color:#e2e8f0;font-size:12px;line-height:1.5">` +
-              `<div style="font-weight:600;font-size:13px;margin-bottom:4px">${name}</div>` +
-              `<div>${bikes} bicikala</div>` +
-              `<div>${docks} mjesta</div>` +
-              `<div style="margin-top:4px;color:${status === "Aktivna" ? "#4ade80" : "#f87171"};font-size:11px">${status}</div>` +
-            `</div>`
-          )
-          .addTo(map)
-      })
-      map.on("mouseenter", "bajs-stations", () => {
-        map.getCanvas().style.cursor = "pointer"
-      })
-      map.on("mouseleave", "bajs-stations", () => {
-        map.getCanvas().style.cursor = originRef.current ? "crosshair" : ""
-      })
-
-      // Preview line: instant straight line from origin to cursor
-      map.addSource("preview", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "preview-line",
-        type: "line",
-        source: "preview",
-        paint: {
-          "line-color": "rgba(255, 255, 255, 0.25)",
-          "line-width": 1.5,
-          "line-dasharray": [4, 4],
-        },
-        layout: { "line-cap": "round" },
-      })
-
-      // Destination dot
-      map.addSource("dest-dot", {
-        type: "geojson",
-        data: EMPTY_FC,
-      })
-      map.addLayer({
-        id: "dest-dot",
-        type: "circle",
-        source: "dest-dot",
-        paint: {
-          "circle-radius": 4,
-          "circle-color": "rgba(255, 255, 255, 0.7)",
-          "circle-stroke-width": 1.5,
-          "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
-        },
-      })
-
-      // Route layers (on top)
-      map.addSource("route", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "route-casing",
-        type: "line",
-        source: "route",
-        paint: {
-          "line-color": "#fff",
-          "line-width": 8,
-          "line-opacity": 0.25,
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-      map.addLayer({
-        id: "route-walk",
-        type: "line",
-        source: "route",
-        filter: ["==", ["get", "mode"], "WALK"],
-        paint: {
-          "line-color": modeColor("WALK"),
-          "line-width": 3,
-          "line-dasharray": [1.5, 2],
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-      map.addLayer({
-        id: "route-bike",
-        type: "line",
-        source: "route",
-        filter: ["==", ["get", "mode"], "BIKE"],
-        paint: {
-          "line-color": modeColor("BIKE"),
-          "line-width": 3.5,
-          "line-dasharray": [0.8, 1.4],
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-      map.addLayer({
-        id: "route-transit",
-        type: "line",
-        source: "route",
-        filter: [
-          "all",
-          ["!=", ["get", "mode"], "WALK"],
-          ["!=", ["get", "mode"], "BIKE"],
-        ],
-        paint: {
-          "line-color": [
-            "match",
-            ["get", "mode"],
-            "BIKE",
-            modeColor("BIKE"),
-            "TRAM",
-            modeColor("TRAM"),
-            "BUS",
-            modeColor("BUS"),
-            "#e2e8f0",
-          ],
-          "line-width": 4,
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-      map.addSource("route-tail", { type: "geojson", data: EMPTY_FC })
-      map.addLayer({
-        id: "route-tail-casing",
-        type: "line",
-        source: "route-tail",
-        paint: {
-          "line-color": "#fff",
-          "line-width": 8,
-          "line-opacity": 0.25,
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-      map.addLayer({
-        id: "route-tail",
-        type: "line",
-        source: "route-tail",
-        paint: {
-          "line-color": modeColor("WALK"),
-          "line-width": 3,
-          "line-dasharray": [1.5, 2],
-        },
-        layout: { "line-cap": "round", "line-join": "round" },
-      })
-
-      function scheduleExactRoute(
-        destLat: number,
-        destLon: number,
-        preferredKey: string | null
-      ) {
-        const origin = originRef.current
-        if (!origin) return
-
-        if (exactRouteTimerRef.current) {
-          window.clearTimeout(exactRouteTimerRef.current)
-        }
-        if (exactRouteAbortRef.current) {
-          exactRouteAbortRef.current.abort()
-        }
-
-        const requestSeq = ++exactRouteSeqRef.current
-        setRouteLoading(true)
-        exactRouteTimerRef.current = window.setTimeout(() => {
-          const controller = new AbortController()
-          exactRouteAbortRef.current = controller
-
-          fetchExactRoute(
-            {
-              originLat: origin[1],
-              originLon: origin[0],
-              destLat,
-              destLon,
-              time: effectiveTimeRef.current,
-              bajs: bajsEnabledRef.current,
-              preferredKey,
-            },
-            controller.signal
-          )
-            .then((itinerary) => {
-              if (
-                controller.signal.aborted ||
-                requestSeq !== exactRouteSeqRef.current
-              ) {
-                return
-              }
-              renderFullRoute(map, itinerary)
-              routeTailOriginRef.current = null
-              setRoute(itinerary)
-              setRouteLoading(false)
-            })
-            .catch((err) => {
-              if (controller.signal.aborted) return
-              console.error("Exact route fetch failed:", err)
-              setRouteLoading(false)
-            })
-        }, 160)
-      }
-
-      // Shared destination preview handler
-      function handleDestination(lat: number, lng: number) {
-        const o = originRef.current
-        if (!o) return
-
-        pendingDestinationRef.current = { lat, lng }
-
-        const dest: [number, number] = [lng, lat]
-
-        // Instant: update preview line (desktop only) + destination dot
-        if (!isTouchRef.current) {
-          const previewSrc = map.getSource(
-            "preview"
-          ) as maplibregl.GeoJSONSource
-          if (previewSrc) {
-            previewSrc.setData({
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  properties: {},
-                  geometry: { type: "LineString", coordinates: [o, dest] },
-                },
-              ],
-            })
-          }
-        }
-        const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-        if (dotSrc) {
-          dotSrc.setData({
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                properties: {},
-                geometry: { type: "Point", coordinates: dest },
-              },
-            ],
-          })
-        }
-
-        // Client-side route reconstruction (instant, no network)
-        const rd = routingDataRef.current
-        if (rd) {
-          const nearest = findNearestStop(rd, lat, lng)
-          const nearestChanged = nearest !== lastNearestRef.current
-
-          if (nearestChanged) {
-            const itinerary = reconstructRoute(rd, lat, lng, nearest)
-
-            if (itinerary) {
-              renderRouteBase(map, itinerary)
-              const tailStop = nearest ? rd.stops.get(nearest) : null
-              routeTailOriginRef.current = tailStop
-                ? [tailStop.lon, tailStop.lat]
-                : null
-            } else {
-              routeTailOriginRef.current = null
-              clearRenderedRoute(map)
-              setRoute(null)
-              setRouteLoading(false)
-            }
-
-            renderRouteTail(map, routeTailOriginRef.current, dest)
-            lastNearestRef.current = nearest
-          } else {
-            renderRouteTail(map, routeTailOriginRef.current, dest)
-          }
-
-          setRoute(null)
-          scheduleExactRoute(lat, lng, nearest)
-        }
-      }
-      handleDestinationRef.current = handleDestination
-
-      // Click → set origin, or show route on touch devices
-      map.on("click", (e) => {
-        if (originRef.current && isTouchRef.current) {
-          handleDestination(e.lngLat.lat, e.lngLat.lng)
-          return
-        }
-        originRef.current = [e.lngLat.lng, e.lngLat.lat]
-        setRoute(null)
-        setRouteLoading(false)
-        setLoading(true)
-        setError(null)
-        setCoords({
-          lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
-          lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
-        })
-        map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat], duration: 400 })
-      })
-
-      // Mousemove → preview route (desktop, throttled via RAF)
-      map.on("mousemove", (e) => {
-        if (!originRef.current) return
-        cancelAnimationFrame(rafRef.current)
-        rafRef.current = requestAnimationFrame(() => {
-          handleDestination(e.lngLat.lat, e.lngLat.lng)
-        })
-      })
-
-      // Clear preview when mouse leaves
-      map.on("mouseout", () => {
-        const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-        if (previewSrc) previewSrc.setData(EMPTY_FC)
-        const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-        if (dotSrc) dotSrc.setData(EMPTY_FC)
-        if (exactRouteTimerRef.current) {
-          window.clearTimeout(exactRouteTimerRef.current)
-        }
-        if (exactRouteAbortRef.current) {
-          exactRouteAbortRef.current.abort()
-        }
-        pendingDestinationRef.current = null
-        setRouteLoading(false)
-      })
-
+      refs.mapRef.current = map
+      addAllMapSources(map)
+      addPoiClickHandler(map, refs.originRef)
+      addBajsClickHandler(map, refs.originRef)
+      bindMapInteractions(map, refs, setRoute, setRouteLoading, setLoading, setError, setCoords)
       setMapReady(true)
     })
 
     return () => {
-      if (bajsAbortRef.current) bajsAbortRef.current.abort()
-      if (routingAbortRef.current) routingAbortRef.current.abort()
-      if (exactRouteAbortRef.current) exactRouteAbortRef.current.abort()
-      if (exactRouteTimerRef.current) {
-        window.clearTimeout(exactRouteTimerRef.current)
-      }
-      if (vehicleIntervalRef.current) {
-        window.clearInterval(vehicleIntervalRef.current)
-      }
-      if (poiAbortRef.current) poiAbortRef.current.abort()
-      map.remove()
-      mapRef.current = null
-      handleDestinationRef.current = null
-      setMapReady(false)
-      routeTailOriginRef.current = null
-      cancelAnimationFrame(rafRef.current)
+      cleanupMapInit(map, refs, setMapReady)
     }
-  }, [setCoords])
+  }, [setCoords]) // eslint-disable-line react-hooks/exhaustive-deps
+}
 
+function createMap(
+  container: HTMLDivElement,
+  isTouchRef: React.MutableRefObject<boolean>
+): maplibregl.Map {
+  const map = new maplibregl.Map({
+    container,
+    style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+    center: ZAGREB,
+    zoom: 12,
+    attributionControl: false,
+    canvasContextAttributes: { preserveDrawingBuffer: true },
+  })
+
+  map.getContainer().addEventListener(
+    "touchstart",
+    () => { isTouchRef.current = true },
+    { once: true, passive: true }
+  )
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right")
+  map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right")
+  return map
+}
+
+function bindMapInteractions(
+  map: maplibregl.Map,
+  refs: MapRefs,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void,
+  setLoading: (l: boolean) => void,
+  setError: (e: string | null) => void,
+  setCoords: SetCoords
+) {
+  const destOpts: HandleDestinationOpts = {
+    map,
+    originRef: refs.originRef,
+    pendingDestinationRef: refs.pendingDestinationRef,
+    isTouchRef: refs.isTouchRef,
+    routingDataRef: refs.routingDataRef,
+    lastNearestRef: refs.lastNearestRef,
+    routeTailOriginRef: refs.routeTailOriginRef,
+    exactRouteOpts: {
+      map,
+      originRef: refs.originRef,
+      effectiveTimeRef: refs.effectiveTimeRef,
+      bajsEnabledRef: refs.bajsEnabledRef,
+      exactRouteTimerRef: refs.exactRouteTimerRef,
+      exactRouteAbortRef: refs.exactRouteAbortRef,
+      exactRouteSeqRef: refs.exactRouteSeqRef,
+      routeTailOriginRef: refs.routeTailOriginRef,
+      setRoute,
+      setRouteLoading,
+    },
+    setRoute,
+    setRouteLoading,
+  }
+
+  function handleDestination(lat: number, lng: number) {
+    handleDestinationAt(lat, lng, destOpts)
+  }
+  refs.handleDestinationRef.current = handleDestination
+
+  bindMapClickEvents(map, refs, handleDestination, setRoute, setRouteLoading, setLoading, setError, setCoords)
+}
+
+function bindMapClickEvents(
+  map: maplibregl.Map,
+  refs: MapRefs,
+  handleDestination: (lat: number, lng: number) => void,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void,
+  setLoading: (l: boolean) => void,
+  setError: (e: string | null) => void,
+  setCoords: SetCoords
+) {
+  map.on("click", (e) => {
+    if (refs.originRef.current && refs.isTouchRef.current) {
+      handleDestination(e.lngLat.lat, e.lngLat.lng)
+      return
+    }
+    refs.originRef.current = [e.lngLat.lng, e.lngLat.lat]
+    setRoute(null)
+    setRouteLoading(false)
+    setLoading(true)
+    setError(null)
+    setCoords({
+      lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
+      lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
+    })
+    map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat], duration: 400 })
+  })
+
+  map.on("mousemove", (e) => {
+    if (!refs.originRef.current) return
+    cancelAnimationFrame(refs.rafRef.current)
+    refs.rafRef.current = requestAnimationFrame(() => {
+      handleDestination(e.lngLat.lat, e.lngLat.lng)
+    })
+  })
+
+  map.on("mouseout", () => {
+    clearMapOnMouseOut(
+      map, refs.exactRouteTimerRef, refs.exactRouteAbortRef,
+      refs.pendingDestinationRef, setRouteLoading
+    )
+  })
+}
+
+function useBajsLayer(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  bajsAbortRef: React.MutableRefObject<AbortController | null>,
+  bajsEnabled: boolean,
+  mapReady: boolean
+) {
   useEffect(() => {
     const map = mapRef.current
     if (!map || !mapReady) return
@@ -875,15 +1264,21 @@ export function TransitMap() {
         source.setData(EMPTY_FC)
       })
 
-    return () => {
-      controller.abort()
-    }
-  }, [bajsEnabled, mapReady])
+    return () => { controller.abort() }
+  }, [bajsEnabled, mapReady, mapRef, bajsAbortRef])
+}
 
-  // Live vehicle positions: fetch when enabled, refresh every 30s
+function useVehiclePositions(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  vehicleIntervalRef: React.MutableRefObject<number>,
+  prevVehiclesJsonRef: React.MutableRefObject<string>,
+  mapReady: boolean,
+  vehiclesEnabled: boolean,
+  vehiclePositions: GeoJSON.FeatureCollection,
+  setVehiclePositions: (fc: GeoJSON.FeatureCollection) => void
+) {
   useEffect(() => {
-    const map = mapRef.current
-    if (!map || !mapReady || !vehiclesEnabled) {
+    if (!mapRef.current || !mapReady || !vehiclesEnabled) {
       if (vehicleIntervalRef.current) {
         window.clearInterval(vehicleIntervalRef.current)
         vehicleIntervalRef.current = 0
@@ -896,35 +1291,16 @@ export function TransitMap() {
 
     function fetchVehicles() {
       fetch("/api/vehicles")
-        .then((res) => {
-          if (!res.ok) throw new Error(`HTTP ${res.status}`)
-          return res.json()
-        })
-        .then((vehicles: Array<{ tripId: string; routeId?: string | null; lat: number; lon: number; bearing?: number; speed?: number }>) => {
+        .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
+        .then((vehicles: VehicleRecord[]) => {
           if (aborted) return
-          const fc: GeoJSON.FeatureCollection = {
-            type: "FeatureCollection",
-            features: vehicles.map((v) => {
-              // Extract line number from routeId like "ZET_6" → "6", or from tripId
-              const line = v.routeId
-                ? v.routeId.replace(/^[A-Z]+_/, "")
-                : v.tripId.split("_")[0] ?? ""
-              return {
-                type: "Feature" as const,
-                geometry: { type: "Point" as const, coordinates: [v.lon, v.lat] },
-                properties: { tripId: v.tripId, line, bearing: v.bearing ?? 0, speed: v.speed ?? 0 },
-              }
-            }),
-          }
+          const fc = buildVehicleFeatureCollection(vehicles)
           const json = JSON.stringify(fc.features)
           if (json === prevVehiclesJsonRef.current) return
           prevVehiclesJsonRef.current = json
           setVehiclePositions(fc)
         })
-        .catch((err) => {
-          if (aborted) return
-          console.error("Vehicle positions fetch failed:", err)
-        })
+        .catch((err) => { if (!aborted) console.error("Vehicle positions fetch failed:", err) })
     }
 
     fetchVehicles()
@@ -937,650 +1313,881 @@ export function TransitMap() {
         vehicleIntervalRef.current = 0
       }
     }
-  }, [mapReady, vehiclesEnabled])
+  }, [mapReady, vehiclesEnabled, mapRef, vehicleIntervalRef, prevVehiclesJsonRef, setVehiclePositions])
 
-  // Update vehicle positions source when data changes
   useEffect(() => {
     const map = mapRef.current
     if (!map || !mapReady) return
-    const source = map.getSource(
-      "vehicle-positions"
-    ) as maplibregl.GeoJSONSource
+    const source = map.getSource("vehicle-positions") as maplibregl.GeoJSONSource
     if (source) source.setData(vehiclePositions)
-  }, [vehiclePositions, mapReady])
+  }, [vehiclePositions, mapReady, mapRef])
+}
 
-  // POI overlay: fetch when enabled, clear when disabled
+function usePoiLayer(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  poiAbortRef: React.MutableRefObject<AbortController | null>,
+  poiEnabled: boolean,
+  mapReady: boolean
+) {
   useEffect(() => {
     const map = mapRef.current
     if (!map || !mapReady) return
-
     const source = map.getSource("poi") as maplibregl.GeoJSONSource
     if (!source) return
-
-    if (!poiEnabled) {
-      source.setData(EMPTY_FC)
-      return
-    }
-
+    if (!poiEnabled) { source.setData(EMPTY_FC); return }
     if (poiAbortRef.current) poiAbortRef.current.abort()
     const controller = new AbortController()
     poiAbortRef.current = controller
+    fetchPoiData(source, controller)
+    return () => { controller.abort() }
+  }, [poiEnabled, mapReady, mapRef, poiAbortRef])
+}
 
-    fetch("/api/poi?categories=hospital,school,park,pharmacy", {
-      signal: controller.signal,
+function fetchPoiData(source: maplibregl.GeoJSONSource, controller: AbortController) {
+  fetch("/api/poi?categories=hospital,school,park,pharmacy", { signal: controller.signal })
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      return res.json()
     })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
-      .then((pois: Array<{ id: number; name: string; lat: number; lon: number; category: string }>) => {
-        if (controller.signal.aborted) return
-        const fc: GeoJSON.FeatureCollection = {
-          type: "FeatureCollection",
-          features: pois.map((p) => ({
-            type: "Feature" as const,
-            geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] },
-            properties: { name: p.name, category: p.category },
-          })),
-        }
-        source.setData(fc)
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return
-        console.error("POI fetch failed:", err)
-        source.setData(EMPTY_FC)
-      })
+    .then((pois: Array<{ id: number; name: string; lat: number; lon: number; category: string }>) => {
+      if (controller.signal.aborted) return
+      const fc: GeoJSON.FeatureCollection = {
+        type: "FeatureCollection",
+        features: pois.map((p) => ({
+          type: "Feature" as const,
+          geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] },
+          properties: { name: p.name, category: p.category },
+        })),
+      }
+      source.setData(fc)
+    })
+    .catch((err) => {
+      if (controller.signal.aborted) return
+      console.error("POI fetch failed:", err)
+      source.setData(EMPTY_FC)
+    })
+}
 
-    return () => {
-      controller.abort()
-    }
-  }, [poiEnabled, mapReady])
-
-  // Origin change → fetch isochrone
+function useOriginIsochrone(
+  refs: MapRefs,
+  originLat: number | null,
+  originLon: number | null,
+  mapReady: boolean,
+  effectiveTime: string,
+  bajsEnabled: boolean,
+  setRoute: (r: Itinerary | null) => void,
+  setRouteLoading: (l: boolean) => void,
+  setLoading: (l: boolean) => void,
+  setError: (e: string | null) => void,
+  setShowStatsCta: (v: boolean) => void
+) {
   useEffect(() => {
-    const map = mapRef.current
+    const map = refs.mapRef.current
     if (!map || !mapReady) return
 
-    if (markerRef.current) {
-      markerRef.current.remove()
-      markerRef.current = null
-    }
-
-    const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
-    if (routeSource) routeSource.setData(EMPTY_FC)
-    const routeTailSource = map.getSource(
-      "route-tail"
-    ) as maplibregl.GeoJSONSource
-    if (routeTailSource) routeTailSource.setData(EMPTY_FC)
-    if (exactRouteAbortRef.current) exactRouteAbortRef.current.abort()
-    if (exactRouteTimerRef.current) {
-      window.clearTimeout(exactRouteTimerRef.current)
-    }
-    if (routingAbortRef.current) routingAbortRef.current.abort()
-    exactRouteSeqRef.current++
-    const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-    if (previewSrc) previewSrc.setData(EMPTY_FC)
-    const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-    if (dotSrc) dotSrc.setData(EMPTY_FC)
-    setRouteLoading(false)
-    pendingDestinationRef.current = null
-    routingDataRef.current = null
+    resetOriginMapState(map, refs, setRouteLoading)
 
     if (originLat === null || originLon === null) {
-      const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
-      if (isoSource) isoSource.setData(EMPTY_FC)
-      const walkRingSrc = map.getSource("walk-ring") as maplibregl.GeoJSONSource
-      if (walkRingSrc) walkRingSrc.setData(EMPTY_FC)
-      map.getCanvas().style.cursor = ""
-      originRef.current = null
-      routeTailOriginRef.current = null
-      setRoute(null) // eslint-disable-line react-hooks/set-state-in-effect -- cleanup
+      clearOriginFromMap(map, refs.originRef, refs.routeTailOriginRef, setRoute)
       return
     }
 
-    const origin: [number, number] = [originLon, originLat]
-    originRef.current = origin
+    prepareOriginMarker(map, refs, originLat, originLon)
 
-    // Center map when loading from a shared URL
-    if (initialLoadRef.current) {
-      initialLoadRef.current = false
-      map.jumpTo({ center: origin, zoom: 13 })
-    }
-
-    map.getCanvas().style.cursor = "progress"
-    lastNearestRef.current = null
-    routeTailOriginRef.current = null
-
-    markerRef.current = new maplibregl.Marker({
-      element: createMarkerElement(),
-    })
-      .setLngLat(origin)
-      .addTo(map)
-
-    if (isoAbortRef.current) isoAbortRef.current.abort()
-    if (routingAbortRef.current) routingAbortRef.current.abort()
+    if (refs.isoAbortRef.current) refs.isoAbortRef.current.abort()
+    if (refs.routingAbortRef.current) refs.routingAbortRef.current.abort()
     const isoController = new AbortController()
     const routingController = new AbortController()
-    isoAbortRef.current = isoController
-    routingAbortRef.current = routingController
+    refs.isoAbortRef.current = isoController // eslint-disable-line react-hooks/immutability
+    refs.routingAbortRef.current = routingController
 
     setLoading(true)
     setError(null)
     setRoute(null)
     setRouteLoading(false)
 
-    fetchIsochrone(
-      {
-        lat: originLat,
-        lon: originLon,
-        time: effectiveTime,
-        bajs: bajsEnabled,
-      },
-      isoController.signal
+    startIsochroneFetches(
+      map, originLat, originLon, effectiveTime, bajsEnabled,
+      isoController, routingController,
+      refs.statsCtaDismissedRef, refs.routingDataRef, refs.pendingDestinationRef,
+      refs.handleDestinationRef,
+      setLoading, setShowStatsCta, setError
     )
-      .then((geojson: IsochroneResponse) => {
-        if (isoController.signal.aborted) return
-        const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
-        if (isoSource) isoSource.setData(geojson)
-        const walkRingSrc = map.getSource(
-          "walk-ring"
-        ) as maplibregl.GeoJSONSource
-        if (walkRingSrc) {
-          walkRingSrc.setData(geojson.walkRing ?? EMPTY_FC)
-        }
-        setLoading(false)
-        map.getCanvas().style.cursor = "crosshair"
-        if (
-          !statsCtaDismissedRef.current &&
-          !localStorage.getItem("doseg-stats-cta")
-        ) {
-          setShowStatsCta(true)
-        }
-      })
-      .catch((err) => {
-        if (isoController.signal.aborted) return
-        console.error("Isochrone fetch failed:", err)
-        routingController.abort()
-        const msg =
-          err.message?.includes("502") || err.message?.includes("503")
-            ? "Usluga javnog prijevoza je privremeno nedostupna"
-            : "Nije moguće učitati podatke o dosegu"
-        setError(msg)
-        setLoading(false)
-        map.getCanvas().style.cursor = "crosshair"
-      })
 
-    fetchIsochroneRouting(
-      {
-        lat: originLat,
-        lon: originLon,
-        time: effectiveTime,
-        bajs: bajsEnabled,
-      },
-      routingController.signal
-    )
-      .then((response) => {
-        if (routingController.signal.aborted) return
-        if (!response.routing) return
-        routingDataRef.current = parseRoutingData(
-          response.routing,
-          originLat,
-          originLon
-        )
-        const pendingDestination = pendingDestinationRef.current
-        if (pendingDestination && handleDestinationRef.current) {
-          handleDestinationRef.current(
-            pendingDestination.lat,
-            pendingDestination.lng
-          )
-        }
-      })
-      .catch((err) => {
-        if (routingController.signal.aborted) return
-        console.error("Isochrone routing fetch failed:", err)
-      })
+    return () => { isoController.abort(); routingController.abort() }
+  }, [originLat, originLon, mapReady, effectiveTime, bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
+}
 
-    return () => {
-      isoController.abort()
-      routingController.abort()
-    }
-  }, [originLat, originLon, mapReady, effectiveTime, bajsEnabled])
+function prepareOriginMarker(
+  map: maplibregl.Map,
+  refs: MapRefs,
+  originLat: number,
+  originLon: number
+) {
+  const origin: [number, number] = [originLon, originLat]
+  refs.originRef.current = origin
 
+  if (refs.initialLoadRef.current) {
+    refs.initialLoadRef.current = false
+    map.jumpTo({ center: origin, zoom: 13 })
+  }
+
+  map.getCanvas().style.cursor = "progress"
+  refs.lastNearestRef.current = null
+  refs.routeTailOriginRef.current = null
+
+  refs.markerRef.current = new maplibregl.Marker({
+    element: createMarkerElement(),
+  })
+    .setLngLat(origin)
+    .addTo(map)
+}
+
+function useTransitMapState() {
+  const [coords, setCoords] = useQueryStates({ lat: parseAsFloat, lon: parseAsFloat })
+  const [time, setTime] = useQueryState("t", parseAsString)
+  const [bajs, setBajs] = useQueryState("bajs", parseAsString)
+  const [defaultTime] = useState(formatTime)
+  const effectiveTime = time ?? defaultTime
+  const bajsEnabled = bajs === "1"
+  const [route, setRoute] = useState<Itinerary | null>(null)
+  const [routeLoading, setRouteLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [mapReady, setMapReady] = useState(false)
+  const [showStatsCta, setShowStatsCta] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
+  const [vehiclePositions, setVehiclePositions] = useState<GeoJSON.FeatureCollection>(EMPTY_FC)
+  const [vehiclesEnabled, setVehiclesEnabled] = useState(false)
+  const [poiEnabled, setPoiEnabled] = useState(false)
+  const [layersOpen, setLayersOpen] = useState(false)
+  const hasOrigin = coords.lat !== null && coords.lon !== null
+
+  return {
+    coords, setCoords, time, setTime, bajs, setBajs,
+    effectiveTime, bajsEnabled, route, setRoute,
+    routeLoading, setRouteLoading, loading, setLoading,
+    error, setError, mapReady, setMapReady,
+    showStatsCta, setShowStatsCta, linkCopied, setLinkCopied,
+    vehiclePositions, setVehiclePositions,
+    vehiclesEnabled, setVehiclesEnabled,
+    poiEnabled, setPoiEnabled, layersOpen, setLayersOpen,
+    hasOrigin,
+  }
+}
+
+export function TransitMap() {
+  const s = useTransitMapState()
+  const refs = useTransitMapRefs(s)
+
+  useEffect(() => { refs.effectiveTimeRef.current = s.effectiveTime }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
+  useEffect(() => { refs.bajsEnabledRef.current = s.bajsEnabled }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
+
+  useEscapeKey(refs.originRef, s.setCoords, s.setRoute, s.setRouteLoading, s.setError)
+  useMapInit(refs, s.setMapReady, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setCoords)
+  useBajsLayer(refs.mapRef, refs.bajsAbortRef, s.bajsEnabled, s.mapReady)
+  useVehiclePositions(refs.mapRef, refs.vehicleIntervalRef, refs.prevVehiclesJsonRef, s.mapReady, s.vehiclesEnabled, s.vehiclePositions, s.setVehiclePositions)
+  usePoiLayer(refs.mapRef, refs.poiAbortRef, s.poiEnabled, s.mapReady)
+  useOriginIsochrone(refs, s.coords.lat, s.coords.lon, s.mapReady, s.effectiveTime, s.bajsEnabled, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setShowStatsCta)
+
+  return (
+    <TransitMapView
+      containerRef={refs.containerRef} loading={s.loading} bajsEnabled={s.bajsEnabled}
+      poiEnabled={s.poiEnabled} layersOpen={s.layersOpen} vehiclesEnabled={s.vehiclesEnabled}
+      effectiveTime={s.effectiveTime} hasOrigin={s.hasOrigin} error={s.error}
+      showStatsCta={s.showStatsCta} route={s.route} routeLoading={s.routeLoading}
+      linkCopied={s.linkCopied} mapRef={refs.mapRef} statsCtaDismissedRef={refs.statsCtaDismissedRef}
+      setTime={s.setTime} setBajs={s.setBajs} setLayersOpen={s.setLayersOpen}
+      setVehiclesEnabled={s.setVehiclesEnabled} setPoiEnabled={s.setPoiEnabled}
+      setCoords={s.setCoords} setShowStatsCta={s.setShowStatsCta} setLinkCopied={s.setLinkCopied}
+    />
+  )
+}
+
+type Ease = readonly [number, number, number, number]
+type SetCoords = (v: { lat: number | null; lon: number | null }) => void
+
+type TransitMapViewProps = {
+  containerRef: React.RefObject<HTMLDivElement | null>
+  loading: boolean
+  bajsEnabled: boolean
+  poiEnabled: boolean
+  layersOpen: boolean
+  vehiclesEnabled: boolean
+  effectiveTime: string
+  hasOrigin: boolean
+  error: string | null
+  showStatsCta: boolean
+  route: Itinerary | null
+  routeLoading: boolean
+  linkCopied: boolean
+  mapRef: React.RefObject<maplibregl.Map | null>
+  statsCtaDismissedRef: React.MutableRefObject<boolean>
+  setTime: (v: string | null) => void
+  setBajs: (v: string | null) => void
+  setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setVehiclesEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setCoords: SetCoords
+  setShowStatsCta: (v: boolean) => void
+  setLinkCopied: (v: boolean) => void
+}
+
+function TransitMapView({
+  containerRef, mapRef, statsCtaDismissedRef, ...rest
+}: TransitMapViewProps) {
   const ease = [0.23, 1, 0.32, 1] as const
-
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative h-svh w-full">
         <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
+        <LoadingBar loading={rest.loading} ease={ease} />
+        <LayerLegend bajsEnabled={rest.bajsEnabled} poiEnabled={rest.poiEnabled} ease={ease} />
+        <HudOverlay {...rest} mapRef={mapRef} statsCtaDismissedRef={statsCtaDismissedRef} ease={ease} />
+        <OnboardingDialog />
+      </div>
+    </MotionConfig>
+  )
+}
 
-        {/* Loading bar: spans full width, outside grid padding */}
-        <AnimatePresence>
-          {loading && (
-            <motion.div
-              key="loading"
-              className="absolute top-0 right-0 left-0 z-20"
-              aria-live="polite"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease }}
+function LoadingBar({ loading, ease }: { loading: boolean; ease: readonly [number, number, number, number] }) {
+  return (
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          key="loading"
+          className="absolute top-0 right-0 left-0 z-20"
+          aria-live="polite"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease }}
+        >
+          <span className="sr-only">Učitavanje podataka o dosegu</span>
+          <div className="loading-bar" />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function BajsLegend() {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">BAJS</div>
+      <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1">
+          <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
+          <span className="text-[9px] font-medium text-slate-300">Dostupno</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
+          <span className="text-[9px] font-medium text-slate-300">0 bic.</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
+          <span className="text-[9px] font-medium text-slate-300">Puna</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
+          <span className="text-[9px] font-medium text-slate-300">Ne radi</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PoiLegend() {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">Ustanove</div>
+      <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1">
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-white">H</div>
+          <span className="text-[9px] font-medium text-slate-300">Bolnica</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-white">Š</div>
+          <span className="text-[9px] font-medium text-slate-300">Škola</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-white">P</div>
+          <span className="text-[9px] font-medium text-slate-300">Park</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-white">Lj</div>
+          <span className="text-[9px] font-medium text-slate-300">Ljekarna</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LayerLegend({
+  bajsEnabled,
+  poiEnabled,
+  ease,
+}: {
+  bajsEnabled: boolean
+  poiEnabled: boolean
+  ease: readonly [number, number, number, number]
+}) {
+  return (
+    <AnimatePresence>
+      {(bajsEnabled || poiEnabled) && (
+        <motion.div
+          className="panel pointer-events-auto absolute bottom-6 left-3 z-10 flex flex-col gap-2 px-3 py-2 sm:bottom-4 sm:left-4"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.2, ease }}
+        >
+          {bajsEnabled && <BajsLegend />}
+          {bajsEnabled && poiEnabled && <div className="h-px bg-white/10" />}
+          {poiEnabled && <PoiLegend />}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+type IslandToolbarProps = {
+  effectiveTime: string
+  bajsEnabled: boolean
+  layersOpen: boolean
+  vehiclesEnabled: boolean
+  poiEnabled: boolean
+  hasOrigin: boolean
+  ease: Ease
+  setTime: (v: string | null) => void
+  setBajs: (v: string | null) => void
+  setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setVehiclesEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setCoords: SetCoords
+}
+
+function IslandToolbar(props: IslandToolbarProps) {
+  return (
+    <motion.div
+      className="island pointer-events-auto"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3, ease: props.ease }}
+    >
+      <IslandMainRow
+        effectiveTime={props.effectiveTime}
+        bajsEnabled={props.bajsEnabled}
+        layersOpen={props.layersOpen}
+        vehiclesEnabled={props.vehiclesEnabled}
+        poiEnabled={props.poiEnabled}
+        hasOrigin={props.hasOrigin}
+        setTime={props.setTime}
+        setBajs={props.setBajs}
+        setLayersOpen={props.setLayersOpen}
+        setCoords={props.setCoords}
+      />
+      <IslandLayerToggles
+        layersOpen={props.layersOpen}
+        vehiclesEnabled={props.vehiclesEnabled}
+        poiEnabled={props.poiEnabled}
+        ease={props.ease}
+        setVehiclesEnabled={props.setVehiclesEnabled}
+        setPoiEnabled={props.setPoiEnabled}
+      />
+    </motion.div>
+  )
+}
+
+type IslandMainRowProps = {
+  effectiveTime: string
+  bajsEnabled: boolean
+  layersOpen: boolean
+  vehiclesEnabled: boolean
+  poiEnabled: boolean
+  hasOrigin: boolean
+  setTime: (v: string | null) => void
+  setBajs: (v: string | null) => void
+  setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setCoords: SetCoords
+}
+
+function IslandMainRow(p: IslandMainRowProps) {
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1.5">
+        <TimePicker value={p.effectiveTime} onChange={(v) => p.setTime(v)} />
+      </div>
+      <div className="h-6 w-px bg-white/10" />
+      <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
+      <LayersButton layersOpen={p.layersOpen} vehiclesEnabled={p.vehiclesEnabled} poiEnabled={p.poiEnabled} setLayersOpen={p.setLayersOpen} />
+      <div className="h-6 w-px bg-white/10" />
+      <ColorScale />
+      <ClearOriginButton hasOrigin={p.hasOrigin} setCoords={p.setCoords} />
+    </div>
+  )
+}
+
+function BajsToggleButton({ bajsEnabled, setBajs }: { bajsEnabled: boolean; setBajs: (v: string | null) => void }) {
+  return (
+    <button
+      type="button"
+      onClick={() => setBajs(bajsEnabled ? null : "1")}
+      aria-pressed={bajsEnabled}
+      className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+        bajsEnabled
+          ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
+          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+      }`}
+      title="Ukljuci BAJS stanice i bicikl u izracun rute"
+    >
+      <span>BAJS</span>
+      <span className="hidden text-[9px] font-medium text-slate-400 sm:inline">
+        + tram/bus
+      </span>
+    </button>
+  )
+}
+
+function ColorScale() {
+  return (
+    <div className="flex flex-col justify-center py-0.5">
+      <div
+        className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
+        style={{
+          background:
+            "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+        }}
+      />
+      <div className="mt-1 flex w-[140px] justify-between text-[9px] leading-none font-medium text-slate-400 tabular-nums sm:w-[200px]">
+        <span>0</span>
+        <span>15</span>
+        <span>30</span>
+        <span>45m</span>
+      </div>
+    </div>
+  )
+}
+
+function LayersButton({
+  layersOpen,
+  vehiclesEnabled,
+  poiEnabled,
+  setLayersOpen,
+}: {
+  layersOpen: boolean
+  vehiclesEnabled: boolean
+  poiEnabled: boolean
+  setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => setLayersOpen((v) => !v)}
+      className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+        layersOpen || vehiclesEnabled || poiEnabled
+          ? "bg-slate-500/20 text-slate-200 ring-1 ring-slate-400/40"
+          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+      }`}
+    >
+      <svg
+        aria-hidden="true"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z" />
+        <path d="M2 12l8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
+        <path d="M2 17l8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
+      </svg>
+      <span className="hidden sm:inline">Slojevi</span>
+      {!layersOpen && (vehiclesEnabled || poiEnabled) && (
+        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-500/80 text-[8px] font-bold text-white">
+          {(vehiclesEnabled ? 1 : 0) + (poiEnabled ? 1 : 0)}
+        </span>
+      )}
+    </button>
+  )
+}
+
+function ClearOriginButton({
+  hasOrigin,
+  setCoords,
+}: {
+  hasOrigin: boolean
+  setCoords: (v: { lat: number | null; lon: number | null }) => void
+}) {
+  return (
+    <AnimatePresence>
+      {hasOrigin && (
+        <motion.div
+          key="close"
+          initial={{ opacity: 0, width: 0, scale: 0.9 }}
+          animate={{ opacity: 1, width: "auto", scale: 1 }}
+          exit={{ opacity: 0, width: 0, scale: 0.9 }}
+          className="flex items-center gap-2 overflow-hidden sm:gap-3"
+        >
+          <div className="h-6 w-px shrink-0 bg-white/10" />
+          <button
+            type="button"
+            onClick={() => setCoords({ lat: null, lon: null })}
+            className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 px-2 text-slate-400 transition-colors hover:bg-white/15 hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none sm:px-2.5"
+            aria-label="Obriši ishodište"
+          >
+            <svg
+              aria-hidden="true"
+              width="8"
+              height="8"
+              viewBox="0 0 8 8"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
             >
-              <span className="sr-only">Učitavanje podataka o dosegu</span>
-              <div className="loading-bar" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <path d="M1 1l6 6M7 1l-6 6" />
+            </svg>
+            <span className="ml-1.5 hidden text-[11px] font-medium sm:inline">
+              Obriši
+            </span>
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
-        {/* Layer legend: outside grid to avoid column sizing shifts */}
-        <AnimatePresence>
-          {(bajsEnabled || poiEnabled) && (
-            <motion.div
-              className="panel pointer-events-auto absolute bottom-6 left-3 z-10 flex flex-col gap-2 px-3 py-2 sm:bottom-4 sm:left-4"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-              transition={{ duration: 0.2, ease }}
-            >
-              {bajsEnabled && (
-                <div className="flex flex-col gap-1">
-                  <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">BAJS</div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1">
-                      <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
-                      <span className="text-[9px] font-medium text-slate-300">Dostupno</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
-                      <span className="text-[9px] font-medium text-slate-300">0 bic.</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
-                      <span className="text-[9px] font-medium text-slate-300">Puna</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
-                      <span className="text-[9px] font-medium text-slate-300">Ne radi</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {bajsEnabled && poiEnabled && <div className="h-px bg-white/10" />}
-              {poiEnabled && (
-                <div className="flex flex-col gap-1">
-                  <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">Ustanove</div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1">
-                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-white">H</div>
-                      <span className="text-[9px] font-medium text-slate-300">Bolnica</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-white">Š</div>
-                      <span className="text-[9px] font-medium text-slate-300">Škola</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-white">P</div>
-                      <span className="text-[9px] font-medium text-slate-300">Park</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-white">Lj</div>
-                      <span className="text-[9px] font-medium text-slate-300">Ljekarna</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+type IslandLayerTogglesProps = {
+  layersOpen: boolean
+  vehiclesEnabled: boolean
+  poiEnabled: boolean
+  ease: Ease
+  setVehiclesEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-        {/* HUD overlay grid: all map UI lives here, no overlap */}
-        <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-6 sm:p-4">
-
-          {/* === TOP ROW === */}
-
-          {/* Top-left: About link (desktop only, mobile gets it bottom-left) */}
-          <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:block">
+function IslandLayerToggles(p: IslandLayerTogglesProps) {
+  return (
+    <AnimatePresence>
+      {p.layersOpen && (
+        <motion.div
+          key="layers"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2, ease: p.ease }}
+          className="overflow-hidden"
+        >
+          <div className="flex items-center justify-center gap-2 border-t border-white/10 px-3 pt-2 pb-0.5">
+            <VehiclesToggle enabled={p.vehiclesEnabled} onToggle={p.setVehiclesEnabled} />
+            <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
+            <div className="h-4 w-px bg-white/10" />
             <Link
               href="/o-projektu"
-              className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
-              aria-label="O projektu"
+              className="flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold text-slate-500 transition-colors hover:text-slate-300"
             >
               O projektu
             </Link>
           </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
-          {/* Top-center: Dynamic Island + error overlay */}
-          <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center">
-            <motion.div
-              className="island pointer-events-auto"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, ease }}
+function VehiclesToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Dispatch<React.SetStateAction<boolean>> }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onToggle((v) => !v)}
+      className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+        enabled
+          ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
+          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+      }`}
+    >
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
+      </svg>
+      Vozila uživo
+    </button>
+  )
+}
+
+function PoiToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Dispatch<React.SetStateAction<boolean>> }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onToggle((v) => !v)}
+      className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+        enabled
+          ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/40"
+          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+      }`}
+    >
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      Ustanove
+    </button>
+  )
+}
+
+function BottomHintPanel({
+  hasOrigin,
+  ease,
+}: {
+  hasOrigin: boolean
+  ease: readonly [number, number, number, number]
+}) {
+  return (
+    <AnimatePresence>
+      {!hasOrigin && (
+        <motion.div
+          key="hint"
+          className="panel pointer-events-auto"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.2, ease }}
+        >
+          <div className="flex flex-col items-center gap-2">
+            <div className="text-[13px] text-slate-300">
+              Klikni bilo gdje da vidiš dokle možeš stići
+            </div>
+            <Link
+              href="/statistika"
+              prefetch={false}
+              className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
             >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="flex items-center gap-1.5">
-                  <TimePicker
-                    value={effectiveTime}
-                    onChange={(v) => setTime(v)}
-                  />
-                </div>
-
-                {/* Divider */}
-                <div className="h-6 w-px bg-white/10" />
-
-                <button
-                  type="button"
-                  onClick={() => setBajs(bajsEnabled ? null : "1")}
-                  aria-pressed={bajsEnabled}
-                  className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
-                    bajsEnabled
-                      ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
-                      : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
-                  }`}
-                  title="Ukljuci BAJS stanice i bicikl u izracun rute"
-                >
-                  <span>BAJS</span>
-                  <span className="hidden text-[9px] font-medium text-slate-400 sm:inline">
-                    + tram/bus
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setLayersOpen((v) => !v)}
-                  className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
-                    layersOpen || vehiclesEnabled || poiEnabled
-                      ? "bg-slate-500/20 text-slate-200 ring-1 ring-slate-400/40"
-                      : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
-                  }`}
-                >
-                  <svg
-                    aria-hidden="true"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z" />
-                    <path d="M2 12l8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
-                    <path d="M2 17l8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
-                  </svg>
-                  <span className="hidden sm:inline">Slojevi</span>
-                  {!layersOpen && (vehiclesEnabled || poiEnabled) && (
-                    <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-500/80 text-[8px] font-bold text-white">
-                      {(vehiclesEnabled ? 1 : 0) + (poiEnabled ? 1 : 0)}
-                    </span>
-                  )}
-                </button>
-
-                <div className="h-6 w-px bg-white/10" />
-
-                <div className="flex flex-col justify-center py-0.5">
-                  <div
-                    className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
-                    style={{
-                      background:
-                        "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
-                    }}
-                  />
-                  <div className="mt-1 flex w-[140px] justify-between text-[9px] leading-none font-medium text-slate-400 tabular-nums sm:w-[200px]">
-                    <span>0</span>
-                    <span>15</span>
-                    <span>30</span>
-                    <span>45m</span>
-                  </div>
-                </div>
-
-                <AnimatePresence>
-                  {hasOrigin && (
-                    <motion.div
-                      key="close"
-                      initial={{ opacity: 0, width: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, width: "auto", scale: 1 }}
-                      exit={{ opacity: 0, width: 0, scale: 0.9 }}
-                      className="flex items-center gap-2 overflow-hidden sm:gap-3"
-                    >
-                      <div className="h-6 w-px shrink-0 bg-white/10" />
-                      <button
-                        type="button"
-                        onClick={() => setCoords({ lat: null, lon: null })}
-                        className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 px-2 text-slate-400 transition-colors hover:bg-white/15 hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none sm:px-2.5"
-                        aria-label="Obriši ishodište"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          width="8"
-                          height="8"
-                          viewBox="0 0 8 8"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        >
-                          <path d="M1 1l6 6M7 1l-6 6" />
-                        </svg>
-                        <span className="ml-1.5 hidden text-[11px] font-medium sm:inline">
-                          Obriši
-                        </span>
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Expanding layer toggles */}
-              <AnimatePresence>
-                {layersOpen && (
-                  <motion.div
-                    key="layers"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2, ease }}
-                    className="overflow-hidden"
-                  >
-                    <div className="flex items-center justify-center gap-2 border-t border-white/10 px-3 pt-2 pb-0.5">
-                      <button
-                        type="button"
-                        onClick={() => setVehiclesEnabled((v) => !v)}
-                        className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
-                          vehiclesEnabled
-                            ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
-                            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
-                        }`}
-                      >
-                        <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="3" />
-                          <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
-                        </svg>
-                        Vozila uživo
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPoiEnabled((v) => !v)}
-                        className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
-                          poiEnabled
-                            ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/40"
-                            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
-                        }`}
-                      >
-                        <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                          <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                        Ustanove
-                      </button>
-                      <div className="h-4 w-px bg-white/10" />
-                      <Link
-                        href="/o-projektu"
-                        className="flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold text-slate-500 transition-colors hover:text-slate-300"
-                      >
-                        O projektu
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  key="error"
-                  role="alert"
-                  aria-live="assertive"
-                  className="island pointer-events-auto text-[12px] text-red-400"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.2, ease }}
-                >
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
+              ili pogledaj statistiku po četvrtima &rarr;
+            </Link>
           </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
-          {/* Top-right: Keyboard hints (desktop only) */}
-          <div className="pointer-events-auto col-start-3 row-start-1 hidden self-start sm:flex items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
-            <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
-              Pomicanje
-            </span>
-            <KbdGroup>
-              <Kbd>↑</Kbd>
-              <Kbd>↓</Kbd>
-              <Kbd>←</Kbd>
-              <Kbd>→</Kbd>
-            </KbdGroup>
-          </div>
+type StatsCtaPanelProps = {
+  showStatsCta: boolean
+  hasOrigin: boolean
+  statsCtaDismissedRef: React.MutableRefObject<boolean>
+  ease: Ease
+  setShowStatsCta: (v: boolean) => void
+}
 
-          {/* === MIDDLE ROW: empty, map shows through === */}
+function StatsCtaPanel({ showStatsCta, hasOrigin, statsCtaDismissedRef, ease, setShowStatsCta }: StatsCtaPanelProps) {
+  function dismiss() {
+    localStorage.setItem("doseg-stats-cta", "1")
+    statsCtaDismissedRef.current = true
+    setShowStatsCta(false)
+  }
+  return (
+    <AnimatePresence>
+      {showStatsCta && hasOrigin && (
+        <motion.div
+          key="stats-cta"
+          className="panel pointer-events-auto"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.3, delay: 0.5, ease }}
+        >
+          <StatsCtaContent onDismiss={dismiss} onLinkClick={() => {
+            localStorage.setItem("doseg-stats-cta", "1")
+            statsCtaDismissedRef.current = true
+          }} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
-          {/* === BOTTOM ROW === */}
+function StatsCtaContent({ onDismiss, onLinkClick }: { onDismiss: () => void; onLinkClick: () => void }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-[12px] text-slate-400">
+        Kako se tvoja četvrt uspoređuje?
+      </span>
+      <Link
+        href="/statistika"
+        prefetch={false}
+        className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
+        onClick={onLinkClick}
+      >
+        Statistika &rarr;
+      </Link>
+      <button
+        type="button"
+        className="text-slate-500 transition-colors hover:text-slate-300"
+        aria-label="Zatvori"
+        onClick={onDismiss}
+      >
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+          <path d="M1 1l6 6M7 1l-6 6" />
+        </svg>
+      </button>
+    </div>
+  )
+}
 
-          {/* Bottom-left: placeholder to preserve grid structure */}
-          <div className="col-start-1 row-start-3" />
+function RouteDetailsPanel({
+  route,
+  routeLoading,
+  effectiveTime,
+  linkCopied,
+  mapRef,
+  setLinkCopied,
+}: {
+  route: Itinerary | null
+  routeLoading: boolean
+  effectiveTime: string
+  linkCopied: boolean
+  mapRef: React.RefObject<maplibregl.Map | null>
+  setLinkCopied: (v: boolean) => void
+}) {
+  return (
+    <AnimatePresence>
+      {(route || routeLoading) && (
+        <RouteDetails
+          itinerary={route}
+          loading={routeLoading}
+          departureTime={effectiveTime}
+          className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
+          onShare={() => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+              setLinkCopied(true)
+              setTimeout(() => setLinkCopied(false), 2000)
+            })
+          }}
+          onExport={() => {
+            const map = mapRef.current
+            if (!map) return
+            const canvas = map.getCanvas()
+            const link = document.createElement("a")
+            link.download = "doseg.png"
+            link.href = canvas.toDataURL("image/png")
+            link.click()
+          }}
+          shareConfirm={linkCopied}
+        />
+      )}
+    </AnimatePresence>
+  )
+}
 
-          {/* Bottom-center: Hint text / Stats CTA / Route details */}
-          <div className="col-start-1 col-span-full row-start-3 self-end justify-self-stretch sm:col-start-2 sm:col-span-1 sm:justify-self-center">
-            <AnimatePresence>
-              {!hasOrigin && (
-                <motion.div
-                  key="hint"
-                  className="panel pointer-events-auto"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.2, ease }}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="text-[13px] text-slate-300">
-                      Klikni bilo gdje da vidiš dokle možeš stići
-                    </div>
-                    <Link
-                      href="/statistika"
-                      prefetch={false}
-                      className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
-                    >
-                      ili pogledaj statistiku po četvrtima &rarr;
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+type HudOverlayProps = Omit<TransitMapViewProps, "containerRef"> & { ease: Ease }
 
-            <AnimatePresence>
-              {showStatsCta && hasOrigin && (
-                <motion.div
-                  key="stats-cta"
-                  className="panel pointer-events-auto"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.3, delay: 0.5, ease }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-[12px] text-slate-400">
-                      Kako se tvoja četvrt uspoređuje?
-                    </span>
-                    <Link
-                      href="/statistika"
-                      prefetch={false}
-                      className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
-                      onClick={() => {
-                        localStorage.setItem("doseg-stats-cta", "1")
-                        statsCtaDismissedRef.current = true
-                      }}
-                    >
-                      Statistika &rarr;
-                    </Link>
-                    <button
-                      type="button"
-                      className="text-slate-500 transition-colors hover:text-slate-300"
-                      aria-label="Zatvori"
-                      onClick={() => {
-                        localStorage.setItem("doseg-stats-cta", "1")
-                        statsCtaDismissedRef.current = true
-                        setShowStatsCta(false)
-                      }}
-                    >
-                      <svg
-                        aria-hidden="true"
-                        width="10"
-                        height="10"
-                        viewBox="0 0 8 8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      >
-                        <path d="M1 1l6 6M7 1l-6 6" />
-                      </svg>
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+function HudOverlay(p: HudOverlayProps) {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-6 sm:p-4">
+      <HudTopRow p={p} />
+      <div className="col-start-1 row-start-3" />
+      <HudBottomRow p={p} />
+      <div className="col-start-3 row-start-3" />
+    </div>
+  )
+}
 
-            <AnimatePresence>
-              {(route || routeLoading) && (
-                <RouteDetails
-                  itinerary={route}
-                  loading={routeLoading}
-                  departureTime={effectiveTime}
-                  className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
-                  onShare={() => {
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                      setLinkCopied(true)
-                      setTimeout(() => setLinkCopied(false), 2000)
-                    })
-                  }}
-                  onExport={() => {
-                    const map = mapRef.current
-                    if (!map) return
-                    const canvas = map.getCanvas()
-                    const link = document.createElement("a")
-                    link.download = "doseg.png"
-                    link.href = canvas.toDataURL("image/png")
-                    link.click()
-                  }}
-                  shareConfirm={linkCopied}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Bottom-right: empty placeholder */}
-          <div className="col-start-3 row-start-3" />
-
-        </div>{/* end HUD overlay grid */}
-
-        <OnboardingDialog />
+function HudTopRow({ p }: { p: HudOverlayProps }) {
+  return (
+    <>
+      <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:block">
+        <Link
+          href="/o-projektu"
+          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
+          aria-label="O projektu"
+        >
+          O projektu
+        </Link>
       </div>
-    </MotionConfig>
+      <HudTopCenter p={p} />
+      <div className="pointer-events-auto col-start-3 row-start-1 hidden self-start sm:flex items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
+        <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+          Pomicanje
+        </span>
+        <KbdGroup>
+          <Kbd>↑</Kbd>
+          <Kbd>↓</Kbd>
+          <Kbd>←</Kbd>
+          <Kbd>→</Kbd>
+        </KbdGroup>
+      </div>
+    </>
+  )
+}
+
+function HudTopCenter({ p }: { p: HudOverlayProps }) {
+  return (
+    <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center">
+      <IslandToolbar
+        effectiveTime={p.effectiveTime}
+        bajsEnabled={p.bajsEnabled}
+        layersOpen={p.layersOpen}
+        vehiclesEnabled={p.vehiclesEnabled}
+        poiEnabled={p.poiEnabled}
+        hasOrigin={p.hasOrigin}
+        ease={p.ease}
+        setTime={p.setTime}
+        setBajs={p.setBajs}
+        setLayersOpen={p.setLayersOpen}
+        setVehiclesEnabled={p.setVehiclesEnabled}
+        setPoiEnabled={p.setPoiEnabled}
+        setCoords={p.setCoords}
+      />
+      <ErrorOverlay error={p.error} ease={p.ease} />
+    </div>
+  )
+}
+
+function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
+  return (
+    <AnimatePresence>
+      {error && (
+        <motion.div
+          key="error"
+          role="alert"
+          aria-live="assertive"
+          className="island pointer-events-auto text-[12px] text-red-400"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.2, ease }}
+        >
+          {error}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function HudBottomRow({ p }: { p: HudOverlayProps }) {
+  return (
+    <div className="col-start-1 col-span-full row-start-3 self-end justify-self-stretch sm:col-start-2 sm:col-span-1 sm:justify-self-center">
+      <BottomHintPanel hasOrigin={p.hasOrigin} ease={p.ease} />
+      <StatsCtaPanel
+        showStatsCta={p.showStatsCta}
+        hasOrigin={p.hasOrigin}
+        statsCtaDismissedRef={p.statsCtaDismissedRef}
+        ease={p.ease}
+        setShowStatsCta={p.setShowStatsCta}
+      />
+      <RouteDetailsPanel
+        route={p.route}
+        routeLoading={p.routeLoading}
+        effectiveTime={p.effectiveTime}
+        linkCopied={p.linkCopied}
+        mapRef={p.mapRef}
+        setLinkCopied={p.setLinkCopied}
+      />
+    </div>
   )
 }
 

@@ -134,6 +134,73 @@ let cachedAlerts: Alert[] = []
 let cacheTime = 0
 let refreshPromise: Promise<void> | null = null
 
+type FeedEntity = GtfsRealtimeBindings.transit_realtime.IFeedEntity
+
+function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
+  const tu = entity.tripUpdate
+  if (!tu?.trip?.tripId || !tu.stopTimeUpdate?.length) return
+
+  const stopTimes: StopTimeRT[] = []
+  for (const stu of tu.stopTimeUpdate) {
+    const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
+    stopTimes.push({
+      stopSequence: stu.stopSequence ?? 0,
+      arrivalDelay: delay,
+    })
+  }
+  stopTimes.sort((a, b) => a.stopSequence - b.stopSequence)
+  rt.set(tu.trip.tripId, { stopTimes })
+}
+
+function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
+  const vp = entity.vehicle
+  if (!vp?.trip?.tripId || !vp.position) return
+
+  const statusNum = vp.currentStatus ?? VehicleStopStatus.IN_TRANSIT_TO
+  const occNum = vp.occupancyStatus
+
+  vehicles.push({
+    tripId: vp.trip.tripId,
+    routeId: vp.trip.routeId ?? null,
+    lat: vp.position.latitude,
+    lon: vp.position.longitude,
+    bearing: vp.position.bearing ?? null,
+    speed: vp.position.speed ?? null,
+    status: VehicleStopStatusName[statusNum] ?? "IN_TRANSIT_TO",
+    occupancyStatus:
+      occNum != null ? (OccupancyStatusName[occNum] ?? null) : null,
+  })
+}
+
+function parseAlert(entity: FeedEntity, alerts: Alert[]) {
+  const al = entity.alert
+  if (!al) return
+
+  const activePeriods: AlertActivePeriod[] = (al.activePeriod ?? []).map(
+    (p) => ({ start: toNum(p.start), end: toNum(p.end) })
+  )
+
+  const affectedRouteIds: string[] = []
+  const affectedStopIds: string[] = []
+  for (const ie of al.informedEntity ?? []) {
+    if (ie.routeId) affectedRouteIds.push(ie.routeId)
+    if (ie.stopId) affectedStopIds.push(ie.stopId)
+  }
+
+  const causeNum = al.cause ?? AlertCause.UNKNOWN_CAUSE
+  const effectNum = al.effect ?? AlertEffect.UNKNOWN_EFFECT
+
+  alerts.push({
+    activePeriods,
+    affectedRouteIds,
+    affectedStopIds,
+    cause: AlertCauseName[causeNum] ?? "UNKNOWN_CAUSE",
+    effect: AlertEffectName[effectNum] ?? "UNKNOWN_EFFECT",
+    headerText: translatedText(al.headerText),
+    descriptionText: translatedText(al.descriptionText),
+  })
+}
+
 async function refresh(): Promise<void> {
   try {
     const res = await fetch(ZET_RT_URL)
@@ -149,72 +216,9 @@ async function refresh(): Promise<void> {
     const alerts: Alert[] = []
 
     for (const entity of feed.entity) {
-      // --- Trip updates ---
-      const tu = entity.tripUpdate
-      if (tu?.trip?.tripId && tu.stopTimeUpdate?.length) {
-        const stopTimes: StopTimeRT[] = []
-        for (const stu of tu.stopTimeUpdate) {
-          const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
-          stopTimes.push({
-            stopSequence: stu.stopSequence ?? 0,
-            arrivalDelay: delay,
-          })
-        }
-        stopTimes.sort((a, b) => a.stopSequence - b.stopSequence)
-        rt.set(tu.trip.tripId, { stopTimes })
-      }
-
-      // --- Vehicle positions ---
-      const vp = entity.vehicle
-      if (vp?.trip?.tripId && vp.position) {
-        const statusNum =
-          vp.currentStatus ??
-          VehicleStopStatus.IN_TRANSIT_TO
-        const occNum = vp.occupancyStatus
-
-        vehicles.push({
-          tripId: vp.trip.tripId,
-          routeId: vp.trip.routeId ?? null,
-          lat: vp.position.latitude,
-          lon: vp.position.longitude,
-          bearing: vp.position.bearing ?? null,
-          speed: vp.position.speed ?? null,
-          status: VehicleStopStatusName[statusNum] ?? "IN_TRANSIT_TO",
-          occupancyStatus:
-            occNum != null ? (OccupancyStatusName[occNum] ?? null) : null,
-        })
-      }
-
-      // --- Alerts ---
-      const al = entity.alert
-      if (al) {
-        const activePeriods: AlertActivePeriod[] = (al.activePeriod ?? []).map(
-          (p) => ({
-            start: toNum(p.start),
-            end: toNum(p.end),
-          })
-        )
-
-        const affectedRouteIds: string[] = []
-        const affectedStopIds: string[] = []
-        for (const ie of al.informedEntity ?? []) {
-          if (ie.routeId) affectedRouteIds.push(ie.routeId)
-          if (ie.stopId) affectedStopIds.push(ie.stopId)
-        }
-
-        const causeNum = al.cause ?? AlertCause.UNKNOWN_CAUSE
-        const effectNum = al.effect ?? AlertEffect.UNKNOWN_EFFECT
-
-        alerts.push({
-          activePeriods,
-          affectedRouteIds,
-          affectedStopIds,
-          cause: AlertCauseName[causeNum] ?? "UNKNOWN_CAUSE",
-          effect: AlertEffectName[effectNum] ?? "UNKNOWN_EFFECT",
-          headerText: translatedText(al.headerText),
-          descriptionText: translatedText(al.descriptionText),
-        })
-      }
+      parseTripUpdate(entity, rt)
+      parseVehiclePosition(entity, vehicles)
+      parseAlert(entity, alerts)
     }
 
     cachedTrips = rt

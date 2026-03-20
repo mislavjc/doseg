@@ -167,53 +167,58 @@ class WalkHeap {
  * Expand transit stop arrival times onto the walking street network.
  * Returns GeoJSON MultiLineString features bucketed by travel time.
  */
-export function expandWalking(
+function seedOriginNode(
   graph: WalkingGraph,
-  transitTimes: Map<string, number>,
-  transitStops: ReadonlyMap<string, { lat: number; lon: number }>,
   originLat: number,
-  originLon: number
-): GeoJSON.Feature[] {
-  // Reuse best buffer (avoids 3.4MB alloc+fill per call)
-  if (!expandBestBuf || expandBestBufSize < graph.nodeCount) {
-    expandBestBuf = new Float64Array(graph.nodeCount).fill(Infinity)
-    expandBestBufSize = graph.nodeCount
-  }
-  const best = expandBestBuf
-  const touched: number[] = []
-  const heap = new WalkHeap()
-  const stopSnaps = getTransitStopSnaps(graph, transitStops)
+  originLon: number,
+  best: Float64Array,
+  touched: number[],
+  heap: WalkHeap,
+  maxSeconds: number = MAX_SECONDS
+) {
+  const originNode = findNearestNode(graph, originLat, originLon, 0.25)
+  if (originNode < 0) return
 
-  // Seed 1: Origin point → nearest walk node
-  const originNode = findNearestNode(graph, originLat, originLon, 0.25) // 0.5² = 0.25
-  if (originNode >= 0) {
-    const olat = graph.coords[originNode * 2]
-    const olon = graph.coords[originNode * 2 + 1]
-    const walkTime =
-      (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
-    if (walkTime < MAX_SECONDS) {
-      touched.push(originNode)
-      best[originNode] = walkTime
-      heap.push(walkTime, originNode)
-    }
+  const olat = graph.coords[originNode * 2]
+  const olon = graph.coords[originNode * 2 + 1]
+  const walkTime =
+    (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
+  if (walkTime < maxSeconds) {
+    touched.push(originNode)
+    best[originNode] = walkTime
+    heap.push(walkTime, originNode)
   }
+}
 
-  // Seed 2: Each reachable transit stop → nearest walk node
+function seedTransitStops(
+  transitTimes: Map<string, number>,
+  stopSnaps: Map<string, StopWalkSnap>,
+  maxSeconds: number,
+  best: Float64Array,
+  touched: number[],
+  heap: WalkHeap
+) {
   for (const [key, time] of transitTimes) {
-    if (time >= MAX_SECONDS) continue
+    if (time >= maxSeconds) continue
     const snap = stopSnaps.get(key)
     if (!snap) continue
 
     const totalTime = time + snap.walkSeconds
-
-    if (totalTime < MAX_SECONDS && totalTime < best[snap.nodeIdx]) {
+    if (totalTime < maxSeconds && totalTime < best[snap.nodeIdx]) {
       touched.push(snap.nodeIdx)
       best[snap.nodeIdx] = totalTime
       heap.push(totalTime, snap.nodeIdx)
     }
   }
+}
 
-  // Dijkstra on walking graph: track reached nodes for fast feature generation
+function runWalkDijkstra(
+  graph: WalkingGraph,
+  best: Float64Array,
+  touched: number[],
+  heap: WalkHeap,
+  maxSeconds: number
+): number[] {
   const reached: number[] = []
   const { offsets, edgeTargets, edgeDistCm } = graph
 
@@ -223,7 +228,7 @@ export function expandWalking(
     heap.pop()
 
     if (time > best[nodeIdx]) continue
-    if (time > MAX_SECONDS) break
+    if (time > maxSeconds) break
 
     reached.push(nodeIdx)
 
@@ -232,7 +237,7 @@ export function expandWalking(
       const toIdx = edgeTargets[e]
       const arrivalTime = time + edgeDistCm[e] * CM_TO_SECONDS
 
-      if (arrivalTime < MAX_SECONDS && arrivalTime < best[toIdx]) {
+      if (arrivalTime < maxSeconds && arrivalTime < best[toIdx]) {
         touched.push(toIdx)
         best[toIdx] = arrivalTime
         heap.push(arrivalTime, toIdx)
@@ -240,11 +245,17 @@ export function expandWalking(
     }
   }
 
-  // Batch edges into MultiLineStrings by 60-second time buckets.
-  // Only iterate reached nodes (~25K) instead of all 422K.
+  return reached
+}
+
+function buildEdgeFeatures(
+  graph: WalkingGraph,
+  reached: number[],
+  best: Float64Array
+): GeoJSON.Feature[] {
   const BUCKET_SECONDS = 60
   const buckets = new Map<number, [number, number][][]>()
-  const { coords } = graph
+  const { coords, offsets, edgeTargets, edgeDistCm } = graph
 
   for (const nodeIdx of reached) {
     const nodeTime = best[nodeIdx]
@@ -290,8 +301,31 @@ export function expandWalking(
       geometry: { type: "MultiLineString", coordinates: lines },
     })
   }
+  return features
+}
 
-  // Reset only touched nodes (not all 422K)
+export function expandWalking(
+  graph: WalkingGraph,
+  transitTimes: Map<string, number>,
+  transitStops: ReadonlyMap<string, { lat: number; lon: number }>,
+  originLat: number,
+  originLon: number
+): GeoJSON.Feature[] {
+  if (!expandBestBuf || expandBestBufSize < graph.nodeCount) {
+    expandBestBuf = new Float64Array(graph.nodeCount).fill(Infinity)
+    expandBestBufSize = graph.nodeCount
+  }
+  const best = expandBestBuf
+  const touched: number[] = []
+  const heap = new WalkHeap()
+  const stopSnaps = getTransitStopSnaps(graph, transitStops)
+
+  seedOriginNode(graph, originLat, originLon, best, touched, heap)
+  seedTransitStops(transitTimes, stopSnaps, MAX_SECONDS, best, touched, heap)
+
+  const reached = runWalkDijkstra(graph, best, touched, heap, MAX_SECONDS)
+  const features = buildEdgeFeatures(graph, reached, best)
+
   for (let i = 0; i < touched.length; i++) best[touched[i]] = Infinity
 
   return features
@@ -307,50 +341,13 @@ export function expandWalking(
  * Expects bestBuf pre-filled with Infinity. Resets only touched nodes at end
  * (avoids filling 422K entries every call, ~10x less memory traffic).
  */
-export function countReachableCells(
+function countCellsDijkstra(
   graph: WalkingGraph,
-  transitTimes: Map<string, number>,
-  transitStops: ReadonlyMap<string, { lat: number; lon: number }>,
-  originLat: number,
-  originLon: number,
-  maxSeconds: number,
-  bestBuf: Float64Array
+  bestBuf: Float64Array,
+  touched: number[],
+  heap: WalkHeap,
+  maxSeconds: number
 ): number {
-  // Track touched nodes for targeted reset instead of bestBuf.fill(Infinity)
-  const touched: number[] = []
-  const heap = new WalkHeap()
-  const stopSnaps = getTransitStopSnaps(graph, transitStops)
-
-  // Seed 1: Origin point → nearest walk node
-  const originNode = findNearestNode(graph, originLat, originLon, 0.25)
-  if (originNode >= 0) {
-    const olat = graph.coords[originNode * 2]
-    const olon = graph.coords[originNode * 2 + 1]
-    const walkTime =
-      (fastDistKm(originLat, originLon, olat, olon) / WALK_SPEED) * 3600
-    if (walkTime < maxSeconds) {
-      touched.push(originNode)
-      bestBuf[originNode] = walkTime
-      heap.push(walkTime, originNode)
-    }
-  }
-
-  // Seed 2: Each reachable transit stop → nearest walk node
-  for (const [key, time] of transitTimes) {
-    if (time >= maxSeconds) continue
-    const snap = stopSnaps.get(key)
-    if (!snap) continue
-
-    const totalTime = time + snap.walkSeconds
-
-    if (totalTime < maxSeconds && totalTime < bestBuf[snap.nodeIdx]) {
-      touched.push(snap.nodeIdx)
-      bestBuf[snap.nodeIdx] = totalTime
-      heap.push(totalTime, snap.nodeIdx)
-    }
-  }
-
-  // Dijkstra on walking graph: count unique grid cells reached
   const cells = new Set<number>()
   const { offsets, edgeTargets, edgeDistCm, coords, gridCellSize } = graph
 
@@ -362,10 +359,9 @@ export function countReachableCells(
     if (time > bestBuf[nodeIdx]) continue
     if (time > maxSeconds) break
 
-    // Compute cell key as single integer (faster than string)
     const ni2 = nodeIdx * 2
-    const cx = Math.floor(coords[ni2 + 1] / gridCellSize) // lon
-    const cy = Math.floor(coords[ni2] / gridCellSize) // lat
+    const cx = Math.floor(coords[ni2 + 1] / gridCellSize)
+    const cy = Math.floor(coords[ni2] / gridCellSize)
     cells.add(cx * 100000 + cy)
 
     const edgeEnd = offsets[nodeIdx + 1]
@@ -381,9 +377,27 @@ export function countReachableCells(
     }
   }
 
-  const count = cells.size
+  return cells.size
+}
 
-  // Reset only touched nodes back to Infinity (not all 422K)
+export function countReachableCells(
+  graph: WalkingGraph,
+  transitTimes: Map<string, number>,
+  transitStops: ReadonlyMap<string, { lat: number; lon: number }>,
+  originLat: number,
+  originLon: number,
+  maxSeconds: number,
+  bestBuf: Float64Array
+): number {
+  const touched: number[] = []
+  const heap = new WalkHeap()
+  const stopSnaps = getTransitStopSnaps(graph, transitStops)
+
+  seedOriginNode(graph, originLat, originLon, bestBuf, touched, heap, maxSeconds)
+  seedTransitStops(transitTimes, stopSnaps, maxSeconds, bestBuf, touched, heap)
+
+  const count = countCellsDijkstra(graph, bestBuf, touched, heap, maxSeconds)
+
   for (let i = 0; i < touched.length; i++) bestBuf[touched[i]] = Infinity
 
   return count

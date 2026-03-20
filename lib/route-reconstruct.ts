@@ -4,23 +4,7 @@ import type {
   RoutingPattern,
 } from "@/lib/generated"
 
-interface RoutingStop {
-  kind: "STOP" | "BAJS"
-  lat: number
-  lon: number
-  name: string
-  time: number
-  delay?: number // RT delay in seconds at this stop
-  pred: {
-    fromKey: string
-    kind: "WALK" | "TRANSIT" | "BIKE"
-    patternIdx?: number | null
-    boardIdx?: number | null
-    alightIdx?: number | null
-  } | null
-}
-
-type RoutingStopInput = RoutingNode
+type RoutingStop = Omit<RoutingNode, "key">
 
 export interface RoutingData {
   stops: Map<string, RoutingStop>
@@ -65,7 +49,7 @@ function distMeters(
 }
 
 export function parseRoutingData(
-  json: { nodes: RoutingStopInput[]; patterns: RoutingPattern[] },
+  json: { nodes: RoutingNode[]; patterns: RoutingPattern[] },
   originLat: number,
   originLon: number
 ): RoutingData {
@@ -79,7 +63,6 @@ export function parseRoutingData(
       lon: s.lon,
       name: s.name || "",
       time: s.time,
-      delay: (s as RoutingStop & { delay?: number }).delay,
       pred: s.pred,
     })
     const cx = Math.floor(s.lon / GRID_CELL_SIZE)
@@ -156,11 +139,7 @@ function stopName(stop: RoutingStop): string {
   return stop.name || ""
 }
 
-function buildRouteTemplate(
-  data: RoutingData,
-  nearestKey: string
-): RouteTemplate | null {
-  // Trace predecessors back to origin
+function traceChain(data: RoutingData, nearestKey: string): string[] {
   const chain: string[] = []
   let current: string | null = nearestKey
   const visited = new Set<string>()
@@ -172,7 +151,87 @@ function buildRouteTemplate(
     current = stop.pred.fromKey
   }
   chain.reverse()
+  return chain
+}
 
+function buildTransitChainLeg(
+  data: RoutingData,
+  stop: RoutingStop,
+  fromStop: RoutingStop
+): Leg | null {
+  if (stop.pred!.patternIdx == null || stop.pred!.boardIdx == null || stop.pred!.alightIdx == null) {
+    return null
+  }
+  const pattern = data.patterns[stop.pred!.patternIdx]
+  if (!pattern) return null
+
+  const coords: [number, number][] = []
+  for (let si = stop.pred!.boardIdx; si <= stop.pred!.alightIdx; si++) {
+    const sk = pattern.stopKeys[si]
+    const s = data.stops.get(sk)
+    if (s) coords.push([s.lon, s.lat])
+  }
+  if (coords.length < 2) {
+    coords.length = 0
+    coords.push([fromStop.lon, fromStop.lat], [stop.lon, stop.lat])
+  }
+
+  const fromTime = fromStop.time || 0
+  return {
+    mode: pattern.mode,
+    from: { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
+    to: { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+    duration: Math.round(stop.time - fromTime),
+    distance: Math.round(distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)),
+    route: pattern.route || undefined,
+    legGeometry: { points: "", coords },
+  }
+}
+
+function buildChainStep(
+  data: RoutingData,
+  chainKey: string
+): Leg | null {
+  const stop = data.stops.get(chainKey)
+  if (!stop?.pred) return null
+  const fromStop = data.stops.get(stop.pred.fromKey)
+  if (!fromStop) return null
+
+  if (stop.pred.kind === "WALK") {
+    const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
+    return makeWalkLeg(
+      { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
+      { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+      d
+    )
+  }
+
+  if (stop.pred.kind === "BIKE") {
+    const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
+    return makeBikeLeg(
+      { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
+      { name: stopName(stop), lat: stop.lat, lon: stop.lon },
+      d,
+      Math.round(stop.time - fromStop.time)
+    )
+  }
+
+  if (
+    stop.pred.patternIdx === undefined ||
+    stop.pred.boardIdx === undefined ||
+    stop.pred.alightIdx === undefined
+  ) {
+    return null
+  }
+
+  return buildTransitChainLeg(data, stop, fromStop)
+}
+
+function buildRouteTemplate(
+  data: RoutingData,
+  nearestKey: string
+): RouteTemplate | null {
+  const chain = traceChain(data, nearestKey)
   if (chain.length === 0) return null
 
   const firstStop = data.stops.get(chain[0])
@@ -181,12 +240,8 @@ function buildRouteTemplate(
 
   const baseLegs: Leg[] = []
 
-  // Walk from origin to first stop
   const originDist = distMeters(
-    data.originLat,
-    data.originLon,
-    firstStop.lat,
-    firstStop.lon
+    data.originLat, data.originLon, firstStop.lat, firstStop.lon
   )
   if (originDist > 10) {
     baseLegs.push(
@@ -198,85 +253,10 @@ function buildRouteTemplate(
     )
   }
 
-  // Process each step in the chain up to the nearest reachable stop
   for (let i = 1; i < chain.length; i++) {
-    const stop = data.stops.get(chain[i])
-    if (!stop?.pred) return null
-    const fromStop = data.stops.get(stop.pred.fromKey)
-    if (!fromStop) return null
-
-    if (stop.pred.kind === "WALK") {
-      const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
-      baseLegs.push(
-        makeWalkLeg(
-          { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
-          { name: stopName(stop), lat: stop.lat, lon: stop.lon },
-          d
-        )
-      )
-      continue
-    }
-
-    if (stop.pred.kind === "BIKE") {
-      const d = distMeters(fromStop.lat, fromStop.lon, stop.lat, stop.lon)
-      baseLegs.push(
-        makeBikeLeg(
-          { name: stopName(fromStop), lat: fromStop.lat, lon: fromStop.lon },
-          { name: stopName(stop), lat: stop.lat, lon: stop.lon },
-          d,
-          Math.round(stop.time - fromStop.time)
-        )
-      )
-      continue
-    }
-
-    if (
-      stop.pred.patternIdx === undefined ||
-      stop.pred.boardIdx === undefined ||
-      stop.pred.alightIdx === undefined
-    ) {
-      return null
-    }
-
-    // Transit leg: build geometry from intermediate stop coordinates
-    if (stop.pred.patternIdx == null || stop.pred.boardIdx == null || stop.pred.alightIdx == null) {
-      return null
-    }
-    const pattern = data.patterns[stop.pred.patternIdx]
-    const boardStop = fromStop
-    if (!pattern) return null
-
-    const coords: [number, number][] = []
-    for (let si = stop.pred.boardIdx; si <= stop.pred.alightIdx; si++) {
-      const sk = pattern.stopKeys[si]
-      const s = data.stops.get(sk)
-      if (s) coords.push([s.lon, s.lat])
-    }
-    if (coords.length < 2) {
-      coords.length = 0
-      coords.push([boardStop.lon, boardStop.lat], [stop.lon, stop.lat])
-    }
-
-    const fromTime = fromStop.time || 0
-    baseLegs.push({
-      mode: pattern.mode,
-      from: {
-        name: stopName(boardStop),
-        lat: boardStop.lat,
-        lon: boardStop.lon,
-      },
-      to: { name: stopName(stop), lat: stop.lat, lon: stop.lon },
-      duration: Math.round(stop.time - fromTime),
-      distance: Math.round(
-        distMeters(boardStop.lat, boardStop.lon, stop.lat, stop.lon)
-      ),
-      route: pattern.route || undefined,
-      delay: stop.delay,
-      legGeometry: {
-        points: "",
-        coords,
-      },
-    })
+    const leg = buildChainStep(data, chain[i])
+    if (!leg) return null
+    baseLegs.push(leg)
   }
 
   const baseWalkDistance = baseLegs

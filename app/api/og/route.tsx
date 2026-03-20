@@ -112,6 +112,339 @@ function scoreColor(score: number): string {
   return "#ef4444"
 }
 
+function colorBar(sizes: { w: string; h: string }) {
+  return ["#22c55e", "#06b6d4", "#3b82f6", "#6366f1"].map((color) => (
+    <div
+      key={color}
+      style={{
+        width: sizes.w,
+        height: sizes.h,
+        borderRadius: sizes.h === "6px" ? "3px" : "4px",
+        background: color,
+        display: "flex",
+      }}
+    />
+  ))
+}
+
+function CoordsTopBar() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "40px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "42px",
+          fontWeight: 700,
+          letterSpacing: "-0.02em",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        <div
+          style={{
+            width: "14px",
+            height: "14px",
+            borderRadius: "50%",
+            background: "#22c55e",
+            display: "flex",
+          }}
+        />
+        Doseg
+      </div>
+      <div
+        style={{
+          fontSize: "22px",
+          color: "#94a3b8",
+          display: "flex",
+        }}
+      >
+        doseg.mislavjc.com
+      </div>
+    </div>
+  )
+}
+
+function ScoreBadge({ district }: { district: { score: number; rank: number } }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "16px",
+        marginTop: "8px",
+      }}
+    >
+      <div
+        style={{
+          background: scoreColor(district.score),
+          borderRadius: "12px",
+          padding: "8px 20px",
+          fontSize: "28px",
+          fontWeight: 700,
+          color: "#0f172a",
+          display: "flex",
+        }}
+      >
+        {district.score}/100
+      </div>
+      <div
+        style={{
+          fontSize: "26px",
+          color: "#cbd5e1",
+          display: "flex",
+        }}
+      >
+        #{district.rank} od 17 gradskih cetvrti
+      </div>
+    </div>
+  )
+}
+
+function MetadataField({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "18px",
+          color: "#64748b",
+          textTransform: "uppercase",
+          letterSpacing: "0.1em",
+          display: "flex",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: "26px",
+          color: "#e2e8f0",
+          fontFeatureSettings: '"tnum"',
+          display: "flex",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  )
+}
+
+function CoordsMetadata({
+  lat,
+  lon,
+  timeStr,
+}: {
+  lat: number
+  lon: number
+  timeStr: string | null
+}) {
+  return (
+    <div style={{ display: "flex", gap: "40px", marginTop: "16px" }}>
+      <MetadataField label="Koordinate" value={formatCoords(lat, lon)} />
+      {timeStr && <MetadataField label="Polazak" value={formatTime(timeStr)} />}
+    </div>
+  )
+}
+
+const ogBackground =
+  "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)"
+
+function CoordsMainContent({
+  district,
+  lat,
+  lon,
+  timeStr,
+}: {
+  district: { name: string; score: number; rank: number } | null
+  lat: number
+  lon: number
+  timeStr: string | null
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        justifyContent: "center",
+        gap: "20px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "72px",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
+          lineHeight: 1.1,
+          display: "flex",
+        }}
+      >
+        {district ? district.name : "Zagreb"}
+      </div>
+
+      {district && district.score > 0 && <ScoreBadge district={district} />}
+
+      <CoordsMetadata lat={lat} lon={lon} timeStr={timeStr} />
+    </div>
+  )
+}
+
+function CoordsBottomBar() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+      }}
+    >
+      <div style={{ fontSize: "20px", color: "#475569", display: "flex" }}>
+        Doseg javnog prijevoza u 30 min
+      </div>
+      <div style={{ display: "flex", gap: "8px" }}>
+        {colorBar({ w: "40px", h: "6px" })}
+      </div>
+    </div>
+  )
+}
+
+function CoordsImage({
+  district,
+  lat,
+  lon,
+  timeStr,
+}: {
+  district: { name: string; score: number; rank: number } | null
+  lat: number
+  lon: number
+  timeStr: string | null
+}) {
+  return (
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        background: ogBackground,
+        padding: "60px",
+        fontFamily: "Inter, system-ui, sans-serif",
+        color: "white",
+      }}
+    >
+      <CoordsTopBar />
+      <CoordsMainContent district={district} lat={lat} lon={lon} timeStr={timeStr} />
+      <CoordsBottomBar />
+    </div>
+  )
+}
+
+function FallbackLogo() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+      <div
+        style={{
+          width: "20px",
+          height: "20px",
+          borderRadius: "50%",
+          background: "#22c55e",
+          display: "flex",
+        }}
+      />
+      <div
+        style={{
+          fontSize: "80px",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
+          display: "flex",
+        }}
+      >
+        Doseg
+      </div>
+    </div>
+  )
+}
+
+function FallbackContent() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "24px",
+      }}
+    >
+      <FallbackLogo />
+      <div
+        style={{
+          fontSize: "36px",
+          color: "#94a3b8",
+          textAlign: "center",
+          maxWidth: "800px",
+          lineHeight: 1.4,
+          display: "flex",
+        }}
+      >
+        Karta dosega javnog prijevoza u Zagrebu
+      </div>
+      <div style={{ display: "flex", gap: "8px", marginTop: "24px" }}>
+        {colorBar({ w: "60px", h: "8px" })}
+      </div>
+      <div
+        style={{ fontSize: "24px", color: "#475569", marginTop: "32px", display: "flex" }}
+      >
+        Pogledaj dokle mozes stici tramvajem i busom u 15, 30 ili 45 min
+      </div>
+    </div>
+  )
+}
+
+function FallbackImage() {
+  return (
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        background: ogBackground,
+        padding: "60px",
+        fontFamily: "Inter, system-ui, sans-serif",
+        color: "white",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <FallbackContent />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "40px",
+          right: "60px",
+          fontSize: "22px",
+          color: "#64748b",
+          display: "flex",
+        }}
+      >
+        doseg.mislavjc.com
+      </div>
+    </div>
+  )
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const latStr = searchParams.get("lat")
@@ -130,340 +463,9 @@ export async function GET(request: Request) {
 
   return new ImageResponse(
     hasCoords ? (
-      <div
-        style={{
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          flexDirection: "column",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
-          padding: "60px",
-          fontFamily: "Inter, system-ui, sans-serif",
-          color: "white",
-        }}
-      >
-        {/* Top bar */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "40px",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "42px",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-            }}
-          >
-            <div
-              style={{
-                width: "14px",
-                height: "14px",
-                borderRadius: "50%",
-                background: "#22c55e",
-                display: "flex",
-              }}
-            />
-            Doseg
-          </div>
-          <div
-            style={{
-              fontSize: "22px",
-              color: "#94a3b8",
-              display: "flex",
-            }}
-          >
-            doseg.mislavjc.com
-          </div>
-        </div>
-
-        {/* Main content */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: "center",
-            gap: "20px",
-          }}
-        >
-          {/* District name */}
-          <div
-            style={{
-              fontSize: "72px",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.1,
-              display: "flex",
-            }}
-          >
-            {district ? district.name : "Zagreb"}
-          </div>
-
-          {/* Score badge */}
-          {district && district.score > 0 && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-                marginTop: "8px",
-              }}
-            >
-              <div
-                style={{
-                  background: scoreColor(district.score),
-                  borderRadius: "12px",
-                  padding: "8px 20px",
-                  fontSize: "28px",
-                  fontWeight: 700,
-                  color: "#0f172a",
-                  display: "flex",
-                }}
-              >
-                {district.score}/100
-              </div>
-              <div
-                style={{
-                  fontSize: "26px",
-                  color: "#cbd5e1",
-                  display: "flex",
-                }}
-              >
-                #{district.rank} od 17 gradskih cetvrti
-              </div>
-            </div>
-          )}
-
-          {/* Coordinates and time */}
-          <div
-            style={{
-              display: "flex",
-              gap: "40px",
-              marginTop: "16px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "4px",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "18px",
-                  color: "#64748b",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  display: "flex",
-                }}
-              >
-                Koordinate
-              </div>
-              <div
-                style={{
-                  fontSize: "26px",
-                  color: "#e2e8f0",
-                  fontFeatureSettings: '"tnum"',
-                  display: "flex",
-                }}
-              >
-                {formatCoords(lat, lon)}
-              </div>
-            </div>
-            {timeStr && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "4px",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "18px",
-                    color: "#64748b",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                    display: "flex",
-                  }}
-                >
-                  Polazak
-                </div>
-                <div
-                  style={{
-                    fontSize: "26px",
-                    color: "#e2e8f0",
-                    fontFeatureSettings: '"tnum"',
-                    display: "flex",
-                  }}
-                >
-                  {formatTime(timeStr)}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "20px",
-              color: "#475569",
-              display: "flex",
-            }}
-          >
-            Doseg javnog prijevoza u 30 min
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-            }}
-          >
-            {["#22c55e", "#06b6d4", "#3b82f6", "#6366f1"].map((color) => (
-              <div
-                key={color}
-                style={{
-                  width: "40px",
-                  height: "6px",
-                  borderRadius: "3px",
-                  background: color,
-                  display: "flex",
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      <CoordsImage district={district} lat={lat} lon={lon} timeStr={timeStr} />
     ) : (
-      /* Fallback: generic OG image */
-      <div
-        style={{
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          flexDirection: "column",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
-          padding: "60px",
-          fontFamily: "Inter, system-ui, sans-serif",
-          color: "white",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {/* Logo and title */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "24px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
-            <div
-              style={{
-                width: "20px",
-                height: "20px",
-                borderRadius: "50%",
-                background: "#22c55e",
-                display: "flex",
-              }}
-            />
-            <div
-              style={{
-                fontSize: "80px",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                display: "flex",
-              }}
-            >
-              Doseg
-            </div>
-          </div>
-
-          <div
-            style={{
-              fontSize: "36px",
-              color: "#94a3b8",
-              textAlign: "center",
-              maxWidth: "800px",
-              lineHeight: 1.4,
-              display: "flex",
-            }}
-          >
-            Karta dosega javnog prijevoza u Zagrebu
-          </div>
-
-          {/* Decorative gradient bar */}
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              marginTop: "24px",
-            }}
-          >
-            {["#22c55e", "#06b6d4", "#3b82f6", "#6366f1"].map((color) => (
-              <div
-                key={color}
-                style={{
-                  width: "60px",
-                  height: "8px",
-                  borderRadius: "4px",
-                  background: color,
-                  display: "flex",
-                }}
-              />
-            ))}
-          </div>
-
-          <div
-            style={{
-              fontSize: "24px",
-              color: "#475569",
-              marginTop: "32px",
-              display: "flex",
-            }}
-          >
-            Pogledaj dokle mozes stici tramvajem i busom u 15, 30 ili 45 min
-          </div>
-        </div>
-
-        {/* Bottom URL */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            right: "60px",
-            fontSize: "22px",
-            color: "#64748b",
-            display: "flex",
-          }}
-        >
-          doseg.mislavjc.com
-        </div>
-      </div>
+      <FallbackImage />
     ),
     {
       width: 1200,

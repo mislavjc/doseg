@@ -5,6 +5,14 @@ import { buildAccurateItinerary } from "@/lib/accurate-itinerary"
 import { getReachabilityState } from "@/lib/reachability-state"
 import { secondsOfDay } from "@/lib/zagreb-time"
 
+function parseDepartureTime(timeStr: string | null): number {
+  if (timeStr) {
+    const [h, m] = timeStr.split(":").map(Number)
+    if (!Number.isNaN(h) && !Number.isNaN(m)) return h * 3600 + m * 60
+  }
+  return secondsOfDay()
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
   const originLat = parseFloat(searchParams.get("originLat") || "")
@@ -24,16 +32,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const timeStr = searchParams.get("time")
-  let departureTime: number
-  if (timeStr) {
-    const [h, m] = timeStr.split(":").map(Number)
-    departureTime =
-      !Number.isNaN(h) && !Number.isNaN(m) ? h * 3600 + m * 60 : secondsOfDay()
-  } else {
-    departureTime = secondsOfDay()
-  }
-
+  const departureTime = parseDepartureTime(searchParams.get("time"))
   const useBajs = searchParams.get("bajs") === "1"
   const preferredKey = searchParams.get("preferredKey")
 

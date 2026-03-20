@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef } from "react"
+import { useCallback } from "react"
 
 import {
   Popover,
@@ -65,6 +65,32 @@ export function TimePicker({
   )
 }
 
+function ScrollColumnItem({
+  item,
+  selected,
+  onSelect,
+}: {
+  item: number
+  selected: boolean
+  onSelect: (value: number) => void
+}) {
+  return (
+    <button
+      role="option"
+      aria-selected={selected}
+      onClick={() => onSelect(item)}
+      className={`flex w-full items-center justify-center rounded-lg text-[14px] tabular-nums transition-colors ${
+        selected
+          ? "bg-white/10 font-semibold text-white"
+          : "text-slate-400 hover:text-slate-200"
+      }`}
+      style={{ height: ITEM_H }}
+    >
+      {pad(item)}
+    </button>
+  )
+}
+
 function ScrollColumn({
   items,
   selected,
@@ -76,19 +102,15 @@ function ScrollColumn({
   onSelect: (value: number) => void
   label: string
 }) {
-  const selectedRef = useRef(selected)
-  selectedRef.current = selected
-
-  // Callback ref: scroll to selected item when the popover mounts the node
   const attachRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) return
-      const idx = items.indexOf(selectedRef.current)
+      const idx = items.indexOf(selected)
       if (idx >= 0) {
         node.scrollTop = idx * ITEM_H
       }
     },
-    [items]
+    [items, selected]
   )
 
   return (
@@ -98,23 +120,14 @@ function ScrollColumn({
       role="listbox"
       aria-label={label}
     >
-      {/* Top/bottom padding so selected item can center */}
       <div style={{ height: ITEM_H * 2 }} />
       {items.map((item) => (
-        <button
+        <ScrollColumnItem
           key={item}
-          role="option"
-          aria-selected={item === selected}
-          onClick={() => onSelect(item)}
-          className={`flex w-full items-center justify-center rounded-lg text-[14px] tabular-nums transition-colors ${
-            item === selected
-              ? "bg-white/10 font-semibold text-white"
-              : "text-slate-400 hover:text-slate-200"
-          }`}
-          style={{ height: ITEM_H }}
-        >
-          {pad(item)}
-        </button>
+          item={item}
+          selected={item === selected}
+          onSelect={onSelect}
+        />
       ))}
       <div style={{ height: ITEM_H * 2 }} />
     </div>

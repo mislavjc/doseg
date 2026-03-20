@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 export default function DistrictMap() {
   return (
     <div className="w-full overflow-hidden" style={{ aspectRatio: "960/620" }}>

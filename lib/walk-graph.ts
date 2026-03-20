@@ -27,34 +27,27 @@ const GRID_CELL_SIZE = 0.002 // ~200m in degrees
 
 const cached = new Map<string, WalkingGraph>()
 
-function loadGraph(
-  path: string,
-  label: string,
-  buildCommand: string
-): WalkingGraph {
-  const existing = cached.get(path)
-  if (existing) return existing
-
-  let buf: Buffer
+function readGraphBuffer(path: string, label: string, buildCommand: string): Buffer {
   try {
-    buf = readFileSync(path)
+    return readFileSync(path)
   } catch {
     throw new Error(
       `${label} graph not found at ${path}. Run "${buildCommand}" to generate it.`
     )
   }
+}
+
+function parseGraphArrays(buf: Buffer) {
   const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
 
   const nodeCount = view.getUint32(0, true)
   const edgeCount = view.getUint32(4, true)
 
-  // Read node coordinates: bulk copy via DataView
   const coordsBytes = nodeCount * 2 * 8
   const coords = new Float64Array(nodeCount * 2)
   const coordSrc = new Uint8Array(buf.buffer, buf.byteOffset + 8, coordsBytes)
   new Uint8Array(coords.buffer).set(coordSrc)
 
-  // Read CSR offsets: bulk copy
   const offsetsStart = 8 + coordsBytes
   const offsetsBytes = (nodeCount + 1) * 4
   const offsets = new Uint32Array(nodeCount + 1)
@@ -62,7 +55,6 @@ function loadGraph(
     new Uint8Array(buf.buffer, buf.byteOffset + offsetsStart, offsetsBytes)
   )
 
-  // Read edges: interleaved [target, dist, target, dist, ...], deinterleave
   const edgesStart = offsetsStart + offsetsBytes
   const edgeTargets = new Uint32Array(edgeCount)
   const edgeDistCm = new Uint32Array(edgeCount)
@@ -72,11 +64,14 @@ function loadGraph(
     edgeDistCm[i] = view.getUint32(off + 4, true)
   }
 
-  // Build spatial grid for nearest-node lookup
+  return { nodeCount, edgeCount, coords, offsets, edgeTargets, edgeDistCm }
+}
+
+function buildSpatialGrid(coords: Float64Array, nodeCount: number) {
   const grid = new Map<string, number[]>()
   for (let i = 0; i < nodeCount; i++) {
-    const cx = Math.floor(coords[i * 2 + 1] / GRID_CELL_SIZE) // lon
-    const cy = Math.floor(coords[i * 2] / GRID_CELL_SIZE) // lat
+    const cx = Math.floor(coords[i * 2 + 1] / GRID_CELL_SIZE)
+    const cy = Math.floor(coords[i * 2] / GRID_CELL_SIZE)
     const key = `${cx},${cy}`
     let cell = grid.get(key)
     if (!cell) {
@@ -85,17 +80,22 @@ function loadGraph(
     }
     cell.push(i)
   }
+  return grid
+}
 
-  const graph = {
-    nodeCount,
-    edgeCount,
-    coords,
-    offsets,
-    edgeTargets,
-    edgeDistCm,
-    grid,
-    gridCellSize: GRID_CELL_SIZE,
-  }
+function loadGraph(
+  path: string,
+  label: string,
+  buildCommand: string
+): WalkingGraph {
+  const existing = cached.get(path)
+  if (existing) return existing
+
+  const buf = readGraphBuffer(path, label, buildCommand)
+  const arrays = parseGraphArrays(buf)
+  const grid = buildSpatialGrid(arrays.coords, arrays.nodeCount)
+
+  const graph = { ...arrays, grid, gridCellSize: GRID_CELL_SIZE }
 
   cached.set(path, graph)
   return graph

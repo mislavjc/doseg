@@ -43,6 +43,56 @@ function makeKey(params: {
   ].join(":")
 }
 
+async function computeState(
+  key: string,
+  params: {
+    originLat: number
+    originLon: number
+    departureTime: number
+    useBajs: boolean
+  }
+): Promise<ReachabilityState> {
+  const graph = await getGraph()
+  const rtData = getRealtimeData()
+  let bajsData: BajsData | null = null
+  if (params.useBajs) {
+    try {
+      bajsData = await getBajsData()
+    } catch (err) {
+      console.error("BAJS routing data unavailable:", err)
+    }
+  }
+  const {
+    times: travelTimes,
+    preds,
+    delays,
+  } = computeTravelTimes(
+    graph,
+    params.originLat,
+    params.originLon,
+    params.departureTime,
+    rtData,
+    {
+      bajsStations: bajsData?.stations,
+      timeCap: 3600,
+    }
+  )
+
+  return {
+    key,
+    originLat: params.originLat,
+    originLon: params.originLon,
+    departureTime: params.departureTime,
+    useBajs: params.useBajs,
+    graph,
+    rtData,
+    bajsData,
+    travelTimes,
+    preds,
+    delays,
+  }
+}
+
 export async function getReachabilityState(params: {
   originLat: number
   originLon: number
@@ -56,47 +106,7 @@ export async function getReachabilityState(params: {
     return cached.value
   }
 
-  const value = (async () => {
-    const graph = await getGraph()
-    const rtData = getRealtimeData()
-    let bajsData: BajsData | null = null
-    if (params.useBajs) {
-      try {
-        bajsData = await getBajsData()
-      } catch (err) {
-        console.error("BAJS routing data unavailable:", err)
-      }
-    }
-    const {
-      times: travelTimes,
-      preds,
-      delays,
-    } = computeTravelTimes(
-      graph,
-      params.originLat,
-      params.originLon,
-      params.departureTime,
-      rtData,
-      {
-        bajsStations: bajsData?.stations,
-        timeCap: 3600,
-      }
-    )
-
-    return {
-      key,
-      originLat: params.originLat,
-      originLon: params.originLon,
-      departureTime: params.departureTime,
-      useBajs: params.useBajs,
-      graph,
-      rtData,
-      bajsData,
-      travelTimes,
-      preds,
-      delays,
-    }
-  })()
+  const value = computeState(key, params)
 
   cache.set(key, {
     expiresAt: now + CACHE_TTL_MS,

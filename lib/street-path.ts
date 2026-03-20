@@ -157,14 +157,11 @@ function setCachedPath(
   cache.set(`${startNode}:${endNode}`, value)
 }
 
-function findPathBetweenNodes(
+function runDijkstra(
   graph: WalkingGraph,
   startNode: number,
   endNode: number
-): PathCacheEntry | null {
-  const cachedPath = getCachedPath(graph, startNode, endNode)
-  if (cachedPath !== undefined) return cachedPath
-
+): { best: Float64Array; prev: Int32Array } {
   const best = new Float64Array(graph.nodeCount).fill(Infinity)
   const prev = new Int32Array(graph.nodeCount).fill(-1)
   const heap = new PathHeap()
@@ -191,12 +188,15 @@ function findPathBetweenNodes(
     }
   }
 
-  const weightedDistanceCm = best[endNode]
-  if (!Number.isFinite(weightedDistanceCm)) {
-    setCachedPath(graph, startNode, endNode, null)
-    return null
-  }
+  return { best, prev }
+}
 
+function tracePathChain(
+  prev: Int32Array,
+  startNode: number,
+  endNode: number,
+  graph: WalkingGraph
+): [number, number][] | null {
   const chain: number[] = []
   let current = endNode
   while (current !== -1) {
@@ -205,21 +205,38 @@ function findPathBetweenNodes(
     current = prev[current]
   }
 
-  if (chain[chain.length - 1] !== startNode) {
+  if (chain[chain.length - 1] !== startNode) return null
+
+  chain.reverse()
+  return chain.map((nodeIdx) => {
+    const [lat, lon] = getNodeCoords(graph, nodeIdx)
+    return [lon, lat]
+  })
+}
+
+function findPathBetweenNodes(
+  graph: WalkingGraph,
+  startNode: number,
+  endNode: number
+): PathCacheEntry | null {
+  const cachedPath = getCachedPath(graph, startNode, endNode)
+  if (cachedPath !== undefined) return cachedPath
+
+  const { best, prev } = runDijkstra(graph, startNode, endNode)
+
+  const weightedDistanceCm = best[endNode]
+  if (!Number.isFinite(weightedDistanceCm)) {
     setCachedPath(graph, startNode, endNode, null)
     return null
   }
 
-  chain.reverse()
-  const coords: [number, number][] = chain.map((nodeIdx) => {
-    const [lat, lon] = getNodeCoords(graph, nodeIdx)
-    return [lon, lat]
-  })
-
-  const result = {
-    coords,
-    weightedDistanceCm,
+  const coords = tracePathChain(prev, startNode, endNode, graph)
+  if (!coords) {
+    setCachedPath(graph, startNode, endNode, null)
+    return null
   }
+
+  const result = { coords, weightedDistanceCm }
   setCachedPath(graph, startNode, endNode, result)
   return result
 }
@@ -232,6 +249,31 @@ export interface StreetPathResult {
   endNodeIdx: number
 }
 
+function resolvePathNodes(
+  graph: WalkingGraph,
+  startNodeIdx: number,
+  endNodeIdx: number
+): PathCacheEntry | null {
+  if (startNodeIdx === endNodeIdx) {
+    const startNodeCoords = getNodeCoords(graph, startNodeIdx)
+    return {
+      coords: [[startNodeCoords[1], startNodeCoords[0]]],
+      weightedDistanceCm: 0,
+    }
+  }
+  return findPathBetweenNodes(graph, startNodeIdx, endNodeIdx)
+}
+
+function sumCoordDistance(coords: [number, number][]): number {
+  let total = 0
+  for (let i = 1; i < coords.length; i++) {
+    const [prevLon, prevLat] = coords[i - 1]
+    const [lon, lat] = coords[i]
+    total += distMeters(prevLat, prevLon, lat, lon)
+  }
+  return total
+}
+
 export function findStreetPath(
   graph: WalkingGraph,
   from: { lat: number; lon: number },
@@ -239,28 +281,11 @@ export function findStreetPath(
   speedKmh: number,
   maxNodeDistKmSq: number = 0.25
 ): StreetPathResult | null {
-  const startNodeIdx = findNearestNode(
-    graph,
-    from.lat,
-    from.lon,
-    maxNodeDistKmSq
-  )
+  const startNodeIdx = findNearestNode(graph, from.lat, from.lon, maxNodeDistKmSq)
   const endNodeIdx = findNearestNode(graph, to.lat, to.lon, maxNodeDistKmSq)
   if (startNodeIdx < 0 || endNodeIdx < 0) return null
 
-  const startNodeCoords = getNodeCoords(graph, startNodeIdx)
-  const endNodeCoords = getNodeCoords(graph, endNodeIdx)
-
-  const path =
-    startNodeIdx === endNodeIdx
-      ? {
-          coords: [[startNodeCoords[1], startNodeCoords[0]]] as [
-            number,
-            number,
-          ][],
-          weightedDistanceCm: 0,
-        }
-      : findPathBetweenNodes(graph, startNodeIdx, endNodeIdx)
+  const path = resolvePathNodes(graph, startNodeIdx, endNodeIdx)
   if (!path) return null
 
   const coords: [number, number][] = []
@@ -270,13 +295,8 @@ export function findStreetPath(
   }
   appendCoord(coords, to.lon, to.lat)
 
-  let distanceMeters = 0
-  for (let i = 1; i < coords.length; i++) {
-    const [prevLon, prevLat] = coords[i - 1]
-    const [lon, lat] = coords[i]
-    distanceMeters += distMeters(prevLat, prevLon, lat, lon)
-  }
-
+  const startNodeCoords = getNodeCoords(graph, startNodeIdx)
+  const endNodeCoords = getNodeCoords(graph, endNodeIdx)
   const durationSeconds =
     path.weightedDistanceCm * (3600 / (100_000 * speedKmh)) +
     distMeters(from.lat, from.lon, startNodeCoords[0], startNodeCoords[1]) /
@@ -286,7 +306,7 @@ export function findStreetPath(
 
   return {
     coords,
-    distanceMeters: Math.round(distanceMeters),
+    distanceMeters: Math.round(sumCoordDistance(coords)),
     durationSeconds: Math.round(durationSeconds),
     startNodeIdx,
     endNodeIdx,

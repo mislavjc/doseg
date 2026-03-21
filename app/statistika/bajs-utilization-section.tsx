@@ -1,7 +1,11 @@
 "use client"
 
 import useSWR from "swr"
+import dynamic from "next/dynamic"
 import { fmtHR } from "@/lib/format"
+import BajsUsageChart from "./bajs-usage-chart"
+
+const BajsStationMap = dynamic(() => import("./bajs-station-map"), { ssr: false })
 
 interface BajsStationBrief {
   name: string
@@ -57,27 +61,33 @@ export default function BajsUtilizationSection() {
 
 function UtilizationContent({ data }: { data: BajsUtilizationData }) {
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-      <MetricsRow data={data} />
-      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {data.emptyStations.length > 0 && (
-          <StationList
-            title="Prazne stanice"
-            subtitle="0 bicikala"
-            stations={data.emptyStations}
-            color="text-red-600 dark:text-red-400"
-            bgColor="bg-red-50 dark:bg-red-950/20"
-          />
-        )}
-        {data.fullStations.length > 0 && (
-          <StationList
-            title="Pune stanice"
-            subtitle="0 slobodnih mjesta"
-            stations={data.fullStations}
-            color="text-amber-600 dark:text-amber-400"
-            bgColor="bg-amber-50 dark:bg-amber-950/20"
-          />
-        )}
+    <div className="space-y-6">
+      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+        <MetricsRow data={data} />
+        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {data.emptyStations.length > 0 && (
+            <StationList
+              title="Prazne stanice"
+              subtitle="0 bicikala"
+              stations={data.emptyStations}
+              color="text-red-600 dark:text-red-400"
+              bgColor="bg-red-50 dark:bg-red-950/20"
+            />
+          )}
+          {data.fullStations.length > 0 && (
+            <StationList
+              title="Pune stanice"
+              subtitle="0 slobodnih mjesta"
+              stations={data.fullStations}
+              color="text-amber-600 dark:text-amber-400"
+              bgColor="bg-amber-50 dark:bg-amber-950/20"
+            />
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BajsStationMap />
+        <BajsUsageChart />
       </div>
     </div>
   )

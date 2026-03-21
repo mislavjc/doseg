@@ -16,8 +16,41 @@ use rusqlite::{params, Connection};
 
 use crate::gtfs_rt::RtSnapshot;
 
-/// Delay threshold for "on time" classification (5 minutes).
-const ON_TIME_THRESHOLD: i32 = 300;
+/// "On time" = no more than 1 min early, no more than 5 min late.
+/// Matches the TCQSM industry standard used by most transit agencies.
+const ON_TIME_EARLY: i32 = -60;
+const ON_TIME_LATE: i32 = 300;
+
+/// Grace period for stale-trip filtering: if the latest predicted stop time
+/// for a trip is more than this many seconds in the past, skip the trip.
+const STALE_GRACE_SEC: i64 = 120;
+
+/// Compute mean headway and coefficient of variation from a set of arrival times.
+/// Returns (mean_headway_sec, cv) or (None, None) if fewer than 3 vehicles.
+fn compute_headway(times: &mut Vec<i64>) -> (Option<f64>, Option<f64>) {
+    if times.len() < 3 {
+        return (None, None);
+    }
+    times.sort_unstable();
+    times.dedup();
+
+    let headways: Vec<f64> = times
+        .windows(2)
+        .map(|w| (w[1] - w[0]) as f64)
+        .filter(|&h| h > 30.0 && h < 3600.0) // skip <30s (duplicates) and >1h (gaps)
+        .collect();
+
+    if headways.len() < 2 {
+        return (None, None);
+    }
+
+    let n = headways.len() as f64;
+    let mean = headways.iter().sum::<f64>() / n;
+    let variance = headways.iter().map(|h| (h - mean).powi(2)).sum::<f64>() / n;
+    let cv = variance.sqrt() / mean;
+
+    (Some(mean), Some(cv))
+}
 
 pub struct RtDb {
     conn: Connection,
@@ -46,6 +79,8 @@ impl RtDb {
                 max_delay   INTEGER NOT NULL,
                 on_time_pct REAL    NOT NULL,
                 trip_count  INTEGER NOT NULL,
+                headway_sec REAL,
+                headway_cv  REAL,
                 PRIMARY KEY (ts, route_id)
             ) WITHOUT ROWID;
 
@@ -111,6 +146,17 @@ impl RtDb {
         ",
         )?;
 
+        // Migrate existing databases: add columns that were introduced after initial schema
+        let has_headway: bool = conn
+            .prepare("SELECT headway_sec FROM snapshots LIMIT 0")
+            .is_ok();
+        if !has_headway {
+            conn.execute_batch(
+                "ALTER TABLE snapshots ADD COLUMN headway_sec REAL;
+                 ALTER TABLE snapshots ADD COLUMN headway_cv  REAL;",
+            )?;
+        }
+
         Ok(RtDb {
             conn,
             last_written_ts: 0,
@@ -118,6 +164,10 @@ impl RtDb {
     }
 
     /// Ingest a snapshot. Deduplicates to one write per 60s window.
+    ///
+    /// Stale trips (all stop times in the past) are filtered out.
+    /// Delay is clamped: negatives → 0 (schedule padding makes "early" meaningless).
+    /// On-time uses asymmetric threshold: -1 min to +5 min (TCQSM standard).
     pub fn ingest(&mut self, snap: &RtSnapshot) {
         let ts = (snap.timestamp / 60) * 60;
 
@@ -147,8 +197,8 @@ impl RtDb {
         // Route-level snapshots
         {
             let mut stmt = tx.prepare_cached(
-                "INSERT OR IGNORE INTO snapshots (ts, route_id, avg_delay, max_delay, on_time_pct, trip_count)
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+                "INSERT OR IGNORE INTO snapshots (ts, route_id, avg_delay, max_delay, on_time_pct, trip_count, headway_sec, headway_cv)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
             )?;
 
             for (route_id, trips) in &by_route {
@@ -156,30 +206,70 @@ impl RtDb {
                 let mut max_delay: i32 = 0;
                 let mut on_time: u32 = 0;
                 let mut count: u32 = 0;
+                // Collect arrival times for headway computation
+                let mut arrival_times: Vec<i64> = Vec::new();
 
                 for trip in trips {
-                    // Use first stop_time_update: it's the nearest to the
-                    // vehicle's current position and the most reliable delay.
-                    // last() would use a speculative prediction for a distant
-                    // future stop, amplifying any schedule-padding bias.
-                    if let Some(first) = trip.stop_times.first() {
-                        let d = first.delay;
-                        total_delay += d as i64;
-                        if d.abs() > max_delay.abs() {
-                            max_delay = d;
+                    // Use first stop_time_update: nearest to vehicle's
+                    // current position, most reliable delay value.
+                    let first = match trip.stop_times.first() {
+                        Some(st) => st,
+                        None => continue,
+                    };
+
+                    // Filter stale/completed trips: if the latest predicted
+                    // time for this trip is well in the past, skip it.
+                    let latest_time = trip
+                        .stop_times
+                        .iter()
+                        .filter_map(|st| st.time)
+                        .max();
+                    if let Some(lt) = latest_time {
+                        if lt < ts - STALE_GRACE_SEC {
+                            continue;
                         }
-                        if d.abs() <= ON_TIME_THRESHOLD {
-                            on_time += 1;
-                        }
-                        count += 1;
+                    }
+
+                    let d = first.delay;
+
+                    // avg_delay: clamp negatives to 0 — schedule padding
+                    // makes raw negative delays meaningless to passengers.
+                    // Only lateness (positive delay) is shown.
+                    total_delay += d.max(0) as i64;
+
+                    if d.abs() > max_delay.abs() {
+                        max_delay = d;
+                    }
+
+                    // Asymmetric on-time: -1 min to +5 min (TCQSM standard).
+                    // Early departures hurt passengers (missed vehicle).
+                    if d >= ON_TIME_EARLY && d <= ON_TIME_LATE {
+                        on_time += 1;
+                    }
+
+                    count += 1;
+
+                    // Collect arrival time for headway computation
+                    if let Some(t) = first.time {
+                        arrival_times.push(t);
                     }
                 }
 
-                if count > 0 {
-                    let avg = total_delay as f64 / count as f64;
-                    let pct = on_time as f64 / count as f64;
-                    stmt.execute(params![ts, route_id, avg, max_delay, pct, count])?;
+                if count == 0 {
+                    continue;
                 }
+
+                let avg = total_delay as f64 / count as f64;
+                let pct = on_time as f64 / count as f64;
+
+                // Headway: compute mean and CV from inter-vehicle time gaps.
+                // Sort arrival times and compute intervals between consecutive
+                // vehicles on the same route.
+                let (headway_sec, headway_cv) = compute_headway(&mut arrival_times);
+
+                stmt.execute(params![
+                    ts, route_id, avg, max_delay, pct, count, headway_sec, headway_cv,
+                ])?;
             }
         }
 
@@ -401,6 +491,12 @@ pub struct HistoryPoint {
     pub on_time_pct: f64,
     #[serde(rename = "tripCount")]
     pub trip_count: i32,
+    /// Mean headway in seconds between consecutive vehicles (None if < 3 vehicles).
+    #[serde(rename = "headwaySec", skip_serializing_if = "Option::is_none")]
+    pub headway_sec: Option<f64>,
+    /// Headway coefficient of variation: 0 = perfectly regular, >0.5 = severe bunching.
+    #[serde(rename = "headwayCv", skip_serializing_if = "Option::is_none")]
+    pub headway_cv: Option<f64>,
 }
 
 #[derive(Serialize)]
@@ -472,7 +568,7 @@ pub fn query_history(
     let mut points = Vec::new();
 
     let mut stmt = conn.prepare_cached(
-        "SELECT ts, avg_delay, max_delay, on_time_pct, trip_count
+        "SELECT ts, avg_delay, max_delay, on_time_pct, trip_count, headway_sec, headway_cv
          FROM snapshots WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
          ORDER BY ts",
     )?;
@@ -483,6 +579,8 @@ pub fn query_history(
             max_delay: row.get(2)?,
             on_time_pct: row.get(3)?,
             trip_count: row.get(4)?,
+            headway_sec: row.get(5)?,
+            headway_cv: row.get(6)?,
         })
     })?;
     for row in rows {
@@ -502,6 +600,8 @@ pub fn query_history(
             max_delay: row.get(2)?,
             on_time_pct: row.get(3)?,
             trip_count: row.get(4)?,
+            headway_sec: None,
+            headway_cv: None,
         })
     })?;
     for row in rows {
@@ -891,14 +991,17 @@ mod tests {
                         SnapshotStopTime {
                             stop_sequence: 1,
                             delay: 30,
+                            time: Some(ts + 30),
                         },
                         SnapshotStopTime {
                             stop_sequence: 5,
                             delay: 120,
+                            time: Some(ts + 300),
                         },
                         SnapshotStopTime {
                             stop_sequence: 10,
                             delay: 60,
+                            time: Some(ts + 600),
                         },
                     ],
                 },
@@ -908,6 +1011,7 @@ mod tests {
                     stop_times: vec![SnapshotStopTime {
                         stop_sequence: 3,
                         delay: -30,
+                        time: Some(ts + 100),
                     }],
                 },
                 SnapshotTrip {
@@ -916,6 +1020,7 @@ mod tests {
                     stop_times: vec![SnapshotStopTime {
                         stop_sequence: 1,
                         delay: 400,
+                        time: Some(ts + 400),
                     }],
                 },
             ],
@@ -958,8 +1063,8 @@ mod tests {
             )
             .unwrap();
         assert_eq!(trips, 2);
-        // first() delays: trip_1=30, trip_2=-30 → avg=0, max=30
-        assert!((avg - 0.0).abs() < 0.1, "avg should be (30 + -30)/2 = 0");
+        // first() delays: trip_1=30 (clamped 30), trip_2=-30 (clamped 0) → avg=15
+        assert!((avg - 15.0).abs() < 0.1, "avg should be (30 + 0)/2 = 15");
         assert_eq!(max, 30);
         assert!((pct - 1.0).abs() < 0.01, "both within 300s threshold");
 

@@ -184,6 +184,9 @@ pub struct SnapshotTrip {
 pub struct SnapshotStopTime {
     pub stop_sequence: u16,
     pub delay: i32,
+    /// Absolute predicted arrival/departure time (Unix seconds).
+    /// Used for stale-trip detection and headway computation.
+    pub time: Option<i64>,
 }
 
 pub struct SnapshotAlert {
@@ -432,9 +435,18 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
                             .and_then(|a| a.delay)
                             .or_else(|| stu.departure.as_ref().and_then(|d| d.delay))
                             .unwrap_or(0);
+                        let time = stu
+                            .arrival
+                            .as_ref()
+                            .and_then(|a| a.time)
+                            .filter(|&t| t != 0)
+                            .or_else(|| {
+                                stu.departure.as_ref().and_then(|d| d.time).filter(|&t| t != 0)
+                            });
                         SnapshotStopTime {
                             stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,
                             delay,
+                            time,
                         }
                     })
                     .collect(),

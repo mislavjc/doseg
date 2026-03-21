@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 import useSWR from "swr"
 import { fmtHR } from "@/lib/format"
+import { computeXTicks } from "@/lib/chart-utils"
 import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { LinePath, AreaClosed } from "@visx/shape"
@@ -31,14 +32,6 @@ const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
 function fmtTime(ts: number): string {
   const d = new Date(ts * 1000)
   return d.toLocaleTimeString("hr-HR", { hour: "2-digit", minute: "2-digit" })
-}
-
-function computeXTicks(tsMin: number, tsMax: number, count: number): Date[] {
-  const ticks: Date[] = []
-  for (let i = 0; i <= count; i++) {
-    ticks.push(new Date((tsMin + (i / count) * (tsMax - tsMin)) * 1000))
-  }
-  return ticks
 }
 
 // --- Data fetching ---

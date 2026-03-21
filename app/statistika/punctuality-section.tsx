@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { fmtDelaySec, pickPreferredRoute } from "@/lib/format"
+import { computeXTicks } from "@/lib/chart-utils"
 import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { LinePath, Bar } from "@visx/shape"
@@ -16,6 +17,8 @@ interface HistoryPoint {
   maxDelay: number
   onTimePct: number
   tripCount: number
+  headwaySec?: number
+  headwayCv?: number
 }
 
 interface HistoryResponse {
@@ -61,14 +64,6 @@ function fmtTime(ts: number, range: TimeRange): string {
     return d.toLocaleTimeString("hr-HR", { hour: "2-digit", minute: "2-digit" })
   }
   return d.toLocaleDateString("hr-HR", { day: "numeric", month: "short" })
-}
-
-function computeXTicks(tsMin: number, tsMax: number, count: number): Date[] {
-  const ticks: Date[] = []
-  for (let i = 0; i <= count; i++) {
-    ticks.push(new Date((tsMin + (i / count) * (tsMax - tsMin)) * 1000))
-  }
-  return ticks
 }
 
 function useHistoryFetch(route: string, timeRange: TimeRange) {
@@ -125,8 +120,8 @@ function PunctualityHeader() {
         </h2>
       </div>
       <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Točnost dolazaka po liniji: prosječno kašnjenje i postotak vozila
-        koja su stigla na vrijeme (kašnjenje &lt; 5 min).
+        Točnost dolazaka po liniji: prosječno kašnjenje, postotak vozila
+        na vrijeme (−1 do +5 min) i regularnost razmaka.
       </p>
     </div>
   )
@@ -168,10 +163,12 @@ function PunctualityContent({
   if (error) return <ErrorState message={error} />
   if (isLoading || !data) return <LoadingState />
   if (data.points.length === 0) return <EmptyState />
+  const hasHeadway = data.points.some((p) => p.headwayCv != null)
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <DelayChart points={data.points} timeRange={timeRange} />
       <OnTimeChart points={data.points} timeRange={timeRange} />
+      {hasHeadway && <HeadwayChart points={data.points} timeRange={timeRange} />}
     </div>
   )
 }
@@ -444,8 +441,129 @@ function OnTimeChartHeader({ avgOnTime, totalTrips }: { avgOnTime: number; total
           {avgOnTime.toFixed(1).replace(".", ",")}%
         </span>
         <span className="text-[12px] text-slate-500 dark:text-slate-400">
-          na vrijeme (&lt; 5 min) &middot;{" "}
+          na vrijeme (−1 do +5 min) &middot;{" "}
           {totalTrips.toLocaleString("hr-HR")} polazaka
+        </span>
+      </div>
+    </>
+  )
+}
+
+// --- Headway chart ---
+
+function useHeadwayScales(points: HistoryPoint[]) {
+  return useMemo(() => {
+    const pts = points.filter((p) => p.headwayCv != null)
+    if (pts.length === 0) return null
+    const tsMin = Math.min(...pts.map((p) => p.ts))
+    const tsMax = Math.max(...pts.map((p) => p.ts))
+    const maxCv = Math.max(...pts.map((p) => p.headwayCv!), 0.6)
+    const xScale = scaleTime<number>({
+      domain: [new Date(tsMin * 1000), new Date(tsMax * 1000)],
+      range: [0, INNER_WIDTH],
+    })
+    const yScale = scaleLinear<number>({
+      domain: [0, Math.min(maxCv * 1.2, 1.5)],
+      range: [INNER_HEIGHT, 0],
+      nice: true,
+    })
+    const xTicks = computeXTicks(tsMin, tsMax, 5)
+    const yTicks = yScale.ticks(5)
+
+    // Weighted average headway and CV
+    const totalTrips = pts.reduce((s, p) => s + p.tripCount, 0)
+    const avgHeadway =
+      pts.reduce((s, p) => s + (p.headwaySec ?? 0) * p.tripCount, 0) /
+      Math.max(totalTrips, 1)
+    const avgCv =
+      pts.reduce((s, p) => s + (p.headwayCv ?? 0) * p.tripCount, 0) /
+      Math.max(totalTrips, 1)
+
+    return { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, totalTrips, pts }
+  }, [points])
+}
+
+function HeadwayChart({ points, timeRange }: { points: HistoryPoint[]; timeRange: TimeRange }) {
+  const scales = useHeadwayScales(points)
+  if (!scales) return null
+  const { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, pts } = scales
+
+  return (
+    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+      <HeadwayChartHeader avgHeadway={avgHeadway} avgCv={avgCv} />
+      <ChartSvg label="Grafikon regularnosti razmaka">
+        <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#94a3b8" strokeOpacity={0.15} strokeWidth={1} />
+        {/* Good regularity zone: cv < 0.3 */}
+        <rect
+          x={0}
+          y={yScale(0.3) ?? 0}
+          width={INNER_WIDTH}
+          height={Math.max(0, (yScale(0) ?? 0) - (yScale(0.3) ?? 0))}
+          fill="#10b981"
+          fillOpacity={0.06}
+        />
+        {pts.length > 1 && (
+          <TripCountBars points={pts} xScale={xScale} maxTrips={Math.max(...pts.map((p) => p.tripCount))} color="#8b5cf6" />
+        )}
+        <LinePath<HistoryPoint>
+          data={pts}
+          x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
+          y={(d) => yScale(d.headwayCv ?? 0) ?? 0}
+          stroke="#7c3aed"
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+        {/* Threshold line at cv=0.3 */}
+        <line
+          x1={0}
+          y1={yScale(0.3) ?? 0}
+          x2={INNER_WIDTH}
+          y2={yScale(0.3) ?? 0}
+          stroke="#7c3aed"
+          strokeWidth={1}
+          strokeDasharray="4 3"
+          strokeOpacity={0.4}
+        />
+        <text
+          x={INNER_WIDTH - 2}
+          y={(yScale(0.3) ?? 0) - 4}
+          textAnchor="end"
+          className="fill-violet-500/60 text-[7px] dark:fill-violet-400/60"
+        >
+          dobra regularnost
+        </text>
+        <ChartXLabels ticks={xTicks} xScale={xScale} timeRange={timeRange} />
+        <ChartYLabels ticks={yTicks} yScale={yScale} format={(v) => v.toFixed(1)} />
+        <ChartYTitle label="CV razmaka" />
+      </ChartSvg>
+    </div>
+  )
+}
+
+function HeadwayChartHeader({ avgHeadway, avgCv }: { avgHeadway: number; avgCv: number }) {
+  const quality =
+    avgCv < 0.3 ? "odlična" : avgCv < 0.5 ? "umjerena" : "loša"
+  const qualityColor =
+    avgCv < 0.3
+      ? "text-emerald-600 dark:text-emerald-400"
+      : avgCv < 0.5
+        ? "text-amber-600 dark:text-amber-400"
+        : "text-red-600 dark:text-red-400"
+
+  return (
+    <>
+      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
+        Regularnost razmaka
+      </div>
+      <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span className={`font-serif text-[28px] leading-none tabular-nums ${qualityColor}`}>
+          {quality}
+        </span>
+        <span className="text-[12px] text-slate-500 dark:text-slate-400">
+          CV {avgCv.toFixed(2)} &middot; prosječni razmak{" "}
+          {avgHeadway >= 60
+            ? `${Math.round(avgHeadway / 60)} min`
+            : `${Math.round(avgHeadway)} s`}
         </span>
       </div>
     </>

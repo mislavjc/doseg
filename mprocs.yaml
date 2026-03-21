@@ -5,7 +5,12 @@ procs:
       ISOCHRONE_URL: "http://localhost:3002"
 
   isochrone:
-    shell: "OTP_URL=http://localhost:8080 DATA_DIR=data PORT=3002 transit/target/release/isochrone-server"
+    shell: "cd transit && cargo watch -x 'run --bin isochrone-server'"
+    env:
+      OTP_URL: "http://localhost:8080"
+      DATA_DIR: "../data"
+      RT_DB_DIR: "../data"
+      PORT: "3002"
 
   otp-tunnel:
     shell: |

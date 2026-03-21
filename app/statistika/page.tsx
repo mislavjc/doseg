@@ -216,7 +216,26 @@ function computeBajsInsights(data: ScoreData) {
       )
     : []
   const topBajsBeneficiary = bajsRankedByBoost[0]
-  return { hasBajs, bajsTotalStations, cityBajsBoost, bajsRankedByBoost, topBajsBeneficiary }
+
+  // 2.6: Coverage — % of transit stops within 350m of a BAJS station
+  const coveragePct = data.bajsStopCoveragePct ?? 0
+  const coveredStops = data.bajsCoveredStops ?? 0
+  const totalStops = data.districts.reduce((s, d) => s + d.stops, 0)
+
+  // 2.7: Density — stations per km² and per 10k residents
+  const densityRanked = hasBajs
+    ? [...data.districts]
+        .filter((d) => (d.bajsStations ?? 0) > 0)
+        .sort((a, b) => (b.bajsDensityPerKm2 ?? 0) - (a.bajsDensityPerKm2 ?? 0))
+    : []
+  const topDensity = densityRanked[0]
+  const zeroBajsDistricts = data.districts.filter((d) => (d.bajsStations ?? 0) === 0)
+
+  return {
+    hasBajs, bajsTotalStations, cityBajsBoost, bajsRankedByBoost, topBajsBeneficiary,
+    coveragePct, coveredStops, totalStops,
+    densityRanked, topDensity, zeroBajsDistricts,
+  }
 }
 
 function computeDesertInsights(data: ScoreData) {
@@ -2191,6 +2210,10 @@ function BajsImpactSection({
         <BajsRanking bajs={bajs} />
         <BajsAnalysis data={data} bajs={bajs} />
       </div>
+      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BajsCoverageCard bajs={bajs} />
+        <BajsDensityCard bajs={bajs} />
+      </div>
     </section>
   )
 }
@@ -2333,6 +2356,126 @@ function BajsTotalImpactCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsi
           <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">max. dobitak ({bajs.topBajsBeneficiary?.name ?? "-"})</div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function BajsCoverageStats({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
+  return (
+    <div className="mb-6 grid grid-cols-3 gap-4">
+      <div className="text-center">
+        <div className="font-serif text-[28px] leading-none text-amber-600 tabular-nums dark:text-amber-400">
+          {bajs.coveragePct}%
+        </div>
+        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">stanica pokriveno</div>
+      </div>
+      <div className="text-center">
+        <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+          {bajs.coveredStops}
+        </div>
+        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">od {bajs.totalStops} stanica</div>
+      </div>
+      <div className="text-center">
+        <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">350m</div>
+        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">pješački doseg</div>
+      </div>
+    </div>
+  )
+}
+
+function BajsCoverageCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
+  return (
+    <div className="rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
+      <SectionIcon icon="pin" color="amber" title="Pokrivenost posljednje milje" />
+      <BajsCoverageStats bajs={bajs} />
+      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p>
+          Bike-sharing kao &ldquo;posljednja milja&rdquo; funkcionira samo ako postoji BAJS stanica
+          blizu tramvajske ili autobusne stanice. Od{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{bajs.totalStops}</strong>{" "}
+          stanica javnog prijevoza u Zagrebu, samo{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {bajs.coveredStops} ({bajs.coveragePct}%)
+          </strong>{" "}
+          ima BAJS stanicu unutar 350 metara hoda.
+        </p>
+        <p>
+          {bajs.zeroBajsDistricts.length > 0 ? (
+            <>
+              <strong className="font-medium text-slate-900 dark:text-slate-100">
+                {bajs.zeroBajsDistricts.length} {bajs.zeroBajsDistricts.length === 1 ? "četvrt nema" : bajs.zeroBajsDistricts.length < 5 ? "četvrti nemaju" : "četvrti nema"}
+              </strong>{" "}
+              nijednu BAJS stanicu: {bajs.zeroBajsDistricts.map((d) => d.name).join(", ")}.
+              Za stanovnike tih četvrti, kombinacija bicikla i javnog prijevoza
+              jednostavno ne postoji.
+            </>
+          ) : (
+            <>Svaka četvrt ima barem jednu BAJS stanicu — ali gustoća varira drastično.</>
+          )}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function BajsDensityRow({ d, i, topDensity }: { d: ReturnType<typeof computeBajsInsights>["densityRanked"][0]; i: number; topDensity: number }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
+        {i + 1}.
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 flex items-baseline justify-between gap-2">
+          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">{d.name}</span>
+          <span className="shrink-0 font-serif text-[14px] font-medium text-amber-600 tabular-nums dark:text-amber-400">
+            {fmtHR(d.bajsDensityPerKm2 ?? 0, 2)} st./km²
+          </span>
+        </div>
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
+            style={{ width: `${((d.bajsDensityPerKm2 ?? 0) / topDensity) * 100}%` }}
+          />
+        </div>
+      </div>
+      <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+        {fmtHR(d.bajsPer10k ?? 0, 1)}/10k st.
+      </span>
+    </div>
+  )
+}
+
+function BajsDensityCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
+  const topDensityVal = bajs.topDensity?.bajsDensityPerKm2 ?? 1
+  const lastDistrict = bajs.densityRanked[bajs.densityRanked.length - 1]
+  return (
+    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+      <h3 className="mb-2 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+        Gustoća BAJS stanica
+      </h3>
+      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+        Stanica po km² — koliko je infrastruktura ravnomjerno raspoređena
+      </p>
+      <div className="space-y-3">
+        {bajs.densityRanked.slice(0, 8).map((d, i) => (
+          <BajsDensityRow key={d.osmId} d={d} i={i} topDensity={topDensityVal} />
+        ))}
+      </div>
+      {bajs.topDensity && lastDistrict && (
+        <div className="mt-6 rounded-2xl border border-amber-200/50 bg-amber-50/50 px-5 py-4 dark:border-amber-800/30 dark:bg-amber-950/20">
+          <p className="text-[13px] leading-relaxed text-amber-900 dark:text-amber-200">
+            <strong className="font-medium">{bajs.topDensity.name}</strong> ima{" "}
+            {fmtHR(bajs.topDensity.bajsDensityPerKm2 ?? 0, 2)} stanica/km²,
+            dok {lastDistrict.name} ima samo{" "}
+            {fmtHR(lastDistrict.bajsDensityPerKm2 ?? 0, 2)}.
+            {" "}Razlika u gustoći od{" "}
+            <strong className="font-medium">
+              {Math.round((bajs.topDensity.bajsDensityPerKm2 ?? 1) / (lastDistrict.bajsDensityPerKm2 || 0.01))}×
+            </strong>{" "}
+            znači da kvaliteta bike-sharing usluge ovisi prije svega o tome gdje živite.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -3092,9 +3235,7 @@ function TravelMatrixInsights({ matrix }: { matrix: ReturnType<typeof computeMat
 // Transfer Dependency Distribution (1.14)
 // ---------------------------------------------------------------------------
 
-function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatrix | null }) {
-  if (!travelMatrix?.transferMatrix) return null
-
+function computeTransferData(travelMatrix: TravelMatrix) {
   const n = travelMatrix.districts.length
   const buckets: Record<string, { count: number; pairs: { from: string; to: string; time: number }[] }> = {
     "0": { count: 0, pairs: [] },
@@ -3109,7 +3250,7 @@ function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatri
       if (i === j) continue
       const time = travelMatrix.matrix[i]?.[j] ?? -1
       if (time <= 0) continue
-      const transfers = travelMatrix.transferMatrix[i]?.[j] ?? 0
+      const transfers = travelMatrix.transferMatrix![i]?.[j] ?? 0
       totalPairs++
       totalTransfers += transfers
       if (transfers === 0) {
@@ -3123,21 +3264,79 @@ function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatri
     }
   }
 
-  if (totalPairs === 0) return null
-
-  const avgTransfers = (totalTransfers / totalPairs).toFixed(1).replace(".", ",")
-  const directPct = Math.round((buckets["0"].count / totalPairs) * 100)
-  const onePct = Math.round((buckets["1"].count / totalPairs) * 100)
-  const twoPlusPct = Math.round((buckets["2+"].count / totalPairs) * 100)
-
-  // Sort 2+ pairs by time descending
+  const directPct = totalPairs > 0 ? Math.round((buckets["0"].count / totalPairs) * 100) : 0
+  const onePct = totalPairs > 0 ? Math.round((buckets["1"].count / totalPairs) * 100) : 0
+  const twoPlusPct = totalPairs > 0 ? Math.round((buckets["2+"].count / totalPairs) * 100) : 0
   const worstPairs = [...buckets["2+"].pairs].sort((a, b) => b.time - a.time).slice(0, 6)
 
-  const barData = [
-    { label: "Izravno", count: buckets["0"].count, pct: directPct, color: "bg-emerald-400 dark:bg-emerald-500" },
-    { label: "1 presjedanje", count: buckets["1"].count, pct: onePct, color: "bg-amber-400 dark:bg-amber-500" },
-    { label: "2+ presjedanja", count: buckets["2+"].count, pct: twoPlusPct, color: "bg-red-400 dark:bg-red-500" },
-  ]
+  return {
+    totalPairs,
+    avgTransfers: totalPairs > 0 ? (totalTransfers / totalPairs).toFixed(1).replace(".", ",") : "0",
+    directPct, onePct, twoPlusPct, worstPairs,
+    barData: [
+      { label: "Izravno", count: buckets["0"].count, pct: directPct, color: "bg-emerald-400 dark:bg-emerald-500" },
+      { label: "1 presjedanje", count: buckets["1"].count, pct: onePct, color: "bg-amber-400 dark:bg-amber-500" },
+      { label: "2+ presjedanja", count: buckets["2+"].count, pct: twoPlusPct, color: "bg-red-400 dark:bg-red-500" },
+    ],
+  }
+}
+
+function TransferStackedBar({ barData, avgTransfers }: { barData: ReturnType<typeof computeTransferData>["barData"]; avgTransfers: string }) {
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className="mb-6 flex h-12 overflow-hidden rounded-xl">
+        {barData.map((d) => (
+          d.pct > 0 && (
+            <div key={d.label} className={`${d.color} flex items-center justify-center transition-all`} style={{ width: `${d.pct}%` }}>
+              {d.pct >= 8 && <span className="text-[12px] font-bold text-white">{d.pct}%</span>}
+            </div>
+          )
+        ))}
+      </div>
+      <div className="flex flex-wrap justify-center gap-6">
+        {barData.map((d) => (
+          <div key={d.label} className="text-center">
+            <div className="flex items-center gap-1.5">
+              <span className={`inline-block h-3 w-3 rounded-sm ${d.color}`} />
+              <span className="text-[12px] font-medium text-slate-700 dark:text-slate-300">{d.label}</span>
+            </div>
+            <div className="mt-1 font-serif text-[20px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{d.count}</div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400">parova ({d.pct}%)</div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 text-center">
+        <span className="text-[13px] text-slate-600 dark:text-slate-400">
+          Prosječno presjedanja po putovanju: <strong className="font-medium text-slate-900 dark:text-slate-100">{avgTransfers}</strong>
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function TransferWorstCorridors({ worstPairs }: { worstPairs: ReturnType<typeof computeTransferData>["worstPairs"] }) {
+  if (worstPairs.length === 0) return null
+  return (
+    <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">Koridori s 2+ presjedanja</div>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {worstPairs.map((pair, i) => (
+          <div key={i} className="flex items-center justify-between rounded-xl bg-red-50/50 px-4 py-3 dark:bg-red-950/10">
+            <span className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
+              {pair.from} → {pair.to}
+            </span>
+            <span className="ml-2 font-serif text-[14px] font-medium tabular-nums text-red-700 dark:text-red-400">{pair.time} min</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatrix | null }) {
+  if (!travelMatrix?.transferMatrix) return null
+  const td = computeTransferData(travelMatrix)
+  if (td.totalPairs === 0) return null
 
   return (
     <section className="mt-16 sm:mt-20">
@@ -3152,61 +3351,16 @@ function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatri
         </p>
       </div>
 
-      {/* Stacked bar */}
-      <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="mb-6 flex h-12 overflow-hidden rounded-xl">
-          {barData.map((d) => (
-            d.pct > 0 && (
-              <div key={d.label} className={`${d.color} flex items-center justify-center transition-all`} style={{ width: `${d.pct}%` }}>
-                {d.pct >= 8 && <span className="text-[12px] font-bold text-white">{d.pct}%</span>}
-              </div>
-            )
-          ))}
-        </div>
-        <div className="flex flex-wrap justify-center gap-6">
-          {barData.map((d) => (
-            <div key={d.label} className="text-center">
-              <div className="flex items-center gap-1.5">
-                <span className={`inline-block h-3 w-3 rounded-sm ${d.color}`} />
-                <span className="text-[12px] font-medium text-slate-700 dark:text-slate-300">{d.label}</span>
-              </div>
-              <div className="mt-1 font-serif text-[20px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{d.count}</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">parova ({d.pct}%)</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 text-center">
-          <span className="text-[13px] text-slate-600 dark:text-slate-400">
-            Prosječno presjedanja po putovanju: <strong className="font-medium text-slate-900 dark:text-slate-100">{avgTransfers}</strong>
-          </span>
-        </div>
-      </div>
-
-      {/* Worst corridors */}
-      {worstPairs.length > 0 && (
-        <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">Koridori s 2+ presjedanja</div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {worstPairs.map((pair, i) => (
-              <div key={i} className="flex items-center justify-between rounded-xl bg-red-50/50 px-4 py-3 dark:bg-red-950/10">
-                <span className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
-                  {pair.from} → {pair.to}
-                </span>
-                <span className="ml-2 font-serif text-[14px] font-medium tabular-nums text-red-700 dark:text-red-400">{pair.time} min</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <TransferStackedBar barData={td.barData} avgTransfers={td.avgTransfers} />
+      <TransferWorstCorridors worstPairs={td.worstPairs} />
 
       <div className="mt-6 rounded-2xl border border-violet-200/50 bg-violet-50/50 px-5 py-4 dark:border-violet-800/30 dark:bg-violet-950/20">
         <p className="text-[13px] leading-relaxed text-violet-900 dark:text-violet-200">
-          Od {totalPairs} mogućih parova četvrti, <strong>{directPct}%</strong> je dostupno izravno bez presjedanja,{" "}
-          <strong>{onePct}%</strong> zahtijeva jedno presjedanje, a <strong>{twoPlusPct}%</strong> zahtijeva dva ili više.
-          {worstPairs.length > 0 && (
-            <> Najgori koridor (<strong>{worstPairs[0].from} → {worstPairs[0].to}</strong>) traje{" "}
-              <strong>{worstPairs[0].time} minuta</strong> - svako presjedanje dodaje nepredvidivo čekanje.</>
+          Od {td.totalPairs} mogućih parova četvrti, <strong>{td.directPct}%</strong> je dostupno izravno bez presjedanja,{" "}
+          <strong>{td.onePct}%</strong> zahtijeva jedno presjedanje, a <strong>{td.twoPlusPct}%</strong> zahtijeva dva ili više.
+          {td.worstPairs.length > 0 && (
+            <> Najgori koridor (<strong>{td.worstPairs[0].from} → {td.worstPairs[0].to}</strong>) traje{" "}
+              <strong>{td.worstPairs[0].time} minuta</strong> - svako presjedanje dodaje nepredvidivo čekanje.</>
           )}
         </p>
       </div>
@@ -3267,11 +3421,55 @@ function CentralityRanking({ stops, title, subtitle, color, scoreDecimals }: {
   )
 }
 
+function CentralityNumbers({ data }: { data: import("@/lib/generated").CentralityStats }) {
+  const { networkDiameter, averagePathLength } = data
+  return (
+    <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+          {networkDiameter.minutes}
+        </div>
+        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">minuta - mrežni dijametar</div>
+        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+          {networkDiameter.fromStop} → {networkDiameter.toStop}
+        </div>
+      </div>
+      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+          {averagePathLength.minutes}
+        </div>
+        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">min prosječno putovanje</div>
+        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+          srednja vrijednost svih najkraćih puteva
+        </div>
+      </div>
+      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+          {averagePathLength.reachablePct}%
+        </div>
+        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">parova povezano</div>
+        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+          {averagePathLength.reachablePairs.toLocaleString("hr")} od {averagePathLength.totalPairs.toLocaleString("hr")}
+        </div>
+      </div>
+      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+          {data.stopCount.toLocaleString("hr")}
+        </div>
+        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">analiziranih stanica</div>
+        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+          izračun trajao {data.computationSeconds}s
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function CentralitySection() {
   const data = loadCentralityStats()
   if (!data) return null
 
-  const { betweenness, closeness, networkDiameter, averagePathLength } = data
+  const { betweenness, closeness, networkDiameter } = data
 
   return (
     <section className="mt-16 sm:mt-20">
@@ -3286,45 +3484,7 @@ function CentralitySection() {
         </p>
       </div>
 
-      {/* Diameter + average path big numbers */}
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
-            {networkDiameter.minutes}
-          </div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">minuta - mrežni dijametar</div>
-          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            {networkDiameter.fromStop} → {networkDiameter.toStop}
-          </div>
-        </div>
-        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
-            {averagePathLength.minutes}
-          </div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">min prosječno putovanje</div>
-          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            srednja vrijednost svih najkraćih puteva
-          </div>
-        </div>
-        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
-            {averagePathLength.reachablePct}%
-          </div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">parova povezano</div>
-          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            {averagePathLength.reachablePairs.toLocaleString("hr")} od {averagePathLength.totalPairs.toLocaleString("hr")}
-          </div>
-        </div>
-        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
-            {data.stopCount.toLocaleString("hr")}
-          </div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">analiziranih stanica</div>
-          <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            izračun trajao {data.computationSeconds}s
-          </div>
-        </div>
-      </div>
+      <CentralityNumbers data={data} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <CentralityRanking stops={betweenness} title="Betweenness centralnost" subtitle="Kritične točke - stanice kroz koje prolazi najviše najkraćih puteva" color="red" scoreDecimals={4} />

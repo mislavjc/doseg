@@ -25,10 +25,7 @@ type Point = [number, number]
 type Ring = Point[]
 type PolygonRings = Ring[]
 
-import type {
-  District as DistrictScore,
-  DistrictScoresOutput as ScoreData,
-} from "../lib/generated"
+import type { DistrictScoresOutput as ScoreData } from "../lib/generated"
 
 interface DistrictProperties {
   name?: string

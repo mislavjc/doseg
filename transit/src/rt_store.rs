@@ -955,6 +955,17 @@ pub struct BajsUsagePoint {
     pub known_fleet: i32,
 }
 
+/// Rolling 24h peak of bikes at stations (effective fleet size).
+pub fn query_bajs_peak_available(conn: &Connection, cutoff: i64) -> Option<i32> {
+    conn.query_row(
+        "SELECT MAX(available) FROM bajs_usage WHERE ts >= ?1",
+        params![cutoff],
+        |row| row.get::<_, Option<i32>>(0),
+    )
+    .ok()
+    .flatten()
+}
+
 pub fn query_bajs_usage(
     conn: &Connection,
     from: i64,

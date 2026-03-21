@@ -2301,7 +2301,7 @@ async fn main() {
     let initial_peak = bajs_db_conn
         .as_ref()
         .and_then(|db| {
-            let cutoff = unix_now() as i64 - 86400;
+            let cutoff = unix_now() - 86400;
             db.lock()
                 .ok()
                 .and_then(|conn| rt_store::query_bajs_peak_available(&conn, cutoff))

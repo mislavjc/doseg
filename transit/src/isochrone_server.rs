@@ -20,10 +20,10 @@ pub fn chrono_now_iso() -> String {
     String::new()
 }
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
-use std::sync::Arc;
-use std::time::Instant;
+use std::sync::{Arc, RwLock};
+use std::time::{Duration, Instant};
 
 use axum::extract::{Query, State};
 use axum::http::header;
@@ -65,6 +65,7 @@ struct AppState {
     walk_graph: WalkGraph,
     stop_snaps: Vec<Option<StopSnap>>,
     rt_store: gtfs_rt::RtStore,
+    vehicle_store: gtfs_rt::VehicleStore,
     rt_last_refresh: gtfs_rt::RtLastRefresh,
     /// Decoded polyline geometries per pattern: Vec<Vec<[lon, lat]>>
     pattern_geometries: Vec<Vec<[f64; 2]>>,
@@ -72,7 +73,14 @@ struct AppState {
     bajs_adjacency: Option<BajsAdjacency>,
     /// Read-only SQLite connection for RT history queries
     rt_db_reader: Option<tokio::sync::Mutex<rusqlite::Connection>>,
+    /// Scheduled speeds from route-stats.json (route name → km/h)
+    scheduled_speeds: HashMap<String, f64>,
+    /// Live BAJS station status (refreshed every 60s)
+    bajs_status_store: BajsStatusStore,
 }
+
+/// Shared BAJS station status store.
+type BajsStatusStore = Arc<RwLock<Vec<otp::GbfsStationStatus>>>;
 
 // --- BAJS adjacency (string-keyed, matching TS interactive Dijkstra) ---
 
@@ -1147,6 +1155,105 @@ async fn handle_health(State(state): State<Arc<AppState>>) -> Response {
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
+// --- RT helpers ---
+
+fn unix_now() -> i64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64
+}
+
+/// Zagreb timezone offset in seconds: CET (UTC+1) or CEST (UTC+2).
+/// EU DST: last Sunday of March 01:00 UTC → +2, last Sunday of October 01:00 UTC → +1.
+fn zagreb_offset(epoch: i64) -> i64 {
+    let days = epoch / 86400;
+    let (y, m, d) = days_to_ymd(days as u64);
+    // Day of week: 0=Thu for 1970-01-01, so (days+4)%7: 0=Sun
+    let dow = ((days + 4) % 7) as u64;
+    // Last Sunday of a month: start from day 31 (or 30/28), walk back to Sunday
+    let last_sunday = |month_days: u64, first_dow_of_month: u64| -> u64 {
+        let last_day_dow = (first_dow_of_month + month_days - 1) % 7;
+        month_days - ((last_day_dow + 7) % 7)
+    };
+    // Day of week of the 1st of current month
+    let first_dow = (dow + 700 - ((d - 1) % 7)) % 7;
+    let march_days = 31u64;
+    let october_days = 31u64;
+    let time_of_day = epoch % 86400;
+
+    let is_summer = match m {
+        1..=2 => false,
+        4..=9 => true,
+        3 => {
+            let switch_day = last_sunday(march_days, first_dow);
+            d > switch_day || (d == switch_day && time_of_day >= 3600)
+        }
+        10 => {
+            let switch_day = last_sunday(october_days, first_dow);
+            d < switch_day || (d == switch_day && time_of_day < 3600)
+        }
+        _ => false, // Nov-Dec
+    };
+    if is_summer {
+        7200
+    } else {
+        3600
+    }
+}
+
+fn days_to_ymd(days: u64) -> (u64, u64, u64) {
+    let mut y = 1970u64;
+    let mut rem = days;
+    loop {
+        let yd = if y % 4 == 0 && (y % 100 != 0 || y % 400 == 0) {
+            366
+        } else {
+            365
+        };
+        if rem < yd {
+            break;
+        }
+        rem -= yd;
+        y += 1;
+    }
+    let leap = y % 4 == 0 && (y % 100 != 0 || y % 400 == 0);
+    let mdays = [
+        31,
+        if leap { 29 } else { 28 },
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+    ];
+    let mut m = 1u64;
+    for &md in &mdays {
+        if rem < md {
+            break;
+        }
+        rem -= md;
+        m += 1;
+    }
+    (y, m, rem + 1)
+}
+
+fn require_db(state: &AppState) -> Result<&tokio::sync::Mutex<rusqlite::Connection>, Response> {
+    state.rt_db_reader.as_ref().ok_or_else(|| {
+        (
+            axum::http::StatusCode::SERVICE_UNAVAILABLE,
+            [(header::CONTENT_TYPE, "application/json")],
+            r#"{"error":"RT database not available"}"#.to_string(),
+        )
+            .into_response()
+    })
+}
+
 // --- RT history API handlers ---
 
 #[derive(Deserialize)]
@@ -1160,22 +1267,12 @@ async fn handle_rt_history(
     State(state): State<Arc<AppState>>,
     Query(params): Query<RtHistoryParams>,
 ) -> Response {
-    let db = match &state.rt_db_reader {
-        Some(db) => db,
-        None => {
-            return (
-                axum::http::StatusCode::SERVICE_UNAVAILABLE,
-                [(header::CONTENT_TYPE, "application/json")],
-                r#"{"error":"RT database not available"}"#.to_string(),
-            )
-                .into_response()
-        }
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
     };
 
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
-        .as_secs() as i64;
+    let now = unix_now();
     let to = params.to.unwrap_or(now);
     let from = params.from.unwrap_or(to - 86400); // default: last 24h
 
@@ -1211,16 +1308,9 @@ async fn handle_rt_stops(
     State(state): State<Arc<AppState>>,
     Query(params): Query<RtStopsParams>,
 ) -> Response {
-    let db = match &state.rt_db_reader {
-        Some(db) => db,
-        None => {
-            return (
-                axum::http::StatusCode::SERVICE_UNAVAILABLE,
-                [(header::CONTENT_TYPE, "application/json")],
-                r#"{"error":"RT database not available"}"#.to_string(),
-            )
-                .into_response()
-        }
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
     };
 
     let conn = db.lock().await;
@@ -1255,22 +1345,12 @@ async fn handle_rt_alerts(
     State(state): State<Arc<AppState>>,
     Query(params): Query<RtAlertsParams>,
 ) -> Response {
-    let db = match &state.rt_db_reader {
-        Some(db) => db,
-        None => {
-            return (
-                axum::http::StatusCode::SERVICE_UNAVAILABLE,
-                [(header::CONTENT_TYPE, "application/json")],
-                r#"{"error":"RT database not available"}"#.to_string(),
-            )
-                .into_response()
-        }
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
     };
 
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
-        .as_secs() as i64;
+    let now = unix_now();
     let to = params.to.unwrap_or(now);
     let from = params.from.unwrap_or(to - 7 * 86400); // default: last 7 days
 
@@ -1296,17 +1376,268 @@ async fn handle_rt_alerts(
     }
 }
 
-async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
-    let db = match &state.rt_db_reader {
-        Some(db) => db,
-        None => {
-            return (
-                axum::http::StatusCode::SERVICE_UNAVAILABLE,
-                [(header::CONTENT_TYPE, "application/json")],
-                r#"{"error":"RT database not available"}"#.to_string(),
+// --- Fleet deployment (feature 2.3) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct FleetRouteDeployment {
+    route_id: String,
+    mode: String,
+    scheduled_trips: usize,
+    active_trips: usize,
+    deployment_pct: f64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct FleetDeploymentResponse {
+    routes: Vec<FleetRouteDeployment>,
+    total_scheduled: usize,
+    total_active: usize,
+    total_deployment_pct: f64,
+}
+
+async fn handle_fleet_deployment(State(state): State<Arc<AppState>>) -> Response {
+    // Get current time-of-day in seconds since midnight (Zagreb = UTC+1, or UTC+2 in summer)
+    let now_epoch = unix_now();
+    let now_seconds = ((now_epoch + zagreb_offset(now_epoch)) % 86400) as f64;
+
+    // Collect active trip IDs from RT store — clone keys and drop lock immediately
+    let rt_trip_ids: HashSet<String> = {
+        let rt_data = state.rt_store.read().unwrap();
+        rt_data.keys().cloned().collect()
+    };
+
+    // For each pattern, determine scheduled trips and active trips
+    let mut route_scheduled: HashMap<String, usize> = HashMap::new();
+    let mut route_active: HashMap<String, usize> = HashMap::new();
+    let mut route_mode: HashMap<String, String> = HashMap::new();
+
+    for pattern in &state.transit_graph.patterns {
+        let route_id = &pattern.route;
+        let mode = &pattern.mode;
+        route_mode
+            .entry(route_id.clone())
+            .or_insert_with(|| mode.clone());
+
+        let last_offset = pattern.stop_offsets.last().copied().unwrap_or(0.0);
+
+        for (di, dep) in pattern.departures.iter().enumerate() {
+            let trip_start = dep + pattern.stop_offsets[0];
+            let trip_end = dep + last_offset;
+
+            if trip_start <= now_seconds && now_seconds <= trip_end {
+                *route_scheduled.entry(route_id.clone()).or_insert(0) += 1;
+
+                // Check if this trip has RT data
+                if di < pattern.trip_ids.len() {
+                    if rt_trip_ids.contains(&pattern.trip_ids[di]) {
+                        *route_active.entry(route_id.clone()).or_insert(0) += 1;
+                    }
+                }
+            }
+        }
+    }
+
+    let mut routes: Vec<FleetRouteDeployment> = Vec::new();
+    let mut total_scheduled = 0usize;
+    let mut total_active = 0usize;
+
+    for (route_id, scheduled) in &route_scheduled {
+        let active = route_active.get(route_id).copied().unwrap_or(0);
+        let pct = if *scheduled > 0 {
+            (active as f64 / *scheduled as f64) * 100.0
+        } else {
+            0.0
+        };
+        total_scheduled += scheduled;
+        total_active += active;
+        routes.push(FleetRouteDeployment {
+            route_id: route_id.clone(),
+            mode: route_mode.get(route_id).cloned().unwrap_or_default(),
+            scheduled_trips: *scheduled,
+            active_trips: active,
+            deployment_pct: (pct * 10.0).round() / 10.0,
+        });
+    }
+
+    routes.sort_by(|a, b| {
+        a.deployment_pct
+            .partial_cmp(&b.deployment_pct)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    let total_deployment_pct = if total_scheduled > 0 {
+        let pct = (total_active as f64 / total_scheduled as f64) * 100.0;
+        (pct * 10.0).round() / 10.0
+    } else {
+        0.0
+    };
+
+    let resp = FleetDeploymentResponse {
+        routes,
+        total_scheduled,
+        total_active,
+        total_deployment_pct,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=15"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+// --- Alert stats (feature 2.5) ---
+
+#[derive(Deserialize)]
+struct AlertStatsParams {
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+async fn handle_alert_stats(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<AlertStatsParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 30 * 86400); // default: last 30 days
+
+    let conn = db.lock().await;
+    let result = rt_store::query_alert_stats(&conn, from, to);
+    drop(conn);
+
+    match result {
+        Ok(resp) => (
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=60"),
+            ],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
+// --- Delay profile (feature 2.9) ---
+
+#[derive(Deserialize)]
+struct DelayProfileParams {
+    route: String,
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct DelayProfileApiPoint {
+    seq: i32,
+    stop_name: String,
+    avg_delay: f64,
+    p90_delay: i32,
+    samples: i64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct DelayProfileApiResponse {
+    route: String,
+    points: Vec<DelayProfileApiPoint>,
+}
+
+async fn handle_delay_profile(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<DelayProfileParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 86400); // default: last 24h
+
+    let conn = db.lock().await;
+    let result = rt_store::query_delay_profile(&conn, &params.route, from, to);
+    drop(conn);
+
+    match result {
+        Ok(raw_points) => {
+            // Build stop_sequence → stop_name mapping from transit graph patterns
+            let mut seq_to_name: HashMap<i32, String> = HashMap::new();
+            for pattern in &state.transit_graph.patterns {
+                if pattern.route == params.route {
+                    for (i, &stop_idx) in pattern.stop_indices.iter().enumerate() {
+                        let seq = (i + 1) as i32; // 1-based stop_sequence
+                        if !seq_to_name.contains_key(&seq) {
+                            if let Some(stop) = state.transit_graph.stops.get(stop_idx) {
+                                seq_to_name.insert(seq, stop.name.clone());
+                            }
+                        }
+                    }
+                    break; // Use first matching pattern
+                }
+            }
+
+            let points: Vec<DelayProfileApiPoint> = raw_points
+                .into_iter()
+                .map(|p| {
+                    let stop_name = seq_to_name
+                        .get(&p.seq)
+                        .cloned()
+                        .unwrap_or_else(|| format!("Stop {}", p.seq));
+                    DelayProfileApiPoint {
+                        seq: p.seq,
+                        stop_name,
+                        avg_delay: (p.avg_delay * 10.0).round() / 10.0,
+                        p90_delay: p.p90_delay,
+                        samples: p.samples,
+                    }
+                })
+                .collect();
+
+            let resp = DelayProfileApiResponse {
+                route: params.route,
+                points,
+            };
+            (
+                [
+                    (header::CONTENT_TYPE, "application/json"),
+                    (header::CACHE_CONTROL, "public, max-age=60"),
+                ],
+                serde_json::to_string(&resp).unwrap(),
             )
                 .into_response()
         }
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
+async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
     };
 
     let conn = db.lock().await;
@@ -1331,6 +1662,416 @@ async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
     }
 }
 
+// --- BAJS utilization (feature 2.8) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct BajsStationBrief {
+    name: String,
+    station_id: String,
+    capacity: i32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct BajsUtilizationResponse {
+    total_stations: usize,
+    active_stations: usize,
+    total_capacity: i32,
+    total_bikes_available: i32,
+    total_docks_available: i32,
+    bikes_in_use: i32,
+    utilization_pct: f64,
+    empty_stations: Vec<BajsStationBrief>,
+    full_stations: Vec<BajsStationBrief>,
+}
+
+async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response {
+    let statuses = state.bajs_status_store.read().unwrap().clone();
+    if statuses.is_empty() {
+        return (
+            axum::http::StatusCode::SERVICE_UNAVAILABLE,
+            [(header::CONTENT_TYPE, "application/json")],
+            r#"{"error":"BAJS status not yet available"}"#.to_string(),
+        )
+            .into_response();
+    }
+
+    // Build station_id → info lookup from transit graph
+    let info_map: HashMap<&str, &crate::bajs::BajsStation> = state
+        .transit_graph
+        .bajs_stations
+        .iter()
+        .map(|s| (s.station_id.as_str(), s))
+        .collect();
+
+    let total_stations = statuses.len();
+    let active: Vec<_> = statuses
+        .iter()
+        .filter(|s| s.is_installed && s.is_renting)
+        .collect();
+
+    let active_stations = active.len();
+    let mut total_capacity = 0i32;
+    let mut total_bikes = 0i32;
+    let mut total_docks = 0i32;
+    let mut empty = Vec::new();
+    let mut full = Vec::new();
+
+    for s in &active {
+        let cap = info_map
+            .get(s.station_id.as_str())
+            .map(|i| i.capacity)
+            .unwrap_or(s.num_bikes_available + s.num_docks_available);
+        let name = info_map
+            .get(s.station_id.as_str())
+            .map(|i| i.name.clone())
+            .unwrap_or_else(|| s.station_id.clone());
+
+        total_capacity += cap;
+        total_bikes += s.num_bikes_available;
+        total_docks += s.num_docks_available;
+
+        if s.num_bikes_available == 0 {
+            empty.push(BajsStationBrief {
+                name,
+                station_id: s.station_id.clone(),
+                capacity: cap,
+            });
+        } else if s.num_docks_available == 0 {
+            full.push(BajsStationBrief {
+                name,
+                station_id: s.station_id.clone(),
+                capacity: cap,
+            });
+        }
+    }
+
+    let bikes_in_use = (total_capacity - total_bikes - total_docks).max(0);
+    let utilization_pct = if total_capacity > 0 {
+        (bikes_in_use as f64 / total_capacity as f64 * 1000.0).round() / 10.0
+    } else {
+        0.0
+    };
+
+    let resp = BajsUtilizationResponse {
+        total_stations,
+        active_stations,
+        total_capacity,
+        total_bikes_available: total_bikes,
+        total_docks_available: total_docks,
+        bikes_in_use,
+        utilization_pct,
+        empty_stations: empty,
+        full_stations: full,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=30"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+// --- BAJS status polling ---
+
+fn spawn_bajs_status_task(store: BajsStatusStore) {
+    tokio::spawn(async move {
+        loop {
+            let result = tokio::task::spawn_blocking(otp::fetch_station_status).await;
+            match result {
+                Ok(Some(statuses)) => {
+                    let count = statuses.len();
+                    *store.write().unwrap() = statuses;
+                    eprintln!("BAJS status: refreshed {} stations", count);
+                }
+                Ok(None) => {} // error already logged
+                Err(e) => eprintln!("BAJS status: spawn_blocking failed: {}", e),
+            }
+            tokio::time::sleep(Duration::from_secs(60)).await;
+        }
+    });
+}
+
+// --- Load scheduled speeds from route-stats.json ---
+
+fn load_scheduled_speeds(path: &Path) -> HashMap<String, f64> {
+    #[derive(Deserialize)]
+    struct RouteStatsFile {
+        routes: Vec<RouteStatsEntry>,
+    }
+    #[derive(Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct RouteStatsEntry {
+        name: String,
+        commercial_speed_kmh: f64,
+    }
+
+    let data = match std::fs::read_to_string(path) {
+        Ok(d) => d,
+        Err(e) => {
+            eprintln!(
+                "Warning: could not read route-stats.json ({}): {}",
+                path.display(),
+                e
+            );
+            return HashMap::new();
+        }
+    };
+    let parsed: RouteStatsFile = match serde_json::from_str(&data) {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("Warning: could not parse route-stats.json: {}", e);
+            return HashMap::new();
+        }
+    };
+    parsed
+        .routes
+        .into_iter()
+        .map(|r| (r.name, r.commercial_speed_kmh))
+        .collect()
+}
+
+// --- Speed comparison (feature 2.2) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct SpeedRouteComparison {
+    route_id: String,
+    mode: String,
+    scheduled_speed_kmh: f64,
+    actual_speed_kmh: Option<f64>,
+    speed_ratio: Option<f64>,
+    sample_count: usize,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct SpeedComparisonResponse {
+    routes: Vec<SpeedRouteComparison>,
+    has_data: bool,
+}
+
+async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response {
+    // Aggregate vehicle speeds by route from live store
+    let vehicle_data = state.vehicle_store.read().unwrap().clone();
+    let mut route_speeds: HashMap<String, Vec<f32>> = HashMap::new();
+    let mut route_mode: HashMap<String, String> = HashMap::new();
+
+    for v in vehicle_data.values() {
+        if let Some(speed) = v.speed_mps {
+            if speed >= 0.0 {
+                route_speeds
+                    .entry(v.route_id.clone())
+                    .or_default()
+                    .push(speed);
+            }
+        }
+    }
+
+    // Also build route_mode from transit graph
+    for pattern in &state.transit_graph.patterns {
+        route_mode
+            .entry(pattern.route.clone())
+            .or_insert_with(|| pattern.mode.clone());
+    }
+
+    let has_data = !route_speeds.is_empty();
+
+    // Build comparison for all routes that have scheduled speed
+    let mut routes: Vec<SpeedRouteComparison> = state
+        .scheduled_speeds
+        .iter()
+        .map(|(route_name, &sched_speed)| {
+            let speeds = route_speeds.get(route_name);
+            let (actual, ratio, count) = match speeds {
+                Some(s) if !s.is_empty() => {
+                    let avg_mps = s.iter().sum::<f32>() / s.len() as f32;
+                    let avg_kmh = (avg_mps as f64) * 3.6;
+                    let avg_kmh_rounded = (avg_kmh * 10.0).round() / 10.0;
+                    let ratio = if sched_speed > 0.0 {
+                        Some((avg_kmh_rounded / sched_speed * 100.0).round() / 100.0)
+                    } else {
+                        None
+                    };
+                    (Some(avg_kmh_rounded), ratio, s.len())
+                }
+                _ => (None, None, 0),
+            };
+            SpeedRouteComparison {
+                route_id: route_name.clone(),
+                mode: route_mode.get(route_name).cloned().unwrap_or_default(),
+                scheduled_speed_kmh: sched_speed,
+                actual_speed_kmh: actual,
+                speed_ratio: ratio,
+                sample_count: count,
+            }
+        })
+        .collect();
+
+    routes.sort_by(|a, b| {
+        a.route_id
+            .parse::<i32>()
+            .unwrap_or(999)
+            .cmp(&b.route_id.parse::<i32>().unwrap_or(999))
+    });
+
+    let resp = SpeedComparisonResponse { routes, has_data };
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=15"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+// --- Occupancy (feature 2.4) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct OccupancyRouteHour {
+    hour: i32,
+    empty: i64,
+    few_seats: i64,
+    standing: i64,
+    full: i64,
+    total: i64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct OccupancyRoute {
+    route_id: String,
+    mode: String,
+    hours: Vec<OccupancyRouteHour>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct OccupancyResponse {
+    has_data: bool,
+    routes: Vec<OccupancyRoute>,
+}
+
+#[derive(Deserialize)]
+struct OccupancyParams {
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+async fn handle_occupancy(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<OccupancyParams>,
+) -> Response {
+    // First check live data for any occupancy info
+    let has_live = {
+        let vehicles = state.vehicle_store.read().unwrap();
+        vehicles
+            .values()
+            .any(|v| v.occupancy_status.is_some() && v.occupancy_status != Some(0))
+    };
+
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(_) if !has_live => {
+            // No DB and no live data
+            let resp = OccupancyResponse {
+                has_data: false,
+                routes: vec![],
+            };
+            return (
+                [
+                    (header::CONTENT_TYPE, "application/json"),
+                    (header::CACHE_CONTROL, "public, max-age=60"),
+                ],
+                serde_json::to_string(&resp).unwrap(),
+            )
+                .into_response();
+        }
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 86400);
+
+    let conn = db.lock().await;
+    let has_historical = rt_store::has_occupancy_data(&conn).unwrap_or(false);
+    let buckets = rt_store::query_occupancy(&conn, from, to).unwrap_or_default();
+    drop(conn);
+
+    let has_data = has_live || has_historical;
+
+    // Build route→mode lookup
+    let mut route_mode: HashMap<String, String> = HashMap::new();
+    for pattern in &state.transit_graph.patterns {
+        route_mode
+            .entry(pattern.route.clone())
+            .or_insert_with(|| pattern.mode.clone());
+    }
+
+    // Group buckets into routes → hours
+    let mut route_hours: HashMap<String, HashMap<i32, OccupancyRouteHour>> = HashMap::new();
+    for b in &buckets {
+        let hour_entry = route_hours
+            .entry(b.route_id.clone())
+            .or_default()
+            .entry(b.hour)
+            .or_insert_with(|| OccupancyRouteHour {
+                hour: b.hour,
+                empty: 0,
+                few_seats: 0,
+                standing: 0,
+                full: 0,
+                total: 0,
+            });
+        // GTFS-RT OccupancyStatus: 0=EMPTY, 1=MANY_SEATS, 2=FEW_SEATS,
+        // 3=STANDING_ROOM_ONLY, 4=CRUSHED_STANDING, 5=FULL
+        match b.level {
+            0 | 1 => hour_entry.empty += b.count,
+            2 => hour_entry.few_seats += b.count,
+            3 | 4 => hour_entry.standing += b.count,
+            5 => hour_entry.full += b.count,
+            _ => {}
+        }
+        hour_entry.total += b.count;
+    }
+
+    let mut routes: Vec<OccupancyRoute> = route_hours
+        .into_iter()
+        .map(|(route_id, hours_map)| {
+            let mut hours: Vec<OccupancyRouteHour> = hours_map.into_values().collect();
+            hours.sort_by_key(|h| h.hour);
+            OccupancyRoute {
+                mode: route_mode.get(&route_id).cloned().unwrap_or_default(),
+                route_id,
+                hours,
+            }
+        })
+        .collect();
+    routes.sort_by(|a, b| {
+        a.route_id
+            .parse::<i32>()
+            .unwrap_or(999)
+            .cmp(&b.route_id.parse::<i32>().unwrap_or(999))
+    });
+
+    let resp = OccupancyResponse { has_data, routes };
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=60"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
 #[tokio::main]
 async fn main() {
     let otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".to_string());
@@ -1340,9 +2081,20 @@ async fn main() {
         .parse()
         .unwrap_or(3001);
 
-    println!("Loading transit graph from OTP at {}...", otp_url);
+    // Compute today's date (CET/CEST) as YYYY-MM-DD for OTP service-day filtering
+    let today = {
+        let now = unix_now();
+        let secs = (now + zagreb_offset(now)) as u64;
+        let days = secs / 86400;
+        let (y, m, d) = days_to_ymd(days);
+        format!("{:04}-{:02}-{:02}", y, m, d)
+    };
+    println!(
+        "Loading transit graph from OTP at {} for {}...",
+        otp_url, today
+    );
     let t0 = Instant::now();
-    let mut transit_graph = otp::fetch_and_build_graph(&otp_url, None);
+    let mut transit_graph = otp::fetch_and_build_graph(&otp_url, Some(&today));
     transit_graph.bajs_stations = otp::fetch_bajs_stations();
     transit_graph.build_stop_grid();
     println!(
@@ -1391,8 +2143,19 @@ async fn main() {
         );
     }
 
+    // Load scheduled speeds from route-stats.json
+    let scheduled_speeds = {
+        let stats_path = Path::new(&data_dir).join("route-stats.json");
+        load_scheduled_speeds(&stats_path)
+    };
+    println!(
+        "Loaded scheduled speeds for {} routes",
+        scheduled_speeds.len()
+    );
+
     // Start GTFS-RT background refresh + SQLite persistence
     let rt_store = gtfs_rt::new_rt_store();
+    let vehicle_store = gtfs_rt::new_vehicle_store();
     let rt_last_refresh = gtfs_rt::new_rt_last_refresh();
 
     let rt_db_dir = std::env::var("RT_DB_DIR").unwrap_or_else(|_| data_dir.clone());
@@ -1400,7 +2163,12 @@ async fn main() {
     let (db_tx, db_rx) = std::sync::mpsc::sync_channel::<gtfs_rt::RtSnapshot>(4);
     rt_store::spawn_writer_thread(db_path.clone(), db_rx);
 
-    gtfs_rt::spawn_refresh_task(rt_store.clone(), rt_last_refresh.clone(), Some(db_tx));
+    gtfs_rt::spawn_refresh_task(
+        rt_store.clone(),
+        vehicle_store.clone(),
+        rt_last_refresh.clone(),
+        Some(db_tx),
+    );
     println!("GTFS-RT background refresh started (30s interval, persisting to SQLite)");
 
     // Open read-only DB connection for API queries (may fail on first startup)
@@ -1411,15 +2179,23 @@ async fn main() {
         })
         .ok();
 
+    // Start BAJS station status polling (60s interval)
+    let bajs_status_store: BajsStatusStore = Arc::new(RwLock::new(Vec::new()));
+    spawn_bajs_status_task(bajs_status_store.clone());
+    println!("BAJS station status polling started (60s interval)");
+
     let state = Arc::new(AppState {
         transit_graph,
         walk_graph,
         stop_snaps,
         rt_store,
+        vehicle_store,
         rt_last_refresh,
         pattern_geometries,
         bajs_adjacency,
         rt_db_reader,
+        scheduled_speeds,
+        bajs_status_store,
     });
 
     let app = Router::new()
@@ -1429,6 +2205,15 @@ async fn main() {
         .route("/api/rt/stops", get(handle_rt_stops))
         .route("/api/rt/alerts", get(handle_rt_alerts))
         .route("/api/rt/summary", get(handle_rt_summary))
+        .route("/api/rt/fleet-deployment", get(handle_fleet_deployment))
+        .route("/api/rt/alert-stats", get(handle_alert_stats))
+        .route("/api/rt/delay-profile", get(handle_delay_profile))
+        .route("/api/rt/speed-comparison", get(handle_speed_comparison))
+        .route("/api/rt/occupancy", get(handle_occupancy))
+        .route(
+            "/api/rt/bajs-utilization",
+            get(handle_bajs_utilization),
+        )
         .route("/health", get(handle_health))
         .layer(CompressionLayer::new())
         .with_state(state);

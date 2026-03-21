@@ -1388,41 +1388,9 @@ fn compute_pulse_scheduling(graph: &TransitGraphJson) -> Vec<PulseHub> {
                     let (_, ref arr_a) = route_arrivals[i];
                     let (_, ref arr_b) = route_arrivals[j];
 
-                    // For each arrival of route A, find minimum wait to next arrival of route B
-                    let mut min_waits_ab: Vec<f64> = Vec::new();
-                    for &a in arr_a {
-                        let mut best = f64::INFINITY;
-                        for &b in arr_b {
-                            if b >= a {
-                                best = (b - a).min(best);
-                                break; // arr_b is sorted, first >= a is the minimum
-                            }
-                        }
-                        if best < f64::INFINITY {
-                            min_waits_ab.push(best);
-                        }
-                    }
+                    let mut all_waits = min_transfer_waits(arr_a, arr_b);
+                    all_waits.extend(min_transfer_waits(arr_b, arr_a));
 
-                    // And vice versa: for each arrival of B, find min wait to next A
-                    let mut min_waits_ba: Vec<f64> = Vec::new();
-                    for &b in arr_b {
-                        let mut best = f64::INFINITY;
-                        for &a in arr_a {
-                            if a >= b {
-                                best = (a - b).min(best);
-                                break;
-                            }
-                        }
-                        if best < f64::INFINITY {
-                            min_waits_ba.push(best);
-                        }
-                    }
-
-                    // Average of both directions
-                    let all_waits: Vec<f64> = min_waits_ab
-                        .into_iter()
-                        .chain(min_waits_ba.into_iter())
-                        .collect();
                     if !all_waits.is_empty() {
                         let avg_wait = all_waits.iter().sum::<f64>() / all_waits.len() as f64;
                         pair_waits.push(avg_wait / 60.0); // convert to minutes
@@ -1501,6 +1469,19 @@ fn compute_pulse_scheduling(graph: &TransitGraphJson) -> Vec<PulseHub> {
 // ---------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------
+
+/// For each arrival in `from`, find the minimum wait to the next arrival in `to` (sorted).
+/// Returns waits in seconds for arrivals that have a valid successor.
+fn min_transfer_waits(from: &[f64], to: &[f64]) -> Vec<f64> {
+    let mut waits = Vec::new();
+    for &t in from {
+        let idx = to.partition_point(|&b| b < t);
+        if idx < to.len() {
+            waits.push(to[idx] - t);
+        }
+    }
+    waits
+}
 
 /// Parse YYYYMMDD string and return day of week (0=Sunday, 1=Monday, ..., 6=Saturday).
 /// Uses Tomohiko Sakamoto's algorithm.

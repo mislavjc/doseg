@@ -80,9 +80,27 @@ impl RtDb {
                 hash        TEXT    NOT NULL UNIQUE
             );
 
+            CREATE TABLE IF NOT EXISTS speed_snapshots (
+                ts          INTEGER NOT NULL,
+                route_id    TEXT    NOT NULL,
+                avg_speed_mps REAL  NOT NULL,
+                sample_count INTEGER NOT NULL,
+                PRIMARY KEY (ts, route_id)
+            ) WITHOUT ROWID;
+
+            CREATE TABLE IF NOT EXISTS occupancy_snapshots (
+                ts              INTEGER NOT NULL,
+                route_id        TEXT    NOT NULL,
+                occupancy_level INTEGER NOT NULL,
+                count           INTEGER NOT NULL,
+                PRIMARY KEY (ts, route_id, occupancy_level)
+            ) WITHOUT ROWID;
+
             CREATE INDEX IF NOT EXISTS idx_snapshots_route ON snapshots(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_stop_delays_route ON stop_delays(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_alerts_ts ON alerts(first_seen);
+            CREATE INDEX IF NOT EXISTS idx_speed_route ON speed_snapshots(route_id, ts);
+            CREATE INDEX IF NOT EXISTS idx_occupancy_route ON occupancy_snapshots(route_id, ts);
         ",
         )?;
 
@@ -204,6 +222,49 @@ impl RtDb {
                     &stop_ids,
                     &hash,
                 ])?;
+            }
+        }
+
+        // Vehicle speed snapshots (every 60s, same as route snapshots)
+        {
+            let mut by_route: HashMap<&str, Vec<f32>> = HashMap::new();
+            for v in &snap.vehicles {
+                if let Some(speed) = v.speed_mps {
+                    if speed >= 0.0 && !v.route_id.is_empty() {
+                        by_route.entry(&v.route_id).or_default().push(speed);
+                    }
+                }
+            }
+            if !by_route.is_empty() {
+                let mut stmt = tx.prepare_cached(
+                    "INSERT OR IGNORE INTO speed_snapshots (ts, route_id, avg_speed_mps, sample_count)
+                     VALUES (?1, ?2, ?3, ?4)",
+                )?;
+                for (route_id, speeds) in &by_route {
+                    let avg = speeds.iter().sum::<f32>() / speeds.len() as f32;
+                    stmt.execute(params![ts, route_id, avg as f64, speeds.len() as i32])?;
+                }
+            }
+        }
+
+        // Occupancy snapshots (every 5 min, same cadence as stop_delays)
+        if write_stops {
+            let mut counts: HashMap<(&str, i32), i64> = HashMap::new();
+            for v in &snap.vehicles {
+                if let Some(occ) = v.occupancy_status {
+                    if !v.route_id.is_empty() {
+                        *counts.entry((&v.route_id, occ)).or_insert(0) += 1;
+                    }
+                }
+            }
+            if !counts.is_empty() {
+                let mut stmt = tx.prepare_cached(
+                    "INSERT OR IGNORE INTO occupancy_snapshots (ts, route_id, occupancy_level, count)
+                     VALUES (?1, ?2, ?3, ?4)",
+                )?;
+                for ((route_id, level), count) in &counts {
+                    stmt.execute(params![ts, route_id, level, count])?;
+                }
             }
         }
 
@@ -509,6 +570,146 @@ pub fn query_alerts(conn: &Connection, from: i64, to: i64) -> rusqlite::Result<A
     Ok(AlertsResponse { alerts })
 }
 
+// --- Alert stats (feature 2.5) ---
+
+fn sorted_label_counts(counts: HashMap<String, i64>) -> Vec<LabelCount> {
+    let mut v: Vec<LabelCount> = counts
+        .into_iter()
+        .map(|(label, count)| LabelCount { label, count })
+        .collect();
+    v.sort_by(|a, b| b.count.cmp(&a.count));
+    v
+}
+
+#[derive(Serialize)]
+pub struct LabelCount {
+    pub label: String,
+    pub count: i64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AlertStatsResponse {
+    pub by_route: Vec<LabelCount>,
+    pub by_cause: Vec<LabelCount>,
+    pub by_effect: Vec<LabelCount>,
+    pub total: i64,
+}
+
+pub fn query_alert_stats(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<AlertStatsResponse> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT cause, effect, route_ids FROM alerts
+         WHERE first_seen >= ?1 AND first_seen < ?2",
+    )?;
+
+    let mut route_counts: HashMap<String, i64> = HashMap::new();
+    let mut cause_counts: HashMap<String, i64> = HashMap::new();
+    let mut effect_counts: HashMap<String, i64> = HashMap::new();
+    let mut total: i64 = 0;
+
+    let rows = stmt.query_map(params![from, to], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, Option<String>>(2)?,
+        ))
+    })?;
+
+    for row in rows {
+        let (cause, effect, route_ids_str) = row?;
+        total += 1;
+
+        *cause_counts.entry(cause).or_insert(0) += 1;
+        *effect_counts.entry(effect).or_insert(0) += 1;
+
+        if let Some(ids) = route_ids_str {
+            for rid in ids.split(',').filter(|s| !s.is_empty()) {
+                *route_counts.entry(rid.to_string()).or_insert(0) += 1;
+            }
+        }
+    }
+
+    let by_route = sorted_label_counts(route_counts);
+    let by_cause = sorted_label_counts(cause_counts);
+    let by_effect = sorted_label_counts(effect_counts);
+
+    Ok(AlertStatsResponse {
+        by_route,
+        by_cause,
+        by_effect,
+        total,
+    })
+}
+
+// --- Delay profile (feature 2.9) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DelayProfilePoint {
+    pub seq: i32,
+    pub avg_delay: f64,
+    pub p90_delay: i32,
+    pub samples: i64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DelayProfileResponse {
+    pub route: String,
+    pub points: Vec<DelayProfilePoint>,
+}
+
+pub fn query_delay_profile(
+    conn: &Connection,
+    route: &str,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<DelayProfilePoint>> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT stop_sequence, delay FROM stop_delays
+         WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
+         ORDER BY stop_sequence",
+    )?;
+
+    let mut by_seq: HashMap<i32, Vec<i32>> = HashMap::new();
+
+    let rows = stmt.query_map(params![route, from, to], |row| {
+        Ok((row.get::<_, i32>(0)?, row.get::<_, i32>(1)?))
+    })?;
+
+    for row in rows {
+        let (seq, delay) = row?;
+        by_seq.entry(seq).or_default().push(delay);
+    }
+
+    let mut points: Vec<DelayProfilePoint> = by_seq
+        .into_iter()
+        .map(|(seq, mut delays)| {
+            delays.sort_unstable();
+            let samples = delays.len() as i64;
+            let avg_delay = delays.iter().map(|&d| d as f64).sum::<f64>() / samples as f64;
+            let p90_idx = ((samples as f64 * 0.9).ceil() as usize)
+                .min(delays.len())
+                .saturating_sub(1);
+            let p90_delay = delays[p90_idx];
+            DelayProfilePoint {
+                seq,
+                avg_delay,
+                p90_delay,
+                samples,
+            }
+        })
+        .collect();
+
+    points.sort_by_key(|p| p.seq);
+
+    Ok(points)
+}
+
 pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
     let snapshot_count: i64 = conn.query_row("SELECT COUNT(*) FROM snapshots", [], |r| r.get(0))?;
     let route_count: i64 =
@@ -529,10 +730,95 @@ pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
     })
 }
 
+// --- Speed comparison query (feature 2.2) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpeedSnapshotPoint {
+    pub ts: i64,
+    pub avg_speed_kmh: f64,
+    pub sample_count: i32,
+}
+
+pub fn query_speed_history(
+    conn: &Connection,
+    route: &str,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<SpeedSnapshotPoint>> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT ts, avg_speed_mps, sample_count
+         FROM speed_snapshots WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
+         ORDER BY ts",
+    )?;
+    let mut points = Vec::new();
+    let rows = stmt.query_map(params![route, from, to], |row| {
+        let avg_mps: f64 = row.get(0 + 1)?; // column 1
+        Ok(SpeedSnapshotPoint {
+            ts: row.get(0)?,
+            avg_speed_kmh: (avg_mps * 3.6 * 10.0).round() / 10.0,
+            sample_count: row.get(2)?,
+        })
+    })?;
+    for row in rows {
+        points.push(row?);
+    }
+    Ok(points)
+}
+
+// --- Occupancy query (feature 2.4) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OccupancyBucket {
+    pub route_id: String,
+    pub hour: i32,
+    pub level: i32,
+    pub count: i64,
+}
+
+pub fn query_occupancy(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<OccupancyBucket>> {
+    // Group by route, hour-of-day, and occupancy level
+    let mut stmt = conn.prepare_cached(
+        "SELECT route_id, ((ts % 86400) / 3600) AS hour, occupancy_level, SUM(count)
+         FROM occupancy_snapshots WHERE ts >= ?1 AND ts < ?2
+         GROUP BY route_id, hour, occupancy_level
+         ORDER BY route_id, hour, occupancy_level",
+    )?;
+    let mut buckets = Vec::new();
+    let rows = stmt.query_map(params![from, to], |row| {
+        Ok(OccupancyBucket {
+            route_id: row.get(0)?,
+            hour: row.get(1)?,
+            level: row.get(2)?,
+            count: row.get(3)?,
+        })
+    })?;
+    for row in rows {
+        buckets.push(row?);
+    }
+    Ok(buckets)
+}
+
+pub fn has_occupancy_data(conn: &Connection) -> rusqlite::Result<bool> {
+    let count: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM occupancy_snapshots LIMIT 1",
+        [],
+        |r| r.get(0),
+    )?;
+    Ok(count > 0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::gtfs_rt::{RtSnapshot, SnapshotAlert, SnapshotStopTime, SnapshotTrip};
+    use crate::gtfs_rt::{
+        RtSnapshot, SnapshotAlert, SnapshotStopTime, SnapshotTrip, SnapshotVehicle,
+    };
 
     fn make_snapshot(ts: i64) -> RtSnapshot {
         RtSnapshot {
@@ -581,6 +867,7 @@ mod tests {
                 route_ids: vec!["6".into()],
                 stop_ids: vec![],
             }],
+            vehicles: vec![],
         }
     }
 

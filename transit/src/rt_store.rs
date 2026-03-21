@@ -958,8 +958,9 @@ mod tests {
             )
             .unwrap();
         assert_eq!(trips, 2);
-        assert!((avg - 15.0).abs() < 0.1, "avg should be (60 + -30)/2 = 15");
-        assert_eq!(max, 60);
+        // first() delays: trip_1=30, trip_2=-30 → avg=0, max=30
+        assert!((avg - 0.0).abs() < 0.1, "avg should be (30 + -30)/2 = 0");
+        assert_eq!(max, 30);
         assert!((pct - 1.0).abs() < 0.01, "both within 300s threshold");
 
         // Check stop-level (should be written since ts % 300 == 0)

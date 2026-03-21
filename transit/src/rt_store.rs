@@ -219,11 +219,7 @@ impl RtDb {
 
                     // Filter stale/completed trips: if the latest predicted
                     // time for this trip is well in the past, skip it.
-                    let latest_time = trip
-                        .stop_times
-                        .iter()
-                        .filter_map(|st| st.time)
-                        .max();
+                    let latest_time = trip.stop_times.iter().filter_map(|st| st.time).max();
                     if let Some(lt) = latest_time {
                         if lt < ts - STALE_GRACE_SEC {
                             continue;
@@ -268,7 +264,14 @@ impl RtDb {
                 let (headway_sec, headway_cv) = compute_headway(&mut arrival_times);
 
                 stmt.execute(params![
-                    ts, route_id, avg, max_delay, pct, count, headway_sec, headway_cv,
+                    ts,
+                    route_id,
+                    avg,
+                    max_delay,
+                    pct,
+                    count,
+                    headway_sec,
+                    headway_cv,
                 ])?;
             }
         }

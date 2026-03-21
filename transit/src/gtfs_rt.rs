@@ -441,7 +441,10 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
                             .and_then(|a| a.time)
                             .filter(|&t| t != 0)
                             .or_else(|| {
-                                stu.departure.as_ref().and_then(|d| d.time).filter(|&t| t != 0)
+                                stu.departure
+                                    .as_ref()
+                                    .and_then(|d| d.time)
+                                    .filter(|&t| t != 0)
                             });
                         SnapshotStopTime {
                             stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,

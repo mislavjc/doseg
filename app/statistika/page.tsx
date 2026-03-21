@@ -9,6 +9,14 @@ import { Group } from "@visx/group"
 import { LinePath } from "@visx/shape"
 import { GridRows, GridColumns } from "@visx/grid"
 import NetworkStatsSection from "./network-stats-section"
+import PunctualitySection from "./punctuality-section"
+import FleetDeploymentSection from "./fleet-deployment-section"
+import SpeedComparisonSection from "./speed-comparison-section"
+import OccupancySection from "./occupancy-section"
+import AlertStatsSection from "./alert-stats-section"
+import DelayPropagationSection from "./delay-propagation-section"
+import BajsUtilizationSection from "./bajs-utilization-section"
+import AccessibilityProfileSection from "./accessibility-profile-section"
 import type {
   District as DistrictScore,
   DistrictScoresOutput as ScoreData,
@@ -641,6 +649,7 @@ function StatistikaContentSections({ data, all }: { data: ScoreData; all: Return
       <TransitDesertSection data={data} desert={all.desert} />
       <StopDistanceSection desert={all.desert} />
       <PeakOffPeakSection data={data} base={all.base} evening={all.evening} />
+      <AccessibilityProfileSection />
       <WeekendSection weekend={all.weekend} />
       <BajsImpactSection data={data} bajs={all.bajs} />
       <VarianceSection data={data} variance={all.variance} />
@@ -648,11 +657,41 @@ function StatistikaContentSections({ data, all }: { data: ScoreData; all: Return
       <LineSpeedSection lineSpeed={all.lineSpeed} />
       <RouteStatsSection routeStats={all.routeStats} routes={all.routes} freq={all.freq} />
       <NetworkStatsSection />
+      <RealTimeSections routeStats={all.routeStats} />
       <TravelMatrixSection travelMatrix={all.travelMatrix} matrix={all.matrix} />
       <TransferDependencySection travelMatrix={all.travelMatrix} />
       <CentralitySection />
       <DistrictBandsSection data={data} bands={all.bands} districtEmblems={all.districtEmblems} base={all.base} />
       <MethodologySection data={data} base={all.base} bajs={all.bajs} />
+    </>
+  )
+}
+
+function sortRoutesByName(routes: RouteInfo[]): RouteInfo[] {
+  return [...routes].sort((a, b) => {
+    const na = parseInt(a.name, 10), nb = parseInt(b.name, 10)
+    if (!isNaN(na) && !isNaN(nb)) return na - nb
+    if (!isNaN(na)) return -1
+    if (!isNaN(nb)) return 1
+    return a.name.localeCompare(b.name)
+  })
+}
+
+function RealTimeSections({ routeStats }: { routeStats: ReturnType<typeof loadAllData>["routeStats"] }) {
+  const routes = sortRoutesByName(routeStats?.routes.filter((r: RouteInfo) => r.mode !== "RAIL") ?? [])
+  return (
+    <>
+      {routeStats && (
+        <PunctualitySection routes={routes.map((r: RouteInfo) => ({ name: r.name, mode: r.mode }))} />
+      )}
+      <FleetDeploymentSection />
+      <SpeedComparisonSection />
+      <OccupancySection />
+      <AlertStatsSection />
+      {routeStats && (
+        <DelayPropagationSection routes={routes.map((r: RouteInfo) => r.name)} />
+      )}
+      <BajsUtilizationSection />
     </>
   )
 }

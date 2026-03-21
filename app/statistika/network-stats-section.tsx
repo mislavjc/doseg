@@ -10,6 +10,7 @@ import type {
   DirectionalAsymmetryEntry,
   RouteStatsOutput,
   ServiceSpan,
+  PulseHub,
 } from "@/lib/generated"
 
 function loadNetworkStats(): NetworkStatsOutput | null {
@@ -1140,6 +1141,291 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
 }
 
 // ---------------------------------------------------------------------------
+// 7. Pulse Scheduling Detection
+// ---------------------------------------------------------------------------
+function pulseWaitColor(waitMin: number): string {
+  if (waitMin < 3) return "text-emerald-600 dark:text-emerald-400"
+  if (waitMin <= 6) return "text-amber-600 dark:text-amber-400"
+  return "text-red-600 dark:text-red-400"
+}
+
+function pulseWaitBg(waitMin: number): string {
+  if (waitMin < 3)
+    return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
+  if (waitMin <= 6)
+    return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
+  return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"
+}
+
+function PulseHubRow({ hub }: { hub: PulseHub }) {
+  return (
+    <tr className="border-b border-slate-100 last:border-0 dark:border-slate-800">
+      <td className="py-3 pr-4 text-left">
+        <div className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
+          {hub.stopName}
+        </div>
+      </td>
+      <td className="py-3 pr-4 text-center">
+        <span className="font-serif text-[14px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
+          {hub.routeCount}
+        </span>
+      </td>
+      <td className="py-3 pr-4">
+        <div className="flex flex-wrap gap-1">
+          {hub.routes.slice(0, 8).map((route) => (
+            <span
+              key={route}
+              className="inline-flex h-5 items-center rounded bg-slate-100 px-1.5 text-[10px] font-semibold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
+            >
+              {route}
+            </span>
+          ))}
+          {hub.routes.length > 8 && (
+            <span className="text-[10px] text-slate-400">
+              +{hub.routes.length - 8}
+            </span>
+          )}
+        </div>
+      </td>
+      <td className="py-3 pr-4 text-center">
+        <span
+          className={`inline-flex h-6 items-center rounded-md px-2 text-[12px] font-semibold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
+        >
+          {fmtDec(hub.avgTransferWaitMin, 1)} min
+        </span>
+      </td>
+      <td className="py-3 text-center">
+        <span className="text-[13px] text-slate-700 tabular-nums dark:text-slate-300">
+          {hub.bestHour}:00
+        </span>
+        <span
+          className={`ml-1.5 text-[11px] font-medium tabular-nums ${pulseWaitColor(hub.bestHourWaitMin)}`}
+        >
+          ({fmtDec(hub.bestHourWaitMin, 1)} min)
+        </span>
+      </td>
+    </tr>
+  )
+}
+
+const PULSE_CELL_W = 32
+const PULSE_CELL_H = 28
+const PULSE_GAP = 2
+const PULSE_LABEL_W = 120
+
+function pulseHeatColor(wait: number, maxWait: number): string {
+  if (wait < 0) return "transparent"
+  const t = Math.min(wait / maxWait, 1)
+  if (t < 0.3) return "#059669"
+  if (t < 0.6) return "#d97706"
+  return "#dc2626"
+}
+
+function PulseHeatmapCells({
+  topHubs,
+  maxWait,
+}: {
+  topHubs: PulseHub[]
+  maxWait: number
+}) {
+  return (
+    <>
+      {topHubs.map((hub, ri) =>
+        hub.hourlyWait.map((wait, ci) => (
+          <rect
+            key={`cell-${hub.stopKey}-${ci}`}
+            x={PULSE_LABEL_W + ci * (PULSE_CELL_W + PULSE_GAP)}
+            y={ri * (PULSE_CELL_H + PULSE_GAP)}
+            width={PULSE_CELL_W}
+            height={PULSE_CELL_H}
+            rx={4}
+            fill={pulseHeatColor(wait, maxWait)}
+            opacity={wait < 0 ? 0.1 : 0.8}
+          />
+        ))
+      )}
+      {topHubs.map((hub, ri) =>
+        hub.hourlyWait.map((wait, ci) =>
+          wait >= 0 ? (
+            <text
+              key={`txt-${hub.stopKey}-${ci}`}
+              x={PULSE_LABEL_W + ci * (PULSE_CELL_W + PULSE_GAP) + PULSE_CELL_W / 2}
+              y={ri * (PULSE_CELL_H + PULSE_GAP) + PULSE_CELL_H / 2 + 1}
+              textAnchor="middle"
+              dominantBaseline="central"
+              className="fill-white/90 font-sans text-[9px] font-medium"
+            >
+              {wait.toFixed(0)}
+            </text>
+          ) : null
+        )
+      )}
+    </>
+  )
+}
+
+function PulseHeatmap({ hubs }: { hubs: PulseHub[] }) {
+  const topHubs = hubs.slice(0, 5)
+  if (topHubs.length === 0) return null
+
+  const hours = Array.from({ length: 19 }, (_, i) => i + 5)
+  const allWaits = topHubs.flatMap((h) => h.hourlyWait.filter((v) => v >= 0))
+  const maxWait = Math.max(...allWaits, 1)
+  const svgW = PULSE_LABEL_W + hours.length * (PULSE_CELL_W + PULSE_GAP)
+  const svgH = topHubs.length * (PULSE_CELL_H + PULSE_GAP) + 24
+
+  return (
+    <div className="mt-6 flex justify-center overflow-x-auto rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <svg
+        width={svgW}
+        height={svgH}
+        viewBox={`0 0 ${svgW} ${svgH}`}
+        className="block"
+        role="img"
+        aria-label="Toplinska karta prosjecnog cekanja na presjedanje po satu"
+      >
+        {topHubs.map((hub, ri) => (
+          <text
+            key={`lbl-${hub.stopKey}`}
+            x={PULSE_LABEL_W - 8}
+            y={ri * (PULSE_CELL_H + PULSE_GAP) + PULSE_CELL_H / 2 + 1}
+            textAnchor="end"
+            dominantBaseline="central"
+            className="fill-slate-600 font-sans text-[11px] dark:fill-slate-400"
+          >
+            {hub.stopName.length > 18
+              ? hub.stopName.slice(0, 16) + "..."
+              : hub.stopName}
+          </text>
+        ))}
+        <PulseHeatmapCells topHubs={topHubs} maxWait={maxWait} />
+        {hours
+          .filter((_, i) => i % 3 === 0)
+          .map((h) => (
+            <text
+              key={`hr-${h}`}
+              x={PULSE_LABEL_W + (h - 5) * (PULSE_CELL_W + PULSE_GAP) + PULSE_CELL_W / 2}
+              y={topHubs.length * (PULSE_CELL_H + PULSE_GAP) + 16}
+              textAnchor="middle"
+              className="fill-slate-500 font-sans text-[10px] dark:fill-slate-400"
+            >
+              {h}h
+            </text>
+          ))}
+      </svg>
+    </div>
+  )
+}
+
+function PulseHubsTable({ hubs }: { hubs: PulseHub[] }) {
+  return (
+    <div className="overflow-x-auto rounded-3xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="border-b border-slate-200 dark:border-slate-700">
+            <th className="px-6 py-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Stajaliste
+            </th>
+            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Linije
+            </th>
+            <th className="px-4 py-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Rute
+            </th>
+            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Prosj. cekanje
+            </th>
+            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Najbolji sat
+            </th>
+          </tr>
+        </thead>
+        <tbody className="px-6">
+          {hubs.map((hub) => (
+            <PulseHubRow key={hub.stopKey} hub={hub} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function PulseInsight({
+  hubs,
+  avgWait,
+  bestHub,
+  pulsedCount,
+}: {
+  hubs: PulseHub[]
+  avgWait: number
+  bestHub: PulseHub
+  pulsedCount: number
+}) {
+  if (pulsedCount > 0) {
+    return (
+      <Insight>
+        Zagreb pokazuje elemente pulse schedulinga na{" "}
+        <strong>
+          {pulsedCount} od {hubs.length}
+        </strong>{" "}
+        analiziranih cvorista (prosjecno cekanje na presjedanje &lt;5 min u
+        vrsnom satu). Najbolje sinkronizirano cvoriste je{" "}
+        <strong>{bestHub.stopName}</strong> s prosjecnim cekanjem od samo{" "}
+        {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta. Ukupni prosjek od{" "}
+        {fmtDec(avgWait, 1)} minuta sugerira da postoji odredena koordinacija,
+        ali ne sustavni pulse.
+      </Insight>
+    )
+  }
+  return (
+    <Insight>
+      Zagreb ne koristi pulse scheduling - prosjecno cekanje na presjedanje na
+      velikim cvoristima iznosi <strong>{fmtDec(avgWait, 1)} minuta</strong>.
+      Presjedanja su uglavnom prepustena slucaju, sto je tipicno za mreze s
+      kratkim intervalima. Najbolje sinkronizirano cvoriste je{" "}
+      <strong>{bestHub.stopName}</strong> s prosjecnim cekanjem od{" "}
+      {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta.
+    </Insight>
+  )
+}
+
+function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
+  if (hubs.length === 0) return null
+
+  const avgWait =
+    hubs.reduce((s, h) => s + h.avgTransferWaitMin, 0) / hubs.length
+  const bestHub = [...hubs].sort(
+    (a, b) => a.avgTransferWaitMin - b.avgTransferWaitMin
+  )[0]
+  const pulsedCount = hubs.filter((h) => h.bestHourWaitMin < 5).length
+
+  return (
+    <section className="mt-24">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
+        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+          Pulse scheduling
+        </h2>
+      </div>
+      <p className="mb-10 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+        Pulse scheduling znaci sinkronizaciju dolazaka razlicitih linija na
+        kljucna cvorista, kako bi putnici mogli presjedati s minimalnim
+        cekanjem. Analiziramo {hubs.length} najvecih presjedackih cvorista.
+      </p>
+
+      <PulseHubsTable hubs={hubs} />
+      <PulseHeatmap hubs={hubs} />
+      <PulseInsight
+        hubs={hubs}
+        avgWait={avgWait}
+        bestHub={bestHub}
+        pulsedCount={pulsedCount}
+      />
+    </section>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 export default function NetworkStatsSection() {
@@ -1160,6 +1446,9 @@ export default function NetworkStatsSection() {
         asymmetry={data.directionalAsymmetry}
       />
       {data.serviceSpan && <ServiceSpanSection span={data.serviceSpan} />}
+      {data.pulseHubs && data.pulseHubs.length > 0 && (
+        <PulseSchedulingSection hubs={data.pulseHubs} />
+      )}
     </div>
   )
 }

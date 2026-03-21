@@ -1797,8 +1797,7 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
     } else {
         total_capacity.max(1)
     };
-    let utilization_pct =
-        (bikes_in_use as f64 / utilization_denom as f64 * 1000.0).round() / 10.0;
+    let utilization_pct = (bikes_in_use as f64 / utilization_denom as f64 * 1000.0).round() / 10.0;
 
     let resp = BajsUtilizationResponse {
         total_stations,
@@ -1875,15 +1874,13 @@ fn load_fleet_cache(data_dir: &str) -> HashMap<String, u64> {
     let path = Path::new(data_dir).join(BAJS_FLEET_CACHE);
     match std::fs::read_to_string(&path) {
         Ok(data) => {
-            let map: HashMap<String, u64> =
-                serde_json::from_str(&data).unwrap_or_default();
+            let map: HashMap<String, u64> = serde_json::from_str(&data).unwrap_or_default();
             eprintln!("BAJS fleet: loaded {} bikes from cache", map.len());
             map
         }
         Err(_) => HashMap::new(),
     }
 }
-
 
 struct BajsTaskConfig {
     store: BajsStatusStore,
@@ -1937,14 +1934,14 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
                 drop(fleet_map);
 
                 let available = snapshot.available_count;
-                config.fleet.available_count.store(
-                    available as i32,
-                    std::sync::atomic::Ordering::Relaxed,
-                );
-                config.fleet.known_fleet.store(
-                    known as i32,
-                    std::sync::atomic::Ordering::Relaxed,
-                );
+                config
+                    .fleet
+                    .available_count
+                    .store(available as i32, std::sync::atomic::Ordering::Relaxed);
+                config
+                    .fleet
+                    .known_fleet
+                    .store(known as i32, std::sync::atomic::Ordering::Relaxed);
 
                 let bikes_in_use = known.saturating_sub(available);
                 eprintln!(

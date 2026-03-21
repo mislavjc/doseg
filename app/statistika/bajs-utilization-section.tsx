@@ -7,12 +7,6 @@ import BajsUsageChart from "./bajs-usage-chart"
 
 const BajsStationMap = dynamic(() => import("./bajs-station-map"), { ssr: false })
 
-interface BajsStationBrief {
-  name: string
-  stationId: string
-  capacity: number
-}
-
 interface BajsUtilizationData {
   totalStations: number
   activeStations: number
@@ -22,8 +16,8 @@ interface BajsUtilizationData {
   bikesInUse: number
   utilizationPct: number
   knownFleet: number
-  emptyStations: BajsStationBrief[]
-  fullStations: BajsStationBrief[]
+  emptyStations: { name: string; stationId: string; capacity: number }[]
+  fullStations: { name: string; stationId: string; capacity: number }[]
 }
 
 function pctColor(pct: number): string {
@@ -59,32 +53,39 @@ export default function BajsUtilizationSection() {
   )
 }
 
+function MetricsCard({ data }: { data: BajsUtilizationData }) {
+  const normal = data.activeStations - data.emptyStations.length - data.fullStations.length
+
+  return (
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className="flex flex-wrap items-baseline gap-x-8 gap-y-3">
+        <div>
+          <span className={`font-serif text-[36px] font-medium tabular-nums ${pctColor(data.utilizationPct)}`}>
+            {fmtHR(data.utilizationPct, 1)}%
+          </span>
+          <span className="ml-2 text-[13px] text-slate-500 dark:text-slate-400">
+            iskorištenost
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-x-6 gap-y-1 text-[13px] text-slate-500 dark:text-slate-400">
+          <Metric value={data.bikesInUse} label="u uporabi" />
+          <Metric value={data.totalBikesAvailable} label="na stanicama" />
+          <Metric value={data.knownFleet ?? data.totalCapacity} label="ukupni bicikli" />
+        </div>
+      </div>
+      <div className="mt-5 flex flex-wrap gap-3">
+        <StatusBadge count={data.emptyStations.length} label="praznih" dotColor="bg-red-500" textColor="text-red-700 dark:text-red-400" bgColor="bg-red-50 dark:bg-red-950/20" />
+        <StatusBadge count={data.fullStations.length} label="punih" dotColor="bg-amber-500" textColor="text-amber-700 dark:text-amber-400" bgColor="bg-amber-50 dark:bg-amber-950/20" />
+        <StatusBadge count={normal} label="dostupnih" dotColor="bg-emerald-500" textColor="text-emerald-700 dark:text-emerald-400" bgColor="bg-emerald-50 dark:bg-emerald-950/20" />
+      </div>
+    </div>
+  )
+}
+
 function UtilizationContent({ data }: { data: BajsUtilizationData }) {
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-        <MetricsRow data={data} />
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {data.emptyStations.length > 0 && (
-            <StationList
-              title="Prazne stanice"
-              subtitle="0 bicikala"
-              stations={data.emptyStations}
-              color="text-red-600 dark:text-red-400"
-              bgColor="bg-red-50 dark:bg-red-950/20"
-            />
-          )}
-          {data.fullStations.length > 0 && (
-            <StationList
-              title="Pune stanice"
-              subtitle="0 slobodnih mjesta"
-              stations={data.fullStations}
-              color="text-amber-600 dark:text-amber-400"
-              bgColor="bg-amber-50 dark:bg-amber-950/20"
-            />
-          )}
-        </div>
-      </div>
+      <MetricsCard data={data} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <BajsStationMap />
         <BajsUsageChart />
@@ -93,24 +94,24 @@ function UtilizationContent({ data }: { data: BajsUtilizationData }) {
   )
 }
 
-function MetricsRow({ data }: { data: BajsUtilizationData }) {
+function StatusBadge({
+  count,
+  label,
+  dotColor,
+  textColor,
+  bgColor,
+}: {
+  count: number
+  label: string
+  dotColor: string
+  textColor: string
+  bgColor: string
+}) {
   return (
-    <div className="flex flex-wrap items-baseline gap-x-8 gap-y-3">
-      <div>
-        <span className={`font-serif text-[36px] font-medium tabular-nums ${pctColor(data.utilizationPct)}`}>
-          {fmtHR(data.utilizationPct, 1)}%
-        </span>
-        <span className="ml-2 text-[13px] text-slate-500 dark:text-slate-400">
-          iskorištenost
-        </span>
-      </div>
-      <div className="flex flex-wrap gap-x-6 gap-y-1 text-[13px] text-slate-500 dark:text-slate-400">
-        <Metric value={data.bikesInUse} label="u uporabi" />
-        <Metric value={data.totalBikesAvailable} label="na stanicama" />
-        <Metric value={data.activeStations} label="aktivnih stanica" />
-        <Metric value={data.knownFleet ?? data.totalCapacity} label="ukupni bicikli" />
-      </div>
-    </div>
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium ${textColor} ${bgColor}`}>
+      <span className={`inline-block h-2 w-2 rounded-full ${dotColor}`} />
+      {count} {label}
+    </span>
   )
 }
 
@@ -122,38 +123,5 @@ function Metric({ value, label }: { value: number; label: string }) {
       </strong>{" "}
       {label}
     </span>
-  )
-}
-
-function StationList({
-  title,
-  subtitle,
-  stations,
-  color,
-  bgColor,
-}: {
-  title: string
-  subtitle: string
-  stations: BajsStationBrief[]
-  color: string
-  bgColor: string
-}) {
-  return (
-    <div className={`rounded-xl p-4 ${bgColor}`}>
-      <div className="mb-1 text-[11px] font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">
-        {title} ({stations.length})
-      </div>
-      <div className="mb-3 text-[11px] text-slate-400 dark:text-slate-500">{subtitle}</div>
-      <div className="flex flex-wrap gap-1.5">
-        {stations.map((s) => (
-          <span
-            key={s.stationId}
-            className={`rounded bg-white/60 px-1.5 py-0.5 text-[10px] font-medium dark:bg-black/20 ${color}`}
-          >
-            {s.name}
-          </span>
-        ))}
-      </div>
-    </div>
   )
 }

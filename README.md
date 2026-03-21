@@ -119,7 +119,7 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 ./scripts/setup-dev.sh
 ```
 
-This installs dependencies, downloads data files (walk graph, GTFS), and builds the Rust isochrone server. If you have SSH access to the production server (`netcup`), it downloads pre-built data; otherwise it builds from source.
+This installs dependencies, downloads data files (walk graph, GTFS) from the CDN, and builds the Rust isochrone server. Use `--force` to re-download data files.
 
 Then start everything:
 
@@ -127,7 +127,7 @@ Then start everything:
 mprocs
 ```
 
-This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server.
+This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server. Visit `http://doseg.localhost:1355` (requires [portless](https://github.com/nicholasgasior/portless)) or `http://localhost:3000`.
 
 ### Without SSH access to the server
 

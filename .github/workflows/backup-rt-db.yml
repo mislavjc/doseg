@@ -28,9 +28,12 @@ jobs:
       - name: Download backup and dev data from server
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg-backups/gtfs-rt-${DATE}.db.zst /tmp/gtfs-rt-${DATE}.db.zst
-          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg/data/gtfs/zet.zip /tmp/zet.zip
-          scp ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/doseg/data/walk-graph.bin /tmp/walk-graph.bin
+          SERVER="${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
+          rsync -e "ssh -o StrictHostKeyChecking=no" \
+            "$SERVER:/opt/doseg-backups/gtfs-rt-${DATE}.db.zst" \
+            "$SERVER:/opt/doseg/data/gtfs/zet.zip" \
+            "$SERVER:/opt/doseg/data/walk-graph.bin" \
+            /tmp/
           ls -lh /tmp/gtfs-rt-${DATE}.db.zst /tmp/zet.zip /tmp/walk-graph.bin
 
       - name: Upload to R2
@@ -38,7 +41,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          npm install -g wrangler
+          npm install -g wrangler@latest
           DATE=$(date -u +%Y-%m-%d)
           wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
             --file "/tmp/gtfs-rt-${DATE}.db.zst" --remote

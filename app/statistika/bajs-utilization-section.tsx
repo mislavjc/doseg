@@ -17,6 +17,7 @@ interface BajsUtilizationData {
   totalDocksAvailable: number
   bikesInUse: number
   utilizationPct: number
+  knownFleet: number
   emptyStations: BajsStationBrief[]
   fullStations: BajsStationBrief[]
 }
@@ -97,7 +98,7 @@ function MetricsRow({ data }: { data: BajsUtilizationData }) {
         <Metric value={data.bikesInUse} label="u uporabi" />
         <Metric value={data.totalBikesAvailable} label="na stanicama" />
         <Metric value={data.activeStations} label="aktivnih stanica" />
-        <Metric value={data.totalCapacity} label="ukupni kapacitet" />
+        <Metric value={data.knownFleet ?? data.totalCapacity} label="ukupni bicikli" />
       </div>
     </div>
   )

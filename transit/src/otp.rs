@@ -500,3 +500,72 @@ pub fn fetch_station_status() -> Option<Vec<GbfsStationStatus>> {
     };
     feed.data.and_then(|d| d.stations)
 }
+
+// --- BAJS free bike status (individual bike tracking) ---
+
+#[allow(dead_code)]
+const FREE_BIKE_STATUS_URL: &str =
+    "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/free_bike_status.json";
+
+#[allow(dead_code)]
+#[derive(serde::Deserialize)]
+struct GbfsFreeBikeStatusFeed {
+    data: Option<GbfsFreeBikeStatusData>,
+}
+
+#[allow(dead_code)]
+#[derive(serde::Deserialize)]
+struct GbfsFreeBikeStatusData {
+    bikes: Option<Vec<GbfsFreeBike>>,
+}
+
+#[allow(dead_code)]
+#[derive(serde::Deserialize)]
+struct GbfsFreeBike {
+    bike_id: String,
+    #[serde(default)]
+    is_reserved: bool,
+    #[serde(default)]
+    is_disabled: bool,
+}
+
+#[allow(dead_code)]
+pub struct FreeBikeSnapshot {
+    /// All bike IDs in the feed (for fleet tracking)
+    pub all_ids: Vec<String>,
+    /// Count of bikes available for rent (!reserved && !disabled)
+    pub available_count: usize,
+}
+
+/// Fetch individual bike records from the free_bike_status feed.
+#[allow(dead_code)]
+pub fn fetch_free_bike_status() -> Option<FreeBikeSnapshot> {
+    let resp = match ureq::get(FREE_BIKE_STATUS_URL).call() {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("BAJS free bikes: fetch failed: {}", e);
+            return None;
+        }
+    };
+    let feed: GbfsFreeBikeStatusFeed = match resp.into_json() {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("BAJS free bikes: parse failed: {}", e);
+            return None;
+        }
+    };
+    feed.data.and_then(|d| d.bikes).map(|bikes| {
+        let mut available_count = 0usize;
+        let mut all_ids = Vec::with_capacity(bikes.len());
+        for b in bikes {
+            if !b.is_reserved && !b.is_disabled {
+                available_count += 1;
+            }
+            all_ids.push(b.bike_id);
+        }
+        FreeBikeSnapshot {
+            all_ids,
+            available_count,
+        }
+    })
+}

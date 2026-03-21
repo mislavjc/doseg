@@ -96,6 +96,13 @@ impl RtDb {
                 PRIMARY KEY (ts, route_id, occupancy_level)
             ) WITHOUT ROWID;
 
+            CREATE TABLE IF NOT EXISTS bajs_usage (
+                ts          INTEGER NOT NULL PRIMARY KEY,
+                bikes_in_use INTEGER NOT NULL,
+                available   INTEGER NOT NULL,
+                known_fleet INTEGER NOT NULL
+            ) WITHOUT ROWID;
+
             CREATE INDEX IF NOT EXISTS idx_snapshots_route ON snapshots(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_stop_delays_route ON stop_delays(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_alerts_ts ON alerts(first_seen);
@@ -151,8 +158,12 @@ impl RtDb {
                 let mut count: u32 = 0;
 
                 for trip in trips {
-                    if let Some(last) = trip.stop_times.last() {
-                        let d = last.delay;
+                    // Use first stop_time_update: it's the nearest to the
+                    // vehicle's current position and the most reliable delay.
+                    // last() would use a speculative prediction for a distant
+                    // future stop, amplifying any schedule-padding bias.
+                    if let Some(first) = trip.stop_times.first() {
+                        let d = first.delay;
                         total_delay += d as i64;
                         if d.abs() > max_delay.abs() {
                             max_delay = d;
@@ -828,6 +839,38 @@ pub fn has_occupancy_data(conn: &Connection) -> rusqlite::Result<bool> {
         .prepare_cached("SELECT 1 FROM occupancy_snapshots LIMIT 1")?
         .exists([])?;
     Ok(exists)
+}
+
+// --- BAJS usage history ---
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BajsUsagePoint {
+    pub ts: i64,
+    pub bikes_in_use: i32,
+    pub available: i32,
+    pub known_fleet: i32,
+}
+
+pub fn query_bajs_usage(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<BajsUsagePoint>> {
+    let mut stmt = conn.prepare(
+        "SELECT ts, bikes_in_use, available, known_fleet
+         FROM bajs_usage WHERE ts >= ?1 AND ts <= ?2
+         ORDER BY ts",
+    )?;
+    let rows = stmt.query_map(params![from, to], |row| {
+        Ok(BajsUsagePoint {
+            ts: row.get(0)?,
+            bikes_in_use: row.get(1)?,
+            available: row.get(2)?,
+            known_fleet: row.get(3)?,
+        })
+    })?;
+    rows.collect()
 }
 
 #[cfg(test)]

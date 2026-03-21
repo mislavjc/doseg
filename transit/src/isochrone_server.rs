@@ -79,10 +79,22 @@ struct AppState {
     route_mode_map: HashMap<String, String>,
     /// Live BAJS station status (refreshed every 60s)
     bajs_status_store: BajsStatusStore,
+    /// BAJS fleet tracking state (shared with background poll task)
+    bajs_fleet: Arc<BajsFleetState>,
 }
 
 /// Shared BAJS station status store.
 type BajsStatusStore = Arc<RwLock<Vec<otp::GbfsStationStatus>>>;
+
+/// BAJS fleet tracking: bike IDs seen over time, current availability.
+struct BajsFleetState {
+    /// bike_id → last-seen unix epoch
+    fleet_map: RwLock<HashMap<String, u64>>,
+    /// Filtered available count from free_bike_status (!reserved && !disabled)
+    available_count: std::sync::atomic::AtomicI32,
+    /// Known fleet size (fleet_map.len()), updated each cycle — avoids RwLock on hot path
+    known_fleet: std::sync::atomic::AtomicI32,
+}
 
 // --- BAJS adjacency (string-keyed, matching TS interactive Dijkstra) ---
 
@@ -1686,6 +1698,7 @@ struct BajsUtilizationResponse {
     total_docks_available: i32,
     bikes_in_use: i32,
     utilization_pct: f64,
+    known_fleet: i32,
     empty_stations: Vec<BajsStationBrief>,
     full_stations: Vec<BajsStationBrief>,
 }
@@ -1751,12 +1764,41 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
         }
     }
 
-    let bikes_in_use = (total_capacity - total_bikes - total_docks).max(0);
-    let utilization_pct = if total_capacity > 0 {
-        (bikes_in_use as f64 / total_capacity as f64 * 1000.0).round() / 10.0
+    // Use fleet tracking for accurate bikes-in-use count.
+    // Atomics avoid RwLock contention on this per-request hot path.
+    let known_fleet = state
+        .bajs_fleet
+        .known_fleet
+        .load(std::sync::atomic::Ordering::Relaxed);
+    let available_from_feed = state
+        .bajs_fleet
+        .available_count
+        .load(std::sync::atomic::Ordering::Relaxed);
+
+    let bikes_in_use = if known_fleet > 0 && available_from_feed > 0 {
+        // Fleet is warmed up — use accurate calculation
+        (known_fleet - available_from_feed).max(0)
     } else {
-        0.0
+        // Fleet not yet warmed up — fall back to per-station clamping
+        // (sum of positive deltas only, so overflow stations don't cancel out rentals)
+        active
+            .iter()
+            .map(|s| {
+                let cap = info_map
+                    .get(s.station_id.as_str())
+                    .map(|i| i.capacity)
+                    .unwrap_or(s.num_bikes_available + s.num_docks_available);
+                (cap - s.num_bikes_available - s.num_docks_available).max(0)
+            })
+            .sum::<i32>()
     };
+    let utilization_denom = if known_fleet > 0 {
+        known_fleet
+    } else {
+        total_capacity.max(1)
+    };
+    let utilization_pct =
+        (bikes_in_use as f64 / utilization_denom as f64 * 1000.0).round() / 10.0;
 
     let resp = BajsUtilizationResponse {
         total_stations,
@@ -1766,6 +1808,7 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
         total_docks_available: total_docks,
         bikes_in_use,
         utilization_pct,
+        known_fleet,
         empty_stations: empty,
         full_stations: full,
     };
@@ -1780,21 +1823,147 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
         .into_response()
 }
 
+// --- BAJS usage history ---
+
+#[derive(Deserialize)]
+struct BajsUsageParams {
+    from: Option<i64>,
+    to: Option<i64>,
+}
+
+async fn handle_bajs_usage_history(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<BajsUsageParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let to = params.to.unwrap_or(now);
+    let from = params.from.unwrap_or(to - 86400);
+
+    let conn = db.lock().await;
+    let result = rt_store::query_bajs_usage(&conn, from, to);
+    drop(conn);
+
+    match result {
+        Ok(points) => (
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=60"),
+            ],
+            serde_json::to_string(&points).unwrap(),
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error":"{}"}}"#, e),
+        )
+            .into_response(),
+    }
+}
+
 // --- BAJS status polling ---
 
-fn spawn_bajs_status_task(store: BajsStatusStore) {
+const BAJS_FLEET_CACHE: &str = "bajs-fleet.json";
+
+/// Load persisted fleet map from disk (survives redeploys).
+fn load_fleet_cache(data_dir: &str) -> HashMap<String, u64> {
+    let path = Path::new(data_dir).join(BAJS_FLEET_CACHE);
+    match std::fs::read_to_string(&path) {
+        Ok(data) => {
+            let map: HashMap<String, u64> =
+                serde_json::from_str(&data).unwrap_or_default();
+            eprintln!("BAJS fleet: loaded {} bikes from cache", map.len());
+            map
+        }
+        Err(_) => HashMap::new(),
+    }
+}
+
+
+struct BajsTaskConfig {
+    store: BajsStatusStore,
+    fleet: Arc<BajsFleetState>,
+    data_dir: String,
+    db_conn: Option<std::sync::Mutex<rusqlite::Connection>>,
+}
+
+fn spawn_bajs_status_task(config: BajsTaskConfig) {
     tokio::spawn(async move {
+        let mut prev_fleet_len: usize = 0;
+
         loop {
-            let result = tokio::task::spawn_blocking(otp::fetch_station_status).await;
-            match result {
-                Ok(Some(statuses)) => {
-                    let count = statuses.len();
-                    *store.write().unwrap() = statuses;
-                    eprintln!("BAJS status: refreshed {} stations", count);
-                }
-                Ok(None) => {} // error already logged
-                Err(e) => eprintln!("BAJS status: spawn_blocking failed: {}", e),
+            // Fetch both feeds in parallel
+            let status_handle = tokio::task::spawn_blocking(otp::fetch_station_status);
+            let bikes_handle = tokio::task::spawn_blocking(otp::fetch_free_bike_status);
+            let (status_result, bikes_result) = tokio::join!(status_handle, bikes_handle);
+
+            if let Ok(Some(statuses)) = status_result {
+                let count = statuses.len();
+                *config.store.write().unwrap() = statuses;
+                eprintln!("BAJS status: refreshed {} stations", count);
             }
+
+            if let Ok(Some(snapshot)) = bikes_result {
+                let now = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs();
+                let mut fleet_map = config.fleet.fleet_map.write().unwrap();
+                for id in &snapshot.all_ids {
+                    fleet_map.insert(id.clone(), now);
+                }
+                let cutoff = now.saturating_sub(72 * 3600);
+                fleet_map.retain(|_, last_seen| *last_seen >= cutoff);
+                let known = fleet_map.len();
+
+                // Only write cache when fleet size changes
+                if known != prev_fleet_len {
+                    let cache_data = serde_json::to_string(&*fleet_map).ok();
+                    let dir = config.data_dir.clone();
+                    // Disk write in spawn_blocking to avoid blocking async runtime
+                    tokio::task::spawn_blocking(move || {
+                        if let Some(data) = cache_data {
+                            let path = Path::new(&dir).join(BAJS_FLEET_CACHE);
+                            let _ = std::fs::write(&path, data);
+                        }
+                    });
+                    prev_fleet_len = known;
+                }
+                drop(fleet_map);
+
+                let available = snapshot.available_count;
+                config.fleet.available_count.store(
+                    available as i32,
+                    std::sync::atomic::Ordering::Relaxed,
+                );
+                config.fleet.known_fleet.store(
+                    known as i32,
+                    std::sync::atomic::Ordering::Relaxed,
+                );
+
+                let bikes_in_use = known.saturating_sub(available);
+                eprintln!(
+                    "BAJS fleet: {} available, {} known, ~{} in use",
+                    available, known, bikes_in_use
+                );
+
+                // Log to SQLite for historical usage stats
+                if let Some(ref db) = config.db_conn {
+                    let ts = (now / 60) * 60;
+                    if let Ok(conn) = db.lock() {
+                        let _ = conn.execute(
+                            "INSERT OR REPLACE INTO bajs_usage (ts, bikes_in_use, available, known_fleet) VALUES (?1, ?2, ?3, ?4)",
+                            rusqlite::params![ts as i64, bikes_in_use as i32, available as i32, known as i32],
+                        );
+                    }
+                }
+            }
+
             tokio::time::sleep(Duration::from_secs(60)).await;
         }
     });
@@ -2177,7 +2346,28 @@ async fn main() {
 
     // Start BAJS station status polling (60s interval)
     let bajs_status_store: BajsStatusStore = Arc::new(RwLock::new(Vec::new()));
-    spawn_bajs_status_task(bajs_status_store.clone());
+    let initial_fleet = load_fleet_cache(&data_dir);
+    let initial_len = initial_fleet.len() as i32;
+    let bajs_fleet = Arc::new(BajsFleetState {
+        fleet_map: RwLock::new(initial_fleet),
+        available_count: std::sync::atomic::AtomicI32::new(0),
+        known_fleet: std::sync::atomic::AtomicI32::new(initial_len),
+    });
+    // Open a write connection for BAJS usage logging (table created by RtDb::open)
+    let bajs_db_conn = rusqlite::Connection::open(&db_path)
+        .map(|conn| {
+            let _ = conn.execute_batch(
+                "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL; PRAGMA busy_timeout=5000;",
+            );
+            std::sync::Mutex::new(conn)
+        })
+        .ok();
+    spawn_bajs_status_task(BajsTaskConfig {
+        store: bajs_status_store.clone(),
+        fleet: bajs_fleet.clone(),
+        data_dir: data_dir.clone(),
+        db_conn: bajs_db_conn,
+    });
     println!("BAJS station status polling started (60s interval)");
 
     // Precompute route→mode map from transit graph
@@ -2202,6 +2392,7 @@ async fn main() {
         scheduled_speeds,
         route_mode_map,
         bajs_status_store,
+        bajs_fleet,
     });
 
     let app = Router::new()
@@ -2217,6 +2408,7 @@ async fn main() {
         .route("/api/rt/speed-comparison", get(handle_speed_comparison))
         .route("/api/rt/occupancy", get(handle_occupancy))
         .route("/api/rt/bajs-utilization", get(handle_bajs_utilization))
+        .route("/api/rt/bajs-usage-history", get(handle_bajs_usage_history))
         .route("/health", get(handle_health))
         .layer(CompressionLayer::new())
         .with_state(state);

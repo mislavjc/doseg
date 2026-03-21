@@ -13,6 +13,10 @@ const nextConfig = {
         source: "/api/isochrone",
         destination: `${process.env.ISOCHRONE_URL || "http://localhost:3002"}/api/isochrone`,
       },
+      {
+        source: "/api/rt/:path*",
+        destination: `${process.env.ISOCHRONE_URL || "http://localhost:3002"}/api/rt/:path*`,
+      },
     ]
   },
 }

@@ -3,8 +3,9 @@ import type { DeadEndStops } from "./DeadEndStops";
 import type { DirectionalAsymmetryEntry } from "./DirectionalAsymmetryEntry";
 import type { Fleet } from "./Fleet";
 import type { NetworkRoute } from "./NetworkRoute";
+import type { PulseHub } from "./PulseHub";
 import type { ServiceSpan } from "./ServiceSpan";
 import type { VehicleKm } from "./VehicleKm";
 import type { WeekendService } from "./WeekendService";
 
-export type NetworkStatsOutput = { generatedAt: string, vehicleKm: VehicleKm, routes: Array<NetworkRoute>, deadEndStops: DeadEndStops, fleet: Fleet | null, weekendService: WeekendService | null, directionalAsymmetry: Array<DirectionalAsymmetryEntry> | null, serviceSpan: ServiceSpan | null, };
+export type NetworkStatsOutput = { generatedAt: string, vehicleKm: VehicleKm, routes: Array<NetworkRoute>, deadEndStops: DeadEndStops, fleet: Fleet | null, weekendService: WeekendService | null, directionalAsymmetry: Array<DirectionalAsymmetryEntry> | null, serviceSpan: ServiceSpan | null, pulseHubs: Array<PulseHub>, };

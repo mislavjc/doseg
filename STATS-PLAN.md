@@ -11,6 +11,12 @@ The page already shows:
 - Route stats (speed, headway, departures, service hours)
 - Travel matrix (17x17 district pairs)
 - Transfer hubs, multimodal connections
+- 24-hour accessibility profile (19 hourly Dijkstra passes per district)
+- Pulse scheduling detection (transfer hub synchronization analysis)
+- Live punctuality charts (avg delay + on-time % per route, from GTFS-RT)
+- GTFS-RT coverage (RT signal vs scheduled trips, service-day filtered)
+- Alert frequency analysis (auto-hides when no alerts)
+- Delay propagation (per-stop delay staircase chart per route)
 
 ---
 
@@ -48,16 +54,16 @@ No new sources needed. Just smarter use of GTFS static feed + transit graph.
 
 | #    | Feature                       | Description                                                              | Status |
 | ---- | ----------------------------- | ------------------------------------------------------------------------ | ------ |
-| 2.1  | Live punctuality              | From GTFS-RT delays: % on-time, avg delay per route                      | [ ]    |
-| 2.2  | Actual vs scheduled speed     | Vehicle positions give real speed; compare to commercialSpeedKmh         | [ ]    |
-| 2.3  | Fleet deployment rate         | Active vehicles vs scheduled trips - "is ZET running what they promise?" | [ ]    |
-| 2.4  | Occupancy heatmap             | GTFS-RT occupancyStatus by route/time (if ZET sends it)                  | [ ]    |
-| 2.5  | Alert frequency analysis      | Which routes are disrupted most, cause breakdown                         | [ ]    |
+| 2.1  | Live punctuality              | From GTFS-RT delays: % on-time, avg delay per route                      | [x]    |
+| 2.2  | Actual vs scheduled speed     | Vehicle positions give real speed; compare to commercialSpeedKmh         | [x]    |
+| 2.3  | GTFS-RT coverage              | RT signal vs scheduled trips per route (service-day filtered)            | [x]    |
+| 2.4  | Occupancy heatmap             | GTFS-RT occupancyStatus by route/time (if ZET sends it)                  | [x]    |
+| 2.5  | Alert frequency analysis      | Which routes are disrupted most, cause breakdown                         | [x]    |
 | 2.6  | BAJS first/last-mile coverage | "X% of transit stops within 350m of a BAJS station"                      | [x]    |
 | 2.7  | BAJS station density          | Stations/km², per 10k residents per district                             | [x]    |
-| 2.8  | BAJS snapshot utilization     | "X% of bikes currently in use", empty/full stations                      | [ ]    |
-| 2.9  | Delay propagation             | Delay by stop sequence - where does delay accumulate?                    | [ ]    |
-| 2.10 | Pulse scheduling detection    | Do routes synchronize at hubs or are transfers left to chance?           | [ ]    |
+| 2.8  | BAJS snapshot utilization     | "X% of bikes currently in use", empty/full stations                      | [x]    |
+| 2.9  | Delay propagation             | Delay by stop sequence - where does delay accumulate?                    | [x]    |
+| 2.10 | Pulse scheduling detection    | Do routes synchronize at hubs or are transfers left to chance?           | [x]    |
 
 
 ## Tier 3 - New data sources (OSM, hardcoded reference, Overpass)
@@ -93,7 +99,7 @@ No new sources needed. Just smarter use of GTFS static feed + transit graph.
 | #   | Feature                       | Description                                                                | Status |
 | --- | ----------------------------- | -------------------------------------------------------------------------- | ------ |
 | 4.1 | GTFS-RT persistence (SQLite)  | Snapshot every 60s → enables ALL historical analyses                       | [x]    |
-| 4.2 | 24-hour accessibility profile | 18+ Dijkstra passes instead of 2 - service decay curve through the day     | [ ]    |
+| 4.2 | 24-hour accessibility profile | 19 hourly Dijkstra passes (05-23h) from district centroids                 | [x]    |
 | 4.3 | Network resilience            | "If Glavni kolodvor shuts down, avg travel time increases by X min"        | [ ]    |
 | 4.4 | Animated vehicle map          | Real-time dots on MapLibre - the single most visually impressive feature   | [x]    |
 | 4.5 | Census population grid        | DZS 2021 census by statistical circles - population-weighted accessibility | [ ]    |

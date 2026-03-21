@@ -42,6 +42,13 @@ export type { VehicleKm } from "./VehicleKm"
 export type { WeekendRoute } from "./WeekendRoute"
 export type { WeekendService } from "./WeekendService"
 
+// Pulse scheduling types
+export type { PulseHub } from "./PulseHub"
+
+// Accessibility profile types (data/accessibility-profile.json)
+export type { AccessibilityProfileOutput } from "./AccessibilityProfileOutput"
+export type { DistrictHourlyProfile } from "./DistrictHourlyProfile"
+
 // Centrality stats types (data/centrality-stats.json)
 export type { AveragePathLength } from "./AveragePathLength"
 export type { CentralityStats } from "./CentralityStats"

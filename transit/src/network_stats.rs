@@ -32,6 +32,7 @@ pub struct NetworkStatsOutput {
     pub weekend_service: Option<WeekendService>,
     pub directional_asymmetry: Option<Vec<DirectionalAsymmetryEntry>>,
     pub service_span: Option<ServiceSpan>,
+    pub pulse_hubs: Vec<PulseHub>,
 }
 
 #[derive(Serialize, TS)]
@@ -217,6 +218,26 @@ pub struct NightGap {
     pub routes_ending_before_23: Vec<String>,
     /// Routes running past midnight
     pub routes_past_midnight: Vec<String>,
+}
+
+// ---------------------------------------------------------------------------
+// 2.10 Pulse scheduling detection
+// ---------------------------------------------------------------------------
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct PulseHub {
+    pub stop_name: String,
+    pub stop_key: String,
+    pub lat: f64,
+    pub lon: f64,
+    pub route_count: usize,
+    pub routes: Vec<String>,
+    pub avg_transfer_wait_min: f64,
+    pub best_hour: u8,
+    pub best_hour_wait_min: f64,
+    pub hourly_wait: Vec<f64>,
 }
 
 // ---------------------------------------------------------------------------
@@ -1286,6 +1307,198 @@ fn compute_service_span(
 }
 
 // ---------------------------------------------------------------------------
+// 2.10 Pulse scheduling: detect synchronized arrivals at transfer hubs
+// ---------------------------------------------------------------------------
+
+fn compute_pulse_scheduling(graph: &TransitGraphJson) -> Vec<PulseHub> {
+    // For each stop, collect unique route names and the patterns per route
+    let mut stop_route_patterns: Vec<HashMap<String, Vec<usize>>> =
+        vec![HashMap::new(); graph.stops.len()];
+
+    for (si, stop) in graph.stops.iter().enumerate() {
+        for sp in &stop.patterns {
+            let p = &graph.patterns[sp.pattern_idx];
+            let route_name = p.route.clone();
+            stop_route_patterns[si]
+                .entry(route_name)
+                .or_default()
+                .push(sp.pattern_idx);
+        }
+    }
+
+    // Find transfer hubs: stops served by 3+ different routes
+    let mut hubs: Vec<PulseHub> = Vec::new();
+
+    for (si, route_patterns) in stop_route_patterns.iter().enumerate() {
+        if route_patterns.len() < 3 {
+            continue;
+        }
+
+        let stop = &graph.stops[si];
+        let mut routes: Vec<String> = route_patterns.keys().cloned().collect();
+        routes.sort_by(|a, b| match (a.parse::<i32>(), b.parse::<i32>()) {
+            (Ok(ai), Ok(bi)) => ai.cmp(&bi),
+            _ => a.cmp(b),
+        });
+
+        // For each hour (5:00-23:00), compute arrivals per route at this stop
+        let mut hourly_wait: Vec<f64> = Vec::with_capacity(19);
+
+        for hour in 5u8..=23 {
+            let hour_start = hour as f64 * 3600.0;
+            let hour_end = hour_start + 3600.0;
+
+            // Collect arrivals per route within this hour
+            let mut route_arrivals: Vec<(&str, Vec<f64>)> = Vec::new();
+
+            for (route_name, pattern_indices) in route_patterns {
+                let mut arrivals: Vec<f64> = Vec::new();
+                // Deduplicate pattern indices for this stop+route
+                let mut seen_patterns: HashSet<usize> = HashSet::new();
+
+                for sp in &stop.patterns {
+                    if !seen_patterns.insert(sp.pattern_idx) {
+                        continue;
+                    }
+                    if !pattern_indices.contains(&sp.pattern_idx) {
+                        continue;
+                    }
+                    let pattern = &graph.patterns[sp.pattern_idx];
+                    let offset = pattern.stop_offsets[sp.stop_idx];
+
+                    for &dep in &pattern.departures {
+                        let arrival = dep + offset;
+                        if arrival >= hour_start && arrival < hour_end {
+                            arrivals.push(arrival);
+                        }
+                    }
+                }
+                arrivals.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                arrivals.dedup();
+                if !arrivals.is_empty() {
+                    route_arrivals.push((route_name.as_str(), arrivals));
+                }
+            }
+
+            // Compute average minimum transfer wait across all route pairs
+            let mut pair_waits: Vec<f64> = Vec::new();
+
+            for i in 0..route_arrivals.len() {
+                for j in (i + 1)..route_arrivals.len() {
+                    let (_, ref arr_a) = route_arrivals[i];
+                    let (_, ref arr_b) = route_arrivals[j];
+
+                    // For each arrival of route A, find minimum wait to next arrival of route B
+                    let mut min_waits_ab: Vec<f64> = Vec::new();
+                    for &a in arr_a {
+                        let mut best = f64::INFINITY;
+                        for &b in arr_b {
+                            if b >= a {
+                                best = (b - a).min(best);
+                                break; // arr_b is sorted, first >= a is the minimum
+                            }
+                        }
+                        if best < f64::INFINITY {
+                            min_waits_ab.push(best);
+                        }
+                    }
+
+                    // And vice versa: for each arrival of B, find min wait to next A
+                    let mut min_waits_ba: Vec<f64> = Vec::new();
+                    for &b in arr_b {
+                        let mut best = f64::INFINITY;
+                        for &a in arr_a {
+                            if a >= b {
+                                best = (a - b).min(best);
+                                break;
+                            }
+                        }
+                        if best < f64::INFINITY {
+                            min_waits_ba.push(best);
+                        }
+                    }
+
+                    // Average of both directions
+                    let all_waits: Vec<f64> = min_waits_ab
+                        .into_iter()
+                        .chain(min_waits_ba.into_iter())
+                        .collect();
+                    if !all_waits.is_empty() {
+                        let avg_wait = all_waits.iter().sum::<f64>() / all_waits.len() as f64;
+                        pair_waits.push(avg_wait / 60.0); // convert to minutes
+                    }
+                }
+            }
+
+            if pair_waits.is_empty() {
+                hourly_wait.push(f64::NAN);
+            } else {
+                let avg = pair_waits.iter().sum::<f64>() / pair_waits.len() as f64;
+                hourly_wait.push(round1(avg));
+            }
+        }
+
+        // Compute overall average (ignoring NaN hours)
+        let valid_hours: Vec<f64> = hourly_wait
+            .iter()
+            .copied()
+            .filter(|v| !v.is_nan())
+            .collect();
+        if valid_hours.is_empty() {
+            continue;
+        }
+        let avg_transfer_wait = valid_hours.iter().sum::<f64>() / valid_hours.len() as f64;
+
+        // Find best hour (lowest wait)
+        let mut best_hour = 5u8;
+        let mut best_wait = f64::INFINITY;
+        for (i, &w) in hourly_wait.iter().enumerate() {
+            if !w.is_nan() && w < best_wait {
+                best_wait = w;
+                best_hour = (i as u8) + 5;
+            }
+        }
+
+        // Replace NaN with -1 for JSON serialization
+        let hourly_wait_json: Vec<f64> = hourly_wait
+            .iter()
+            .map(|&v| if v.is_nan() { -1.0 } else { v })
+            .collect();
+
+        hubs.push(PulseHub {
+            stop_name: if stop.name.is_empty() {
+                stop.key.clone()
+            } else {
+                stop.name.clone()
+            },
+            stop_key: stop.key.clone(),
+            lat: stop.lat,
+            lon: stop.lon,
+            route_count: routes.len(),
+            routes,
+            avg_transfer_wait_min: round1(avg_transfer_wait),
+            best_hour,
+            best_hour_wait_min: round1(best_wait),
+            hourly_wait: hourly_wait_json,
+        });
+    }
+
+    // Sort by route_count descending (most connected hubs first)
+    hubs.sort_by(|a, b| {
+        b.route_count.cmp(&a.route_count).then_with(|| {
+            a.avg_transfer_wait_min
+                .partial_cmp(&b.avg_transfer_wait_min)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
+    });
+
+    // Limit to top 20
+    hubs.truncate(20);
+
+    hubs
+}
+
+// ---------------------------------------------------------------------------
 // Utilities
 // ---------------------------------------------------------------------------
 
@@ -1450,6 +1663,14 @@ pub fn compute_and_write(
         );
     }
 
+    // 2.10 Pulse scheduling detection
+    let pulse_hubs = compute_pulse_scheduling(graph);
+    eprintln!(
+        "  Pulse hubs: {} hubs with 3+ routes (top avg wait: {:.1} min)",
+        pulse_hubs.len(),
+        pulse_hubs.first().map_or(0.0, |h| h.avg_transfer_wait_min),
+    );
+
     // Build output
     let output = NetworkStatsOutput {
         generated_at: crate::chrono_now_iso(),
@@ -1465,6 +1686,7 @@ pub fn compute_and_write(
         weekend_service: weekend_val,
         directional_asymmetry: direction_val,
         service_span: service_span_val,
+        pulse_hubs,
     };
 
     let json = serde_json::to_string_pretty(&output).expect("JSON serialization failed");

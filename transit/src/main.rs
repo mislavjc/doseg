@@ -27,7 +27,9 @@ use serde::Serialize;
 use ts_rs::TS;
 
 use crate::bajs::{build_bajs_adjacency_indexed, BAJS_TRANSFER_MAX_KM};
-use crate::districts::{generate_sample_points, load_districts, point_in_polygon, polygon_area_km2, SamplePoint};
+use crate::districts::{
+    generate_sample_points, load_districts, point_in_polygon, polygon_area_km2, SamplePoint,
+};
 use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::osm::{extract_populated_cells, POP_CELL};
 use crate::transit_graph::{compute_avg_travel_times, TransitGraphJson, TransitState};
@@ -591,9 +593,10 @@ fn main() {
     let mut total_stops_with_bajs: usize = 0;
     if !graph.bajs_stations.is_empty() {
         for (si, stop) in graph.stops.iter().enumerate() {
-            let has_bajs = graph.bajs_stations.iter().any(|st| {
-                fast_dist_km(stop.lat, stop.lon, st.lat, st.lon) <= BAJS_TRANSFER_MAX_KM
-            });
+            let has_bajs = graph
+                .bajs_stations
+                .iter()
+                .any(|st| fast_dist_km(stop.lat, stop.lon, st.lat, st.lon) <= BAJS_TRANSFER_MAX_KM);
             if has_bajs {
                 total_stops_with_bajs += 1;
                 if let Some(di) = stop_to_district[si] {
@@ -602,9 +605,8 @@ fn main() {
             }
         }
     }
-    let system_bajs_coverage_pct = js_round(
-        total_stops_with_bajs as f64 / graph.stop_count.max(1) as f64 * 100.0,
-    );
+    let system_bajs_coverage_pct =
+        js_round(total_stops_with_bajs as f64 / graph.stop_count.max(1) as f64 * 100.0);
 
     let mut district_transit: Vec<TransitInfo> = (0..districts.len())
         .map(|_| TransitInfo {
@@ -1103,6 +1105,191 @@ fn main() {
             desert_str,
         );
     }
+
+    // 24-hour accessibility profile (uses best_point as centroid per district)
+    let centroids: Vec<(f64, f64)> = (0..n_districts)
+        .map(|di| (ds[di].best_lat, ds[di].best_lon))
+        .collect();
+
+    compute_accessibility_profile(
+        &districts,
+        &centroids,
+        max_seconds,
+        &graph,
+        &walk_graph,
+        &stop_snaps,
+        data_dir,
+    );
+}
+
+// ---------------------------------------------------------------------------
+// 24-Hour Accessibility Profile
+// ---------------------------------------------------------------------------
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct AccessibilityProfileOutput {
+    pub generated_at: String,
+    #[ts(type = "number")]
+    pub max_minutes: i64,
+    pub mode: String,
+    pub districts: Vec<DistrictHourlyProfile>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DistrictHourlyProfile {
+    pub name: String,
+    pub key: String,
+    pub hours: Vec<u8>,
+    pub reachable_cells: Vec<f64>,
+    #[ts(type = "number")]
+    pub peak_hour: u8,
+    pub peak_cells: f64,
+    #[ts(type = "number")]
+    pub trough_hour: u8,
+    pub trough_cells: f64,
+    pub service_drop_pct: f64,
+}
+
+fn slugify(s: &str) -> String {
+    s.to_lowercase()
+        .chars()
+        .map(|c| match c {
+            'č' | 'ć' => 'c',
+            'š' => 's',
+            'ž' => 'z',
+            'đ' => 'd',
+            ' ' => '-',
+            c => c,
+        })
+        .collect()
+}
+
+/// Compute the 24-hour accessibility profile for each district using centroids only.
+/// Uses bus+tram mode (excludes rail, no BAJS) with 19 hourly windows (05:00-23:00),
+/// 3 departure samples per hour.
+///
+/// `centroids` is a slice of (lat, lon) per district, indexed by district order.
+fn compute_accessibility_profile(
+    districts: &[crate::districts::District],
+    centroids: &[(f64, f64)],
+    max_seconds: f64,
+    graph: &TransitGraphJson,
+    walk_graph: &WalkGraph,
+    stop_snaps: &[Option<walk_expand::StopSnap>],
+    data_dir: &Path,
+) {
+    let t = Instant::now();
+    let hours: Vec<u8> = (5..=23).collect();
+    let n_hours = hours.len();
+
+    // Build centroid points: one per district using best_point from scoring results
+    let centroid_points: Vec<SamplePoint> = centroids
+        .iter()
+        .enumerate()
+        .map(|(i, &(lat, lon))| SamplePoint {
+            lat,
+            lon,
+            district_idx: i,
+        })
+        .collect();
+
+    let n_districts = districts.len();
+    let rail_modes = vec![transit_graph::Mode::Rail];
+
+    eprintln!(
+        "Computing 24-hour accessibility profile ({} districts × {} hours × 3 departures = {} Dijkstra runs)...",
+        n_districts, n_hours, n_districts * n_hours * 3
+    );
+
+    // For each hour, build 3 departure times: hour-15min, hour, hour+15min
+    // Then run scoring_pass with those departures for the centroid points
+    let mut hourly_scores: Vec<Vec<f64>> = vec![Vec::new(); n_districts]; // [district][hour] = avg cells
+
+    for &hour in &hours {
+        let h = hour as f64 * 3600.0;
+        let departures = [h - 15.0 * 60.0, h, h + 15.0 * 60.0];
+        let label = format!("  {:02}:00", hour);
+
+        let scores = scoring_pass(
+            &label,
+            &centroid_points,
+            &departures,
+            max_seconds,
+            graph,
+            walk_graph,
+            stop_snaps,
+            false,
+            Some(&rail_modes),
+        );
+
+        for (di, &score) in scores.iter().enumerate() {
+            hourly_scores[di].push(score as f64);
+        }
+    }
+
+    // Build output profiles
+    let mut profiles: Vec<DistrictHourlyProfile> = Vec::new();
+
+    for (di, d) in districts.iter().enumerate() {
+        let cells = &hourly_scores[di];
+
+        let mut peak_idx = 0usize;
+        let mut trough_idx = 0usize;
+        let mut peak_val = f64::NEG_INFINITY;
+        let mut trough_val = f64::INFINITY;
+
+        for (hi, &c) in cells.iter().enumerate() {
+            if c > peak_val {
+                peak_val = c;
+                peak_idx = hi;
+            }
+            if c < trough_val {
+                trough_val = c;
+                trough_idx = hi;
+            }
+        }
+
+        let service_drop_pct = if peak_val > 0.0 {
+            ((peak_val - trough_val) / peak_val * 100.0 * 10.0).round() / 10.0
+        } else {
+            0.0
+        };
+
+        let key = slugify(&d.name);
+
+        profiles.push(DistrictHourlyProfile {
+            name: d.name.clone(),
+            key,
+            hours: hours.clone(),
+            reachable_cells: cells.iter().map(|c| (c * 10.0).round() / 10.0).collect(),
+            peak_hour: hours[peak_idx],
+            peak_cells: (peak_val * 10.0).round() / 10.0,
+            trough_hour: hours[trough_idx],
+            trough_cells: (trough_val * 10.0).round() / 10.0,
+            service_drop_pct,
+        });
+    }
+
+    let output = AccessibilityProfileOutput {
+        generated_at: chrono_now_iso(),
+        max_minutes: (max_seconds / 60.0) as i64,
+        mode: "bus+tram".to_string(),
+        districts: profiles,
+    };
+
+    let out_path = data_dir.join("accessibility-profile.json");
+    let json_str = serde_json::to_string_pretty(&output).expect("JSON serialization failed");
+    std::fs::write(&out_path, json_str).expect("Cannot write accessibility profile JSON");
+
+    eprintln!(
+        "Accessibility profile done in {:.1}s → {}",
+        t.elapsed().as_secs_f64(),
+        out_path.display()
+    );
 }
 
 /// Simple ISO 8601 timestamp without pulling in chrono.

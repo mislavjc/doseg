@@ -493,15 +493,7 @@ function HeadwayChart({ points, timeRange }: { points: HistoryPoint[]; timeRange
       <HeadwayChartHeader avgHeadway={avgHeadway} avgCv={avgCv} />
       <ChartSvg label="Grafikon regularnosti razmaka">
         <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#94a3b8" strokeOpacity={0.15} strokeWidth={1} />
-        {/* Good regularity zone: cv < 0.3 */}
-        <rect
-          x={0}
-          y={yScale(0.3) ?? 0}
-          width={INNER_WIDTH}
-          height={Math.max(0, (yScale(0) ?? 0) - (yScale(0.3) ?? 0))}
-          fill="#10b981"
-          fillOpacity={0.06}
-        />
+        <RegularityZone yScale={yScale} />
         {pts.length > 1 && (
           <TripCountBars points={pts} xScale={xScale} maxTrips={Math.max(...pts.map((p) => p.tripCount))} color="#8b5cf6" />
         )}
@@ -513,30 +505,24 @@ function HeadwayChart({ points, timeRange }: { points: HistoryPoint[]; timeRange
           strokeWidth={2}
           strokeLinejoin="round"
         />
-        {/* Threshold line at cv=0.3 */}
-        <line
-          x1={0}
-          y1={yScale(0.3) ?? 0}
-          x2={INNER_WIDTH}
-          y2={yScale(0.3) ?? 0}
-          stroke="#7c3aed"
-          strokeWidth={1}
-          strokeDasharray="4 3"
-          strokeOpacity={0.4}
-        />
-        <text
-          x={INNER_WIDTH - 2}
-          y={(yScale(0.3) ?? 0) - 4}
-          textAnchor="end"
-          className="fill-violet-500/60 text-[7px] dark:fill-violet-400/60"
-        >
-          dobra regularnost
-        </text>
         <ChartXLabels ticks={xTicks} xScale={xScale} timeRange={timeRange} />
         <ChartYLabels ticks={yTicks} yScale={yScale} format={(v) => v.toFixed(1)} />
         <ChartYTitle label="CV razmaka" />
       </ChartSvg>
     </div>
+  )
+}
+
+function RegularityZone({ yScale }: { yScale: ReturnType<typeof scaleLinear<number>> }) {
+  const y03 = yScale(0.3) ?? 0
+  return (
+    <>
+      <rect x={0} y={y03} width={INNER_WIDTH} height={Math.max(0, (yScale(0) ?? 0) - y03)} fill="#10b981" fillOpacity={0.06} />
+      <line x1={0} y1={y03} x2={INNER_WIDTH} y2={y03} stroke="#7c3aed" strokeWidth={1} strokeDasharray="4 3" strokeOpacity={0.4} />
+      <text x={INNER_WIDTH - 2} y={y03 - 4} textAnchor="end" className="fill-violet-500/60 text-[7px] dark:fill-violet-400/60">
+        dobra regularnost
+      </text>
+    </>
   )
 }
 

@@ -243,7 +243,7 @@ impl RtDb {
 
                     // Asymmetric on-time: -1 min to +5 min (TCQSM standard).
                     // Early departures hurt passengers (missed vehicle).
-                    if d >= ON_TIME_EARLY && d <= ON_TIME_LATE {
+                    if (ON_TIME_EARLY..=ON_TIME_LATE).contains(&d) {
                         on_time += 1;
                     }
 

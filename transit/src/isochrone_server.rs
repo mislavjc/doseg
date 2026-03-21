@@ -75,6 +75,8 @@ struct AppState {
     rt_db_reader: Option<tokio::sync::Mutex<rusqlite::Connection>>,
     /// Scheduled speeds from route-stats.json (route name → km/h)
     scheduled_speeds: HashMap<String, f64>,
+    /// Route name → mode ("TRAM", "BUS", etc.), precomputed from transit graph
+    route_mode_map: HashMap<String, String>,
     /// Live BAJS station status (refreshed every 60s)
     bajs_status_store: BajsStatusStore,
 }
@@ -1859,7 +1861,6 @@ async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response
     // Aggregate vehicle speeds by route from live store
     let vehicle_data = state.vehicle_store.read().unwrap().clone();
     let mut route_speeds: HashMap<String, Vec<f32>> = HashMap::new();
-    let mut route_mode: HashMap<String, String> = HashMap::new();
 
     for v in vehicle_data.values() {
         if let Some(speed) = v.speed_mps {
@@ -1870,13 +1871,6 @@ async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response
                     .push(speed);
             }
         }
-    }
-
-    // Also build route_mode from transit graph
-    for pattern in &state.transit_graph.patterns {
-        route_mode
-            .entry(pattern.route.clone())
-            .or_insert_with(|| pattern.mode.clone());
     }
 
     let has_data = !route_speeds.is_empty();
@@ -1903,7 +1897,11 @@ async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response
             };
             SpeedRouteComparison {
                 route_id: route_name.clone(),
-                mode: route_mode.get(route_name).cloned().unwrap_or_default(),
+                mode: state
+                    .route_mode_map
+                    .get(route_name)
+                    .cloned()
+                    .unwrap_or_default(),
                 scheduled_speed_kmh: sched_speed,
                 actual_speed_kmh: actual,
                 speed_ratio: ratio,
@@ -1978,8 +1976,8 @@ async fn handle_occupancy(
 
     let db = match require_db(&state) {
         Ok(db) => db,
-        Err(_) if !has_live => {
-            // No DB and no live data
+        Err(_) => {
+            // No DB — return hasData: false (occupancy needs historical data)
             let resp = OccupancyResponse {
                 has_data: false,
                 routes: vec![],
@@ -1993,7 +1991,6 @@ async fn handle_occupancy(
             )
                 .into_response();
         }
-        Err(resp) => return resp,
     };
 
     let now = unix_now();
@@ -2002,18 +1999,11 @@ async fn handle_occupancy(
 
     let conn = db.lock().await;
     let has_historical = rt_store::has_occupancy_data(&conn).unwrap_or(false);
-    let buckets = rt_store::query_occupancy(&conn, from, to).unwrap_or_default();
+    let tz_offset = zagreb_offset(now);
+    let buckets = rt_store::query_occupancy(&conn, from, to, tz_offset).unwrap_or_default();
     drop(conn);
 
     let has_data = has_live || has_historical;
-
-    // Build route→mode lookup
-    let mut route_mode: HashMap<String, String> = HashMap::new();
-    for pattern in &state.transit_graph.patterns {
-        route_mode
-            .entry(pattern.route.clone())
-            .or_insert_with(|| pattern.mode.clone());
-    }
 
     // Group buckets into routes → hours
     let mut route_hours: HashMap<String, HashMap<i32, OccupancyRouteHour>> = HashMap::new();
@@ -2048,7 +2038,11 @@ async fn handle_occupancy(
             let mut hours: Vec<OccupancyRouteHour> = hours_map.into_values().collect();
             hours.sort_by_key(|h| h.hour);
             OccupancyRoute {
-                mode: route_mode.get(&route_id).cloned().unwrap_or_default(),
+                mode: state
+                    .route_mode_map
+                    .get(&route_id)
+                    .cloned()
+                    .unwrap_or_default(),
                 route_id,
                 hours,
             }
@@ -2184,6 +2178,15 @@ async fn main() {
     spawn_bajs_status_task(bajs_status_store.clone());
     println!("BAJS station status polling started (60s interval)");
 
+    // Precompute route→mode map from transit graph
+    let route_mode_map: HashMap<String, String> = {
+        let mut m = HashMap::new();
+        for p in &transit_graph.patterns {
+            m.entry(p.route.clone()).or_insert_with(|| p.mode.clone());
+        }
+        m
+    };
+
     let state = Arc::new(AppState {
         transit_graph,
         walk_graph,
@@ -2195,6 +2198,7 @@ async fn main() {
         bajs_adjacency,
         rt_db_reader,
         scheduled_speeds,
+        route_mode_map,
         bajs_status_store,
     });
 
@@ -2210,10 +2214,7 @@ async fn main() {
         .route("/api/rt/delay-profile", get(handle_delay_profile))
         .route("/api/rt/speed-comparison", get(handle_speed_comparison))
         .route("/api/rt/occupancy", get(handle_occupancy))
-        .route(
-            "/api/rt/bajs-utilization",
-            get(handle_bajs_utilization),
-        )
+        .route("/api/rt/bajs-utilization", get(handle_bajs_utilization))
         .route("/health", get(handle_health))
         .layer(CompressionLayer::new())
         .with_state(state);

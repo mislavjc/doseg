@@ -324,6 +324,19 @@ impl RtDb {
         Ok(compacted)
     }
 
+    /// Delete speed_snapshots and occupancy_snapshots older than cutoff.
+    fn cleanup_old_vehicle_data(&self, cutoff_ts: i64) -> rusqlite::Result<usize> {
+        let a = self.conn.execute(
+            "DELETE FROM speed_snapshots WHERE ts < ?1",
+            params![cutoff_ts],
+        )?;
+        let b = self.conn.execute(
+            "DELETE FROM occupancy_snapshots WHERE ts < ?1",
+            params![cutoff_ts],
+        )?;
+        Ok(a + b)
+    }
+
     /// Run periodic maintenance: clean old stop data, compact old snapshots.
     fn maintain(&self, now_ts: i64) {
         let six_months_ago = now_ts - 180 * 86400;
@@ -331,6 +344,11 @@ impl RtDb {
             Ok(0) => {}
             Ok(n) => eprintln!("RT DB: cleaned {} old stop delay rows", n),
             Err(e) => eprintln!("RT DB: stop cleanup failed: {}", e),
+        }
+        match self.cleanup_old_vehicle_data(six_months_ago) {
+            Ok(0) => {}
+            Ok(n) => eprintln!("RT DB: cleaned {} old speed/occupancy rows", n),
+            Err(e) => eprintln!("RT DB: vehicle data cleanup failed: {}", e),
         }
 
         let one_year_ago = now_ts - 365 * 86400;
@@ -753,7 +771,7 @@ pub fn query_speed_history(
     )?;
     let mut points = Vec::new();
     let rows = stmt.query_map(params![route, from, to], |row| {
-        let avg_mps: f64 = row.get(0 + 1)?; // column 1
+        let avg_mps: f64 = row.get(1)?;
         Ok(SpeedSnapshotPoint {
             ts: row.get(0)?,
             avg_speed_kmh: (avg_mps * 3.6 * 10.0).round() / 10.0,
@@ -781,16 +799,17 @@ pub fn query_occupancy(
     conn: &Connection,
     from: i64,
     to: i64,
+    tz_offset: i64,
 ) -> rusqlite::Result<Vec<OccupancyBucket>> {
-    // Group by route, hour-of-day, and occupancy level
+    // Group by route, local hour-of-day, and occupancy level
     let mut stmt = conn.prepare_cached(
-        "SELECT route_id, ((ts % 86400) / 3600) AS hour, occupancy_level, SUM(count)
+        "SELECT route_id, (((ts + ?3) % 86400) / 3600) AS hour, occupancy_level, SUM(count)
          FROM occupancy_snapshots WHERE ts >= ?1 AND ts < ?2
          GROUP BY route_id, hour, occupancy_level
          ORDER BY route_id, hour, occupancy_level",
     )?;
     let mut buckets = Vec::new();
-    let rows = stmt.query_map(params![from, to], |row| {
+    let rows = stmt.query_map(params![from, to, tz_offset], |row| {
         Ok(OccupancyBucket {
             route_id: row.get(0)?,
             hour: row.get(1)?,
@@ -805,12 +824,10 @@ pub fn query_occupancy(
 }
 
 pub fn has_occupancy_data(conn: &Connection) -> rusqlite::Result<bool> {
-    let count: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM occupancy_snapshots LIMIT 1",
-        [],
-        |r| r.get(0),
-    )?;
-    Ok(count > 0)
+    let exists: bool = conn
+        .prepare_cached("SELECT 1 FROM occupancy_snapshots LIMIT 1")?
+        .exists([])?;
+    Ok(exists)
 }
 
 #[cfg(test)]

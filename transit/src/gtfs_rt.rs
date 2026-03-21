@@ -39,9 +39,32 @@ pub struct FeedEntity {
     pub is_deleted: Option<bool>,
     #[prost(message, optional, tag = "3")]
     pub trip_update: Option<TripUpdate>,
-    // tag 4: VehiclePosition (skipped via prost unknown field handling)
+    #[prost(message, optional, tag = "4")]
+    pub vehicle: Option<VehiclePosition>,
     #[prost(message, optional, tag = "5")]
     pub alert: Option<Alert>,
+}
+
+#[derive(Clone, Message)]
+pub struct VehiclePosition {
+    #[prost(message, optional, tag = "1")]
+    pub trip: Option<TripDescriptor>,
+    #[prost(message, optional, tag = "2")]
+    pub position: Option<Position>,
+    #[prost(int32, optional, tag = "9")]
+    pub occupancy_status: Option<i32>,
+}
+
+#[derive(Clone, Message)]
+pub struct Position {
+    #[prost(float, tag = "1")]
+    pub latitude: f32,
+    #[prost(float, tag = "2")]
+    pub longitude: f32,
+    #[prost(float, optional, tag = "3")]
+    pub bearing: Option<f32>,
+    #[prost(float, optional, tag = "5")]
+    pub speed: Option<f32>,
 }
 
 #[derive(Clone, Message)]
@@ -143,6 +166,14 @@ pub struct RtSnapshot {
     pub timestamp: i64,
     pub trips: Vec<SnapshotTrip>,
     pub alerts: Vec<SnapshotAlert>,
+    pub vehicles: Vec<SnapshotVehicle>,
+}
+
+pub struct SnapshotVehicle {
+    pub trip_id: String,
+    pub route_id: String,
+    pub speed_mps: Option<f32>,
+    pub occupancy_status: Option<i32>,
 }
 
 pub struct SnapshotTrip {
@@ -167,6 +198,7 @@ pub struct SnapshotAlert {
 
 pub struct FeedParseResult {
     pub trips: HashMap<String, TripRT>,
+    pub vehicles: HashMap<String, VehicleRT>,
     pub snapshot: RtSnapshot,
 }
 
@@ -187,6 +219,21 @@ pub struct TripRT {
 pub type RtStore = Arc<RwLock<HashMap<String, TripRT>>>;
 
 pub fn new_rt_store() -> RtStore {
+    Arc::new(RwLock::new(HashMap::new()))
+}
+
+/// Live vehicle data for speed/occupancy queries.
+#[derive(Clone)]
+pub struct VehicleRT {
+    pub route_id: String,
+    pub speed_mps: Option<f32>,
+    pub occupancy_status: Option<i32>,
+}
+
+/// Shared vehicle position store.
+pub type VehicleStore = Arc<RwLock<HashMap<String, VehicleRT>>>;
+
+pub fn new_vehicle_store() -> VehicleStore {
     Arc::new(RwLock::new(HashMap::new()))
 }
 
@@ -303,8 +350,38 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
     let mut rt = HashMap::new();
     let mut snapshot_trips = Vec::new();
     let mut snapshot_alerts = Vec::new();
+    let mut snapshot_vehicles = Vec::new();
+    let mut vehicles = HashMap::new();
 
     for entity in &feed.entity {
+        // Parse vehicle positions (speed + occupancy)
+        if let Some(vp) = &entity.vehicle {
+            let trip_id = vp.trip.as_ref().and_then(|t| t.trip_id.as_ref());
+            let route_id = vp.trip.as_ref().and_then(|t| t.route_id.as_ref());
+            if let (Some(tid), Some(rid)) = (trip_id, route_id) {
+                let raw_tid = strip_prefix(tid).to_string();
+                let raw_rid = strip_prefix(rid).to_string();
+                let speed_mps = vp.position.as_ref().and_then(|p| p.speed);
+                let occupancy = vp.occupancy_status;
+
+                vehicles.insert(
+                    raw_tid.clone(),
+                    VehicleRT {
+                        route_id: raw_rid.clone(),
+                        speed_mps,
+                        occupancy_status: occupancy,
+                    },
+                );
+
+                snapshot_vehicles.push(SnapshotVehicle {
+                    trip_id: raw_tid,
+                    route_id: raw_rid,
+                    speed_mps,
+                    occupancy_status: occupancy,
+                });
+            }
+        }
+
         // Parse trip updates
         if let Some(tu) = &entity.trip_update {
             let trip_id = match tu.trip.as_ref().and_then(|t| t.trip_id.as_ref()) {
@@ -400,10 +477,12 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
 
     Some(FeedParseResult {
         trips: rt,
+        vehicles,
         snapshot: RtSnapshot {
             timestamp,
             trips: snapshot_trips,
             alerts: snapshot_alerts,
+            vehicles: snapshot_vehicles,
         },
     })
 }
@@ -412,6 +491,7 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
 /// If `db_tx` is provided, snapshots are sent to the SQLite writer thread.
 pub fn spawn_refresh_task(
     store: RtStore,
+    vehicle_store: VehicleStore,
     last_refresh: RtLastRefresh,
     db_tx: Option<std::sync::mpsc::SyncSender<RtSnapshot>>,
 ) {
@@ -420,10 +500,15 @@ pub fn spawn_refresh_task(
             let result = tokio::task::spawn_blocking(fetch_and_parse).await;
             match result {
                 Ok(Some(feed_result)) => {
-                    let count = feed_result.trips.len();
+                    let trip_count = feed_result.trips.len();
+                    let vehicle_count = feed_result.vehicles.len();
                     *store.write().unwrap() = feed_result.trips;
+                    *vehicle_store.write().unwrap() = feed_result.vehicles;
                     *last_refresh.write().unwrap() = Some(Instant::now());
-                    eprintln!("GTFS-RT: refreshed {} trip updates", count);
+                    eprintln!(
+                        "GTFS-RT: refreshed {} trip updates, {} vehicle positions",
+                        trip_count, vehicle_count
+                    );
 
                     if let Some(ref tx) = db_tx {
                         let _ = tx.try_send(feed_result.snapshot);

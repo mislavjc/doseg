@@ -426,6 +426,8 @@ struct GbfsStationInfo {
 
 const STATION_INFORMATION_URL: &str =
     "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json";
+const STATION_STATUS_URL: &str =
+    "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_status.json";
 
 /// Fetch BAJS stations and return idealized BajsStations (1 bike, 1 dock each).
 pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
@@ -453,4 +455,43 @@ pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
             capacity: s.capacity.unwrap_or(10),
         })
         .collect()
+}
+
+// --- BAJS station status (live availability) ---
+
+#[derive(serde::Deserialize)]
+struct GbfsStationStatusFeed {
+    data: Option<GbfsStationStatusData>,
+}
+
+#[derive(serde::Deserialize)]
+struct GbfsStationStatusData {
+    stations: Option<Vec<GbfsStationStatus>>,
+}
+
+#[derive(Clone, serde::Deserialize)]
+pub struct GbfsStationStatus {
+    pub station_id: String,
+    pub num_bikes_available: i32,
+    pub num_docks_available: i32,
+    pub is_installed: bool,
+    pub is_renting: bool,
+}
+
+pub fn fetch_station_status() -> Option<Vec<GbfsStationStatus>> {
+    let resp = match ureq::get(STATION_STATUS_URL).call() {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("BAJS status: fetch failed: {}", e);
+            return None;
+        }
+    };
+    let feed: GbfsStationStatusFeed = match resp.into_json() {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("BAJS status: parse failed: {}", e);
+            return None;
+        }
+    };
+    feed.data.and_then(|d| d.stations)
 }

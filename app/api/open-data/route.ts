@@ -11,7 +11,8 @@ export async function GET() {
     return new Response(data, {
       headers: {
         "Content-Type": "application/json",
-        "Content-Disposition": 'attachment; filename="doseg-district-scores.json"',
+        "Content-Disposition":
+          'attachment; filename="doseg-district-scores.json"',
         "Cache-Control": "public, max-age=3600",
       },
     })

@@ -3,7 +3,7 @@ use serde::Deserialize;
 use crate::geo::fast_dist_km;
 
 #[allow(dead_code)]
-const BAJS_TRANSFER_MAX_KM: f64 = 0.35;
+pub const BAJS_TRANSFER_MAX_KM: f64 = 0.35;
 #[allow(dead_code)]
 const BAJS_BIKE_MAX_KM: f64 = 6.0;
 

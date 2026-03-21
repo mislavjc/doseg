@@ -6,7 +6,9 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
   const params = await searchParams
   const lat = typeof params.lat === "string" ? params.lat : undefined
   const lon = typeof params.lon === "string" ? params.lon : undefined

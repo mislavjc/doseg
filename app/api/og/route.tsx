@@ -171,7 +171,11 @@ function CoordsTopBar() {
   )
 }
 
-function ScoreBadge({ district }: { district: { score: number; rank: number } }) {
+function ScoreBadge({
+  district,
+}: {
+  district: { score: number; rank: number }
+}) {
   return (
     <div
       style={{
@@ -345,7 +349,12 @@ function CoordsImage({
       }}
     >
       <CoordsTopBar />
-      <CoordsMainContent district={district} lat={lat} lon={lon} timeStr={timeStr} />
+      <CoordsMainContent
+        district={district}
+        lat={lat}
+        lon={lon}
+        timeStr={timeStr}
+      />
       <CoordsBottomBar />
     </div>
   )
@@ -404,7 +413,12 @@ function FallbackContent() {
         {colorBar({ w: "60px", h: "8px" })}
       </div>
       <div
-        style={{ fontSize: "24px", color: "#475569", marginTop: "32px", display: "flex" }}
+        style={{
+          fontSize: "24px",
+          color: "#475569",
+          marginTop: "32px",
+          display: "flex",
+        }}
       >
         Pogledaj dokle mozes stici tramvajem i busom u 15, 30 ili 45 min
       </div>

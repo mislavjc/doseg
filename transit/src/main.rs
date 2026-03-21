@@ -26,8 +26,8 @@ use rayon::prelude::*;
 use serde::Serialize;
 use ts_rs::TS;
 
-use crate::bajs::build_bajs_adjacency_indexed;
-use crate::districts::{generate_sample_points, load_districts, point_in_polygon, SamplePoint};
+use crate::bajs::{build_bajs_adjacency_indexed, BAJS_TRANSFER_MAX_KM};
+use crate::districts::{generate_sample_points, load_districts, point_in_polygon, polygon_area_km2, SamplePoint};
 use crate::geo::{fast_dist_km, WALK_SPEED};
 use crate::osm::{extract_populated_cells, POP_CELL};
 use crate::transit_graph::{compute_avg_travel_times, TransitGraphJson, TransitState};
@@ -390,6 +390,9 @@ pub struct DistrictScoresOutput {
     pub total_sample_points: usize,
     pub total_grid_cells: usize,
     pub bajs_total_stations: usize,
+    pub bajs_covered_stops: usize,
+    #[ts(type = "number")]
+    pub bajs_stop_coverage_pct: i64,
     #[ts(type = "number")]
     pub city_desert_pct: i64,
     pub districts: Vec<District>,
@@ -437,6 +440,11 @@ pub struct District {
     pub bajs_boost_pct: i64,
     #[ts(type = "number")]
     pub bajs_stations: i64,
+    pub area_km2: f64,
+    pub bajs_density_per_km2: f64,
+    pub bajs_per_10k: f64,
+    #[ts(type = "number")]
+    pub bajs_stop_coverage_pct: i64,
     #[ts(type = "number")]
     pub desert_pct: i64,
     #[ts(type = "number")]
@@ -536,6 +544,15 @@ fn main() {
     let districts = load_districts(&districts_path);
     eprintln!("  {} districts", districts.len());
 
+    // Compute district areas
+    let district_areas: Vec<f64> = districts
+        .iter()
+        .map(|d| {
+            let a = polygon_area_km2(&d.ring);
+            (a * 10.0).round() / 10.0 // 1 decimal place
+        })
+        .collect();
+
     // Count BAJS stations per district
     let mut district_bajs_count: Vec<i64> = vec![0; districts.len()];
     for station in &graph.bajs_stations {
@@ -568,6 +585,26 @@ fn main() {
             }
         }
     }
+
+    // Count stops with BAJS coverage per district (within 350m)
+    let mut district_stops_with_bajs: Vec<usize> = vec![0; districts.len()];
+    let mut total_stops_with_bajs: usize = 0;
+    if !graph.bajs_stations.is_empty() {
+        for (si, stop) in graph.stops.iter().enumerate() {
+            let has_bajs = graph.bajs_stations.iter().any(|st| {
+                fast_dist_km(stop.lat, stop.lon, st.lat, st.lon) <= BAJS_TRANSFER_MAX_KM
+            });
+            if has_bajs {
+                total_stops_with_bajs += 1;
+                if let Some(di) = stop_to_district[si] {
+                    district_stops_with_bajs[di] += 1;
+                }
+            }
+        }
+    }
+    let system_bajs_coverage_pct = js_round(
+        total_stops_with_bajs as f64 / graph.stop_count.max(1) as f64 * 100.0,
+    );
 
     let mut district_transit: Vec<TransitInfo> = (0..districts.len())
         .map(|_| TransitInfo {
@@ -840,6 +877,10 @@ fn main() {
         bajs_avg_reachable_cells: i64,
         bajs_boost_pct: i64,
         bajs_stations: i64,
+        area_km2: f64,
+        bajs_density_per_km2: f64,
+        bajs_per_10k: f64,
+        bajs_stop_coverage_pct: i64,
         desert_pct: i64,
         avg_nearest_stop_m: i64,
         best_lat: f64,
@@ -918,6 +959,25 @@ fn main() {
             bajs_avg_reachable_cells: js_round(bajs_avg),
             bajs_boost_pct: boost_pct(train_avg, bajs_avg),
             bajs_stations: district_bajs_count[i],
+            area_km2: district_areas[i],
+            bajs_density_per_km2: if district_areas[i] > 0.0 {
+                (district_bajs_count[i] as f64 / district_areas[i] * 100.0).round() / 100.0
+            } else {
+                0.0
+            },
+            bajs_per_10k: d.population.map_or(0.0, |pop| {
+                if pop > 0 {
+                    let raw = district_bajs_count[i] as f64 / pop as f64 * 10000.0;
+                    (raw * 10.0).round() / 10.0 // 1 decimal place
+                } else {
+                    0.0
+                }
+            }),
+            bajs_stop_coverage_pct: if transit.stops > 0 {
+                js_round(district_stops_with_bajs[i] as f64 / transit.stops as f64 * 100.0)
+            } else {
+                0
+            },
             desert_pct,
             avg_nearest_stop_m,
             best_lat: best_lat_rounded,
@@ -964,6 +1024,10 @@ fn main() {
             bajs_avg_reachable_cells: r.bajs_avg_reachable_cells,
             bajs_boost_pct: r.bajs_boost_pct,
             bajs_stations: r.bajs_stations,
+            area_km2: r.area_km2,
+            bajs_density_per_km2: r.bajs_density_per_km2,
+            bajs_per_10k: r.bajs_per_10k,
+            bajs_stop_coverage_pct: r.bajs_stop_coverage_pct,
             desert_pct: r.desert_pct,
             avg_nearest_stop_m: r.avg_nearest_stop_m,
             best_point: BestPoint {
@@ -990,6 +1054,8 @@ fn main() {
         total_sample_points: points.len(),
         total_grid_cells: walk_graph.grid.len(),
         bajs_total_stations: graph.bajs_stations.len(),
+        bajs_covered_stops: total_stops_with_bajs,
+        bajs_stop_coverage_pct: system_bajs_coverage_pct,
         city_desert_pct: js_round(total_desert as f64 / points.len() as f64 * 100.0),
         districts: district_json,
         day: args.day.clone(),

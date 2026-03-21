@@ -217,12 +217,12 @@ function computeBajsInsights(data: ScoreData) {
     : []
   const topBajsBeneficiary = bajsRankedByBoost[0]
 
-  // 2.6: Coverage — % of transit stops within 350m of a BAJS station
+  // 2.6: Coverage - % of transit stops within 350m of a BAJS station
   const coveragePct = data.bajsStopCoveragePct ?? 0
   const coveredStops = data.bajsCoveredStops ?? 0
   const totalStops = data.districts.reduce((s, d) => s + d.stops, 0)
 
-  // 2.7: Density — stations per km² and per 10k residents
+  // 2.7: Density - stations per km² and per 10k residents
   const densityRanked = hasBajs
     ? [...data.districts]
         .filter((d) => (d.bajsStations ?? 0) > 0)
@@ -2410,7 +2410,7 @@ function BajsCoverageCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsight
               jednostavno ne postoji.
             </>
           ) : (
-            <>Svaka četvrt ima barem jednu BAJS stanicu — ali gustoća varira drastično.</>
+            <>Svaka četvrt ima barem jednu BAJS stanicu, ali gustoća varira drastično.</>
           )}
         </p>
       </div>
@@ -2418,35 +2418,7 @@ function BajsCoverageCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsight
   )
 }
 
-function BajsDensityRow({ d, i, topDensity }: { d: ReturnType<typeof computeBajsInsights>["densityRanked"][0]; i: number; topDensity: number }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">
-        {i + 1}.
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-baseline justify-between gap-2">
-          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">{d.name}</span>
-          <span className="shrink-0 font-serif text-[14px] font-medium text-amber-600 tabular-nums dark:text-amber-400">
-            {fmtHR(d.bajsDensityPerKm2 ?? 0, 2)} st./km²
-          </span>
-        </div>
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-amber-100 dark:bg-amber-900/30">
-          <div
-            className="absolute inset-y-0 left-0 rounded-full bg-amber-500"
-            style={{ width: `${((d.bajsDensityPerKm2 ?? 0) / topDensity) * 100}%` }}
-          />
-        </div>
-      </div>
-      <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
-        {fmtHR(d.bajsPer10k ?? 0, 1)}/10k st.
-      </span>
-    </div>
-  )
-}
-
 function BajsDensityCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
-  const topDensityVal = bajs.topDensity?.bajsDensityPerKm2 ?? 1
   const lastDistrict = bajs.densityRanked[bajs.densityRanked.length - 1]
   return (
     <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
@@ -2454,13 +2426,19 @@ function BajsDensityCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights
         Gustoća BAJS stanica
       </h3>
       <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Stanica po km² — koliko je infrastruktura ravnomjerno raspoređena
+        Stanica po km² - koliko je infrastruktura ravnomjerno raspoređena
       </p>
-      <div className="space-y-3">
-        {bajs.densityRanked.slice(0, 8).map((d, i) => (
-          <BajsDensityRow key={d.osmId} d={d} i={i} topDensity={topDensityVal} />
-        ))}
-      </div>
+      <RankingList
+        items={bajs.densityRanked}
+        value={(d) => d.bajsDensityPerKm2 ?? 0}
+        label={(d) => `${fmtHR(d.bajsDensityPerKm2 ?? 0, 2)} st./km²`}
+        trailing={(d) => `${fmtHR(d.bajsPer10k ?? 0, 1)}/10k st.`}
+        color={{
+          text: "text-amber-600 dark:text-amber-400",
+          bg: "bg-amber-100 dark:bg-amber-900/30",
+          bar: "bg-amber-500",
+        }}
+      />
       {bajs.topDensity && lastDistrict && (
         <div className="mt-6 rounded-2xl border border-amber-200/50 bg-amber-50/50 px-5 py-4 dark:border-amber-800/30 dark:bg-amber-950/20">
           <p className="text-[13px] leading-relaxed text-amber-900 dark:text-amber-200">

@@ -66,6 +66,8 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
   - Accessibility equity gap: what percentage of Zagreb's population lives in poorly-connected areas
   - Maximum city reach: what percentage of the city is reachable from the best-connected district
   - BAJS impact analysis: how bike-sharing improves each district's score, with equity assessment
+  - BAJS last-mile coverage: percentage of transit stops within 350m of a bike-sharing station, per district
+  - BAJS station density: stations per km² and per 10,000 residents, ranked by district
   - Transit desert score: flags areas >500m from nearest stop or with <2 trips/hour
   - HZ train impact: per-district boost from adding railway access
   - Per-district tram/bus line breakdowns, stop counts, headway times

@@ -62,6 +62,24 @@ pub fn load_districts(path: &Path) -> Vec<District> {
         .collect()
 }
 
+/// Polygon area in km² using the Shoelace formula with flat-earth projection.
+pub fn polygon_area_km2(ring: &[(f64, f64)]) -> f64 {
+    let n = ring.len();
+    if n < 3 {
+        return 0.0;
+    }
+    let mut area = 0.0;
+    for i in 0..n {
+        let j = (i + 1) % n;
+        let x_i = ring[i].0 * KM_PER_DEG_LON;
+        let y_i = ring[i].1 * KM_PER_DEG_LAT;
+        let x_j = ring[j].0 * KM_PER_DEG_LON;
+        let y_j = ring[j].1 * KM_PER_DEG_LAT;
+        area += x_i * y_j - x_j * y_i;
+    }
+    (area / 2.0).abs()
+}
+
 /// Ray-casting point-in-polygon test.
 pub fn point_in_polygon(lon: f64, lat: f64, ring: &[(f64, f64)]) -> bool {
     let mut inside = false;

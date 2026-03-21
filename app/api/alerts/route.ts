@@ -17,11 +17,7 @@ export async function GET(req: Request) {
       })
     })
 
-    const { response } = jsonResponse(
-      active,
-      req,
-      "public, max-age=60"
-    )
+    const { response } = jsonResponse(active, req, "public, max-age=60")
     return response
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal error"

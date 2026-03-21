@@ -9,11 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     const vehicles = getVehiclePositions()
 
-    const { response } = jsonResponse(
-      vehicles,
-      request,
-      "public, max-age=15"
-    )
+    const { response } = jsonResponse(vehicles, request, "public, max-age=15")
     return response
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal error"

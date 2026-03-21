@@ -23,11 +23,7 @@ export async function GET(request: NextRequest) {
 
     const pois = await fetchPOIs(categories)
 
-    const { response } = jsonResponse(
-      pois,
-      request,
-      "public, max-age=86400"
-    )
+    const { response } = jsonResponse(pois, request, "public, max-age=86400")
     return response
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal error"

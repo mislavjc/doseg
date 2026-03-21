@@ -78,9 +78,7 @@ function DataSection() {
           <span className="mb-1 block font-semibold text-slate-200">
             OpenTripPlanner
           </span>
-          <p className="font-medium text-slate-400">
-            server za rutiranje
-          </p>
+          <p className="font-medium text-slate-400">server za rutiranje</p>
         </div>
       </div>
     </Section>
@@ -99,27 +97,25 @@ function ArchitectureSection() {
         </p>
         <p>
           <span className="font-semibold text-slate-200">GTFS-RT</span>{" "}
-          kašnjenja dolaze iz ZET-ovog protobuf feeda svake 30 sekundi
-          (~600 trip updateova po osvježavanju).
+          kašnjenja dolaze iz ZET-ovog protobuf feeda svake 30 sekundi (~600
+          trip updateova po osvježavanju).
         </p>
         <p>
-          <span className="font-semibold text-slate-200">ts-rs</span>{" "}
-          generira TypeScript tipove iz Rust structova, jedan izvor
-          istine za cijeli stack.
+          <span className="font-semibold text-slate-200">ts-rs</span> generira
+          TypeScript tipove iz Rust structova, jedan izvor istine za cijeli
+          stack.
         </p>
         <p>
-          <span className="font-semibold text-slate-200">Next.js</span>{" "}
-          servira SSR stranice i lakše API endpointe.{" "}
-          <span className="font-semibold text-slate-200">
-            OpenTripPlanner
-          </span>{" "}
+          <span className="font-semibold text-slate-200">Next.js</span> servira
+          SSR stranice i lakše API endpointe.{" "}
+          <span className="font-semibold text-slate-200">OpenTripPlanner</span>{" "}
           radi planiranje ruta.
         </p>
         <p>
           Ispred svega stoji{" "}
-          <span className="font-semibold text-slate-200">Caddy</span>{" "}
-          reverse proxy s Cloudflareom. Koordinate se snappaju na mrežu
-          (~100&thinsp;m) tako da CDN može cachirati odgovore.
+          <span className="font-semibold text-slate-200">Caddy</span> reverse
+          proxy s Cloudflareom. Koordinate se snappaju na mrežu (~100&thinsp;m)
+          tako da CDN može cachirati odgovore.
         </p>
       </div>
     </Section>
@@ -174,8 +170,8 @@ function Sections() {
         <p className="text-[14px] leading-relaxed text-slate-300">
           Klikom na kartu Doseg izračunava izokrone koristeći Dijkstrin
           algoritam nad ZET-ovim voznim redom. Rute se rekonstruiraju na
-          klijentskoj strani, pa pregled prijelaza između linija radi
-          trenutno dok pomičeš miš.
+          klijentskoj strani, pa pregled prijelaza između linija radi trenutno
+          dok pomičeš miš.
         </p>
       </Section>
 
@@ -183,8 +179,8 @@ function Sections() {
 
       <Section title="Privatnost">
         <p className="text-[14px] leading-relaxed text-slate-300">
-          Nema kolačića, praćenja ni osobnih podataka. Svi upiti ostaju
-          između tvog preglednika i servera za rutiranje.
+          Nema kolačića, praćenja ni osobnih podataka. Svi upiti ostaju između
+          tvog preglednika i servera za rutiranje.
         </p>
       </Section>
 

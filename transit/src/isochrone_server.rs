@@ -1170,7 +1170,7 @@ fn unix_now() -> i64 {
 /// EU DST: last Sunday of March 01:00 UTC → +2, last Sunday of October 01:00 UTC → +1.
 fn zagreb_offset(epoch: i64) -> i64 {
     let days = epoch / 86400;
-    let (y, m, d) = days_to_ymd(days as u64);
+    let (_y, m, d) = days_to_ymd(days as u64);
     // Day of week: 0=Thu for 1970-01-01, so (days+4)%7: 0=Sun
     let dow = ((days + 4) % 7) as u64;
     // Last Sunday of a month: start from day 31 (or 30/28), walk back to Sunday
@@ -1208,7 +1208,7 @@ fn days_to_ymd(days: u64) -> (u64, u64, u64) {
     let mut y = 1970u64;
     let mut rem = days;
     loop {
-        let yd = if y % 4 == 0 && (y % 100 != 0 || y % 400 == 0) {
+        let yd = if y.is_multiple_of(4) && (!y.is_multiple_of(100) || y.is_multiple_of(400)) {
             366
         } else {
             365
@@ -1219,7 +1219,7 @@ fn days_to_ymd(days: u64) -> (u64, u64, u64) {
         rem -= yd;
         y += 1;
     }
-    let leap = y % 4 == 0 && (y % 100 != 0 || y % 400 == 0);
+    let leap = y.is_multiple_of(4) && (!y.is_multiple_of(100) || y.is_multiple_of(400));
     let mdays = [
         31,
         if leap { 29 } else { 28 },
@@ -1245,6 +1245,7 @@ fn days_to_ymd(days: u64) -> (u64, u64, u64) {
     (y, m, rem + 1)
 }
 
+#[allow(clippy::result_large_err)]
 fn require_db(state: &AppState) -> Result<&tokio::sync::Mutex<rusqlite::Connection>, Response> {
     state.rt_db_reader.as_ref().ok_or_else(|| {
         (
@@ -1432,10 +1433,8 @@ async fn handle_fleet_deployment(State(state): State<Arc<AppState>>) -> Response
                 *route_scheduled.entry(route_id.clone()).or_insert(0) += 1;
 
                 // Check if this trip has RT data
-                if di < pattern.trip_ids.len() {
-                    if rt_trip_ids.contains(&pattern.trip_ids[di]) {
-                        *route_active.entry(route_id.clone()).or_insert(0) += 1;
-                    }
+                if di < pattern.trip_ids.len() && rt_trip_ids.contains(&pattern.trip_ids[di]) {
+                    *route_active.entry(route_id.clone()).or_insert(0) += 1;
                 }
             }
         }
@@ -1587,11 +1586,14 @@ async fn handle_delay_profile(
                 if pattern.route == params.route {
                     for (i, &stop_idx) in pattern.stop_indices.iter().enumerate() {
                         let seq = (i + 1) as i32; // 1-based stop_sequence
-                        if !seq_to_name.contains_key(&seq) {
-                            if let Some(stop) = state.transit_graph.stops.get(stop_idx) {
-                                seq_to_name.insert(seq, stop.name.clone());
-                            }
-                        }
+                        seq_to_name.entry(seq).or_insert_with(|| {
+                            state
+                                .transit_graph
+                                .stops
+                                .get(stop_idx)
+                                .map(|s| s.name.clone())
+                                .unwrap_or_default()
+                        });
                     }
                     break; // Use first matching pattern
                 }

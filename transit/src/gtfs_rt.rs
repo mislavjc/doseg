@@ -170,7 +170,6 @@ pub struct RtSnapshot {
 }
 
 pub struct SnapshotVehicle {
-    pub trip_id: String,
     pub route_id: String,
     pub speed_mps: Option<f32>,
     pub occupancy_status: Option<i32>,
@@ -365,7 +364,7 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
                 let occupancy = vp.occupancy_status;
 
                 vehicles.insert(
-                    raw_tid.clone(),
+                    raw_tid,
                     VehicleRT {
                         route_id: raw_rid.clone(),
                         speed_mps,
@@ -374,7 +373,6 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
                 );
 
                 snapshot_vehicles.push(SnapshotVehicle {
-                    trip_id: raw_tid,
                     route_id: raw_rid,
                     speed_mps,
                     occupancy_status: occupancy,

@@ -426,6 +426,7 @@ struct GbfsStationInfo {
 
 const STATION_INFORMATION_URL: &str =
     "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json";
+#[allow(dead_code)]
 const STATION_STATUS_URL: &str =
     "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_status.json";
 
@@ -459,16 +460,19 @@ pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
 
 // --- BAJS station status (live availability) ---
 
+#[allow(dead_code)]
 #[derive(serde::Deserialize)]
 struct GbfsStationStatusFeed {
     data: Option<GbfsStationStatusData>,
 }
 
+#[allow(dead_code)]
 #[derive(serde::Deserialize)]
 struct GbfsStationStatusData {
     stations: Option<Vec<GbfsStationStatus>>,
 }
 
+#[allow(dead_code)]
 #[derive(Clone, serde::Deserialize)]
 pub struct GbfsStationStatus {
     pub station_id: String,
@@ -478,6 +482,7 @@ pub struct GbfsStationStatus {
     pub is_renting: bool,
 }
 
+#[allow(dead_code)]
 pub fn fetch_station_status() -> Option<Vec<GbfsStationStatus>> {
     let resp = match ureq::get(STATION_STATUS_URL).call() {
         Ok(r) => r,

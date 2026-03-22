@@ -16,13 +16,14 @@ import OccupancySection from "./occupancy-section"
 import AlertStatsSection from "./alert-stats-section"
 import DelayPropagationSection from "./delay-propagation-section"
 import BajsUtilizationSection from "./bajs-utilization-section"
+import InsightsSection, { type ConnectivityGap } from "./insights-section"
 import AccessibilityProfileSection from "./accessibility-profile-section"
+import RouteAnalysisTables from "./route-analysis-tables"
 import type {
   District as DistrictScore,
   DistrictScoresOutput as ScoreData,
   RouteStatsOutput as RouteStats,
   RouteStatsRoute as RouteInfo,
-  TransferHub,
 } from "@/lib/generated"
 
 export const metadata: Metadata = {
@@ -177,8 +178,9 @@ function computeBaseInsights(data: ScoreData) {
   const goodDistricts = data.districts.filter((d) => d.score >= 50)
   const poorPop = poorDistricts.reduce((s, d) => s + (d.population ?? 0), 0)
   const goodPop = goodDistricts.reduce((s, d) => s + (d.population ?? 0), 0)
-  const best = data.districts[0]
-  const worst = data.districts[data.districts.length - 1]
+  const emptyDistrict: DistrictScore = { name: "-", osmId: 0, population: 0, sampleCount: 0, avgReachableCells: 0, minReachableCells: 0, maxReachableCells: 0, stddevReachableCells: 0, medianReachableCells: 0, p25ReachableCells: 0, p75ReachableCells: 0, eveningAvgReachableCells: 0, peakOffpeakDrop: 0, trainAvgReachableCells: 0, trainBoostPct: 0, bajsAvgReachableCells: 0, bajsBoostPct: 0, bajsStations: 0, areaKm2: 0, bajsDensityPerKm2: 0, bajsPer10k: 0, bajsStopCoveragePct: 0, desertPct: 0, avgNearestStopM: 0, bestPoint: { lat: 0, lon: 0 }, tramLines: [], busLines: [], trainLines: [], stops: 0, medianHeadwayMin: 0, rank: 0, score: 0 }
+  const best = data.districts.length > 0 ? data.districts[0] : emptyDistrict
+  const worst = data.districts.length > 0 ? data.districts[data.districts.length - 1] : emptyDistrict
   const bestPct = pct(best.avgReachableCells, data.totalGridCells)
   const worstPct = pct(worst.avgReachableCells, data.totalGridCells)
   const ratio =
@@ -195,7 +197,7 @@ function computeBaseInsights(data: ScoreData) {
     (s, d) => s + d.avgReachableCells * d.sampleCount,
     0
   )
-  const cityAvg = weightedSum / data.totalSamplePoints
+  const cityAvg = weightedSum / Math.max(data.totalSamplePoints, 1)
   const cityWeightedScore = Math.round(
     totalPop > 0
       ? data.districts.reduce((s, d) => s + d.score * (d.population ?? 0), 0) / totalPop
@@ -465,7 +467,99 @@ function computeMatrixInsights(travelMatrix: TravelMatrix | null) {
     }
     return { from: bestFrom, to: bestTo, time: bestTime }
   })()
-  return { matrixWorstCorridor, matrixBestPair }
+  const avgTimeAll = (() => {
+    if (!travelMatrix) return 0
+    let sum = 0
+    let count = 0
+    for (let i = 0; i < travelMatrix.matrix.length; i++) {
+      for (let j = 0; j < travelMatrix.matrix[i].length; j++) {
+        if (i !== j && travelMatrix.matrix[i][j] > 0) {
+          sum += travelMatrix.matrix[i][j]
+          count++
+        }
+      }
+    }
+    return count > 0 ? Math.round(sum / count) : 0
+  })()
+  return { matrixWorstCorridor, matrixBestPair, avgTimeAll }
+}
+
+function fmtPop(n: number): string {
+  return n.toLocaleString("hr-HR")
+}
+
+function findUnderservedGaps(data: ScoreData): { gaps: ConnectivityGap[]; underserved: DistrictScore[] } {
+  const gaps: ConnectivityGap[] = []
+  const underserved = [...data.districts]
+    .filter((d) => d.score < 25 && (d.population ?? 0) > 20000)
+    .sort((a, b) => (b.population ?? 0) - (a.population ?? 0))
+  for (const d of underserved.slice(0, 2)) {
+    const noTram = d.tramLines.length === 0
+    gaps.push({
+      severity: "critical",
+      issue: `${d.name} (${fmtPop(d.population ?? 0)} stan.) \u2014 rezultat povezanosti ${d.score}/100${noTram ? ", bez tramvajske veze" : ""}`,
+      impact: `Velika populacija s ograničenim pristupom ostatku grada. Doseže samo ${pct(d.avgReachableCells, data.totalGridCells)}% gradske površine u ${data.maxMinutes} min.`,
+      recommendation: noTram
+        ? "Brza autobusna linija (BRT) ili produljenje tramvajske mreže"
+        : "Povećanje frekvencija i direktnije veze prema centru",
+    })
+  }
+  return { gaps, underserved }
+}
+
+function findMatrixGaps(travelMatrix: TravelMatrix, usedNames: Set<string>): ConnectivityGap[] {
+  const gaps: ConnectivityGap[] = []
+  const pairs: { from: string; to: string; time: number }[] = []
+  const n = travelMatrix.districts.length
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const t = Math.max(travelMatrix.matrix[i][j], travelMatrix.matrix[j][i])
+      if (t > 80) pairs.push({ from: travelMatrix.districts[i], to: travelMatrix.districts[j], time: t })
+    }
+  }
+  pairs.sort((a, b) => b.time - a.time)
+  let added = 0
+  for (const p of pairs) {
+    if (added >= 2) break
+    if (usedNames.has(p.from) && usedNames.has(p.to)) continue
+    gaps.push({
+      severity: p.time > 100 ? "critical" : "warning",
+      issue: `${p.from} \u2194 ${p.to}: ${Math.round(p.time)} min putovanja`,
+      impact: "Nema izravne veze \u2014 zahtijeva presjedanje kroz centar, što udvostručuje vrijeme putovanja",
+      recommendation: "Razmotriti dijagonalnu ili kružnu liniju koja povezuje rubne četvrti bez prolaska kroz centar",
+    })
+    added++
+  }
+  return gaps
+}
+
+function computeConnectivityGaps(
+  data: ScoreData,
+  travelMatrix: TravelMatrix | null,
+): ConnectivityGap[] {
+  const { gaps, underserved } = findUnderservedGaps(data)
+
+  if (travelMatrix) {
+    const usedNames = new Set(underserved.map((d) => d.name))
+    gaps.push(...findMatrixGaps(travelMatrix, usedNames))
+  }
+
+  // 3. Districts without tram but large population
+  const tramless = data.districts
+    .filter((d) => d.tramLines.length === 0 && (d.population ?? 0) > 40000)
+    .filter((d) => !underserved.some((u) => u.name === d.name))
+    .sort((a, b) => (b.population ?? 0) - (a.population ?? 0))
+
+  for (const d of tramless.slice(0, 1)) {
+    gaps.push({
+      severity: "warning",
+      issue: `${d.name} (${fmtPop(d.population ?? 0)} stan.) nema tramvajsku vezu`,
+      impact: "Oslanja se isključivo na autobusne linije koje su sporije i manje pouzdane od tramvaja",
+      recommendation: "Produljenje tramvajske mreže ili uvođenje BRT linije s prioritetom na prometnicama",
+    })
+  }
+
+  return gaps.slice(0, 5)
 }
 
 const districtAbbrev: Record<string, string> = {
@@ -602,10 +696,12 @@ function loadAllData(data: ScoreData) {
   const matrix = computeMatrixInsights(travelMatrix)
   const weekend = computeWeekendData(data, saturdayData)
   const routes = computeRouteInsights(routeStats)
+  const connectivityGaps = computeConnectivityGaps(data, travelMatrix)
   return {
     districtEmblems, travelMatrix, routeStats,
     base, bajs, desert, evening, variance, freq,
     lineSpeed, scatter, giniData, bands, matrix, weekend, routes,
+    connectivityGaps,
   }
 }
 
@@ -618,52 +714,96 @@ function StatistikaContent({ data }: { data: ScoreData }) {
         best={all.base.best}
         bestPct={all.base.bestPct}
         departureTime={all.base.displayDepartureTime}
-        generatedLabel={all.base.generatedLabel}
         maxMinutes={data.maxMinutes}
         ratio={all.base.ratio}
         worst={all.base.worst}
       />
       <ChoroplethSection />
-      <HeadlineInsights data={data} base={all.base} bajs={all.bajs} freq={all.freq} />
+      <HeadlineInsights data={data} base={all.base} bajs={all.bajs} />
+      <InsightsSection connectivityGaps={all.connectivityGaps} />
+      <SectionNav />
       <StatistikaContentSections data={data} all={all} />
     </Shell>
   )
 }
 
-function StatistikaContentSections({ data, all }: { data: ScoreData; all: ReturnType<typeof loadAllData> }) {
+type AllData = ReturnType<typeof loadAllData>
+
+function StatistikaContentSections({ data, all }: { data: ScoreData; all: AllData }) {
   return (
     <>
-      <div className="mt-16 grid grid-cols-1 gap-12 sm:mt-20">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <ScoreMeaningSection data={data} base={all.base} bajs={all.bajs} />
-          <AccessibilityGapSection base={all.base} />
-        </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <LorenzSection giniData={all.giniData} />
-          <GiniSection giniData={all.giniData} />
-        </div>
-        <TramSection freq={all.freq} />
-        <HzTrainSection data={data} />
-      </div>
-      <DensityScatterSection scatter={all.scatter} />
-      <TransitDesertSection data={data} desert={all.desert} />
-      <StopDistanceSection desert={all.desert} />
-      <PeakOffPeakSection data={data} base={all.base} evening={all.evening} />
-      <AccessibilityProfileSection />
-      <WeekendSection weekend={all.weekend} />
-      <BajsImpactSection data={data} bajs={all.bajs} />
-      <VarianceSection data={data} variance={all.variance} />
-      <FrequencySection freq={all.freq} />
-      <LineSpeedSection lineSpeed={all.lineSpeed} />
-      <RouteStatsSection routeStats={all.routeStats} routes={all.routes} freq={all.freq} />
-      <NetworkStatsSection />
-      <RealTimeSections routeStats={all.routeStats} />
-      <TravelMatrixSection travelMatrix={all.travelMatrix} matrix={all.matrix} />
-      <TransferDependencySection travelMatrix={all.travelMatrix} />
-      <CentralitySection />
+      <RealTimeGroup all={all} />
+      <ReliabilityGroup routeStats={all.routeStats} />
+      <AccessibilityGroup data={data} all={all} />
+      <BajsGroup data={data} bajs={all.bajs} />
+      <DeepDiveGroup data={data} all={all} />
       <DistrictBandsSection data={data} bands={all.bands} districtEmblems={all.districtEmblems} base={all.base} />
       <MethodologySection data={data} base={all.base} bajs={all.bajs} />
     </>
+  )
+}
+
+function RealTimeGroup({ all }: { all: AllData }) {
+  const routes = sortRoutesByName(all.routeStats?.routes.filter((r: RouteInfo) => r.mode !== "RAIL") ?? [])
+  return (
+    <SectionGroup id="promet-danas" title="Radi li promet danas?" description="Stvarni podaci iz ZET-ovog sustava praćenja vozila u realnom vremenu.">
+      {all.routeStats && <PunctualitySection routes={routes.map((r) => ({ name: r.name, mode: r.mode }))} />}
+      <AlertStatsSection />
+      {all.routeStats && <DelayPropagationSection routes={routes.map((r) => r.name)} />}
+    </SectionGroup>
+  )
+}
+
+function ReliabilityGroup({ routeStats }: { routeStats: AllData["routeStats"] }) {
+  return (
+    <SectionGroup id="pouzdanost" title="Pouzdanost i brzina linija" description="Koliko su pouzdane pojedine linije — iz voznog reda i stvarnih mjerenja.">
+      <RouteStatsSection routeStats={routeStats} />
+      <FleetDeploymentSection />
+      <SpeedComparisonSection />
+      <OccupancySection />
+    </SectionGroup>
+  )
+}
+
+function AccessibilityGroup({ data, all }: { data: ScoreData; all: AllData }) {
+  return (
+    <SectionGroup id="povezanost" title="Povezanost kvartova" description="Koliko je grada dostupno iz vaše četvrti u 30 minuta javnim prijevozom.">
+      <AccessibilityProfileSection />
+      <ScoreMeaningSection data={data} base={all.base} bajs={all.bajs} />
+      <AccessibilityGapSection base={all.base} />
+      <PeakOffPeakSection data={data} base={all.base} evening={all.evening} />
+      <WeekendSection weekend={all.weekend} />
+      <TravelMatrixSection travelMatrix={all.travelMatrix} matrix={all.matrix} />
+      <TransferDependencySection travelMatrix={all.travelMatrix} />
+    </SectionGroup>
+  )
+}
+
+function BajsGroup({ data, bajs }: { data: ScoreData; bajs: AllData["bajs"] }) {
+  return (
+    <SectionGroup id="bajs" title="BAJS bicikli" description="Dijeljeni bicikli kao nadopuna javnom prijevozu — dostupnost i utjecaj na povezanost.">
+      <BajsUtilizationSection />
+      <BajsImpactSection data={data} bajs={bajs} />
+    </SectionGroup>
+  )
+}
+
+function DeepDiveGroup({ data, all }: { data: ScoreData; all: AllData }) {
+  return (
+    <SectionGroup id="analiza" title="Struktura mreže" description="Detaljnija analiza za one koji žele razumjeti sustav u dubinu.">
+      <NetworkStatsSection />
+      <CentralitySection />
+      <DensityScatterSection scatter={all.scatter} />
+      <TransitDesertSection data={data} desert={all.desert} />
+      <StopDistanceSection desert={all.desert} />
+      <TramSection freq={all.freq} />
+      <HzTrainSection data={data} />
+      <LorenzSection giniData={all.giniData} />
+      <GiniSection giniData={all.giniData} />
+      <VarianceSection data={data} variance={all.variance} />
+      <FrequencySection freq={all.freq} />
+      <LineSpeedSection lineSpeed={all.lineSpeed} />
+    </SectionGroup>
   )
 }
 
@@ -677,22 +817,54 @@ function sortRoutesByName(routes: RouteInfo[]): RouteInfo[] {
   })
 }
 
-function RealTimeSections({ routeStats }: { routeStats: ReturnType<typeof loadAllData>["routeStats"] }) {
-  const routes = sortRoutesByName(routeStats?.routes.filter((r: RouteInfo) => r.mode !== "RAIL") ?? [])
+function SectionGroup({
+  id,
+  title,
+  description,
+  children,
+}: {
+  id: string
+  title: string
+  description: string
+  children: React.ReactNode
+}) {
   return (
-    <>
-      {routeStats && (
-        <PunctualitySection routes={routes.map((r: RouteInfo) => ({ name: r.name, mode: r.mode }))} />
-      )}
-      <FleetDeploymentSection />
-      <SpeedComparisonSection />
-      <OccupancySection />
-      <AlertStatsSection />
-      {routeStats && (
-        <DelayPropagationSection routes={routes.map((r: RouteInfo) => r.name)} />
-      )}
-      <BajsUtilizationSection />
-    </>
+    <div id={id} className="mt-24 sm:mt-32">
+      <div className="mb-3 flex items-center gap-4">
+        <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
+        <span className="font-sans text-[11px] font-bold tracking-[0.2em] text-slate-400 uppercase dark:text-slate-500">
+          {title}
+        </span>
+        <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
+      </div>
+      <p className="mb-12 text-center text-[15px] text-slate-500 dark:text-slate-400">
+        {description}
+      </p>
+      {children}
+    </div>
+  )
+}
+
+function SectionNav() {
+  const links = [
+    { href: "#promet-danas", label: "Promet danas" },
+    { href: "#pouzdanost", label: "Pouzdanost linija" },
+    { href: "#povezanost", label: "Povezanost kvartova" },
+    { href: "#bajs", label: "BAJS bicikli" },
+    { href: "#analiza", label: "Struktura mreže" },
+  ]
+  return (
+    <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-slate-200 py-6 text-[13px] dark:border-white/10">
+      {links.map((l) => (
+        <a
+          key={l.href}
+          href={l.href}
+          className="text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
   )
 }
 
@@ -700,14 +872,14 @@ function RealTimeSections({ routeStats }: { routeStats: ReturnType<typeof loadAl
 
 function ChoroplethSection() {
   return (
-    <section id="karta" className="mt-20 sm:mt-32">
-      <div className="mb-10 flex flex-col items-center text-center">
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+    <section id="karta" className="mt-20 flex flex-col items-center border-t border-slate-200 py-16 sm:mt-32 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col items-center text-center">
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
           Karta područja
         </h2>
         <ChoroplethLegend />
       </div>
-      <div className="mx-auto max-w-5xl">
+      <div className="w-full max-w-5xl">
         <DistrictMap />
       </div>
     </section>
@@ -736,129 +908,109 @@ function HeadlineInsights({
   data,
   base,
   bajs,
-  freq,
 }: {
   data: ScoreData
   base: ReturnType<typeof computeBaseInsights>
   bajs: ReturnType<typeof computeBajsInsights>
-  freq: ReturnType<typeof computeFrequencyInsights>
 }) {
   return (
-    <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
-      <HeadlineCard
-        title="Gradski prosjek"
-        value={String(base.cityWeightedScore)}
-        suffix="od 100 bodova"
-        note="populacijski ponderiran prosječni rezultat."
-      />
-      <HeadlineCard
-        title="Dobra povezanost"
-        value={String(base.goodDistricts.length)}
-        suffix={`od ${data.districts.length} četvrti`}
-      />
-      <HeadlineCard
-        title="Jaz u dostupnosti"
-        value={`${base.totalPop > 0 ? Math.round((base.poorPop / base.totalPop) * 100) : 0}%`}
-        suffix="stanovnika"
-        note="živi u četvrtima s rezultatom manjim od 25."
-      />
-      <HeadlineCard
-        title="Maksimalni doseg"
-        value={`${base.bestPct}%`}
-        suffix="grada"
-        note={`može se doseći iz najbolje četvrti (${base.best.name}).`}
-      />
-      <HeadlineCard
-        title="Mreža u brojkama"
-        value={String(freq.totalLines)}
-        suffix="linija"
-        note={`${data.districts.reduce((s, d) => s + d.stops, 0).toLocaleString("hr-HR")} stajališta u praćenim četvrtima.`}
-      />
-      <HzHeadlineCard data={data} />
-      {bajs.hasBajs && (
-        <BajsHeadlineCard bajs={bajs} />
-      )}
+    <div className="border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-3 xl:grid-cols-6">
+        <EditorialStat
+          title="Gradski prosjek"
+          value={String(base.cityWeightedScore)}
+          note="od 100"
+          detail="populacijski ponderiran prosječni rezultat."
+        />
+        <EditorialStat
+          title="Dobra povezanost"
+          value={String(base.goodDistricts.length)}
+          note={`/ ${data.districts.length}`}
+          detail="četvrti s rezultatom iznad 50 bodova."
+        />
+        <EditorialStat
+          title="Jaz u dostupnosti"
+          value={`${base.totalPop > 0 ? Math.round((base.poorPop / base.totalPop) * 100) : 0}%`}
+          note="stanovnika"
+          detail="živi u četvrtima s rezultatom manjim od 25."
+        />
+        <EditorialStat
+          title="Maksimalni doseg"
+          value={`${base.bestPct}%`}
+          note="grada"
+          detail={`može se doseći iz najbolje četvrti (${base.best.name}).`}
+        />
+        <HzEditorialStat data={data} />
+        {bajs.hasBajs && (
+          <BajsEditorialStat bajs={bajs} />
+        )}
+      </div>
     </div>
   )
 }
 
-function HeadlineCard({
+function EditorialStat({
   title,
   value,
-  suffix,
   note,
+  detail,
+  valueColor = "text-slate-900 dark:text-slate-100",
 }: {
   title: string
   value: string
-  suffix: string
   note?: string
+  detail?: string
+  valueColor?: string
 }) {
   return (
-    <div className="flex flex-col justify-between rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+    <div className="flex flex-col">
+      <div className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         {title}
       </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="mt-4 flex items-baseline gap-1.5">
+        <span className={`font-serif text-[44px] leading-none tabular-nums ${valueColor}`}>
           {value}
         </span>
-        <span className="text-[14px] text-slate-500 dark:text-slate-400">
-          {suffix}
-        </span>
+        {note && (
+          <span className="text-[15px] text-slate-500 dark:text-slate-400">
+            {note}
+          </span>
+        )}
       </div>
-      {note && (
-        <div className="mt-2 text-[12px] leading-snug text-slate-500 dark:text-slate-400">
-          {note}
+      {detail && (
+        <div className="mt-3 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
+          {detail}
         </div>
       )}
     </div>
   )
 }
 
-function HzHeadlineCard({ data }: { data: ScoreData }) {
+function HzEditorialStat({ data }: { data: ScoreData }) {
   const districtsWithTrains = data.districts.filter(
     (d) => (d.trainLines?.length ?? 0) > 0
   ).length
   if (districtsWithTrains === 0) return null
   return (
-    <div className="flex flex-col justify-between rounded-2xl bg-teal-50 p-6 shadow-sm ring-1 ring-teal-200/50 dark:bg-teal-950/20 dark:ring-teal-500/20">
-      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-teal-700 uppercase dark:text-teal-400">
-        HŽ vlakovi
-      </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
-          {districtsWithTrains}
-        </span>
-        <span className="text-[14px] text-teal-700 dark:text-teal-400">
-          / {data.districts.length} četvrti
-        </span>
-      </div>
-      <div className="mt-2 text-[12px] leading-snug text-teal-700/80 dark:text-teal-400/80">
-        Doprinos dosegu: <strong className="text-teal-800 dark:text-teal-300">0%</strong>.
-        Rijedak interval (30-60 min) troši cijeli budžet čekanja.
-      </div>
-    </div>
+    <EditorialStat
+      title="HŽ vlakovi"
+      value={String(districtsWithTrains)}
+      note={`/ ${data.districts.length}`}
+      valueColor="text-teal-700 dark:text-teal-400"
+      detail="Doprinos dosegu: 0%. Rijedak interval troši cijeli budžet."
+    />
   )
 }
 
-function BajsHeadlineCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
+function BajsEditorialStat({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   return (
-    <div className="flex flex-col justify-between rounded-2xl bg-amber-50 p-6 shadow-sm ring-1 ring-amber-200/50 dark:bg-amber-950/20 dark:ring-amber-500/20">
-      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
-        BAJS bike-sharing
-      </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className="font-serif text-[40px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
-          {bajs.bajsTotalStations}
-        </span>
-        <span className="text-[14px] text-amber-700 dark:text-amber-400">
-          stanica
-        </span>
-      </div>
-      <div className="mt-2 text-[12px] leading-snug text-amber-700/80 dark:text-amber-400/80">
-        Prosječno +{bajs.cityBajsBoost}% dosega za cijeli grad.
-      </div>
-    </div>
+    <EditorialStat
+      title="BAJS sustav"
+      value={String(bajs.bajsTotalStations)}
+      note="stanica"
+      valueColor="text-amber-700 dark:text-amber-400"
+      detail={`Prosječno +${bajs.cityBajsBoost}% dosega za cijeli grad.`}
+    />
   )
 }
 
@@ -872,20 +1024,21 @@ function ScoreMeaningSection({
   bajs: ReturnType<typeof computeBajsInsights>
 }) {
   return (
-    <section id="metodika" className="flex flex-col rounded-3xl bg-slate-100 p-8 dark:bg-white/5">
-      <SectionIcon icon="info" color="slate" title="Što znači rezultat" />
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-        <p>
-          Grad je podijeljen u ćelije od ~200m. Rezultat mjeri koliki udio
-          tih ćelija ({data.totalGridCells.toLocaleString("hr-HR")}{" "}
-          ukupno) možeš doseći za{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {data.maxMinutes} minuta
-          </strong>{" "}
-          koristeći tramvaj, bus i hodanje. Uzorkovane su samo naseljene
-          točke (blizu zgrada).
-        </p>
-        <ScoreMeaningDetails base={base} bajs={bajs} />
+    <section id="metodika" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Što znači rezultat
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Grad je podijeljen u ćelije od ~200m. Rezultat mjeri koliki udio tih ćelija ({data.totalGridCells.toLocaleString("hr-HR")} ukupno) možeš doseći za <strong className="font-medium text-slate-900 dark:text-slate-100">{data.maxMinutes} minuta</strong> koristeći tramvaj, bus i hodanje. Uzorkovane su samo naseljene točke (blizu zgrada).
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300 lg:flex-row lg:gap-16">
+        <div className="flex-1 space-y-6">
+          <ScoreMeaningDetails base={base} bajs={bajs} />
+        </div>
       </div>
     </section>
   )
@@ -931,25 +1084,19 @@ function ScoreMeaningDetails({
 
 function AccessibilityGapSection({ base }: { base: ReturnType<typeof computeBaseInsights> }) {
   return (
-    <section id="jaz" className="flex flex-col rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
-      <SectionIcon icon="warning" color="rose" title="Jaz u dostupnosti" />
-      <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-        Samo{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {base.totalPop > 0 ? Math.round((base.goodPop / base.totalPop) * 100) : 0}%
-        </strong>{" "}
-        Zagrepčana ({base.goodPop.toLocaleString("hr-HR")} stan.) živi u
-        četvrtima s rezultatom ≥50. Istovremeno,{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {base.totalPop > 0 ? Math.round((base.poorPop / base.totalPop) * 100) : 0}%
-        </strong>{" "}
-        ({base.poorPop.toLocaleString("hr-HR")} stan.) živi u četvrtima gdje je
-        rezultat ispod 25 - to uključuje{" "}
-        <span className="text-slate-600 dark:text-slate-400">
-          {base.poorDistricts.map((d) => d.name).join(", ")}
-        </span>
-        .
-      </p>
+    <section id="jaz" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-rose-800 sm:text-[32px] dark:text-rose-400">
+            Jaz u dostupnosti
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Samo <strong className="font-medium text-rose-900 dark:text-rose-300">{base.totalPop > 0 ? Math.round((base.goodPop / base.totalPop) * 100) : 0}%</strong> Zagrepčana ({base.goodPop.toLocaleString("hr-HR")} stan.) živi u
+            četvrtima s rezultatom ≥50. Istovremeno, <strong className="font-medium text-rose-900 dark:text-rose-300">{base.totalPop > 0 ? Math.round((base.poorPop / base.totalPop) * 100) : 0}%</strong> ({base.poorPop.toLocaleString("hr-HR")} stan.) živi u četvrtima gdje je
+            rezultat ispod 25 - to uključuje <span className="text-slate-600 dark:text-slate-400">{base.poorDistricts.map((d) => d.name).join(", ")}</span>.
+          </p>
+        </div>
+      </div>
     </section>
   )
 }
@@ -1022,15 +1169,39 @@ function LorenzSection({
   giniData: ReturnType<typeof computeGiniData>
 }) {
   return (
-    <section id="lorenz" className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
-        Lorenzova krivulja dostupnosti
+    <section id="lorenz" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Lorenzova krivulja dostupnosti
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Krivulja prikazuje kumulativni udio stanovništva u odnosu na kumulativni udio dostupnosti. Što je krivulja bliže dijagonali, to je raspodjela pravednija.
+          </p>
+        </div>
       </div>
-      <LorenzChart lorenzPoints={giniData.lorenzPoints} />
-      <p className="mt-4 text-center text-[13px] leading-snug text-slate-500 dark:text-slate-400">
-        Što je krivulja dalje od dijagonale, to je nejednakost veća.
-      </p>
-      <LorenzAccessibilityTable popSorted={giniData.popSorted} />
+      <div className="flex flex-col md:flex-row md:items-start md:gap-16">
+        <div className="w-full md:w-[320px] md:shrink-0">
+          <LorenzChart lorenzPoints={giniData.lorenzPoints} />
+          <p className="mt-6 text-center text-[13px] leading-snug text-slate-500 dark:text-slate-400">
+            Što je krivulja dalje od dijagonale, to je nejednakost veća.
+          </p>
+        </div>
+        <div className="mt-12 flex-1 text-[18px] leading-relaxed text-slate-700 md:mt-0 dark:text-slate-300">
+          <p>
+            Ova krivulja prikazuje kumulativni udio dostupnosti u odnosu na
+            kumulativni udio stanovništva.
+          </p>
+          <p className="mt-6">
+            Kada bi svi građani imali jednaku dostupnost, krivulja bi pratila
+            ravnu dijagonalu (linija savršene jednakosti). Odstupanje od te linije
+            pokazuje koliko su resursi neravnomjerno raspoređeni po gradu.
+          </p>
+          <div className="mt-12">
+            <LorenzAccessibilityTable popSorted={giniData.popSorted} />
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
@@ -1165,38 +1336,55 @@ function GiniSection({
   giniData: ReturnType<typeof computeGiniData>
 }) {
   return (
-    <section id="gini" className="flex flex-col rounded-3xl bg-emerald-50/50 p-8 dark:bg-emerald-950/10">
-      <SectionIcon icon="chart" color="emerald" title="Gini koeficijent" />
-      <div className="mb-2 flex items-baseline gap-2">
-        <span className="font-serif text-[48px] leading-none text-emerald-700 tabular-nums dark:text-emerald-400">
-          {fmtHR(giniData.gini, 2)}
-        </span>
+    <section id="gini" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Gini koeficijent
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Gini koeficijent mjeri nejednakost. 0 predstavlja savršenu jednakost (svi imaju istu dostupnost), a 1 potpunu nejednakost.
+          </p>
+        </div>
       </div>
-      <p className="mb-6 text-[13px] text-slate-500 dark:text-slate-400">
-        (0 = savršena jednakost, 1 = potpuna nejednakost)
-      </p>
-      <GiniCards giniData={giniData} />
-      <GiniInterpretation giniData={giniData} />
+      
+      <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
+        <div className="flex shrink-0 items-baseline gap-2">
+          <span className="font-serif text-[96px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+            {fmtHR(giniData.gini, 2)}
+          </span>
+        </div>
+        <div className="flex-1">
+          <GiniCards giniData={giniData} />
+          <div className="mt-12 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            <GiniInterpretation giniData={giniData} />
+            <p className="mt-6">
+              Za usporedbu: većina europskih gradova s dobrim javnim prijevozom
+              ima Gini koeficijent između 0,25 i 0,35. Više vrijednosti ukazuju da je dobar javni prijevoz koncentriran samo u malom dijelu grada.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
 
 function GiniCards({ giniData }: { giniData: ReturnType<typeof computeGiniData> }) {
   return (
-    <div className="mb-6 grid grid-cols-3 gap-4">
-      <div className="rounded-xl bg-white/80 p-3 text-center dark:bg-white/5">
-        <div className="mb-1 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Jutro</div>
-        <div className="font-serif text-[24px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{fmtHR(giniData.gini, 3)}</div>
+    <div className="grid grid-cols-1 gap-8 border-l-2 border-slate-200 pl-6 sm:grid-cols-3 dark:border-white/10">
+      <div className="flex flex-col">
+        <div className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Jutro</div>
+        <div className="mt-2 font-serif text-[32px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{fmtHR(giniData.gini, 3)}</div>
       </div>
-      <div className="rounded-xl bg-white/80 p-3 text-center dark:bg-white/5">
-        <div className="mb-1 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">S BAJS-om</div>
-        <div className={`font-serif text-[24px] leading-none tabular-nums ${giniData.bajsGini > giniData.gini ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+      <div className="flex flex-col">
+        <div className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">S BAJS-om</div>
+        <div className={`mt-2 font-serif text-[32px] leading-none tabular-nums ${giniData.bajsGini > giniData.gini ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}>
           {fmtHR(giniData.bajsGini, 3)}
         </div>
       </div>
-      <div className="rounded-xl bg-white/80 p-3 text-center dark:bg-white/5">
-        <div className="mb-1 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Večer</div>
-        <div className="font-serif text-[24px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{fmtHR(giniData.eveningGini, 3)}</div>
+      <div className="flex flex-col">
+        <div className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Večer</div>
+        <div className="mt-2 font-serif text-[32px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{fmtHR(giniData.eveningGini, 3)}</div>
       </div>
     </div>
   )
@@ -1204,7 +1392,7 @@ function GiniCards({ giniData }: { giniData: ReturnType<typeof computeGiniData> 
 
 function GiniInterpretation({ giniData }: { giniData: ReturnType<typeof computeGiniData> }) {
   return (
-    <p className="text-[14px] leading-relaxed text-emerald-700/80 dark:text-emerald-300/80">
+    <p>
       BAJS bike-sharing blago{" "}
       {giniData.giniDiff > 0 ? "pogor\u0161ava" : "pobolj\u0161ava"} jednakost
       (Gini {giniData.giniDiff > 0 ? "+" : ""}
@@ -1218,28 +1406,24 @@ function GiniInterpretation({ giniData }: { giniData: ReturnType<typeof computeG
 function TramSection({ freq }: { freq: ReturnType<typeof computeFrequencyInsights> }) {
   if (freq.tramlessDistricts.length === 0) return null
   return (
-    <section id="tramvaj" className="rounded-3xl bg-rose-50/50 p-8 dark:bg-rose-950/10">
-      <SectionIcon icon="tram" color="rose" title="Tramvaj je kralj" />
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-        <p>
-          Nijedna četvrt bez tramvaja ne prelazi rezultat{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {freq.bestTramless}
-          </strong>
-          . {freq.tramlessDistricts.length} četvrti nema tramvajski pristup:{" "}
-          <span className="text-slate-600 dark:text-slate-400">
-            {freq.tramlessDistricts.map((d) => d.name).join(", ")}
-          </span>
-          .
-        </p>
-        <p>
-          Broj tramvajskih linija je najjači prediktor rezultata - četvrti
-          s više od 10 linija prosječno imaju rezultat{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {freq.avgScoreWithManyTramLines}
-          </strong>.
-        </p>
-        <TramlessScores districts={freq.tramlessDistricts} />
+    <section id="tramvaj" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Tramvaj je kralj
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Nijedna četvrt bez tramvaja ne prelazi rezultat <strong className="font-medium text-slate-900 dark:text-slate-100">{freq.bestTramless}</strong>. Broj tramvajskih linija je najjači prediktor rezultata - četvrti s više od 10 linija prosječno imaju rezultat <strong className="font-medium text-slate-900 dark:text-slate-100">{freq.avgScoreWithManyTramLines}</strong>.
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-start md:gap-12">
+        <div className="mt-8 md:mt-0 md:w-1/2">
+          <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+            {freq.tramlessDistricts.length} četvrti bez tramvaja
+          </div>
+          <TramlessScores districts={freq.tramlessDistricts} />
+        </div>
       </div>
     </section>
   )
@@ -1247,7 +1431,7 @@ function TramSection({ freq }: { freq: ReturnType<typeof computeFrequencyInsight
 
 function TramlessScores({ districts }: { districts: DistrictScore[] }) {
   return (
-    <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[14px] text-rose-700/80 dark:text-rose-300/80">
+    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-slate-600 dark:text-slate-400">
       {[...districts]
         .sort((a, b) => b.score - a.score)
         .map((d) => (
@@ -1271,28 +1455,42 @@ function HzTrainSection({ data }: { data: ScoreData }) {
   )
   if (withTrains.length === 0 || anyTrainBoost) return null
   return (
-    <section id="vlak" className="rounded-3xl bg-teal-50/50 p-8 dark:bg-teal-950/10">
-      <SectionIcon icon="flag" color="teal" title="HŽ vlak - neiskorišten potencijal" />
-      <HzTrainBody withTrains={withTrains} totalDistricts={data.districts.length} />
-      <HzTrainDistrictList withTrains={withTrains} />
+    <section id="vlak" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            HŽ vlak - neiskorišten potencijal
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            HŽ ima stanice u <strong className="font-medium text-slate-900 dark:text-slate-100">{withTrains.length}</strong> od {data.districts.length} četvrti. Međutim, doprinos vlaka u prosječnom 30-minutnom putovanju je zanemariv.
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-start md:gap-12">
+        <div className="md:w-1/2">
+          <HzTrainBody withTrains={withTrains} totalDistricts={data.districts.length} />
+        </div>
+        <div className="mt-8 md:mt-0 md:w-1/2">
+          <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+            Četvrti uz željeznicu
+          </div>
+          <HzTrainDistrictList withTrains={withTrains} />
+        </div>
+      </div>
     </section>
   )
 }
 
 function HzTrainBody({ withTrains, totalDistricts }: { withTrains: DistrictScore[]; totalDistricts: number }) {
   return (
-    <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
       <p>
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           {withTrains.length} od {totalDistricts} četvrti
         </strong>{" "}
         ima pristup željezničkoj mreži - ali vlak ne poboljšava
         30-minutnu dostupnost ni u jednoj od njih. Doprinos
-        vlaka je{" "}
-        <strong className="font-medium text-teal-700 dark:text-teal-300">
-          0%
-        </strong>{" "}
-        posvuda.
+        vlaka je <strong className="font-medium text-slate-900 dark:text-slate-100">0%</strong> posvuda.
       </p>
       <p>
         Razlog je frekvencija. HŽ regionalni vlakovi voze svakih
@@ -1302,7 +1500,7 @@ function HzTrainBody({ withTrains, totalDistricts }: { withTrains: DistrictScore
         dovoljno da bi značajno proširilo doseg u usporedbi s
         tramvajem ili autobusom koji su već krenuli.
       </p>
-      <p className="text-[14px] text-teal-700/80 dark:text-teal-400/80">
+      <p className="text-[15px] text-slate-500 dark:text-slate-400">
         Za usporedbu: tramvaj u vršnom satu dolazi svakih 7-10 minuta
         po liniji, ali na frekventnim stanicama s više linija
         efektivno čekanje je ~2-3 min. Kad bi HŽ vozio svakih 15
@@ -1315,20 +1513,24 @@ function HzTrainBody({ withTrains, totalDistricts }: { withTrains: DistrictScore
 
 function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
   return (
-    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-[14px] text-teal-700/80 dark:text-teal-300/80">
+    <div className="flex flex-col gap-4 text-[14px] text-slate-600 dark:text-slate-400">
       {withTrains
         .sort((a, b) => b.score - a.score)
         .map((d) => (
-          <span key={d.name}>
-            {d.name}:{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
-              {d.trainLines?.length ?? 0}
-            </strong>{" "}
-            linija, boost{" "}
-            <strong className="font-medium text-teal-700 dark:text-teal-300">
-              0%
-            </strong>
-          </span>
+          <div key={d.name} className="flex items-center justify-between border-b border-slate-100 pb-2 last:border-0 dark:border-white/5">
+            <span className="font-medium text-slate-700 dark:text-slate-300">{d.name}</span>
+            <div className="flex items-center gap-4">
+              <span>
+                <strong className="font-medium text-slate-900 dark:text-slate-100">
+                  {d.trainLines?.length ?? 0}
+                </strong>{" "}
+                linija
+              </span>
+              <span className="w-16 text-right">
+                boost <strong className="font-medium text-slate-900 dark:text-slate-100">0%</strong>
+              </span>
+            </div>
+          </div>
         ))}
     </div>
   )
@@ -1340,21 +1542,21 @@ function DensityScatterSection({
   scatter: ReturnType<typeof computeScatterData>
 }) {
   const scatterMargin = { top: 20, right: 16, bottom: 50, left: 40 }
-  const scatterW = 340
-  const scatterH = 280
+  const scatterW = 400
+  const scatterH = 320
   const scatterInnerW = scatterW - scatterMargin.left - scatterMargin.right
   const scatterInnerH = scatterH - scatterMargin.top - scatterMargin.bottom
   const scatterCeilDensity = Math.ceil(scatter.maxDensity / 100) * 100 || scatter.maxDensity + 10
   const scatterXScale = scaleLinear<number>({ domain: [0, scatterCeilDensity], range: [0, scatterInnerW] })
   const scatterYScale = scaleLinear<number>({ domain: [0, 100], range: [scatterInnerH, 0] })
   const scatterMaxPop = Math.max(...scatter.densityData.map((d) => d.population))
-  const scatterRScale = scaleSqrt<number>({ domain: [0, scatterMaxPop], range: [4, 14] })
+  const scatterRScale = scaleSqrt<number>({ domain: [0, scatterMaxPop], range: [4, 18] })
 
   return (
-    <section id="gustoca" className="mt-16 sm:mt-20">
+    <section id="gustoca" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <DensitySectionHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+      <div className="mt-12 flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
+        <div className="w-full lg:w-[480px] shrink-0">
           <ScatterPlot
             scatter={scatter}
             scatterMargin={scatterMargin}
@@ -1370,7 +1572,9 @@ function DensityScatterSection({
           <ScatterLegend />
           <ScatterAccessibilityTable densityData={scatter.densityData} />
         </div>
-        <DensityInterpretation scatter={scatter} />
+        <div className="flex-1">
+          <DensityInterpretation scatter={scatter} />
+        </div>
       </div>
     </section>
   )
@@ -1378,18 +1582,17 @@ function DensityScatterSection({
 
 function DensitySectionHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
           Gustoća vs. povezanost
         </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Svaka točka je jedna gradska četvrt. Idealno bi gušće naseljene
+          četvrti trebale imati bolji javni prijevoz - ali to u Zagrebu često
+          nije slučaj.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Svaka točka je jedna gradska četvrt. Idealno bi gušće naseljene
-        četvrti trebale imati bolji javni prijevoz - ali to u Zagrebu često
-        nije slučaj.
-      </p>
     </div>
   )
 }
@@ -1667,14 +1870,18 @@ function TransitDesertSection({
 }) {
   if (!desert.hasDesertData && desert.lowFreqDistricts.length === 0) return null
   return (
-    <section id="pustinje" className="mt-16 sm:mt-20">
+    <section id="pustinje" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <TransitDesertHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
         {desert.hasDesertData && desert.desertDistricts.length > 0 && (
-          <DesertRanking data={data} desert={desert} />
+          <div className="w-full lg:w-[400px] shrink-0">
+            <DesertRanking data={data} desert={desert} />
+          </div>
         )}
         {desert.hasDesertData && (
-          <DesertInterpretation data={data} desert={desert} />
+          <div className="flex-1">
+            <DesertInterpretation data={data} desert={desert} />
+          </div>
         )}
       </div>
     </section>
@@ -1683,27 +1890,26 @@ function TransitDesertSection({
 
 function TransitDesertHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-red-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
           Prometne pustinje
         </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Područja gdje je najbliža stanica udaljena više od 500 metara
+          zračne linije (realna pješačka udaljenost je 20-40% veća) ili gdje
+          prijevoz dolazi rjeđe od 2 puta na sat.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Područja gdje je najbliža stanica udaljena više od 500 metara
-        zračne linije (realna pješačka udaljenost je 20-40% veća) ili gdje
-        prijevoz dolazi rjeđe od 2 puta na sat.
-      </p>
     </div>
   )
 }
 
 function DesertRanking({ data, desert }: { data: ScoreData; desert: ReturnType<typeof computeDesertInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-sans text-[11px] font-bold tracking-widest text-red-700 uppercase dark:text-red-400">
+    <div>
+      <div className="mb-4 flex items-baseline justify-between">
+        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
           Daleko od stanice (&gt;500m)
         </h3>
         {data.cityDesertPct !== undefined && (
@@ -1712,7 +1918,7 @@ function DesertRanking({ data, desert }: { data: ScoreData; desert: ReturnType<t
           </span>
         )}
       </div>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">
         Udio uzorkovanih točaka u svakoj četvrti udaljenijih više od
         500m od najbliže stanice javnog prijevoza.
       </p>
@@ -1722,9 +1928,9 @@ function DesertRanking({ data, desert }: { data: ScoreData; desert: ReturnType<t
         label={(d) => `${d.desertPct}%`}
         trailing={(d) => `~${d.avgNearestStopM}m`}
         color={{
-          text: "text-red-600 dark:text-red-400",
-          bg: "bg-red-100 dark:bg-red-900/30",
-          bar: "bg-red-500",
+          text: "text-rose-700 dark:text-rose-400",
+          bg: "bg-rose-100 dark:bg-rose-900/30",
+          bar: "bg-rose-500",
         }}
       />
     </div>
@@ -1733,8 +1939,10 @@ function DesertRanking({ data, desert }: { data: ScoreData; desert: ReturnType<t
 
 function DesertInterpretation({ data, desert }: { data: ScoreData; desert: ReturnType<typeof computeDesertInsights> }) {
   return (
-    <div className="flex flex-col rounded-3xl bg-red-50/50 p-8 dark:bg-red-950/10">
-      <SectionIcon icon="warning" color="red" title="Koliko je to loše?" />
+    <div>
+      <h3 className="font-serif text-[28px] text-rose-800 dark:text-rose-400">
+        Koliko je to loše?
+      </h3>
       <DesertStatCards data={data} desert={desert} />
       <DesertInterpretationText desert={desert} />
     </div>
@@ -1743,25 +1951,21 @@ function DesertInterpretation({ data, desert }: { data: ScoreData; desert: Retur
 
 function DesertStatCards({ data, desert }: { data: ScoreData; desert: ReturnType<typeof computeDesertInsights> }) {
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-red-600 tabular-nums dark:text-red-400">
+    <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-8 border-b border-t border-slate-200 py-6 dark:border-white/10">
+      <div className="flex flex-col border-l-2 border-rose-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {data.cityDesertPct ?? 0}%
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
-          uzorkovanih točaka grada je
-          <br />
-          &gt;500m od stanice
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">
+          uzorkovanih točaka grada je &gt;500m od stanice
         </div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="flex flex-col border-l-2 border-rose-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {desert.desertDistricts.length}
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
-          od {data.districts.length} četvrti
-          <br />
-          ima barem jednu pustinjsku zonu
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">
+          od {data.districts.length} četvrti ima barem jednu pustinjsku zonu
         </div>
       </div>
     </div>
@@ -1770,7 +1974,7 @@ function DesertStatCards({ data, desert }: { data: ScoreData; desert: ReturnType
 
 function DesertInterpretationText({ desert }: { desert: ReturnType<typeof computeDesertInsights> }) {
   return (
-    <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
       <p>
         Najveća prometna pustinja je{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -1808,9 +2012,9 @@ function StopDistanceSection({
 }) {
   if (!desert.hasStopDistData || desert.stopDistSorted.length === 0) return null
   return (
-    <section id="udaljenost-stajalista" className="mt-16 sm:mt-20">
+    <section id="udaljenost-stajalista" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <StopDistanceHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         <StopDistanceChart desert={desert} />
         <StopDistanceInterpretation desert={desert} />
       </div>
@@ -1820,34 +2024,29 @@ function StopDistanceSection({
 
 function StopDistanceHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
           Udaljenost do najbližeg stajališta
         </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Prosječna udaljenost pješačenja do najbliže stanice javnog
+          prijevoza. Urbanistički standard od <strong className="font-medium text-slate-900 dark:text-slate-100">400 metara</strong> smatra se ugodnom pješačkom udaljenošću - sve iznad toga
+          odvraća ljude od korištenja javnog prijevoza.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Prosječna udaljenost pješačenja do najbliže stanice javnog
-        prijevoza. Urbanistički standard od{" "}
-        <strong className="font-medium text-slate-700 dark:text-slate-300">
-          400 metara
-        </strong>{" "}
-        smatra se ugodnom pješačkom udaljenošću - sve iznad toga
-        odvraća ljude od korištenja javnog prijevoza.
-      </p>
     </div>
   )
 }
 
 function StopDistanceChart({ desert }: { desert: ReturnType<typeof computeDesertInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+    <div>
+      <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
         Prosječna udaljenost po četvrti (m)
       </h3>
-      <div className="space-y-2">
-        {desert.stopDistSorted.map((d, i) => (
+      <div className="flex flex-col gap-2">
+        {desert.stopDistSorted.slice(0, 10).map((d, i) => (
           <StopDistanceBar key={d.osmId} d={d} i={i} maxStopDist={desert.maxStopDist} />
         ))}
       </div>
@@ -1897,24 +2096,27 @@ function StopDistanceInterpretation({ desert }: { desert: ReturnType<typeof comp
   const first = desert.stopDistSorted[0]
   const last = desert.stopDistSorted[desert.stopDistSorted.length - 1]
   return (
-    <div className="flex flex-col rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
-      <SectionIcon icon="pin" color="amber" title="Koliko daleko pješačimo?" />
-      <StopDistStatCards first={first} last={last} />
-      <StopDistInterpretationText desert={desert} first={first} last={last} />
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
+        <StopDistStatCards first={first} last={last} />
+        <StopDistInterpretationText desert={desert} first={first} last={last} />
+      </div>
     </div>
   )
 }
 
 function StopDistStatCards({ first, last }: { first: DistrictScore; last: DistrictScore }) {
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-emerald-600 tabular-nums dark:text-emerald-400">~{Math.round(first?.avgNearestStopM ?? 0)}m</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">{first?.name}<br />najbliže stanice</div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="flex flex-col border-l-2 border-emerald-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">~{Math.round(first?.avgNearestStopM ?? 0)}m</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">{first?.name}</div>
+        <div className="mt-1 text-[12px] text-slate-400">najbliže stanice u prosjeku</div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-red-600 tabular-nums dark:text-red-400">~{Math.round(last?.avgNearestStopM ?? 0)}m</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">{last?.name}<br />najudaljenije stanice</div>
+      <div className="flex flex-col border-l-2 border-rose-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">~{Math.round(last?.avgNearestStopM ?? 0)}m</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">{last?.name}</div>
+        <div className="mt-1 text-[12px] text-slate-400">najudaljenije stanice u prosjeku</div>
       </div>
     </div>
   )
@@ -1938,7 +2140,7 @@ function StopDistInterpretationText({
         do najbliže stanice, dok stanovnici{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">{last?.name}</strong>{" "}
         moraju prijeći ~{Math.round(last?.avgNearestStopM ?? 0)}m
-        - {Math.round((last?.avgNearestStopM ?? 0) / (first?.avgNearestStopM ?? 1))}x
+        - {Math.round((last?.avgNearestStopM ?? 0) / Math.max(first?.avgNearestStopM ?? 1, 1))}x
         više.
       </p>
       <p>
@@ -1966,11 +2168,15 @@ function PeakOffPeakSection({
 }) {
   if (!evening.hasEveningData || evening.eveningRankedByDrop.length === 0) return null
   return (
-    <section id="vrsni-sat" className="mt-16 sm:mt-20">
+    <section id="vrsni-sat" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <PeakOffPeakHeader departureTime={base.displayDepartureTime} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PeakOffPeakRanking data={data} evening={evening} />
-        <PeakOffPeakInterpretation evening={evening} />
+      <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
+        <div className="w-full lg:w-[400px] shrink-0">
+          <PeakOffPeakRanking data={data} evening={evening} />
+        </div>
+        <div className="flex-1">
+          <PeakOffPeakInterpretation evening={evening} />
+        </div>
       </div>
     </section>
   )
@@ -1978,28 +2184,29 @@ function PeakOffPeakSection({
 
 function PeakOffPeakHeader({ departureTime }: { departureTime: string }) {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-indigo-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Jutro vs. večer</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+          Jutro vs. večer
+        </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Koliko dostupnosti svaka četvrt gubi navečer (21:00) u usporedbi s
+          jutarnjim vršnim satom ({departureTime}). Ista mreža, manji
+          broj polazaka.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Koliko dostupnosti svaka četvrt gubi navečer (21:00) u usporedbi s
-        jutarnjim vršnim satom ({departureTime}). Ista mreža, manji
-        broj polazaka.
-      </p>
     </div>
   )
 }
 
 function PeakOffPeakRanking({ data, evening }: { data: ScoreData; evening: ReturnType<typeof computeEveningInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-sans text-[11px] font-bold tracking-widest text-indigo-700 uppercase dark:text-indigo-400">Najveći pad navečer</h3>
-        <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">-{evening.cityEveningDrop}% prosjek</span>
+    <div>
+      <div className="mb-4 flex items-baseline justify-between">
+        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Najveći pad navečer</h3>
+        <span className="font-serif text-[14px] text-indigo-600 dark:text-indigo-400">-{evening.cityEveningDrop}% prosjek</span>
       </div>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">
         Postotak smanjenja dosežnih ćelija u 30 minuta navečer u
         usporedbi s jutarnjim vršnim satom.
       </p>
@@ -2012,7 +2219,7 @@ function PeakOffPeakRanking({ data, evening }: { data: ScoreData; evening: Retur
             `${pct(d.eveningAvgReachableCells ?? d.avgReachableCells, data.totalGridCells)}%`
           }
           color={{
-            text: "text-indigo-600 dark:text-indigo-400",
+            text: "text-indigo-700 dark:text-indigo-400",
             bg: "bg-indigo-100 dark:bg-indigo-900/30",
             bar: "bg-indigo-500",
           }}
@@ -2024,8 +2231,7 @@ function PeakOffPeakRanking({ data, evening }: { data: ScoreData; evening: Retur
 
 function PeakOffPeakInterpretation({ evening }: { evening: ReturnType<typeof computeEveningInsights> }) {
   return (
-    <div className="flex flex-col rounded-3xl bg-indigo-50/50 p-8 dark:bg-indigo-950/10">
-      <SectionIcon icon="moon" color="indigo" title="Što se događa navečer?" />
+    <div className="flex flex-col gap-8">
       <PeakOffPeakStatCards evening={evening} />
       <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         <p>
@@ -2042,14 +2248,14 @@ function PeakOffPeakInterpretation({ evening }: { evening: ReturnType<typeof com
 
 function PeakOffPeakStatCards({ evening }: { evening: ReturnType<typeof computeEveningInsights> }) {
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-indigo-600 tabular-nums dark:text-indigo-400">-{evening.cityEveningDrop}%</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">prosječni pad dosega<br />u cijelom gradu</div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="flex flex-col border-l-2 border-indigo-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">-{evening.cityEveningDrop}%</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">prosječni pad dosega<br />u cijelom gradu</div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">-{evening.eveningRankedByDrop[0]?.peakOffpeakDrop ?? 0}%</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">najgori pad<br />({evening.eveningRankedByDrop[0]?.name ?? "-"})</div>
+      <div className="flex flex-col border-l-2 border-indigo-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">-{evening.eveningRankedByDrop[0]?.peakOffpeakDrop ?? 0}%</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">najgori pad<br />({evening.eveningRankedByDrop[0]?.name ?? "-"})</div>
       </div>
     </div>
   )
@@ -2062,11 +2268,15 @@ function WeekendSection({
 }) {
   if (!weekend.weekendComparison || weekend.weekendComparison.length === 0) return null
   return (
-    <section id="vikend" className="mt-16 sm:mt-20">
+    <section id="vikend" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <WeekendHeader cityWeekendChange={weekend.cityWeekendChange} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <WeekendBarChart weekend={weekend} />
-        <WeekendInterpretation weekend={weekend} />
+      <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
+        <div className="w-full lg:w-[480px] shrink-0">
+          <WeekendBarChart weekend={weekend} />
+        </div>
+        <div className="flex-1">
+          <WeekendInterpretation weekend={weekend} />
+        </div>
       </div>
     </section>
   )
@@ -2074,17 +2284,16 @@ function WeekendSection({
 
 function WeekendHeader({ cityWeekendChange }: { cityWeekendChange: number }) {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-violet-500" />
-        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Radni dan vs. subota</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">Radni dan vs. subota</h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Usporedba rezultata dostupnosti radnim danom i subotom.
+          {cityWeekendChange > 0
+            ? " Iznenađujuće, subotom je povezanost u prosjeku bolja. OTP model koristi subotnja vremena vožnje koja su kraća zbog manjeg prometa, što više nego kompenzira rjeđi vozni red."
+            : " Manji broj polazaka subotom smanjuje doseg većine četvrti."}
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Usporedba rezultata dostupnosti radnim danom i subotom.
-        {cityWeekendChange > 0
-          ? " Iznenađujuće, subotom je povezanost u prosjeku bolja. OTP model koristi subotnja vremena vožnje koja su kraća zbog manjeg prometa, što više nego kompenzira rjeđi vozni red."
-          : " Manji broj polazaka subotom smanjuje doseg većine četvrti."}
-      </p>
     </div>
   )
 }
@@ -2092,44 +2301,48 @@ function WeekendHeader({ cityWeekendChange }: { cityWeekendChange: number }) {
 function WeekendBarChart({ weekend }: { weekend: ReturnType<typeof computeWeekendData> }) {
   if (!weekend.weekendComparison) return null
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">Promjena rezultata subotom</h3>
-        <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">prosjek {weekend.cityWeekendChange > 0 ? "+" : ""}{fmtHR(weekend.cityWeekendChange, 1)}%</span>
+    <div>
+      <div className="mb-4 flex items-baseline justify-between">
+        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Promjena rezultata subotom</h3>
+        <span className="font-serif text-[14px] text-violet-600 dark:text-violet-400">prosjek {weekend.cityWeekendChange > 0 ? "+" : ""}{fmtHR(weekend.cityWeekendChange, 1)}%</span>
       </div>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">
         Postotak promjene rezultata subotom u usporedbi s radnim danom.
       </p>
-      <div className="space-y-2.5">
-        {weekend.weekendComparison.map((p, i) => (
-          <WeekendBarRow key={p.name} p={p} i={i} weekendComparison={weekend.weekendComparison!} />
-        ))}
+      <div className="flex flex-col gap-2">
+        {(() => {
+          const maxAbsChange = Math.max(...weekend.weekendComparison!.map((x) => Math.abs(x.change)), 1)
+          return weekend.weekendComparison!.map((p, i) => (
+            <WeekendBarRow key={p.name} p={p} i={i} maxAbsChange={maxAbsChange} />
+          ))
+        })()}
       </div>
     </div>
   )
 }
 
-function WeekendBarRow({ p, i, weekendComparison }: { p: WeekendItem; i: number; weekendComparison: WeekendItem[] }) {
-  const maxAbsChange = Math.max(...weekendComparison.map((x) => Math.abs(x.change)), 1)
+function WeekendBarRow({ p, i, maxAbsChange }: { p: WeekendItem; i: number; maxAbsChange: number }) {
   const barPct = (Math.abs(p.change) / maxAbsChange) * 100
   const isPositive = p.change >= 0
-  const barColor = isPositive ? "hsl(142, 65%, 40%)" : "hsl(0, 65%, 45%)"
-  const barBg = isPositive ? "hsl(142, 40%, 92%)" : "hsl(0, 40%, 92%)"
+  const barColor = isPositive ? "bg-emerald-500" : "bg-rose-500"
+  const barBg = isPositive ? "bg-emerald-100 dark:bg-emerald-900/30" : "bg-rose-100 dark:bg-rose-900/30"
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">{i + 1}.</span>
-      <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-baseline justify-between gap-2">
-          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">{p.name}</span>
-          <span className="shrink-0 font-serif text-[14px] font-medium tabular-nums" style={{ color: barColor }}>
-            {p.change > 0 ? "+" : ""}{fmtHR(p.change, 1)}%
-          </span>
+    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">{(i + 1).toString().padStart(2, "0")}</span>
+          <span className="text-[14px] font-medium text-slate-700 dark:text-slate-300">{p.name}</span>
         </div>
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full" style={{ backgroundColor: barBg }}>
-          <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${barPct}%`, backgroundColor: barColor }} />
+        <span className={`shrink-0 font-serif text-[15px] font-medium tabular-nums ${isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
+          {p.change > 0 ? "+" : ""}{fmtHR(p.change, 1)}%
+        </span>
+      </div>
+      <div className="ml-7">
+        <div className={`relative h-1.5 w-full overflow-hidden rounded-full ${barBg}`}>
+          <div className={`absolute inset-y-0 left-0 rounded-full ${barColor}`} style={{ width: `${barPct}%` }} />
         </div>
-        <div className="mt-0.5 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
-          Radni dan: {p.weekdayScore} → Subota: {p.weekendScore}
+        <div className="mt-2 text-[12px] text-slate-500 tabular-nums dark:text-slate-400">
+          Radni dan: {p.weekdayScore} &rarr; Subota: {p.weekendScore}
         </div>
       </div>
     </div>
@@ -2139,10 +2352,9 @@ function WeekendBarRow({ p, i, weekendComparison }: { p: WeekendItem; i: number;
 function WeekendInterpretation({ weekend }: { weekend: ReturnType<typeof computeWeekendData> }) {
   if (!weekend.weekendComparison) return null
   return (
-    <div className="flex flex-col rounded-3xl bg-violet-50/50 p-8 dark:bg-violet-950/10">
-      <SectionIcon icon="calendar" color="violet" title="Što se događa vikendom?" />
+    <div className="flex flex-col gap-8">
       <WeekendStatCards weekend={weekend} />
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <div className="space-y-6 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         {weekend.cityWeekendChange > 0 ? (
           <WeekendPositiveText weekendComparison={weekend.weekendComparison} cityWeekendChange={weekend.cityWeekendChange} />
         ) : (
@@ -2156,18 +2368,18 @@ function WeekendInterpretation({ weekend }: { weekend: ReturnType<typeof compute
 function WeekendStatCards({ weekend }: { weekend: ReturnType<typeof computeWeekendData> }) {
   if (!weekend.weekendComparison) return null
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-violet-600 tabular-nums dark:text-violet-400">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="flex flex-col border-l-2 border-violet-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {weekend.cityWeekendChange > 0 ? "+" : ""}{fmtHR(weekend.cityWeekendChange, 1)}%
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">pop. ponderirana<br />prosječna promjena</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">pop. ponderirana<br />prosječna promjena</div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="flex flex-col border-l-2 border-violet-500 pl-4 py-1">
+        <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {weekend.weekendComparison[0]?.change > 0 ? "+" : ""}{fmtHR(weekend.weekendComparison[0]?.change ?? 0, 1)}%
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">najveća promjena<br />({weekend.weekendComparison[0]?.name ?? "-"})</div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">najveća promjena<br />({weekend.weekendComparison[0]?.name ?? "-"})</div>
       </div>
     </div>
   )
@@ -2242,14 +2454,20 @@ function BajsImpactSection({
 }) {
   if (!bajs.hasBajs) return null
   return (
-    <section id="bajs" className="mt-16 sm:mt-20">
-      <BajsHeader />
-      <BajsMapSection />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <BajsRanking bajs={bajs} />
-        <BajsAnalysis data={data} bajs={bajs} />
+    <section id="bajs" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <BajsHeader />
       </div>
-      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <BajsMapSection />
+      <div className="mt-12 flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
+        <div className="w-full lg:w-[400px] shrink-0">
+          <BajsRanking bajs={bajs} />
+        </div>
+        <div className="flex-1">
+          <BajsAnalysis data={data} bajs={bajs} />
+        </div>
+      </div>
+      <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <BajsCoverageCard bajs={bajs} />
         <BajsDensityCard bajs={bajs} />
       </div>
@@ -2259,12 +2477,9 @@ function BajsImpactSection({
 
 function BajsHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Utjecaj BAJS bicikala</h2>
-      </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+    <div>
+      <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">Utjecaj BAJS bicikala</h2>
+      <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
         Koliko se dostupnost svake četvrti poboljšava kada se uz javni
         prijevoz koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje
         je svaka stanica operativna s barem jednim biciklom.
@@ -2275,19 +2490,18 @@ function BajsHeader() {
 
 function BajsMapSection() {
   return (
-    <div className="mb-10">
-      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[13px] text-slate-600 dark:text-slate-400">
+    <div className="mt-12">
+      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-slate-500 dark:text-slate-400">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-[#d97706]" />
+          <span className="inline-block h-3 w-3 rounded-full bg-[#d97706]" />
           Tamnije = veći dobitak
         </span>
-        <span className="hidden opacity-50 sm:inline-block">•</span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-[#94a3b8]" />
+          <span className="inline-block h-3 w-3 rounded-full bg-[#94a3b8]" />
           Sivo = bez utjecaja
         </span>
       </div>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto w-full max-w-5xl rounded-3xl bg-slate-50 p-4 dark:bg-white/5">
         <div className="w-full overflow-hidden" style={{ aspectRatio: "960/620" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -2304,15 +2518,15 @@ function BajsMapSection() {
 
 function BajsRanking({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">Tko najviše profitira</h3>
+    <div>
+      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Tko najviše profitira</h3>
       <RankingList
         items={bajs.bajsRankedByBoost}
         value={(d) => d.bajsBoostPct ?? 0}
         label={(d) => `+${d.bajsBoostPct}%`}
         trailing={(d) => `${d.bajsStations} st.`}
         color={{
-          text: "text-amber-600 dark:text-amber-400",
+          text: "text-amber-700 dark:text-amber-400",
           bg: "bg-amber-100 dark:bg-amber-900/30",
           bar: "bg-amber-500",
         }}
@@ -2332,8 +2546,8 @@ function BajsAnalysis({ data, bajs }: { data: ScoreData; bajs: ReturnType<typeof
 
 function BajsEquityCard({ data }: { data: ScoreData }) {
   return (
-    <div className="flex-1 rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
-      <SectionIcon icon="circle-down" color="amber" title="Smanjuje li BAJS jaz?" />
+    <div className="flex flex-col border-l-2 border-amber-500 pl-6 py-2">
+      <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">Smanjuje li BAJS jaz?</h3>
       <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         <p>
           <BajsEquityText data={data} />
@@ -2377,22 +2591,22 @@ function BajsEquityText({ data }: { data: ScoreData }) {
 
 function BajsTotalImpactCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   return (
-    <div className="flex-1 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-4 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Ukupni utjecaj</h3>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="text-center">
-          <div className="font-serif text-[28px] leading-none text-amber-600 tabular-nums dark:text-amber-400">+{bajs.cityBajsBoost}%</div>
-          <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">prosječni dobitak</div>
+    <div className="flex flex-col border-l-2 border-amber-500 pl-6 py-2 mt-6">
+      <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">Ukupni utjecaj</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div className="flex flex-col">
+          <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">+{bajs.cityBajsBoost}%</div>
+          <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">prosječni dobitak</div>
         </div>
-        <div className="text-center">
-          <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{bajs.bajsTotalStations}</div>
-          <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">stanica u gradu</div>
+        <div className="flex flex-col">
+          <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{bajs.bajsTotalStations}</div>
+          <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">stanica u gradu</div>
         </div>
-        <div className="text-center">
-          <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="flex flex-col">
+          <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
             {bajs.topBajsBeneficiary ? `+${bajs.topBajsBeneficiary.bajsBoostPct}%` : "-"}
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">max. dobitak ({bajs.topBajsBeneficiary?.name ?? "-"})</div>
+          <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">max. dobitak<br />({bajs.topBajsBeneficiary?.name ?? "-"})</div>
         </div>
       </div>
     </div>
@@ -2401,22 +2615,22 @@ function BajsTotalImpactCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsi
 
 function BajsCoverageStats({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   return (
-    <div className="mb-6 grid grid-cols-3 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[28px] leading-none text-amber-600 tabular-nums dark:text-amber-400">
+    <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {bajs.coveragePct}%
         </div>
-        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">stanica pokriveno</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">stanica pokriveno</div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {bajs.coveredStops}
         </div>
-        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">od {bajs.totalStops} stanica</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">od {bajs.totalStops} stanica</div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">350m</div>
-        <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">pješački doseg</div>
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">350m</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">pješački doseg</div>
       </div>
     </div>
   )
@@ -2424,8 +2638,8 @@ function BajsCoverageStats({ bajs }: { bajs: ReturnType<typeof computeBajsInsigh
 
 function BajsCoverageCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   return (
-    <div className="rounded-3xl bg-amber-50/50 p-8 dark:bg-amber-950/10">
-      <SectionIcon icon="pin" color="amber" title="Pokrivenost posljednje milje" />
+    <div className="flex flex-col border-l-2 border-amber-500 pl-6 py-2">
+      <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">Pokrivenost posljednje milje</h3>
       <BajsCoverageStats bajs={bajs} />
       <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         <p>
@@ -2460,11 +2674,11 @@ function BajsCoverageCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsight
 function BajsDensityCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights> }) {
   const lastDistrict = bajs.densityRanked[bajs.densityRanked.length - 1]
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-2 font-sans text-[11px] font-bold tracking-widest text-amber-700 uppercase dark:text-amber-400">
+    <div className="flex flex-col border-l-2 border-amber-500 pl-6 py-2">
+      <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">
         Gustoća BAJS stanica
       </h3>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
         Stanica po km² - koliko je infrastruktura ravnomjerno raspoređena
       </p>
       <RankingList
@@ -2479,14 +2693,14 @@ function BajsDensityCard({ bajs }: { bajs: ReturnType<typeof computeBajsInsights
         }}
       />
       {bajs.topDensity && lastDistrict && (
-        <div className="mt-6 rounded-2xl border border-amber-200/50 bg-amber-50/50 px-5 py-4 dark:border-amber-800/30 dark:bg-amber-950/20">
-          <p className="text-[13px] leading-relaxed text-amber-900 dark:text-amber-200">
-            <strong className="font-medium">{bajs.topDensity.name}</strong> ima{" "}
+        <div className="mt-6 border-l-2 border-amber-200/50 pl-4 py-1 dark:border-amber-800/30">
+          <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
+            <strong className="font-medium text-slate-900 dark:text-slate-100">{bajs.topDensity.name}</strong> ima{" "}
             {fmtHR(bajs.topDensity.bajsDensityPerKm2 ?? 0, 2)} stanica/km²,
             dok {lastDistrict.name} ima samo{" "}
             {fmtHR(lastDistrict.bajsDensityPerKm2 ?? 0, 2)}.
             {" "}Razlika u gustoći od{" "}
-            <strong className="font-medium">
+            <strong className="font-medium text-slate-900 dark:text-slate-100">
               {Math.round((bajs.topDensity.bajsDensityPerKm2 ?? 1) / (lastDistrict.bajsDensityPerKm2 || 0.01))}×
             </strong>{" "}
             znači da kvaliteta bike-sharing usluge ovisi prije svega o tome gdje živite.
@@ -2506,9 +2720,9 @@ function VarianceSection({
 }) {
   if (!variance.hasVarianceData || variance.varianceRanked.length === 0) return null
   return (
-    <section id="varijacija" className="mt-16 sm:mt-20">
+    <section id="varijacija" className="mt-16 flex flex-col border-t border-slate-200 py-16 sm:mt-20 sm:py-24 dark:border-white/10">
       <VarianceHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px]">
         <VarianceRanking data={data} variance={variance} />
         <VarianceInterpretation variance={variance} />
       </div>
@@ -2518,24 +2732,27 @@ function VarianceSection({
 
 function VarianceHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-sky-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Nejednakost unutar četvrti</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+          Nejednakost unutar četvrti
+        </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Neke četvrti imaju odlične dijelove i prometne pustinje unutar
+          istog područja. Standardna devijacija mjeri koliko se rezultati
+          razlikuju unutar jedne četvrti.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Neke četvrti imaju odlične dijelove i prometne pustinje unutar
-        istog područja. Standardna devijacija mjeri koliko se rezultati
-        razlikuju unutar jedne četvrti.
-      </p>
     </div>
   )
 }
 
 function VarianceRanking({ data, variance }: { data: ScoreData; variance: ReturnType<typeof computeVarianceInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-sky-700 uppercase dark:text-sky-400">Najveća varijacija u dostupnosti</h3>
+    <div className="flex flex-col">
+      <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+        Najveća varijacija u dostupnosti
+      </div>
       <div className="space-y-3">
         {variance.varianceRanked.slice(0, 8).map((d, i) => (
           <VarianceRow key={d.osmId} d={d} i={i} totalGridCells={data.totalGridCells} />
@@ -2549,47 +2766,62 @@ function VarianceRow({ d, i, totalGridCells }: { d: DistrictScore; i: number; to
   const minPct = ((d.minReachableCells ?? 0) / totalGridCells) * 100
   const maxPct = ((d.maxReachableCells ?? 0) / totalGridCells) * 100
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-serif text-[13px] text-slate-400 tabular-nums">{i + 1}.</span>
-      <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-baseline justify-between gap-2">
-          <span className="truncate text-[14px] font-medium text-slate-900 dark:text-slate-100">{d.name}</span>
-          <span className="shrink-0 font-serif text-[14px] font-medium text-sky-600 tabular-nums dark:text-sky-400">σ {Math.round(d.stddevReachableCells ?? 0)}</span>
+    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">{(i + 1).toString().padStart(2, "0")}</span>
+          <span className="text-[14px] font-medium text-slate-700 dark:text-slate-300">{d.name}</span>
         </div>
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-sky-100 dark:bg-sky-900/30">
+        <span className="shrink-0 font-serif text-[15px] font-medium text-sky-600 tabular-nums dark:text-sky-400">σ {Math.round(d.stddevReachableCells ?? 0)}</span>
+      </div>
+      <div className="ml-7">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
           <div className="absolute inset-y-0 rounded-full bg-sky-500" style={{ left: `${minPct}%`, width: `${Math.max(maxPct - minPct, 1)}%` }} />
         </div>
-      </div>
-      <div className="flex shrink-0 flex-col items-end gap-0.5">
-        <span className="text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
-          {pct(d.minReachableCells ?? 0, totalGridCells)}-{pct(d.maxReachableCells ?? 0, totalGridCells)}%
-        </span>
-        {d.p25ReachableCells != null && d.p75ReachableCells != null && (
-          <span className="text-[10px] text-sky-500/70 tabular-nums dark:text-sky-400/60">
-            IQR {pct(d.p25ReachableCells, totalGridCells)}-{pct(d.p75ReachableCells, totalGridCells)}%
-          </span>
-        )}
+        <div className="mt-2 flex justify-between text-[12px] text-slate-500 tabular-nums dark:text-slate-400">
+          <span>Min: {Math.round(d.minReachableCells ?? 0)}</span>
+          <span>Max: {Math.round(d.maxReachableCells ?? 0)}</span>
+        </div>
       </div>
     </div>
   )
 }
 
 function VarianceInterpretation({ variance }: { variance: ReturnType<typeof computeVarianceInsights> }) {
+  const mostUnequal = variance.varianceRanked[0]
+  const mostEqual = variance.varianceRanked[variance.varianceRanked.length - 1]
+  
+  if (!mostUnequal || !mostEqual) return null
+  
   return (
-    <div className="flex flex-col rounded-3xl bg-sky-50/50 p-8 dark:bg-sky-950/10">
-      <SectionIcon icon="bars" color="sky" title="Što to znači?" />
+    <div className="flex flex-col gap-6">
       <VarianceStatCards variance={variance} />
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-        <p>
-          Najnejednakija četvrt je{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">{variance.varianceRanked[0]?.name}</strong>{" "}
-          - neki stanovnici imaju odličnu povezanost javnim prijevozom,
-          dok susjedi 500 metara uzbrdo nemaju gotovo ništa.
-        </p>
-        <p>
-          Gornji grad-Medveščak i Črnomerec protežu se uz padinu
-          Medvednice - donji dijelovi blizu centra imaju odličan
-          tramvajski pristup, dok su gornji dijelovi prometne pustinje.
+      <div className="flex flex-col border-l-2 border-sky-500 pl-6 py-2 mt-4">
+        <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-sky-700 uppercase">Grad ekstrema ({mostUnequal.name})</h3>
+        <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p>
+            Najnejednakija četvrt je{" "}
+            <strong className="font-medium text-slate-900 dark:text-slate-100">{mostUnequal.name}</strong>{" "}
+            - neki stanovnici imaju odličnu povezanost javnim prijevozom,
+            dok susjedi 500 metara uzbrdo nemaju gotovo ništa.
+          </p>
+          <p>
+            Ovakav nesrazmjer obično znači da jedan dio četvrti ima odličan
+            pristup tramvajskoj ili željezničkoj pruzi, dok drugi dio 
+            ovisi o rijetkim autobusnim linijama ili je izoliran.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-col border-l-2 border-slate-300 pl-6 py-2 mt-6">
+        <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Ujednačena dostupnost ({mostEqual.name})</h3>
+        <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Nasuprot tome, <strong>{mostEqual.name}</strong> ima 
+          najmanju varijaciju (σ {Math.round(mostEqual.stddevReachableCells ?? 0)}).
+          Rezultati se kreću u uskom rasponu od {Math.round(mostEqual.minReachableCells ?? 0)}{" "}
+          do {Math.round(mostEqual.maxReachableCells ?? 0)}.
+          Ovo ukazuje na ravnomjernu raspodjelu infrastrukture 
+          kroz cijelu četvrt, gdje god se nalazili.
         </p>
       </div>
     </div>
@@ -2600,14 +2832,14 @@ function VarianceStatCards({ variance }: { variance: ReturnType<typeof computeVa
   const d = variance.varianceRanked[0]
   const rangeVal = d ? (d.maxReachableCells ?? 0) - (d.minReachableCells ?? 0) : 0
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-sky-600 tabular-nums dark:text-sky-400">σ {Math.round(variance.varianceRanked[0]?.stddevReachableCells ?? 0)}</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">najveća std. devijacija<br />({variance.varianceRanked[0]?.name})</div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-4">
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">σ {Math.round(variance.varianceRanked[0]?.stddevReachableCells ?? 0)}</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">najveća std. devijacija<br />({variance.varianceRanked[0]?.name})</div>
       </div>
-      <div className="text-center">
+      <div className="flex flex-col">
         <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{d ? rangeVal.toLocaleString("hr-HR") : "-"}</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">max raspon ćelija<br />(min → max unutar četvrti)</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">max raspon ćelija<br />(min → max unutar četvrti)</div>
       </div>
     </div>
   )
@@ -2616,9 +2848,9 @@ function VarianceStatCards({ variance }: { variance: ReturnType<typeof computeVa
 function FrequencySection({ freq }: { freq: ReturnType<typeof computeFrequencyInsights> }) {
   if (freq.freqRanked.length === 0) return null
   return (
-    <section id="frekvencija" className="mt-16 sm:mt-20">
+    <section id="frekvencija" className="mt-16 flex flex-col border-t border-slate-200 py-16 sm:mt-20 sm:py-24 dark:border-white/10">
       <FrequencyHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px]">
         <FrequencyChart freq={freq} />
         <FrequencyInterpretation freq={freq} />
       </div>
@@ -2628,24 +2860,27 @@ function FrequencySection({ freq }: { freq: ReturnType<typeof computeFrequencyIn
 
 function FrequencyHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-blue-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Frekvencija prijevoza</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+          Frekvencija prijevoza
+        </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Prosječni interval dolaska vozila po četvrti. Četvrti s intervalom
+          od 1-2 minute uglavnom imaju gustu mrežu tramvaja ili autobusa;
+          3+ minute znači oslanjanje na rjeđe autobusne linije.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Prosječni interval dolaska vozila po četvrti. Četvrti s intervalom
-        od 1-2 minute uglavnom imaju gustu mrežu tramvaja ili autobusa;
-        3+ minute znači oslanjanje na rjeđe autobusne linije.
-      </p>
     </div>
   )
 }
 
 function FrequencyChart({ freq }: { freq: ReturnType<typeof computeFrequencyInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-blue-700 uppercase dark:text-blue-400">Interval po četvrti (minuta)</h3>
+    <div className="flex flex-col">
+      <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+        Interval po četvrti (minuta)
+      </div>
       <div className="space-y-2">
         {freq.freqRanked.map((d, i) => (
           <FrequencyBar key={d.osmId} d={d} i={i} maxHeadway={freq.maxHeadway} />
@@ -2662,35 +2897,32 @@ function FrequencyBar({ d, i, maxHeadway }: { d: DistrictScore; i: number; maxHe
     headway <= 1 ? "bg-emerald-500"
     : headway <= 2 ? "bg-cyan-500"
     : headway <= 3 ? "bg-blue-500"
-    : "bg-purple-500"
+    : "bg-indigo-500"
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-mono text-[11px] text-slate-400 dark:text-slate-500">{i + 1}</span>
-      <span className="w-[7.5rem] shrink-0 truncate text-[13px] text-slate-700 dark:text-slate-300">{d.name}</span>
-      <div className="relative h-5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
-        <div className={`absolute inset-y-0 left-0 rounded-full ${barColor}`} style={{ width: `${barPct}%` }} />
+    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">{(i + 1).toString().padStart(2, "0")}</span>
+          <span className="text-[14px] font-medium text-slate-700 dark:text-slate-300">{d.name}</span>
+        </div>
+        <span className="shrink-0 font-serif text-[15px] font-medium text-slate-900 tabular-nums dark:text-slate-100">~{fmtHR(headway, 1)} min</span>
       </div>
-      <span className="w-10 shrink-0 text-right font-mono text-[13px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{headway.toFixed(1)}</span>
+      <div className="ml-7">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
+          <div className={`absolute inset-y-0 left-0 rounded-full ${barColor}`} style={{ width: `${barPct}%` }} />
+        </div>
+      </div>
     </div>
   )
 }
 
 function FrequencyInterpretation({ freq }: { freq: ReturnType<typeof computeFrequencyInsights> }) {
   return (
-    <div className="flex flex-col rounded-3xl bg-blue-50/50 p-8 dark:bg-blue-950/10">
-      <SectionIcon icon="clock" color="blue" title="Zašto je interval važan?" />
-      <div className="mb-8 grid grid-cols-2 gap-4">
-        <div className="text-center">
-          <div className="font-serif text-[36px] leading-none text-blue-600 tabular-nums dark:text-blue-400">{freq.totalLines}</div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">linija<br />opslužuje Zagreb</div>
-        </div>
-        <div className="text-center">
-          <div className="font-serif text-[20px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{freq.allTramLines.size} tram + {freq.allBusLines.size} bus</div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">tramvajskih +<br />autobusnih</div>
-        </div>
-      </div>
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-        <p>
+    <div className="flex flex-col gap-6">
+      <FrequencyStatCards freq={freq} />
+      <div className="flex flex-col border-l-2 border-blue-500 pl-6 py-2 mt-4">
+        <h3 className="mb-4 font-sans text-[13px] font-bold tracking-widest text-blue-700 uppercase">Jaz u frekvenciji</h3>
+        <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
           Četvrti s intervalom od{" "}
           <strong className="font-medium text-slate-900 dark:text-slate-100">1 minute</strong>{" "}
           uglavnom imaju gustu mrežu s više linija koje se preklapaju
@@ -2699,7 +2931,9 @@ function FrequencyInterpretation({ freq }: { freq: ReturnType<typeof computeFreq
           autobusnim linijama - čekanje od 15-30 minuta značajno
           umanjuje praktičnu dostupnost.
         </p>
-        <p className="text-[13px] text-slate-500 dark:text-slate-400">
+      </div>
+      <div className="mt-4 border-l-2 border-slate-300 pl-6 py-2">
+        <p className="text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">
           Noćne tramvajske linije (31-34) održavaju promet do ~05:30,
           dajući četvrtima s tramvajem praktično 24-satnu pokrivenost.
         </p>
@@ -2708,13 +2942,32 @@ function FrequencyInterpretation({ freq }: { freq: ReturnType<typeof computeFreq
   )
 }
 
+function FrequencyStatCards({ freq }: { freq: ReturnType<typeof computeFrequencyInsights> }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-4">
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{freq.totalLines}</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">linija opslužuje Zagreb</div>
+      </div>
+      <div className="flex flex-col">
+        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{freq.allTramLines.size} tram + {freq.allBusLines.size} bus</div>
+        <div className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">tramvajskih i autobusnih</div>
+      </div>
+    </div>
+  )
+}
+
 function LineSpeedSection({ lineSpeed }: { lineSpeed: ReturnType<typeof computeLineSpeedInsights> }) {
   return (
-    <section id="brzina" className="mt-16 sm:mt-20">
+    <section id="brzina" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <LineSpeedHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <LineSpeedCards lineSpeed={lineSpeed} />
-        <LineSpeedInterpretation />
+      <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
+        <div className="w-full lg:w-[400px] shrink-0">
+          <LineSpeedCards lineSpeed={lineSpeed} />
+        </div>
+        <div className="flex-1">
+          <LineSpeedInterpretation />
+        </div>
       </div>
     </section>
   )
@@ -2722,25 +2975,24 @@ function LineSpeedSection({ lineSpeed }: { lineSpeed: ReturnType<typeof computeL
 
 function LineSpeedHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-orange-500" />
-        <h2 className="font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Brzina linija</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">Brzina linija</h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Komercijalna brzina prometnih sredstava - koliko brzo se vozilo
+          kreće uključujući zaustavljanja na stanicama. Brži mod znači veći
+          doseg u istih 30 minuta.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Komercijalna brzina prometnih sredstava - koliko brzo se vozilo
-        kreće uključujući zaustavljanja na stanicama. Brži mod znači veći
-        doseg u istih 30 minuta.
-      </p>
     </div>
   )
 }
 
 function LineSpeedCards({ lineSpeed }: { lineSpeed: ReturnType<typeof computeLineSpeedInsights> }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-orange-700 uppercase dark:text-orange-400">Komercijalna brzina po modu</h3>
-      <div className="space-y-4">
+    <div>
+      <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Komercijalna brzina po modu</h3>
+      <div className="flex flex-col gap-4">
         <SpeedModeRow icon="tram" label="Tramvaj" speed={TRAM_SPEED_KMH} color="rose" note={`${lineSpeed.tramLineCount} linija, prosj. ${lineSpeed.avgTramCoverage} četvrti po liniji`} pct={(TRAM_SPEED_KMH / TRAIN_SPEED_KMH) * 100} />
         <SpeedModeRow icon="bus" label="Autobus" speed={BUS_SPEED_KMH} color="blue" note={`${lineSpeed.busLineCount} linija, prosj. ${lineSpeed.avgBusCoverage} četvrti po liniji`} pct={(BUS_SPEED_KMH / TRAIN_SPEED_KMH) * 100} />
         {lineSpeed.trainLineCount > 0 && (
@@ -2803,16 +3055,16 @@ function SpeedWalkBajs() {
 
 function LineSpeedInterpretation() {
   return (
-    <div className="flex flex-col rounded-3xl bg-orange-50/50 p-8 dark:bg-orange-950/10">
-      <SectionIcon icon="bolt" color="orange" title="Brzina vs. frekvencija" />
-      <div className="mb-8 grid grid-cols-2 gap-4">
-        <div className="text-center">
-          <div className="font-serif text-[36px] leading-none text-orange-600 tabular-nums dark:text-orange-400">{TRAM_SPEED_KMH}</div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">km/h tramvaj<br />(komercijalna brzina)</div>
+    <div>
+      <h3 className="font-serif text-[22px] text-orange-800 dark:text-orange-400">Brzina vs. frekvencija</h3>
+      <div className="my-8 grid grid-cols-1 sm:grid-cols-2 gap-8 border-b border-t border-slate-200 py-6 dark:border-white/10">
+        <div className="flex flex-col">
+          <div className="font-serif text-[48px] leading-none text-orange-700 tabular-nums dark:text-orange-400">{TRAM_SPEED_KMH}</div>
+          <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">km/h tramvaj<br />(komercijalna brzina)</div>
         </div>
-        <div className="text-center">
-          <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{Math.round(TRAM_SPEED_KMH * 0.5)} km</div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">doseg tramvajem<br />u 30 min</div>
+        <div className="flex flex-col">
+          <div className="font-serif text-[48px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{Math.round(TRAM_SPEED_KMH * 0.5)} km</div>
+          <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">doseg tramvajem<br />u 30 min</div>
         </div>
       </div>
       <LineSpeedInterpretationText />
@@ -2848,257 +3100,46 @@ function LineSpeedInterpretationText() {
         <strong className="font-medium text-slate-900 dark:text-slate-100">cijeli budžet odlazi na čekanje</strong>.
         Brzina bez frekvencije ne donosi ništa.
       </p>
-      <p className="text-[13px] text-orange-700/80 dark:text-orange-400/80">
-        Zaključak: za 30-minutnu dostupnost, frekvencija je
-        važnija od brzine. Jedna tramvajska linija svakih 5 min
-        vrijedi više od brzog vlaka svakih 45 min.
-      </p>
     </div>
   )
 }
 
 function RouteStatsSection({
-  routeStats,
-  routes,
-  freq,
+  routeStats: stats,
 }: {
   routeStats: RouteStats | null
-  routes: ReturnType<typeof computeRouteInsights>
-  freq: ReturnType<typeof computeFrequencyInsights>
 }) {
-  if (!routeStats) return null
+  if (!stats) return null
+
+  const sortedRoutes = sortRoutesByName(
+    stats.routes.filter((r) => r.mode !== "RAIL"),
+  )
+  const trams = sortedRoutes.filter((r) => r.mode === "TRAM")
+  const buses = sortedRoutes.filter((r) => r.mode === "BUS")
+
+  const generatedLabel = (() => {
+    const d = new Date(stats.generatedAt)
+    return Number.isNaN(d.getTime())
+      ? stats.generatedAt
+      : d.toLocaleString("hr-HR", { dateStyle: "long", timeStyle: "short" })
+  })()
+
   return (
-    <section id="linije" className="mt-16 sm:mt-20">
-      <RouteStatsHeader routeStats={routeStats} />
-      <RouteStatsSummary routeStats={routeStats} routes={routes} districtLineCount={freq.totalLines} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <RouteFrequencyRanking routes={routes} />
-        <RouteLengthCards routes={routes} />
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Analiza linija
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Detaljna analiza performansi svih tramvajskih i autobusnih linija u zagrebačkom prometu.
+            Podaci iz statičkog GTFS izračuna, generirano {generatedLabel}.
+          </p>
+        </div>
       </div>
-      <TransferHubsSection routeStats={routeStats} />
+
+      <RouteAnalysisTables trams={trams} buses={buses} />
     </section>
-  )
-}
-
-function RouteStatsHeader({ routeStats }: { routeStats: RouteStats }) {
-  return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 rounded-full bg-violet-500" />
-        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Statistika linija</h2>
-      </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Pregled {routeStats.summary.tramRoutes + routeStats.summary.busRoutes} ZET linija javnog
-        prijevoza: duljina, frekvencija, brzina i prijenosna čvorišta.
-      </p>
-    </div>
-  )
-}
-
-function RouteStatsSummary({ routeStats, routes, districtLineCount }: { routeStats: RouteStats; routes: ReturnType<typeof computeRouteInsights>; districtLineCount: number }) {
-  return (
-    <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">{routeStats.summary.tramRoutes + routeStats.summary.busRoutes}</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">ZET linija</div>
-        <div className="mt-1 text-[11px] text-slate-500">{routes.tramRoutes.length} tram · {routes.busRoutes.length} bus</div>
-        <div className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">{districtLineCount} opslužuje gradske četvrti</div>
-      </div>
-      <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">{routeStats.summary.totalStops.toLocaleString("hr-HR")}</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">jedinstvenih stanica</div>
-      </div>
-      <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">{routeStats.summary.totalDailyDepartures.toLocaleString("hr-HR")}</div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">polazaka dnevno</div>
-      </div>
-      {routes.busiestRoute && (
-        <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-          <div className="font-serif text-[32px] leading-none text-violet-600 tabular-nums dark:text-violet-400">{routes.busiestRoute.name}</div>
-          <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">najprometnija linija</div>
-          <div className="mt-1 text-[11px] text-slate-500">{routes.busiestRoute.dailyDepartures} pol/dan · {fmtHR(routes.busiestRoute.depPerHour ?? 0, 1)} pol/sat</div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function RouteFrequencyRanking({ routes }: { routes: ReturnType<typeof computeRouteInsights> }) {
-  const sorted = [...routes.urbanRoutes].sort((a, b) => (b.depPerHour ?? 0) - (a.depPerHour ?? 0)).slice(0, 10)
-  const maxDph = sorted[0]?.depPerHour ?? 1
-  return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">Najčešće linije (polazaka/sat)</h3>
-      <div className="space-y-3">
-        {sorted.map((r, i) => (
-          <RouteFreqRow key={`freq-${i}`} r={r} maxDph={maxDph} />
-        ))}
-      </div>
-      <div className="mt-4 text-[11px] text-slate-500 dark:text-slate-400">Polazaka po satu unutar operativnog razdoblja linije</div>
-    </div>
-  )
-}
-
-function RouteFreqRow({ r, maxDph }: { r: RouteInfo; maxDph: number }) {
-  const badgeBg = r.mode === "TRAM" ? "bg-rose-500" : r.mode === "RAIL" ? "bg-teal-500" : "bg-blue-500"
-  const barBg = r.mode === "TRAM" ? "bg-rose-400" : r.mode === "RAIL" ? "bg-teal-400" : "bg-blue-400"
-  return (
-    <div>
-      <div className="flex items-center gap-3">
-        <span className={`flex h-7 w-10 shrink-0 items-center justify-center rounded-md text-[12px] font-bold text-white ${badgeBg}`}>{r.name}</span>
-        <div className="min-w-0 flex-1">
-          <div className="relative h-5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-            <div className={`absolute inset-y-0 left-0 rounded-full ${barBg}`} style={{ width: `${((r.depPerHour ?? 0) / maxDph) * 100}%` }} />
-          </div>
-        </div>
-        <span className="w-12 shrink-0 text-right font-serif text-[13px] tabular-nums text-slate-700 dark:text-slate-300">{fmtHR(r.depPerHour ?? 0, 1)}</span>
-      </div>
-      <div className="mt-0.5 ml-[52px] flex gap-2 text-[10px] text-slate-400 dark:text-slate-500">
-        <span>{r.firstDeparture ?? "-"}-{r.lastDeparture ?? "-"}</span>
-        <span>·</span>
-        <span>{r.dailyDepartures} pol/dan</span>
-        <span>·</span>
-        <span>{fmtHR(r.serviceHours ?? 0, 1)}h</span>
-      </div>
-    </div>
-  )
-}
-
-function RouteLengthCards({ routes }: { routes: ReturnType<typeof computeRouteInsights> }) {
-  return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">Najduže i najkraće linije</h3>
-      <div className="space-y-5">
-        <div>
-          <div className="mb-2 text-[13px] font-medium text-rose-600 dark:text-rose-400">Tramvaj</div>
-          {routes.longestTram && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najduža: linija {routes.longestTram.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(routes.longestTram.distanceKm, 1)} km</span></div>}
-          {routes.shortestTram && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najkraća: linija {routes.shortestTram.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(routes.shortestTram.distanceKm, 1)} km</span></div>}
-          {routes.mostStopsTram && <div className="mt-1 flex items-baseline justify-between text-[13px] text-slate-500 dark:text-slate-400"><span>Najviše stanica: linija {routes.mostStopsTram.name}</span><span className="tabular-nums">{routes.mostStopsTram.stops}</span></div>}
-        </div>
-        <div>
-          <div className="mb-2 text-[13px] font-medium text-blue-600 dark:text-blue-400">Autobus</div>
-          {routes.longestBus && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najduža: linija {routes.longestBus.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(routes.longestBus.distanceKm, 1)} km</span></div>}
-          {routes.shortestBus && <div className="flex items-baseline justify-between text-[14px]"><span className="text-slate-700 dark:text-slate-300">Najkraća: linija {routes.shortestBus.name}</span><span className="font-serif tabular-nums text-slate-900 dark:text-slate-100">{fmtHR(routes.shortestBus.distanceKm, 1)} km</span></div>}
-          {routes.mostStopsBus && <div className="mt-1 flex items-baseline justify-between text-[13px] text-slate-500 dark:text-slate-400"><span>Najviše stanica: linija {routes.mostStopsBus.name}</span><span className="tabular-nums">{routes.mostStopsBus.stops}</span></div>}
-        </div>
-      </div>
-      {routes.fastestBus && routes.slowestBus && (
-        <div className="mt-6 border-t border-black/5 pt-4 text-[13px] text-slate-600 dark:border-white/5 dark:text-slate-400">
-          Najbrži bus: <strong className="text-slate-900 dark:text-slate-100">{routes.fastestBus.name}</strong> ({fmtHR(routes.fastestBus.commercialSpeedKmh, 1)} km/h) · najsporiji: <strong className="text-slate-900 dark:text-slate-100">{routes.slowestBus.name}</strong> ({fmtHR(routes.slowestBus.commercialSpeedKmh, 1)} km/h)
-        </div>
-      )}
-    </div>
-  )
-}
-
-function TransferHubsSection({ routeStats }: { routeStats: RouteStats }) {
-  return (
-    <div className="mt-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-8 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">Prijenosna čvorišta</h3>
-      <TopHubHero hub={routeStats.transferHubs[0]} />
-      <div className="space-y-1.5">
-        {routeStats.transferHubs.slice(1, 10).map((hub, i) => (
-          <HubRow key={`hub-${i}`} hub={hub} i={i} maxRoutes={routeStats.transferHubs[0].routeCount} />
-        ))}
-      </div>
-      <HubFooter routeStats={routeStats} />
-    </div>
-  )
-}
-
-function TopHubHero({ hub }: { hub: TransferHub | undefined }) {
-  if (!hub) return null
-  const total = hub.routeCount
-  const r = 38
-  const circ = 2 * Math.PI * r
-  const segments = [
-    { count: hub.tramRoutes.length, color: "#fb7185" },
-    { count: hub.busRoutes.length, color: "#60a5fa" },
-    { count: hub.railRoutes.length, color: "#2dd4bf" },
-  ].filter(s => s.count > 0)
-  let offset = 0
-  return (
-    <div className="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:gap-8">
-      <div className="relative shrink-0">
-        <svg width="100" height="100" viewBox="0 0 100 100" className="rotate-[-90deg]">
-          <circle cx="50" cy="50" r={r} fill="none" stroke="currentColor" strokeWidth="8" className="text-slate-100 dark:text-zinc-800" />
-          {segments.map((seg, si) => {
-            const dash = (seg.count / total) * circ
-            const el = (
-              <circle key={si} cx="50" cy="50" r={r} fill="none" stroke={seg.color} strokeWidth="8"
-                strokeDasharray={`${dash} ${circ - dash}`}
-                strokeDashoffset={-offset}
-                strokeLinecap="round" />
-            )
-            offset += dash
-            return el
-          })}
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">{total}</span>
-          <span className="text-[9px] text-slate-400">linija</span>
-        </div>
-      </div>
-      <div>
-        <div className="text-[11px] font-medium tracking-wide text-violet-600 uppercase dark:text-violet-400">#1 čvorište</div>
-        <div className="mt-1 font-serif text-[22px] leading-tight text-slate-900 dark:text-slate-100">{hub.name}</div>
-        <TopHubTags hub={hub} />
-      </div>
-    </div>
-  )
-}
-
-function TopHubTags({ hub }: { hub: TransferHub }) {
-  return (
-    <div className="mt-3 flex flex-wrap gap-1.5">
-      {hub.tramRoutes.map(r => <span key={`t-${r}`} className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700 dark:bg-rose-500/20 dark:text-rose-300">{r}</span>)}
-      {hub.busRoutes.map(r => <span key={`b-${r}`} className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-500/20 dark:text-blue-300">{r}</span>)}
-      {hub.railRoutes.slice(0, 6).map(r => <span key={`r-${r}`} className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700 dark:bg-teal-500/20 dark:text-teal-300">{r}</span>)}
-      {hub.railRoutes.length > 6 && <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-zinc-700 dark:text-slate-400">+{hub.railRoutes.length - 6}</span>}
-    </div>
-  )
-}
-
-function HubRow({ hub, i, maxRoutes }: { hub: TransferHub; i: number; maxRoutes: number }) {
-  return (
-    <div className="group flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-white/3">
-      <span className="w-5 shrink-0 text-center font-serif text-[15px] text-slate-300 dark:text-slate-600">{i + 2}</span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-2">
-          <span className="truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">{hub.name}</span>
-          <span className="shrink-0 text-[11px] tabular-nums text-slate-400 dark:text-slate-500">{hub.routeCount}</span>
-        </div>
-        <div className="mt-1 flex h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
-          <div className="flex" style={{ width: `${(hub.routeCount / maxRoutes) * 100}%` }}>
-            {hub.tramRoutes.length > 0 && <div className="h-full bg-rose-400" style={{ width: `${(hub.tramRoutes.length / hub.routeCount) * 100}%` }} />}
-            {hub.busRoutes.length > 0 && <div className="h-full bg-blue-400" style={{ width: `${(hub.busRoutes.length / hub.routeCount) * 100}%` }} />}
-            {hub.railRoutes.length > 0 && <div className="h-full bg-teal-400" style={{ width: `${(hub.railRoutes.length / hub.routeCount) * 100}%` }} />}
-          </div>
-        </div>
-      </div>
-      <div className="flex shrink-0 gap-1">
-        {hub.tramRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-100 px-1.5 text-[9px] font-bold tabular-nums text-rose-600 dark:bg-rose-500/20 dark:text-rose-300">{hub.tramRoutes.length}</span>}
-        {hub.busRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-100 px-1.5 text-[9px] font-bold tabular-nums text-blue-600 dark:bg-blue-500/20 dark:text-blue-300">{hub.busRoutes.length}</span>}
-        {hub.railRoutes.length > 0 && <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-teal-100 px-1.5 text-[9px] font-bold tabular-nums text-teal-600 dark:bg-teal-500/20 dark:text-teal-300">{hub.railRoutes.length}</span>}
-      </div>
-    </div>
-  )
-}
-
-function HubFooter({ routeStats }: { routeStats: RouteStats }) {
-  return (
-    <div className="mt-6 flex items-center gap-6 border-t border-black/5 pt-5 dark:border-white/5">
-      <div className="flex items-center gap-4 text-[11px] text-slate-400 dark:text-slate-500">
-        <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-rose-400" />tram</span>
-        <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-blue-400" />bus</span>
-        <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded-full bg-teal-400" />vlak</span>
-      </div>
-      <div className="ml-auto flex gap-5 text-[12px] text-slate-600 dark:text-slate-400">
-        <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.tramBus}</span> <span className="text-[10px]">tram-bus</span></div>
-        <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.tramRail}</span> <span className="text-[10px]">tram-vlak</span></div>
-        <div><span className="font-serif text-[16px] font-medium text-slate-900 dark:text-slate-100">{routeStats.multimodalConnections.threeMode}</span> <span className="text-[10px]">3 moda</span></div>
-      </div>
-    </div>
   )
 }
 
@@ -3111,39 +3152,44 @@ function TravelMatrixSection({
 }) {
   if (!travelMatrix) return null
   return (
-    <section id="matrica" className="mt-16 sm:mt-20">
+    <section id="matrica" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <TravelMatrixHeader travelMatrix={travelMatrix} />
-      <TravelMatrixTable travelMatrix={travelMatrix} />
-      <TravelMatrixInsights matrix={matrix} />
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px] lg:gap-16">
+        <div className="overflow-x-auto">
+          <TravelMatrixTable travelMatrix={travelMatrix} />
+        </div>
+        <div>
+          <TravelMatrixInsights matrix={matrix} />
+        </div>
+      </div>
     </section>
   )
 }
 
 function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-cyan-500" />
-        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Matrica putovanja</h2>
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+          Matrica putovanja
+        </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Vrijeme putovanja javnim prijevozom između središta svake četvrti, polazak u {travelMatrix.departureTime ?? "08:00"}. Boja označava trajanje - od zelene (brzo) do crvene (sporo).
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Vrijeme putovanja javnim prijevozom između središta svake četvrti,
-        polazak u {travelMatrix.departureTime ?? "08:00"}.
-        Boja označava trajanje - od zelene (brzo) do crvene (sporo).
-      </p>
     </div>
   )
 }
 
 function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h3 className="mb-4 font-sans text-[11px] font-bold tracking-widest text-cyan-700 uppercase dark:text-cyan-400">Vrijeme putovanja u minutama</h3>
+    <div className="flex flex-col">
+      <h3 className="mb-8 font-sans text-[11px] font-bold tracking-widest text-cyan-700 uppercase dark:text-cyan-400">Vrijeme putovanja u minutama</h3>
       <div className="overflow-x-auto">
-        <table className="mx-auto w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
+        <table className="w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
           <thead>
             <tr>
-              <th className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-900/40 dark:text-slate-400">
+              <th className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
                 <span className="sr-only">Iz / U</span>
               </th>
               {travelMatrix.districts.map((name, ci) => (
@@ -3169,7 +3215,7 @@ function MatrixRow({ travelMatrix, rowName, ri }: { travelMatrix: TravelMatrix; 
   return (
     <tr className="group/row">
       <th
-        className="sticky left-0 z-10 whitespace-nowrap bg-white p-1 pr-2 text-left font-medium text-slate-700 group-hover/row:bg-cyan-50 dark:bg-zinc-900/40 dark:text-slate-300 dark:group-hover/row:bg-cyan-950/20"
+        className="sticky left-0 z-10 whitespace-nowrap bg-white p-1 pr-2 text-left font-medium text-slate-700 group-hover/row:bg-cyan-50 dark:bg-zinc-950 dark:text-slate-300 dark:group-hover/row:bg-cyan-950/20"
         scope="row"
       >
         {districtAbbrev[rowName] ?? rowName.slice(0, 4)}
@@ -3212,12 +3258,12 @@ function MatrixCell({ travelMatrix, ri, ci, time }: { travelMatrix: TravelMatrix
 
 function TravelMatrixLegend() {
   return (
-    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
-      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#bbf7d0" }} />&lt;20 min</span>
-      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fef08a" }} />20-40 min</span>
-      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fed7aa" }} />40-60 min</span>
-      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#fecaca" }} />&gt;60 min</span>
-      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded-sm" style={{ backgroundColor: "#e2e8f0" }} />nema rute</span>
+    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded" style={{ backgroundColor: "#bbf7d0" }} />&lt;20 min</span>
+      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded" style={{ backgroundColor: "#fef08a" }} />20-40 min</span>
+      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded" style={{ backgroundColor: "#fed7aa" }} />40-60 min</span>
+      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded" style={{ backgroundColor: "#fecaca" }} />&gt;60 min</span>
+      <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-4 rounded" style={{ backgroundColor: "#e2e8f0" }} />nema rute</span>
       <span className="text-[10px] italic">p = presjedanja</span>
     </div>
   )
@@ -3225,25 +3271,28 @@ function TravelMatrixLegend() {
 
 function TravelMatrixInsights({ matrix }: { matrix: ReturnType<typeof computeMatrixInsights> }) {
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-      {matrix.matrixWorstCorridor && matrix.matrixWorstCorridor.time > 0 && (
-        <div className="rounded-2xl bg-red-50/50 p-5 dark:bg-red-950/10">
-          <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-red-700 uppercase dark:text-red-400">Najdulje putovanje</div>
-          <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-            <strong className="font-medium text-slate-900 dark:text-slate-100">{matrix.matrixWorstCorridor.from} → {matrix.matrixWorstCorridor.to}</strong>{" "}
-            traje <strong className="font-medium text-red-700 dark:text-red-400">{matrix.matrixWorstCorridor.time} minuta</strong> javnim prijevozom.
-          </p>
+    <div className="flex flex-col gap-6">
+      <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Zanimljivosti</h3>
+      <div className="flex flex-col gap-6">
+        {matrix.matrixWorstCorridor && matrix.matrixWorstCorridor.time > 0 && (
+          <div className="border-l-2 border-rose-500 pl-4 py-1">
+            <div className="text-[13px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest">Najdulje putovanje</div>
+            <div className="mt-2 font-serif text-[20px] text-slate-900 dark:text-slate-100">{districtAbbrev[matrix.matrixWorstCorridor.from] ?? matrix.matrixWorstCorridor.from} &rarr; {districtAbbrev[matrix.matrixWorstCorridor.to] ?? matrix.matrixWorstCorridor.to}</div>
+            <div className="mt-1 text-[14px] text-slate-600 dark:text-slate-400">{matrix.matrixWorstCorridor.time} minuta</div>
+          </div>
+        )}
+        {matrix.matrixBestPair && matrix.matrixBestPair.time < Infinity && (
+          <div className="border-l-2 border-emerald-500 pl-4 py-1">
+            <div className="text-[13px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest">Najbrža veza</div>
+            <div className="mt-2 font-serif text-[20px] text-slate-900 dark:text-slate-100">{districtAbbrev[matrix.matrixBestPair.from] ?? matrix.matrixBestPair.from} &harr; {districtAbbrev[matrix.matrixBestPair.to] ?? matrix.matrixBestPair.to}</div>
+            <div className="mt-1 text-[14px] text-slate-600 dark:text-slate-400">{matrix.matrixBestPair.time} minuta</div>
+          </div>
+        )}
+        <div className="border-l-2 border-violet-500 pl-4 py-1">
+          <div className="text-[13px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest">Prosjek svih putovanja</div>
+          <div className="mt-2 font-serif text-[24px] text-slate-900 dark:text-slate-100">{matrix.avgTimeAll} min</div>
         </div>
-      )}
-      {matrix.matrixBestPair && matrix.matrixBestPair.time < Infinity && (
-        <div className="rounded-2xl bg-emerald-50/50 p-5 dark:bg-emerald-950/10">
-          <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">Najbrža veza</div>
-          <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-            <strong className="font-medium text-slate-900 dark:text-slate-100">{matrix.matrixBestPair.from} → {matrix.matrixBestPair.to}</strong>{" "}
-            traje samo <strong className="font-medium text-emerald-700 dark:text-emerald-400">{matrix.matrixBestPair.time} minuta</strong>.
-          </p>
-        </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -3300,32 +3349,25 @@ function computeTransferData(travelMatrix: TravelMatrix) {
 
 function TransferStackedBar({ barData, avgTransfers }: { barData: ReturnType<typeof computeTransferData>["barData"]; avgTransfers: string }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-6 flex h-12 overflow-hidden rounded-xl">
+    <div className="flex flex-col">
+      <div className="mb-8 flex h-4 w-full overflow-hidden rounded-full">
         {barData.map((d) => (
           d.pct > 0 && (
-            <div key={d.label} className={`${d.color} flex items-center justify-center transition-all`} style={{ width: `${d.pct}%` }}>
-              {d.pct >= 8 && <span className="text-[12px] font-bold text-white">{d.pct}%</span>}
-            </div>
+            <div key={d.label} className={`${d.color} flex items-center justify-center transition-all`} style={{ width: `${d.pct}%` }} />
           )
         ))}
       </div>
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
         {barData.map((d) => (
-          <div key={d.label} className="text-center">
-            <div className="flex items-center gap-1.5">
-              <span className={`inline-block h-3 w-3 rounded-sm ${d.color}`} />
-              <span className="text-[12px] font-medium text-slate-700 dark:text-slate-300">{d.label}</span>
-            </div>
-            <div className="mt-1 font-serif text-[20px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{d.count}</div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400">parova ({d.pct}%)</div>
+          <div key={d.label} className={`border-l-2 pl-4 py-1 ${d.color.split(' ')[0].replace('bg-', 'border-')}`}>
+            <div className="text-[13px] font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400">{d.label}</div>
+            <div className="mt-2 font-serif text-[24px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{d.count}</div>
+            <div className="text-[14px] text-slate-600 dark:text-slate-400">parova četvrti ({d.pct}%)</div>
           </div>
         ))}
       </div>
-      <div className="mt-6 text-center">
-        <span className="text-[13px] text-slate-600 dark:text-slate-400">
-          Prosječno presjedanja po putovanju: <strong className="font-medium text-slate-900 dark:text-slate-100">{avgTransfers}</strong>
-        </span>
+      <div className="mt-8 border-t border-slate-200 pt-6 text-[14px] leading-relaxed text-slate-600 dark:border-white/10 dark:text-slate-400">
+        Prosječno presjedanja po putovanju: <strong className="font-medium text-slate-900 dark:text-slate-100">{avgTransfers}</strong>
       </div>
     </div>
   )
@@ -3334,15 +3376,15 @@ function TransferStackedBar({ barData, avgTransfers }: { barData: ReturnType<typ
 function TransferWorstCorridors({ worstPairs }: { worstPairs: ReturnType<typeof computeTransferData>["worstPairs"] }) {
   if (worstPairs.length === 0) return null
   return (
-    <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-4 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">Koridori s 2+ presjedanja</div>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-12 flex flex-col">
+      <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Koridori s 2+ presjedanja</h3>
+      <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
         {worstPairs.map((pair, i) => (
-          <div key={i} className="flex items-center justify-between rounded-xl bg-red-50/50 px-4 py-3 dark:bg-red-950/10">
-            <span className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
-              {pair.from} → {pair.to}
+          <div key={i} className="flex items-baseline justify-between border-b border-slate-100 pb-2 dark:border-white/5">
+            <span className="text-[14px] text-slate-800 dark:text-slate-200">
+              {pair.from} <span className="text-slate-400">&rarr;</span> {pair.to}
             </span>
-            <span className="ml-2 font-serif text-[14px] font-medium tabular-nums text-red-700 dark:text-red-400">{pair.time} min</span>
+            <span className="ml-4 font-serif text-[15px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{pair.time} min</span>
           </div>
         ))}
       </div>
@@ -3356,28 +3398,29 @@ function TransferDependencySection({ travelMatrix }: { travelMatrix: TravelMatri
   if (td.totalPairs === 0) return null
 
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="mb-10 flex flex-col items-center text-center">
-        <div className="mb-4 flex items-center gap-2">
-          <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-violet-500" />
-          <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Ovisnost o presjedanjima</h2>
+    <section id="presjedanja" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Ovisnost o presjedanjima
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Koliko presjedanja zahtijeva tipično putovanje između zagrebačkih četvrti?
+            Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
+          </p>
         </div>
-        <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Koliko presjedanja zahtijeva tipično putovanje između zagrebačkih četvrti?
-          Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
-        </p>
       </div>
 
       <TransferStackedBar barData={td.barData} avgTransfers={td.avgTransfers} />
       <TransferWorstCorridors worstPairs={td.worstPairs} />
 
-      <div className="mt-6 rounded-2xl border border-violet-200/50 bg-violet-50/50 px-5 py-4 dark:border-violet-800/30 dark:bg-violet-950/20">
-        <p className="text-[13px] leading-relaxed text-violet-900 dark:text-violet-200">
-          Od {td.totalPairs} mogućih parova četvrti, <strong>{td.directPct}%</strong> je dostupno izravno bez presjedanja,{" "}
-          <strong>{td.onePct}%</strong> zahtijeva jedno presjedanje, a <strong>{td.twoPlusPct}%</strong> zahtijeva dva ili više.
+      <div className="mt-8 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p>
+          Od {td.totalPairs} mogućih parova četvrti, <strong className="font-medium text-slate-900 dark:text-slate-100">{td.directPct}%</strong> je dostupno izravno bez presjedanja,{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{td.onePct}%</strong> zahtijeva jedno presjedanje, a <strong className="font-medium text-slate-900 dark:text-slate-100">{td.twoPlusPct}%</strong> zahtijeva dva ili više.
           {td.worstPairs.length > 0 && (
-            <> Najgori koridor (<strong>{td.worstPairs[0].from} → {td.worstPairs[0].to}</strong>) traje{" "}
-              <strong>{td.worstPairs[0].time} minuta</strong> - svako presjedanje dodaje nepredvidivo čekanje.</>
+            <> Najgori koridor (<strong className="font-medium text-slate-900 dark:text-slate-100">{td.worstPairs[0].from} &rarr; {td.worstPairs[0].to}</strong>) traje{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-100">{td.worstPairs[0].time} minuta</strong> - svako presjedanje dodaje nepredvidivo čekanje.</>
           )}
         </p>
       </div>
@@ -3403,32 +3446,37 @@ function CentralityRanking({ stops, title, subtitle, color, scoreDecimals }: {
   stops: import("@/lib/generated").CentralityStop[]
   title: string
   subtitle: string
-  color: "red" | "emerald"
+  color: "rose" | "emerald"
   scoreDecimals: number
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className={`mb-1 font-sans text-[11px] font-bold tracking-widest uppercase text-${color}-600 dark:text-${color}-400`}>{title}</div>
-      <div className="mb-4 text-[12px] text-slate-500 dark:text-slate-400">{subtitle}</div>
-      <div className="space-y-2">
-        {stops.slice(0, 10).map((stop) => {
+    <div className="flex flex-col">
+      <div className={`border-l-2 border-${color}-500 pl-4 py-1`}>
+        <h3 className={`font-serif text-[20px] text-${color}-600 dark:text-${color}-400`}>{title}</h3>
+        <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">{subtitle}</p>
+      </div>
+      <div className="mt-6 flex flex-col pl-4">
+        {stops.slice(0, 10).map((stop, i) => {
           const barW = stops[0].score > 0 ? (stop.score / stops[0].score) * 100 : 0
           return (
-            <div key={stop.key}>
-              <div className="mb-1 flex items-baseline justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-${color}-100 text-[10px] font-bold text-${color}-700 dark:bg-${color}-900/40 dark:text-${color}-300`}>{stop.rank}</span>
-                  <span className="text-[12px] font-medium text-slate-800 dark:text-slate-200">{stop.name}</span>
+            <div key={stop.key} className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+              <div className="flex items-baseline justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className={`font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500`}>{(i + 1).toString().padStart(2, "0")}</span>
+                  <span className="text-[14px] font-medium text-slate-700 dark:text-slate-300">{stop.name}</span>
                 </div>
-                <span className="font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400">{stop.score.toFixed(scoreDecimals)}</span>
+                <span className="font-serif text-[15px] tabular-nums text-slate-900 dark:text-slate-100">{stop.score.toFixed(scoreDecimals)}</span>
               </div>
-              <div className={`h-1.5 overflow-hidden rounded-full bg-${color}-100 dark:bg-${color}-900/20`}>
-                <div className={`h-full rounded-full bg-${color}-400 dark:bg-${color}-500`} style={{ width: `${barW}%` }} />
-              </div>
-              <div className="mt-0.5 flex flex-wrap gap-1">
-                {stop.routes.slice(0, 6).map((r) => (
-                  <span key={r} className="text-[9px] text-slate-400 dark:text-slate-500">{r}</span>
-                ))}
+              <div className="ml-7 mt-3">
+                <div className={`h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800`}>
+                  <div className={`h-full bg-${color}-400 dark:bg-${color}-500`} style={{ width: `${barW}%` }} />
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {stop.routes.slice(0, 6).map((r) => (
+                    <span key={r} className="inline-flex h-5 items-center rounded-sm bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-600 dark:bg-white/10 dark:text-slate-300">{r}</span>
+                  ))}
+                  {stop.routes.length > 6 && <span className="inline-flex h-5 items-center rounded-sm bg-slate-50 px-1.5 font-mono text-[10px] font-medium text-slate-400 dark:bg-white/5 dark:text-slate-500">+{stop.routes.length - 6}</span>}
+                </div>
               </div>
             </div>
           )
@@ -3441,42 +3489,39 @@ function CentralityRanking({ stops, title, subtitle, color, scoreDecimals }: {
 function CentralityNumbers({ data }: { data: import("@/lib/generated").CentralityStats }) {
   const { networkDiameter, averagePathLength } = data
   return (
-    <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+    <div className="my-12 grid grid-cols-2 gap-12 border-b border-t border-slate-200 py-12 sm:grid-cols-4 dark:border-white/10">
+      <div className="flex flex-col border-l-2 border-rose-500 pl-4">
+        <div className="font-serif text-[48px] font-medium leading-none tabular-nums text-slate-900 dark:text-slate-100">
           {networkDiameter.minutes}
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">minuta - mrežni dijametar</div>
-        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-          {networkDiameter.fromStop} → {networkDiameter.toStop}
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">minuta - mrežni dijametar</div>
+        <div className="mt-1 text-[12px] text-slate-400">
+          {networkDiameter.fromStop} &rarr; {networkDiameter.toStop}
         </div>
       </div>
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+      <div className="flex flex-col border-l-2 border-emerald-500 pl-4">
+        <div className="font-serif text-[48px] font-medium leading-none tabular-nums text-slate-900 dark:text-slate-100">
           {averagePathLength.minutes}
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">min prosječno putovanje</div>
-        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">min prosječno putovanje</div>
+        <div className="mt-1 text-[12px] text-slate-400">
           srednja vrijednost svih najkraćih puteva
         </div>
       </div>
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+      <div className="flex flex-col border-l-2 border-violet-500 pl-4">
+        <div className="font-serif text-[48px] font-medium leading-none tabular-nums text-slate-900 dark:text-slate-100">
           {averagePathLength.reachablePct}%
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">parova povezano</div>
-        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">parova povezano</div>
+        <div className="mt-1 text-[12px] text-slate-400">
           {averagePathLength.reachablePairs.toLocaleString("hr")} od {averagePathLength.totalPairs.toLocaleString("hr")}
         </div>
       </div>
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <div className="font-serif text-[32px] font-medium leading-none tabular-nums text-fuchsia-600 dark:text-fuchsia-400">
+      <div className="flex flex-col border-l-2 border-slate-300 pl-4 dark:border-slate-700">
+        <div className="font-serif text-[48px] font-medium leading-none tabular-nums text-slate-900 dark:text-slate-100">
           {data.stopCount.toLocaleString("hr")}
         </div>
-        <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">analiziranih stanica</div>
-        <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-          izračun trajao {data.computationSeconds}s
-        </div>
+        <div className="mt-2 text-[14px] leading-snug text-slate-500 dark:text-slate-400">analiziranih stanica</div>
       </div>
     </div>
   )
@@ -3489,39 +3534,42 @@ function CentralitySection() {
   const { betweenness, closeness, networkDiameter } = data
 
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="mb-10 flex flex-col items-center text-center">
-        <div className="mb-4 flex items-center gap-2">
-          <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-fuchsia-500" />
-          <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">Centralnost mreže</h2>
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Centralnost mreže
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Analiza grafa otkriva kritične točke mreže - stanice čijim zatvaranjem bi se cijelom sustavu
+            dramatično pogoršala povezanost, i stanice koje najbolje pokrivaju cijeli grad.
+          </p>
         </div>
-        <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Analiza grafa otkriva kritične točke mreže - stanice čijim zatvaranjem bi se cijelom sustavu
-          dramatično pogoršala povezanost, i stanice koje najbolje pokrivaju cijeli grad.
-        </p>
       </div>
 
       <CentralityNumbers data={data} />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <CentralityRanking stops={betweenness} title="Betweenness centralnost" subtitle="Kritične točke - stanice kroz koje prolazi najviše najkraćih puteva" color="red" scoreDecimals={4} />
+      <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <CentralityRanking stops={betweenness} title="Betweenness centralnost" subtitle="Kritične točke - stanice kroz koje prolazi najviše najkraćih puteva" color="rose" scoreDecimals={4} />
         <CentralityRanking stops={closeness} title="Closeness centralnost" subtitle="Najbolje povezane stanice - najbrži prosječni pristup cijeloj mreži" color="emerald" scoreDecimals={2} />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-fuchsia-200/50 bg-fuchsia-50/50 px-5 py-4 dark:border-fuchsia-800/30 dark:bg-fuchsia-950/20">
-        <p className="text-[13px] leading-relaxed text-fuchsia-900 dark:text-fuchsia-200">
-          <strong>Betweenness centralnost</strong> otkriva kritične točke mreže.
+      <div className="mt-12 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p>
+          <strong className="font-medium text-slate-900 dark:text-slate-100">Betweenness centralnost</strong> otkriva kritične točke mreže.
           {betweenness[0] && (<>
-            {" "}Stajalište <strong>{betweenness[0].name}</strong> je najvažnije čvorište -
+            {" "}Stajalište <strong className="font-medium text-slate-900 dark:text-slate-100">{betweenness[0].name}</strong> je najvažnije čvorište -
             najveći udio svih najkraćih puteva prolazi upravo kroz njega.
             Ako se ta stanica zatvori, tisuće putnika mora tražiti alternativnu rutu.
           </>)}
-          {" "}<strong>Closeness centralnost</strong> pokazuje odakle je najbrže doći svugdje.
+        </p>
+        <p className="mt-6">
+          <strong className="font-medium text-slate-900 dark:text-slate-100">Closeness centralnost</strong> pokazuje odakle je najbrže doći svugdje.
           {closeness[0] && (<>
-            {" "}<strong>{closeness[0].name}</strong> ima najpovoljniji prosječni pristup cijeloj mreži.
+            {" "}<strong className="font-medium text-slate-900 dark:text-slate-100">{closeness[0].name}</strong> ima najpovoljniji prosječni pristup cijeloj mreži.
           </>)}
-          {" "}Mrežni dijametar od <strong>{networkDiameter.minutes} minuta</strong>{" "}
-          ({networkDiameter.fromStop} → {networkDiameter.toStop}) označava najdulje moguće putovanje unutar sustava.
+          {" "}Mrežni dijametar od <strong className="font-medium text-slate-900 dark:text-slate-100">{networkDiameter.minutes} minuta</strong>{" "}
+          ({networkDiameter.fromStop} &rarr; {networkDiameter.toStop}) označava najdulje moguće putovanje unutar sustava.
         </p>
       </div>
     </section>
@@ -3540,11 +3588,11 @@ function DistrictBandsSection({
   base: ReturnType<typeof computeBaseInsights>
 }) {
   return (
-    <div className="mt-20 space-y-20 lg:space-y-24">
+    <div className="flex flex-col gap-24 border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       {bands.map((band) => (
         <section key={band.label}>
           <BandHeader band={band} />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {band.districts.map((d) => (
               <DistrictCard
                 key={d.osmId}
@@ -3566,12 +3614,12 @@ function DistrictBandsSection({
 
 function BandHeader({ band }: { band: { label: string; color: string; districts: DistrictScore[] } }) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-black/10 pb-4 dark:border-white/10">
+    <div className="flex flex-col gap-2">
       <div className="flex items-center gap-4">
-        <span className="inline-block h-4 w-4 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.1)]" style={{ backgroundColor: band.color }} />
-        <h3 className="font-serif text-3xl tracking-tight text-slate-900 dark:text-slate-100">{band.label}</h3>
+        <span className="inline-block h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: band.color }} />
+        <h3 className="font-serif text-[28px] text-slate-900 sm:text-[32px] dark:text-slate-100">{band.label}</h3>
       </div>
-      <span className="text-[14px] font-medium text-slate-500 dark:text-slate-400">
+      <span className="pl-7 text-[15px] font-medium text-slate-500 dark:text-slate-400">
         {band.districts.length} {band.districts.length === 1 ? "četvrt" : "četvrti"}
       </span>
     </div>
@@ -3588,11 +3636,12 @@ function MethodologySection({
   bajs: ReturnType<typeof computeBajsInsights>
 }) {
   return (
-    <section id="metodologija" className="mt-24 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 sm:p-12 dark:bg-zinc-900/40 dark:ring-white/10">
-      <h2 className="mb-8 font-serif text-[24px] text-slate-900 dark:text-slate-100">Metodologija izračuna</h2>
+    <section id="metodologija" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <h2 className="mb-12 font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+        Metodologija izračuna
+      </h2>
       <MethodologyGrid data={data} base={base} bajs={bajs} />
       <MethodologyFooter base={base} />
-      <MethodologyDownload />
     </section>
   )
 }
@@ -3612,9 +3661,9 @@ function MethodologyGrid({
       {bajs.hasBajs && (
         <MethodologyItem color="amber" title="BAJS">
           Idealni scenarij:{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-200">{bajs.bajsTotalStations}</strong>{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{bajs.bajsTotalStations}</strong>{" "}
           stanica, svaka s 1 biciklom. Brzina{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-200">14 km/h</strong>.
+          <strong className="font-medium text-slate-900 dark:text-slate-100">14 km/h</strong>.
         </MethodologyItem>
       )}
     </div>
@@ -3626,25 +3675,25 @@ function MethodologyGridItems({ data, base }: { data: ScoreData; base: ReturnTyp
     <>
       <MethodologyItem color="emerald" title="Algoritam">
         Dijkstrina pretraga nad{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-200">ZET GTFS</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">ZET GTFS</strong>{" "}
         i pješačkom mrežom.
       </MethodologyItem>
       <MethodologyItem color="cyan" title="Raster">
-        <strong className="font-medium text-slate-900 dark:text-slate-200">{data.gridSpacingM}m</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">{data.gridSpacingM}m</strong>{" "}
         razmak ·{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-200">{data.totalSamplePoints.toLocaleString("hr-HR")}</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">{data.totalSamplePoints.toLocaleString("hr-HR")}</strong>{" "}
         uzoraka u naseljima.
       </MethodologyItem>
       <MethodologyItem color="blue" title="Metrika">
         Udio dosežnih ćelija od ukupno{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-200">{data.totalGridCells.toLocaleString("hr-HR")}</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">{data.totalGridCells.toLocaleString("hr-HR")}</strong>{" "}
         u gradu.
       </MethodologyItem>
       <MethodologyItem color="purple" title="Vozni red">
         Prosjek od{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-200">{data.departureCount ?? 1} polazaka</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">{data.departureCount ?? 1} polazaka</strong>{" "}
         u prozoru{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-200">{base.displayDepartureTime}</strong>{" "}
+        <strong className="font-medium text-slate-900 dark:text-slate-100">{base.displayDepartureTime}</strong>{" "}
         (vršni sat). Čekanje na stanicu modelirano kao pola intervala
         dolaska linije. Bez kašnjenja u voznom redu.
       </MethodologyItem>
@@ -3668,40 +3717,43 @@ function MethodologyItem({ color, title, children }: { color: string; title: str
     amber: "border-amber-500",
   }
   return (
-    <div className={`flex flex-col gap-2 border-l-2 ${borderColors[color] ?? ""} pl-4`}>
-      <span className="font-sans text-[10px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">{title}</span>
-      <p className="text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">{children}</p>
+    <div className={`flex flex-col gap-3 border-l-2 ${borderColors[color] ?? ""} pl-5`}>
+      <span className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">{title}</span>
+      <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">{children}</p>
     </div>
   )
 }
 
 function MethodologyFooter({ base }: { base: ReturnType<typeof computeBaseInsights> }) {
   return (
-    <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">
-      <p className="font-sans text-[11px] font-medium tracking-wide text-slate-500 dark:text-slate-400">
-        Zadnji izračun proveden:{" "}
-        <span className="text-slate-700 dark:text-slate-300">{base.generatedLabel}</span>
-      </p>
+    <div className="mt-12 flex flex-col gap-8 border-t border-slate-200 pt-8 sm:flex-row sm:items-start sm:justify-between dark:border-white/10">
+      <div className="flex flex-col gap-2">
+        <p className="font-sans text-[12px] tracking-wide text-slate-500 dark:text-slate-400">
+          Zadnji izračun proveden:{" "}
+          <span className="font-medium text-slate-900 dark:text-slate-100">{base.generatedLabel}</span>
+        </p>
+      </div>
+      <MethodologyDownload />
     </div>
   )
 }
 
 function MethodologyDownload() {
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-black/5 pt-6 dark:border-white/5">
+    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
       <a
         href="/api/open-data"
         download="doseg-district-scores.json"
-        className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.97] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+        className="inline-flex items-center gap-2.5 rounded-full bg-slate-900 px-5 py-3 text-[14px] font-medium text-white shadow-sm transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
       >
-        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
           <polyline points="7 10 12 15 17 10" />
           <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
         Preuzmi podatke (JSON)
       </a>
-      <span className="text-[12px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <span className="max-w-md text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
         Svi izračunati podaci po četvrtima - rezultati, populacija, pustinjski indeks,
         BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu. Slobodno za korištenje
         uz navođenje izvora.
@@ -3788,7 +3840,6 @@ function StatHero({
   best,
   bestPct,
   departureTime,
-  generatedLabel,
   maxMinutes,
   ratio,
   worst,
@@ -3796,147 +3847,31 @@ function StatHero({
   best: DistrictScore
   bestPct: string
   departureTime: string
-  generatedLabel: string
   maxMinutes: number
   ratio: number
   worst: DistrictScore
 }) {
   return (
-    <section className="mt-8 sm:mt-12">
-      <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16">
-        <HeroLeft
-          best={best}
-          bestPct={bestPct}
-          departureTime={departureTime}
-          generatedLabel={generatedLabel}
-          maxMinutes={maxMinutes}
-          ratio={ratio}
-        />
-        <HeroRight best={best} worst={worst} departureTime={departureTime} />
+    <section className="mx-auto mt-12 w-full max-w-4xl sm:mt-20">
+      <div className="text-center">
+        <div className="mb-8 flex items-center justify-center gap-3">
+          <span className="h-px w-8 bg-slate-200 dark:bg-slate-700" />
+          <span className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            Jutarnji presjek • {departureTime}
+          </span>
+          <span className="h-px w-8 bg-slate-200 dark:bg-slate-700" />
+        </div>
+        <h1 className="font-serif text-6xl tracking-tight text-slate-900 sm:text-7xl lg:text-[6.5rem] lg:leading-[0.95] dark:text-slate-50">
+          Povezanost četvrti
+        </h1>
+        <p className="mt-12 text-[21px] leading-[1.6] text-slate-600 sm:text-[24px] lg:text-[28px] dark:text-slate-300">
+          U Zagrebu, prosječni stanovnik četvrti <span className="font-medium text-emerald-700 dark:text-emerald-400">{best.name}</span> može doseći 
+          <span className="font-medium text-slate-900 dark:text-white"> {bestPct}% grada </span> 
+          u {maxMinutes} minuta. S druge strane, oni u četvrti <span className="font-medium text-purple-700 dark:text-purple-400">{worst.name}</span> 
+          imaju <span className="font-medium text-slate-900 dark:text-white">{ratio === Infinity ? "čak ∞" : `čak ${ratio}x`} slabiji</span> doseg.
+        </p>
       </div>
     </section>
-  )
-}
-
-function HeroLeft({
-  best,
-  bestPct,
-  departureTime,
-  generatedLabel,
-  maxMinutes,
-  ratio,
-}: {
-  best: DistrictScore
-  bestPct: string
-  departureTime: string
-  generatedLabel: string
-  maxMinutes: number
-  ratio: number
-}) {
-  return (
-    <div className="flex-1">
-      <div className="inline-flex flex-wrap items-center gap-2 px-1 text-[11px] font-medium tracking-[0.18em] text-slate-500 uppercase dark:text-slate-400">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none"></span>
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-        </span>
-        Zagreb
-        <span className="opacity-40">•</span>
-        {maxMinutes} min dosega
-        <span className="opacity-40">•</span>
-        Polazak u {departureTime}
-      </div>
-      <h1 className="mt-5 max-w-4xl font-serif text-5xl tracking-tight text-slate-900 sm:text-6xl lg:text-[5.5rem] lg:leading-[0.95] dark:text-slate-50">
-        Povezanost četvrti
-      </h1>
-      <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-slate-600 sm:text-[19px] dark:text-slate-400">
-        Koliki dio grada prosječni stanovnik svake četvrti može doseći za{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{maxMinutes} minuta</strong>{" "}
-        javnim prijevozom, hodanjem i BAJS bike-sharingom. U jednom
-        jutarnjem vršnom satu vidi se vrlo jasan urbani jaz između središta
-        i rubova grada - ali i koliko bicikli mogu pomoći.
-      </p>
-      <div className="mt-10 flex flex-wrap gap-x-12 gap-y-8 border-t border-black/5 pt-8 dark:border-white/5">
-        <HeroStat color="#16a34a" label="Najbolji doseg" value={`${best.name} · ${bestPct}%`} />
-        <HeroStat color="#0891b2" label="Zadnji izračun" value={generatedLabel} />
-        <HeroStat color="#f59e0b" label="Raspon rezultata" value={`${ratio === Infinity ? "∞" : ratio}× između vrha i dna`} />
-      </div>
-    </div>
-  )
-}
-
-function HeroRight({
-  best,
-  worst,
-  departureTime,
-}: {
-  best: DistrictScore
-  worst: DistrictScore
-  departureTime: string
-}) {
-  return (
-    <div className="flex w-full shrink-0 flex-col rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 lg:w-[360px] dark:bg-zinc-900/40 dark:ring-white/10">
-      <HeroRightHeader departureTime={departureTime} />
-      <div className="flex flex-col gap-3">
-        <HeroDistrictSummary accent="#16a34a" district={best} label="Najbolja četvrt" />
-        <HeroDistrictSummary accent="#9333ea" district={worst} label="Najslabija četvrt" />
-      </div>
-      <HeroGradeScale />
-    </div>
-  )
-}
-
-function HeroRightHeader({ departureTime }: { departureTime: string }) {
-  return (
-    <div className="mb-6 flex items-center justify-between">
-      <h2 className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">Jutarnji presjek</h2>
-      <div className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 dark:bg-white/5">
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500">
-          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-        </svg>
-        <span className="font-serif text-[12px] font-medium text-slate-700 dark:text-slate-300">{departureTime}</span>
-      </div>
-    </div>
-  )
-}
-
-function HeroGradeScale() {
-  const grades = [
-    { color: "#16a34a", label: "70+", desc: "Odlična povezanost" },
-    { color: "#0891b2", label: "50-69", desc: "Dobra povezanost" },
-    { color: "#2563eb", label: "25-49", desc: "Slaba povezanost" },
-    { color: "#9333ea", label: "<25", desc: "Loša povezanost" },
-  ]
-  return (
-    <div className="mt-6 flex flex-col gap-3 pt-2">
-      <span className="font-sans text-[9px] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">Ocjene dostupnosti</span>
-      <div className="flex flex-col gap-2">
-        {grades.map((band) => (
-          <div key={band.label} className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center">
-              <span className="absolute h-3 w-3 rounded-full opacity-20" style={{ backgroundColor: band.color }} />
-              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: band.color }} />
-            </div>
-            <div className="flex flex-1 items-center justify-between border-b border-black/5 pb-1 last:border-0 dark:border-white/5">
-              <span className="font-sans text-[11px] font-medium text-slate-700 dark:text-slate-300">{band.desc}</span>
-              <span className="font-serif text-[13px] text-slate-400">{band.label}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function HeroStat({ color, label, value }: { color: string; label: string; value: string }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="flex items-center gap-2 font-sans text-[10px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-        <span className="h-2 w-2 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.1)]" style={{ backgroundColor: color }} />
-        {label}
-      </span>
-      <span className="font-serif text-[17px] text-slate-900 dark:text-slate-200">{value}</span>
-    </div>
   )
 }
 
@@ -3959,26 +3894,6 @@ function ScoreRing({ score, accent, size }: { score: number; accent: string; siz
       <div className="flex flex-col items-center text-center">
         <span className={textClass}>{score}</span>
       </div>
-    </div>
-  )
-}
-
-function HeroDistrictSummary({
-  accent,
-  district,
-  label,
-}: {
-  accent: string
-  district: DistrictScore
-  label: string
-}) {
-  return (
-    <div className="group relative flex items-center justify-between gap-4 rounded-2xl border border-black/5 p-3 transition-colors hover:bg-slate-50/50 dark:border-white/5 dark:hover:bg-white/2" aria-label={`${label}: ${district.name}, rezultat ${district.score} od 100`}>
-      <div className="min-w-0 flex-1 pl-1">
-        <div className="font-sans text-[9px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">{label}</div>
-        <div className="mt-1 truncate font-serif text-[18px] leading-tight text-slate-900 dark:text-slate-100">{district.name}</div>
-      </div>
-      <ScoreRing score={district.score} accent={accent} size="sm" />
     </div>
   )
 }
@@ -4039,7 +3954,7 @@ function DistrictCard({
   mapLink: string
 }) {
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="relative flex flex-col overflow-hidden border-l-2 bg-transparent pl-6 py-2" style={{ borderLeftColor: bandColor }}>
       <DistrictCardHeader d={d} emblemPath={emblemPath} bandColor={bandColor} bestDistrict={bestDistrict} />
       <DistrictCardStats d={d} />
       <DistrictCardReach d={d} totalGridCells={totalGridCells} bandColor={bandColor} cityAvg={cityAvg} />
@@ -4095,9 +4010,9 @@ function DistrictCardStats({ d }: { d: DistrictScore }) {
 
 function StatBadge({ value, label }: { value: string; label: string }) {
   return (
-    <div className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 dark:bg-white/5">
+    <div className="inline-flex items-center gap-1.5 rounded-sm bg-slate-100 px-2 py-1 dark:bg-white/5">
       <span className="font-serif text-[13px] font-medium text-slate-700 dark:text-slate-300">{value}</span>
-      <span className="text-[10px] text-slate-500 dark:text-slate-400">{label}</span>
+      <span className="text-[10px] text-slate-500 uppercase tracking-widest dark:text-slate-400">{label}</span>
     </div>
   )
 }
@@ -4106,7 +4021,7 @@ function DistrictCardSpecialBadges({ d }: { d: DistrictScore }) {
   return (
     <>
       {(d.trainLines?.length ?? 0) > 0 && (
-        <div className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1.5 dark:bg-teal-900/20">
+        <div className="inline-flex items-center gap-1.5 rounded-sm bg-teal-50 px-2 py-1 dark:bg-teal-900/20">
           <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-600 dark:text-teal-400">
             <rect x="4" y="3" width="16" height="14" rx="2" /><path d="M4 11h16" /><path d="M12 3v8" /><circle cx="8" cy="20" r="1" /><circle cx="16" cy="20" r="1" />
           </svg>
@@ -4114,7 +4029,7 @@ function DistrictCardSpecialBadges({ d }: { d: DistrictScore }) {
         </div>
       )}
       {d.bajsStations > 0 && (
-        <div className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 dark:bg-amber-900/20">
+        <div className="inline-flex items-center gap-1.5 rounded-sm bg-amber-50 px-2 py-1 dark:bg-amber-900/20">
           <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400">
             <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" />
           </svg>
@@ -4122,17 +4037,18 @@ function DistrictCardSpecialBadges({ d }: { d: DistrictScore }) {
         </div>
       )}
       {(d.peakOffpeakDrop ?? 0) >= 30 && (
-        <div className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-50 px-2.5 py-1.5 dark:bg-indigo-900/20">
+        <div className="inline-flex items-center gap-1.5 rounded-sm bg-indigo-50 px-2 py-1 dark:bg-indigo-900/20">
           <span className="font-serif text-[13px] font-medium text-indigo-600 dark:text-indigo-400">-{d.peakOffpeakDrop}%</span>
-          <span className="text-[10px] text-indigo-500 dark:text-indigo-400">navečer</span>
+          <span className="text-[10px] uppercase tracking-widest text-indigo-500 dark:text-indigo-400">navečer</span>
         </div>
       )}
       {(d.desertPct ?? 0) >= 20 && (
-        <div className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1.5 dark:bg-red-900/20">
+        <div className="inline-flex items-center gap-1.5 rounded-sm bg-red-50 px-2 py-1 dark:bg-red-900/20">
           <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500 dark:text-red-400">
             <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" />
           </svg>
-          <span className="font-serif text-[13px] font-medium text-red-600 dark:text-red-400">{d.desertPct}% pustinja</span>
+          <span className="font-serif text-[13px] font-medium text-red-600 dark:text-red-400">{d.desertPct}%</span>
+          <span className="text-[10px] uppercase tracking-widest text-red-500 dark:text-red-400">pustinja</span>
         </div>
       )}
     </>
@@ -4156,11 +4072,11 @@ function DistrictCardReach({
   const vsAvg = Math.round(((d.avgReachableCells - cityAvg) / cityAvg) * 100)
   return (
     <div className="mt-8 flex-1">
-      <div className="mb-2 flex items-end justify-between">
+      <div className="mb-2 flex items-baseline justify-between">
         <span className="font-sans text-[10px] tracking-[0.15em] text-slate-500 uppercase dark:text-slate-400">Doseg grada</span>
-        <span className="font-serif text-[15px] leading-none text-slate-900 dark:text-slate-200">{reachPctStr}%</span>
+        <span className="font-serif text-[15px] font-medium tabular-nums text-slate-900 dark:text-slate-100">{reachPctStr}%</span>
       </div>
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-black/5 dark:bg-white/10">
+      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
         <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${reachPctNum}%`, backgroundColor: bandColor }} />
         <div className="absolute top-0 bottom-0 w-[2px] bg-slate-900 dark:bg-white" style={{ left: `${cityReachPctNum}%` }} title="Prosjek grada" />
       </div>
@@ -4194,16 +4110,16 @@ function DistrictCardBoosts({ d, totalGridCells }: { d: DistrictScore; totalGrid
 
 function BoostBar({ label, color, pct: boostPct, barWidth, baseWidth }: { label: string; color: "teal" | "amber"; pct: number; barWidth: number; baseWidth: number }) {
   const textColor = color === "teal" ? "text-teal-600 dark:text-teal-400" : "text-amber-600 dark:text-amber-400"
-  const bgColor = color === "teal" ? "bg-teal-100 dark:bg-teal-900/30" : "bg-amber-100 dark:bg-amber-900/30"
-  const barColor = color === "teal" ? "bg-teal-500" : "bg-amber-500"
-  const overlayColor = color === "teal" ? "bg-teal-800/20 dark:bg-teal-300/20" : "bg-amber-800/20 dark:bg-amber-300/20"
+  const bgColor = color === "teal" ? "bg-teal-50 dark:bg-teal-900/10" : "bg-amber-50 dark:bg-amber-900/10"
+  const barColor = color === "teal" ? "bg-teal-400 dark:bg-teal-500" : "bg-amber-400 dark:bg-amber-500"
+  const overlayColor = color === "teal" ? "bg-teal-600/20 dark:bg-teal-300/20" : "bg-amber-600/20 dark:bg-amber-300/20"
   return (
     <div className="mt-4">
       <div className="mb-1.5 flex items-end justify-between">
         <span className={`font-sans text-[10px] tracking-[0.15em] uppercase ${textColor}`}>{label}</span>
         <span className={`font-serif text-[13px] leading-none tabular-nums ${textColor}`}>+{boostPct}%</span>
       </div>
-      <div className={`relative h-2 w-full overflow-hidden rounded-full ${bgColor}`}>
+      <div className={`relative h-1.5 w-full overflow-hidden rounded-full ${bgColor}`}>
         <div className={`absolute inset-y-0 left-0 rounded-full ${barColor}`} style={{ width: `${barWidth}%` }} />
         <div className={`absolute inset-y-0 left-0 rounded-full ${overlayColor}`} style={{ width: `${baseWidth}%` }} />
       </div>
@@ -4213,7 +4129,7 @@ function BoostBar({ label, color, pct: boostPct, barWidth, baseWidth }: { label:
 
 function DistrictCardLines({ d }: { d: DistrictScore }) {
   return (
-    <div className="mt-8 border-t border-black/5 pt-6 dark:border-white/5">
+    <div className="mt-8">
       <span className="mb-3 block font-sans text-[10px] tracking-[0.15em] text-slate-500 uppercase dark:text-slate-400">Linije</span>
       <div className="flex flex-wrap items-center gap-1.5">
         {d.tramLines.length === 0 && d.busLines.length === 0 && (d.trainLines?.length ?? 0) === 0 ? (
@@ -4230,17 +4146,17 @@ function DistrictCardLinesBadges({ d }: { d: DistrictScore }) {
   return (
     <>
       {d.tramLines.map((line) => (
-        <span key={`t${line}`} className="inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-md border border-blue-600/20 bg-blue-50 px-1.5 text-[11px] font-semibold text-blue-700 tabular-nums dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-400">
+        <span key={`t${line}`} className="inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-sm bg-slate-100 px-1.5 font-mono text-[11px] font-medium text-slate-600 dark:bg-white/10 dark:text-slate-300">
           {line}
         </span>
       ))}
       {d.busLines.length > 0 && (
-        <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 tabular-nums shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:shadow-none">
+        <span className="inline-flex h-[24px] items-center justify-center rounded-sm bg-slate-100 px-2 font-mono text-[11px] font-medium text-slate-600 dark:bg-white/10 dark:text-slate-300">
           {d.busLines.length} {d.busLines.length === 1 ? "bus" : "buseva"}
         </span>
       )}
       {(d.trainLines?.length ?? 0) > 0 && (
-        <span className="inline-flex h-[24px] items-center justify-center rounded-md border border-teal-600/20 bg-teal-50 px-2 text-[11px] font-medium text-teal-700 dark:border-teal-400/20 dark:bg-teal-500/10 dark:text-teal-400">
+        <span className="inline-flex h-[24px] items-center justify-center rounded-sm bg-teal-50 px-2 font-mono text-[11px] font-medium text-teal-700 dark:bg-teal-900/20 dark:text-teal-400">
           HŽ vlak
         </span>
       )}
@@ -4250,12 +4166,14 @@ function DistrictCardLinesBadges({ d }: { d: DistrictScore }) {
 
 function DistrictCardFooter({ mapLink }: { mapLink: string }) {
   return (
-    <Link
-      href={mapLink}
-      className="mt-8 flex w-full items-center justify-center gap-1.5 rounded-xl bg-slate-50 py-3.5 font-sans text-[10px] font-bold tracking-[0.2em] text-slate-600 uppercase transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-100 active:scale-[0.97] dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
-    >
-      Istraži područje
-      <span aria-hidden="true">&rarr;</span>
-    </Link>
+    <div className="mt-6 pt-4">
+      <Link
+        href={mapLink}
+        className="flex items-center gap-1.5 font-sans text-[11px] font-bold tracking-[0.2em] text-violet-600 uppercase transition-colors hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300"
+      >
+        Istraži područje
+        <span aria-hidden="true">&rarr;</span>
+      </Link>
+    </div>
   )
 }

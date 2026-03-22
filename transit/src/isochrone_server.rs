@@ -1674,6 +1674,120 @@ async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
     }
 }
 
+// --- Route health overview (insights endpoint) ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct RouteHealthEntry {
+    route_id: String,
+    mode: String,
+    avg_delay: f64,
+    on_time_pct: f64,
+    headway_cv: Option<f64>,
+    headway_sec: Option<f64>,
+    scheduled_speed_kmh: Option<f64>,
+    severity_score: f64,
+    label: String,
+    samples: i32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct RouteHealthResponse {
+    generated_at: i64,
+    routes: Vec<RouteHealthEntry>,
+}
+
+async fn handle_route_health(State(state): State<Arc<AppState>>) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let from = now - 86400;
+
+    let conn = db.lock().await;
+    let health_rows = match rt_store::query_route_health(&conn, from, now) {
+        Ok(rows) => rows,
+        Err(e) => {
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"{}"}}"#, e),
+            )
+                .into_response();
+        }
+    };
+    drop(conn);
+
+    let mut routes: Vec<RouteHealthEntry> = Vec::new();
+    for row in health_rows {
+        let mode = state
+            .route_mode_map
+            .get(&row.route_id)
+            .cloned()
+            .unwrap_or_default();
+        let scheduled_speed = state.scheduled_speeds.get(&row.route_id).copied();
+
+        // Severity score: 0-100, higher = worse
+        let mut score: f64 = 0.0;
+        // On-time penalty: 0% → +40, 80% → +8, 100% → 0
+        score += (1.0 - row.on_time_pct) * 40.0;
+        // Headway CV penalty: CV>0.3 starts adding, CV 1.0 → +30
+        if let Some(cv) = row.headway_cv {
+            score += ((cv - 0.3).max(0.0) / 0.7) * 30.0;
+        }
+        // Delay penalty: every 60s of avg delay → +10 (capped at 30)
+        score += (row.avg_delay.max(0.0) / 60.0).min(3.0) * 10.0;
+        score = score.clamp(0.0, 100.0);
+
+        let label = if score < 20.0 {
+            "stable"
+        } else if score < 45.0 {
+            "moderate"
+        } else if score < 70.0 {
+            "unreliable"
+        } else {
+            "critical"
+        };
+
+        routes.push(RouteHealthEntry {
+            route_id: row.route_id,
+            mode,
+            avg_delay: (row.avg_delay * 10.0).round() / 10.0,
+            on_time_pct: (row.on_time_pct * 1000.0).round() / 1000.0,
+            headway_cv: row.headway_cv.map(|v| (v * 100.0).round() / 100.0),
+            headway_sec: row.headway_sec.map(|v| v.round()),
+            scheduled_speed_kmh: scheduled_speed,
+            severity_score: (score * 10.0).round() / 10.0,
+            label: label.to_string(),
+            samples: row.samples,
+        });
+    }
+
+    // Sort by severity (worst first)
+    routes.sort_by(|a, b| {
+        b.severity_score
+            .partial_cmp(&a.severity_score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    let resp = RouteHealthResponse {
+        generated_at: now,
+        routes,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=60"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
 // --- BAJS utilization (feature 2.8) ---
 
 #[derive(Serialize)]
@@ -2354,6 +2468,7 @@ async fn main() {
         .route("/api/rt/delay-profile", get(handle_delay_profile))
         .route("/api/rt/speed-comparison", get(handle_speed_comparison))
         .route("/api/rt/occupancy", get(handle_occupancy))
+        .route("/api/rt/route-health", get(handle_route_health))
         .route("/api/rt/bajs-utilization", get(handle_bajs_utilization))
         .route("/api/rt/bajs-usage-history", get(handle_bajs_usage_history))
         .route("/health", get(handle_health))

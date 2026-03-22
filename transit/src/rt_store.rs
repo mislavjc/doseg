@@ -944,6 +944,50 @@ pub fn has_occupancy_data(conn: &Connection) -> rusqlite::Result<bool> {
     Ok(exists)
 }
 
+// --- Route health aggregation ---
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RouteHealthRow {
+    pub route_id: String,
+    pub avg_delay: f64,
+    pub on_time_pct: f64,
+    pub headway_cv: Option<f64>,
+    pub headway_sec: Option<f64>,
+    pub samples: i32,
+}
+
+/// Aggregate last N hours of snapshots per route for system-wide health overview.
+pub fn query_route_health(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<RouteHealthRow>> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT route_id,
+                AVG(avg_delay),
+                SUM(on_time_pct * trip_count) / NULLIF(SUM(trip_count), 0),
+                AVG(CASE WHEN headway_cv IS NOT NULL THEN headway_cv END),
+                AVG(CASE WHEN headway_sec IS NOT NULL THEN headway_sec END),
+                COUNT(*)
+         FROM snapshots
+         WHERE ts >= ?1 AND ts < ?2
+         GROUP BY route_id
+         HAVING SUM(trip_count) > 0",
+    )?;
+    let rows = stmt.query_map(params![from, to], |row| {
+        Ok(RouteHealthRow {
+            route_id: row.get(0)?,
+            avg_delay: row.get::<_, f64>(1).unwrap_or(0.0),
+            on_time_pct: row.get::<_, f64>(2).unwrap_or(0.0),
+            headway_cv: row.get(3)?,
+            headway_sec: row.get(4)?,
+            samples: row.get(5)?,
+        })
+    })?;
+    rows.collect()
+}
+
 // --- BAJS usage history ---
 
 #[derive(serde::Serialize)]

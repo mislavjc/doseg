@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://doseg.mislavjc.com"),
+  metadataBase: new URL("https://doseg.hr"),
   title: "Doseg | Zagreb Transit Reachability",
   description:
     "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta.",

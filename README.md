@@ -9,7 +9,7 @@ Interactive transit reachability map for Zagreb. Click anywhere to see how far y
 - **Multimodal isochrones** — tram, bus, train, and BAJS bike-sharing in one routing graph, with elevation-aware walking
 - **Instant route preview** — hover any destination to reconstruct the full route client-side, no extra network request
 - **Live transit data** — real-time delays from ZET's GTFS-RT feed, vehicle positions, and service alerts
-- **District statistics** ([`/statistika`](https://doseg.mislavjc.com/statistika)) — city-wide transit analytics: district rankings, equity gaps, transit deserts, Gini coefficient, travel time matrix, and downloadable open data
+- **District statistics** ([`/statistika`](https://doseg.hr/statistika)) — city-wide transit analytics: district rankings, equity gaps, transit deserts, Gini coefficient, travel time matrix, and downloadable open data
 
 ![Statistics page](docs/screenshot-stats.png)
 

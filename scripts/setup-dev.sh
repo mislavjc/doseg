@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-DATA_CDN="https://data.doseg.mislavjc.com"
+DATA_CDN="https://data.doseg.hr"
 FORCE=false
 
 for arg in "$@"; do

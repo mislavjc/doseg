@@ -1,1 +1,1 @@
-export const SITE_DOMAIN = "doseg.mislavjc.com"
+export const SITE_DOMAIN = "doseg.hr"

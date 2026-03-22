@@ -165,7 +165,7 @@ function CoordsTopBar() {
           display: "flex",
         }}
       >
-        doseg.mislavjc.com
+        doseg.hr
       </div>
     </div>
   )
@@ -453,7 +453,7 @@ function FallbackImage() {
           display: "flex",
         }}
       >
-        doseg.mislavjc.com
+        doseg.hr
       </div>
     </div>
   )

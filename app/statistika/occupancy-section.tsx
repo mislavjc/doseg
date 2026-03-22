@@ -50,18 +50,23 @@ export default function OccupancySection() {
   if (!data || !data.hasData || data.routes.length === 0) return null
 
   return (
-    <section className="mt-24">
-      <h2 className="mb-2 font-serif text-[24px] text-slate-900 dark:text-slate-100">
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <h2 className="mb-12 font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
         Zauzetost vozila
       </h2>
-      <p className="mb-8 max-w-xl text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Razina popunjenosti vozila po liniji i satu iz GTFS-RT feeda.
-        Prikazano ako ZET šalje podatke o popunjenosti.
-      </p>
-
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
-        <Legend />
-        <HeatmapGrid routes={data.routes} />
+      <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
+        <div className="flex-1 space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p>
+            Razina popunjenosti vozila po liniji i satu iz GTFS-RT feeda.
+            Prikazano ako ZET šalje podatke o popunjenosti.
+          </p>
+        </div>
+        <div className="w-full lg:w-[600px] lg:shrink-0">
+          <div className="flex flex-col">
+            <Legend />
+            <HeatmapGrid routes={data.routes} />
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -69,11 +74,11 @@ export default function OccupancySection() {
 
 function Legend() {
   return (
-    <div className="mb-6 flex flex-wrap gap-4">
+    <div className="mb-8 flex flex-wrap gap-6 text-[11px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
       {Object.entries(LEVEL_COLORS).map(([key, val]) => (
-        <div key={key} className="flex items-center gap-1.5">
+        <div key={key} className="flex items-center gap-2">
           <div className="h-3 w-3 rounded" style={{ backgroundColor: val.bg }} />
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">{val.label}</span>
+          <span>{val.label}</span>
         </div>
       ))}
     </div>
@@ -88,10 +93,10 @@ function HeatmapGrid({ routes }: { routes: OccupancyRoute[] }) {
       <table className="w-full border-collapse text-[11px]">
         <thead>
           <tr>
-            <th className="w-14 pb-2 text-right font-medium text-slate-500 dark:text-slate-400">Linija</th>
+            <th className="w-14 pb-4 text-right font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">Linija</th>
             {SERVICE_HOURS.map((h) => (
-              <th key={h} className="pb-2 text-center font-normal text-slate-400 dark:text-slate-500" style={{ minWidth: 24 }}>
-                {h}
+              <th key={h} className="pb-4 text-center font-medium tracking-wider text-slate-400 dark:text-slate-500" style={{ minWidth: 24 }}>
+                {h % 4 === 0 ? h : ""}
               </th>
             ))}
           </tr>
@@ -109,8 +114,8 @@ function HeatmapGrid({ routes }: { routes: OccupancyRoute[] }) {
 function HeatmapRow({ route }: { route: OccupancyRoute }) {
   const hourMap = new Map(route.hours.map((h) => [h.hour, h]))
   return (
-    <tr>
-      <td className="py-0.5 pr-2 text-right font-mono font-medium text-slate-700 dark:text-slate-300">
+    <tr className="group">
+      <td className="py-1 pr-4 text-right font-mono text-[13px] font-medium text-slate-600 dark:text-slate-300">
         {route.routeId}
       </td>
       {SERVICE_HOURS.map((h) => (
@@ -123,18 +128,22 @@ function HeatmapRow({ route }: { route: OccupancyRoute }) {
 function HeatmapCell({ routeId, hour, data }: { routeId: string; hour: number; data?: OccupancyRouteHour }) {
   if (!data || data.total === 0) {
     return (
-      <td className="p-0.5">
-        <div className="mx-auto h-4 w-4 rounded-sm bg-slate-100 dark:bg-slate-800" />
+      <td className="p-[1px]">
+        <div className="h-8 w-full rounded bg-slate-100 transition-colors group-hover:opacity-80 dark:bg-white/5" />
       </td>
     )
   }
   return (
-    <td className="p-0.5">
+    <td className="p-[1px]">
       <div
-        className="mx-auto h-4 w-4 rounded-sm"
-        style={{ backgroundColor: dominantColor(data), opacity: cellOpacity(data) }}
+        className="relative h-8 w-full rounded transition-opacity group-hover:opacity-80"
         title={`${routeId} @ ${hour}:00 — prazno: ${data.empty}, malo mjesta: ${data.fewSeats}, stajaća: ${data.standing}, puno: ${data.full}`}
-      />
+      >
+        <div
+          className="absolute inset-0 rounded"
+          style={{ backgroundColor: dominantColor(data), opacity: cellOpacity(data) }}
+        />
+      </div>
     </td>
   )
 }

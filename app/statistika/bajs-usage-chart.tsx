@@ -54,9 +54,9 @@ function useBajsUsageHistory() {
 
 function useUsageScales(points: UsagePoint[]) {
   return useMemo(() => {
-    const tsMin = Math.min(...points.map((p) => p.ts))
-    const tsMax = Math.max(...points.map((p) => p.ts))
-    const maxBikes = Math.max(...points.map((p) => p.bikesInUse), 1)
+    const tsMin = points.reduce((m, p) => Math.min(m, p.ts), Infinity)
+    const tsMax = points.reduce((m, p) => Math.max(m, p.ts), -Infinity)
+    const maxBikes = points.reduce((m, p) => Math.max(m, p.bikesInUse), 0)
 
     const xScale = scaleTime<number>({
       domain: [new Date(tsMin * 1000), new Date(tsMax * 1000)],
@@ -98,41 +98,43 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
     useUsageScales(points)
 
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
       <ChartHeader current={current} peak={peak} avg={avg} />
-      <ChartSvg label="Grafikon korištenja BAJS bicikala">
-        <GridRows
-          scale={yScale}
-          width={INNER_WIDTH}
-          tickValues={yTicks}
-          stroke="#94a3b8"
-          strokeOpacity={0.15}
-          strokeWidth={1}
-        />
-        {points.length > 1 && (
-          <AreaClosed<UsagePoint>
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+        <ChartSvg label="Grafikon korištenja BAJS bicikala">
+          <GridRows
+            scale={yScale}
+            width={INNER_WIDTH}
+            tickValues={yTicks}
+            stroke="#94a3b8"
+            strokeOpacity={0.15}
+            strokeWidth={1}
+          />
+          {points.length > 1 && (
+            <AreaClosed<UsagePoint>
+              data={points}
+              x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
+              y={(d) => yScale(d.bikesInUse) ?? 0}
+              yScale={yScale}
+              fill="#22c55e"
+              fillOpacity={0.12}
+              curve={curveMonotoneX}
+            />
+          )}
+          <LinePath<UsagePoint>
             data={points}
             x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
             y={(d) => yScale(d.bikesInUse) ?? 0}
-            yScale={yScale}
-            fill="#22c55e"
-            fillOpacity={0.12}
+            stroke="#16a34a"
+            strokeWidth={2}
+            strokeLinejoin="round"
             curve={curveMonotoneX}
           />
-        )}
-        <LinePath<UsagePoint>
-          data={points}
-          x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
-          y={(d) => yScale(d.bikesInUse) ?? 0}
-          stroke="#16a34a"
-          strokeWidth={2}
-          strokeLinejoin="round"
-          curve={curveMonotoneX}
-        />
-        <ChartXLabels ticks={xTicks} xScale={xScale} />
-        <ChartYLabels ticks={yTicks} yScale={yScale} />
-        <ChartYTitle label="Bicikli" />
-      </ChartSvg>
+          <ChartXLabels ticks={xTicks} xScale={xScale} />
+          <ChartYLabels ticks={yTicks} yScale={yScale} />
+          <ChartYTitle label="Bicikli" />
+        </ChartSvg>
+      </div>
     </div>
   )
 }
@@ -149,19 +151,22 @@ function ChartHeader({
   avg: number
 }) {
   return (
-    <>
-      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-lime-700 uppercase dark:text-lime-400">
-        Bicikli u uporabi
-      </div>
-      <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-serif text-[28px] leading-none text-green-600 tabular-nums dark:text-green-400">
+    <div className="mb-6 flex flex-col">
+      <div className="mb-4 flex items-baseline gap-4">
+        <span className="font-serif text-[48px] font-medium leading-none text-lime-700 tabular-nums dark:text-lime-400">
           {fmtHR(current)}
         </span>
-        <span className="text-[12px] text-slate-500 dark:text-slate-400">
-          trenutno &middot; prosjek {fmtHR(avg, 1)} &middot; vrh {fmtHR(peak)}
+        <span className="text-[14px] text-slate-500 dark:text-slate-400">trenutno u uporabi</span>
+      </div>
+      <div className="flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
+        <span className="flex items-center gap-2">
+          <span className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(peak)}</span> maksimum
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(avg)}</span> prosjek
         </span>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -170,7 +175,7 @@ function ChartHeader({
 function ChartSvg({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="relative mx-auto w-full">
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full" aria-label={label}>
+      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full" role="img" aria-label={label}>
         <Group top={MARGIN.top} left={MARGIN.left}>
           {children}
         </Group>
@@ -247,14 +252,19 @@ function ChartYTitle({ label }: { label: string }) {
 
 function LoadingState() {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="flex items-center justify-center py-20">
-        <div className="flex items-center gap-3 text-[14px] text-slate-500 dark:text-slate-400">
-          <svg className="h-5 w-5 animate-spin text-lime-500" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
-            <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          </svg>
-          Učitavanje podataka...
+    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
+      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        Dnevni trend
+      </div>
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+        <div className="flex items-center justify-center py-20">
+          <div className="flex items-center gap-3 text-[14px] text-slate-500 dark:text-slate-400">
+            <svg className="h-5 w-5 animate-spin text-lime-500" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+            Učitavanje podataka...
+          </div>
         </div>
       </div>
     </div>
@@ -263,11 +273,16 @@ function LoadingState() {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="rounded-2xl bg-red-50/50 p-8 text-center dark:bg-red-950/10">
-        <p className="text-[14px] text-red-700 dark:text-red-400">
-          Nije moguće dohvatiti podatke: {message}
-        </p>
+    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
+      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        Dnevni trend
+      </div>
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+        <div className="rounded-2xl bg-red-50/50 p-8 text-center dark:bg-red-950/10">
+          <p className="text-[14px] text-red-700 dark:text-red-400">
+            Nije moguće dohvatiti podatke: {message}
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -275,11 +290,16 @@ function ErrorState({ message }: { message: string }) {
 
 function EmptyState() {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="rounded-2xl bg-slate-50/50 p-8 text-center dark:bg-zinc-900/20">
-        <p className="text-[14px] text-slate-600 dark:text-slate-400">
-          Podaci se prikupljaju...
-        </p>
+    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
+      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        Dnevni trend
+      </div>
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+        <div className="rounded-2xl bg-slate-50/50 p-8 text-center dark:bg-zinc-900/20">
+          <p className="text-[14px] text-slate-600 dark:text-slate-400">
+            Podaci se prikupljaju...
+          </p>
+        </div>
       </div>
     </div>
   )

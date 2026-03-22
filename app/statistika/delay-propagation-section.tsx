@@ -108,8 +108,8 @@ function DelayChart({ data }: { data: DelayProfileData }) {
   const yScale = scaleLinear<number>({ domain: [minDelay < 0 ? minDelay * 1.15 : 0, maxDelay * 1.15], range: [innerH, 0], nice: true })
 
   return (
-    <div className="overflow-x-auto">
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block">
+    <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 overflow-x-auto dark:border-white/10 dark:bg-white/5">
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block" role="img" aria-label="Graf propagacije kašnjenja po stajalištima">
         <Group left={CHART_MARGIN.left} top={CHART_MARGIN.top}>
           <ChartGrid yScale={yScale} innerW={innerW} />
           {minDelay < 0 && (
@@ -127,15 +127,15 @@ function DelayChart({ data }: { data: DelayProfileData }) {
 
 function ChartLegend() {
   return (
-    <div className="mb-3 flex gap-6 text-[10px] text-slate-500 dark:text-slate-400">
-      <span className="flex items-center gap-1.5">
-        <span className="inline-block h-0.5 w-4 bg-emerald-600 dark:bg-emerald-400" /> prosječno kašnjenje
+    <div className="mb-6 flex flex-wrap gap-6 text-[11px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <span className="flex items-center gap-2">
+        <span className="inline-block h-0.5 w-4 bg-emerald-600 dark:bg-emerald-400" /> Prosječno kašnjenje
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="inline-block h-0.5 w-4 border-t border-dashed border-rose-300 dark:border-rose-500/60" /> p90 kašnjenje
+      <span className="flex items-center gap-2">
+        <span className="inline-block h-0.5 w-4 border-t border-dashed border-rose-300 dark:border-rose-500/60" /> P90 kašnjenje
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="inline-block h-2 w-2 rounded-full bg-red-500 dark:bg-red-400" /> nagli porast
+      <span className="flex items-center gap-2">
+        <span className="inline-block h-2 w-2 rounded-full bg-red-500 dark:bg-red-400" /> Nagli porast
       </span>
     </div>
   )
@@ -150,22 +150,23 @@ function DelayProfileBody({ data, error, isLoading, selectedRoute }: {
   if (error) return <p className="text-[13px] text-slate-500 dark:text-slate-400">Podaci nisu dostupni</p>
   if (isLoading || !data) {
     return (
-      <div className="flex h-40 items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
+      <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500" />
+        <span className="sr-only">Učitavanje...</span>
       </div>
     )
   }
   if (data.points.length === 0) {
     return (
-      <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-        <p className="text-[13px] text-slate-400">
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-12 text-center dark:border-white/10 dark:bg-white/5">
+        <p className="text-[14px] text-slate-500 dark:text-slate-400">
           Nema podataka o kašnjenju za liniju {selectedRoute} u zadnjih 24h
         </p>
       </div>
     )
   }
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="flex flex-col">
       <ChartLegend />
       <DelayChart data={data} />
     </div>
@@ -182,7 +183,8 @@ function RouteSelector({ routes, selectedRoute, onChange }: {
     <select
       value={selectedRoute}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12px] text-slate-700 shadow-sm dark:border-slate-700 dark:bg-zinc-900 dark:text-slate-300"
+      aria-label="Odabir linije"
+      className="h-10 min-w-[160px] rounded-2xl border border-slate-200 bg-white/80 px-4 text-[14px] font-medium text-slate-700 shadow-sm transition-colors hover:border-slate-300 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 dark:border-white/10 dark:bg-zinc-900/80 dark:text-slate-200 dark:hover:border-white/20"
     >
       {routes.map((r) => (
         <option key={r} value={r}>Linija {r}</option>
@@ -197,17 +199,19 @@ export default function DelayPropagationSection({ routes }: { routes: string[] }
   const { data, error, isLoading } = useSWR<DelayProfileData>(key, { keepPreviousData: true })
 
   return (
-    <section className="mt-24">
-      <div className="mb-2 flex items-baseline justify-between">
-        <h2 className="font-serif text-[24px] text-slate-900 dark:text-slate-100">
-          Propagacija kašnjenja
-        </h2>
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+            Propagacija kašnjenja
+          </h2>
+          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Kako se kašnjenje razvija duž linije - od prve do zadnje stanice.
+            Crveni krugovi označavaju stanice s naglim porastom kašnjenja.
+          </p>
+        </div>
         <RouteSelector routes={routes} selectedRoute={selectedRoute} onChange={setSelectedRoute} />
       </div>
-      <p className="mb-8 max-w-xl text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Kako se kašnjenje razvija duž linije - od prve do zadnje stanice.
-        Crveni krugovi označavaju stanice s naglim porastom kašnjenja.
-      </p>
       <DelayProfileBody data={data} error={error} isLoading={isLoading} selectedRoute={selectedRoute} />
     </section>
   )

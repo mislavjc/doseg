@@ -3,6 +3,8 @@
 import useSWR from "swr"
 import { fmtHR } from "@/lib/format"
 
+const MAX_RATIO_SCALE = 1.5
+
 interface SpeedRouteComparison {
   routeId: string
   mode: string
@@ -38,7 +40,7 @@ export default function SpeedComparisonSection() {
   )
 
   return (
-    <section className="mt-24">
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <SectionHeader />
       <SpeedContent data={data} error={error} />
     </section>
@@ -48,8 +50,9 @@ export default function SpeedComparisonSection() {
 function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Error }) {
   if (!data && !error) {
     return (
-      <div className="flex h-40 items-center justify-center">
+      <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-500" />
+        <span className="sr-only">Učitavanje...</span>
       </div>
     )
   }
@@ -64,10 +67,12 @@ function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Err
 
   if (!data.hasData) {
     return (
-      <p className="text-[13px] text-slate-500 dark:text-slate-400">
-        GTFS-RT feed ne sadrži podatke o brzini vozila. Usporedba će biti dostupna
-        kada ZET počne slati brzine u VehiclePosition feedu.
-      </p>
+      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-12 text-center dark:border-white/10 dark:bg-white/5">
+        <p className="text-[14px] text-slate-500 dark:text-slate-400">
+          ZET-ov sustav praćenja trenutno ne šalje podatke o brzini vozila.
+          Usporedba stvarne i planirane brzine bit će dostupna kada ti podaci postanu dostupni.
+        </p>
+      </div>
     )
   }
 
@@ -77,7 +82,7 @@ function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Err
   const overallRatio = avgScheduled > 0 ? avgActual / avgScheduled : null
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="flex flex-col">
       <SummaryRow avgScheduled={avgScheduled} avgActual={avgActual} ratio={overallRatio} routeCount={withActual.length} />
       {withActual.length > 0 && <SpeedTable routes={data.routes} />}
     </div>
@@ -86,15 +91,15 @@ function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Err
 
 function SectionHeader() {
   return (
-    <>
-      <h2 className="mb-2 font-serif text-[24px] text-slate-900 dark:text-slate-100">
+    <div className="mb-12">
+      <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
         Stvarna vs planirana brzina
       </h2>
-      <p className="mb-8 max-w-xl text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Usporedba trenutne brzine vozila iz GTFS-RT feeda s planiranom komercijalnom
-        brzinom iz voznog reda. Stvarna brzina uključuje stajanje na stanicama.
+      <p className="mt-4 max-w-2xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        Usporedba stvarne brzine vozila s planiranom brzinom iz voznog reda.
+        Stvarna brzina uključuje stajanje na stanicama.
       </p>
-    </>
+    </div>
   )
 }
 
@@ -110,26 +115,28 @@ function SummaryRow({
   routeCount: number
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+    <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
       <div>
-        <span className={`font-serif text-[36px] font-medium tabular-nums ${ratioColor(ratio)}`}>
+        <span className={`font-serif text-[48px] font-medium leading-none tabular-nums ${ratioColor(ratio)}`}>
           {fmtHR(avgActual, 1)} km/h
         </span>
-        <span className="ml-2 text-[13px] text-slate-500 dark:text-slate-400">
-          stvarna (planirana: {fmtHR(avgScheduled, 1)} km/h)
-        </span>
       </div>
-      <div className="flex gap-4 text-[12px] text-slate-500 dark:text-slate-400">
+      <div className="text-[14px] text-slate-500 dark:text-slate-400">
+        stvarna (planirana: {fmtHR(avgScheduled, 1)} km/h)
+      </div>
+      <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
         {ratio !== null && (
-          <span>
+          <span className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
             <strong className={`font-medium ${ratioColor(ratio)}`}>
               {Math.round(ratio * 100)}%
             </strong>{" "}
             planirane brzine
           </span>
         )}
-        <span>
-          <strong className="font-medium text-slate-700 dark:text-slate-300">{routeCount}</strong>{" "}
+        <span className="flex items-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{routeCount}</strong>{" "}
           linija s podacima
         </span>
       </div>
@@ -142,11 +149,11 @@ function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
     .sort((a, b) => (a.speedRatio ?? 0) - (b.speedRatio ?? 0))
 
   return (
-    <div>
-      <div className="mb-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+    <div className="mt-12">
+      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Po linijama
       </div>
-      <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
         {sorted.map((r) => (
           <SpeedRow key={r.routeId} r={r} />
         ))}
@@ -156,26 +163,27 @@ function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
 }
 
 function SpeedRow({ r }: { r: SpeedRouteComparison }) {
-  const barPct = r.speedRatio !== null ? Math.min(r.speedRatio * 100, 150) : 0
+  const barPct = r.speedRatio !== null ? Math.min(r.speedRatio * 100, MAX_RATIO_SCALE * 100) : 0
 
   return (
-    <div className="flex items-center gap-2 py-1.5">
-      <span className="w-10 shrink-0 text-right font-mono text-[12px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
+    <div className="flex items-center gap-3 border-b border-slate-100 py-2 dark:border-white/5">
+      <span className="w-10 shrink-0 font-mono text-[14px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
         {r.routeId}
       </span>
-      <div className="relative h-1.5 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
-        <div className="absolute top-0 left-[66.7%] h-full w-px bg-slate-300 dark:bg-slate-600" />
+      <div className="relative h-2 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="absolute top-0 h-full w-[2px] bg-slate-300 dark:bg-slate-600" style={{ left: `${100 / MAX_RATIO_SCALE}%` }} />
+        <span className="absolute text-[9px] text-slate-400 dark:text-slate-500" style={{ left: `${100 / MAX_RATIO_SCALE}%`, top: -14 }}>100%</span>
         <div
           className={`h-full rounded-full ${ratioBg(r.speedRatio)}`}
-          style={{ width: `${Math.max(barPct / 1.5, 2)}%` }}
+          style={{ width: `${Math.max(barPct / MAX_RATIO_SCALE, 2)}%` }}
         />
       </div>
-      <span className="w-28 text-right font-mono text-[11px] tabular-nums text-slate-600 dark:text-slate-400">
+      <span className="w-24 text-right font-mono text-[13px] tabular-nums text-slate-600 dark:text-slate-400">
         {r.actualSpeedKmh !== null
-          ? `${r.actualSpeedKmh.toFixed(1)}/${r.scheduledSpeedKmh.toFixed(1)}`
-          : `—/${r.scheduledSpeedKmh.toFixed(1)}`}
+          ? `${r.actualSpeedKmh.toFixed(1)} / ${r.scheduledSpeedKmh.toFixed(1)}`
+          : `— / ${r.scheduledSpeedKmh.toFixed(1)}`}
       </span>
-      <span className={`w-10 text-right font-mono text-[11px] font-medium tabular-nums ${ratioColor(r.speedRatio)}`}>
+      <span className={`w-12 text-right font-mono text-[13px] font-medium tabular-nums ${ratioColor(r.speedRatio)}`}>
         {r.speedRatio !== null ? `${Math.round(r.speedRatio * 100)}%` : "—"}
       </span>
     </div>

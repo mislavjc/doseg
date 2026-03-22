@@ -139,9 +139,9 @@ export default function AccessibilityProfileSection() {
   const insights = computeInsights(data)
 
   return (
-    <section id="24h-profil" className="mt-16 sm:mt-20">
+    <section id="24h-profil" className="mt-16 flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <ProfileHeader />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px]">
         <ProfileChartCard data={data} insights={insights} />
         <ProfileInterpretation insights={insights} />
       </div>
@@ -152,17 +152,16 @@ export default function AccessibilityProfileSection() {
 
 function ProfileHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="inline-block h-3 w-3 shrink-0 rounded-full bg-teal-500" />
-        <h2 className="font-serif text-2xl tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
+    <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
           24-satni profil dostupnosti
         </h2>
+        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          Kada se tvoja četvrt &ldquo;budi&rdquo;, a kada &ldquo;zaspi&rdquo;? Svaki sat od 5 do 23h
+          mjeri koliko je grada dostupno autobusom i tramvajem u 30 minuta.
+        </p>
       </div>
-      <p className="max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Kada se tvoja četvrt &ldquo;budi&rdquo;, a kada &ldquo;zaspi&rdquo;? Svaki sat od 5 do 23h
-        mjeri koliko je grada dostupno autobusom i tramvajem u 30 minuta.
-      </p>
     </div>
   )
 }
@@ -175,11 +174,11 @@ function ProfileChartCard({
   insights: ProfileInsights
 }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
-      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-teal-700 uppercase dark:text-teal-400">
+    <div className="flex flex-col">
+      <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Dostupnost kroz dan
       </div>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-8 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
         Broj dosežnih ćelija po satu za odabrane četvrti i gradski prosjek.
       </p>
       <ProfileChart data={data} insights={insights} />
@@ -249,13 +248,13 @@ function ChartAxes({ xScale, yScale, innerW, innerH, yTicks, hours }: {
   return (
     <>
       {yTicks.map((v) => (
-        <text key={v} x={-8} y={yScale(v) + 1} textAnchor="end" dominantBaseline="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">{v}</text>
+        <text key={v} x={-8} y={yScale(v) + 1} textAnchor="end" dominantBaseline="middle" className="fill-slate-400 text-[9px] font-mono dark:fill-slate-500">{v}</text>
       ))}
       {hours.filter((h) => h % 2 === 1 || h === 5 || h === 23).map((h) => (
-        <text key={h} x={xScale(h)} y={innerH + 16} textAnchor="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">{h}:00</text>
+        <text key={h} x={xScale(h)} y={innerH + 16} textAnchor="middle" className="fill-slate-400 text-[9px] font-mono dark:fill-slate-500">{h}:00</text>
       ))}
-      <text x={innerW / 2} y={innerH + 30} textAnchor="middle" className="fill-slate-400 text-[9px] dark:fill-slate-500">Sat</text>
-      <text x={-30} y={-6} textAnchor="start" className="fill-slate-400 text-[9px] dark:fill-slate-500">Ćelije</text>
+      <text x={innerW / 2} y={innerH + 30} textAnchor="middle" className="fill-slate-400 text-[10px] uppercase tracking-widest font-bold dark:fill-slate-500">Sat</text>
+      <text x={-30} y={-6} textAnchor="start" className="fill-slate-400 text-[10px] uppercase tracking-widest font-bold dark:fill-slate-500">Ćelije</text>
     </>
   )
 }
@@ -326,41 +325,29 @@ function ProfileLegend({ insights, data }: { insights: ProfileInsights; data: Ac
 
 function ProfileInterpretation({ insights }: { insights: ProfileInsights }) {
   return (
-    <div className="flex flex-col rounded-3xl bg-teal-50/50 p-8 dark:bg-teal-950/10">
-      <InterpretationHeader />
-      <InterpretationStats insights={insights} />
-      <InterpretationText insights={insights} />
-    </div>
-  )
-}
-
-function InterpretationHeader() {
-  return (
-    <div className="mb-6 flex items-center gap-3 text-teal-800 dark:text-teal-200">
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-teal-500/20">
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </svg>
-      </span>
-      <h2 className="font-serif text-[22px] text-slate-900 dark:text-slate-100">Kada grad diše?</h2>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col border-l-2 border-teal-500 pl-6 py-2 mt-4">
+        <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-teal-700 uppercase">Kada grad diše?</h3>
+        <InterpretationStats insights={insights} />
+        <InterpretationText insights={insights} />
+      </div>
     </div>
   )
 }
 
 function InterpretationStats({ insights }: { insights: ProfileInsights }) {
   return (
-    <div className="mb-8 grid grid-cols-2 gap-4">
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-teal-600 tabular-nums dark:text-teal-400">
+    <div className="mb-6 grid grid-cols-2 gap-4">
+      <div>
+        <div className="font-serif text-[28px] leading-none text-teal-600 tabular-nums dark:text-teal-400">
           {insights.cityPeakHour}:00
         </div>
         <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
           vršni sat<br />({Math.round(insights.cityPeakCells)} ćelija prosjek)
         </div>
       </div>
-      <div className="text-center">
-        <div className="font-serif text-[36px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
+      <div>
+        <div className="font-serif text-[28px] leading-none text-slate-900 tabular-nums dark:text-slate-100">
           {insights.cityTroughHour}:00
         </div>
         <div className="mt-2 text-[12px] text-slate-600 dark:text-slate-400">
@@ -375,21 +362,10 @@ function InterpretationText({ insights }: { insights: ProfileInsights }) {
   return (
     <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
       <p>
-        Vršna dostupnost je u{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{insights.cityPeakHour}:00</strong>{" "}
-        sa prosječno{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{Math.round(insights.cityPeakCells)}</strong>{" "}
-        dosežnih ćelija. Najslabiji sat je{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{insights.cityTroughHour}:00</strong>{" "}
-        s padom od{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(insights.cityDropPct, 1)}%</strong>.
+        Vršna dostupnost je u <span className="font-medium text-slate-900 dark:text-slate-100">{insights.cityPeakHour}:00</span> sa prosječno <span className="font-medium text-slate-900 dark:text-slate-100">{Math.round(insights.cityPeakCells)}</span> dosežnih ćelija. Najslabiji sat je <span className="font-medium text-slate-900 dark:text-slate-100">{insights.cityTroughHour}:00</span> s padom od <span className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(insights.cityDropPct, 1)}%</span>.
       </p>
       <p>
-        Najveći pad tijekom dana ima{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{insights.biggestDrop.name}</strong>{" "}
-        (-{fmtHR(insights.biggestDrop.serviceDropPct, 1)}%), dok{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">{insights.smallestDrop.name}</strong>{" "}
-        ({fmtHR(insights.smallestDrop.serviceDropPct, 1)}%) ima najstabilniju uslugu kroz dan.
+        Najveći pad tijekom dana ima <span className="font-medium text-slate-900 dark:text-slate-100">{insights.biggestDrop.name}</span> (-{fmtHR(insights.biggestDrop.serviceDropPct, 1)}%), dok <span className="font-medium text-slate-900 dark:text-slate-100">{insights.smallestDrop.name}</span> ({fmtHR(insights.smallestDrop.serviceDropPct, 1)}%) ima najstabilniju uslugu kroz dan.
       </p>
       <p>
         Rubne četvrti s rijetkim autobusima pokazuju oštre padove
@@ -408,7 +384,7 @@ function ProfileTable({ data, insights }: { data: AccessibilityProfileOutput; in
   const sorted = [...data.districts].sort((a, b) => b.serviceDropPct - a.serviceDropPct)
 
   return (
-    <div className="mt-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="mt-12 flex flex-col">
       <ProfileTableHeader cityDropPct={insights.cityDropPct} />
       <DesktopTable sorted={sorted} />
       <MobileCards sorted={sorted} />
@@ -418,34 +394,34 @@ function ProfileTable({ data, insights }: { data: AccessibilityProfileOutput; in
 
 function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
   return (
-    <>
-      <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-sans text-[11px] font-bold tracking-widest text-teal-700 uppercase dark:text-teal-400">
-          Sve četvrti - dnevna stabilnost
+    <div className="mb-6 flex flex-col gap-2 border-l-2 border-slate-200 pl-4 dark:border-white/10">
+      <div className="flex items-baseline justify-between">
+        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+          Dnevna stabilnost po četvrtima
         </h3>
         <span className="font-serif text-[14px] text-slate-500 dark:text-slate-400">
           prosječni pad -{fmtHR(cityDropPct, 1)}%
         </span>
       </div>
-      <p className="mb-6 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
         Poredano po padu usluge - četvrti s najvećim raskorakom između najboljeg i najgoreg sata.
       </p>
-    </>
+    </div>
   )
 }
 
 function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
   return (
-    <div className="hidden sm:block">
-      <table className="w-full text-[13px]">
+    <div className="hidden sm:block overflow-x-auto">
+      <table className="w-full text-[14px]">
         <thead>
-          <tr className="border-b border-black/5 text-left text-[11px] font-medium text-slate-500 uppercase dark:border-white/5 dark:text-slate-400">
-            <th className="pb-2 pr-4">#</th>
-            <th className="pb-2 pr-4">Četvrt</th>
-            <th className="pb-2 pr-4 text-right">Vrh</th>
-            <th className="pb-2 pr-4 text-right">Dno</th>
-            <th className="pb-2 pr-4 text-right">Pad</th>
-            <th className="pb-2 text-right">Mini-profil</th>
+          <tr className="border-b-2 border-slate-200 text-left text-[12px] font-bold tracking-widest text-slate-500 uppercase dark:border-white/10 dark:text-slate-400">
+            <th className="pb-3 pr-4 w-8">#</th>
+            <th className="pb-3 pr-4">Četvrt</th>
+            <th className="pb-3 pr-4 text-right">Vrh</th>
+            <th className="pb-3 pr-4 text-right">Dno</th>
+            <th className="pb-3 pr-4 text-right">Pad</th>
+            <th className="pb-3 text-right">Mini-profil</th>
           </tr>
         </thead>
         <tbody>
@@ -460,7 +436,7 @@ function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
 
 function MobileCards({ sorted }: { sorted: DistrictHourlyProfile[] }) {
   return (
-    <div className="space-y-3 sm:hidden">
+    <div className="flex flex-col gap-4 sm:hidden">
       {sorted.map((d, i) => (
         <ProfileMobileCard key={d.key} d={d} rank={i + 1} />
       ))}
@@ -469,26 +445,26 @@ function MobileCards({ sorted }: { sorted: DistrictHourlyProfile[] }) {
 }
 
 function dropColorClass(pct: number): string {
-  if (pct >= 50) return "text-red-600 dark:text-red-400"
+  if (pct >= 50) return "text-rose-600 dark:text-rose-400"
   if (pct >= 30) return "text-orange-600 dark:text-orange-400"
   return "text-teal-600 dark:text-teal-400"
 }
 
 function ProfileTableRow({ d, rank }: { d: DistrictHourlyProfile; rank: number }) {
   return (
-    <tr className="border-b border-black/3 last:border-0 dark:border-white/3">
-      <td className="py-2 pr-4 text-slate-400 tabular-nums dark:text-slate-500">{rank}</td>
-      <td className="py-2 pr-4 font-medium text-slate-900 dark:text-slate-100">{d.name}</td>
-      <td className="py-2 pr-4 text-right tabular-nums text-slate-600 dark:text-slate-300">
-        {d.peakHour}:00 <span className="ml-1 text-[11px] text-slate-400 dark:text-slate-500">({Math.round(d.peakCells)})</span>
+    <tr className="border-b border-slate-100 last:border-0 dark:border-white/5">
+      <td className="py-3 pr-4 font-mono text-[11px] text-slate-400 dark:text-slate-500">{rank.toString().padStart(2, "0")}</td>
+      <td className="py-3 pr-4 font-medium text-slate-800 dark:text-slate-200">{d.name}</td>
+      <td className="py-3 pr-4 text-right tabular-nums text-slate-600 dark:text-slate-400">
+        {d.peakHour}:00 <span className="ml-1 text-[12px] text-slate-400 dark:text-slate-500">({Math.round(d.peakCells)})</span>
       </td>
-      <td className="py-2 pr-4 text-right tabular-nums text-slate-600 dark:text-slate-300">
-        {d.troughHour}:00 <span className="ml-1 text-[11px] text-slate-400 dark:text-slate-500">({Math.round(d.troughCells)})</span>
+      <td className="py-3 pr-4 text-right tabular-nums text-slate-600 dark:text-slate-400">
+        {d.troughHour}:00 <span className="ml-1 text-[12px] text-slate-400 dark:text-slate-500">({Math.round(d.troughCells)})</span>
       </td>
-      <td className="py-2 pr-4 text-right font-medium tabular-nums">
+      <td className="py-3 pr-4 text-right font-medium tabular-nums">
         <span className={dropColorClass(d.serviceDropPct)}>-{fmtHR(d.serviceDropPct, 1)}%</span>
       </td>
-      <td className="py-2 text-right"><Sparkline cells={d.reachableCells} /></td>
+      <td className="py-3 text-right"><Sparkline cells={d.reachableCells} /></td>
     </tr>
   )
 }
@@ -499,11 +475,13 @@ function Sparkline({ cells }: { cells: number[] }) {
   const maxC = Math.max(...cells, 1)
   const minC = Math.min(...cells)
   const range = maxC - minC || 1
+  const denom = Math.max(cells.length - 1, 1)
   return (
-    <svg width={sparkW} height={sparkH} className="ml-auto">
+    <svg width={sparkW} height={sparkH} className="ml-auto" aria-hidden="true">
       <polyline
-        fill="none" stroke="#0d9488" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-        points={cells.map((c, i) => `${(i / (cells.length - 1)) * sparkW},${sparkH - ((c - minC) / range) * (sparkH - 2) - 1}`).join(" ")}
+        fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+        className="text-slate-400 dark:text-slate-500"
+        points={cells.map((c, i) => `${(i / denom) * sparkW},${sparkH - ((c - minC) / range) * (sparkH - 2) - 1}`).join(" ")}
       />
     </svg>
   )
@@ -511,17 +489,17 @@ function Sparkline({ cells }: { cells: number[] }) {
 
 function ProfileMobileCard({ d, rank }: { d: DistrictHourlyProfile; rank: number }) {
   return (
-    <div className="rounded-2xl bg-slate-50/50 px-4 py-3 dark:bg-white/3">
-      <div className="flex items-baseline justify-between">
+    <div className="flex flex-col border-b border-slate-100 pb-4 last:border-0 dark:border-white/5">
+      <div className="flex items-baseline justify-between mb-1">
         <div className="flex items-baseline gap-2">
-          <span className="text-[12px] text-slate-400 tabular-nums">{rank}.</span>
-          <span className="font-medium text-slate-900 dark:text-slate-100">{d.name}</span>
+          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">{rank.toString().padStart(2, "0")}</span>
+          <span className="font-medium text-slate-800 dark:text-slate-200">{d.name}</span>
         </div>
         <span className={`font-medium tabular-nums ${dropColorClass(d.serviceDropPct)}`}>
           -{fmtHR(d.serviceDropPct, 1)}%
         </span>
       </div>
-      <div className="mt-1 text-[12px] text-slate-500 dark:text-slate-400">
+      <div className="text-[12px] text-slate-500 dark:text-slate-400 ml-5">
         Vrh {d.peakHour}:00 ({Math.round(d.peakCells)} ćelija) · Dno {d.troughHour}:00 ({Math.round(d.troughCells)} ćelija)
       </div>
     </div>

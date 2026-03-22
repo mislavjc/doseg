@@ -153,9 +153,9 @@ export default function BajsStationMap() {
   }, [data, updateSource])
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 overflow-hidden dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="overflow-hidden rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 dark:border-white/10 dark:bg-white/5">
       <div className="relative">
-        <div ref={containerRef} style={{ height: 400, width: "100%" }} />
+        <div ref={containerRef} role="application" aria-label="Karta BAJS stanica u Zagrebu" style={{ height: 400, width: "100%" }} />
         <MapLegend />
       </div>
     </div>

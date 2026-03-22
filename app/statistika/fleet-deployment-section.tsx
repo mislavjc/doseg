@@ -38,22 +38,29 @@ export default function FleetDeploymentSection() {
   )
 
   return (
-    <section className="mt-24">
-      <h2 className="mb-2 font-serif text-[24px] text-slate-900 dark:text-slate-100">
-        GTFS-RT pokrivenost
+    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+      <h2 className="mb-12 font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+        Pokrivenost flote u stvarnom vremenu
       </h2>
-      <p className="mb-8 max-w-xl text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Koliko planiranih polazaka šalje podatke u stvarnom vremenu putem
-        GTFS-RT feeda. Nizak postotak znači da ZET ne objavljuje RT podatke
-        za sve linije, ne da vozila ne voze.
-      </p>
-      {error && !data && <p className="text-[13px] text-slate-500 dark:text-slate-400">Podaci nisu dostupni</p>}
-      {isLoading && (
-        <div className="flex h-40 items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
+      <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
+        <div className="flex-1 space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p>
+            Koliko planiranih polazaka trenutačno šalje podatke o poziciji vozila?
+            Nizak postotak znači da ZET ne prati sve linije u stvarnom vremenu
+            (čest problem s neopremljenim autobusima), a ne nužno da vozila ne voze.
+          </p>
         </div>
-      )}
-      {data && !error && <FleetContent data={data} />}
+        <div className="w-full lg:w-[600px] lg:shrink-0">
+          {error && !data && <p className="text-[13px] text-slate-500 dark:text-slate-400">Podaci nisu dostupni</p>}
+          {isLoading && !data && (
+            <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
+              <span className="sr-only">Učitavanje...</span>
+            </div>
+          )}
+          {data && <FleetContent data={data} />}
+        </div>
+      </div>
     </section>
   )
 }
@@ -65,7 +72,7 @@ function FleetContent({ data }: { data: FleetDeploymentData }) {
   const withoutSignal = data.routes.filter((r) => r.activeTrips === 0 && r.scheduledTrips > 0)
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8 dark:bg-zinc-900/40 dark:ring-white/10">
+    <div className="flex flex-col">
       <SummaryRow data={data} withSignal={withSignal.length} withoutSignal={withoutSignal.length} />
       {withSignal.length > 0 && <ActiveRoutesTable routes={withSignal} />}
       {withoutSignal.length > 0 && <SilentRoutesList routes={withoutSignal} />}
@@ -79,18 +86,24 @@ function SummaryRow({ data, withSignal, withoutSignal }: {
   withoutSignal: number
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+    <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
       <div>
-        <span className={`font-serif text-[36px] font-medium tabular-nums ${pctColor(data.totalDeploymentPct)}`}>
+        <span className={`font-serif text-[48px] font-medium leading-none tabular-nums ${pctColor(data.totalDeploymentPct)}`}>
           {Math.round(data.totalDeploymentPct)}%
         </span>
-        <span className="ml-2 text-[13px] text-slate-500 dark:text-slate-400">
-          ukupno ({data.totalActive}/{data.totalScheduled} polazaka)
-        </span>
       </div>
-      <div className="flex gap-4 text-[12px] text-slate-500 dark:text-slate-400">
-        <span><strong className="font-medium text-slate-700 dark:text-slate-300">{withSignal}</strong> linija s RT signalom</span>
-        <span><strong className="font-medium text-slate-700 dark:text-slate-300">{withoutSignal}</strong> bez signala</span>
+      <div className="text-[14px] text-slate-500 dark:text-slate-400">
+        ukupno pokriveno ({data.totalActive} / {data.totalScheduled} polazaka)
+      </div>
+      <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
+        <span className="flex items-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{withSignal}</strong> s RT signalom
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+          <strong className="font-medium text-slate-900 dark:text-slate-100">{withoutSignal}</strong> bez signala
+        </span>
       </div>
     </div>
   )
@@ -101,11 +114,11 @@ function SummaryRow({ data, withSignal, withoutSignal }: {
 function ActiveRoutesTable({ routes }: { routes: FleetRouteDeployment[] }) {
   const sorted = [...routes].sort((a, b) => b.deploymentPct - a.deploymentPct)
   return (
-    <div>
-      <div className="mb-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+    <div className="mt-8 border-t border-slate-100 pt-6 dark:border-white/5">
+      <div className="mb-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Linije s RT signalom
       </div>
-      <div className="grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {sorted.map((r) => (
           <ActiveRouteItem key={r.routeId} r={r} />
         ))}

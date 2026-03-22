@@ -29,15 +29,28 @@ export default function RouteAnalysisTables({
   )
 }
 
-function ExpandableRouteTable({
-  title,
-  routes,
-  mode,
-}: {
-  title: string
-  routes: RouteInfo[]
-  mode: "TRAM" | "BUS"
-}) {
+const COLUMNS = ["Linija", "Polasci", "Brzina", "Takt", "Vožnja"] as const
+const TH_CLASS = "pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400"
+
+function RouteTableHead() {
+  return (
+    <thead>
+      <tr className="border-b-2 border-slate-100 dark:border-white/10">
+        {COLUMNS.map((col, i) => (
+          <th
+            key={col}
+            scope="col"
+            className={i === COLUMNS.length - 1 ? `${TH_CLASS} text-right !pr-0` : TH_CLASS}
+          >
+            {col}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  )
+}
+
+function ExpandableRouteTable({ title, routes, mode }: { title: string; routes: RouteInfo[]; mode: "TRAM" | "BUS" }) {
   const [expanded, setExpanded] = useState(false)
   const tableId = useId().replace(/:/g, "")
   const regionId = `route-table-${mode}-${tableId}`
@@ -49,53 +62,17 @@ function ExpandableRouteTable({
       <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         {title}
       </h3>
-      <div
-        className={
-          needsToggle && !expanded
-            ? "relative max-h-[min(28rem,70vh)] overflow-hidden"
-            : "relative"
-        }
-      >
+      <div className={needsToggle && !expanded ? "relative max-h-[min(28rem,70vh)] overflow-hidden" : "relative"}>
         <div className="overflow-x-auto">
-          <table
-            id={regionId}
-            className="w-full text-left"
-            aria-label={title}
-          >
-            <thead>
-              <tr className="border-b-2 border-slate-100 dark:border-white/10">
-                <th scope="col" className="pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-                  Linija
-                </th>
-                <th scope="col" className="pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-                  Polasci
-                </th>
-                <th scope="col" className="pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-                  Brzina
-                </th>
-                <th scope="col" className="pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-                  Takt
-                </th>
-                <th scope="col" className="pb-4 text-right font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-                  Vožnja
-                </th>
-              </tr>
-            </thead>
+          <table id={regionId} className="w-full text-left" aria-label={title}>
+            <RouteTableHead />
             <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-              {visible.map((r) => (
-                <RouteRow
-                  key={`${mode}-${r.name}`}
-                  route={r}
-                />
-              ))}
+              {visible.map((r) => <RouteRow key={`${mode}-${r.name}`} route={r} />)}
             </tbody>
           </table>
         </div>
         {needsToggle && !expanded && (
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-page-bg,#F6F5F2)] to-transparent dark:from-background"
-            aria-hidden
-          />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-page-bg,#F6F5F2)] to-transparent dark:from-background" aria-hidden />
         )}
       </div>
       {needsToggle && (
@@ -106,9 +83,7 @@ function ExpandableRouteTable({
           aria-controls={regionId}
           onClick={() => setExpanded((e) => !e)}
         >
-          {expanded
-            ? "Suzi prikaz"
-            : `Prikaži sve linije (${routes.length} ukupno)`}
+          {expanded ? "Suzi prikaz" : `Prikaži sve linije (${routes.length} ukupno)`}
         </button>
       )}
     </div>

@@ -1973,8 +1973,7 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
                 .unwrap()
                 .as_secs();
 
-            let status_result =
-                tokio::task::spawn_blocking(otp::fetch_station_status).await;
+            let status_result = tokio::task::spawn_blocking(otp::fetch_station_status).await;
 
             if let Ok(Some(statuses)) = status_result {
                 let count = statuses.len();

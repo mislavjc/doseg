@@ -354,13 +354,33 @@ function HeatmapCells({
   )
 }
 
-function HourlyHeatmap({
-  routes,
-  insights,
-}: {
-  routes: NetworkRoute[]
-  insights: ReturnType<typeof computeInsights>
-}) {
+function HeatmapInsight({ insights }: { insights: ReturnType<typeof computeInsights> }) {
+  return (
+    <div className="flex flex-col border-l-2 border-emerald-500 py-2 pl-4 sm:pl-6">
+      <h3 className="mb-2 font-sans text-[12px] font-bold tracking-widest text-emerald-700 uppercase sm:text-[13px]">
+        Satni polasci tramvaja
+      </h3>
+      <p className="text-[16px] leading-relaxed text-slate-700 sm:text-[15px] dark:text-slate-300">
+        Broj polazaka po satu za svaku tramvajsku liniju. Svjetlija boja znači
+        više polazaka. Vršni sat je <strong>{insights.peakHour}:00</strong> s{" "}
+        {insights.peakDeps} tramvajskih polazaka.
+        {insights.busiestTram && (
+          <>
+            {" "}
+            Najfrekventnija linija {insights.busiestTram.name} ima{" "}
+            {insights.busiestPeakDep} polazaka u vršnom satu - tramvaj svakih{" "}
+            <strong>{fmtDec(insights.busiestInterval, 1)} minuta</strong>.
+          </>
+        )}{" "}
+        Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} polazaka -
+        tek {fmtDec((insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100, 1)}%
+        dnevnog kapaciteta.
+      </p>
+    </div>
+  )
+}
+
+function HourlyHeatmap({ routes, insights }: { routes: NetworkRoute[]; insights: ReturnType<typeof computeInsights> }) {
   const tramRoutes = routes
     .filter((r) => r.mode === "TRAM")
     .sort((a, b) => {
@@ -373,7 +393,6 @@ function HourlyHeatmap({
 
   const allDeps = tramRoutes.flatMap((r) => r.hourlyDepartures)
   const maxDep = Math.max(...allDeps, 1)
-
   const colorScale = scaleLinear<string>({
     domain: [0, maxDep * 0.25, maxDep * 0.6, maxDep],
     range: ["#0f172a", "#065f46", "#10b981", "#6ee7b7"],
@@ -381,28 +400,7 @@ function HourlyHeatmap({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col border-l-2 border-emerald-500 py-2 pl-4 sm:pl-6">
-        <h3 className="mb-2 font-sans text-[12px] font-bold tracking-widest text-emerald-700 uppercase sm:text-[13px]">
-          Satni polasci tramvaja
-        </h3>
-        <p className="text-[16px] leading-relaxed text-slate-700 sm:text-[15px] dark:text-slate-300">
-          Broj polazaka po satu za svaku tramvajsku liniju. Svjetlija boja znači
-          više polazaka. Vršni sat je <strong>{insights.peakHour}:00</strong> s{" "}
-          {insights.peakDeps} tramvajskih polazaka.
-          {insights.busiestTram && (
-            <>
-              {" "}
-              Najfrekventnija linija {insights.busiestTram.name} ima{" "}
-              {insights.busiestPeakDep} polazaka u vršnom satu - tramvaj svakih{" "}
-              <strong>{fmtDec(insights.busiestInterval, 1)} minuta</strong>.
-            </>
-          )}{" "}
-          Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} polazaka -
-          tek {fmtDec((insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100, 1)}%
-          dnevnog kapaciteta.
-        </p>
-      </div>
-
+      <HeatmapInsight insights={insights} />
       <div className="overflow-x-auto rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-4 sm:rounded-3xl sm:p-6 dark:border-white/10 dark:bg-white/5">
         <p className="mb-3 text-center text-[12px] leading-snug text-slate-500 sm:hidden dark:text-slate-400">
           Povucite vodoravno za sve sate i linije.

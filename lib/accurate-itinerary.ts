@@ -205,7 +205,7 @@ function buildTransitLeg(
   fromNode: RouteNode,
   node: RouteNode,
   elapsedSeconds: number
-): { leg: Leg; newElapsed: number; chainKey: string } | null {
+): { leg: Leg; newElapsed: number } | null {
   if (
     pred.patternIdx === undefined ||
     pred.boardIdx === undefined ||
@@ -217,18 +217,15 @@ function buildTransitLeg(
   const pattern = state.graph.patterns[pred.patternIdx]
   if (!pattern) return null
 
-  // Use the Dijkstra's known arrival time at the boarding stop rather than
-  // accumulated street-routing elapsed time.  Accurate walk/bike legs can be
-  // slightly longer than the Dijkstra estimates, which shifts the clock and
-  // can cause the originally-selected transit departure to be missed.
-  const boardingArrival =
-    state.travelTimes.get(pred.fromKey) ?? elapsedSeconds
+  // Use accumulated elapsed time (actual walk/bike/ride durations) rather than
+  // Dijkstra travel times, which include artificial transfer penalties that
+  // would shift the clock forward and select later departures than necessary.
   const timing = computeTransitLegDuration(
     pattern,
     pred.boardIdx,
     pred.alightIdx,
     state.departureTime,
-    boardingArrival,
+    elapsedSeconds,
     state.rtData
   )
   if (!timing) return null
@@ -255,7 +252,7 @@ function buildTransitLeg(
     legGeometry: { points: "", coords: transitCoords },
   }
 
-  return { leg, newElapsed: boardingArrival + timing.durationSeconds, chainKey: "" }
+  return { leg, newElapsed: elapsedSeconds + timing.durationSeconds }
 }
 
 function processChainStep(
@@ -285,10 +282,7 @@ function processChainStep(
   const result = buildTransitLeg(state, pred, fromNode, node, elapsedSeconds)
   if (!result) return null
 
-  // After a transit leg, sync elapsed time to the Dijkstra's arrival at the
-  // alight stop so that subsequent legs stay consistent with the graph.
-  const dijkstraAlight = state.travelTimes.get(chainKey)
-  return { leg: result.leg, newElapsed: dijkstraAlight ?? result.newElapsed }
+  return { leg: result.leg, newElapsed: result.newElapsed }
 }
 
 function buildLegsFromChain(

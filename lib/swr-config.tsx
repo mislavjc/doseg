@@ -1,6 +1,7 @@
 "use client"
 
 import { SWRConfig } from "swr"
+import { LazyMotion, domAnimation } from "motion/react"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -21,7 +22,9 @@ export default function SwrProvider({ children }: { children: React.ReactNode })
         dedupingInterval: 5000,
       }}
     >
-      {children}
+      <LazyMotion features={domAnimation} strict>
+        {children}
+      </LazyMotion>
     </SWRConfig>
   )
 }

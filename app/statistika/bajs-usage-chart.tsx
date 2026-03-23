@@ -193,9 +193,9 @@ function ChartXLabels({
 }) {
   return (
     <>
-      {ticks.map((t, i) => (
+      {ticks.map((t) => (
         <text
-          key={i}
+          key={t.getTime()}
           x={xScale(t)}
           y={INNER_HEIGHT + 20}
           textAnchor="middle"

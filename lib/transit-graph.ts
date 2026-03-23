@@ -4,13 +4,11 @@ import { decodePolyline } from "./polyline"
 import { COS_LAT, KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm } from "./geo"
 import { modeSpeed, type TransitMode } from "./transit"
 
-export { COS_LAT, KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm }
-
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_WAIT = 60 * 60
 
 export const WALK_SPEED = 5 // km/h
-export const WALK_MAX_KM = 1.2
+const WALK_MAX_KM = 1.2
 const TRANSFER_MAX_KM = 0.3
 const BAJS_TRANSFER_MAX_KM = 0.35
 const BAJS_BIKE_MAX_KM = 6
@@ -62,7 +60,7 @@ export interface Predecessor {
   alightIdx?: number
 }
 
-export interface ComputeTravelTimesOptions {
+interface ComputeTravelTimesOptions {
   timeCap?: number
   bajsStations?: readonly BajsStation[]
 }

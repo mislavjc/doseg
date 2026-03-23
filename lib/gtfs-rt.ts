@@ -20,7 +20,7 @@ export interface TripRT {
 // Vehicle position types
 // ---------------------------------------------------------------------------
 
-export interface VehiclePosition {
+interface VehiclePosition {
   tripId: string
   routeId: string | null
   lat: number
@@ -35,12 +35,12 @@ export interface VehiclePosition {
 // Alert types
 // ---------------------------------------------------------------------------
 
-export interface AlertActivePeriod {
+interface AlertActivePeriod {
   start: number | null // unix seconds
   end: number | null
 }
 
-export interface Alert {
+interface Alert {
   activePeriods: AlertActivePeriod[]
   affectedRouteIds: string[]
   affectedStopIds: string[]

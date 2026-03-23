@@ -88,11 +88,11 @@ async function fetchJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>
 }
 
-export function bajsStationKey(stationId: string): string {
+function bajsStationKey(stationId: string): string {
   return `bajs:${stationId}`
 }
 
-export function isBajsKey(key: string): boolean {
+function isBajsKey(key: string): boolean {
   return key.startsWith("bajs:")
 }
 

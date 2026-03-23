@@ -1,7 +1,7 @@
 "use client"
 
 import { Dialog } from "@base-ui/react/dialog"
-import { motion, AnimatePresence } from "motion/react"
+import { m, AnimatePresence } from "motion/react"
 
 const ease = [0.23, 1, 0.32, 1] as const
 
@@ -25,8 +25,8 @@ function IsochroneIllustration() {
           </g>
         ))}
         {rings.map((ring, i) => (
-          <motion.circle
-            key={i}
+          <m.circle
+            key={ring.r}
             cx="80"
             cy="80"
             r={ring.r}
@@ -39,12 +39,12 @@ function IsochroneIllustration() {
             transition={{ delay: 0.25 + i * 0.12, duration: 0.45, ease }}
           />
         ))}
-        <motion.circle
+        <m.circle
           cx="80" cy="80" r="12" fill="rgba(34,197,94,0.1)"
           initial={{ r: 0 }} animate={{ r: 12 }}
           transition={{ delay: 0.2, duration: 0.4, ease }}
         />
-        <motion.circle
+        <m.circle
           cx="80" cy="80" r="4" fill="white" stroke="#22c55e" strokeWidth="2"
           initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, duration: 0.3, ease }}
@@ -56,7 +56,7 @@ function IsochroneIllustration() {
 
 function StepRow({ n, children, delay }: { n: string; children: React.ReactNode; delay: number }) {
   return (
-    <motion.div
+    <m.div
       className="flex items-start gap-3"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ function StepRow({ n, children, delay }: { n: string; children: React.ReactNode;
         {n}
       </span>
       <span className="text-[13px] leading-snug text-slate-400">{children}</span>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -121,7 +121,7 @@ function DialogPortalContent() {
     <Dialog.Portal keepMounted>
       <Dialog.Backdrop
         render={
-          <motion.div
+          <m.div
             className="fixed inset-0 z-50 bg-black/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -132,7 +132,7 @@ function DialogPortalContent() {
       />
       <Dialog.Popup
         render={
-          <motion.div
+          <m.div
             className="panel fixed top-1/2 left-1/2 z-50 w-[min(320px,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 p-0 will-change-transform"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

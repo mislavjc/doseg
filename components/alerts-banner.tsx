@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "motion/react"
+import { useState } from "react"
+import useSWR from "swr"
+import { m, AnimatePresence } from "motion/react"
 
 interface AlertActivePeriod {
   start: number | null
@@ -71,15 +72,15 @@ function AlertText({ alert }: { alert: Alert }) {
 
 function ExpandedAlerts({ alerts, onCollapse }: { alerts: Alert[]; onCollapse: () => void }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       exit={{ opacity: 0, height: 0 }}
       className="overflow-hidden"
     >
       <div className="mt-1.5 flex flex-col gap-1">
-        {alerts.slice(1).map((alert, i) => (
-          <AlertText key={i} alert={alert} />
+        {alerts.slice(1).map((alert) => (
+          <AlertText key={`${alert.effect}-${alert.headerText}`} alert={alert} />
         ))}
       </div>
       <button
@@ -89,7 +90,7 @@ function ExpandedAlerts({ alerts, onCollapse }: { alerts: Alert[]; onCollapse: (
       >
         Prikaži manje
       </button>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -153,33 +154,15 @@ function AlertsBannerContent({
 }
 
 export function AlertsBanner() {
-  const [alerts, setAlerts] = useState<Alert[]>([])
+  const { data: alerts } = useSWR<Alert[]>("/api/alerts")
   const [dismissed, setDismissed] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
-  useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      try {
-        const res = await fetch("/api/alerts")
-        if (!res.ok) return
-        const data: Alert[] = await res.json()
-        if (!cancelled) setAlerts(data)
-      } catch {
-        // Silently ignore; banner just won't show
-      }
-    }
-
-    load()
-    return () => { cancelled = true }
-  }, [])
-
-  if (dismissed || alerts.length === 0) return null
+  if (dismissed || !alerts || alerts.length === 0) return null
 
   return (
     <AnimatePresence>
-      <motion.div
+      <m.div
         role="alert"
         aria-live="polite"
         className="pointer-events-auto w-full max-w-lg rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 shadow-lg backdrop-blur-md"
@@ -194,7 +177,7 @@ export function AlertsBanner() {
           setExpanded={setExpanded}
           setDismissed={setDismissed}
         />
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   )
 }

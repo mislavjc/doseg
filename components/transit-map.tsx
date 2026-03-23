@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
-import { motion, AnimatePresence, MotionConfig } from "motion/react"
+import useSWR from "swr"
+import { m, AnimatePresence, MotionConfig } from "motion/react"
 import {
   useQueryStates,
   useQueryState,
@@ -758,7 +759,6 @@ function cleanupMapInit(
     routingAbortRef: React.MutableRefObject<AbortController | null>
     exactRouteAbortRef: React.MutableRefObject<AbortController | null>
     exactRouteTimerRef: React.MutableRefObject<number>
-    vehicleIntervalRef: React.MutableRefObject<number>
     poiAbortRef: React.MutableRefObject<AbortController | null>
     mapRef: React.MutableRefObject<maplibregl.Map | null>
     handleDestinationRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>
@@ -772,9 +772,6 @@ function cleanupMapInit(
   if (refs.exactRouteAbortRef.current) refs.exactRouteAbortRef.current.abort()
   if (refs.exactRouteTimerRef.current) {
     window.clearTimeout(refs.exactRouteTimerRef.current)
-  }
-  if (refs.vehicleIntervalRef.current) {
-    window.clearInterval(refs.vehicleIntervalRef.current)
   }
   if (refs.poiAbortRef.current) refs.poiAbortRef.current.abort()
   map.remove()
@@ -980,8 +977,6 @@ type MapRefs = {
   bajsEnabledRef: React.MutableRefObject<boolean>
   statsCtaDismissedRef: React.MutableRefObject<boolean>
   poiAbortRef: React.MutableRefObject<AbortController | null>
-  vehicleIntervalRef: React.MutableRefObject<number>
-  prevVehiclesJsonRef: React.MutableRefObject<string>
   initialLoadRef: React.MutableRefObject<boolean>
 }
 
@@ -1008,8 +1003,6 @@ function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; has
   const bajsEnabledRef = useRef(s.bajsEnabled)
   const statsCtaDismissedRef = useRef(false)
   const poiAbortRef = useRef<AbortController | null>(null)
-  const vehicleIntervalRef = useRef<number>(0)
-  const prevVehiclesJsonRef = useRef("")
   const initialLoadRef = useRef(s.hasOrigin)
 
   return {
@@ -1017,29 +1010,21 @@ function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; has
     bajsAbortRef, exactRouteAbortRef, exactRouteTimerRef, exactRouteSeqRef,
     routingDataRef, handleDestinationRef, pendingDestinationRef, lastNearestRef,
     routeTailOriginRef, rafRef, isTouchRef, effectiveTimeRef, bajsEnabledRef,
-    statsCtaDismissedRef, poiAbortRef, vehicleIntervalRef, prevVehiclesJsonRef, initialLoadRef,
+    statsCtaDismissedRef, poiAbortRef, initialLoadRef,
   }
 }
 
 function useEscapeKey(
   originRef: React.RefObject<[number, number] | null>,
-  setCoords: SetCoords,
-  setRoute: (r: Itinerary | null) => void,
-  setRouteLoading: (l: boolean) => void,
-  setError: (e: string | null) => void
+  onEscape: () => void
 ) {
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && originRef.current) {
-        setCoords({ lat: null, lon: null })
-        setRoute(null)
-        setRouteLoading(false)
-        setError(null)
-      }
+      if (e.key === "Escape" && originRef.current) onEscape()
     }
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [setCoords, originRef, setRoute, setRouteLoading, setError])
+  }, [originRef, onEscape])
 }
 
 function useMapInit(
@@ -1204,50 +1189,18 @@ function useBajsLayer(
 
 function useVehiclePositions(
   mapRef: React.RefObject<maplibregl.Map | null>,
-  vehicleIntervalRef: React.MutableRefObject<number>,
-  prevVehiclesJsonRef: React.MutableRefObject<string>,
   mapReady: boolean,
   vehiclesEnabled: boolean,
-  vehiclePositions: GeoJSON.FeatureCollection,
-  setVehiclePositions: (fc: GeoJSON.FeatureCollection) => void
 ) {
-  useEffect(() => {
-    if (!mapRef.current || !mapReady || !vehiclesEnabled) {
-      if (vehicleIntervalRef.current) {
-        window.clearInterval(vehicleIntervalRef.current)
-        vehicleIntervalRef.current = 0
-      }
-      setVehiclePositions(EMPTY_FC)
-      return
-    }
+  const { data: vehicles } = useSWR<VehicleRecord[]>(
+    vehiclesEnabled && mapReady ? "/api/vehicles" : null,
+    { refreshInterval: 30_000 }
+  )
 
-    let aborted = false
-
-    function fetchVehicles() {
-      fetch("/api/vehicles")
-        .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-        .then((vehicles: VehicleRecord[]) => {
-          if (aborted) return
-          const fc = buildVehicleFeatureCollection(vehicles)
-          const json = JSON.stringify(fc.features)
-          if (json === prevVehiclesJsonRef.current) return
-          prevVehiclesJsonRef.current = json
-          setVehiclePositions(fc)
-        })
-        .catch((err) => { if (!aborted) console.error("Vehicle positions fetch failed:", err) })
-    }
-
-    fetchVehicles()
-    vehicleIntervalRef.current = window.setInterval(fetchVehicles, 30_000)
-
-    return () => {
-      aborted = true
-      if (vehicleIntervalRef.current) {
-        window.clearInterval(vehicleIntervalRef.current)
-        vehicleIntervalRef.current = 0
-      }
-    }
-  }, [mapReady, vehiclesEnabled, mapRef, vehicleIntervalRef, prevVehiclesJsonRef, setVehiclePositions])
+  const vehiclePositions = useMemo(
+    () => vehicles ? buildVehicleFeatureCollection(vehicles) : EMPTY_FC,
+    [vehicles]
+  )
 
   useEffect(() => {
     const map = mapRef.current
@@ -1309,6 +1262,7 @@ function useOriginIsochrone(
   mapReady: boolean,
   effectiveTime: string,
   bajsEnabled: boolean,
+  resetFetchState: () => void,
   setRoute: (r: Itinerary | null) => void,
   setRouteLoading: (l: boolean) => void,
   setLoading: (l: boolean) => void,
@@ -1335,10 +1289,7 @@ function useOriginIsochrone(
     refs.isoAbortRef.current = isoController // eslint-disable-line react-hooks/immutability
     refs.routingAbortRef.current = routingController
 
-    setLoading(true)
-    setError(null)
-    setRoute(null)
-    setRouteLoading(false)
+    resetFetchState()
 
     startIsochroneFetches(
       map, originLat, originLon, effectiveTime, bajsEnabled,
@@ -1396,7 +1347,6 @@ function useTransitMapState() {
   const [mapReady, setMapReady] = useState(false)
   const [showStatsCta, setShowStatsCta] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
-  const [vehiclePositions, setVehiclePositions] = useState<GeoJSON.FeatureCollection>(EMPTY_FC)
   const [vehiclesEnabled, setVehiclesEnabled] = useState(false)
   const [poiEnabled, setPoiEnabled] = useState(false)
   const [layersOpen, setLayersOpen] = useState(false)
@@ -1408,7 +1358,6 @@ function useTransitMapState() {
     routeLoading, setRouteLoading, loading, setLoading,
     error, setError, mapReady, setMapReady,
     showStatsCta, setShowStatsCta, linkCopied, setLinkCopied,
-    vehiclePositions, setVehiclePositions,
     vehiclesEnabled, setVehiclesEnabled,
     poiEnabled, setPoiEnabled, layersOpen, setLayersOpen,
     hasOrigin,
@@ -1430,12 +1379,26 @@ export function TransitMap() {
   useEffect(() => { refs.effectiveTimeRef.current = s.effectiveTime }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
   useEffect(() => { refs.bajsEnabledRef.current = s.bajsEnabled }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
 
-  useEscapeKey(refs.originRef, s.setCoords, s.setRoute, s.setRouteLoading, s.setError)
+  const onEscape = useCallback(() => {
+    s.setCoords({ lat: null, lon: null })
+    s.setRoute(null)
+    s.setRouteLoading(false)
+    s.setError(null)
+  }, [s.setCoords, s.setRoute, s.setRouteLoading, s.setError])
+
+  const resetFetchState = useCallback(() => {
+    s.setLoading(true)
+    s.setError(null)
+    s.setRoute(null)
+    s.setRouteLoading(false)
+  }, [s.setLoading, s.setError, s.setRoute, s.setRouteLoading])
+
+  useEscapeKey(refs.originRef, onEscape)
   useMapInit(refs, s.setMapReady, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setCoords)
   useBajsLayer(refs.mapRef, refs.bajsAbortRef, s.bajsEnabled, s.mapReady)
-  useVehiclePositions(refs.mapRef, refs.vehicleIntervalRef, refs.prevVehiclesJsonRef, s.mapReady, s.vehiclesEnabled, s.vehiclePositions, s.setVehiclePositions)
+  useVehiclePositions(refs.mapRef, s.mapReady, s.vehiclesEnabled)
   usePoiLayer(refs.mapRef, refs.poiAbortRef, s.poiEnabled, s.mapReady)
-  useOriginIsochrone(refs, s.coords.lat, s.coords.lon, s.mapReady, s.effectiveTime, s.bajsEnabled, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setShowStatsCta)
+  useOriginIsochrone(refs, s.coords.lat, s.coords.lon, s.mapReady, s.effectiveTime, s.bajsEnabled, resetFetchState, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setShowStatsCta)
 
   return (
     <TransitMapView
@@ -1508,7 +1471,7 @@ function LoadingBar({ loading, ease }: { loading: boolean; ease: readonly [numbe
   return (
     <AnimatePresence>
       {loading && (
-        <motion.div
+        <m.div
           key="loading"
           className="absolute top-0 right-0 left-0 z-20"
           aria-live="polite"
@@ -1519,7 +1482,7 @@ function LoadingBar({ loading, ease }: { loading: boolean; ease: readonly [numbe
         >
           <span className="sr-only">Učitavanje podataka o dosegu</span>
           <div className="loading-bar" />
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )
@@ -1589,7 +1552,7 @@ function LayerLegend({
   return (
     <AnimatePresence>
       {(bajsEnabled || poiEnabled) && (
-        <motion.div
+        <m.div
           className="panel pointer-events-auto absolute bottom-6 left-3 z-10 flex flex-col gap-2 px-3 py-2 sm:bottom-4 sm:left-4"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1599,7 +1562,7 @@ function LayerLegend({
           {bajsEnabled && <BajsLegend />}
           {bajsEnabled && poiEnabled && <div className="h-px bg-white/10" />}
           {poiEnabled && <PoiLegend />}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )
@@ -1624,7 +1587,7 @@ type IslandToolbarProps = {
 
 function IslandToolbar(props: IslandToolbarProps) {
   return (
-    <motion.div
+    <m.div
       className="island pointer-events-auto"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -1651,7 +1614,7 @@ function IslandToolbar(props: IslandToolbarProps) {
         setVehiclesEnabled={props.setVehiclesEnabled}
         setPoiEnabled={props.setPoiEnabled}
       />
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -1814,7 +1777,7 @@ function GeoErrorTooltip({ message }: { message: string | null }) {
   return (
     <AnimatePresence>
       {message && (
-        <motion.div
+        <m.div
           key="geo-error"
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1823,7 +1786,7 @@ function GeoErrorTooltip({ message }: { message: string | null }) {
           className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[rgba(30,30,30,0.92)] px-3 py-1.5 text-[11px] text-red-400 shadow-lg backdrop-blur-md"
         >
           {message}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )
@@ -1879,7 +1842,7 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
   return (
     <AnimatePresence>
       {p.layersOpen && (
-        <motion.div
+        <m.div
           key="layers"
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
@@ -1894,7 +1857,7 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
               <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )
@@ -1943,7 +1906,7 @@ function PoiToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Di
 
 function HintBubble({ k, ease, children }: { k: string; ease: Ease; children: React.ReactNode }) {
   return (
-    <motion.div
+    <m.div
       key={k}
       className="panel pointer-events-auto"
       initial={{ opacity: 0, y: 8 }}
@@ -1952,7 +1915,7 @@ function HintBubble({ k, ease, children }: { k: string; ease: Ease; children: Re
       transition={{ duration: 0.2, ease }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -2132,7 +2095,7 @@ function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
   return (
     <AnimatePresence>
       {error && (
-        <motion.div
+        <m.div
           key="error"
           role="alert"
           aria-live="assertive"
@@ -2143,7 +2106,7 @@ function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
           transition={{ duration: 0.2, ease }}
         >
           {error}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

@@ -581,8 +581,8 @@ function ChartXLabels({
 }) {
   return (
     <>
-      {ticks.map((t, i) => (
-        <text key={i} x={xScale(t)} y={INNER_HEIGHT + 20} textAnchor="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">
+      {ticks.map((t) => (
+        <text key={t.getTime()} x={xScale(t)} y={INNER_HEIGHT + 20} textAnchor="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">
           {fmtTime(t.getTime() / 1000, timeRange)}
         </text>
       ))}
@@ -673,11 +673,11 @@ function TripCountBars({
   )
   return (
     <>
-      {points.map((p, i) => {
+      {points.map((p) => {
         const barHeight = (p.tripCount / maxTrips) * INNER_HEIGHT * 0.3
         return (
           <Bar
-            key={i}
+            key={p.ts}
             x={(xScale(new Date(p.ts * 1000)) ?? 0) - barWidth / 2}
             y={INNER_HEIGHT - barHeight}
             width={barWidth}

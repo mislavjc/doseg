@@ -2,10 +2,9 @@ import type { FeatureCollection } from "geojson"
 import type {
   IsochroneResponse as RustIsochroneResponse,
   RoutingOnlyResponse,
-  RoutingPayload,
 } from "./generated"
 
-export interface IsochroneParams {
+interface IsochroneParams {
   lat: number
   lon: number
   time?: string // HH:MM departure time
@@ -13,9 +12,8 @@ export interface IsochroneParams {
 }
 
 // Re-export Rust-generated types as the canonical source of truth
-export type IsochroneRoutingPayload = RoutingPayload
 export type IsochroneResponse = RustIsochroneResponse
-export type IsochroneRoutingResponse = RoutingOnlyResponse
+type IsochroneRoutingResponse = RoutingOnlyResponse
 
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({
@@ -67,7 +65,7 @@ export async function fetchBajsStations(
   return response.json()
 }
 
-export interface ExactRouteParams {
+interface ExactRouteParams {
   originLat: number
   originLon: number
   destLat: number

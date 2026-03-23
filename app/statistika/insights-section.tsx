@@ -52,8 +52,8 @@ export default function InsightsSection({
           </div>
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {connectivityGaps.map((gap, i) => (
-              <GapCard key={i} gap={gap} />
+            {connectivityGaps.map((gap) => (
+              <GapCard key={gap.issue} gap={gap} />
             ))}
           </div>
         </>

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { motion, AnimatePresence } from "motion/react"
+import { m, AnimatePresence } from "motion/react"
 
 import type { Itinerary } from "@/lib/otp"
 import { modeColor, modeLabel } from "@/lib/transit"
@@ -170,7 +170,7 @@ function LegsBadges({ legs }: { legs: Itinerary["legs"] }) {
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1.5">
       {legs.map((leg, i) => (
-        <div key={i} className="flex items-center gap-1.5">
+        <div key={`${leg.from.name}-${leg.to.name}`} className="flex items-center gap-1.5">
           {i > 0 && <span className="text-[10px] text-slate-600">›</span>}
           {leg.mode === "WALK" ? (
             <WalkIcon />
@@ -243,7 +243,7 @@ function LegRow({ leg }: { leg: Itinerary["legs"][number] }) {
 
 function ExpandedDetails({ itinerary }: { itinerary: Itinerary }) {
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       animate="visible"
       exit="hidden"
@@ -255,11 +255,11 @@ function ExpandedDetails({ itinerary }: { itinerary: Itinerary }) {
     >
       <TripStats itinerary={itinerary} />
       <div className="flex max-h-[30vh] flex-col gap-0.5 overflow-y-auto sm:max-h-[40vh]" role="list">
-        {itinerary.legs.map((leg, i) => (
-          <LegRow key={i} leg={leg} />
+        {itinerary.legs.map((leg) => (
+          <LegRow key={`${leg.from.name}-${leg.to.name}`} leg={leg} />
         ))}
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -267,7 +267,7 @@ export function RouteDetails({ itinerary, loading, departureTime, className, onS
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <motion.div
+    <m.div
       className={className ?? "panel absolute right-3 bottom-8 left-3 cursor-pointer sm:right-auto sm:bottom-8 sm:left-4 sm:w-[280px]"}
       role="button"
       aria-expanded={isExpanded}
@@ -311,6 +311,6 @@ export function RouteDetails({ itinerary, loading, departureTime, className, onS
           {onReset && <ResetButton onReset={onReset} />}
         </>
       )}
-    </motion.div>
+    </m.div>
   )
 }

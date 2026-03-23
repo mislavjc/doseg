@@ -11,7 +11,7 @@ export type POICategory =
   | "supermarket"
   | "pharmacy"
 
-export type POI = {
+type POI = {
   id: number
   name: string
   lat: number

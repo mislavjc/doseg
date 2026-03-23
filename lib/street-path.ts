@@ -99,7 +99,7 @@ function appendCoord(coords: [number, number][], lon: number, lat: number) {
   coords.push([lon, lat])
 }
 
-export function findNearestNode(
+function findNearestNode(
   graph: WalkingGraph,
   lat: number,
   lon: number,
@@ -241,7 +241,7 @@ function findPathBetweenNodes(
   return result
 }
 
-export interface StreetPathResult {
+interface StreetPathResult {
   coords: [number, number][]
   distanceMeters: number
   durationSeconds: number

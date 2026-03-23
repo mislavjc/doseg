@@ -466,16 +466,116 @@ function collectRoutingResults(
   return { times, preds, delays }
 }
 
+interface DijkstraState {
+  best: Float64Array
+  delayArr: Float64Array
+  predFrom: Int32Array
+  predKind: Uint8Array
+  predPattern: Int32Array
+  predBoard: Int32Array
+  predAlight: Int32Array
+  h: FlatHeap
+}
+
+function relaxWalk(s: DijkstraState, destIdx: number, time: number, fromIdx: number) {
+  if (time < s.best[destIdx]) {
+    s.best[destIdx] = time
+    s.predFrom[destIdx] = fromIdx
+    s.predKind[destIdx] = PRED_WALK
+    flatHeapPush(s.h, time, destIdx)
+  }
+}
+
+function expandTransitStop(
+  s: DijkstraState,
+  stop: StopNode,
+  nodeIdx: number,
+  time: number,
+  departureTime: number,
+  graph: TransitGraph,
+  rtData: Map<string, TripRT>,
+  bajsAdj: IndexedBajsAdjacency | null
+) {
+  const isSameStopTransfer = s.predKind[nodeIdx] === PRED_TRANSIT
+  for (const { patternIdx, stopIdx } of stop.patterns) {
+    if (isSameStopTransfer && s.predPattern[nodeIdx] === patternIdx) continue
+
+    const pattern = graph.patterns[patternIdx]
+    const result = getNextWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
+    if (result === null) continue
+
+    const boardTime = time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)
+    const boardOffset = pattern.stopOffsets[stopIdx]
+    const tripRT = findTripRT(rtData, pattern.tripIds, result.tripIndex)
+    const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
+
+    for (let i = stopIdx + 1; i < pattern.stopIndices.length; i++) {
+      const alightDelay = tripRT ? getStopDelay(tripRT, i) : 0
+      let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
+      if (tripRT) travelTime += alightDelay - boardDelay
+
+      const destIdx = pattern.stopIndices[i]
+      if (travelTime < s.best[destIdx]) {
+        s.best[destIdx] = travelTime
+        s.predFrom[destIdx] = nodeIdx
+        s.predKind[destIdx] = PRED_TRANSIT
+        s.predPattern[destIdx] = patternIdx
+        s.predBoard[destIdx] = stopIdx
+        s.predAlight[destIdx] = i
+        if (tripRT) s.delayArr[destIdx] = alightDelay
+        flatHeapPush(s.h, travelTime, destIdx)
+      }
+    }
+  }
+
+  for (const { idx: nearbyIdx, distKm } of stop.nearbyStopIndices) {
+    relaxWalk(s, nearbyIdx, time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY, nodeIdx)
+  }
+
+  if (bajsAdj) {
+    const links = bajsAdj.stopToStationLinks[nodeIdx]
+    if (links) {
+      for (const { idx: stationIdx, distKm } of links) {
+        relaxWalk(s, stationIdx, time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY, nodeIdx)
+      }
+    }
+  }
+}
+
+function expandBajsStation(
+  s: DijkstraState,
+  bi: number,
+  nodeIdx: number,
+  time: number,
+  bajsAdj: IndexedBajsAdjacency
+) {
+  const stopLinks = bajsAdj.stationToStopLinks[bi]
+  if (stopLinks) {
+    for (const { idx: stopIdx, distKm } of stopLinks) {
+      relaxWalk(s, stopIdx, time + (distKm / WALK_SPEED) * 3600, nodeIdx)
+    }
+  }
+
+  const station = bajsAdj.stations[bi]
+  if (station.isRenting && station.bikesAvailable > 0) {
+    const bikeLinks = bajsAdj.stationBikeLinks[bi]
+    if (bikeLinks) {
+      for (const { idx: targetIdx, distKm } of bikeLinks) {
+        const bikeTime = time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
+        if (bikeTime < s.best[targetIdx]) {
+          s.best[targetIdx] = bikeTime
+          s.predFrom[targetIdx] = nodeIdx
+          s.predKind[targetIdx] = PRED_BIKE
+          flatHeapPush(s.h, bikeTime, targetIdx)
+        }
+      }
+    }
+  }
+}
+
 /**
  * Run the interactive reachability search from an origin point.
- * Returns travel times to all reachable transit stops and optional BAJS stations,
- * plus predecessor chains and RT delays for transit alight nodes.
- *
- * Uses integer-indexed Float64Array + flat heap for performance (3-5x faster
- * than the previous Map<string> + object-heap implementation).
- *
- * @param options.timeCap - optional time limit in seconds. Nodes beyond this are not explored.
- *   Default: Infinity (explore everything, needed for client-side route reconstruction).
+ * Uses integer-indexed Float64Array + flat heap for performance.
  */
 export function computeTravelTimes(
   graph: TransitGraph,
@@ -492,21 +592,49 @@ export function computeTravelTimes(
   const timeCap = options.timeCap ?? Infinity
   const { stopArray, stopCount } = graph
   const hasBajs = options.bajsStations != null && options.bajsStations.length > 0
-  const bajsAdj = hasBajs
-    ? buildBajsAdjacencyIndexed(graph, options.bajsStations!)
-    : null
+  const bajsAdj = hasBajs ? buildBajsAdjacencyIndexed(graph, options.bajsStations!) : null
   const totalNodes = stopCount + (bajsAdj?.bajsCount ?? 0)
 
-  const best = new Float64Array(totalNodes).fill(Infinity)
-  const delayArr = new Float64Array(totalNodes)
-  const predFrom = new Int32Array(totalNodes)
-  const predKind = new Uint8Array(totalNodes)
-  const predPattern = new Int32Array(totalNodes)
-  const predBoard = new Int32Array(totalNodes)
-  const predAlight = new Int32Array(totalNodes)
-  const h: FlatHeap = { hT: [], hN: [], hSize: 0 }
+  const s: DijkstraState = {
+    best: new Float64Array(totalNodes).fill(Infinity),
+    delayArr: new Float64Array(totalNodes),
+    predFrom: new Int32Array(totalNodes),
+    predKind: new Uint8Array(totalNodes),
+    predPattern: new Int32Array(totalNodes),
+    predBoard: new Int32Array(totalNodes),
+    predAlight: new Int32Array(totalNodes),
+    h: { hT: [], hN: [], hSize: 0 },
+  }
 
-  // Seed: walk from origin to nearby stops
+  seedTravelTimes(originLat, originLon, stopArray, stopCount, bajsAdj, s.best, s.h)
+
+  while (s.h.hSize > 0) {
+    const { time, nodeIdx } = flatHeapPop(s.h)
+    if (time > timeCap) break
+    if (time > s.best[nodeIdx]) continue
+
+    if (nodeIdx < stopCount) {
+      expandTransitStop(s, stopArray[nodeIdx], nodeIdx, time, departureTime, graph, rtData, bajsAdj)
+    } else if (bajsAdj) {
+      expandBajsStation(s, nodeIdx - stopCount, nodeIdx, time, bajsAdj)
+    }
+  }
+
+  return collectRoutingResults(
+    s.best, s.delayArr, s.predFrom, s.predKind, s.predPattern, s.predBoard, s.predAlight,
+    totalNodes, stopCount, stopArray, bajsAdj
+  )
+}
+
+function seedTravelTimes(
+  originLat: number,
+  originLon: number,
+  stopArray: StopNode[],
+  stopCount: number,
+  bajsAdj: IndexedBajsAdjacency | null,
+  best: Float64Array,
+  h: FlatHeap
+) {
   for (let si = 0; si < stopCount; si++) {
     const stop = stopArray[si]
     const d = fastDistKm(originLat, originLon, stop.lat, stop.lon)
@@ -517,7 +645,6 @@ export function computeTravelTimes(
     }
   }
 
-  // Seed: walk to BAJS stations
   if (bajsAdj) {
     for (let bi = 0; bi < bajsAdj.bajsCount; bi++) {
       const station = bajsAdj.stations[bi]
@@ -532,124 +659,6 @@ export function computeTravelTimes(
       }
     }
   }
-
-  while (h.hSize > 0) {
-    const { time, nodeIdx } = flatHeapPop(h)
-    if (time > timeCap) break
-    if (time > best[nodeIdx]) continue
-
-    if (nodeIdx < stopCount) {
-      const stop = stopArray[nodeIdx]
-
-      // --- Expand transit patterns ---
-      const isSameStopTransfer = predKind[nodeIdx] === PRED_TRANSIT
-      for (const { patternIdx, stopIdx } of stop.patterns) {
-        if (isSameStopTransfer && predPattern[nodeIdx] === patternIdx) continue
-
-        const pattern = graph.patterns[patternIdx]
-        const clockTime = departureTime + time
-        const result = getNextWait(
-          pattern.departures,
-          pattern.stopOffsets[stopIdx],
-          clockTime
-        )
-        if (result === null) continue
-
-        const boardTime =
-          time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)
-        const boardOffset = pattern.stopOffsets[stopIdx]
-        const tripRT = findTripRT(rtData, pattern.tripIds, result.tripIndex)
-        const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
-
-        for (let i = stopIdx + 1; i < pattern.stopIndices.length; i++) {
-          const alightDelay = tripRT ? getStopDelay(tripRT, i) : 0
-          let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
-          if (tripRT) travelTime += alightDelay - boardDelay
-
-          const destIdx = pattern.stopIndices[i]
-          if (travelTime < best[destIdx]) {
-            best[destIdx] = travelTime
-            predFrom[destIdx] = nodeIdx
-            predKind[destIdx] = PRED_TRANSIT
-            predPattern[destIdx] = patternIdx
-            predBoard[destIdx] = stopIdx
-            predAlight[destIdx] = i
-            if (tripRT) delayArr[destIdx] = alightDelay
-            flatHeapPush(h, travelTime, destIdx)
-          }
-        }
-      }
-
-      // --- Expand walk transfers to nearby stops ---
-      for (const { idx: nearbyIdx, distKm } of stop.nearbyStopIndices) {
-        const transferTime =
-          time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY
-        if (transferTime < best[nearbyIdx]) {
-          best[nearbyIdx] = transferTime
-          predFrom[nearbyIdx] = nodeIdx
-          predKind[nearbyIdx] = PRED_WALK
-          flatHeapPush(h, transferTime, nearbyIdx)
-        }
-      }
-
-      // --- Expand walks to BAJS stations ---
-      if (bajsAdj) {
-        const links = bajsAdj.stopToStationLinks[nodeIdx]
-        if (links) {
-          for (const { idx: stationIdx, distKm } of links) {
-            const walkTime =
-              time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY
-            if (walkTime < best[stationIdx]) {
-              best[stationIdx] = walkTime
-              predFrom[stationIdx] = nodeIdx
-              predKind[stationIdx] = PRED_WALK
-              flatHeapPush(h, walkTime, stationIdx)
-            }
-          }
-        }
-      }
-    } else if (bajsAdj) {
-      const bi = nodeIdx - stopCount
-
-      const stopLinks = bajsAdj.stationToStopLinks[bi]
-      if (stopLinks) {
-        for (const { idx: stopIdx, distKm } of stopLinks) {
-          const walkTime = time + (distKm / WALK_SPEED) * 3600
-          if (walkTime < best[stopIdx]) {
-            best[stopIdx] = walkTime
-            predFrom[stopIdx] = nodeIdx
-            predKind[stopIdx] = PRED_WALK
-            flatHeapPush(h, walkTime, stopIdx)
-          }
-        }
-      }
-
-      const station = bajsAdj.stations[bi]
-      if (station.isRenting && station.bikesAvailable > 0) {
-        const bikeLinks = bajsAdj.stationBikeLinks[bi]
-        if (bikeLinks) {
-          for (const { idx: targetIdx, distKm } of bikeLinks) {
-            const bikeTime =
-              time +
-              BAJS_PICKUP_SECONDS +
-              BAJS_DROPOFF_SECONDS +
-              (distKm / BAJS_SPEED) * 3600
-            if (bikeTime < best[targetIdx]) {
-              best[targetIdx] = bikeTime
-              predFrom[targetIdx] = nodeIdx
-              predKind[targetIdx] = PRED_BIKE
-              flatHeapPush(h, bikeTime, targetIdx)
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return collectRoutingResults(
-    best, delayArr, predFrom, predKind, predPattern, predBoard, predAlight,
-    totalNodes, stopCount, stopArray, bajsAdj
-  )
 }
 
 // --- Indexed BAJS adjacency ---

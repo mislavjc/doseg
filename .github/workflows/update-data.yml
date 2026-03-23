@@ -35,7 +35,7 @@ jobs:
         run: |
           curl -fSL --retry 3 --retry-delay 5 \
             -o data/gtfs/hzpp.zip \
-            "https://www.hzpp.hr/gtfs/latest"
+            "https://www.hzpp.hr/GTFS_files.zip"
           echo "HZPP: $(du -h data/gtfs/hzpp.zip | cut -f1)"
 
       - name: Filter HZPP to Zagreb area
@@ -69,7 +69,7 @@ jobs:
 
             **Downloads:**
             - ZET: https://zet.hr/gtfs-scheduled/latest
-            - HZPP: https://www.hzpp.hr/gtfs/latest (filtered to Zagreb area)
+            - HZPP: https://www.hzpp.hr/GTFS_files.zip (filtered to Zagreb area)
 
             The OTP graph and walk graph are **not** rebuilt by this workflow.
             After merging, re-run `scripts/setup-data.sh` on the server (skipping the download steps)

@@ -100,6 +100,11 @@ function OnboardingContent() {
             <span className="text-slate-300">Klikni odredište</span> za detalje rute
           </StepRow>
         </div>
+        <p className="mt-3 text-center text-[11px] leading-snug text-slate-500">
+          Rute koriste tramvaje i buseve prema ZET voznom redu.
+          <br />
+          Uključi <span className="text-amber-400/80">+ BAJS</span> za opciju gradskog bicikla.
+        </p>
       </div>
 
       <div className="px-5 pb-4">

@@ -1693,14 +1693,19 @@ function BajsToggleButton({ bajsEnabled, setBajs }: { bajsEnabled: boolean; setB
       type="button"
       onClick={() => setBajs(bajsEnabled ? null : "1")}
       aria-pressed={bajsEnabled}
-      className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+      className={`flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
         bajsEnabled
           ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
           : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
       }`}
-      title="Ukljuci BAJS stanice i bicikl u izracun rute"
+      title="Dodaj BAJS bicikl u izračun rute"
     >
-      <span>BAJS</span>
+      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="5.5" cy="17.5" r="3.5" />
+        <circle cx="18.5" cy="17.5" r="3.5" />
+        <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2" />
+      </svg>
+      <span>+ BAJS</span>
     </button>
   )
 }
@@ -1882,9 +1887,12 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
           transition={{ duration: 0.2, ease: p.ease }}
           className="overflow-hidden"
         >
-          <div className="flex items-center justify-center gap-2 border-t border-white/10 px-3 pt-2 pb-0.5">
-            <VehiclesToggle enabled={p.vehiclesEnabled} onToggle={p.setVehiclesEnabled} />
-            <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
+          <div className="flex flex-col items-center gap-1.5 border-t border-white/10 px-3 pt-2 pb-0.5">
+            <span className="text-[9px] font-medium tracking-wide text-slate-500 uppercase">Na karti</span>
+            <div className="flex items-center gap-2">
+              <VehiclesToggle enabled={p.vehiclesEnabled} onToggle={p.setVehiclesEnabled} />
+              <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
+            </div>
           </div>
         </motion.div>
       )}
@@ -1897,6 +1905,7 @@ function VehiclesToggle({ enabled, onToggle }: { enabled: boolean; onToggle: Rea
     <button
       type="button"
       onClick={() => onToggle((v) => !v)}
+      title="Prikaži gdje se tramvaji i busevi trenutno nalaze"
       className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
         enabled
           ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
@@ -1907,7 +1916,7 @@ function VehiclesToggle({ enabled, onToggle }: { enabled: boolean; onToggle: Rea
         <circle cx="12" cy="12" r="3" />
         <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
       </svg>
-      Vozila uživo
+      Tramvaji i busevi uživo
     </button>
   )
 }
@@ -1956,7 +1965,7 @@ function BottomHintPanel({ hasOrigin, everHadOrigin, route, loading, routeLoadin
       {!hasOrigin && !everHadOrigin && (
         <HintBubble k="origin" ease={ease}>
           <div className="text-center text-[13px] text-slate-300">
-            Klikni bilo gdje da vidiš dokle možeš stići
+            Klikni bilo gdje da vidiš dokle možeš stići tramvajem i busom
           </div>
         </HintBubble>
       )}

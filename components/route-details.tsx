@@ -254,7 +254,7 @@ function ExpandedDetails({ itinerary }: { itinerary: Itinerary }) {
       className="overflow-hidden"
     >
       <TripStats itinerary={itinerary} />
-      <div className="flex flex-col gap-0.5" role="list">
+      <div className="flex max-h-[30vh] flex-col gap-0.5 overflow-y-auto sm:max-h-[40vh]" role="list">
         {itinerary.legs.map((leg, i) => (
           <LegRow key={i} leg={leg} />
         ))}

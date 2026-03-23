@@ -2010,7 +2010,7 @@ function RouteDetailsPanel({
           itinerary={route}
           loading={routeLoading}
           departureTime={effectiveTime}
-          className="panel pointer-events-auto cursor-pointer max-h-[50vh] overflow-y-auto sm:max-h-none sm:overflow-visible sm:w-[280px]"
+          className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
           onShare={() => {
             navigator.clipboard.writeText(window.location.href).then(() => {
               setLinkCopied(true)

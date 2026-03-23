@@ -30,7 +30,7 @@ jobs:
             git reset --hard origin/main
 
             DOCKER_BUILDKIT=1 docker compose up -d --build --remove-orphans
-            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile
+            docker compose up -d --force-recreate caddy
             docker image prune -f
 
             # Poll health checks (up to 2 minutes)

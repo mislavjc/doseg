@@ -237,7 +237,7 @@
 }
 
 .maplibregl-ctrl-attrib a {
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .maplibregl-ctrl-top-right {
@@ -332,7 +332,7 @@
 }
 .district-popup .maplibregl-popup-content .pop {
   display: block;
-  color: #64748b;
+  color: #94a3b8;
   font-size: 11px;
 }
 .district-popup .maplibregl-popup-tip {

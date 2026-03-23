@@ -180,9 +180,9 @@ function RouteSelector({
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[14px] font-medium text-slate-600 dark:text-slate-400">Linija</span>
+      <label htmlFor="punctuality-route" className="text-[14px] font-medium text-slate-600 dark:text-slate-400">Linija</label>
       <select
-        aria-label="Odabir linije"
+        id="punctuality-route"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="min-w-[160px] appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-10 text-[15px] font-medium text-slate-900 transition-colors hover:bg-slate-100 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 focus:outline-none dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:focus:border-indigo-600 dark:focus:ring-indigo-900"

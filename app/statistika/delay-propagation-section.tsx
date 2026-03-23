@@ -183,7 +183,7 @@ function RouteSelector({ routes, selectedRoute, onChange }: {
     <select
       value={selectedRoute}
       onChange={(e) => onChange(e.target.value)}
-      aria-label="Odabir linije"
+      aria-label="Linija"
       className="h-10 min-w-[160px] rounded-2xl border border-slate-200 bg-white/80 px-4 text-[14px] font-medium text-slate-700 shadow-sm transition-colors hover:border-slate-300 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 dark:border-white/10 dark:bg-zinc-900/80 dark:text-slate-200 dark:hover:border-white/20"
     >
       {routes.map((r) => (

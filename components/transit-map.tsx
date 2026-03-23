@@ -2045,7 +2045,7 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
         <Link
           href="/o-projektu"
           prefetch={false}
-          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
+          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-colors hover:text-slate-200"
           aria-label="O projektu"
         >
           O projektu
@@ -2053,7 +2053,7 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
         <Link
           href="/statistika"
           prefetch={false}
-          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
+          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-colors hover:text-slate-200"
           aria-label="Statistika"
         >
           Statistika
@@ -2061,7 +2061,7 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
         <button
           type="button"
           onClick={() => p.setOnboardingOpen(true)}
-          className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold text-slate-400 transition-colors hover:text-slate-200"
+          className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold text-slate-300 transition-colors hover:text-slate-200"
           aria-label="Pomoć"
         >
           ?

@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 import { AlertsBanner } from "@/components/alerts-banner"
@@ -16,6 +17,10 @@ export function HomeClient() {
       <h1 className="sr-only">
         Doseg: karta dosega javnog prijevoza u Zagrebu
       </h1>
+      <nav aria-label="Navigacija" className="sr-only">
+        <Link href="/o-projektu">O projektu</Link>
+        <Link href="/statistika">Statistika</Link>
+      </nav>
       <NuqsAdapter>
         <TransitMap />
       </NuqsAdapter>

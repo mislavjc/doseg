@@ -6,6 +6,8 @@ export default function DistrictMap() {
         src="/district-map.svg"
         alt="Karta povezanosti zagrebačkih četvrti. Zeleno označava bolju povezanost, ljubičasto slabiju."
         className="h-full w-full object-contain"
+        width={960}
+        height={620}
       />
     </div>
   )

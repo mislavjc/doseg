@@ -2,9 +2,17 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "O projektu | Doseg",
+  title: "O projektu — Doseg | Zagreb Transit Reachability",
   description:
-    "Kako radi Doseg, interaktivna karta dosega javnog prijevoza u Zagrebu.",
+    "Kako radi Doseg: interaktivna karta dosega javnog prijevoza u Zagrebu. Dijkstrin algoritam, ZET GTFS vozni red, GTFS-RT kašnjenja i pješačka mreža s 422K čvorova.",
+  alternates: { canonical: "/o-projektu" },
+  openGraph: {
+    title: "O projektu — Doseg | Zagreb Transit Reachability",
+    description:
+      "Kako radi Doseg: interaktivna karta dosega javnog prijevoza u Zagrebu. Dijkstrin algoritam, ZET GTFS vozni red, GTFS-RT kašnjenja i pješačka mreža s 422K čvorova.",
+    type: "article",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" }],
+  },
 }
 
 function Section({
@@ -28,7 +36,7 @@ function BackLink() {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-500 uppercase transition-colors hover:text-slate-300"
+      className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-400 uppercase transition-colors hover:text-slate-300"
     >
       <svg
         aria-hidden="true"
@@ -212,14 +220,14 @@ export default function AboutPage() {
         <h1 className="mt-12 text-4xl font-bold tracking-tighter text-white sm:text-5xl">
           Doseg
         </h1>
-        <p className="mt-4 text-[16px] leading-relaxed text-slate-400 sm:text-[18px]">
+        <p className="mt-4 text-[16px] leading-relaxed text-slate-300 sm:text-[18px]">
           Interaktivna karta dosega javnog prijevoza u Zagrebu. Klikni bilo gdje
           i vidi dokle možeš stići tramvajem ili busom u 15, 30 ili 45 minuta.
         </p>
 
         <Sections />
 
-        <p className="mt-12 text-[13px] font-medium text-slate-500">
+        <p className="mt-12 text-[13px] font-medium text-slate-400">
           Napravio{" "}
           <a
             href="https://mislavjc.com"

@@ -27,20 +27,22 @@ import type {
 } from "@/lib/generated"
 
 export const metadata: Metadata = {
-  title: "Statistika - Doseg",
+  title: "Statistika dostupnosti — Doseg | Zagreb Transit Reachability",
   description:
-    "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+    "Ranking svih 17 zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima. Bodovi, karte, analiza mreže i usporedba linija.",
+  alternates: { canonical: "/statistika" },
   openGraph: {
-    title: "Statistika - Doseg",
+    title: "Statistika dostupnosti — Doseg | Zagreb Transit Reachability",
     description:
-      "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+      "Ranking svih 17 zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima. Bodovi, karte, analiza mreže i usporedba linija.",
     type: "article",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Statistika - Doseg",
+    title: "Statistika dostupnosti — Doseg | Zagreb Transit Reachability",
     description:
-      "Ranking zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima u 30 minuta.",
+      "Ranking svih 17 zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima. Bodovi, karte, analiza mreže i usporedba linija.",
   },
 }
 
@@ -2508,6 +2510,8 @@ function BajsMapSection() {
             src="/district-bajs-map.svg"
             alt="Karta utjecaja BAJS bicikala po četvrtima. Tamniji amber označava veći dobitak u dostupnosti."
             className="h-full w-full object-contain"
+            width={960}
+            height={620}
             loading="lazy"
           />
         </div>
@@ -3189,9 +3193,9 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
         <table className="w-max border-collapse text-[11px]" role="grid" aria-label="Matrica putovanja između četvrti">
           <thead>
             <tr>
-              <th className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
+              <td className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
                 <span className="sr-only">Iz / U</span>
-              </th>
+              </td>
               {travelMatrix.districts.map((name, ci) => (
                 <th key={ci} className="min-w-[44px] p-1 text-center font-medium text-slate-500 dark:text-slate-400" title={name}>
                   {districtAbbrev[name] ?? name.slice(0, 4)}

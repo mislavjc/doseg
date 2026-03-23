@@ -604,27 +604,8 @@ function addAllMapSources(map: maplibregl.Map) {
 
 function updatePreviewAndDot(
   map: maplibregl.Map,
-  origin: [number, number],
   dest: [number, number],
-  isTouch: boolean
 ) {
-  if (!isTouch) {
-    const previewSrc = map.getSource(
-      "preview"
-    ) as maplibregl.GeoJSONSource
-    if (previewSrc) {
-      previewSrc.setData({
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [origin, dest] },
-          },
-        ],
-      })
-    }
-  }
   const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
   if (dotSrc) {
     dotSrc.setData({
@@ -680,60 +661,47 @@ interface ScheduleExactRouteOpts {
   routeTailOriginRef: React.MutableRefObject<[number, number] | null>
   setRoute: (r: Itinerary | null) => void
   setRouteLoading: (l: boolean) => void
+  setError: (e: string | null) => void
+}
+
+function fireExactRoute(
+  origin: [number, number], destLat: number, destLon: number,
+  preferredKey: string | null, requestSeq: number, opts: ScheduleExactRouteOpts
+) {
+  const controller = new AbortController()
+  opts.exactRouteAbortRef.current = controller
+  fetchExactRoute(
+    { originLat: origin[1], originLon: origin[0], destLat, destLon,
+      time: opts.effectiveTimeRef.current, bajs: opts.bajsEnabledRef.current, preferredKey },
+    controller.signal
+  )
+    .then((itinerary) => {
+      if (controller.signal.aborted || requestSeq !== opts.exactRouteSeqRef.current) return
+      renderFullRoute(opts.map, itinerary)
+      opts.routeTailOriginRef.current = null
+      opts.setRoute(itinerary)
+      opts.setRouteLoading(false)
+    })
+    .catch((err) => {
+      if (controller.signal.aborted) return
+      console.error("Exact route fetch failed:", err)
+      opts.setRouteLoading(false)
+      opts.setError("Nije moguće izračunati rutu")
+    })
 }
 
 function scheduleExactRoute(
-  destLat: number,
-  destLon: number,
-  preferredKey: string | null,
-  opts: ScheduleExactRouteOpts
+  destLat: number, destLon: number, preferredKey: string | null, opts: ScheduleExactRouteOpts
 ) {
   const origin = opts.originRef.current
   if (!origin) return
-
-  if (opts.exactRouteTimerRef.current) {
-    window.clearTimeout(opts.exactRouteTimerRef.current)
-  }
-  if (opts.exactRouteAbortRef.current) {
-    opts.exactRouteAbortRef.current.abort()
-  }
-
+  if (opts.exactRouteTimerRef.current) window.clearTimeout(opts.exactRouteTimerRef.current)
+  if (opts.exactRouteAbortRef.current) opts.exactRouteAbortRef.current.abort()
   const requestSeq = ++opts.exactRouteSeqRef.current
   opts.setRouteLoading(true)
-  opts.exactRouteTimerRef.current = window.setTimeout(() => {
-    const controller = new AbortController()
-    opts.exactRouteAbortRef.current = controller
-
-    fetchExactRoute(
-      {
-        originLat: origin[1],
-        originLon: origin[0],
-        destLat,
-        destLon,
-        time: opts.effectiveTimeRef.current,
-        bajs: opts.bajsEnabledRef.current,
-        preferredKey,
-      },
-      controller.signal
-    )
-      .then((itinerary) => {
-        if (
-          controller.signal.aborted ||
-          requestSeq !== opts.exactRouteSeqRef.current
-        ) {
-          return
-        }
-        renderFullRoute(opts.map, itinerary)
-        opts.routeTailOriginRef.current = null
-        opts.setRoute(itinerary)
-        opts.setRouteLoading(false)
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return
-        console.error("Exact route fetch failed:", err)
-        opts.setRouteLoading(false)
-      })
-  }, 160)
+  opts.exactRouteTimerRef.current = window.setTimeout(
+    () => fireExactRoute(origin, destLat, destLon, preferredKey, requestSeq, opts), 160
+  )
 }
 
 interface HandleDestinationOpts {
@@ -760,7 +728,7 @@ function handleDestinationAt(
   opts.pendingDestinationRef.current = { lat, lng }
   const dest: [number, number] = [lng, lat]
 
-  updatePreviewAndDot(opts.map, o, dest, opts.isTouchRef.current)
+  updatePreviewAndDot(opts.map, dest)
 
   const rd = opts.routingDataRef.current
   if (!rd) return
@@ -782,26 +750,6 @@ function handleDestinationAt(
   scheduleExactRoute(lat, lng, nearest, opts.exactRouteOpts)
 }
 
-function clearMapOnMouseOut(
-  map: maplibregl.Map,
-  exactRouteTimerRef: React.MutableRefObject<number>,
-  exactRouteAbortRef: React.MutableRefObject<AbortController | null>,
-  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>,
-  setRouteLoading: (l: boolean) => void
-) {
-  const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
-  if (previewSrc) previewSrc.setData(EMPTY_FC)
-  const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
-  if (dotSrc) dotSrc.setData(EMPTY_FC)
-  if (exactRouteTimerRef.current) {
-    window.clearTimeout(exactRouteTimerRef.current)
-  }
-  if (exactRouteAbortRef.current) {
-    exactRouteAbortRef.current.abort()
-  }
-  pendingDestinationRef.current = null
-  setRouteLoading(false)
-}
 
 function cleanupMapInit(
   map: maplibregl.Map,
@@ -1175,6 +1123,7 @@ function bindMapInteractions(
       routeTailOriginRef: refs.routeTailOriginRef,
       setRoute,
       setRouteLoading,
+      setError,
     },
     setRoute,
     setRouteLoading,
@@ -1199,7 +1148,7 @@ function bindMapClickEvents(
   setCoords: SetCoords
 ) {
   map.on("click", (e) => {
-    if (refs.originRef.current && refs.isTouchRef.current) {
+    if (refs.originRef.current) {
       handleDestination(e.lngLat.lat, e.lngLat.lng)
       return
     }
@@ -1213,21 +1162,6 @@ function bindMapClickEvents(
       lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
     })
     map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat], duration: 400 })
-  })
-
-  map.on("mousemove", (e) => {
-    if (!refs.originRef.current) return
-    cancelAnimationFrame(refs.rafRef.current)
-    refs.rafRef.current = requestAnimationFrame(() => {
-      handleDestination(e.lngLat.lat, e.lngLat.lng)
-    })
-  })
-
-  map.on("mouseout", () => {
-    clearMapOnMouseOut(
-      map, refs.exactRouteTimerRef, refs.exactRouteAbortRef,
-      refs.pendingDestinationRef, setRouteLoading
-    )
   })
 }
 
@@ -1454,6 +1388,11 @@ function useTransitMapState() {
   const [routeLoading, setRouteLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  useEffect(() => {
+    if (!error) return
+    const t = setTimeout(() => setError(null), 4000)
+    return () => clearTimeout(t)
+  }, [error])
   const [mapReady, setMapReady] = useState(false)
   const [showStatsCta, setShowStatsCta] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
@@ -1476,10 +1415,18 @@ function useTransitMapState() {
   }
 }
 
+const ONBOARDING_KEY = "doseg-onboarded"
+
 export function TransitMap() {
   const s = useTransitMapState()
   const refs = useTransitMapRefs(s)
+  const [onboardingOpen, setOnboardingOpen] = useState(() => {
+    if (typeof window === "undefined") return false
+    return !localStorage.getItem(ONBOARDING_KEY)
+  })
 
+  const [everHadOrigin, setEverHadOrigin] = useState(s.hasOrigin)
+  useEffect(() => { if (s.hasOrigin) setEverHadOrigin(true) }, [s.hasOrigin])
   useEffect(() => { refs.effectiveTimeRef.current = s.effectiveTime }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
   useEffect(() => { refs.bajsEnabledRef.current = s.bajsEnabled }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
 
@@ -1494,9 +1441,10 @@ export function TransitMap() {
     <TransitMapView
       containerRef={refs.containerRef} loading={s.loading} bajsEnabled={s.bajsEnabled}
       poiEnabled={s.poiEnabled} layersOpen={s.layersOpen} vehiclesEnabled={s.vehiclesEnabled}
-      effectiveTime={s.effectiveTime} hasOrigin={s.hasOrigin} error={s.error}
+      effectiveTime={s.effectiveTime} hasOrigin={s.hasOrigin} everHadOrigin={everHadOrigin} error={s.error}
       showStatsCta={s.showStatsCta} route={s.route} routeLoading={s.routeLoading}
       linkCopied={s.linkCopied} mapRef={refs.mapRef} statsCtaDismissedRef={refs.statsCtaDismissedRef}
+      onboardingOpen={onboardingOpen} setOnboardingOpen={setOnboardingOpen}
       setTime={s.setTime} setBajs={s.setBajs} setLayersOpen={s.setLayersOpen}
       setVehiclesEnabled={s.setVehiclesEnabled} setPoiEnabled={s.setPoiEnabled}
       setCoords={s.setCoords} setShowStatsCta={s.setShowStatsCta} setLinkCopied={s.setLinkCopied}
@@ -1516,6 +1464,7 @@ type TransitMapViewProps = {
   vehiclesEnabled: boolean
   effectiveTime: string
   hasOrigin: boolean
+  everHadOrigin: boolean
   error: string | null
   showStatsCta: boolean
   route: Itinerary | null
@@ -1523,6 +1472,8 @@ type TransitMapViewProps = {
   linkCopied: boolean
   mapRef: React.RefObject<maplibregl.Map | null>
   statsCtaDismissedRef: React.MutableRefObject<boolean>
+  onboardingOpen: boolean
+  setOnboardingOpen: (v: boolean) => void
   setTime: (v: string | null) => void
   setBajs: (v: string | null) => void
   setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -1544,7 +1495,10 @@ function TransitMapView({
         <LoadingBar loading={rest.loading} ease={ease} />
         <LayerLegend bajsEnabled={rest.bajsEnabled} poiEnabled={rest.poiEnabled} ease={ease} />
         <HudOverlay {...rest} mapRef={mapRef} statsCtaDismissedRef={statsCtaDismissedRef} ease={ease} />
-        <OnboardingDialog />
+        <OnboardingDialog open={rest.onboardingOpen} onClose={() => {
+          localStorage.setItem(ONBOARDING_KEY, "1")
+          rest.setOnboardingOpen(false)
+        }} />
       </div>
     </MotionConfig>
   )
@@ -1659,6 +1613,7 @@ type IslandToolbarProps = {
   poiEnabled: boolean
   hasOrigin: boolean
   ease: Ease
+  mapRef: React.RefObject<maplibregl.Map | null>
   setTime: (v: string | null) => void
   setBajs: (v: string | null) => void
   setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -1682,6 +1637,7 @@ function IslandToolbar(props: IslandToolbarProps) {
         vehiclesEnabled={props.vehiclesEnabled}
         poiEnabled={props.poiEnabled}
         hasOrigin={props.hasOrigin}
+        mapRef={props.mapRef}
         setTime={props.setTime}
         setBajs={props.setBajs}
         setLayersOpen={props.setLayersOpen}
@@ -1706,6 +1662,7 @@ type IslandMainRowProps = {
   vehiclesEnabled: boolean
   poiEnabled: boolean
   hasOrigin: boolean
+  mapRef: React.RefObject<maplibregl.Map | null>
   setTime: (v: string | null) => void
   setBajs: (v: string | null) => void
   setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -1721,9 +1678,11 @@ function IslandMainRow(p: IslandMainRowProps) {
       <div className="h-6 w-px bg-white/10" />
       <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
       <LayersButton layersOpen={p.layersOpen} vehiclesEnabled={p.vehiclesEnabled} poiEnabled={p.poiEnabled} setLayersOpen={p.setLayersOpen} />
-      <div className="h-6 w-px bg-white/10" />
-      <ColorScale />
-      <ClearOriginButton hasOrigin={p.hasOrigin} setCoords={p.setCoords} />
+      <LocateMeButton mapRef={p.mapRef} setCoords={p.setCoords} />
+      <div className="hidden h-6 w-px bg-white/10 sm:block" />
+      <div className="hidden sm:block">
+        <ColorScale />
+      </div>
     </div>
   )
 }
@@ -1742,9 +1701,6 @@ function BajsToggleButton({ bajsEnabled, setBajs }: { bajsEnabled: boolean; setB
       title="Ukljuci BAJS stanice i bicikl u izracun rute"
     >
       <span>BAJS</span>
-      <span className="hidden text-[9px] font-medium text-slate-400 sm:inline">
-        + tram/bus
-      </span>
     </button>
   )
 }
@@ -1815,51 +1771,95 @@ function LayersButton({
   )
 }
 
-function ClearOriginButton({
-  hasOrigin,
-  setCoords,
-}: {
-  hasOrigin: boolean
-  setCoords: (v: { lat: number | null; lon: number | null }) => void
-}) {
+function geoErrorMessage(err: GeolocationPositionError): string {
+  if (err.code === err.PERMISSION_DENIED) return "Pristup lokaciji odbijen"
+  if (err.code === err.POSITION_UNAVAILABLE) return "Lokacija nedostupna"
+  return "Vrijeme za lokaciju isteklo"
+}
+
+function requestGeolocation(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  setCoords: SetCoords,
+  setLocating: (v: boolean) => void,
+  setGeoError: (v: string | null) => void
+) {
+  if (!navigator.geolocation) {
+    setGeoError("Geolokacija nije dostupna")
+    return
+  }
+  setLocating(true)
+  setGeoError(null)
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = Math.round(pos.coords.latitude * 1e5) / 1e5
+      const lon = Math.round(pos.coords.longitude * 1e5) / 1e5
+      setCoords({ lat, lon })
+      mapRef.current?.easeTo({ center: [lon, lat], duration: 400 })
+      setLocating(false)
+    },
+    (err) => {
+      setLocating(false)
+      setGeoError(geoErrorMessage(err))
+    },
+    { enableHighAccuracy: false, timeout: 10000 }
+  )
+}
+
+function GeoErrorTooltip({ message }: { message: string | null }) {
   return (
     <AnimatePresence>
-      {hasOrigin && (
+      {message && (
         <motion.div
-          key="close"
-          initial={{ opacity: 0, width: 0, scale: 0.9 }}
-          animate={{ opacity: 1, width: "auto", scale: 1 }}
-          exit={{ opacity: 0, width: 0, scale: 0.9 }}
-          className="flex items-center gap-2 overflow-hidden sm:gap-3"
+          key="geo-error"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4, transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] } }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[rgba(30,30,30,0.92)] px-3 py-1.5 text-[11px] text-red-400 shadow-lg backdrop-blur-md"
         >
-          <div className="h-6 w-px shrink-0 bg-white/10" />
-          <button
-            type="button"
-            onClick={() => setCoords({ lat: null, lon: null })}
-            className="flex h-6 shrink-0 items-center justify-center rounded-full bg-white/5 px-2 text-slate-400 transition-colors hover:bg-white/15 hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none sm:px-2.5"
-            aria-label="Obriši ishodište"
-          >
-            <svg
-              aria-hidden="true"
-              width="8"
-              height="8"
-              viewBox="0 0 8 8"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            >
-              <path d="M1 1l6 6M7 1l-6 6" />
-            </svg>
-            <span className="ml-1.5 hidden text-[11px] font-medium sm:inline">
-              Obriši
-            </span>
-          </button>
+          {message}
         </motion.div>
       )}
     </AnimatePresence>
   )
 }
+
+function LocateMeButton({ mapRef, setCoords }: { mapRef: React.RefObject<maplibregl.Map | null>; setCoords: SetCoords }) {
+  const [locating, setLocating] = useState(false)
+  const [geoError, setGeoError] = useState<string | null>(null)
+  useEffect(() => {
+    if (!geoError) return
+    const t = setTimeout(() => setGeoError(null), 3000)
+    return () => clearTimeout(t)
+  }, [geoError])
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => requestGeolocation(mapRef, setCoords, setLocating, setGeoError)}
+        disabled={locating}
+        className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-[background-color,color,transform] duration-160 ease-out focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none active:scale-[0.97] ${
+          locating
+            ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
+            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+        }`}
+        title="Pronađi moju lokaciju"
+        aria-label="Pronađi moju lokaciju"
+      >
+        <svg
+          aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          className={locating ? "animate-pulse" : ""}
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+        </svg>
+      </button>
+      <GeoErrorTooltip message={geoError} />
+    </div>
+  )
+}
+
 
 type IslandLayerTogglesProps = {
   layersOpen: boolean
@@ -1885,13 +1885,6 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
           <div className="flex items-center justify-center gap-2 border-t border-white/10 px-3 pt-2 pb-0.5">
             <VehiclesToggle enabled={p.vehiclesEnabled} onToggle={p.setVehiclesEnabled} />
             <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
-            <div className="h-4 w-px bg-white/10" />
-            <Link
-              href="/o-projektu"
-              className="flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold text-slate-500 transition-colors hover:text-slate-300"
-            >
-              O projektu
-            </Link>
           </div>
         </motion.div>
       )}
@@ -1939,104 +1932,50 @@ function PoiToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Di
   )
 }
 
-function BottomHintPanel({
-  hasOrigin,
-  ease,
-}: {
-  hasOrigin: boolean
-  ease: readonly [number, number, number, number]
+function HintBubble({ k, ease, children }: { k: string; ease: Ease; children: React.ReactNode }) {
+  return (
+    <motion.div
+      key={k}
+      className="panel pointer-events-auto"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+      transition={{ duration: 0.2, ease }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function BottomHintPanel({ hasOrigin, everHadOrigin, route, loading, routeLoading, ease, setCoords }: {
+  hasOrigin: boolean; everHadOrigin: boolean; route: Itinerary | null; loading: boolean
+  routeLoading: boolean; ease: Ease; setCoords: SetCoords
 }) {
   return (
-    <AnimatePresence>
-      {!hasOrigin && (
-        <motion.div
-          key="hint"
-          className="panel pointer-events-auto"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-          transition={{ duration: 0.2, ease }}
-        >
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-[13px] text-slate-300">
-              Klikni bilo gdje da vidiš dokle možeš stići
-            </div>
-            <Link
-              href="/statistika"
-              prefetch={false}
-              className="text-[12px] text-slate-500 transition-colors hover:text-slate-300"
-            >
-              ili pogledaj statistiku po četvrtima &rarr;
-            </Link>
+    <AnimatePresence mode="wait">
+      {!hasOrigin && !everHadOrigin && (
+        <HintBubble k="origin" ease={ease}>
+          <div className="text-center text-[13px] text-slate-300">
+            Klikni bilo gdje da vidiš dokle možeš stići
           </div>
-        </motion.div>
+        </HintBubble>
+      )}
+      {hasOrigin && !route && !loading && !routeLoading && (
+        <HintBubble k="dest" ease={ease}>
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-[13px] text-slate-300">Klikni odredište</span>
+            <span className="text-slate-600">·</span>
+            <button type="button" onClick={() => setCoords({ lat: null, lon: null })}
+              className="text-[12px] text-slate-500 transition-[color,transform] duration-160 ease-out hover:text-slate-300 active:scale-[0.97]">
+              promijeni polazište
+            </button>
+          </div>
+        </HintBubble>
       )}
     </AnimatePresence>
   )
 }
 
-type StatsCtaPanelProps = {
-  showStatsCta: boolean
-  hasOrigin: boolean
-  statsCtaDismissedRef: React.MutableRefObject<boolean>
-  ease: Ease
-  setShowStatsCta: (v: boolean) => void
-}
-
-function StatsCtaPanel({ showStatsCta, hasOrigin, statsCtaDismissedRef, ease, setShowStatsCta }: StatsCtaPanelProps) {
-  function dismiss() {
-    localStorage.setItem("doseg-stats-cta", "1")
-    statsCtaDismissedRef.current = true
-    setShowStatsCta(false)
-  }
-  return (
-    <AnimatePresence>
-      {showStatsCta && hasOrigin && (
-        <motion.div
-          key="stats-cta"
-          className="panel pointer-events-auto"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
-          transition={{ duration: 0.3, delay: 0.5, ease }}
-        >
-          <StatsCtaContent onDismiss={dismiss} onLinkClick={() => {
-            localStorage.setItem("doseg-stats-cta", "1")
-            statsCtaDismissedRef.current = true
-          }} />
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
-function StatsCtaContent({ onDismiss, onLinkClick }: { onDismiss: () => void; onLinkClick: () => void }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-[12px] text-slate-400">
-        Kako se tvoja četvrt uspoređuje?
-      </span>
-      <Link
-        href="/statistika"
-        prefetch={false}
-        className="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors hover:bg-white/20"
-        onClick={onLinkClick}
-      >
-        Statistika &rarr;
-      </Link>
-      <button
-        type="button"
-        className="text-slate-500 transition-colors hover:text-slate-300"
-        aria-label="Zatvori"
-        onClick={onDismiss}
-      >
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-          <path d="M1 1l6 6M7 1l-6 6" />
-        </svg>
-      </button>
-    </div>
-  )
-}
 
 function RouteDetailsPanel({
   route,
@@ -2045,6 +1984,7 @@ function RouteDetailsPanel({
   linkCopied,
   mapRef,
   setLinkCopied,
+  setCoords,
 }: {
   route: Itinerary | null
   routeLoading: boolean
@@ -2052,6 +1992,7 @@ function RouteDetailsPanel({
   linkCopied: boolean
   mapRef: React.RefObject<maplibregl.Map | null>
   setLinkCopied: (v: boolean) => void
+  setCoords: SetCoords
 }) {
   return (
     <AnimatePresence>
@@ -2060,7 +2001,7 @@ function RouteDetailsPanel({
           itinerary={route}
           loading={routeLoading}
           departureTime={effectiveTime}
-          className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
+          className="panel pointer-events-auto cursor-pointer max-h-[50vh] overflow-y-auto sm:max-h-none sm:overflow-visible sm:w-[280px]"
           onShare={() => {
             navigator.clipboard.writeText(window.location.href).then(() => {
               setLinkCopied(true)
@@ -2076,6 +2017,7 @@ function RouteDetailsPanel({
             link.href = canvas.toDataURL("image/png")
             link.click()
           }}
+          onReset={() => setCoords({ lat: null, lon: null })}
           shareConfirm={linkCopied}
         />
       )}
@@ -2087,7 +2029,7 @@ type HudOverlayProps = Omit<TransitMapViewProps, "containerRef"> & { ease: Ease 
 
 function HudOverlay(p: HudOverlayProps) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-6 sm:p-4">
+    <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-10 sm:p-4">
       <HudTopRow p={p} />
       <div className="col-start-1 row-start-3" />
       <HudBottomRow p={p} />
@@ -2099,14 +2041,31 @@ function HudOverlay(p: HudOverlayProps) {
 function HudTopRow({ p }: { p: HudOverlayProps }) {
   return (
     <>
-      <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:block">
+      <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:flex items-center gap-2">
         <Link
           href="/o-projektu"
+          prefetch={false}
           className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
           aria-label="O projektu"
         >
           O projektu
         </Link>
+        <Link
+          href="/statistika"
+          prefetch={false}
+          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-200"
+          aria-label="Statistika"
+        >
+          Statistika
+        </Link>
+        <button
+          type="button"
+          onClick={() => p.setOnboardingOpen(true)}
+          className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold text-slate-400 transition-colors hover:text-slate-200"
+          aria-label="Pomoć"
+        >
+          ?
+        </button>
       </div>
       <HudTopCenter p={p} />
       <div className="pointer-events-auto col-start-3 row-start-1 hidden self-start sm:flex items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
@@ -2135,6 +2094,7 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         poiEnabled={p.poiEnabled}
         hasOrigin={p.hasOrigin}
         ease={p.ease}
+        mapRef={p.mapRef}
         setTime={p.setTime}
         setBajs={p.setBajs}
         setLayersOpen={p.setLayersOpen}
@@ -2142,6 +2102,18 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         setPoiEnabled={p.setPoiEnabled}
         setCoords={p.setCoords}
       />
+      <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-black/30 px-4 py-1.5 backdrop-blur-md sm:hidden">
+        <Link href="/o-projektu" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">
+          O projektu
+        </Link>
+        <Link href="/statistika" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">
+          Statistika
+        </Link>
+        <button type="button" onClick={() => p.setOnboardingOpen(true)}
+          className="text-[12px] font-medium text-slate-300 transition-[color,transform] duration-160 ease-out hover:text-slate-200 active:scale-[0.95]">
+          Pomoć
+        </button>
+      </div>
       <ErrorOverlay error={p.error} ease={p.ease} />
     </div>
   )
@@ -2171,14 +2143,7 @@ function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
 function HudBottomRow({ p }: { p: HudOverlayProps }) {
   return (
     <div className="col-start-1 col-span-full row-start-3 self-end justify-self-stretch sm:col-start-2 sm:col-span-1 sm:justify-self-center">
-      <BottomHintPanel hasOrigin={p.hasOrigin} ease={p.ease} />
-      <StatsCtaPanel
-        showStatsCta={p.showStatsCta}
-        hasOrigin={p.hasOrigin}
-        statsCtaDismissedRef={p.statsCtaDismissedRef}
-        ease={p.ease}
-        setShowStatsCta={p.setShowStatsCta}
-      />
+      <BottomHintPanel hasOrigin={p.hasOrigin} everHadOrigin={p.everHadOrigin} route={p.route} loading={p.loading} routeLoading={p.routeLoading} ease={p.ease} setCoords={p.setCoords} />
       <RouteDetailsPanel
         route={p.route}
         routeLoading={p.routeLoading}
@@ -2186,6 +2151,7 @@ function HudBottomRow({ p }: { p: HudOverlayProps }) {
         linkCopied={p.linkCopied}
         mapRef={p.mapRef}
         setLinkCopied={p.setLinkCopied}
+        setCoords={p.setCoords}
       />
     </div>
   )

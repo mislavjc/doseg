@@ -2482,7 +2482,12 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
         .await
-        .unwrap_or_else(|_| panic!("Failed to bind to port {} — is another instance already running?", port));
+        .unwrap_or_else(|_| {
+            panic!(
+                "Failed to bind to port {} — is another instance already running?",
+                port
+            )
+        });
     println!("Isochrone server listening on port {}", port);
     axum::serve(listener, app).await.unwrap();
 }

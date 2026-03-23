@@ -3,4 +3,4 @@ import type { GeoJsonFeature } from "./GeoJsonFeature";
 import type { RoutingPayload } from "./RoutingPayload";
 import type { WalkRingResponse } from "./WalkRingResponse";
 
-export type IsochroneResponse = { type: "FeatureCollection", features: Array<GeoJsonFeature>, walkRing: WalkRingResponse | null, routing: RoutingPayload | null, realtime: boolean, };
+export type IsochroneResponse = { type: "FeatureCollection", features: Array<GeoJsonFeature>, walkRing?: WalkRingResponse, routing?: RoutingPayload, realtime: boolean, };

@@ -827,6 +827,7 @@ struct RoutingNode {
     name: String,
     time: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pred: Option<RoutingPred>,
 }
 
@@ -838,14 +839,17 @@ struct RoutingPred {
     from_key: String,
     #[ts(type = "\"WALK\" | \"TRANSIT\" | \"BIKE\"")]
     kind: String,
-    #[serde(rename = "patternIdx", skip_serializing_if = "Option::is_none")]
-    #[ts(rename = "patternIdx")]
+    #[serde(rename = "patternIdx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "patternIdx", optional)]
     pattern_idx: Option<usize>,
-    #[serde(rename = "boardIdx", skip_serializing_if = "Option::is_none")]
-    #[ts(rename = "boardIdx")]
+    #[serde(rename = "boardIdx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "boardIdx", optional)]
     board_idx: Option<usize>,
-    #[serde(rename = "alightIdx", skip_serializing_if = "Option::is_none")]
-    #[ts(rename = "alightIdx")]
+    #[serde(rename = "alightIdx")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "alightIdx", optional)]
     alight_idx: Option<usize>,
 }
 
@@ -952,10 +956,12 @@ struct IsochroneResponse {
     #[ts(rename = "type", type = "\"FeatureCollection\"")]
     kind: &'static str,
     features: Vec<GeoJsonFeature>,
-    #[serde(rename = "walkRing", skip_serializing_if = "Option::is_none")]
-    #[ts(rename = "walkRing")]
+    #[serde(rename = "walkRing")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(rename = "walkRing", optional)]
     walk_ring: Option<WalkRingResponse>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     routing: Option<RoutingPayload>,
     realtime: bool,
 }
@@ -2476,7 +2482,7 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
         .await
-        .unwrap();
+        .expect(&format!("Failed to bind to port {} — is another instance already running?", port));
     println!("Isochrone server listening on port {}", port);
     axum::serve(listener, app).await.unwrap();
 }

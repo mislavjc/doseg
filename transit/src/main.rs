@@ -399,8 +399,10 @@ pub struct DistrictScoresOutput {
     pub city_desert_pct: i64,
     pub districts: Vec<District>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pub day: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pub service_date: Option<String>,
 }
 

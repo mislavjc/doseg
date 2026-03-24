@@ -637,6 +637,7 @@ function reconstructAndRenderRoute(
 
   if (itinerary) {
     renderRouteBase(map, itinerary)
+    setRoute(itinerary)
     const tailStop = nearest ? rd.stops.get(nearest) : null
     routeTailOriginRef.current = tailStop
       ? [tailStop.lon, tailStop.lat]
@@ -747,7 +748,6 @@ function handleDestinationAt(
     renderRouteTail(opts.map, opts.routeTailOriginRef.current, dest)
   }
 
-  opts.setRoute(null)
   scheduleExactRoute(lat, lng, nearest, opts.exactRouteOpts)
 }
 

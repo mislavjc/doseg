@@ -48,6 +48,7 @@ interface RouteDetailsProps {
 }
 
 const ease = [0.23, 1, 0.32, 1] as const
+const easeCss = `cubic-bezier(${ease.join(", ")})`
 
 function legDescription(leg: Itinerary["legs"][number]): string {
   const from = leg.from.name || "Početak"
@@ -151,11 +152,23 @@ function ActionButtons({
 }) {
   return (
     <div className="flex items-center gap-1.5">
-      {loading && <div className="route-spinner" />}
+      <AnimatePresence>
+        {loading && (
+          <m.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.15, ease }}
+          >
+            <div className="route-spinner" />
+          </m.div>
+        )}
+      </AnimatePresence>
       {onShare && <ShareButton onShare={onShare} shareConfirm={shareConfirm} />}
       {onExport && <ExportButton onExport={onExport} />}
       <svg
-        className={`h-4 w-4 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+        className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+        style={{ transitionTimingFunction: easeCss }}
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -168,23 +181,33 @@ function ActionButtons({
 
 function LegsBadges({ legs }: { legs: Itinerary["legs"] }) {
   return (
-    <div className="mt-1 flex flex-wrap items-center gap-1.5">
-      {legs.map((leg, i) => (
-        <div key={`${leg.from.name}-${leg.to.name}`} className="flex items-center gap-1.5">
-          {i > 0 && <span className="text-[10px] text-slate-600">›</span>}
-          {leg.mode === "WALK" ? (
-            <WalkIcon />
-          ) : (
-            <span
-              className="inline-flex h-[20px] min-w-[28px] items-center justify-center rounded-[4px] px-1.5 text-[11px] font-semibold"
-              style={{ backgroundColor: modeColor(leg.mode), color: "#fff" }}
-            >
-              {leg.route || modeLabel(leg.mode)}
-            </span>
-          )}
-        </div>
-      ))}
-    </div>
+    <m.div layout className="mt-1 flex flex-wrap items-center gap-1.5">
+      <AnimatePresence mode="popLayout">
+        {legs.map((leg, i) => (
+          <m.div
+            key={`${i}-${leg.mode}-${leg.route || "walk"}`}
+            layout
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.15, ease }}
+            className="flex items-center gap-1.5"
+          >
+            {i > 0 && <span className="text-[10px] text-slate-600">›</span>}
+            {leg.mode === "WALK" ? (
+              <WalkIcon />
+            ) : (
+              <span
+                className="inline-flex h-[20px] min-w-[28px] items-center justify-center rounded-[4px] px-1.5 text-[11px] font-semibold"
+                style={{ backgroundColor: modeColor(leg.mode), color: "#fff" }}
+              >
+                {leg.route || modeLabel(leg.mode)}
+              </span>
+            )}
+          </m.div>
+        ))}
+      </AnimatePresence>
+    </m.div>
   )
 }
 
@@ -241,25 +264,28 @@ function LegRow({ leg }: { leg: Itinerary["legs"][number] }) {
   )
 }
 
-function ExpandedDetails({ itinerary }: { itinerary: Itinerary }) {
+function ExpandedDetails({ itinerary, open }: { itinerary: Itinerary; open: boolean }) {
   return (
-    <m.div
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      variants={{
-        hidden: { opacity: 0, height: 0, marginTop: 0 },
-        visible: { opacity: 1, height: "auto", marginTop: 16 },
+    <div
+      className="grid transition-[grid-template-rows] duration-250 motion-reduce:transition-none"
+      style={{
+        gridTemplateRows: open ? "1fr" : "0fr",
+        transitionTimingFunction: easeCss,
       }}
-      className="overflow-hidden"
     >
-      <TripStats itinerary={itinerary} />
-      <div className="flex max-h-[30vh] flex-col gap-0.5 overflow-y-auto sm:max-h-[40vh]" role="list">
-        {itinerary.legs.map((leg) => (
-          <LegRow key={`${leg.from.name}-${leg.to.name}`} leg={leg} />
-        ))}
+      <div className="overflow-hidden" {...(!open && { inert: true })}>
+        <div
+          className={`mt-4 transition-opacity duration-150 motion-reduce:transition-none ${open ? "opacity-100 delay-75" : "opacity-0"}`}
+        >
+          <TripStats itinerary={itinerary} />
+          <div className="flex max-h-[30vh] flex-col gap-0.5 overflow-y-auto sm:max-h-[40vh]" role="list">
+            {itinerary.legs.map((leg, i) => (
+              <LegRow key={`${i}-${leg.from.name}-${leg.to.name}`} leg={leg} />
+            ))}
+          </div>
+        </div>
       </div>
-    </m.div>
+    </div>
   )
 }
 
@@ -273,44 +299,56 @@ export function RouteDetails({ itinerary, loading, departureTime, className, onS
       aria-expanded={isExpanded}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+      exit={{ opacity: 0, y: 8, transition: { duration: 0.15, ease } }}
       transition={{ duration: 0.2, ease }}
       onClick={() => itinerary && setIsExpanded(!isExpanded)}
     >
-      {loading && !itinerary && (
-        <div className="flex items-center gap-2">
-          <div className="route-spinner" />
-          <span className="text-[12px] text-slate-400">Tražim rutu…</span>
-        </div>
-      )}
-      {itinerary && (
-        <>
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
-                {formatDuration(itinerary.duration)}
-              </span>
-              {departureTime && (
-                <p className="text-[11px] text-slate-400 tabular-nums">
-                  Dolazak: {formatArrivalTime(departureTime, itinerary.duration)}
-                </p>
-              )}
+      <AnimatePresence mode="wait" initial={false}>
+        {loading && !itinerary ? (
+          <m.div
+            key="loading"
+            className="flex items-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+          >
+            <div className="route-spinner" />
+            <span className="text-[12px] text-slate-400">Tražim rutu…</span>
+          </m.div>
+        ) : itinerary ? (
+          <m.div
+            key="route"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
+                  {formatDuration(itinerary.duration)}
+                </span>
+                {departureTime && (
+                  <p className="text-[11px] text-slate-400 tabular-nums">
+                    Dolazak: {formatArrivalTime(departureTime, itinerary.duration)}
+                  </p>
+                )}
+              </div>
+              <ActionButtons
+                loading={loading}
+                isExpanded={isExpanded}
+                onShare={onShare}
+                onExport={onExport}
+                shareConfirm={shareConfirm}
+              />
             </div>
-            <ActionButtons
-              loading={loading}
-              isExpanded={isExpanded}
-              onShare={onShare}
-              onExport={onExport}
-              shareConfirm={shareConfirm}
-            />
-          </div>
-          <LegsBadges legs={itinerary.legs} />
-          <AnimatePresence initial={false}>
-            {isExpanded && <ExpandedDetails itinerary={itinerary} />}
-          </AnimatePresence>
-          {onReset && <ResetButton onReset={onReset} />}
-        </>
-      )}
+            <LegsBadges legs={itinerary.legs} />
+            <ExpandedDetails itinerary={itinerary} open={isExpanded} />
+            {onReset && <ResetButton onReset={onReset} />}
+          </m.div>
+        ) : null}
+      </AnimatePresence>
     </m.div>
   )
 }

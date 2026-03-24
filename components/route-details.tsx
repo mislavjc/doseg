@@ -464,7 +464,7 @@ function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, o
   const dep = departureTime ?? "00:00"
   const arr = formatArrivalTime(dep, itinerary.duration)
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 min-h-0">
       <div className="shrink-0 pt-0 pb-3 border-b border-white/10">
         <div className="flex items-start justify-between">
           <div className="flex flex-col gap-2">
@@ -480,7 +480,7 @@ function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, o
           <MobileActions onShare={onShare} onReset={onReset} shareConfirm={shareConfirm} />
         </div>
       </div>
-      <div className="pt-2 flex-1 overflow-y-auto">
+      <div className="pt-2 pb-8 flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <Timeline legs={itinerary.legs} departureTime={dep} />
       </div>
     </div>
@@ -531,7 +531,7 @@ export function RouteDetails(props: RouteDetailsProps & { className?: string }) 
 
 function RouteDrawerBody(props: RouteDetailsProps) {
   return (
-    <div className="px-4 pb-4 overflow-y-auto overscroll-contain flex-1">
+    <div className="px-4 pb-4 flex-1 min-h-0 flex flex-col">
       {props.loading && !props.itinerary ? (
         <div className="flex flex-col items-center justify-center py-8 gap-4">
           <div className="route-spinner !w-6 !h-6" />

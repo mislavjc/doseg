@@ -341,7 +341,8 @@
 }
 
 /* BAJS station popup */
-.bajs-popup .maplibregl-popup-content {
+.bajs-popup .maplibregl-popup-content,
+.poi-popup .maplibregl-popup-content {
   background: rgba(30, 30, 30, 0.92);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -351,19 +352,55 @@
   color: #e2e8f0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
-.bajs-popup .maplibregl-popup-close-button {
+.bajs-popup .maplibregl-popup-close-button,
+.poi-popup .maplibregl-popup-close-button {
   color: #94a3b8;
   font-size: 16px;
   padding: 2px 6px;
 }
-.bajs-popup .maplibregl-popup-close-button:hover {
+.bajs-popup .maplibregl-popup-close-button:hover,
+.poi-popup .maplibregl-popup-close-button:hover {
   color: #e2e8f0;
   background: transparent;
 }
-.bajs-popup .maplibregl-popup-tip {
+.bajs-popup .maplibregl-popup-tip,
+.poi-popup .maplibregl-popup-tip {
   border-top-color: rgba(30, 30, 30, 0.92) !important;
   border-bottom-color: rgba(30, 30, 30, 0.92) !important;
 }
+
+/* ── Skeleton shimmer ── */
+.skeleton-block {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.06) 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer-slide 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-slide {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -385,5 +422,10 @@
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  .shimmer::after {
+    animation: none;
+    transform: translateX(0);
+    opacity: 0.5;
   }
 }

@@ -1,4 +1,4 @@
-import { type ReactNode, useState, useEffect, useRef } from "react"
+import { type ReactNode, useState, useEffect } from "react"
 import { m, AnimatePresence } from "motion/react"
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer"
 
@@ -322,7 +322,7 @@ function LegInfo({ leg }: { leg: Leg }) {
   )
 }
 
-function TimelineStop({ time, name, color, isOrigin, isEnd }: { time: string; name: string; color: string; isOrigin?: boolean; isEnd?: boolean }) {
+function TimelineStop({ time, name, isOrigin, isEnd }: { time: string; name: string; color?: string; isOrigin?: boolean; isEnd?: boolean }) {
   return (
     <div className="flex items-start py-0.5">
       <span className="w-[66px] shrink-0 text-right text-[13px] font-medium text-slate-300 pt-[2px] pr-3">
@@ -417,15 +417,54 @@ export function RoutePanelContent({ itinerary, loading, departureTime, originNam
 
 /* ── Mobile export: bottom sheet ── */
 
+function MobileLegStrip({ legs }: { legs: Leg[] }) {
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {legs.map((leg, i) => (
+        <span key={`${i}-${leg.mode}`} className="flex items-center gap-1.5">
+          {i > 0 && <span className="text-[11px] text-slate-500 font-bold mx-[1px]">›</span>}
+          {leg.mode === "WALK" ? (
+            <div className="h-[20px] px-1 flex items-center justify-center text-slate-400">
+              <WalkIconSmall />
+            </div>
+          ) : (
+            <span
+              className="inline-flex h-[22px] min-w-[28px] items-center justify-center rounded-[5px] px-2 text-[12px] font-bold"
+              style={{ backgroundColor: modeColor(leg.mode), color: "#fff" }}
+            >
+              {isShortRoute(leg.route) ? leg.route : modeLabel(leg.mode)}
+            </span>
+          )}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function MobileActions({ onShare, onReset, shareConfirm }: Pick<RouteDetailsProps, "onShare" | "onReset" | "shareConfirm">) {
+  return (
+    <div className="flex items-center gap-1.5 pt-0.5">
+      {onShare && <ShareIconBtn onShare={onShare} shareConfirm={shareConfirm} />}
+      {onReset && (
+        <button
+          type="button"
+          onClick={onReset}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 transition-colors hover:bg-white/20 hover:text-white"
+          aria-label="Zatvori rutu"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      )}
+    </div>
+  )
+}
+
 function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, onReset, shareConfirm }: RouteDetailsProps) {
   if (!itinerary) return null
-  
   const dep = departureTime ?? "00:00"
   const arr = formatArrivalTime(dep, itinerary.duration)
-  
   return (
     <div className="flex flex-col h-full">
-      {/* Summary section (always visible when snapped to bottom) */}
       <div className="shrink-0 pt-0 pb-3 border-b border-white/10">
         <div className="flex items-start justify-between">
           <div className="flex flex-col gap-2">
@@ -433,75 +472,35 @@ function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, o
               <span className="text-[24px] font-medium text-white tabular-nums tracking-tight leading-none">
                 {formatDuration(itinerary.duration)}
               </span>
-              <span className="text-[14px] text-slate-400 tabular-nums">
-                {dep} – {arr}
-              </span>
+              <span className="text-[14px] text-slate-400 tabular-nums">{dep} – {arr}</span>
               {loading && <span className="route-spinner ml-1" />}
             </div>
-            
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {itinerary.legs.map((leg, i) => (
-                <span key={`${i}-${leg.mode}`} className="flex items-center gap-1.5">
-                  {i > 0 && <span className="text-[11px] text-slate-500 font-bold mx-[1px]">›</span>}
-                  {leg.mode === "WALK" ? (
-                    <div className="h-[20px] px-1 flex items-center justify-center text-slate-400">
-                      <WalkIconSmall />
-                    </div>
-                  ) : (
-                    <span
-                      className="inline-flex h-[22px] min-w-[28px] items-center justify-center rounded-[5px] px-2 text-[12px] font-bold"
-                      style={{ backgroundColor: modeColor(leg.mode), color: "#fff" }}
-                    >
-                      {isShortRoute(leg.route) ? leg.route : modeLabel(leg.mode)}
-                    </span>
-                  )}
-                </span>
-              ))}
-            </div>
+            <MobileLegStrip legs={itinerary.legs} />
           </div>
-
-          <div className="flex items-center gap-1.5 pt-0.5">
-            {onShare && <ShareIconBtn onShare={onShare} shareConfirm={shareConfirm} />}
-            {onReset && (
-              <button
-                type="button"
-                onClick={onReset}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 transition-colors hover:bg-white/20 hover:text-white"
-                aria-label="Zatvori rutu"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-            )}
-          </div>
+          <MobileActions onShare={onShare} onReset={onReset} shareConfirm={shareConfirm} />
         </div>
       </div>
-
-      {/* Expandable step-by-step list */}
       <div className="pt-2 flex-1 overflow-y-auto">
-        <Timeline legs={itinerary.legs} departureTime={departureTime ?? "00:00"} />
+        <Timeline legs={itinerary.legs} departureTime={dep} />
       </div>
     </div>
   )
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(true)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+  return isMobile
+}
+
 export function RouteDetails(props: RouteDetailsProps & { className?: string }) {
   const [snap, setSnap] = useState<number | string | null>("148px")
-  const [isMobile, setIsMobile] = useState(true)
-  const wasOpen = useRef(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
-
-  useEffect(() => {
-    if (props.open && !wasOpen.current) {
-      setSnap("148px")
-    }
-    wasOpen.current = !!props.open
-  }, [props.open])
+  const isMobile = useIsMobile()
 
   if (!isMobile) return null
 
@@ -510,9 +509,8 @@ export function RouteDetails(props: RouteDetailsProps & { className?: string }) 
       <Drawer
         open={props.open ?? false}
         onOpenChange={(open) => {
-          if (!open && props.onReset) {
-            props.onReset()
-          }
+          if (open) setSnap("148px")
+          else props.onReset?.()
         }}
         snapPoints={["148px", 0.9]}
         activeSnapPoint={snap}
@@ -524,18 +522,24 @@ export function RouteDetails(props: RouteDetailsProps & { className?: string }) 
           className="bg-[rgba(30,30,30,0.92)] backdrop-blur-[20px] border-none shadow-[0_-4px_24px_rgba(0,0,0,0.3),0_0_0_0.5px_rgba(255,255,255,0.08)] outline-none"
         >
           <DrawerTitle className="sr-only">Detalji rute</DrawerTitle>
-          <div className="px-4 pb-4 overflow-y-auto overscroll-contain flex-1">
-            {props.loading && !props.itinerary ? (
-              <div className="flex flex-col items-center justify-center py-8 gap-4">
-                <div className="route-spinner !w-6 !h-6" />
-                <span className="text-[15px] font-medium text-slate-300">Tražim najbolju rutu…</span>
-              </div>
-            ) : props.itinerary ? (
-              <MobileRouteSheetContent {...props} />
-            ) : null}
-          </div>
+          <RouteDrawerBody {...props} />
         </DrawerContent>
       </Drawer>
+    </div>
+  )
+}
+
+function RouteDrawerBody(props: RouteDetailsProps) {
+  return (
+    <div className="px-4 pb-4 overflow-y-auto overscroll-contain flex-1">
+      {props.loading && !props.itinerary ? (
+        <div className="flex flex-col items-center justify-center py-8 gap-4">
+          <div className="route-spinner !w-6 !h-6" />
+          <span className="text-[15px] font-medium text-slate-300">Tražim najbolju rutu…</span>
+        </div>
+      ) : props.itinerary ? (
+        <MobileRouteSheetContent {...props} />
+      ) : null}
     </div>
   )
 }

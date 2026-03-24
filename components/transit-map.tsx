@@ -1498,44 +1498,43 @@ function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "cont
   )
 }
 
+function IdleInputs({ hasOrigin }: { hasOrigin: boolean }) {
+  return (
+    <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
+      <div className="h-10 w-10 shrink-0" />
+      <div className="flex-1 flex gap-3">
+        <div className="flex flex-col items-center mt-3 ml-1">
+          <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
+          <div className="flex flex-col gap-[3px] my-1 shrink-0">
+            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+          </div>
+          <div className="h-5 w-5 flex items-center justify-center text-slate-500">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2 mt-0.5">
+          <input readOnly placeholder="Odaberi polazište na karti" value={hasOrigin ? "Polazište" : ""} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
+          <input readOnly placeholder="Odaberi odredište na karti" value="" className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
+        </div>
+      </div>
+      <div className="h-10 w-10 shrink-0 ml-1" />
+    </div>
+  )
+}
+
 function SidePanelIdleContent({ p }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease } }) {
   return (
     <div className="flex flex-1 flex-col">
-      {/* Fake PanelHeader to match Google Maps empty state */}
-      <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
-        <div className="h-10 w-10 shrink-0" />
-        <div className="flex-1 flex gap-3">
-          <div className="flex flex-col items-center mt-3 ml-1">
-            <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-            <div className="flex flex-col gap-[3px] my-1 shrink-0">
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            </div>
-            <div className="h-5 w-5 flex items-center justify-center text-slate-500">
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            </div>
-          </div>
-          <div className="flex-1 flex flex-col gap-2 mt-0.5">
-            <input readOnly placeholder="Odaberi polazište na karti" value={p.hasOrigin ? "Polazište" : ""} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
-            <input readOnly placeholder="Odaberi odredište na karti" value="" className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
-          </div>
-        </div>
-        <div className="h-10 w-10 shrink-0 ml-1" />
-      </div>
-
-      {/* Title area */}
+      <IdleInputs hasOrigin={p.hasOrigin} />
       <div className="px-5 pt-5 pb-4">
         <h1 className="text-[20px] font-bold text-white">Doseg</h1>
         <p className="mt-0.5 text-[13px] text-slate-500">Karta dosega javnog prijevoza u Zagrebu</p>
       </div>
-
-      {/* Color scale */}
       <div className="border-t border-white/6 px-5 py-4">
         <ColorScale />
       </div>
-
-      {/* State-specific content */}
       <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 text-center">
         {!p.hasOrigin ? (
           <p className="text-[14px] leading-relaxed text-slate-400">
@@ -1554,8 +1553,6 @@ function SidePanelIdleContent({ p }: { p: Omit<TransitMapViewProps, "containerRe
           </>
         )}
       </div>
-
-      {/* Bottom nav links */}
       <div className="flex items-center justify-center gap-5 border-t border-white/6 px-5 py-4">
         <Link href="/o-projektu" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">O projektu</Link>
         <Link href="/statistika" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">Statistika</Link>

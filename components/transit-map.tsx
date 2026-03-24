@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
@@ -30,7 +30,7 @@ import {
 } from "@/lib/route-reconstruct"
 import { modeColor } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
-import { RouteDetails } from "@/components/route-details"
+import { RouteDetails, SidePanel, RoutePanelContent } from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
 import { OnboardingDialog } from "@/components/onboarding-dialog"
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
@@ -498,9 +498,14 @@ function addRouteSourceAndLayers(map: maplibregl.Map) {
     type: "line",
     source: "route",
     paint: {
-      "line-color": "#fff",
-      "line-width": 8,
-      "line-opacity": 0.25,
+      "line-color": "#000",
+      "line-width": [
+        "interpolate", ["linear"], ["zoom"],
+        10, 6,
+        13, 9,
+        16, 11,
+      ],
+      "line-opacity": 0.35,
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -558,7 +563,12 @@ function addRouteTransitLayer(map: maplibregl.Map) {
         modeColor("BUS"),
         "#e2e8f0",
       ],
-      "line-width": 4,
+      "line-width": [
+        "interpolate", ["linear"], ["zoom"],
+        10, 3,
+        13, 5,
+        16, 7,
+      ],
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -571,9 +581,9 @@ function addRouteTailLayers(map: maplibregl.Map) {
     type: "line",
     source: "route-tail",
     paint: {
-      "line-color": "#fff",
-      "line-width": 8,
-      "line-opacity": 0.25,
+      "line-color": "#000",
+      "line-width": 7,
+      "line-opacity": 0.3,
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -1447,21 +1457,129 @@ type TransitMapViewProps = {
   setLinkCopied: (v: boolean) => void
 }
 
-function TransitMapView({
-  containerRef, mapRef, statsCtaDismissedRef, ...rest
-}: TransitMapViewProps) {
+function useStableOriginName(route: Itinerary | null, hasOrigin: boolean) {
+  const [name, setName] = useState<string | null>(null)
+  useEffect(() => {
+    if (!hasOrigin) { startTransition(() => setName(null)); return }
+    if (!route) return
+    startTransition(() => setName(prev => {
+      if (prev) return prev
+      for (const leg of route.legs) {
+        if (leg.from.name) return leg.from.name
+      }
+      return null
+    }))
+  }, [route, hasOrigin])
+  return name ?? undefined
+}
+
+function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+  const showRoute = p.route || p.routeLoading
+  const originName = useStableOriginName(p.route, p.hasOrigin)
+  return (
+    <SidePanel>
+      <div className="flex min-h-0 flex-1 flex-col">
+        {showRoute ? (
+          <RoutePanelContent
+            itinerary={p.route}
+            loading={p.routeLoading}
+            departureTime={p.effectiveTime}
+            originName={originName}
+            onShare={() => { navigator.clipboard.writeText(window.location.href).then(() => { p.setLinkCopied(true); setTimeout(() => p.setLinkCopied(false), 2000) }) }}
+            onExport={() => { const map = mapRef.current; if (!map) return; const link = document.createElement("a"); link.download = "doseg.png"; link.href = map.getCanvas().toDataURL("image/png"); link.click() }}
+            onReset={() => p.setCoords({ lat: null, lon: null })}
+            shareConfirm={p.linkCopied}
+          />
+        ) : (
+          <SidePanelIdleContent p={p} />
+        )}
+      </div>
+    </SidePanel>
+  )
+}
+
+function SidePanelIdleContent({ p }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease } }) {
+  return (
+    <div className="flex flex-1 flex-col">
+      {/* Fake PanelHeader to match Google Maps empty state */}
+      <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
+        <div className="h-10 w-10 shrink-0" />
+        <div className="flex-1 flex gap-3">
+          <div className="flex flex-col items-center mt-3 ml-1">
+            <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
+            <div className="flex flex-col gap-[3px] my-1 shrink-0">
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+            </div>
+            <div className="h-5 w-5 flex items-center justify-center text-slate-500">
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col gap-2 mt-0.5">
+            <input readOnly placeholder="Odaberi polazište na karti" value={p.hasOrigin ? "Polazište" : ""} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
+            <input readOnly placeholder="Odaberi odredište na karti" value="" className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
+          </div>
+        </div>
+        <div className="h-10 w-10 shrink-0 ml-1" />
+      </div>
+
+      {/* Title area */}
+      <div className="px-5 pt-5 pb-4">
+        <h1 className="text-[20px] font-bold text-white">Doseg</h1>
+        <p className="mt-0.5 text-[13px] text-slate-500">Karta dosega javnog prijevoza u Zagrebu</p>
+      </div>
+
+      {/* Color scale */}
+      <div className="border-t border-white/6 px-5 py-4">
+        <ColorScale />
+      </div>
+
+      {/* State-specific content */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 text-center">
+        {!p.hasOrigin ? (
+          <p className="text-[14px] leading-relaxed text-slate-400">
+            Klikni bilo gdje na karti da vidiš dokle možeš stići.
+          </p>
+        ) : (
+          <>
+            <p className="text-[14px] text-slate-400">Klikni odredište na karti za rutu</p>
+            <button
+              type="button"
+              onClick={() => p.setCoords({ lat: null, lon: null })}
+              className="mt-1 rounded-lg bg-white/[0.07] px-5 py-2.5 text-[13px] font-medium text-slate-300 transition-[background-color,transform] duration-160 ease-out hover:bg-white/[0.12] hover:text-white active:scale-[0.97]"
+            >
+              Promijeni polazište
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Bottom nav links */}
+      <div className="flex items-center justify-center gap-5 border-t border-white/6 px-5 py-4">
+        <Link href="/o-projektu" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">O projektu</Link>
+        <Link href="/statistika" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">Statistika</Link>
+        <button type="button" onClick={() => p.setOnboardingOpen(true)} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">Pomoć</button>
+      </div>
+    </div>
+  )
+}
+
+function TransitMapView({ containerRef, mapRef, statsCtaDismissedRef, ...rest }: TransitMapViewProps) {
   const ease = [0.23, 1, 0.32, 1] as const
   return (
     <MotionConfig reducedMotion="user">
-      <div className="relative h-svh w-full">
-        <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
-        <LoadingBar loading={rest.loading} ease={ease} />
-        <LayerLegend bajsEnabled={rest.bajsEnabled} poiEnabled={rest.poiEnabled} ease={ease} />
-        <HudOverlay {...rest} mapRef={mapRef} statsCtaDismissedRef={statsCtaDismissedRef} ease={ease} />
-        <OnboardingDialog open={rest.onboardingOpen} onClose={() => {
-          localStorage.setItem(ONBOARDING_KEY, "1")
-          rest.setOnboardingOpen(false)
-        }} />
+      {/* pointer-events-auto: vaul's Radix Dialog sets pointer-events:none on <body> when drawer opens */}
+      <div className="flex h-svh w-full pointer-events-auto">
+        <PersistentSidePanel p={{ ...rest, ease }} mapRef={mapRef} />
+        <div className="relative flex-1">
+          <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
+          <LoadingBar loading={rest.loading} ease={ease} />
+          <LayerLegend bajsEnabled={rest.bajsEnabled} poiEnabled={rest.poiEnabled} ease={ease} />
+          <HudOverlay {...rest} mapRef={mapRef} statsCtaDismissedRef={statsCtaDismissedRef} ease={ease} />
+          <div id="route-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
+          <OnboardingDialog open={rest.onboardingOpen} onClose={() => { localStorage.setItem(ONBOARDING_KEY, "1"); rest.setOnboardingOpen(false) }} />
+        </div>
       </div>
     </MotionConfig>
   )
@@ -1967,33 +2085,30 @@ function RouteDetailsPanel({
   setCoords: SetCoords
 }) {
   return (
-    <AnimatePresence>
-      {(route || routeLoading) && (
-        <RouteDetails
-          itinerary={route}
-          loading={routeLoading}
-          departureTime={effectiveTime}
-          className="panel pointer-events-auto cursor-pointer sm:w-[280px]"
-          onShare={() => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-              setLinkCopied(true)
-              setTimeout(() => setLinkCopied(false), 2000)
-            })
-          }}
-          onExport={() => {
-            const map = mapRef.current
-            if (!map) return
-            const canvas = map.getCanvas()
-            const link = document.createElement("a")
-            link.download = "doseg.png"
-            link.href = canvas.toDataURL("image/png")
-            link.click()
-          }}
-          onReset={() => setCoords({ lat: null, lon: null })}
-          shareConfirm={linkCopied}
-        />
-      )}
-    </AnimatePresence>
+    <RouteDetails
+      open={!!(route || routeLoading)}
+      itinerary={route}
+      loading={routeLoading}
+      departureTime={effectiveTime}
+      className="pointer-events-auto sm:hidden"
+      onShare={() => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          setLinkCopied(true)
+          setTimeout(() => setLinkCopied(false), 2000)
+        })
+      }}
+      onExport={() => {
+        const map = mapRef.current
+        if (!map) return
+        const canvas = map.getCanvas()
+        const link = document.createElement("a")
+        link.download = "doseg.png"
+        link.href = canvas.toDataURL("image/png")
+        link.click()
+      }}
+      onReset={() => setCoords({ lat: null, lon: null })}
+      shareConfirm={linkCopied}
+    />
   )
 }
 
@@ -2013,43 +2128,9 @@ function HudOverlay(p: HudOverlayProps) {
 function HudTopRow({ p }: { p: HudOverlayProps }) {
   return (
     <>
-      <div className="pointer-events-auto col-start-1 row-start-1 hidden self-start sm:flex items-center gap-2">
-        <Link
-          href="/o-projektu"
-          prefetch={false}
-          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-colors hover:text-slate-200"
-          aria-label="O projektu"
-        >
-          O projektu
-        </Link>
-        <Link
-          href="/statistika"
-          prefetch={false}
-          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-colors hover:text-slate-200"
-          aria-label="Statistika"
-        >
-          Statistika
-        </Link>
-        <button
-          type="button"
-          onClick={() => p.setOnboardingOpen(true)}
-          className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold text-slate-300 transition-colors hover:text-slate-200"
-          aria-label="Pomoć"
-        >
-          ?
-        </button>
-      </div>
+      <div className="col-start-1 row-start-1" />
       <HudTopCenter p={p} />
-      <div className="pointer-events-auto col-start-3 row-start-1 hidden self-start sm:flex items-center gap-2 rounded-lg bg-[rgba(30,30,30,0.85)] px-2 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.06)] backdrop-blur-md">
-        <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
-          Pomicanje
-        </span>
-        <KbdGroup>
-          <Kbd>↑</Kbd>
-          <Kbd>↓</Kbd>
-          <Kbd>←</Kbd>
-          <Kbd>→</Kbd>
-        </KbdGroup>
+      <div className="col-start-3 row-start-1">
       </div>
     </>
   )
@@ -2057,7 +2138,7 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
 
 function HudTopCenter({ p }: { p: HudOverlayProps }) {
   return (
-    <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center">
+    <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center sm:col-start-3 sm:items-end sm:justify-self-end">
       <IslandToolbar
         effectiveTime={p.effectiveTime}
         bajsEnabled={p.bajsEnabled}

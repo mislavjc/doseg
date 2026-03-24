@@ -289,6 +289,41 @@ function ExpandedDetails({ itinerary, open }: { itinerary: Itinerary; open: bool
   )
 }
 
+const crossfade = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.12 } }
+
+function LoadingSpinner() {
+  return (
+    <m.div key="loading" className="flex items-center gap-2" {...crossfade}>
+      <div className="route-spinner" />
+      <span className="text-[12px] text-slate-400">Tražim rutu…</span>
+    </m.div>
+  )
+}
+
+function RouteContent({ itinerary, loading, departureTime, isExpanded, onShare, onExport, onReset, shareConfirm }: RouteDetailsProps & { isExpanded: boolean }) {
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
+          {formatDuration(itinerary!.duration)}
+        </span>
+        {departureTime && (
+          <p className="text-[11px] text-slate-400 tabular-nums">
+            Dolazak: {formatArrivalTime(departureTime, itinerary!.duration)}
+          </p>
+        )}
+      </div>
+      <ActionButtons
+        loading={loading}
+        isExpanded={isExpanded}
+        onShare={onShare}
+        onExport={onExport}
+        shareConfirm={shareConfirm}
+      />
+    </div>
+  )
+}
+
 export function RouteDetails({ itinerary, loading, departureTime, className, onShare, onExport, onReset, shareConfirm }: RouteDetailsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -305,44 +340,19 @@ export function RouteDetails({ itinerary, loading, departureTime, className, onS
     >
       <AnimatePresence mode="wait" initial={false}>
         {loading && !itinerary ? (
-          <m.div
-            key="loading"
-            className="flex items-center gap-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
-          >
-            <div className="route-spinner" />
-            <span className="text-[12px] text-slate-400">Tražim rutu…</span>
-          </m.div>
+          <LoadingSpinner />
         ) : itinerary ? (
-          <m.div
-            key="route"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-2xl font-semibold tracking-tight text-slate-100 tabular-nums">
-                  {formatDuration(itinerary.duration)}
-                </span>
-                {departureTime && (
-                  <p className="text-[11px] text-slate-400 tabular-nums">
-                    Dolazak: {formatArrivalTime(departureTime, itinerary.duration)}
-                  </p>
-                )}
-              </div>
-              <ActionButtons
-                loading={loading}
-                isExpanded={isExpanded}
-                onShare={onShare}
-                onExport={onExport}
-                shareConfirm={shareConfirm}
-              />
-            </div>
+          <m.div key="route" {...crossfade}>
+            <RouteContent
+              itinerary={itinerary}
+              loading={loading}
+              departureTime={departureTime}
+              isExpanded={isExpanded}
+              onShare={onShare}
+              onExport={onExport}
+              onReset={onReset}
+              shareConfirm={shareConfirm}
+            />
             <LegsBadges legs={itinerary.legs} />
             <ExpandedDetails itinerary={itinerary} open={isExpanded} />
             {onReset && <ResetButton onReset={onReset} />}

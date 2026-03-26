@@ -48,6 +48,8 @@ export interface RouteDetailsProps {
   loading: boolean
   departureTime?: string
   originName?: string
+  destName?: string
+  onSwap?: () => void
   onShare?: () => void
   onExport?: () => void
   onReset?: () => void
@@ -137,9 +139,9 @@ function isShortRoute(route?: string): boolean {
 
 /* ── Panel header (Desktop) ── */
 
-function PanelHeader({ itinerary, originName, onReset }: { itinerary: Itinerary; originName?: string; onReset?: () => void }) {
+function PanelHeader({ itinerary, originName, destName: destNameProp, onReset, onSwap }: { itinerary: Itinerary; originName?: string; destName?: string; onReset?: () => void; onSwap?: () => void }) {
   const origin = originName || itinerary.legs[0].from.name || "Polazište"
-  const destName = findDestName(itinerary)
+  const destName = destNameProp || findDestName(itinerary)
   return (
     <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
       {onReset && (
@@ -162,7 +164,7 @@ function PanelHeader({ itinerary, originName, onReset }: { itinerary: Itinerary;
           <input readOnly value={destName} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default text-ellipsis" />
         </div>
       </div>
-      <button type="button" className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10 ml-1">
+      <button type="button" onClick={onSwap} className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10 ml-1" aria-label="Zamijeni polazište i odredište">
         <SwapIcon />
       </button>
     </div>
@@ -362,23 +364,54 @@ function ResetButton({ onReset }: { onReset: () => void }) {
 
 /* ── Skeleton ── */
 
-function RoutePanelSkeleton() {
+function RoutePanelSkeleton({ originName, onReset }: { originName?: string; onReset?: () => void }) {
+  const origin = originName || "Polazište"
   return (
     <m.div key="loading" {...crossfade} aria-hidden="true" className="flex flex-col h-full">
-      <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1 h-[106px]" />
-      <div className="border-b border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)]">
-        <div className="shimmer skeleton-block mb-3 h-6 w-48" />
-        <div className="flex gap-2">
-          <div className="shimmer skeleton-block h-4 w-16" />
-          <div className="shimmer skeleton-block h-4 w-12" />
+      <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
+        {onReset && (
+          <button type="button" onClick={onReset} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Natrag">
+            <BackArrow />
+          </button>
+        )}
+        <div className="min-w-0 flex-1 flex gap-3">
+          <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
+            <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
+            <div className="flex flex-col gap-[3px] my-1 shrink-0">
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+            </div>
+            <PinIcon />
+          </div>
+          <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
+            <input readOnly value={origin} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[14px] text-white w-full cursor-default text-ellipsis outline-none" />
+            <div className="relative h-[38px] rounded-[6px] bg-[#3c4043] flex items-center px-3 overflow-hidden">
+               <div className="shimmer absolute inset-0" />
+               <span className="relative text-[14px] text-slate-400">Tražim rutu...</span>
+            </div>
+          </div>
+        </div>
+        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 ml-1">
+          <SwapIcon />
         </div>
       </div>
-      <div className="p-6 space-y-8 mt-2">
+      <div className="border-b border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)] flex items-center gap-3">
+        <div className="route-spinner !w-5 !h-5 shrink-0" />
+        <div className="shimmer skeleton-block h-5 w-32" />
+      </div>
+      <div className="p-6 space-y-6 mt-2">
         {[1, 2, 3].map(i => (
           <div key={i} className="flex gap-4">
-            <div className="shimmer skeleton-block h-4 w-12 shrink-0" />
-            <div className="shimmer skeleton-block h-4 w-4 rounded-full shrink-0" />
-            <div className="shimmer skeleton-block h-4 w-32" />
+            <div className="shimmer skeleton-block h-4 w-12 shrink-0 mt-0.5" />
+            <div className="flex flex-col items-center">
+              <div className="shimmer skeleton-block h-4 w-4 rounded-full shrink-0" />
+              {i !== 3 && <div className="w-1 h-12 bg-white/5 mt-3 rounded-full" />}
+            </div>
+            <div className="flex flex-col gap-2 w-full mt-0.5">
+              <div className="shimmer skeleton-block h-4 w-32" />
+              <div className="shimmer skeleton-block h-3 w-24 opacity-60" />
+            </div>
           </div>
         ))}
       </div>
@@ -396,14 +429,14 @@ export function SidePanel({ children }: { children: ReactNode }) {
   )
 }
 
-export function RoutePanelContent({ itinerary, loading, departureTime, originName, onShare, onExport, onReset, shareConfirm }: RouteDetailsProps) {
+export function RoutePanelContent({ itinerary, loading, departureTime, originName, destName, onSwap, onShare, onExport, onReset, shareConfirm }: RouteDetailsProps) {
   return (
     <AnimatePresence mode="wait" initial={false}>
       {loading && !itinerary ? (
-        <RoutePanelSkeleton />
+        <RoutePanelSkeleton originName={originName} onReset={onReset} />
       ) : itinerary ? (
         <m.div key="route" {...crossfade} className="flex min-h-0 flex-1 flex-col">
-          <PanelHeader itinerary={itinerary} originName={originName} onReset={onReset} />
+          <PanelHeader itinerary={itinerary} originName={originName} destName={destName} onReset={onReset} onSwap={onSwap} />
           <SummaryBar itinerary={itinerary} departureTime={departureTime} loading={loading} onShare={onShare} onExport={onExport} shareConfirm={shareConfirm} />
           <div className="min-h-0 flex-1 overflow-y-auto">
             <Timeline legs={itinerary.legs} departureTime={departureTime ?? "00:00"} />
@@ -498,8 +531,8 @@ function useIsMobile() {
   return isMobile
 }
 
-export function RouteDetails(props: RouteDetailsProps & { className?: string }) {
-  const [snap, setSnap] = useState<number | string | null>("148px")
+export function RouteDetails(props: RouteDetailsProps & { className?: string; onDismiss?: () => void }) {
+  const [snap, setSnap] = useState<number | string | null>("118px")
   const isMobile = useIsMobile()
 
   if (!isMobile) return null
@@ -509,10 +542,10 @@ export function RouteDetails(props: RouteDetailsProps & { className?: string }) 
       <Drawer
         open={props.open ?? false}
         onOpenChange={(open) => {
-          if (open) setSnap("148px")
-          else props.onReset?.()
+          if (open) setSnap("118px")
+          else props.onDismiss?.()
         }}
-        snapPoints={["148px", 0.9]}
+        snapPoints={["118px", 0.9]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         modal={false}

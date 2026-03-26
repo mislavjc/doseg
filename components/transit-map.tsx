@@ -20,6 +20,7 @@ import {
   fetchIsochroneRouting,
   type IsochroneResponse,
   type Itinerary,
+  type Leg,
 } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
 import {
@@ -32,6 +33,7 @@ import { modeColor } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
 import { RouteDetails, SidePanel, RoutePanelContent } from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
+import { AddressInput } from "@/components/address-input"
 import { OnboardingDialog } from "@/components/onboarding-dialog"
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
 
@@ -1044,7 +1046,8 @@ function useMapInit(
   setRouteLoading: (l: boolean) => void,
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
-  setCoords: SetCoords
+  setCoords: SetCoords,
+  clearNames?: () => void
 ) {
   useEffect(() => {
     if (!refs.containerRef.current) return
@@ -1056,7 +1059,7 @@ function useMapInit(
       addAllMapSources(map)
       addPoiClickHandler(map, refs.originRef)
       addBajsClickHandler(map, refs.originRef)
-      bindMapInteractions(map, refs, setRoute, setRouteLoading, setLoading, setError, setCoords)
+      bindMapInteractions(map, refs, setRoute, setRouteLoading, setLoading, setError, setCoords, clearNames)
       setMapReady(true)
     })
 
@@ -1097,7 +1100,8 @@ function bindMapInteractions(
   setRouteLoading: (l: boolean) => void,
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
-  setCoords: SetCoords
+  setCoords: SetCoords,
+  clearNames?: () => void
 ) {
   const destOpts: HandleDestinationOpts = {
     map,
@@ -1129,7 +1133,7 @@ function bindMapInteractions(
   }
   refs.handleDestinationRef.current = handleDestination
 
-  bindMapClickEvents(map, refs, handleDestination, setRoute, setRouteLoading, setLoading, setError, setCoords)
+  bindMapClickEvents(map, refs, handleDestination, setRoute, setRouteLoading, setLoading, setError, setCoords, clearNames)
 }
 
 function bindMapClickEvents(
@@ -1140,10 +1144,12 @@ function bindMapClickEvents(
   setRouteLoading: (l: boolean) => void,
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
-  setCoords: SetCoords
+  setCoords: SetCoords,
+  clearNames?: () => void
 ) {
   map.on("click", (e) => {
     if (refs.originRef.current) {
+      clearNames?.()
       handleDestination(e.lngLat.lat, e.lngLat.lng)
       return
     }
@@ -1152,6 +1158,7 @@ function bindMapClickEvents(
     setRouteLoading(false)
     setLoading(true)
     setError(null)
+    clearNames?.()
     setCoords({
       lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
       lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
@@ -1360,6 +1367,10 @@ function useTransitMapState() {
   const [vehiclesEnabled, setVehiclesEnabled] = useState(false)
   const [poiEnabled, setPoiEnabled] = useState(false)
   const [layersOpen, setLayersOpen] = useState(false)
+  const [originName, setOriginName] = useState<string | null>(null)
+  const [destName, setDestName] = useState<string | null>(null)
+  const [swapping, setSwapping] = useState(false)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const hasOrigin = coords.lat !== null && coords.lon !== null
 
   return {
@@ -1370,15 +1381,30 @@ function useTransitMapState() {
     showStatsCta, setShowStatsCta, linkCopied, setLinkCopied,
     vehiclesEnabled, setVehiclesEnabled,
     poiEnabled, setPoiEnabled, layersOpen, setLayersOpen,
+    originName, setOriginName, destName, setDestName,
+    swapping, setSwapping, mobileSearchOpen, setMobileSearchOpen,
     hasOrigin,
   }
 }
 
 const ONBOARDING_KEY = "doseg-onboarded"
 
+function useTransitMapCallbacks(s: ReturnType<typeof useTransitMapState>) {
+  const { setCoords, setRoute, setRouteLoading, setError, setOriginName, setDestName, setLoading } = s
+  const onEscape = useCallback(() => {
+    setCoords({ lat: null, lon: null }); setRoute(null); setRouteLoading(false); setError(null); setOriginName(null); setDestName(null)
+  }, [setCoords, setRoute, setRouteLoading, setError, setOriginName, setDestName])
+  const resetFetchState = useCallback(() => {
+    setLoading(true); setError(null); setRoute(null); setRouteLoading(false)
+  }, [setLoading, setError, setRoute, setRouteLoading])
+  const clearNames = useCallback(() => { setOriginName(null); setDestName(null) }, [setOriginName, setDestName])
+  return { onEscape, resetFetchState, clearNames }
+}
+
 export function TransitMap() {
   const s = useTransitMapState()
   const refs = useTransitMapRefs(s)
+  const { onEscape, resetFetchState, clearNames } = useTransitMapCallbacks(s)
   const [onboardingOpen, setOnboardingOpen] = useState(() => {
     if (typeof window === "undefined") return false
     return !localStorage.getItem(ONBOARDING_KEY)
@@ -1389,22 +1415,8 @@ export function TransitMap() {
   useEffect(() => { refs.effectiveTimeRef.current = s.effectiveTime }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
   useEffect(() => { refs.bajsEnabledRef.current = s.bajsEnabled }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
 
-  const onEscape = useCallback(() => {
-    s.setCoords({ lat: null, lon: null })
-    s.setRoute(null)
-    s.setRouteLoading(false)
-    s.setError(null)
-  }, [s.setCoords, s.setRoute, s.setRouteLoading, s.setError])
-
-  const resetFetchState = useCallback(() => {
-    s.setLoading(true)
-    s.setError(null)
-    s.setRoute(null)
-    s.setRouteLoading(false)
-  }, [s.setLoading, s.setError, s.setRoute, s.setRouteLoading])
-
   useEscapeKey(refs.originRef, onEscape)
-  useMapInit(refs, s.setMapReady, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setCoords)
+  useMapInit(refs, s.setMapReady, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setCoords, clearNames)
   useBajsLayer(refs.mapRef, refs.bajsAbortRef, s.bajsEnabled, s.mapReady)
   useVehiclePositions(refs.mapRef, s.mapReady, s.vehiclesEnabled)
   usePoiLayer(refs.mapRef, refs.poiAbortRef, s.poiEnabled, s.mapReady)
@@ -1421,6 +1433,12 @@ export function TransitMap() {
       setTime={s.setTime} setBajs={s.setBajs} setLayersOpen={s.setLayersOpen}
       setVehiclesEnabled={s.setVehiclesEnabled} setPoiEnabled={s.setPoiEnabled}
       setCoords={s.setCoords} setShowStatsCta={s.setShowStatsCta} setLinkCopied={s.setLinkCopied}
+      handleDestinationRef={refs.handleDestinationRef}
+      pendingDestinationRef={refs.pendingDestinationRef}
+      originName={s.originName} setOriginName={s.setOriginName}
+      destName={s.destName} setDestName={s.setDestName}
+      swapping={s.swapping} setSwapping={s.setSwapping}
+      mobileSearchOpen={s.mobileSearchOpen} setMobileSearchOpen={s.setMobileSearchOpen}
     />
   )
 }
@@ -1455,14 +1473,24 @@ type TransitMapViewProps = {
   setCoords: SetCoords
   setShowStatsCta: (v: boolean) => void
   setLinkCopied: (v: boolean) => void
+  handleDestinationRef: React.RefObject<((lat: number, lng: number) => void) | null>
+  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  originName: string | null
+  setOriginName: (v: string | null) => void
+  destName: string | null
+  setDestName: (v: string | null) => void
+  swapping: boolean
+  setSwapping: (v: boolean) => void
+  mobileSearchOpen: boolean
+  setMobileSearchOpen: (v: boolean) => void
 }
 
-function useStableOriginName(route: Itinerary | null, hasOrigin: boolean) {
-  const [name, setName] = useState<string | null>(null)
+function useStableOriginName(route: Itinerary | null, hasOrigin: boolean, explicitName: string | null) {
+  const [routeName, setRouteName] = useState<string | null>(null)
   useEffect(() => {
-    if (!hasOrigin) { startTransition(() => setName(null)); return }
+    if (!hasOrigin) { startTransition(() => setRouteName(null)); return }
     if (!route) return
-    startTransition(() => setName(prev => {
+    startTransition(() => setRouteName(prev => {
       if (prev) return prev
       for (const leg of route.legs) {
         if (leg.from.name) return leg.from.name
@@ -1470,64 +1498,132 @@ function useStableOriginName(route: Itinerary | null, hasOrigin: boolean) {
       return null
     }))
   }, [route, hasOrigin])
-  return name ?? undefined
+  return explicitName ?? routeName ?? undefined
 }
 
 function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
-  const showRoute = p.route || p.routeLoading
-  const originName = useStableOriginName(p.route, p.hasOrigin)
+  const originName = useStableOriginName(p.route, p.hasOrigin, p.originName)
+
+  // Keep old route visible during swap until new one arrives
+  const [staleRoute, setStaleRoute] = useState<Itinerary | null>(null)
+  useEffect(() => { if (p.route && p.swapping) p.setSwapping(false) }, [p.route, p.swapping, p.setSwapping])
+
+  const displayItinerary = p.route ?? (p.swapping ? staleRoute : null)
+  const showRoute = displayItinerary || p.routeLoading || (p.loading && p.destName !== null)
+  const isSwapLoading = p.swapping && !p.route
+
   return (
     <SidePanel>
       <div className="flex min-h-0 flex-1 flex-col">
         {showRoute ? (
           <RoutePanelContent
-            itinerary={p.route}
-            loading={p.routeLoading}
+            itinerary={displayItinerary}
+            loading={p.routeLoading || isSwapLoading}
             departureTime={p.effectiveTime}
             originName={originName}
+            destName={p.destName ?? undefined}
+            onSwap={() => {
+              const route = p.route ?? staleRoute
+              if (!route) return
+              setStaleRoute(route)
+              const destLeg = route.legs[route.legs.length - 1]
+              const newOrigin = { lat: destLeg.to.lat, lon: destLeg.to.lon }
+              const oldOrigin = { lat: route.legs[0].from.lat, lon: route.legs[0].from.lon }
+              const newOriginName = p.destName ?? route.legs.findLast((l: Leg) => l.to.name)?.to.name ?? null
+              p.setOriginName(newOriginName)
+              p.setDestName(originName ?? null)
+              p.setSwapping(true)
+              p.setCoords(newOrigin)
+              mapRef.current?.easeTo({ center: [newOrigin.lon, newOrigin.lat], duration: 400 })
+              setTimeout(() => { p.pendingDestinationRef.current = { lat: oldOrigin.lat, lng: oldOrigin.lon } }, 50)
+            }}
             onShare={() => { navigator.clipboard.writeText(window.location.href).then(() => { p.setLinkCopied(true); setTimeout(() => p.setLinkCopied(false), 2000) }) }}
             onExport={() => { const map = mapRef.current; if (!map) return; const link = document.createElement("a"); link.download = "doseg.png"; link.href = map.getCanvas().toDataURL("image/png"); link.click() }}
-            onReset={() => p.setCoords({ lat: null, lon: null })}
+            onReset={() => { p.setCoords({ lat: null, lon: null }); p.setOriginName(null); p.setDestName(null) }}
             shareConfirm={p.linkCopied}
           />
         ) : (
-          <SidePanelIdleContent p={p} />
+          <SidePanelIdleContent p={p} mapRef={mapRef} />
         )}
       </div>
     </SidePanel>
   )
 }
 
-function IdleInputs({ hasOrigin }: { hasOrigin: boolean }) {
+function IdleInputs({ hasOrigin, originName, onReset, onSelectOrigin, onSelectDestination, onCurrentLocation }: {
+  hasOrigin: boolean
+  originName?: string
+  onReset: () => void
+  onSelectOrigin: (lat: number, lon: number, name: string) => void
+  onSelectDestination: (lat: number, lon: number, name: string) => void
+  onCurrentLocation: () => void
+}) {
   return (
     <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
-      <div className="h-10 w-10 shrink-0" />
+      {hasOrigin ? (
+        <button type="button" onClick={onReset} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Natrag">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        </button>
+      ) : (
+        <div className="h-10 w-10 shrink-0" />
+      )}
       <div className="flex-1 flex gap-3">
-        <div className="flex flex-col items-center mt-3 ml-1">
+        <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
           <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
           <div className="flex flex-col gap-[3px] my-1 shrink-0">
             <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
             <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
             <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
           </div>
-          <div className="h-5 w-5 flex items-center justify-center text-slate-500">
+          <div className="h-5 w-5 flex items-center justify-center text-[#ea4335]/50">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
           </div>
         </div>
-        <div className="flex-1 flex flex-col gap-2 mt-0.5">
-          <input readOnly placeholder="Odaberi polazište na karti" value={hasOrigin ? "Polazište" : ""} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
-          <input readOnly placeholder="Odaberi odredište na karti" value="" className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default placeholder:text-slate-400" />
+        <div className="flex-1 flex flex-col gap-2 mt-0.5 min-w-0">
+          <AddressInput
+            placeholder="Pretraži adresu ili klikni kartu"
+            value={originName || (hasOrigin ? "Polazište" : "")}
+            onSelect={onSelectOrigin}
+            onCurrentLocation={onCurrentLocation}
+          />
+          <AddressInput
+            placeholder="Odaberi odredište"
+            value=""
+            onSelect={onSelectDestination}
+            readOnly={!hasOrigin}
+          />
         </div>
       </div>
-      <div className="h-10 w-10 shrink-0 ml-1" />
+      <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500/50 ml-1">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 10v12"/><path d="M15 14v-8"/><path d="M3 14l4 4 4-4"/><path d="M11 6l4-4 4 4"/></svg>
+      </div>
     </div>
   )
 }
 
-function SidePanelIdleContent({ p }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease } }) {
+function useIdleGeo(mapRef: React.RefObject<maplibregl.Map | null>, setCoords: SetCoords, setOriginName: (v: string | null) => void) {
+  const locatingRef = useRef(false)
+  const [geoError, setGeoError] = useState<string | null>(null)
+  useEffect(() => { if (geoError) { const t = setTimeout(() => setGeoError(null), 3000); return () => clearTimeout(t) } }, [geoError])
+  const locate = useCallback(() => {
+    requestGeolocation(mapRef, (v) => { setCoords(v); setOriginName("Moja lokacija") }, (v) => { locatingRef.current = v }, setGeoError)
+  }, [mapRef, setCoords, setOriginName])
+  return { geoError, locate }
+}
+
+function SidePanelIdleContent({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+  const { geoError, locate } = useIdleGeo(mapRef, p.setCoords, p.setOriginName)
   return (
     <div className="flex flex-1 flex-col">
-      <IdleInputs hasOrigin={p.hasOrigin} />
+      {geoError && <div className="px-5 py-2 text-[12px] text-red-400">{geoError}</div>}
+      <IdleInputs
+        hasOrigin={p.hasOrigin}
+        originName={p.originName ?? undefined}
+        onReset={() => { p.setCoords({ lat: null, lon: null }); p.setOriginName(null); p.setDestName(null) }}
+        onSelectOrigin={(lat, lon, name) => { p.setOriginName(name); p.setCoords({ lat, lon }); mapRef.current?.easeTo({ center: [lon, lat], duration: 400 }) }}
+        onSelectDestination={(lat, lon, name) => { p.setDestName(name); p.handleDestinationRef.current?.(lat, lon) }}
+        onCurrentLocation={locate}
+      />
       <div className="px-5 pt-5 pb-4">
         <h1 className="text-[20px] font-bold text-white">Doseg</h1>
         <p className="mt-0.5 text-[13px] text-slate-500">Karta dosega javnog prijevoza u Zagrebu</p>
@@ -1562,6 +1658,81 @@ function SidePanelIdleContent({ p }: { p: Omit<TransitMapViewProps, "containerRe
   )
 }
 
+function MobileSearchOverlay({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+  const { geoError, locate } = useIdleGeo(mapRef, p.setCoords, p.setOriginName)
+  const destRef = useRef<HTMLDivElement>(null)
+  return (
+    <AnimatePresence>
+      {p.mobileSearchOpen && (
+        <m.div
+          key="mobile-search"
+          className="fixed inset-0 z-50 bg-[rgba(24,24,28,0.98)] flex flex-col"
+          initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+          transition={{ duration: 0.3, ease: p.ease }}
+        >
+          <div className="flex items-center gap-2 px-3 py-3 shrink-0">
+            <button type="button" onClick={() => p.setMobileSearchOpen(false)} className="h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Zatvori">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </button>
+            <span className="text-[16px] font-medium text-white">Pretraži</span>
+          </div>
+          {geoError && <div className="px-5 py-1 text-[12px] text-red-400">{geoError}</div>}
+          <MobileSearchFields p={p} mapRef={mapRef} locate={locate} destRef={destRef} />
+        </m.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function MobileSearchFields({ p, mapRef, locate, destRef }: {
+  p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }
+  mapRef: React.RefObject<maplibregl.Map | null>
+  locate: () => void
+  destRef: React.RefObject<HTMLDivElement | null>
+}) {
+  return (
+    <div className="px-3 flex gap-3">
+      <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
+        <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
+        <div className="flex flex-col gap-[3px] my-1 shrink-0">
+          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+        </div>
+        <div className="h-5 w-5 flex items-center justify-center text-[#ea4335]/50">
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+        </div>
+      </div>
+      <div className="flex-1 flex flex-col gap-2 mt-0.5 min-w-0">
+        <AddressInput
+          placeholder="Polazište"
+          value={p.originName || (p.hasOrigin ? "Polazište" : "")}
+          onSelect={(lat, lon, name) => {
+            p.setOriginName(name)
+            p.setCoords({ lat, lon })
+            mapRef.current?.easeTo({ center: [lon, lat], duration: 400 })
+          }}
+          onCurrentLocation={locate}
+          autoFocus={!p.hasOrigin}
+        />
+        <div ref={destRef}>
+          <AddressInput
+            placeholder="Odredište"
+            value=""
+            onSelect={(lat, lon, name) => {
+              p.setDestName(name)
+              p.handleDestinationRef.current?.(lat, lon)
+              p.setMobileSearchOpen(false)
+            }}
+            readOnly={!p.hasOrigin}
+            autoFocus={p.hasOrigin}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function TransitMapView({ containerRef, mapRef, statsCtaDismissedRef, ...rest }: TransitMapViewProps) {
   const ease = [0.23, 1, 0.32, 1] as const
   return (
@@ -1577,6 +1748,7 @@ function TransitMapView({ containerRef, mapRef, statsCtaDismissedRef, ...rest }:
           <div id="route-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
           <OnboardingDialog open={rest.onboardingOpen} onClose={() => { localStorage.setItem(ONBOARDING_KEY, "1"); rest.setOnboardingOpen(false) }} />
         </div>
+        <MobileSearchOverlay p={{ ...rest, ease }} mapRef={mapRef} />
       </div>
     </MotionConfig>
   )
@@ -1698,6 +1870,7 @@ type IslandToolbarProps = {
   setVehiclesEnabled: React.Dispatch<React.SetStateAction<boolean>>
   setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
   setCoords: SetCoords
+  setMobileSearchOpen: (v: boolean) => void
 }
 
 function IslandToolbar(props: IslandToolbarProps) {
@@ -1720,6 +1893,7 @@ function IslandToolbar(props: IslandToolbarProps) {
         setBajs={props.setBajs}
         setLayersOpen={props.setLayersOpen}
         setCoords={props.setCoords}
+        setMobileSearchOpen={props.setMobileSearchOpen}
       />
       <IslandLayerToggles
         layersOpen={props.layersOpen}
@@ -1745,6 +1919,7 @@ type IslandMainRowProps = {
   setBajs: (v: string | null) => void
   setLayersOpen: React.Dispatch<React.SetStateAction<boolean>>
   setCoords: SetCoords
+  setMobileSearchOpen: (v: boolean) => void
 }
 
 function IslandMainRow(p: IslandMainRowProps) {
@@ -1757,6 +1932,14 @@ function IslandMainRow(p: IslandMainRowProps) {
       <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
       <LayersButton layersOpen={p.layersOpen} vehiclesEnabled={p.vehiclesEnabled} poiEnabled={p.poiEnabled} setLayersOpen={p.setLayersOpen} />
       <LocateMeButton mapRef={p.mapRef} setCoords={p.setCoords} />
+      <button
+        type="button"
+        onClick={() => p.setMobileSearchOpen(true)}
+        className="flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200 transition-[background-color,color,transform] duration-160 ease-out active:scale-[0.97] sm:hidden"
+        aria-label="Pretraži adresu"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+      </button>
       <div className="hidden h-6 w-px bg-white/10 sm:block" />
       <div className="hidden sm:block">
         <ColorScale />
@@ -2081,13 +2264,19 @@ function RouteDetailsPanel({
   setLinkCopied: (v: boolean) => void
   setCoords: SetCoords
 }) {
+  const [dismissed, setDismissed] = useState(false)
+  // Reopen when a NEW route arrives (different itinerary reference)
+  const prevRouteRef = useRef(route)
+  useEffect(() => { if (route && route !== prevRouteRef.current) setDismissed(false); prevRouteRef.current = route }, [route])
+
   return (
     <RouteDetails
-      open={!!(route || routeLoading)}
+      open={!!(route || routeLoading) && !dismissed}
       itinerary={route}
       loading={routeLoading}
       departureTime={effectiveTime}
       className="pointer-events-auto sm:hidden"
+      onDismiss={() => setDismissed(true)}
       onShare={() => {
         navigator.clipboard.writeText(window.location.href).then(() => {
           setLinkCopied(true)
@@ -2097,10 +2286,9 @@ function RouteDetailsPanel({
       onExport={() => {
         const map = mapRef.current
         if (!map) return
-        const canvas = map.getCanvas()
         const link = document.createElement("a")
         link.download = "doseg.png"
-        link.href = canvas.toDataURL("image/png")
+        link.href = map.getCanvas().toDataURL("image/png")
         link.click()
       }}
       onReset={() => setCoords({ lat: null, lon: null })}
@@ -2151,6 +2339,7 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         setVehiclesEnabled={p.setVehiclesEnabled}
         setPoiEnabled={p.setPoiEnabled}
         setCoords={p.setCoords}
+        setMobileSearchOpen={p.setMobileSearchOpen}
       />
       <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-black/30 px-4 py-1.5 backdrop-blur-md sm:hidden">
         <Link href="/o-projektu" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">

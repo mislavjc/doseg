@@ -1724,11 +1724,6 @@ function SidePanelIdleContent({ p, mapRef }: { p: Omit<TransitMapViewProps, "con
           </>
         )}
       </div>
-      <div className="flex items-center justify-center gap-5 border-t border-white/6 px-5 py-4">
-        <Link href="/o-projektu" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">O projektu</Link>
-        <Link href="/statistika" prefetch={false} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">Statistika</Link>
-        <button type="button" onClick={() => p.setOnboardingOpen(true)} className="text-[13px] text-slate-500 transition-colors hover:text-slate-300">Pomoć</button>
-      </div>
     </div>
   )
 }
@@ -2414,11 +2409,12 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         setCoords={p.setCoords}
         setMobileSearchOpen={p.setMobileSearchOpen}
       />
-      <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-black/30 px-4 py-1.5 backdrop-blur-md sm:hidden">
+      <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-black/30 px-4 py-1.5 backdrop-blur-md mt-1">
         <Link href="/o-projektu" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">
           O projektu
         </Link>
-        <Link href="/statistika" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">
+        <Link href="/statistika" prefetch={false} className="text-[12px] font-medium text-amber-200/90 transition-colors hover:text-amber-100 flex items-center gap-1.5">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
           Statistika
         </Link>
         <button type="button" onClick={() => p.setOnboardingOpen(true)}

@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
 import Link from "next/link"
+import TableOfContents from "@/components/table-of-contents"
 import DistrictMap from "@/components/district-map"
 import { getDataDir } from "@/lib/data-dir"
 import { scaleLinear, scaleSqrt } from "@visx/scale"
@@ -721,10 +722,19 @@ function StatistikaContent({ data }: { data: ScoreData }) {
         worst={all.base.worst}
       />
       <ChoroplethSection />
-      <HeadlineInsights data={data} base={all.base} bajs={all.bajs} />
-      <InsightsSection connectivityGaps={all.connectivityGaps} />
-      <SectionNav />
-      <StatistikaContentSections data={data} all={all} />
+      
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-12 px-4 sm:px-6 lg:flex-row lg:px-8">
+        <aside className="sticky top-24 hidden w-64 shrink-0 pt-24 lg:block">
+          <TableOfContents />
+        </aside>
+        
+        <div className="min-w-0 flex-1 pb-24 w-full">
+          <TableOfContents isMobile className="mb-8" />
+          <HeadlineInsights data={data} base={all.base} bajs={all.bajs} />
+          <InsightsSection connectivityGaps={all.connectivityGaps} />
+          <StatistikaContentSections data={data} all={all} />
+        </div>
+      </div>
     </Shell>
   )
 }
@@ -844,29 +854,6 @@ function SectionGroup({
       </p>
       {children}
     </div>
-  )
-}
-
-function SectionNav() {
-  const links = [
-    { href: "#promet-danas", label: "Promet danas" },
-    { href: "#pouzdanost", label: "Pouzdanost linija" },
-    { href: "#povezanost", label: "Povezanost kvartova" },
-    { href: "#bajs", label: "BAJS bicikli" },
-    { href: "#analiza", label: "Struktura mreže" },
-  ]
-  return (
-    <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-slate-200 py-6 text-[13px] dark:border-white/10">
-      {links.map((l) => (
-        <a
-          key={l.href}
-          href={l.href}
-          className="text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-        >
-          {l.label}
-        </a>
-      ))}
-    </nav>
   )
 }
 

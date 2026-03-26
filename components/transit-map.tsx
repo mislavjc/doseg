@@ -35,7 +35,6 @@ import { RouteDetails, SidePanel, RoutePanelContent } from "@/components/route-d
 import { TimePicker } from "@/components/time-picker"
 import { AddressInput } from "@/components/address-input"
 import { OnboardingDialog } from "@/components/onboarding-dialog"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
 
 const ZAGREB: [number, number] = [15.9819, 45.815]
 
@@ -1611,85 +1610,63 @@ function useIdleGeo(mapRef: React.RefObject<maplibregl.Map | null>, setCoords: S
   return { geoError, locate }
 }
 
-function EmptyStateIllustration({ type }: { type: "origin" | "destination" }) {
-  if (type === "origin") {
-    return (
-      <div className="relative w-32 h-32 mb-1 text-slate-500/80">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          {/* Subtle map background */}
-          <path d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
-          <path d="M35 15 L35 75" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
-          <path d="M70 25 L70 85" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
-          
-          {/* Animated Isochrones */}
-          <m.path 
-            d="M50 25 C65 25 75 40 75 55 C75 70 60 80 45 75 C30 70 25 55 30 40 C35 25 40 25 50 25 Z" 
-            fill="currentColor" 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1.1, opacity: [0, 0.15, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-            style={{ transformOrigin: "50px 50px" }}
-          />
-          <m.path 
-            d="M50 35 C60 35 65 45 65 55 C65 65 55 70 45 65 C35 60 35 50 40 40 C45 30 45 35 50 35 Z" 
-            fill="currentColor" 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1.2, opacity: [0, 0.25, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.8 }}
-            style={{ transformOrigin: "50px 50px" }}
-          />
-          
-          {/* Map pin */}
-          <m.g
-            initial={{ y: -5, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <path d="M50 35 C43 35 38 40 38 48 C38 57 50 70 50 70 C50 70 62 57 62 48 C62 40 57 35 50 35 Z" fill="currentColor" opacity="0.9" />
-            <circle cx="50" cy="46" r="3.5" fill="#18181c" />
-          </m.g>
-        </svg>
-      </div>
-    )
-  }
-  
+function OriginIllustration() {
   return (
     <div className="relative w-32 h-32 mb-1 text-slate-500/80">
       <svg viewBox="0 0 100 100" className="w-full h-full">
-        {/* Subtle map lines */}
+        <path d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
+        <path d="M35 15 L35 75" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
+        <path d="M70 25 L70 85" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
+        <m.path
+          d="M50 25 C65 25 75 40 75 55 C75 70 60 80 45 75 C30 70 25 55 30 40 C35 25 40 25 50 25 Z"
+          fill="currentColor"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1.1, opacity: [0, 0.15, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+          style={{ transformOrigin: "50px 50px" }}
+        />
+        <m.path
+          d="M50 35 C60 35 65 45 65 55 C65 65 55 70 45 65 C35 60 35 50 40 40 C45 30 45 35 50 35 Z"
+          fill="currentColor"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1.2, opacity: [0, 0.25, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.8 }}
+          style={{ transformOrigin: "50px 50px" }}
+        />
+        <m.g initial={{ y: -5, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
+          <path d="M50 35 C43 35 38 40 38 48 C38 57 50 70 50 70 C50 70 62 57 62 48 C62 40 57 35 50 35 Z" fill="currentColor" opacity="0.9" />
+          <circle cx="50" cy="46" r="3.5" fill="#18181c" />
+        </m.g>
+      </svg>
+    </div>
+  )
+}
+
+function DestinationIllustration() {
+  return (
+    <div className="relative w-32 h-32 mb-1 text-slate-500/80">
+      <svg viewBox="0 0 100 100" className="w-full h-full">
         <path d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.15" strokeLinejoin="round" />
-        
-        {/* Origin Isochrone (Static) */}
         <path d="M30 35 C40 35 45 45 45 55 C45 65 35 70 25 65 C15 60 15 50 20 40 C25 30 25 35 30 35 Z" fill="currentColor" fillOpacity="0.1" />
-        
-        {/* Origin Pin */}
         <path d="M28 40 C24 40 21 44 21 48 C21 54 28 62 28 62 C28 62 35 54 35 48 C35 44 32 40 28 40 Z" fill="currentColor" opacity="0.6" />
         <circle cx="28" cy="46" r="2.5" fill="#18181c" />
-        
-        {/* Destination Pin (Bouncing) */}
-        <m.g
-          initial={{ y: 0 }}
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
+        <m.g initial={{ y: 0 }} animate={{ y: [0, -6, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
           <path d="M72 32 C65 32 59 38 59 46 C59 55 72 70 72 70 C72 70 85 55 85 46 C85 38 79 32 72 32 Z" fill="currentColor" opacity="0.9" />
           <circle cx="72" cy="42" r="3.5" fill="#18181c" />
         </m.g>
-        
-        {/* Route line */}
-        <m.path 
-          d="M32 58 Q50 75 66 62" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeDasharray="6 4" 
-          opacity="0.6"
+        <m.path
+          d="M32 58 Q50 75 66 62" fill="none" stroke="currentColor" strokeWidth="2.5"
+          strokeDasharray="6 4" opacity="0.6"
           animate={{ strokeDashoffset: [10, 0] }}
           transition={{ duration: 0.6, repeat: Infinity, ease: "linear" }}
         />
       </svg>
     </div>
   )
+}
+
+function EmptyStateIllustration({ type }: { type: "origin" | "destination" }) {
+  return type === "origin" ? <OriginIllustration /> : <DestinationIllustration />
 }
 
 function SidePanelIdleContent({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {

@@ -111,7 +111,7 @@ export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, 
     <div ref={wrapperRef} className="relative">
       <input ref={inputRef} type="text" value={focused ? search.query : value} placeholder={placeholder} autoFocus={autoFocus}
         onChange={(e) => search.setQuery(e.target.value)}
-        onFocus={() => { setFocused(true); if (value && !search.query) search.setQuery(value); search.setIsOpen(true) }}
+        onFocus={(e) => { setFocused(true); if (value && !search.query) search.setQuery(value); search.setIsOpen(true); requestAnimationFrame(() => e.target.select()) }}
         onKeyDown={handleKeyDown}
         className={`${INPUT_CLASS} focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors`} />
       {search.loading && focused && <div className="absolute right-2 top-1/2 -translate-y-1/2"><div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-slate-300" /></div>}

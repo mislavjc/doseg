@@ -2264,19 +2264,17 @@ function RouteDetailsPanel({
   setLinkCopied: (v: boolean) => void
   setCoords: SetCoords
 }) {
-  const [dismissed, setDismissed] = useState(false)
-  // Reopen when a NEW route arrives (different itinerary reference)
-  const prevRouteRef = useRef(route)
-  useEffect(() => { if (route && route !== prevRouteRef.current) setDismissed(false); prevRouteRef.current = route }, [route])
+  const [dismissedRoute, setDismissedRoute] = useState<Itinerary | null>(null)
+  const isDismissed = dismissedRoute !== null && dismissedRoute === route
 
   return (
     <RouteDetails
-      open={!!(route || routeLoading) && !dismissed}
+      open={!!(route || routeLoading) && !isDismissed}
       itinerary={route}
       loading={routeLoading}
       departureTime={effectiveTime}
       className="pointer-events-auto sm:hidden"
-      onDismiss={() => setDismissed(true)}
+      onDismiss={() => setDismissedRoute(route)}
       onShare={() => {
         navigator.clipboard.writeText(window.location.href).then(() => {
           setLinkCopied(true)

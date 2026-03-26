@@ -364,6 +364,26 @@ function ResetButton({ onReset }: { onReset: () => void }) {
 
 /* ── Skeleton ── */
 
+function SkeletonTimeline() {
+  return (
+    <div className="p-6 space-y-6 mt-2">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="flex gap-4">
+          <div className="shimmer skeleton-block h-4 w-12 shrink-0 mt-0.5" />
+          <div className="flex flex-col items-center">
+            <div className="shimmer skeleton-block h-4 w-4 rounded-full shrink-0" />
+            {i !== 3 && <div className="w-1 h-12 bg-white/5 mt-3 rounded-full" />}
+          </div>
+          <div className="flex flex-col gap-2 w-full mt-0.5">
+            <div className="shimmer skeleton-block h-4 w-32" />
+            <div className="shimmer skeleton-block h-3 w-24 opacity-60" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function RoutePanelSkeleton({ originName, onReset }: { originName?: string; onReset?: () => void }) {
   const origin = originName || "Polazište"
   return (
@@ -377,44 +397,22 @@ function RoutePanelSkeleton({ originName, onReset }: { originName?: string; onRe
         <div className="min-w-0 flex-1 flex gap-3">
           <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
             <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-            <div className="flex flex-col gap-[3px] my-1 shrink-0">
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-              <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            </div>
+            <div className="flex flex-col gap-[3px] my-1 shrink-0"><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /></div>
             <PinIcon />
           </div>
           <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
             <input readOnly value={origin} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[14px] text-white w-full cursor-default text-ellipsis outline-none" />
             <div className="relative h-[38px] rounded-[6px] bg-[#3c4043] flex items-center px-3 overflow-hidden">
-               <div className="shimmer absolute inset-0" />
-               <span className="relative text-[14px] text-slate-400">Tražim rutu...</span>
+               <div className="shimmer absolute inset-0" /><span className="relative text-[14px] text-slate-400">Tražim rutu...</span>
             </div>
           </div>
         </div>
-        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 ml-1">
-          <SwapIcon />
-        </div>
+        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 ml-1"><SwapIcon /></div>
       </div>
       <div className="border-b border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)] flex items-center gap-3">
-        <div className="route-spinner !w-5 !h-5 shrink-0" />
-        <div className="shimmer skeleton-block h-5 w-32" />
+        <div className="route-spinner !w-5 !h-5 shrink-0" /><div className="shimmer skeleton-block h-5 w-32" />
       </div>
-      <div className="p-6 space-y-6 mt-2">
-        {[1, 2, 3].map(i => (
-          <div key={i} className="flex gap-4">
-            <div className="shimmer skeleton-block h-4 w-12 shrink-0 mt-0.5" />
-            <div className="flex flex-col items-center">
-              <div className="shimmer skeleton-block h-4 w-4 rounded-full shrink-0" />
-              {i !== 3 && <div className="w-1 h-12 bg-white/5 mt-3 rounded-full" />}
-            </div>
-            <div className="flex flex-col gap-2 w-full mt-0.5">
-              <div className="shimmer skeleton-block h-4 w-32" />
-              <div className="shimmer skeleton-block h-3 w-24 opacity-60" />
-            </div>
-          </div>
-        ))}
-      </div>
+      <SkeletonTimeline />
     </m.div>
   )
 }

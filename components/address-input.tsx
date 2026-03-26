@@ -63,7 +63,7 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () =
   }, [ref])
 }
 
-const INPUT_CLASS = "h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[14px] text-white w-full placeholder:text-slate-400 text-ellipsis outline-none"
+const INPUT_CLASS = "h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[16px] sm:text-[14px] text-white w-full placeholder:text-slate-400 text-ellipsis outline-none"
 
 function displayName(result: GeocodeSuggestion) {
   return result.display_name.split(",")[0]

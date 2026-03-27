@@ -3843,24 +3843,34 @@ function StatHero({
   worst: DistrictScore
 }) {
   return (
-    <section className="mx-auto mt-12 w-full max-w-4xl sm:mt-20">
-      <div className="text-center">
-        <div className="mb-8 flex items-center justify-center gap-3">
-          <span className="h-px w-8 bg-slate-200 dark:bg-slate-700" />
-          <span className="font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+    <section className="mx-auto mt-12 w-full max-w-5xl sm:mt-20">
+      <div className="flex flex-col gap-8 md:flex-row md:items-start">
+        <div className="md:w-1/2">
+          <div className="mb-6 inline-block rounded-full bg-orange-100 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
             Jutarnji presjek • {departureTime}
-          </span>
-          <span className="h-px w-8 bg-slate-200 dark:bg-slate-700" />
+          </div>
+          <h1 className="font-serif text-6xl tracking-tight text-slate-900 sm:text-7xl lg:text-[6rem] lg:leading-[0.9] dark:text-slate-50">
+            Povezanost
+            <br />
+            <span className="italic text-orange-600 dark:text-orange-400">četvrti</span>
+          </h1>
         </div>
-        <h1 className="font-serif text-6xl tracking-tight text-slate-900 sm:text-7xl lg:text-[6.5rem] lg:leading-[0.95] dark:text-slate-50">
-          Povezanost četvrti
-        </h1>
-        <p className="mt-12 text-[21px] leading-[1.6] text-slate-600 sm:text-[24px] lg:text-[28px] dark:text-slate-300">
-          U Zagrebu, prosječni stanovnik četvrti <span className="font-medium text-emerald-700 dark:text-emerald-400">{best.name}</span> može doseći 
-          <span className="font-medium text-slate-900 dark:text-white"> {bestPct}% grada </span> 
-          u {maxMinutes} minuta. S druge strane, oni u četvrti <span className="font-medium text-purple-700 dark:text-purple-400">{worst.name}</span> 
-          imaju <span className="font-medium text-slate-900 dark:text-white">{ratio === Infinity ? "čak ∞" : `čak ${ratio}x`} slabiji</span> doseg.
-        </p>
+        <div className="md:w-1/2">
+          <p className="relative text-[18px] leading-[1.8] text-slate-600 sm:text-[20px] dark:text-slate-300">
+            <span className="float-left pr-2 font-serif text-7xl leading-[0.8] text-slate-900 dark:text-slate-100">
+              U
+            </span>
+            Zagrebu, prosječni stanovnik četvrti{" "}
+            <strong className="font-semibold text-orange-600 dark:text-orange-400">{best.name}</strong> može doseći
+            <strong className="font-semibold text-slate-900 dark:text-white"> {bestPct}% grada </strong>
+            u {maxMinutes} minuta. S druge strane, oni u četvrti{" "}
+            <strong className="font-semibold text-orange-600 dark:text-orange-400">{worst.name}</strong> imaju{" "}
+            <strong className="font-semibold text-slate-900 dark:text-white">
+              {ratio === Infinity ? "čak ∞" : `čak ${ratio}x`} slabiji
+            </strong>{" "}
+            doseg.
+          </p>
+        </div>
       </div>
     </section>
   )

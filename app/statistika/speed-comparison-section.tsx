@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { fmtHR } from "@/lib/format"
+import { StatModuleLead, StatModuleTitle } from "./stat-typography"
 
 const MAX_RATIO_SCALE = 1.5
 
@@ -36,7 +37,7 @@ function ratioBg(ratio: number | null): string {
 export default function SpeedComparisonSection() {
   const { data, error } = useSWR<SpeedComparisonData>(
     "/api/rt/speed-comparison",
-    { refreshInterval: 30_000, keepPreviousData: true },
+    { refreshInterval: 30_000, keepPreviousData: true }
   )
 
   return (
@@ -47,10 +48,20 @@ export default function SpeedComparisonSection() {
   )
 }
 
-function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Error }) {
+function SpeedContent({
+  data,
+  error,
+}: {
+  data?: SpeedComparisonData
+  error?: Error
+}) {
   if (!data && !error) {
     return (
-      <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
+      <div
+        className="flex h-40 items-center justify-center"
+        role="status"
+        aria-label="Učitavanje"
+      >
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-500" />
         <span className="sr-only">Učitavanje...</span>
       </div>
@@ -67,23 +78,33 @@ function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Err
 
   if (!data.hasData) {
     return (
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-12 text-center dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-[12px] bg-[#f9f9f9] p-8 text-center sm:p-12 dark:bg-[#1a1a1a]">
         <p className="text-[14px] text-slate-500 dark:text-slate-400">
           ZET-ov sustav praćenja trenutno ne šalje podatke o brzini vozila.
-          Usporedba stvarne i planirane brzine bit će dostupna kada ti podaci postanu dostupni.
+          Usporedba stvarne i planirane brzine bit će dostupna kada ti podaci
+          postanu dostupni.
         </p>
       </div>
     )
   }
 
   const withActual = data.routes.filter((r) => r.actualSpeedKmh !== null)
-  const avgScheduled = withActual.reduce((s, r) => s + r.scheduledSpeedKmh, 0) / Math.max(withActual.length, 1)
-  const avgActual = withActual.reduce((s, r) => s + (r.actualSpeedKmh ?? 0), 0) / Math.max(withActual.length, 1)
+  const avgScheduled =
+    withActual.reduce((s, r) => s + r.scheduledSpeedKmh, 0) /
+    Math.max(withActual.length, 1)
+  const avgActual =
+    withActual.reduce((s, r) => s + (r.actualSpeedKmh ?? 0), 0) /
+    Math.max(withActual.length, 1)
   const overallRatio = avgScheduled > 0 ? avgActual / avgScheduled : null
 
   return (
     <div className="flex flex-col">
-      <SummaryRow avgScheduled={avgScheduled} avgActual={avgActual} ratio={overallRatio} routeCount={withActual.length} />
+      <SummaryRow
+        avgScheduled={avgScheduled}
+        avgActual={avgActual}
+        ratio={overallRatio}
+        routeCount={withActual.length}
+      />
       {withActual.length > 0 && <SpeedTable routes={data.routes} />}
     </div>
   )
@@ -92,13 +113,11 @@ function SpeedContent({ data, error }: { data?: SpeedComparisonData; error?: Err
 function SectionHeader() {
   return (
     <div className="mb-12">
-      <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
-        Stvarna vs planirana brzina
-      </h2>
-      <p className="mt-4 max-w-2xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <StatModuleTitle>Stvarna vs planirana brzina</StatModuleTitle>
+      <StatModuleLead className="max-w-2xl">
         Usporedba stvarne brzine vozila s planiranom brzinom iz voznog reda.
         Stvarna brzina uključuje stajanje na stanicama.
-      </p>
+      </StatModuleLead>
     </div>
   )
 }
@@ -117,7 +136,9 @@ function SummaryRow({
   return (
     <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
       <div>
-        <span className={`font-serif text-[48px] font-medium leading-none tabular-nums ${ratioColor(ratio)}`}>
+        <span
+          className={`font-sans text-[48px] leading-none font-medium tracking-tight tabular-nums ${ratioColor(ratio)}`}
+        >
           {fmtHR(avgActual, 1)} km/h
         </span>
       </div>
@@ -136,7 +157,9 @@ function SummaryRow({
         )}
         <span className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-          <strong className="font-medium text-slate-900 dark:text-slate-100">{routeCount}</strong>{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {routeCount}
+          </strong>{" "}
           linija s podacima
         </span>
       </div>
@@ -145,7 +168,8 @@ function SummaryRow({
 }
 
 function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
-  const sorted = [...routes].filter((r) => r.actualSpeedKmh !== null)
+  const sorted = [...routes]
+    .filter((r) => r.actualSpeedKmh !== null)
     .sort((a, b) => (a.speedRatio ?? 0) - (b.speedRatio ?? 0))
 
   return (
@@ -163,7 +187,10 @@ function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
 }
 
 function SpeedRow({ r }: { r: SpeedRouteComparison }) {
-  const barPct = r.speedRatio !== null ? Math.min(r.speedRatio * 100, MAX_RATIO_SCALE * 100) : 0
+  const barPct =
+    r.speedRatio !== null
+      ? Math.min(r.speedRatio * 100, MAX_RATIO_SCALE * 100)
+      : 0
 
   return (
     <div className="flex items-center gap-3 border-b border-slate-100 py-2 dark:border-white/5">
@@ -171,19 +198,29 @@ function SpeedRow({ r }: { r: SpeedRouteComparison }) {
         {r.routeId}
       </span>
       <div className="relative h-2 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
-        <div className="absolute top-0 h-full w-[2px] bg-slate-300 dark:bg-slate-600" style={{ left: `${100 / MAX_RATIO_SCALE}%` }} />
-        <span className="absolute text-[9px] text-slate-400 dark:text-slate-500" style={{ left: `${100 / MAX_RATIO_SCALE}%`, top: -14 }}>100%</span>
+        <div
+          className="absolute top-0 h-full w-[2px] bg-slate-300 dark:bg-slate-600"
+          style={{ left: `${100 / MAX_RATIO_SCALE}%` }}
+        />
+        <span
+          className="absolute text-[9px] text-slate-400 dark:text-slate-500"
+          style={{ left: `${100 / MAX_RATIO_SCALE}%`, top: -14 }}
+        >
+          100%
+        </span>
         <div
           className={`h-full rounded-full ${ratioBg(r.speedRatio)}`}
           style={{ width: `${Math.max(barPct / MAX_RATIO_SCALE, 2)}%` }}
         />
       </div>
-      <span className="w-24 text-right font-mono text-[13px] tabular-nums text-slate-600 dark:text-slate-400">
+      <span className="w-24 text-right font-mono text-[13px] text-slate-600 tabular-nums dark:text-slate-400">
         {r.actualSpeedKmh !== null
           ? `${r.actualSpeedKmh.toFixed(1)} / ${r.scheduledSpeedKmh.toFixed(1)}`
           : `— / ${r.scheduledSpeedKmh.toFixed(1)}`}
       </span>
-      <span className={`w-12 text-right font-mono text-[13px] font-medium tabular-nums ${ratioColor(r.speedRatio)}`}>
+      <span
+        className={`w-12 text-right font-mono text-[13px] font-medium tabular-nums ${ratioColor(r.speedRatio)}`}
+      >
         {r.speedRatio !== null ? `${Math.round(r.speedRatio * 100)}%` : "—"}
       </span>
     </div>

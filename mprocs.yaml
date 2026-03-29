@@ -6,6 +6,7 @@ procs:
 
   isochrone:
     shell: "cd transit && cargo watch -x 'run --bin isochrone-server'"
+    stop: "SIGINT"
     env:
       OTP_URL: "http://localhost:8080"
       DATA_DIR: "../data"

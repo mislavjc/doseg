@@ -16,8 +16,8 @@ type DropdownItem = { type: "location" | "result"; result?: GeocodeSuggestion }
 
 function LocationIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-cyan-400">
-      <circle cx="12" cy="12" r="4" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-cyan-500">
+      <path d="M10.88 17.182L9.2 13.8a1 1 0 0 0-.546-.546L5.27 11.57a.5.5 0 0 1 .054-.925L18.42 5.56a.5.5 0 0 1 .62.62L13.965 19.3a.5.5 0 0 1-.926.055L11.353 17.67a1 1 0 0 0-.473-.488z" />
     </svg>
   )
 }
@@ -34,9 +34,9 @@ function DropdownRow({ item, active, onSelect }: { item: DropdownItem; active: b
   return (
     <button
       type="button" onMouseDown={(e) => e.preventDefault()} onClick={onSelect}
-      className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-[13px] transition-colors ${active ? "bg-[#4d5156] text-white" : "text-slate-300 hover:bg-[#3c4043] hover:text-white"}`}
+      className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-[13px] transition-colors ${active ? "bg-slate-50 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"}`}
     >
-      {item.type === "location" ? <><LocationIcon /><span className="text-cyan-400">Moja lokacija</span></> : <><PinIcon /><span className="truncate">{item.result!.display_name}</span></>}
+      {item.type === "location" ? <><LocationIcon /><span className="text-cyan-600 font-medium">Moja lokacija</span></> : <><PinIcon /><span className="truncate">{item.result!.display_name}</span></>}
     </button>
   )
 }
@@ -45,7 +45,7 @@ function Dropdown({ items, activeIndex, showNoResults, showLoading, onSelect }: 
   items: DropdownItem[]; activeIndex: number; showNoResults: boolean; showLoading: boolean; onSelect: (item: DropdownItem) => void
 }) {
   return (
-    <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-lg bg-[#2d2e31] shadow-xl ring-1 ring-white/10">
+    <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-2xl bg-white border border-slate-100">
       {items.map((item, i) => <DropdownRow key={item.type === "location" ? "loc" : `${i}-${item.result!.lat}`} item={item} active={i === activeIndex} onSelect={() => onSelect(item)} />)}
       {showLoading && <div className="px-3 py-3 text-[13px] text-slate-500">Tražim...</div>}
       {showNoResults && <div className="px-3 py-3 text-[13px] text-slate-500">Nema rezultata</div>}
@@ -63,7 +63,7 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () =
   }, [ref])
 }
 
-const INPUT_CLASS = "h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[16px] sm:text-[14px] text-white w-full placeholder:text-slate-400 text-ellipsis outline-none"
+const INPUT_CLASS = "h-[44px] rounded-2xl border-transparent bg-slate-100 px-4 text-[16px] sm:text-[14px] text-slate-900 w-full placeholder:text-slate-400 text-ellipsis outline-none transition-colors"
 
 function displayName(result: GeocodeSuggestion) {
   return result.display_name.split(",")[0]
@@ -113,7 +113,7 @@ export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, 
         onChange={(e) => search.setQuery(e.target.value)}
         onFocus={(e) => { setFocused(true); if (value && !search.query) search.setQuery(value); search.setIsOpen(true); requestAnimationFrame(() => e.target.select()) }}
         onKeyDown={handleKeyDown}
-        className={`${INPUT_CLASS} focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors`} />
+        className={`${INPUT_CLASS} focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all`} />
       {search.loading && focused && <div className="absolute right-2 top-1/2 -translate-y-1/2"><div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-slate-300" /></div>}
       {dropdownVisible && <Dropdown items={items} activeIndex={activeIndex} showLoading={search.loading && items.length === 0} showNoResults={noResults} onSelect={selectItem} />}
     </div>

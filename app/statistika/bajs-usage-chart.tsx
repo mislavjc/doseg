@@ -40,14 +40,17 @@ function useBajsUsageHistory() {
   const { data, error, isLoading } = useSWR<UsagePoint[]>(
     "bajs-usage-history",
     () =>
-      fetch("/api/rt/bajs-usage-history")
-        .then((r) => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`)
-          return r.json()
-        }),
-    { refreshInterval: 60_000, keepPreviousData: true },
+      fetch("/api/rt/bajs-usage-history").then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      }),
+    { refreshInterval: 60_000, keepPreviousData: true }
   )
-  return { points: data ?? null, error: error ? (error as Error).message : null, isLoading }
+  return {
+    points: data ?? null,
+    error: error ? (error as Error).message : null,
+    isLoading,
+  }
 }
 
 // --- Scales ---
@@ -100,14 +103,20 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
   return (
     <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
       <ChartHeader current={current} peak={peak} avg={avg} />
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <ChartSvg label="Grafikon korištenja BAJS bicikala">
+          <defs>
+            <linearGradient id="bajsUsageArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#64748b" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="#64748b" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <GridRows
             scale={yScale}
             width={INNER_WIDTH}
             tickValues={yTicks}
             stroke="#94a3b8"
-            strokeOpacity={0.15}
+            strokeOpacity={0.06}
             strokeWidth={1}
           />
           {points.length > 1 && (
@@ -116,8 +125,8 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
               x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
               y={(d) => yScale(d.bikesInUse) ?? 0}
               yScale={yScale}
-              fill="#22c55e"
-              fillOpacity={0.12}
+              fill="url(#bajsUsageArea)"
+              fillOpacity={1}
               curve={curveMonotoneX}
             />
           )}
@@ -125,7 +134,7 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
             data={points}
             x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
             y={(d) => yScale(d.bikesInUse) ?? 0}
-            stroke="#16a34a"
+            stroke="#0f172a"
             strokeWidth={2}
             strokeLinejoin="round"
             curve={curveMonotoneX}
@@ -153,17 +162,25 @@ function ChartHeader({
   return (
     <div className="mb-6 flex flex-col">
       <div className="mb-4 flex items-baseline gap-4">
-        <span className="font-serif text-[48px] font-medium leading-none text-lime-700 tabular-nums dark:text-lime-400">
+        <span className="font-sans text-[48px] leading-none font-semibold tracking-tighter text-slate-900 tabular-nums dark:text-slate-100">
           {fmtHR(current)}
         </span>
-        <span className="text-[14px] text-slate-500 dark:text-slate-400">trenutno u uporabi</span>
+        <span className="text-[14px] text-slate-500 dark:text-slate-400">
+          trenutno u uporabi
+        </span>
       </div>
       <div className="flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
         <span className="flex items-center gap-2">
-          <span className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(peak)}</span> maksimum
+          <span className="font-medium text-slate-900 dark:text-slate-100">
+            {fmtHR(peak)}
+          </span>{" "}
+          maksimum
         </span>
         <span className="flex items-center gap-2">
-          <span className="font-medium text-slate-900 dark:text-slate-100">{fmtHR(avg)}</span> prosjek
+          <span className="font-medium text-slate-900 dark:text-slate-100">
+            {fmtHR(avg)}
+          </span>{" "}
+          prosjek
         </span>
       </div>
     </div>
@@ -172,10 +189,21 @@ function ChartHeader({
 
 // --- Shared chart primitives ---
 
-function ChartSvg({ label, children }: { label: string; children: React.ReactNode }) {
+function ChartSvg({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
   return (
     <div className="relative mx-auto w-full">
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full" role="img" aria-label={label}>
+      <svg
+        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+        className="w-full"
+        role="img"
+        aria-label={label}
+      >
         <Group top={MARGIN.top} left={MARGIN.left}>
           {children}
         </Group>
@@ -256,12 +284,29 @@ function LoadingState() {
       <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Dnevni trend
       </div>
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="flex items-center justify-center py-20">
           <div className="flex items-center gap-3 text-[14px] text-slate-500 dark:text-slate-400">
-            <svg className="h-5 w-5 animate-spin text-lime-500" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
-              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            <svg
+              className="h-5 w-5 animate-spin text-lime-500"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="opacity-25"
+              />
+              <path
+                d="M12 2a10 10 0 0 1 10 10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
             </svg>
             Učitavanje podataka...
           </div>
@@ -277,7 +322,7 @@ function ErrorState({ message }: { message: string }) {
       <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Dnevni trend
       </div>
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="rounded-2xl bg-red-50/50 p-8 text-center dark:bg-red-950/10">
           <p className="text-[14px] text-red-700 dark:text-red-400">
             Nije moguće dohvatiti podatke: {message}
@@ -294,7 +339,7 @@ function EmptyState() {
       <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
         Dnevni trend
       </div>
-      <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="rounded-2xl bg-slate-50/50 p-8 text-center dark:bg-zinc-900/20">
           <p className="text-[14px] text-slate-600 dark:text-slate-400">
             Podaci se prikupljaju...

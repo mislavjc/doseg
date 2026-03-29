@@ -78,7 +78,7 @@ function OnboardingContent() {
       </div>
 
       <div className="px-5 pt-4 pb-4">
-        <Dialog.Title className="text-center text-[15px] font-semibold text-white">
+        <Dialog.Title className="text-center text-[15px] font-semibold text-slate-900">
           Dokle seže Zagreb?
         </Dialog.Title>
         <Dialog.Description className="mt-1.5 text-center text-[13px] leading-snug text-slate-400">
@@ -108,7 +108,7 @@ function OnboardingContent() {
       </div>
 
       <div className="px-5 pb-4">
-        <Dialog.Close className="w-full rounded-lg bg-emerald-500/15 py-2.5 text-[13px] font-medium text-emerald-400 transition-[background-color,transform] duration-160 ease-out hover:bg-emerald-500/25 active:scale-[0.97]">
+        <Dialog.Close className="w-full rounded-full bg-emerald-500/15 py-2.5 text-[13px] font-medium text-emerald-400 transition-[background-color,transform] duration-160 ease-out hover:bg-emerald-500/25 active:scale-[0.97]">
           Istraži kartu
         </Dialog.Close>
       </div>

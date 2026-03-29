@@ -4,6 +4,13 @@ import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { fmtDelaySec, pickPreferredRoute } from "@/lib/format"
 import { Term } from "@/components/ui/term"
+import {
+  StatEyebrow,
+  StatMetricHint,
+  StatMetricValue,
+  StatModuleLead,
+  StatModuleTitle,
+} from "./stat-typography"
 import { computeXTicks } from "@/lib/chart-utils"
 import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
@@ -69,13 +76,25 @@ function fmtTime(ts: number, range: TimeRange): string {
 
 function useHistoryFetch(route: string, timeRange: TimeRange) {
   const key = route ? `rt-history:${route}:${timeRange}` : null
-  const { data, error, isLoading } = useSWR<HistoryResponse>(key, () => {
-    const now = Math.floor(Date.now() / 1000)
-    const from = now - TIME_RANGE_SECONDS[timeRange]
-    return fetch(`/api/rt/history?route=${encodeURIComponent(route)}&from=${from}&to=${now}`)
-      .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-  }, { keepPreviousData: true })
-  return { data: data ?? null, error: error ? (error as Error).message : null, isLoading }
+  const { data, error, isLoading } = useSWR<HistoryResponse>(
+    key,
+    () => {
+      const now = Math.floor(Date.now() / 1000)
+      const from = now - TIME_RANGE_SECONDS[timeRange]
+      return fetch(
+        `/api/rt/history?route=${encodeURIComponent(route)}&from=${from}&to=${now}`
+      ).then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      })
+    },
+    { keepPreviousData: true }
+  )
+  return {
+    data: data ?? null,
+    error: error ? (error as Error).message : null,
+    isLoading,
+  }
 }
 
 // --- Component ---
@@ -85,12 +104,17 @@ export default function PunctualitySection({
 }: {
   routes: RouteOption[]
 }) {
-  const [selectedRoute, setSelectedRoute] = useState(() => pickPreferredRoute(routes.map((r) => r.name)))
+  const [selectedRoute, setSelectedRoute] = useState(() =>
+    pickPreferredRoute(routes.map((r) => r.name))
+  )
   const [timeRange, setTimeRange] = useState<TimeRange>("24h")
   const { data, error } = useHistoryFetch(selectedRoute, timeRange)
 
   return (
-    <section id="tocnost" className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+    <section
+      id="tocnost"
+      className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10"
+    >
       <PunctualityHeader />
       <PunctualityControls
         routes={routes}
@@ -110,13 +134,12 @@ function PunctualityHeader() {
   return (
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
-          Praćenje u stvarnom vremenu
-        </h2>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Točnost dolazaka po liniji: prosječno kašnjenje, postotak vozila
-          na vrijeme (−1 do +5 min) i regularnost razmaka (koliko ravnomjerno dolaze vozila).
-        </p>
+        <StatModuleTitle>Praćenje u stvarnom vremenu</StatModuleTitle>
+        <StatModuleLead>
+          Točnost dolazaka po liniji: prosječno kašnjenje, postotak vozila na
+          vrijeme (−1 do +5 min) i regularnost razmaka (koliko ravnomjerno
+          dolaze vozila).
+        </StatModuleLead>
       </div>
     </div>
   )
@@ -137,7 +160,11 @@ function PunctualityControls({
 }) {
   return (
     <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-      <RouteSelector routes={routes} value={selectedRoute} onChange={onRouteChange} />
+      <RouteSelector
+        routes={routes}
+        value={selectedRoute}
+        onChange={onRouteChange}
+      />
       <span className="hidden h-5 w-px bg-slate-200 sm:block dark:bg-white/10" />
       <TimeRangeSelector value={timeRange} onChange={onTimeRangeChange} />
     </div>
@@ -161,7 +188,9 @@ function PunctualityContent({
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
       <DelayChart points={data.points} timeRange={timeRange} />
       <OnTimeChart points={data.points} timeRange={timeRange} />
-      {hasHeadway && <HeadwayChart points={data.points} timeRange={timeRange} />}
+      {hasHeadway && (
+        <HeadwayChart points={data.points} timeRange={timeRange} />
+      )}
     </div>
   )
 }
@@ -180,25 +209,38 @@ function RouteSelector({
 
   return (
     <div className="flex items-center gap-3">
-      <label htmlFor="punctuality-route" className="text-[14px] font-medium text-slate-600 dark:text-slate-400">Linija</label>
+      <label
+        htmlFor="punctuality-route"
+        className="text-[14px] font-medium text-slate-600 dark:text-slate-400"
+      >
+        Linija
+      </label>
       <select
         id="punctuality-route"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-w-[160px] appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-10 text-[15px] font-medium text-slate-900 transition-colors hover:bg-slate-100 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 focus:outline-none dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:focus:border-indigo-600 dark:focus:ring-indigo-900"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 4 4 4 4-4'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+        className="min-w-[160px] appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pr-10 pl-4 text-[15px] font-medium text-slate-900 transition-colors hover:bg-slate-100 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 focus:outline-none dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10 dark:focus:border-indigo-600 dark:focus:ring-indigo-900"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 4 4 4 4-4'/%3E%3C/svg%3E")`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "right 14px center",
+        }}
       >
         {trams.length > 0 && (
           <optgroup label="Tramvaj">
             {trams.map((r) => (
-              <option key={r.name} value={r.name}>{r.name}</option>
+              <option key={r.name} value={r.name}>
+                {r.name}
+              </option>
             ))}
           </optgroup>
         )}
         {buses.length > 0 && (
           <optgroup label="Bus">
             {buses.map((r) => (
-              <option key={r.name} value={r.name}>{r.name}</option>
+              <option key={r.name} value={r.name}>
+                {r.name}
+              </option>
             ))}
           </optgroup>
         )}
@@ -223,7 +265,7 @@ function TimeRangeSelector({
           onClick={() => onChange(range)}
           className={`rounded-full px-4 py-1.5 text-[12px] font-medium transition-colors ${
             value === range
-              ? "bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
+              ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
               : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           }`}
         >
@@ -249,9 +291,26 @@ function LoadingState() {
 
 function LoadingSpinner() {
   return (
-    <svg className="h-5 w-5 animate-spin text-sky-500" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
-      <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    <svg
+      className="h-5 w-5 animate-spin text-sky-500"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        className="opacity-25"
+      />
+      <path
+        d="M12 2a10 10 0 0 1 10 10"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
     </svg>
   )
 }
@@ -271,14 +330,16 @@ function ErrorState({ message }: { message: string }) {
 
 function EmptyState() {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-12 text-center dark:border-white/10 dark:bg-white/5">
+    <div className="rounded-2xl border border-slate-200/60 bg-slate-100 p-12 text-center dark:border-white/10 dark:bg-zinc-800/60">
       <p className="text-[15px] font-medium text-slate-600 dark:text-slate-400">
         Nema podataka za odabrani period.
       </p>
       <p className="mt-2 text-[14px] text-slate-500 dark:text-slate-500">
         Podaci se prikupljaju u stvarnom vremenu iz{" "}
-            <Term title="General Transit Feed Specification — Real Time: međunarodni standard za podatke o javnom prijevozu">GTFS-RT</Term>{" "}
-            feed-a.
+        <Term title="General Transit Feed Specification — Real Time: međunarodni standard za podatke o javnom prijevozu">
+          GTFS-RT
+        </Term>{" "}
+        feed-a.
       </p>
     </div>
   )
@@ -315,30 +376,77 @@ function useDelayScales(points: HistoryPoint[]) {
       Math.max(totalTrips, 1)
     const maxDelaySec = points.reduce((m, p) => Math.max(m, p.maxDelay), 0)
     const maxTrips = points.reduce((m, p) => Math.max(m, p.tripCount), 0)
-    return { xScale, yScale, xTicks, yTicks, avgDelay, maxDelaySec, totalTrips, maxTrips }
+    return {
+      xScale,
+      yScale,
+      xTicks,
+      yTicks,
+      avgDelay,
+      maxDelaySec,
+      totalTrips,
+      maxTrips,
+    }
   }, [points])
 }
 
-function DelayChart({ points, timeRange }: { points: HistoryPoint[]; timeRange: TimeRange }) {
-  const { xScale, yScale, xTicks, yTicks, avgDelay, maxDelaySec, totalTrips, maxTrips } =
-    useDelayScales(points)
+function DelayChart({
+  points,
+  timeRange,
+}: {
+  points: HistoryPoint[]
+  timeRange: TimeRange
+}) {
+  const {
+    xScale,
+    yScale,
+    xTicks,
+    yTicks,
+    avgDelay,
+    maxDelaySec,
+    totalTrips,
+    maxTrips,
+  } = useDelayScales(points)
 
   return (
-    <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
-      <DelayChartHeader avgDelay={avgDelay} maxDelaySec={maxDelaySec} totalTrips={totalTrips} />
+    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
+      <DelayChartHeader
+        avgDelay={avgDelay}
+        maxDelaySec={maxDelaySec}
+        totalTrips={totalTrips}
+      />
       <ChartSvg label="Grafikon prosječnog kašnjenja">
-        <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#94a3b8" strokeOpacity={0.15} strokeWidth={1} />
+        <GridRows
+          scale={yScale}
+          width={INNER_WIDTH}
+          tickValues={yTicks}
+          stroke="#94a3b8"
+          strokeOpacity={0.06}
+          strokeWidth={1}
+        />
         {yTicks[0] < 0 && (
-          <line x1={0} y1={yScale(0) ?? 0} x2={INNER_WIDTH} y2={yScale(0) ?? 0} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.4} />
+          <line
+            x1={0}
+            y1={yScale(0) ?? 0}
+            x2={INNER_WIDTH}
+            y2={yScale(0) ?? 0}
+            stroke="#94a3b8"
+            strokeWidth={1}
+            strokeOpacity={0.2}
+          />
         )}
         {points.length > 1 && (
-          <TripCountBars points={points} xScale={xScale} maxTrips={maxTrips} color="#0ea5e9" />
+          <TripCountBars
+            points={points}
+            xScale={xScale}
+            maxTrips={maxTrips}
+            color="#e2e8f0"
+          />
         )}
         <LinePath<HistoryPoint>
           data={points}
           x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
           y={(d) => yScale(d.avgDelay) ?? 0}
-          stroke="#0284c7"
+          stroke="#0f172a"
           strokeWidth={2}
           strokeLinejoin="round"
         />
@@ -361,17 +469,13 @@ function DelayChartHeader({
 }) {
   return (
     <>
-      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-sky-700 uppercase dark:text-sky-400">
-        Prosječno kašnjenje
-      </div>
+      <StatEyebrow>Prosječno kašnjenje</StatEyebrow>
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-serif text-[28px] leading-none text-sky-600 tabular-nums dark:text-sky-400">
-          {fmtDelayDetailed(avgDelay)}
-        </span>
-        <span className="text-[12px] text-slate-500 dark:text-slate-400">
+        <StatMetricValue>{fmtDelayDetailed(avgDelay)}</StatMetricValue>
+        <StatMetricHint>
           prosjek &middot; maks {fmtDelayDetailed(maxDelaySec)} &middot;{" "}
           {totalTrips.toLocaleString("hr-HR")} polazaka
-        </span>
+        </StatMetricHint>
       </div>
     </>
   )
@@ -394,29 +498,48 @@ function useOnTimeScales(points: HistoryPoint[]) {
     const totalTrips = points.reduce((s, p) => s + p.tripCount, 0)
     const avgOnTime =
       (points.reduce((s, p) => s + p.onTimePct * p.tripCount, 0) /
-      Math.max(totalTrips, 1)) * 100
+        Math.max(totalTrips, 1)) *
+      100
     const maxTrips = points.reduce((m, p) => Math.max(m, p.tripCount), 0)
     return { xScale, yScale, xTicks, yTicks, avgOnTime, totalTrips, maxTrips }
   }, [points])
 }
 
-function OnTimeChart({ points, timeRange }: { points: HistoryPoint[]; timeRange: TimeRange }) {
+function OnTimeChart({
+  points,
+  timeRange,
+}: {
+  points: HistoryPoint[]
+  timeRange: TimeRange
+}) {
   const { xScale, yScale, xTicks, yTicks, avgOnTime, totalTrips, maxTrips } =
     useOnTimeScales(points)
 
   return (
-    <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <OnTimeChartHeader avgOnTime={avgOnTime} totalTrips={totalTrips} />
       <ChartSvg label="Grafikon točnosti dolazaka">
-        <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#94a3b8" strokeOpacity={0.15} strokeWidth={1} />
+        <GridRows
+          scale={yScale}
+          width={INNER_WIDTH}
+          tickValues={yTicks}
+          stroke="#94a3b8"
+          strokeOpacity={0.06}
+          strokeWidth={1}
+        />
         {points.length > 1 && (
-          <TripCountBars points={points} xScale={xScale} maxTrips={maxTrips} color="#10b981" />
+          <TripCountBars
+            points={points}
+            xScale={xScale}
+            maxTrips={maxTrips}
+            color="#e2e8f0"
+          />
         )}
         <LinePath<HistoryPoint>
           data={points}
           x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
           y={(d) => yScale(d.onTimePct * 100) ?? 0}
-          stroke="#059669"
+          stroke="#0f172a"
           strokeWidth={2}
           strokeLinejoin="round"
         />
@@ -429,20 +552,24 @@ function OnTimeChart({ points, timeRange }: { points: HistoryPoint[]; timeRange:
   )
 }
 
-function OnTimeChartHeader({ avgOnTime, totalTrips }: { avgOnTime: number; totalTrips: number }) {
+function OnTimeChartHeader({
+  avgOnTime,
+  totalTrips,
+}: {
+  avgOnTime: number
+  totalTrips: number
+}) {
   return (
     <>
-      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
-        Točnost dolazaka
-      </div>
+      <StatEyebrow>Točnost dolazaka</StatEyebrow>
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-serif text-[28px] leading-none text-emerald-600 tabular-nums dark:text-emerald-400">
+        <StatMetricValue>
           {avgOnTime.toFixed(1).replace(".", ",")}%
-        </span>
-        <span className="text-[12px] text-slate-500 dark:text-slate-400">
+        </StatMetricValue>
+        <StatMetricHint>
           na vrijeme (−1 do +5 min) &middot;{" "}
           {totalTrips.toLocaleString("hr-HR")} polazaka
-        </span>
+        </StatMetricHint>
       </div>
     </>
   )
@@ -479,78 +606,140 @@ function useHeadwayScales(points: HistoryPoint[]) {
       Math.max(totalTrips, 1)
 
     const maxTrips = pts.reduce((m, p) => Math.max(m, p.tripCount), 0)
-    return { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, totalTrips, maxTrips, pts }
+    return {
+      xScale,
+      yScale,
+      xTicks,
+      yTicks,
+      avgHeadway,
+      avgCv,
+      totalTrips,
+      maxTrips,
+      pts,
+    }
   }, [points])
 }
 
-function HeadwayChart({ points, timeRange }: { points: HistoryPoint[]; timeRange: TimeRange }) {
+function HeadwayChart({
+  points,
+  timeRange,
+}: {
+  points: HistoryPoint[]
+  timeRange: TimeRange
+}) {
   const scales = useHeadwayScales(points)
   if (!scales) return null
-  const { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, maxTrips, pts } = scales
+  const { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, maxTrips, pts } =
+    scales
 
   return (
-    <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 p-6 sm:p-8 dark:border-white/10 dark:bg-white/5">
+    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <HeadwayChartHeader avgHeadway={avgHeadway} avgCv={avgCv} />
       <ChartSvg label="Grafikon regularnosti razmaka">
-        <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#94a3b8" strokeOpacity={0.15} strokeWidth={1} />
+        <GridRows
+          scale={yScale}
+          width={INNER_WIDTH}
+          tickValues={yTicks}
+          stroke="#94a3b8"
+          strokeOpacity={0.06}
+          strokeWidth={1}
+        />
         <RegularityZone yScale={yScale} />
         {pts.length > 1 && (
-          <TripCountBars points={pts} xScale={xScale} maxTrips={maxTrips} color="#8b5cf6" />
+          <TripCountBars
+            points={pts}
+            xScale={xScale}
+            maxTrips={maxTrips}
+            color="#8b5cf6"
+          />
         )}
         <LinePath<HistoryPoint>
           data={pts}
           x={(d) => xScale(new Date(d.ts * 1000)) ?? 0}
           y={(d) => yScale(d.headwayCv ?? 0) ?? 0}
-          stroke="#7c3aed"
+          stroke="#0f172a"
           strokeWidth={2}
           strokeLinejoin="round"
         />
         <ChartXLabels ticks={xTicks} xScale={xScale} timeRange={timeRange} />
-        <ChartYLabels ticks={yTicks} yScale={yScale} format={(v) => v.toFixed(1)} />
+        <ChartYLabels
+          ticks={yTicks}
+          yScale={yScale}
+          format={(v) => v.toFixed(1)}
+        />
         <ChartYTitle label="CV razmaka" />
       </ChartSvg>
     </div>
   )
 }
 
-function RegularityZone({ yScale }: { yScale: ReturnType<typeof scaleLinear<number>> }) {
+function RegularityZone({
+  yScale,
+}: {
+  yScale: ReturnType<typeof scaleLinear<number>>
+}) {
   const y03 = yScale(0.3) ?? 0
   return (
     <>
-      <rect x={0} y={y03} width={INNER_WIDTH} height={Math.max(0, (yScale(0) ?? 0) - y03)} fill="#10b981" fillOpacity={0.06} />
-      <line x1={0} y1={y03} x2={INNER_WIDTH} y2={y03} stroke="#7c3aed" strokeWidth={1} strokeDasharray="4 3" strokeOpacity={0.4} />
-      <text x={INNER_WIDTH - 2} y={y03 - 4} textAnchor="end" className="fill-violet-500/60 text-[7px] dark:fill-violet-400/60">
+      <rect
+        x={0}
+        y={y03}
+        width={INNER_WIDTH}
+        height={Math.max(0, (yScale(0) ?? 0) - y03)}
+        fill="#94a3b8"
+        fillOpacity={0.06}
+      />
+      <line
+        x1={0}
+        y1={y03}
+        x2={INNER_WIDTH}
+        y2={y03}
+        stroke="#94a3b8"
+        strokeWidth={1}
+        strokeDasharray="4 3"
+        strokeOpacity={0.35}
+      />
+      <text
+        x={INNER_WIDTH - 2}
+        y={y03 - 4}
+        textAnchor="end"
+        className="fill-slate-400/80 text-[7px] dark:fill-slate-500"
+      >
         dobra regularnost
       </text>
     </>
   )
 }
 
-function HeadwayChartHeader({ avgHeadway, avgCv }: { avgHeadway: number; avgCv: number }) {
-  const quality =
-    avgCv < 0.3 ? "odlična" : avgCv < 0.5 ? "umjerena" : "loša"
+function HeadwayChartHeader({
+  avgHeadway,
+  avgCv,
+}: {
+  avgHeadway: number
+  avgCv: number
+}) {
+  const quality = avgCv < 0.3 ? "odlična" : avgCv < 0.5 ? "umjerena" : "loša"
   const qualityColor =
     avgCv < 0.3
-      ? "text-emerald-600 dark:text-emerald-400"
+      ? "text-slate-800 dark:text-slate-100"
       : avgCv < 0.5
-        ? "text-amber-600 dark:text-amber-400"
-        : "text-red-600 dark:text-red-400"
+        ? "text-slate-600 dark:text-slate-300"
+        : "text-slate-900 dark:text-slate-200"
 
   return (
     <>
-      <div className="mb-2 font-sans text-[11px] font-bold tracking-widest text-violet-700 uppercase dark:text-violet-400">
-        Regularnost razmaka
-      </div>
+      <StatEyebrow>Regularnost razmaka</StatEyebrow>
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className={`font-serif text-[28px] leading-none tabular-nums ${qualityColor}`}>
-          {quality}
-        </span>
-        <span className="text-[12px] text-slate-500 dark:text-slate-400">
-          <Term title="Koeficijent varijacije — niži broj znači pravilniji razmak između vozila">CV</Term> {avgCv.toFixed(2)} &middot; prosječni razmak{" "}
+        <StatMetricValue className={qualityColor}>{quality}</StatMetricValue>
+        <StatMetricHint>
+          <Term title="Koeficijent varijacije — niži broj znači pravilniji razmak između vozila">
+            CV
+          </Term>{" "}
+          {avgCv.toFixed(2)} &middot; prosječni razmak{" "}
           {avgHeadway >= 60
             ? `${Math.round(avgHeadway / 60)} min`
             : `${Math.round(avgHeadway)} s`}
-        </span>
+        </StatMetricHint>
       </div>
     </>
   )
@@ -558,10 +747,21 @@ function HeadwayChartHeader({ avgHeadway, avgCv }: { avgHeadway: number; avgCv: 
 
 // --- Shared chart primitives ---
 
-function ChartSvg({ label, children }: { label: string; children: React.ReactNode }) {
+function ChartSvg({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
   return (
     <div className="relative mx-auto w-full">
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} className="w-full" role="img" aria-label={label}>
+      <svg
+        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+        className="w-full"
+        role="img"
+        aria-label={label}
+      >
         <Group top={MARGIN.top} left={MARGIN.left}>
           {children}
         </Group>
@@ -582,7 +782,13 @@ function ChartXLabels({
   return (
     <>
       {ticks.map((t) => (
-        <text key={t.getTime()} x={xScale(t)} y={INNER_HEIGHT + 20} textAnchor="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">
+        <text
+          key={t.getTime()}
+          x={xScale(t)}
+          y={INNER_HEIGHT + 20}
+          textAnchor="middle"
+          className="fill-slate-400 text-[8px] dark:fill-slate-500"
+        >
           {fmtTime(t.getTime() / 1000, timeRange)}
         </text>
       ))}
@@ -602,7 +808,14 @@ function ChartYLabels({
   return (
     <>
       {ticks.map((v) => (
-        <text key={v} x={-8} y={(yScale(v) ?? 0) + 1} textAnchor="end" dominantBaseline="middle" className="fill-slate-400 text-[8px] dark:fill-slate-500">
+        <text
+          key={v}
+          x={-8}
+          y={(yScale(v) ?? 0) + 1}
+          textAnchor="end"
+          dominantBaseline="middle"
+          className="fill-slate-400 text-[8px] dark:fill-slate-500"
+        >
           {format(v)}
         </text>
       ))}
@@ -625,7 +838,11 @@ function ChartYTitle({ label }: { label: string }) {
   )
 }
 
-function ThresholdLine({ yScale }: { yScale: ReturnType<typeof scaleLinear<number>> }) {
+function ThresholdLine({
+  yScale,
+}: {
+  yScale: ReturnType<typeof scaleLinear<number>>
+}) {
   return (
     <>
       <line
@@ -633,16 +850,16 @@ function ThresholdLine({ yScale }: { yScale: ReturnType<typeof scaleLinear<numbe
         y1={yScale(80) ?? 0}
         x2={INNER_WIDTH}
         y2={yScale(80) ?? 0}
-        stroke="#059669"
+        stroke="#94a3b8"
         strokeWidth={1}
         strokeDasharray="4 3"
-        strokeOpacity={0.4}
+        strokeOpacity={0.45}
       />
       <text
         x={INNER_WIDTH - 2}
         y={(yScale(80) ?? 0) - 4}
         textAnchor="end"
-        className="fill-emerald-500/60 text-[7px] dark:fill-emerald-400/60"
+        className="fill-slate-400/80 text-[7px] dark:fill-slate-500"
       >
         80% cilj
       </text>
@@ -683,7 +900,7 @@ function TripCountBars({
             width={barWidth}
             height={barHeight}
             fill={color}
-            fillOpacity={0.1}
+            fillOpacity={0.35}
             rx={1}
           />
         )

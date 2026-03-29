@@ -1,6 +1,7 @@
 "use client"
 
 import useSWR from "swr"
+import { StatModuleTitle, StatProse } from "./stat-typography"
 
 interface FleetRouteDeployment {
   routeId: string
@@ -34,26 +35,35 @@ function pctBg(pct: number): string {
 export default function FleetDeploymentSection() {
   const { data, error, isLoading } = useSWR<FleetDeploymentData>(
     "/api/rt/fleet-deployment",
-    { refreshInterval: 30_000, keepPreviousData: true },
+    { refreshInterval: 30_000, keepPreviousData: true }
   )
 
   return (
     <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
-      <h2 className="mb-12 font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
+      <StatModuleTitle className="mb-12">
         Pokrivenost flote u stvarnom vremenu
-      </h2>
+      </StatModuleTitle>
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-        <div className="flex-1 space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           <p>
-            Koliko planiranih polazaka trenutačno šalje podatke o poziciji vozila?
-            Nizak postotak znači da ZET ne prati sve linije u stvarnom vremenu
-            (čest problem s neopremljenim autobusima), a ne nužno da vozila ne voze.
+            Koliko planiranih polazaka trenutačno šalje podatke o poziciji
+            vozila? Nizak postotak znači da ZET ne prati sve linije u stvarnom
+            vremenu (čest problem s neopremljenim autobusima), a ne nužno da
+            vozila ne voze.
           </p>
-        </div>
+        </StatProse>
         <div className="w-full lg:w-[600px] lg:shrink-0">
-          {error && !data && <p className="text-[13px] text-slate-500 dark:text-slate-400">Podaci nisu dostupni</p>}
+          {error && !data && (
+            <p className="text-[13px] text-slate-500 dark:text-slate-400">
+              Podaci nisu dostupni
+            </p>
+          )}
           {isLoading && !data && (
-            <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
+            <div
+              className="flex h-40 items-center justify-center"
+              role="status"
+              aria-label="Učitavanje"
+            >
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
               <span className="sr-only">Učitavanje...</span>
             </div>
@@ -69,18 +79,28 @@ export default function FleetDeploymentSection() {
 
 function FleetContent({ data }: { data: FleetDeploymentData }) {
   const withSignal = data.routes.filter((r) => r.activeTrips > 0)
-  const withoutSignal = data.routes.filter((r) => r.activeTrips === 0 && r.scheduledTrips > 0)
+  const withoutSignal = data.routes.filter(
+    (r) => r.activeTrips === 0 && r.scheduledTrips > 0
+  )
 
   return (
     <div className="flex flex-col">
-      <SummaryRow data={data} withSignal={withSignal.length} withoutSignal={withoutSignal.length} />
+      <SummaryRow
+        data={data}
+        withSignal={withSignal.length}
+        withoutSignal={withoutSignal.length}
+      />
       {withSignal.length > 0 && <ActiveRoutesTable routes={withSignal} />}
       {withoutSignal.length > 0 && <SilentRoutesList routes={withoutSignal} />}
     </div>
   )
 }
 
-function SummaryRow({ data, withSignal, withoutSignal }: {
+function SummaryRow({
+  data,
+  withSignal,
+  withoutSignal,
+}: {
   data: FleetDeploymentData
   withSignal: number
   withoutSignal: number
@@ -88,7 +108,9 @@ function SummaryRow({ data, withSignal, withoutSignal }: {
   return (
     <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
       <div>
-        <span className={`font-serif text-[48px] font-medium leading-none tabular-nums ${pctColor(data.totalDeploymentPct)}`}>
+        <span
+          className={`font-sans text-[48px] leading-none font-medium tracking-tight tabular-nums ${pctColor(data.totalDeploymentPct)}`}
+        >
           {Math.round(data.totalDeploymentPct)}%
         </span>
       </div>
@@ -98,11 +120,17 @@ function SummaryRow({ data, withSignal, withoutSignal }: {
       <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
         <span className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-          <strong className="font-medium text-slate-900 dark:text-slate-100">{withSignal}</strong> s RT signalom
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {withSignal}
+          </strong>{" "}
+          s RT signalom
         </span>
         <span className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
-          <strong className="font-medium text-slate-900 dark:text-slate-100">{withoutSignal}</strong> bez signala
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {withoutSignal}
+          </strong>{" "}
+          bez signala
         </span>
       </div>
     </div>
@@ -139,7 +167,9 @@ function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
           style={{ width: `${Math.max(r.deploymentPct, 2)}%` }}
         />
       </div>
-      <span className={`w-12 text-right font-mono text-[11px] font-medium tabular-nums ${pctColor(r.deploymentPct)}`}>
+      <span
+        className={`w-12 text-right font-mono text-[11px] font-medium tabular-nums ${pctColor(r.deploymentPct)}`}
+      >
         {r.activeTrips}/{r.scheduledTrips}
       </span>
     </div>
@@ -156,7 +186,10 @@ function SilentRoutesList({ routes }: { routes: FleetRouteDeployment[] }) {
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.map((r) => (
-          <span key={r.routeId} className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+          <span
+            key={r.routeId}
+            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+          >
             {r.routeId}
           </span>
         ))}

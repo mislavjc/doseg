@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5)
@@ -19,9 +20,12 @@ function pad(n: number) {
 export function TimePicker({
   value,
   onChange,
+  triggerClassName,
 }: {
   value: string // "HH:MM"
   onChange: (value: string) => void
+  /** Merged into the trigger button (e.g. compact mobile sizing). */
+  triggerClassName?: string
 }) {
   const [h, m] = value.split(":").map(Number)
   // Snap minute to nearest 5, carrying into the hour if needed (e.g. 14:58 → 15:00)
@@ -31,17 +35,21 @@ export function TimePicker({
 
   return (
     <Popover>
-      <PopoverTrigger className="flex cursor-pointer flex-col items-center outline-none">
-        <span className="text-[13px] text-slate-200 tabular-nums transition-colors hover:text-white">
+      <PopoverTrigger
+        className={cn(
+          "flex h-9 cursor-pointer items-center justify-center rounded-full bg-neutral-100 px-3 text-[12px] font-medium text-neutral-800 tabular-nums transition-colors outline-none hover:bg-neutral-200/90 active:bg-neutral-200 sm:px-4 sm:text-[13px]",
+          triggerClassName
+        )}
+      >
+        <span>
           {pad(displayH)}:{pad(displayM)}
         </span>
-        <span className="text-[9px] text-slate-400">polazak</span>
       </PopoverTrigger>
       <PopoverContent
         side="bottom"
         align="center"
         sideOffset={8}
-        className="w-auto gap-0 rounded-xl bg-[rgba(20,20,28,0.95)] p-1 ring-1 ring-white/10 backdrop-blur-xl"
+        className="w-auto gap-0 rounded-[28px] border border-neutral-100/80 bg-white/98 p-2 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur-xl"
       >
         <div className="flex gap-0.5">
           <ScrollColumn
@@ -50,7 +58,7 @@ export function TimePicker({
             onSelect={(v) => onChange(`${pad(v)}:${pad(displayM)}`)}
             label="h"
           />
-          <div className="flex w-4 items-center justify-center text-[13px] text-slate-500">
+          <div className="flex w-4 items-center justify-center text-[13px] text-neutral-400">
             :
           </div>
           <ScrollColumn
@@ -79,10 +87,10 @@ function ScrollColumnItem({
       role="option"
       aria-selected={selected}
       onClick={() => onSelect(item)}
-      className={`flex w-full items-center justify-center rounded-lg text-[14px] tabular-nums transition-colors ${
+      className={`flex w-full items-center justify-center rounded-xl text-[14px] tabular-nums transition-colors ${
         selected
-          ? "bg-white/10 font-semibold text-white"
-          : "text-slate-400 hover:text-slate-200"
+          ? "bg-neutral-100 font-semibold text-neutral-900"
+          : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
       }`}
       style={{ height: ITEM_H }}
     >

@@ -7,16 +7,8 @@ import useSWR from "swr"
 
 const ZAGREB: [number, number] = [15.978, 45.815]
 
-const LIGHT_STYLE =
-  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-const DARK_STYLE =
-  "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-
 function getMapStyle(): string {
-  if (typeof document === "undefined") return DARK_STYLE
-  return document.documentElement.classList.contains("dark")
-    ? DARK_STYLE
-    : LIGHT_STYLE
+  return "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 }
 
 function addStationLayer(map: maplibregl.Map) {
@@ -91,7 +83,7 @@ function setupInteractions(
 
 function MapLegend() {
   return (
-    <div className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-3 py-2 text-[11px] shadow-sm backdrop-blur-sm dark:bg-zinc-900/90">
+    <div className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-3 py-2 text-[11px] backdrop-blur-sm dark:bg-zinc-900/90">
       <div className="mb-1 font-semibold text-slate-700 dark:text-slate-300">Dostupnost</div>
       <div className="flex items-center gap-3">
         <span className="flex items-center gap-1">
@@ -153,7 +145,7 @@ export default function BajsStationMap() {
   }, [data, updateSource])
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 dark:border-white/10 dark:bg-white/5">
+    <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] dark:bg-[#1a1a1a]">
       <div className="relative">
         <div ref={containerRef} role="application" aria-label="Karta BAJS stanica u Zagrebu" style={{ height: 400, width: "100%" }} />
         <MapLegend />

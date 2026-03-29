@@ -11,7 +11,9 @@ export type { RoutingOnlyResponse } from "./RoutingOnlyResponse"
 export type { RoutingPattern } from "./RoutingPattern"
 export type { RoutingPayload } from "./RoutingPayload"
 export type { RoutingPred } from "./RoutingPred"
-export type { WalkRingResponse } from "./WalkRingResponse"
+export type { WalkAreaFeature } from "./WalkAreaFeature"
+export type { WalkAreaGeometry } from "./WalkAreaGeometry"
+export type { WalkAreaResponse } from "./WalkAreaResponse"
 
 // District scores types (data/district-scores.json)
 export type { BestPoint } from "./BestPoint"

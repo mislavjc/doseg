@@ -53,6 +53,8 @@ export interface RouteDetailsProps {
   onShare?: () => void
   onExport?: () => void
   onReset?: () => void
+  /** Clear route / destination; keep origin (map + state). */
+  onClearDestination?: () => void
   shareConfirm?: boolean
   open?: boolean
 }
@@ -89,23 +91,23 @@ function PinIcon() {
 
 function BackArrow() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 18l-6-6 6-6" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19.5 12H4.5M10.5 18L4.5 12l6-6" />
     </svg>
   )
 }
 
 function SwapIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7 10v12"/><path d="M15 14v-8"/><path d="M3 14l4 4 4-4"/><path d="M11 6l4-4 4 4"/>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 19V5m0 0L4 9m4-4l4 4M16 5v14m0 0l-4-4m4 4l4-4" />
     </svg>
   )
 }
 
 function ShareIconBtn({ onShare, shareConfirm }: { onShare: () => void; shareConfirm?: boolean }) {
   return (
-    <button type="button" onClick={onShare} className="flex h-9 w-9 items-center justify-center rounded-full text-slate-300 transition-colors hover:bg-white/10 hover:text-white" aria-label="Dijeli" title="Kopiraj poveznicu">
+    <button type="button" onClick={onShare} className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900" aria-label="Dijeli" title="Kopiraj poveznicu">
       {shareConfirm ? (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
       ) : (
@@ -117,7 +119,7 @@ function ShareIconBtn({ onShare, shareConfirm }: { onShare: () => void; shareCon
 
 function ExportIconBtn({ onExport }: { onExport: () => void }) {
   return (
-    <button type="button" onClick={onExport} className="flex h-9 w-9 items-center justify-center rounded-full text-slate-300 transition-colors hover:bg-white/10 hover:text-white" aria-label="Spremi kartu" title="Spremi kao sliku">
+    <button type="button" onClick={onExport} className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900" aria-label="Spremi kartu" title="Spremi kao sliku">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
     </button>
   )
@@ -139,14 +141,17 @@ function isShortRoute(route?: string): boolean {
 
 /* ── Panel header (Desktop) ── */
 
-function PanelHeader({ itinerary, originName, destName: destNameProp, onReset, onSwap }: { itinerary: Itinerary; originName?: string; destName?: string; onReset?: () => void; onSwap?: () => void }) {
+function PanelHeader({ itinerary, originName, destName: destNameProp, onReset, onClearDestination, onSwap }: { itinerary: Itinerary; originName?: string; destName?: string; onReset?: () => void; onClearDestination?: () => void; onSwap?: () => void }) {
   const origin = originName || itinerary.legs[0].from.name || "Polazište"
   const destName = destNameProp || findDestName(itinerary)
+  const backAction = onClearDestination ?? onReset
   return (
-    <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
-      {onReset && (
-        <button type="button" onClick={onReset} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Natrag">
-          <BackArrow />
+    <div className="bg-[rgba(255,255,255,0.98)] px-4 py-4 shrink-0 flex gap-1">
+      {backAction && (
+        <button type="button" onClick={backAction} className="group mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500 transition-all duration-300 hover:text-[#1264ab] rounded-full hover:bg-[#1264ab]/10 active:scale-95" aria-label="Promijeni odredište">
+          <div className="transition-transform duration-300 ease-out group-hover:-translate-x-1">
+            <BackArrow />
+          </div>
         </button>
       )}
       <div className="min-w-0 flex-1 flex gap-3">
@@ -160,12 +165,14 @@ function PanelHeader({ itinerary, originName, destName: destNameProp, onReset, o
           <PinIcon />
         </div>
         <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
-          <input readOnly value={origin} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default text-ellipsis" />
-          <input readOnly value={destName} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] focus:bg-[#4d5156] hover:bg-[#4d5156] transition-colors outline-none px-3 text-[14px] text-white w-full cursor-default text-ellipsis" />
+          <input readOnly value={origin} className="h-[44px] rounded-2xl bg-slate-100 focus:bg-slate-200 hover:bg-slate-200 transition-colors outline-none px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis" />
+          <input readOnly value={destName} className="h-[44px] rounded-2xl bg-slate-100 focus:bg-slate-200 hover:bg-slate-200 transition-colors outline-none px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis" />
         </div>
       </div>
-      <button type="button" onClick={onSwap} className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10 ml-1" aria-label="Zamijeni polazište i odredište">
-        <SwapIcon />
+      <button type="button" onClick={onSwap} className="group self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 transition-all duration-300 hover:text-[#1264ab] rounded-full hover:bg-[#1264ab]/10 ml-1 active:scale-95" aria-label="Zamijeni polazište i odredište">
+        <div className="transition-transform duration-500 ease-in-out group-hover:rotate-180 group-active:scale-90">
+          <SwapIcon />
+        </div>
       </button>
     </div>
   )
@@ -180,11 +187,11 @@ function SummaryBar({ itinerary, departureTime, loading, onShare, onExport, shar
   const dep = departureTime ?? "00:00"
   const arr = formatArrivalTime(dep, itinerary.duration)
   return (
-    <div className="border-b border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)]">
+    <div className="px-6 py-6 bg-transparent">
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-baseline gap-2">
-            <span className="text-[20px] font-medium text-white tabular-nums">
+            <span className="text-[20px] font-medium text-slate-900 tabular-nums">
               {dep} – {arr}
             </span>
             <span className="text-[16px] text-slate-400 tabular-nums">
@@ -247,13 +254,13 @@ function Timeline({ legs, departureTime }: { legs: Leg[]; departureTime: string 
 }
 
 function TimelineLeg({ leg, time, isFirst }: { leg: Leg; time: string; isFirst: boolean }) {
-  const color = leg.mode === "WALK" ? "#94a3b8" : modeColor(leg.mode)
+  const color = leg.mode === "WALK" ? "#64748b" : modeColor(leg.mode)
   return (
     <div>
       <TimelineStop
         time={time}
         name={leg.from.name || (isFirst ? "Polazište" : "")}
-        color={isFirst ? "#fff" : color}
+        color={isFirst ? "#0f172a" : color}
         isOrigin={isFirst}
       />
       <TimelineConnector leg={leg} color={color} />
@@ -278,12 +285,12 @@ function TimelineConnector({ leg, color }: { leg: Leg; color: string }) {
         >
           {/* Overlapping icon on the line, like Google Maps */}
           {!isWalk && (
-            <div className="absolute top-1/2 -translate-y-1/2 h-5 w-5 bg-[#202124] rounded-full flex items-center justify-center border border-[rgba(255,255,255,0.1)]">
+            <div className="absolute top-1/2 -translate-y-1/2 h-5 w-5 bg-white rounded-full flex items-center justify-center border border-slate-100">
                <TransitIcon mode={leg.mode} color={color} />
             </div>
           )}
           {isWalk && (
-            <div className="absolute top-1/2 -translate-y-1/2 h-5 w-5 bg-[#202124] rounded-full flex items-center justify-center border border-[rgba(255,255,255,0.1)] text-slate-400">
+            <div className="absolute top-1/2 -translate-y-1/2 h-5 w-5 bg-white rounded-full flex items-center justify-center border border-slate-100 text-slate-500">
                <WalkIconSmall />
             </div>
           )}
@@ -309,7 +316,7 @@ function LegInfo({ leg }: { leg: Leg }) {
             {badgeLabel}
           </span>
         )}
-        <span className="min-w-0 text-[15px] text-slate-200 leading-snug break-words">
+        <span className="min-w-0 text-[15px] text-slate-800 leading-snug break-words">
           {isWalk ? "Hodanje" : description}
         </span>
       </div>
@@ -327,19 +334,19 @@ function LegInfo({ leg }: { leg: Leg }) {
 function TimelineStop({ time, name, isOrigin, isEnd }: { time: string; name: string; color?: string; isOrigin?: boolean; isEnd?: boolean }) {
   return (
     <div className="flex items-start py-0.5">
-      <span className="w-[66px] shrink-0 text-right text-[13px] font-medium text-slate-300 pt-[2px] pr-3">
+      <span className="w-[66px] shrink-0 text-right text-[13px] font-medium text-slate-500 pt-[2px] pr-3">
         {time}
       </span>
       <div className="flex w-[20px] shrink-0 items-center justify-center pt-[4px]">
         {isEnd ? (
           <PinIcon />
         ) : isOrigin ? (
-          <div className="h-[14px] w-[14px] rounded-full border-[3px] border-slate-200" />
+          <div className="h-[14px] w-[14px] rounded-full border-[3px] border-slate-100" />
         ) : (
-          <div className="h-[10px] w-[10px] rounded-full border-[2px] border-white bg-slate-900" />
+          <div className="h-[10px] w-[10px] rounded-full border-[2px] border-white bg-slate-400" />
         )}
       </div>
-      <span className={`flex-1 pl-4 text-[16px] leading-tight pt-[1px] ${isOrigin || isEnd ? "font-semibold text-white" : "font-medium text-slate-200"}`}>
+      <span className={`flex-1 pl-4 text-[16px] leading-tight pt-[1px] ${isOrigin || isEnd ? "font-semibold text-slate-900" : "font-medium text-slate-600"}`}>
         {name}
       </span>
     </div>
@@ -348,13 +355,28 @@ function TimelineStop({ time, name, isOrigin, isEnd }: { time: string; name: str
 
 /* ── Reset button ── */
 
-function ResetButton({ onReset }: { onReset: () => void }) {
+function ResetButton({
+  onReset,
+  onClearDestination,
+}: {
+  onReset: () => void
+  onClearDestination?: () => void
+}) {
   return (
-    <div className="border-t border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)]">
+    <div className="space-y-2 px-6 py-6 bg-transparent">
+      {onClearDestination && (
+        <button
+          type="button"
+          onClick={onClearDestination}
+          className="w-full rounded-full border border-slate-200 bg-white py-2.5 text-[14px] font-medium text-slate-700 transition-all duration-300 hover:bg-[#1264ab]/5 hover:text-[#1264ab] hover:border-[#1264ab]/30 active:scale-[0.98]"
+        >
+          Promijeni odredište
+        </button>
+      )}
       <button
         type="button"
         onClick={onReset}
-        className="w-full rounded-full bg-white/[0.08] py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-white/[0.12] active:bg-white/[0.16]"
+        className="w-full rounded-full bg-slate-100 py-2.5 text-[14px] font-medium text-slate-900 transition-all duration-300 hover:bg-[#1264ab]/15 hover:text-[#1264ab] active:scale-[0.98]"
       >
         Novo polazište
       </button>
@@ -372,7 +394,7 @@ function SkeletonTimeline() {
           <div className="shimmer skeleton-block h-4 w-12 shrink-0 mt-0.5" />
           <div className="flex flex-col items-center">
             <div className="shimmer skeleton-block h-4 w-4 rounded-full shrink-0" />
-            {i !== 3 && <div className="w-1 h-12 bg-white/5 mt-3 rounded-full" />}
+            {i !== 3 && <div className="w-1 h-12 bg-slate-200 mt-3 rounded-full" />}
           </div>
           <div className="flex flex-col gap-2 w-full mt-0.5">
             <div className="shimmer skeleton-block h-4 w-32" />
@@ -384,32 +406,41 @@ function SkeletonTimeline() {
   )
 }
 
-function RoutePanelSkeleton({ originName, onReset }: { originName?: string; onReset?: () => void }) {
+function RoutePanelSkeleton({
+  originName,
+  onReset,
+  onClearDestination,
+}: {
+  originName?: string
+  onReset?: () => void
+  onClearDestination?: () => void
+}) {
   const origin = originName || "Polazište"
+  const backAction = onClearDestination ?? onReset
   return (
     <m.div key="loading" {...crossfade} aria-hidden="true" className="flex flex-col h-full">
-      <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
-        {onReset && (
-          <button type="button" onClick={onReset} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Natrag">
+      <div className="bg-[rgba(255,255,255,0.98)] px-4 py-4 shrink-0 flex gap-1">
+        {backAction && (
+          <button type="button" onClick={backAction} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 hover:text-slate-900 rounded-full hover:bg-slate-100" aria-label="Promijeni odredište">
             <BackArrow />
           </button>
         )}
         <div className="min-w-0 flex-1 flex gap-3">
           <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
             <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-            <div className="flex flex-col gap-[3px] my-1 shrink-0"><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /><div className="w-[3px] h-[3px] rounded-full bg-slate-500" /></div>
+            <div className="flex flex-col gap-[3px] my-1 shrink-0"><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /></div>
             <PinIcon />
           </div>
           <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
-            <input readOnly value={origin} className="h-[38px] rounded-[6px] border border-transparent bg-[#3c4043] px-3 text-[14px] text-white w-full cursor-default text-ellipsis outline-none" />
-            <div className="relative h-[38px] rounded-[6px] bg-[#3c4043] flex items-center px-3 overflow-hidden">
+            <input readOnly value={origin} className="h-[44px] rounded-2xl bg-slate-100 px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis outline-none" />
+            <div className="relative h-[44px] rounded-2xl bg-slate-100 flex items-center px-4 overflow-hidden">
                <div className="shimmer absolute inset-0" /><span className="relative text-[14px] text-slate-400">Tražim rutu...</span>
             </div>
           </div>
         </div>
-        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 ml-1"><SwapIcon /></div>
+        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500 ml-1"><SwapIcon /></div>
       </div>
-      <div className="border-b border-white/5 px-6 py-4 bg-[rgba(32,33,36,0.5)] flex items-center gap-3">
+      <div className="px-6 py-6 bg-transparent flex items-center gap-3">
         <div className="route-spinner !w-5 !h-5 shrink-0" /><div className="shimmer skeleton-block h-5 w-32" />
       </div>
       <SkeletonTimeline />
@@ -421,25 +452,25 @@ function RoutePanelSkeleton({ originName, onReset }: { originName?: string; onRe
 
 export function SidePanel({ children }: { children: ReactNode }) {
   return (
-    <aside className="hidden sm:flex h-full w-[400px] shrink-0 flex-col bg-[rgba(24,24,28,0.98)] border-r border-white/5 shadow-xl z-20">
+    <aside className="hidden sm:flex h-full w-[400px] shrink-0 flex-col bg-white border-r border-slate-100 z-20">
       {children}
     </aside>
   )
 }
 
-export function RoutePanelContent({ itinerary, loading, departureTime, originName, destName, onSwap, onShare, onExport, onReset, shareConfirm }: RouteDetailsProps) {
+export function RoutePanelContent({ itinerary, loading, departureTime, originName, destName, onSwap, onShare, onExport, onReset, onClearDestination, shareConfirm }: RouteDetailsProps) {
   return (
     <AnimatePresence mode="wait" initial={false}>
       {loading && !itinerary ? (
-        <RoutePanelSkeleton originName={originName} onReset={onReset} />
+        <RoutePanelSkeleton originName={originName} onReset={onReset} onClearDestination={onClearDestination} />
       ) : itinerary ? (
         <m.div key="route" {...crossfade} className="flex min-h-0 flex-1 flex-col">
-          <PanelHeader itinerary={itinerary} originName={originName} destName={destName} onReset={onReset} onSwap={onSwap} />
+          <PanelHeader itinerary={itinerary} originName={originName} destName={destName} onReset={onReset} onClearDestination={onClearDestination} onSwap={onSwap} />
           <SummaryBar itinerary={itinerary} departureTime={departureTime} loading={loading} onShare={onShare} onExport={onExport} shareConfirm={shareConfirm} />
           <div className="min-h-0 flex-1 overflow-y-auto">
             <Timeline legs={itinerary.legs} departureTime={departureTime ?? "00:00"} />
           </div>
-          {onReset && <ResetButton onReset={onReset} />}
+          {onReset && <ResetButton onReset={onReset} onClearDestination={onClearDestination} />}
         </m.div>
       ) : null}
     </AnimatePresence>
@@ -472,15 +503,32 @@ function MobileLegStrip({ legs }: { legs: Leg[] }) {
   )
 }
 
-function MobileActions({ onShare, onReset, shareConfirm }: Pick<RouteDetailsProps, "onShare" | "onReset" | "shareConfirm">) {
+function MobileActions({
+  onShare,
+  onReset,
+  onClearDestination,
+  shareConfirm,
+}: Pick<
+  RouteDetailsProps,
+  "onShare" | "onReset" | "onClearDestination" | "shareConfirm"
+>) {
   return (
-    <div className="flex items-center gap-1.5 pt-0.5">
+    <div className="flex flex-wrap items-center justify-end gap-1.5 pt-0.5">
       {onShare && <ShareIconBtn onShare={onShare} shareConfirm={shareConfirm} />}
+      {onClearDestination && (
+        <button
+          type="button"
+          onClick={onClearDestination}
+          className="rounded-full bg-slate-100 px-3 py-1.5 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900"
+        >
+          Promijeni odredište
+        </button>
+      )}
       {onReset && (
         <button
           type="button"
           onClick={onReset}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 transition-colors hover:bg-white/20 hover:text-white"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900"
           aria-label="Zatvori rutu"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -490,17 +538,25 @@ function MobileActions({ onShare, onReset, shareConfirm }: Pick<RouteDetailsProp
   )
 }
 
-function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, onReset, shareConfirm }: RouteDetailsProps) {
+function MobileRouteSheetContent({
+  itinerary,
+  loading,
+  departureTime,
+  onShare,
+  onReset,
+  onClearDestination,
+  shareConfirm,
+}: RouteDetailsProps) {
   if (!itinerary) return null
   const dep = departureTime ?? "00:00"
   const arr = formatArrivalTime(dep, itinerary.duration)
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="shrink-0 pt-0 pb-3 border-b border-white/10">
-        <div className="flex items-start justify-between">
-          <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 flex-col gap-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-[24px] font-medium text-white tabular-nums tracking-tight leading-none">
+              <span className="text-[24px] font-medium text-slate-900 tabular-nums tracking-tight leading-none">
                 {formatDuration(itinerary.duration)}
               </span>
               <span className="text-[14px] text-slate-400 tabular-nums">{dep} – {arr}</span>
@@ -508,7 +564,12 @@ function MobileRouteSheetContent({ itinerary, loading, departureTime, onShare, o
             </div>
             <MobileLegStrip legs={itinerary.legs} />
           </div>
-          <MobileActions onShare={onShare} onReset={onReset} shareConfirm={shareConfirm} />
+          <MobileActions
+            onShare={onShare}
+            onReset={onReset}
+            onClearDestination={onClearDestination}
+            shareConfirm={shareConfirm}
+          />
         </div>
       </div>
       <div className="pt-2 pb-8 flex-1 min-h-0 overflow-y-auto overscroll-contain">
@@ -548,9 +609,9 @@ export function RouteDetails(props: RouteDetailsProps & { className?: string; on
         setActiveSnapPoint={setSnap}
         modal={false}
       >
-        <DrawerContent
+          <DrawerContent
           overlay={false}
-          className="bg-[rgba(30,30,30,0.92)] backdrop-blur-[20px] border-none shadow-[0_-4px_24px_rgba(0,0,0,0.3),0_0_0_0.5px_rgba(255,255,255,0.08)] outline-none"
+          className="bg-[rgba(255,255,255,0.95)] backdrop-blur-[20px] outline-none rounded-t-[2rem]"
         >
           <DrawerTitle className="sr-only">Detalji rute</DrawerTitle>
           <RouteDrawerBody {...props} />
@@ -564,9 +625,20 @@ function RouteDrawerBody(props: RouteDetailsProps) {
   return (
     <div className="px-4 pb-4 flex-1 min-h-0 flex flex-col">
       {props.loading && !props.itinerary ? (
-        <div className="flex flex-col items-center justify-center py-8 gap-4">
+        <div className="flex flex-col items-center justify-center gap-4 py-8">
           <div className="route-spinner !w-6 !h-6" />
-          <span className="text-[15px] font-medium text-slate-300">Tražim najbolju rutu…</span>
+          <span className="text-[15px] font-medium text-slate-600">
+            Tražim najbolju rutu…
+          </span>
+          {props.onClearDestination && (
+            <button
+              type="button"
+              onClick={props.onClearDestination}
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              Promijeni odredište
+            </button>
+          )}
         </div>
       ) : props.itinerary ? (
         <MobileRouteSheetContent {...props} />

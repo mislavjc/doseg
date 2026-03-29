@@ -1,6 +1,13 @@
 "use client"
 
-import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import Link from "next/link"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
@@ -29,9 +36,19 @@ import {
   reconstructRoute,
   type RoutingData,
 } from "@/lib/route-reconstruct"
+import {
+  applyBasemapBackgroundTint,
+  DEFAULT_MAP_STYLE,
+  getMapStyleUrl,
+  type MapStyleId,
+} from "@/lib/map-styles"
 import { modeColor } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
-import { RouteDetails, SidePanel, RoutePanelContent } from "@/components/route-details"
+import {
+  RouteDetails,
+  SidePanel,
+  RoutePanelContent,
+} from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
 import { AddressInput } from "@/components/address-input"
 import { OnboardingDialog } from "@/components/onboarding-dialog"
@@ -43,18 +60,26 @@ const EMPTY_FC: GeoJSON.FeatureCollection = {
   features: [],
 }
 
+/** Muted time ramp for light basemap + legend strip */
+const ISOCHRONE_LINE_COLORS = [
+  "#1a7a52",
+  "#16949e",
+  "#2d7ec4",
+  "#7b68b8",
+] as const
+
 const TIME_COLOR_STOPS: maplibregl.ExpressionSpecification = [
   "interpolate",
   ["linear"],
   ["get", "time"],
   0,
-  "#16a34a",
-  900,
-  "#0891b2",
+  ISOCHRONE_LINE_COLORS[0],
+  600,
+  ISOCHRONE_LINE_COLORS[1],
+  1200,
+  ISOCHRONE_LINE_COLORS[2],
   1800,
-  "#2563eb",
-  2700,
-  "#9333ea",
+  ISOCHRONE_LINE_COLORS[3],
 ]
 
 function createMarkerElement(): HTMLDivElement {
@@ -67,77 +92,101 @@ function createMarkerElement(): HTMLDivElement {
   return el
 }
 
-function addIsochroneLayer(map: maplibregl.Map) {
-  map.addSource("isochrone", { type: "geojson", data: EMPTY_FC })
-  map.addLayer({
-    id: "isochrone-core",
-    type: "line",
-    source: "isochrone",
-    filter: ["<=", ["get", "time"], 2700],
-    paint: {
-      "line-color": TIME_COLOR_STOPS,
-      "line-width": [
-        "interpolate",
-        ["linear"],
-        ["zoom"],
-        10,
-        1,
-        13,
-        1.5,
-        16,
-        2.5,
-      ],
-      "line-opacity": [
-        "interpolate",
-        ["linear"],
-        ["zoom"],
-        10,
-        0.4,
-        13,
-        0.5,
-        16,
-        0.65,
-      ],
-      "line-blur": ["interpolate", ["linear"], ["zoom"], 10, 1, 14, 0.5],
-    },
-    layout: { "line-cap": "round", "line-join": "round" },
-  })
+/** Find the first symbol/label layer ID so data layers render below text. */
+function getFirstSymbolLayerId(map: maplibregl.Map): string | undefined {
+  const layers = map.getStyle().layers ?? []
+  for (const l of layers) {
+    if (l.type === "symbol") return l.id
+  }
+  return undefined
 }
 
-function addWalkRingLayer(map: maplibregl.Map) {
-  map.addSource("walk-ring", { type: "geojson", data: EMPTY_FC })
-  map.addLayer({
-    id: "walk-ring",
-    type: "line",
-    source: "walk-ring",
-    paint: {
-      "line-color": TIME_COLOR_STOPS,
-      "line-width": [
-        "interpolate",
-        ["linear"],
-        ["zoom"],
-        10,
-        0.8,
-        13,
-        1.2,
-        16,
-        2,
-      ],
-      "line-opacity": [
-        "interpolate",
-        ["linear"],
-        ["zoom"],
-        10,
-        0.15,
-        13,
-        0.25,
-        16,
-        0.35,
-      ],
-      "line-dasharray": [2, 3],
+function tweakBasemapForIsochrone(map: maplibregl.Map, active: boolean) {
+  for (const id of ["building", "building-top"]) {
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, "visibility", active ? "none" : "visible")
+    }
+  }
+  // Show labels earlier when isochrone is active
+  const overrides: [string, number, number][] = [
+    ["roadname_major", 11, 13],
+    ["roadname_pri", 12, 14],
+    ["roadname_sec", 13, 15],
+    ["roadname_minor", 14, 16],
+    ["place_suburbs", 10, 12],
+    ["place_hamlet", 10, 12],
+    ["place_villages", 8, 10],
+  ]
+  for (const [id, earlyZoom, defaultZoom] of overrides) {
+    if (map.getLayer(id)) {
+      map.setLayerZoomRange(id, active ? earlyZoom : defaultZoom, 24)
+    }
+  }
+}
+
+function addWalkAreaLayer(map: maplibregl.Map) {
+  const firstLabelId = getFirstSymbolLayerId(map)
+  map.addSource("walk-area", { type: "geojson", data: EMPTY_FC })
+  // Fill per time band — each band gets its own color from the ramp
+  map.addLayer(
+    {
+      id: "walk-area-fill",
+      type: "fill",
+      source: "walk-area",
+      paint: {
+        "fill-color": TIME_COLOR_STOPS,
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          0.07,
+          14,
+          0.04,
+          16,
+          0,
+        ],
+      },
     },
-    layout: { "line-cap": "round", "line-join": "round" },
-  })
+    firstLabelId
+  )
+  // Border line per band
+  map.addLayer(
+    {
+      id: "walk-area-border",
+      type: "line",
+      source: "walk-area",
+      paint: {
+        "line-color": TIME_COLOR_STOPS,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          1.5,
+          13,
+          2,
+          16,
+          2.5,
+        ],
+        "line-opacity": [
+          "interpolate",
+          ["linear"],
+          ["get", "time"],
+          600,
+          0.7,
+          2700,
+          0.4,
+        ],
+      },
+      layout: { "line-cap": "round", "line-join": "round" },
+    },
+    firstLabelId
+  )
+}
+
+function addIsochroneLayer(map: maplibregl.Map) {
+  map.addSource("isochrone", { type: "geojson", data: EMPTY_FC })
 }
 
 function addBajsLayers(map: maplibregl.Map) {
@@ -185,21 +234,21 @@ function addBajsStationsLayer(map: maplibregl.Map) {
       "circle-color": [
         "case",
         ["!", ["get", "isRenting"]],
-        "rgba(148, 163, 184, 0.8)",
+        "rgba(148, 163, 184, 0.5)",
         ["==", ["get", "bikesAvailable"], 0],
-        "rgba(249, 115, 22, 0.8)",
+        "rgba(249, 115, 22, 0.7)",
         ["<=", ["get", "bikesAvailable"], 2],
-        "rgba(245, 158, 11, 0.8)",
-        "rgba(245, 158, 11, 0.8)",
+        "rgba(245, 158, 11, 0.7)",
+        "rgba(245, 158, 11, 0.7)",
       ],
       "circle-stroke-width": 1,
       "circle-stroke-color": [
         "case",
         ["!", ["get", "isReturning"]],
-        "rgba(239, 68, 68, 0.8)",
+        "rgba(239, 68, 68, 0.5)",
         ["==", ["get", "docksAvailable"], 0],
-        "rgba(239, 68, 68, 0.8)",
-        "rgba(255, 255, 255, 0.4)",
+        "rgba(239, 68, 68, 0.5)",
+        "rgba(255, 255, 255, 0.8)",
       ],
     },
   })
@@ -223,10 +272,10 @@ function addVehicleLayers(map: maplibregl.Map) {
         16,
         5,
       ],
-      "circle-color": "#22d3ee",
+      "circle-color": "#0284c7",
       "circle-opacity": 0.85,
       "circle-stroke-width": 0.5,
-      "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+      "circle-stroke-color": "rgba(0, 0, 0, 0.2)",
     },
   })
   map.addLayer({
@@ -243,8 +292,8 @@ function addVehicleLayers(map: maplibregl.Map) {
       "text-font": ["Open Sans Bold"],
     },
     paint: {
-      "text-color": "#ffffff",
-      "text-halo-color": "rgba(0, 0, 0, 0.7)",
+      "text-color": "#1e293b",
+      "text-halo-color": "rgba(255, 255, 255, 0.8)",
       "text-halo-width": 1,
     },
   })
@@ -258,24 +307,34 @@ function addPoiSourceAndLayers(map: maplibregl.Map) {
     source: "poi",
     paint: {
       "circle-radius": [
-        "interpolate", ["linear"], ["zoom"],
-        10, 5,
-        13, 8,
-        16, 11,
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        5,
+        13,
+        8,
+        16,
+        11,
       ],
       "circle-color": [
         "match",
         ["get", "category"],
-        "hospital", "#ef4444",
-        "school", "#3b82f6",
-        "park", "#22c55e",
-        "pharmacy", "#f97316",
-        "supermarket", "#eab308",
+        "hospital",
+        "#ef4444",
+        "school",
+        "#3b82f6",
+        "park",
+        "#22c55e",
+        "pharmacy",
+        "#f97316",
+        "supermarket",
+        "#eab308",
         "#94a3b8",
       ],
       "circle-opacity": 0.9,
       "circle-stroke-width": 1.5,
-      "circle-stroke-color": "rgba(255, 255, 255, 0.6)",
+      "circle-stroke-color": "rgba(255, 255, 255, 0.8)",
     },
   })
   addPoiSymbolLayers(map)
@@ -290,19 +349,19 @@ function addPoiSymbolLayers(map: maplibregl.Map) {
       "text-field": [
         "match",
         ["get", "category"],
-        "hospital", "H",
-        "school", "Š",
-        "park", "P",
-        "pharmacy", "Lj",
-        "supermarket", "S",
+        "hospital",
+        "H",
+        "school",
+        "Š",
+        "park",
+        "P",
+        "pharmacy",
+        "Lj",
+        "supermarket",
+        "S",
         "?",
       ],
-      "text-size": [
-        "interpolate", ["linear"], ["zoom"],
-        10, 7,
-        13, 9,
-        16, 11,
-      ],
+      "text-size": ["interpolate", ["linear"], ["zoom"], 10, 7, 13, 9, 16, 11],
       "text-allow-overlap": true,
       "text-ignore-placement": true,
       "text-font": ["Open Sans Bold"],
@@ -331,8 +390,8 @@ function addPoiNameLabels(map: maplibregl.Map) {
       "text-font": ["Open Sans Regular"],
     },
     paint: {
-      "text-color": "#e2e8f0",
-      "text-halo-color": "rgba(0, 0, 0, 0.8)",
+      "text-color": "#334155",
+      "text-halo-color": "rgba(255, 255, 255, 0.9)",
       "text-halo-width": 1,
     },
   })
@@ -416,7 +475,10 @@ function addBajsClickHandler(
     if (!e.features || e.features.length === 0) return
     e.originalEvent.stopPropagation()
     const f = e.features[0]
-    const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [number, number]
+    const coords = (f.geometry as GeoJSON.Point).coordinates.slice() as [
+      number,
+      number,
+    ]
     const p = f.properties as Record<string, unknown>
     showBajsPopup(map, coords, p)
   })
@@ -436,8 +498,10 @@ function showBajsPopup(
   const name = String(p.name ?? "Stanica")
   const bikes = Number(p.bikesAvailable ?? 0)
   const docks = Number(p.docksAvailable ?? 0)
-  const isRenting = p.isRenting !== false && p.isRenting !== "false" && p.isRenting !== 0
-  const isReturning = p.isReturning !== false && p.isReturning !== "false" && p.isReturning !== 0
+  const isRenting =
+    p.isRenting !== false && p.isRenting !== "false" && p.isRenting !== 0
+  const isReturning =
+    p.isReturning !== false && p.isReturning !== "false" && p.isReturning !== 0
 
   let status = "Aktivna"
   if (!isRenting && !isReturning) status = "Ne radi"
@@ -457,7 +521,7 @@ function showBajsPopup(
         `<div>${bikes} bicikala</div>` +
         `<div>${docks} mjesta</div>` +
         `<div style="margin-top:4px;color:${status === "Aktivna" ? "#4ade80" : "#f87171"};font-size:11px">${status}</div>` +
-      `</div>`
+        `</div>`
     )
     .addTo(map)
 }
@@ -469,7 +533,7 @@ function addPreviewLayers(map: maplibregl.Map) {
     type: "line",
     source: "preview",
     paint: {
-      "line-color": "rgba(255, 255, 255, 0.25)",
+      "line-color": "rgba(0, 0, 0, 0.25)",
       "line-width": 1.5,
       "line-dasharray": [4, 4],
     },
@@ -485,9 +549,9 @@ function addPreviewLayers(map: maplibregl.Map) {
     source: "dest-dot",
     paint: {
       "circle-radius": 4,
-      "circle-color": "rgba(255, 255, 255, 0.7)",
+      "circle-color": "rgba(30, 41, 59, 0.7)",
       "circle-stroke-width": 1.5,
-      "circle-stroke-color": "rgba(255, 255, 255, 0.3)",
+      "circle-stroke-color": "rgba(30, 41, 59, 0.3)",
     },
   })
 }
@@ -499,14 +563,9 @@ function addRouteSourceAndLayers(map: maplibregl.Map) {
     type: "line",
     source: "route",
     paint: {
-      "line-color": "#000",
-      "line-width": [
-        "interpolate", ["linear"], ["zoom"],
-        10, 6,
-        13, 9,
-        16, 11,
-      ],
-      "line-opacity": 0.35,
+      "line-color": "#1e293b",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6, 13, 9, 16, 11],
+      "line-opacity": 0.15,
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -564,12 +623,7 @@ function addRouteTransitLayer(map: maplibregl.Map) {
         modeColor("BUS"),
         "#e2e8f0",
       ],
-      "line-width": [
-        "interpolate", ["linear"], ["zoom"],
-        10, 3,
-        13, 5,
-        16, 7,
-      ],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 13, 5, 16, 7],
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -582,9 +636,9 @@ function addRouteTailLayers(map: maplibregl.Map) {
     type: "line",
     source: "route-tail",
     paint: {
-      "line-color": "#000",
+      "line-color": "#1e293b",
       "line-width": 7,
-      "line-opacity": 0.3,
+      "line-opacity": 0.1,
     },
     layout: { "line-cap": "round", "line-join": "round" },
   })
@@ -601,12 +655,10 @@ function addRouteTailLayers(map: maplibregl.Map) {
   })
 }
 
-function addAllMapSources(map: maplibregl.Map) {
-  if (map.getLayer("background")) {
-    map.setPaintProperty("background", "background-color", "#1a1a24")
-  }
+function addAllMapSources(map: maplibregl.Map, mapStyleId: MapStyleId) {
+  applyBasemapBackgroundTint(map, mapStyleId)
+  addWalkAreaLayer(map)
   addIsochroneLayer(map)
-  addWalkRingLayer(map)
   addBajsLayers(map)
   addVehicleLayers(map)
   addPoiSourceAndLayers(map)
@@ -614,10 +666,7 @@ function addAllMapSources(map: maplibregl.Map) {
   addRouteSourceAndLayers(map)
 }
 
-function updatePreviewAndDot(
-  map: maplibregl.Map,
-  dest: [number, number],
-) {
+function updatePreviewAndDot(map: maplibregl.Map, dest: [number, number]) {
   const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
   if (dotSrc) {
     dotSrc.setData({
@@ -650,9 +699,7 @@ function reconstructAndRenderRoute(
     renderRouteBase(map, itinerary)
     setRoute(itinerary)
     const tailStop = nearest ? rd.stops.get(nearest) : null
-    routeTailOriginRef.current = tailStop
-      ? [tailStop.lon, tailStop.lat]
-      : null
+    routeTailOriginRef.current = tailStop ? [tailStop.lon, tailStop.lat] : null
   } else {
     routeTailOriginRef.current = null
     clearRenderedRoute(map)
@@ -678,18 +725,33 @@ interface ScheduleExactRouteOpts {
 }
 
 function fireExactRoute(
-  origin: [number, number], destLat: number, destLon: number,
-  preferredKey: string | null, requestSeq: number, opts: ScheduleExactRouteOpts
+  origin: [number, number],
+  destLat: number,
+  destLon: number,
+  preferredKey: string | null,
+  requestSeq: number,
+  opts: ScheduleExactRouteOpts
 ) {
   const controller = new AbortController()
   opts.exactRouteAbortRef.current = controller
   fetchExactRoute(
-    { originLat: origin[1], originLon: origin[0], destLat, destLon,
-      time: opts.effectiveTimeRef.current, bajs: opts.bajsEnabledRef.current, preferredKey },
+    {
+      originLat: origin[1],
+      originLon: origin[0],
+      destLat,
+      destLon,
+      time: opts.effectiveTimeRef.current,
+      bajs: opts.bajsEnabledRef.current,
+      preferredKey,
+    },
     controller.signal
   )
     .then((itinerary) => {
-      if (controller.signal.aborted || requestSeq !== opts.exactRouteSeqRef.current) return
+      if (
+        controller.signal.aborted ||
+        requestSeq !== opts.exactRouteSeqRef.current
+      )
+        return
       renderFullRoute(opts.map, itinerary)
       opts.routeTailOriginRef.current = null
       opts.setRoute(itinerary)
@@ -704,23 +766,32 @@ function fireExactRoute(
 }
 
 function scheduleExactRoute(
-  destLat: number, destLon: number, preferredKey: string | null, opts: ScheduleExactRouteOpts
+  destLat: number,
+  destLon: number,
+  preferredKey: string | null,
+  opts: ScheduleExactRouteOpts
 ) {
   const origin = opts.originRef.current
   if (!origin) return
-  if (opts.exactRouteTimerRef.current) window.clearTimeout(opts.exactRouteTimerRef.current)
+  if (opts.exactRouteTimerRef.current)
+    window.clearTimeout(opts.exactRouteTimerRef.current)
   if (opts.exactRouteAbortRef.current) opts.exactRouteAbortRef.current.abort()
   const requestSeq = ++opts.exactRouteSeqRef.current
   opts.setRouteLoading(true)
   opts.exactRouteTimerRef.current = window.setTimeout(
-    () => fireExactRoute(origin, destLat, destLon, preferredKey, requestSeq, opts), 160
+    () =>
+      fireExactRoute(origin, destLat, destLon, preferredKey, requestSeq, opts),
+    160
   )
 }
 
 interface HandleDestinationOpts {
   map: maplibregl.Map
   originRef: React.RefObject<[number, number] | null>
-  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  pendingDestinationRef: React.MutableRefObject<{
+    lat: number
+    lng: number
+  } | null>
   isTouchRef: React.RefObject<boolean>
   routingDataRef: React.RefObject<RoutingData | null>
   lastNearestRef: React.MutableRefObject<string | null>
@@ -751,8 +822,15 @@ function handleDestinationAt(
 
   if (nearestChanged) {
     reconstructAndRenderRoute(
-      opts.map, rd, lat, lng, nearest, dest,
-      opts.routeTailOriginRef, opts.setRoute, opts.setRouteLoading
+      opts.map,
+      rd,
+      lat,
+      lng,
+      nearest,
+      dest,
+      opts.routeTailOriginRef,
+      opts.setRoute,
+      opts.setRouteLoading
     )
     opts.lastNearestRef.current = nearest
   } else {
@@ -761,7 +839,6 @@ function handleDestinationAt(
 
   scheduleExactRoute(lat, lng, nearest, opts.exactRouteOpts)
 }
-
 
 function cleanupMapInit(
   map: maplibregl.Map,
@@ -772,7 +849,9 @@ function cleanupMapInit(
     exactRouteTimerRef: React.MutableRefObject<number>
     poiAbortRef: React.MutableRefObject<AbortController | null>
     mapRef: React.MutableRefObject<maplibregl.Map | null>
-    handleDestinationRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>
+    handleDestinationRef: React.MutableRefObject<
+      ((lat: number, lng: number) => void) | null
+    >
     routeTailOriginRef: React.MutableRefObject<[number, number] | null>
     rafRef: React.MutableRefObject<number>
   },
@@ -810,11 +889,16 @@ function buildVehicleFeatureCollection(
     features: vehicles.map((v) => {
       const line = v.routeId
         ? v.routeId.replace(/^[A-Z]+_/, "")
-        : v.tripId.split("_")[0] ?? ""
+        : (v.tripId.split("_")[0] ?? "")
       return {
         type: "Feature" as const,
         geometry: { type: "Point" as const, coordinates: [v.lon, v.lat] },
-        properties: { tripId: v.tripId, line, bearing: v.bearing ?? 0, speed: v.speed ?? 0 },
+        properties: {
+          tripId: v.tripId,
+          line,
+          bearing: v.bearing ?? 0,
+          speed: v.speed ?? 0,
+        },
       }
     }),
   }
@@ -828,7 +912,10 @@ function resetOriginMapState(
     exactRouteTimerRef: React.MutableRefObject<number>
     routingAbortRef: React.MutableRefObject<AbortController | null>
     exactRouteSeqRef: React.MutableRefObject<number>
-    pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+    pendingDestinationRef: React.MutableRefObject<{
+      lat: number
+      lng: number
+    } | null>
     routingDataRef: React.MutableRefObject<RoutingData | null>
   },
   setRouteLoading: (l: boolean) => void
@@ -859,19 +946,59 @@ function resetOriginMapState(
   refs.routingDataRef.current = null
 }
 
+/** Clear route / destination visuals while keeping origin marker and routing graph. */
+function clearDestinationRouteOnMap(
+  map: maplibregl.Map,
+  refs: Pick<
+    MapRefs,
+    | "exactRouteAbortRef"
+    | "exactRouteTimerRef"
+    | "exactRouteSeqRef"
+    | "pendingDestinationRef"
+    | "lastNearestRef"
+    | "routeTailOriginRef"
+  >,
+  setRouteLoading: (l: boolean) => void
+) {
+  const routeSource = map.getSource("route") as maplibregl.GeoJSONSource
+  if (routeSource) routeSource.setData(EMPTY_FC)
+  const routeTailSource = map.getSource(
+    "route-tail"
+  ) as maplibregl.GeoJSONSource
+  if (routeTailSource) routeTailSource.setData(EMPTY_FC)
+  if (refs.exactRouteAbortRef.current) refs.exactRouteAbortRef.current.abort()
+  if (refs.exactRouteTimerRef.current) {
+    window.clearTimeout(refs.exactRouteTimerRef.current)
+  }
+  refs.exactRouteSeqRef.current++
+  const previewSrc = map.getSource("preview") as maplibregl.GeoJSONSource
+  if (previewSrc) previewSrc.setData(EMPTY_FC)
+  const dotSrc = map.getSource("dest-dot") as maplibregl.GeoJSONSource
+  if (dotSrc) dotSrc.setData(EMPTY_FC)
+  setRouteLoading(false)
+  refs.pendingDestinationRef.current = null
+  refs.lastNearestRef.current = null
+  refs.routeTailOriginRef.current = null
+  map.getCanvas().style.cursor = "crosshair"
+}
+
 function clearOriginFromMap(
   map: maplibregl.Map,
-  originRef: React.MutableRefObject<[number, number] | null>,
-  routeTailOriginRef: React.MutableRefObject<[number, number] | null>,
+  refs: Pick<
+    MapRefs,
+    "originRef" | "routeTailOriginRef" | "latestIsochroneRef"
+  >,
   setRoute: (r: Itinerary | null) => void
 ) {
   const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
   if (isoSource) isoSource.setData(EMPTY_FC)
-  const walkRingSrc = map.getSource("walk-ring") as maplibregl.GeoJSONSource
-  if (walkRingSrc) walkRingSrc.setData(EMPTY_FC)
+  const walkAreaSrc = map.getSource("walk-area") as maplibregl.GeoJSONSource
+  if (walkAreaSrc) walkAreaSrc.setData(EMPTY_FC)
+  tweakBasemapForIsochrone(map, false)
   map.getCanvas().style.cursor = ""
-  originRef.current = null
-  routeTailOriginRef.current = null
+  refs.originRef.current = null
+  refs.routeTailOriginRef.current = null
+  refs.latestIsochroneRef.current = null
   setRoute(null)
 }
 
@@ -880,16 +1007,17 @@ function handleIsochroneSuccess(
   geojson: IsochroneResponse,
   statsCtaDismissedRef: React.RefObject<boolean>,
   setLoading: (l: boolean) => void,
-  setShowStatsCta: (v: boolean) => void
+  setShowStatsCta: (v: boolean) => void,
+  latestIsochroneRef: React.MutableRefObject<GeoJSON.FeatureCollection | null>
 ) {
+  latestIsochroneRef.current = geojson
   const isoSource = map.getSource("isochrone") as maplibregl.GeoJSONSource
   if (isoSource) isoSource.setData(geojson)
-  const walkRingSrc = map.getSource(
-    "walk-ring"
-  ) as maplibregl.GeoJSONSource
-  if (walkRingSrc) {
-    walkRingSrc.setData(geojson.walkRing ?? EMPTY_FC)
+  const walkAreaSrc = map.getSource("walk-area") as maplibregl.GeoJSONSource
+  if (walkAreaSrc) {
+    walkAreaSrc.setData(geojson.walkArea ?? EMPTY_FC)
   }
+  tweakBasemapForIsochrone(map, true)
   setLoading(false)
   map.getCanvas().style.cursor = "crosshair"
   if (
@@ -929,10 +1057,13 @@ function startIsochroneFetches(
   statsCtaDismissedRef: React.RefObject<boolean>,
   routingDataRef: React.MutableRefObject<RoutingData | null>,
   pendingDestinationRef: React.RefObject<{ lat: number; lng: number } | null>,
-  handleDestinationRef: React.RefObject<((lat: number, lng: number) => void) | null>,
+  handleDestinationRef: React.RefObject<
+    ((lat: number, lng: number) => void) | null
+  >,
   setLoading: (l: boolean) => void,
   setShowStatsCta: (v: boolean) => void,
-  setError: (e: string | null) => void
+  setError: (e: string | null) => void,
+  latestIsochroneRef: React.MutableRefObject<GeoJSON.FeatureCollection | null>
 ) {
   fetchIsochrone(
     { lat: originLat, lon: originLon, time: effectiveTime, bajs: bajsEnabled },
@@ -940,7 +1071,14 @@ function startIsochroneFetches(
   )
     .then((geojson: IsochroneResponse) => {
       if (isoController.signal.aborted) return
-      handleIsochroneSuccess(map, geojson, statsCtaDismissedRef, setLoading, setShowStatsCta)
+      handleIsochroneSuccess(
+        map,
+        geojson,
+        statsCtaDismissedRef,
+        setLoading,
+        setShowStatsCta,
+        latestIsochroneRef
+      )
     })
     .catch((err) => {
       if (isoController.signal.aborted) return
@@ -954,10 +1092,17 @@ function startIsochroneFetches(
     .then((response) => {
       if (routingController.signal.aborted) return
       if (!response.routing) return
-      routingDataRef.current = parseRoutingData(response.routing, originLat, originLon)
+      routingDataRef.current = parseRoutingData(
+        response.routing,
+        originLat,
+        originLon
+      )
       const pendingDestination = pendingDestinationRef.current
       if (pendingDestination && handleDestinationRef.current) {
-        handleDestinationRef.current(pendingDestination.lat, pendingDestination.lng)
+        handleDestinationRef.current(
+          pendingDestination.lat,
+          pendingDestination.lng
+        )
       }
     })
     .catch((err) => {
@@ -978,8 +1123,13 @@ type MapRefs = {
   exactRouteTimerRef: React.MutableRefObject<number>
   exactRouteSeqRef: React.MutableRefObject<number>
   routingDataRef: React.MutableRefObject<RoutingData | null>
-  handleDestinationRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>
-  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  handleDestinationRef: React.MutableRefObject<
+    ((lat: number, lng: number) => void) | null
+  >
+  pendingDestinationRef: React.MutableRefObject<{
+    lat: number
+    lng: number
+  } | null>
   lastNearestRef: React.MutableRefObject<string | null>
   routeTailOriginRef: React.MutableRefObject<[number, number] | null>
   rafRef: React.MutableRefObject<number>
@@ -989,10 +1139,14 @@ type MapRefs = {
   statsCtaDismissedRef: React.MutableRefObject<boolean>
   poiAbortRef: React.MutableRefObject<AbortController | null>
   initialLoadRef: React.MutableRefObject<boolean>
+  latestIsochroneRef: React.MutableRefObject<GeoJSON.FeatureCollection | null>
 }
 
-
-function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; hasOrigin: boolean }): MapRefs {
+function useTransitMapRefs(s: {
+  effectiveTime: string
+  bajsEnabled: boolean
+  hasOrigin: boolean
+}): MapRefs {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const markerRef = useRef<maplibregl.Marker | null>(null)
@@ -1004,8 +1158,12 @@ function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; has
   const exactRouteTimerRef = useRef<number>(0)
   const exactRouteSeqRef = useRef(0)
   const routingDataRef = useRef<RoutingData | null>(null)
-  const handleDestinationRef = useRef<((lat: number, lng: number) => void) | null>(null)
-  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(null)
+  const handleDestinationRef = useRef<
+    ((lat: number, lng: number) => void) | null
+  >(null)
+  const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(
+    null
+  )
   const lastNearestRef = useRef<string | null>(null)
   const routeTailOriginRef = useRef<[number, number] | null>(null)
   const rafRef = useRef<number>(0)
@@ -1015,13 +1173,32 @@ function useTransitMapRefs(s: { effectiveTime: string; bajsEnabled: boolean; has
   const statsCtaDismissedRef = useRef(false)
   const poiAbortRef = useRef<AbortController | null>(null)
   const initialLoadRef = useRef(s.hasOrigin)
+  const latestIsochroneRef = useRef<GeoJSON.FeatureCollection | null>(null)
 
   return {
-    containerRef, mapRef, markerRef, originRef, isoAbortRef, routingAbortRef,
-    bajsAbortRef, exactRouteAbortRef, exactRouteTimerRef, exactRouteSeqRef,
-    routingDataRef, handleDestinationRef, pendingDestinationRef, lastNearestRef,
-    routeTailOriginRef, rafRef, isTouchRef, effectiveTimeRef, bajsEnabledRef,
-    statsCtaDismissedRef, poiAbortRef, initialLoadRef,
+    containerRef,
+    mapRef,
+    markerRef,
+    originRef,
+    isoAbortRef,
+    routingAbortRef,
+    bajsAbortRef,
+    exactRouteAbortRef,
+    exactRouteTimerRef,
+    exactRouteSeqRef,
+    routingDataRef,
+    handleDestinationRef,
+    pendingDestinationRef,
+    lastNearestRef,
+    routeTailOriginRef,
+    rafRef,
+    isTouchRef,
+    effectiveTimeRef,
+    bajsEnabledRef,
+    statsCtaDismissedRef,
+    poiAbortRef,
+    initialLoadRef,
+    latestIsochroneRef,
   }
 }
 
@@ -1040,6 +1217,7 @@ function useEscapeKey(
 
 function useMapInit(
   refs: MapRefs,
+  mapStyleId: MapStyleId,
   setMapReady: (v: boolean) => void,
   setRoute: (r: Itinerary | null) => void,
   setRouteLoading: (l: boolean) => void,
@@ -1051,14 +1229,27 @@ function useMapInit(
   useEffect(() => {
     if (!refs.containerRef.current) return
 
-    const map = createMap(refs.containerRef.current, refs.isTouchRef)
+    const map = createMap(
+      refs.containerRef.current,
+      refs.isTouchRef,
+      mapStyleId
+    )
 
     map.on("load", () => {
       refs.mapRef.current = map
-      addAllMapSources(map)
+      addAllMapSources(map, mapStyleId)
       addPoiClickHandler(map, refs.originRef)
       addBajsClickHandler(map, refs.originRef)
-      bindMapInteractions(map, refs, setRoute, setRouteLoading, setLoading, setError, setCoords, clearNames)
+      bindMapInteractions(
+        map,
+        refs,
+        setRoute,
+        setRouteLoading,
+        setLoading,
+        setError,
+        setCoords,
+        clearNames
+      )
       setMapReady(true)
     })
 
@@ -1068,13 +1259,58 @@ function useMapInit(
   }, [setCoords]) // eslint-disable-line react-hooks/exhaustive-deps
 }
 
+function useMapBasemapStyle(
+  refs: MapRefs,
+  mapReady: boolean,
+  mapStyleId: MapStyleId,
+  route: Itinerary | null
+) {
+  const routeRef = useRef<Itinerary | null>(route)
+  routeRef.current = route
+  const prevStyleRef = useRef<MapStyleId | null>(null)
+
+  useEffect(() => {
+    const map = refs.mapRef.current
+    if (!map || !mapReady) return
+
+    if (prevStyleRef.current === null) {
+      prevStyleRef.current = mapStyleId
+      return
+    }
+    if (prevStyleRef.current === mapStyleId) return
+    prevStyleRef.current = mapStyleId
+
+    map.setStyle(getMapStyleUrl(mapStyleId))
+    map.once("style.load", () => {
+      addAllMapSources(map, mapStyleId)
+      const iso = refs.latestIsochroneRef.current as IsochroneResponse | null
+      const isoSrc = map.getSource("isochrone") as maplibregl.GeoJSONSource
+      if (iso && isoSrc) isoSrc.setData(iso)
+      const walkAreaSrc = map.getSource("walk-area") as maplibregl.GeoJSONSource
+      if (iso?.walkArea && walkAreaSrc) walkAreaSrc.setData(iso.walkArea)
+
+      const r = routeRef.current
+      if (r) renderFullRoute(map, r)
+      const pending = refs.pendingDestinationRef.current
+      if (pending && refs.originRef.current) {
+        updatePreviewAndDot(map, [pending.lng, pending.lat])
+        renderRouteTail(map, refs.routeTailOriginRef.current, [
+          pending.lng,
+          pending.lat,
+        ])
+      }
+    })
+  }, [mapStyleId, mapReady]) // eslint-disable-line react-hooks/exhaustive-deps -- refs stable
+}
+
 function createMap(
   container: HTMLDivElement,
-  isTouchRef: React.MutableRefObject<boolean>
+  isTouchRef: React.MutableRefObject<boolean>,
+  mapStyleId: MapStyleId
 ): maplibregl.Map {
   const map = new maplibregl.Map({
     container,
-    style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+    style: getMapStyleUrl(mapStyleId),
     center: ZAGREB,
     zoom: 12,
     attributionControl: false,
@@ -1083,12 +1319,20 @@ function createMap(
 
   map.getContainer().addEventListener(
     "touchstart",
-    () => { isTouchRef.current = true },
+    () => {
+      isTouchRef.current = true
+    },
     { once: true, passive: true }
   )
 
-  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right")
-  map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right")
+  map.addControl(
+    new maplibregl.NavigationControl({ showCompass: false }),
+    "top-right"
+  )
+  map.addControl(
+    new maplibregl.AttributionControl({ compact: true }),
+    "bottom-right"
+  )
   return map
 }
 
@@ -1132,7 +1376,17 @@ function bindMapInteractions(
   }
   refs.handleDestinationRef.current = handleDestination
 
-  bindMapClickEvents(map, refs, handleDestination, setRoute, setRouteLoading, setLoading, setError, setCoords, clearNames)
+  bindMapClickEvents(
+    map,
+    refs,
+    handleDestination,
+    setRoute,
+    setRouteLoading,
+    setLoading,
+    setError,
+    setCoords,
+    clearNames
+  )
 }
 
 function bindMapClickEvents(
@@ -1170,9 +1424,11 @@ function useBajsLayer(
   mapRef: React.RefObject<maplibregl.Map | null>,
   bajsAbortRef: React.MutableRefObject<AbortController | null>,
   bajsEnabled: boolean,
-  mapReady: boolean
+  mapReady: boolean,
+  mapStyle: MapStyleId
 ) {
   useEffect(() => {
+    void mapStyle
     const map = mapRef.current
     if (!map || !mapReady) return
 
@@ -1199,14 +1455,17 @@ function useBajsLayer(
         source.setData(EMPTY_FC)
       })
 
-    return () => { controller.abort() }
-  }, [bajsEnabled, mapReady, mapRef, bajsAbortRef])
+    return () => {
+      controller.abort()
+    }
+  }, [bajsEnabled, mapReady, mapRef, bajsAbortRef, mapStyle])
 }
 
 function useVehiclePositions(
   mapRef: React.RefObject<maplibregl.Map | null>,
   mapReady: boolean,
   vehiclesEnabled: boolean,
+  mapStyle: MapStyleId
 ) {
   const { data: vehicles } = useSWR<VehicleRecord[]>(
     vehiclesEnabled && mapReady ? "/api/vehicles" : null,
@@ -1214,56 +1473,81 @@ function useVehiclePositions(
   )
 
   const vehiclePositions = useMemo(
-    () => vehicles ? buildVehicleFeatureCollection(vehicles) : EMPTY_FC,
+    () => (vehicles ? buildVehicleFeatureCollection(vehicles) : EMPTY_FC),
     [vehicles]
   )
 
   useEffect(() => {
+    void mapStyle
     const map = mapRef.current
     if (!map || !mapReady) return
-    const source = map.getSource("vehicle-positions") as maplibregl.GeoJSONSource
+    const source = map.getSource(
+      "vehicle-positions"
+    ) as maplibregl.GeoJSONSource
     if (source) source.setData(vehiclePositions)
-  }, [vehiclePositions, mapReady, mapRef])
+  }, [vehiclePositions, mapReady, mapRef, mapStyle])
 }
 
 function usePoiLayer(
   mapRef: React.RefObject<maplibregl.Map | null>,
   poiAbortRef: React.MutableRefObject<AbortController | null>,
   poiEnabled: boolean,
-  mapReady: boolean
+  mapReady: boolean,
+  mapStyle: MapStyleId
 ) {
   useEffect(() => {
+    void mapStyle
     const map = mapRef.current
     if (!map || !mapReady) return
     const source = map.getSource("poi") as maplibregl.GeoJSONSource
     if (!source) return
-    if (!poiEnabled) { source.setData(EMPTY_FC); return }
+    if (!poiEnabled) {
+      source.setData(EMPTY_FC)
+      return
+    }
     if (poiAbortRef.current) poiAbortRef.current.abort()
     const controller = new AbortController()
     poiAbortRef.current = controller
     fetchPoiData(source, controller)
-    return () => { controller.abort() }
-  }, [poiEnabled, mapReady, mapRef, poiAbortRef])
+    return () => {
+      controller.abort()
+    }
+  }, [poiEnabled, mapReady, mapRef, poiAbortRef, mapStyle])
 }
 
-function fetchPoiData(source: maplibregl.GeoJSONSource, controller: AbortController) {
-  fetch("/api/poi?categories=hospital,school,park,pharmacy", { signal: controller.signal })
+function fetchPoiData(
+  source: maplibregl.GeoJSONSource,
+  controller: AbortController
+) {
+  fetch("/api/poi?categories=hospital,school,park,pharmacy", {
+    signal: controller.signal,
+  })
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       return res.json()
     })
-    .then((pois: Array<{ id: number; name: string; lat: number; lon: number; category: string }>) => {
-      if (controller.signal.aborted) return
-      const fc: GeoJSON.FeatureCollection = {
-        type: "FeatureCollection",
-        features: pois.map((p) => ({
-          type: "Feature" as const,
-          geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] },
-          properties: { name: p.name, category: p.category },
-        })),
+    .then(
+      (
+        pois: Array<{
+          id: number
+          name: string
+          lat: number
+          lon: number
+          category: string
+        }>
+      ) => {
+        if (controller.signal.aborted) return
+        const fc: GeoJSON.FeatureCollection = {
+          type: "FeatureCollection",
+          features: pois.map((p) => ({
+            type: "Feature" as const,
+            geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] },
+            properties: { name: p.name, category: p.category },
+          })),
+        }
+        source.setData(fc)
       }
-      source.setData(fc)
-    })
+    )
     .catch((err) => {
       if (controller.signal.aborted) return
       console.error("POI fetch failed:", err)
@@ -1292,7 +1576,7 @@ function useOriginIsochrone(
     resetOriginMapState(map, refs, setRouteLoading)
 
     if (originLat === null || originLon === null) {
-      clearOriginFromMap(map, refs.originRef, refs.routeTailOriginRef, setRoute)
+      clearOriginFromMap(map, refs, setRoute)
       return
     }
 
@@ -1308,14 +1592,27 @@ function useOriginIsochrone(
     resetFetchState()
 
     startIsochroneFetches(
-      map, originLat, originLon, effectiveTime, bajsEnabled,
-      isoController, routingController,
-      refs.statsCtaDismissedRef, refs.routingDataRef, refs.pendingDestinationRef,
+      map,
+      originLat,
+      originLon,
+      effectiveTime,
+      bajsEnabled,
+      isoController,
+      routingController,
+      refs.statsCtaDismissedRef,
+      refs.routingDataRef,
+      refs.pendingDestinationRef,
       refs.handleDestinationRef,
-      setLoading, setShowStatsCta, setError
+      setLoading,
+      setShowStatsCta,
+      setError,
+      refs.latestIsochroneRef
     )
 
-    return () => { isoController.abort(); routingController.abort() }
+    return () => {
+      isoController.abort()
+      routingController.abort()
+    }
   }, [originLat, originLon, mapReady, effectiveTime, bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 }
 
@@ -1345,10 +1642,14 @@ function prepareOriginMarker(
 }
 
 function useTransitMapState() {
-  const [coords, setCoords] = useQueryStates({ lat: parseAsFloat, lon: parseAsFloat })
+  const [coords, setCoords] = useQueryStates({
+    lat: parseAsFloat,
+    lon: parseAsFloat,
+  })
   const [time, setTime] = useQueryState("t", parseAsString)
   const [bajs, setBajs] = useQueryState("bajs", parseAsString)
   const [defaultTime] = useState(formatTime)
+  const mapStyle = DEFAULT_MAP_STYLE
   const effectiveTime = time ?? defaultTime
   const bajsEnabled = bajs === "1"
   const [route, setRoute] = useState<Itinerary | null>(null)
@@ -1373,15 +1674,43 @@ function useTransitMapState() {
   const hasOrigin = coords.lat !== null && coords.lon !== null
 
   return {
-    coords, setCoords, time, setTime, bajs, setBajs,
-    effectiveTime, bajsEnabled, route, setRoute,
-    routeLoading, setRouteLoading, loading, setLoading,
-    error, setError, mapReady, setMapReady,
-    showStatsCta, setShowStatsCta, linkCopied, setLinkCopied,
-    vehiclesEnabled, setVehiclesEnabled,
-    poiEnabled, setPoiEnabled, layersOpen, setLayersOpen,
-    originName, setOriginName, destName, setDestName,
-    swapping, setSwapping, mobileSearchOpen, setMobileSearchOpen,
+    coords,
+    setCoords,
+    time,
+    setTime,
+    bajs,
+    setBajs,
+    mapStyle,
+    effectiveTime,
+    bajsEnabled,
+    route,
+    setRoute,
+    routeLoading,
+    setRouteLoading,
+    loading,
+    setLoading,
+    error,
+    setError,
+    mapReady,
+    setMapReady,
+    showStatsCta,
+    setShowStatsCta,
+    linkCopied,
+    setLinkCopied,
+    vehiclesEnabled,
+    setVehiclesEnabled,
+    poiEnabled,
+    setPoiEnabled,
+    layersOpen,
+    setLayersOpen,
+    originName,
+    setOriginName,
+    destName,
+    setDestName,
+    swapping,
+    setSwapping,
+    mobileSearchOpen,
+    setMobileSearchOpen,
     hasOrigin,
   }
 }
@@ -1389,14 +1718,40 @@ function useTransitMapState() {
 const ONBOARDING_KEY = "doseg-onboarded"
 
 function useTransitMapCallbacks(s: ReturnType<typeof useTransitMapState>) {
-  const { setCoords, setRoute, setRouteLoading, setError, setOriginName, setDestName, setLoading } = s
+  const {
+    setCoords,
+    setRoute,
+    setRouteLoading,
+    setError,
+    setOriginName,
+    setDestName,
+    setLoading,
+  } = s
   const onEscape = useCallback(() => {
-    setCoords({ lat: null, lon: null }); setRoute(null); setRouteLoading(false); setError(null); setOriginName(null); setDestName(null)
-  }, [setCoords, setRoute, setRouteLoading, setError, setOriginName, setDestName])
+    setCoords({ lat: null, lon: null })
+    setRoute(null)
+    setRouteLoading(false)
+    setError(null)
+    setOriginName(null)
+    setDestName(null)
+  }, [
+    setCoords,
+    setRoute,
+    setRouteLoading,
+    setError,
+    setOriginName,
+    setDestName,
+  ])
   const resetFetchState = useCallback(() => {
-    setLoading(true); setError(null); setRoute(null); setRouteLoading(false)
+    setLoading(true)
+    setError(null)
+    setRoute(null)
+    setRouteLoading(false)
   }, [setLoading, setError, setRoute, setRouteLoading])
-  const clearNames = useCallback(() => { setOriginName(null); setDestName(null) }, [setOriginName, setDestName])
+  const clearNames = useCallback(() => {
+    setOriginName(null)
+    setDestName(null)
+  }, [setOriginName, setDestName])
   return { onEscape, resetFetchState, clearNames }
 }
 
@@ -1410,34 +1765,137 @@ export function TransitMap() {
   })
 
   const [everHadOrigin, setEverHadOrigin] = useState(s.hasOrigin)
-  useEffect(() => { if (s.hasOrigin) setEverHadOrigin(true) }, [s.hasOrigin])
-  useEffect(() => { refs.effectiveTimeRef.current = s.effectiveTime }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
-  useEffect(() => { refs.bajsEnabledRef.current = s.bajsEnabled }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
+  useEffect(() => {
+    if (s.hasOrigin) setEverHadOrigin(true)
+  }, [s.hasOrigin])
+  useEffect(() => {
+    refs.effectiveTimeRef.current = s.effectiveTime
+  }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
+  useEffect(() => {
+    refs.bajsEnabledRef.current = s.bajsEnabled
+  }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
 
   useEscapeKey(refs.originRef, onEscape)
-  useMapInit(refs, s.setMapReady, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setCoords, clearNames)
-  useBajsLayer(refs.mapRef, refs.bajsAbortRef, s.bajsEnabled, s.mapReady)
-  useVehiclePositions(refs.mapRef, s.mapReady, s.vehiclesEnabled)
-  usePoiLayer(refs.mapRef, refs.poiAbortRef, s.poiEnabled, s.mapReady)
-  useOriginIsochrone(refs, s.coords.lat, s.coords.lon, s.mapReady, s.effectiveTime, s.bajsEnabled, resetFetchState, s.setRoute, s.setRouteLoading, s.setLoading, s.setError, s.setShowStatsCta)
+  useMapInit(
+    refs,
+    s.mapStyle,
+    s.setMapReady,
+    s.setRoute,
+    s.setRouteLoading,
+    s.setLoading,
+    s.setError,
+    s.setCoords,
+    clearNames
+  )
+  useMapBasemapStyle(refs, s.mapReady, s.mapStyle, s.route)
+  useBajsLayer(
+    refs.mapRef,
+    refs.bajsAbortRef,
+    s.bajsEnabled,
+    s.mapReady,
+    s.mapStyle
+  )
+  useVehiclePositions(refs.mapRef, s.mapReady, s.vehiclesEnabled, s.mapStyle)
+  usePoiLayer(
+    refs.mapRef,
+    refs.poiAbortRef,
+    s.poiEnabled,
+    s.mapReady,
+    s.mapStyle
+  )
+  useOriginIsochrone(
+    refs,
+    s.coords.lat,
+    s.coords.lon,
+    s.mapReady,
+    s.effectiveTime,
+    s.bajsEnabled,
+    resetFetchState,
+    s.setRoute,
+    s.setRouteLoading,
+    s.setLoading,
+    s.setError,
+    s.setShowStatsCta
+  )
+
+  // Dim walk area when a route is displayed
+  useEffect(() => {
+    const map = refs.mapRef.current
+    if (!map || !s.mapReady) return
+    const hasRoute = s.route !== null
+    if (map.getLayer("walk-area-fill")) {
+      map.setLayoutProperty(
+        "walk-area-fill",
+        "visibility",
+        hasRoute ? "none" : "visible"
+      )
+    }
+    if (map.getLayer("walk-area-border")) {
+      map.setPaintProperty(
+        "walk-area-border",
+        "line-opacity",
+        hasRoute
+          ? 0.15
+          : ["interpolate", ["linear"], ["get", "time"], 600, 0.7, 2700, 0.4]
+      )
+    }
+  }, [s.route, s.mapReady]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const clearDestinationOnly = useCallback(() => {
+    const map = refs.mapRef.current
+    if (map) clearDestinationRouteOnMap(map, refs, s.setRouteLoading)
+    s.setRoute(null)
+    s.setRouteLoading(false)
+    s.setDestName(null)
+    s.setError(null)
+    s.setSwapping(false)
+  }, [
+    s.setRoute,
+    s.setRouteLoading,
+    s.setDestName,
+    s.setError,
+    s.setSwapping,
+  ]) // eslint-disable-line react-hooks/exhaustive-deps -- refs from useTransitMapRefs
 
   return (
     <TransitMapView
-      containerRef={refs.containerRef} loading={s.loading} bajsEnabled={s.bajsEnabled}
-      poiEnabled={s.poiEnabled} layersOpen={s.layersOpen} vehiclesEnabled={s.vehiclesEnabled}
-      effectiveTime={s.effectiveTime} hasOrigin={s.hasOrigin} everHadOrigin={everHadOrigin} error={s.error}
-      showStatsCta={s.showStatsCta} route={s.route} routeLoading={s.routeLoading}
-      linkCopied={s.linkCopied} mapRef={refs.mapRef} statsCtaDismissedRef={refs.statsCtaDismissedRef}
-      onboardingOpen={onboardingOpen} setOnboardingOpen={setOnboardingOpen}
-      setTime={s.setTime} setBajs={s.setBajs} setLayersOpen={s.setLayersOpen}
-      setVehiclesEnabled={s.setVehiclesEnabled} setPoiEnabled={s.setPoiEnabled}
-      setCoords={s.setCoords} setShowStatsCta={s.setShowStatsCta} setLinkCopied={s.setLinkCopied}
+      containerRef={refs.containerRef}
+      loading={s.loading}
+      bajsEnabled={s.bajsEnabled}
+      poiEnabled={s.poiEnabled}
+      layersOpen={s.layersOpen}
+      vehiclesEnabled={s.vehiclesEnabled}
+      effectiveTime={s.effectiveTime}
+      hasOrigin={s.hasOrigin}
+      everHadOrigin={everHadOrigin}
+      error={s.error}
+      showStatsCta={s.showStatsCta}
+      route={s.route}
+      routeLoading={s.routeLoading}
+      linkCopied={s.linkCopied}
+      mapRef={refs.mapRef}
+      statsCtaDismissedRef={refs.statsCtaDismissedRef}
+      onboardingOpen={onboardingOpen}
+      setOnboardingOpen={setOnboardingOpen}
+      setTime={s.setTime}
+      setBajs={s.setBajs}
+      setLayersOpen={s.setLayersOpen}
+      setVehiclesEnabled={s.setVehiclesEnabled}
+      setPoiEnabled={s.setPoiEnabled}
+      setCoords={s.setCoords}
+      setShowStatsCta={s.setShowStatsCta}
+      setLinkCopied={s.setLinkCopied}
       handleDestinationRef={refs.handleDestinationRef}
       pendingDestinationRef={refs.pendingDestinationRef}
-      originName={s.originName} setOriginName={s.setOriginName}
-      destName={s.destName} setDestName={s.setDestName}
-      swapping={s.swapping} setSwapping={s.setSwapping}
-      mobileSearchOpen={s.mobileSearchOpen} setMobileSearchOpen={s.setMobileSearchOpen}
+      originName={s.originName}
+      setOriginName={s.setOriginName}
+      destName={s.destName}
+      setDestName={s.setDestName}
+      swapping={s.swapping}
+      setSwapping={s.setSwapping}
+      mobileSearchOpen={s.mobileSearchOpen}
+      setMobileSearchOpen={s.setMobileSearchOpen}
+      onClearDestination={clearDestinationOnly}
     />
   )
 }
@@ -1472,8 +1930,13 @@ type TransitMapViewProps = {
   setCoords: SetCoords
   setShowStatsCta: (v: boolean) => void
   setLinkCopied: (v: boolean) => void
-  handleDestinationRef: React.RefObject<((lat: number, lng: number) => void) | null>
-  pendingDestinationRef: React.MutableRefObject<{ lat: number; lng: number } | null>
+  handleDestinationRef: React.RefObject<
+    ((lat: number, lng: number) => void) | null
+  >
+  pendingDestinationRef: React.MutableRefObject<{
+    lat: number
+    lng: number
+  } | null>
   originName: string | null
   setOriginName: (v: string | null) => void
   destName: string | null
@@ -1482,33 +1945,56 @@ type TransitMapViewProps = {
   setSwapping: (v: boolean) => void
   mobileSearchOpen: boolean
   setMobileSearchOpen: (v: boolean) => void
+  /** Clear route / destination; keep origin (like “promijeni polazište” for the other end). */
+  onClearDestination: () => void
 }
 
-function useStableOriginName(route: Itinerary | null, hasOrigin: boolean, explicitName: string | null) {
+function useStableOriginName(
+  route: Itinerary | null,
+  hasOrigin: boolean,
+  explicitName: string | null
+) {
   const [routeName, setRouteName] = useState<string | null>(null)
   useEffect(() => {
-    if (!hasOrigin) { startTransition(() => setRouteName(null)); return }
+    if (!hasOrigin) {
+      startTransition(() => setRouteName(null))
+      return
+    }
     if (!route) return
-    startTransition(() => setRouteName(prev => {
-      if (prev) return prev
-      for (const leg of route.legs) {
-        if (leg.from.name) return leg.from.name
-      }
-      return null
-    }))
+    startTransition(() =>
+      setRouteName((prev) => {
+        if (prev) return prev
+        for (const leg of route.legs) {
+          if (leg.from.name) return leg.from.name
+        }
+        return null
+      })
+    )
   }, [route, hasOrigin])
   return explicitName ?? routeName ?? undefined
 }
 
-function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+function PersistentSidePanel({
+  p,
+  mapRef,
+}: {
+  p: Omit<
+    TransitMapViewProps,
+    "containerRef" | "mapRef" | "statsCtaDismissedRef"
+  > & { ease: Ease }
+  mapRef: React.RefObject<maplibregl.Map | null>
+}) {
   const originName = useStableOriginName(p.route, p.hasOrigin, p.originName)
 
   // Keep old route visible during swap until new one arrives
   const [staleRoute, setStaleRoute] = useState<Itinerary | null>(null)
-  useEffect(() => { if (p.route && p.swapping) p.setSwapping(false) }, [p.route, p.swapping, p.setSwapping])
+  useEffect(() => {
+    if (p.route && p.swapping) p.setSwapping(false)
+  }, [p.route, p.swapping, p.setSwapping])
 
   const displayItinerary = p.route ?? (p.swapping ? staleRoute : null)
-  const showRoute = displayItinerary || p.routeLoading || (p.loading && p.destName !== null)
+  const showRoute =
+    displayItinerary || p.routeLoading || (p.loading && p.destName !== null)
   const isSwapLoading = p.swapping && !p.route
 
   return (
@@ -1527,18 +2013,49 @@ function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "cont
               setStaleRoute(route)
               const destLeg = route.legs[route.legs.length - 1]
               const newOrigin = { lat: destLeg.to.lat, lon: destLeg.to.lon }
-              const oldOrigin = { lat: route.legs[0].from.lat, lon: route.legs[0].from.lon }
-              const newOriginName = p.destName ?? route.legs.findLast((l: Leg) => l.to.name)?.to.name ?? null
+              const oldOrigin = {
+                lat: route.legs[0].from.lat,
+                lon: route.legs[0].from.lon,
+              }
+              const newOriginName =
+                p.destName ??
+                route.legs.findLast((l: Leg) => l.to.name)?.to.name ??
+                null
               p.setOriginName(newOriginName)
               p.setDestName(originName ?? null)
               p.setSwapping(true)
               p.setCoords(newOrigin)
-              mapRef.current?.easeTo({ center: [newOrigin.lon, newOrigin.lat], duration: 400 })
-              setTimeout(() => { p.pendingDestinationRef.current = { lat: oldOrigin.lat, lng: oldOrigin.lon } }, 50)
+              mapRef.current?.easeTo({
+                center: [newOrigin.lon, newOrigin.lat],
+                duration: 400,
+              })
+              setTimeout(() => {
+                p.pendingDestinationRef.current = {
+                  lat: oldOrigin.lat,
+                  lng: oldOrigin.lon,
+                }
+              }, 50)
             }}
-            onShare={() => { navigator.clipboard.writeText(window.location.href).then(() => { p.setLinkCopied(true); setTimeout(() => p.setLinkCopied(false), 2000) }) }}
-            onExport={() => { const map = mapRef.current; if (!map) return; const link = document.createElement("a"); link.download = "doseg.png"; link.href = map.getCanvas().toDataURL("image/png"); link.click() }}
-            onReset={() => { p.setCoords({ lat: null, lon: null }); p.setOriginName(null); p.setDestName(null) }}
+            onShare={() => {
+              navigator.clipboard.writeText(window.location.href).then(() => {
+                p.setLinkCopied(true)
+                setTimeout(() => p.setLinkCopied(false), 2000)
+              })
+            }}
+            onExport={() => {
+              const map = mapRef.current
+              if (!map) return
+              const link = document.createElement("a")
+              link.download = "doseg.png"
+              link.href = map.getCanvas().toDataURL("image/png")
+              link.click()
+            }}
+            onReset={() => {
+              p.setCoords({ lat: null, lon: null })
+              p.setOriginName(null)
+              p.setDestName(null)
+            }}
+            onClearDestination={p.onClearDestination}
             shareConfirm={p.linkCopied}
           />
         ) : (
@@ -1549,7 +2066,14 @@ function PersistentSidePanel({ p, mapRef }: { p: Omit<TransitMapViewProps, "cont
   )
 }
 
-function IdleInputs({ hasOrigin, originName, onReset, onSelectOrigin, onSelectDestination, onCurrentLocation }: {
+function IdleInputs({
+  hasOrigin,
+  originName,
+  onReset,
+  onSelectOrigin,
+  onSelectDestination,
+  onCurrentLocation,
+}: {
   hasOrigin: boolean
   originName?: string
   onReset: () => void
@@ -1558,27 +2082,45 @@ function IdleInputs({ hasOrigin, originName, onReset, onSelectOrigin, onSelectDe
   onCurrentLocation: () => void
 }) {
   return (
-    <div className="bg-[rgba(32,33,36,0.98)] px-3 py-3 shrink-0 flex gap-1">
+    <div className="flex shrink-0 gap-1 bg-[rgba(255,255,255,0.98)] px-4 py-4">
       {hasOrigin ? (
-        <button type="button" onClick={onReset} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Natrag">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        <button
+          type="button"
+          onClick={onReset}
+          className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+          aria-label="Natrag"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19.5 12H4.5M10.5 18L4.5 12l6-6" />
+          </svg>
         </button>
       ) : (
         <div className="h-10 w-10 shrink-0" />
       )}
-      <div className="flex-1 flex gap-3">
-        <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
-          <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-          <div className="flex flex-col gap-[3px] my-1 shrink-0">
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+      <div className="flex flex-1 gap-3">
+        <div className="mt-3 ml-1 flex shrink-0 flex-col items-center">
+          <div className="h-3.5 w-3.5 shrink-0 rounded-full border-[2.5px] border-slate-300" />
+          <div className="my-1 flex shrink-0 flex-col gap-[3px]">
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
           </div>
-          <div className="h-5 w-5 flex items-center justify-center text-[#ea4335]/50">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <div className="flex h-5 w-5 items-center justify-center text-[#ea4335]/70">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
           </div>
         </div>
-        <div className="flex-1 flex flex-col gap-2 mt-0.5 min-w-0">
+        <div className="mt-0.5 flex min-w-0 flex-1 flex-col gap-2">
           <AddressInput
             placeholder="Pretraži adresu ili klikni kartu"
             value={originName || (hasOrigin ? "Polazište" : "")}
@@ -1593,30 +2135,81 @@ function IdleInputs({ hasOrigin, originName, onReset, onSelectOrigin, onSelectDe
           />
         </div>
       </div>
-      <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500/50 ml-1">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 10v12"/><path d="M15 14v-8"/><path d="M3 14l4 4 4-4"/><path d="M11 6l4-4 4 4"/></svg>
+      <div className="mt-0.5 ml-1 flex h-10 w-10 shrink-0 items-center justify-center self-center text-slate-500/50">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M8 19V5m0 0L4 9m4-4l4 4M16 5v14m0 0l-4-4m4 4l4-4" />
+        </svg>
       </div>
     </div>
   )
 }
 
-function useIdleGeo(mapRef: React.RefObject<maplibregl.Map | null>, setCoords: SetCoords, setOriginName: (v: string | null) => void) {
+function useIdleGeo(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  setCoords: SetCoords,
+  setOriginName: (v: string | null) => void
+) {
   const locatingRef = useRef(false)
   const [geoError, setGeoError] = useState<string | null>(null)
-  useEffect(() => { if (geoError) { const t = setTimeout(() => setGeoError(null), 3000); return () => clearTimeout(t) } }, [geoError])
+  useEffect(() => {
+    if (geoError) {
+      const t = setTimeout(() => setGeoError(null), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [geoError])
   const locate = useCallback(() => {
-    requestGeolocation(mapRef, (v) => { setCoords(v); setOriginName("Moja lokacija") }, (v) => { locatingRef.current = v }, setGeoError)
+    requestGeolocation(
+      mapRef,
+      (v) => {
+        setCoords(v)
+        setOriginName("Moja lokacija")
+      },
+      (v) => {
+        locatingRef.current = v
+      },
+      setGeoError
+    )
   }, [mapRef, setCoords, setOriginName])
   return { geoError, locate }
 }
 
 function OriginIllustration() {
   return (
-    <div className="relative w-32 h-32 mb-1 text-slate-500/80">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <path d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
-        <path d="M35 15 L35 75" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
-        <path d="M70 25 L70 85" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.2" strokeLinejoin="round" />
+    <div className="relative mb-1 h-32 w-32 text-slate-500/80">
+      <svg viewBox="0 0 100 100" className="h-full w-full">
+        <path
+          d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.2"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M35 15 L35 75"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.2"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M70 25 L70 85"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.2"
+          strokeLinejoin="round"
+        />
         <m.path
           d="M50 25 C65 25 75 40 75 55 C75 70 60 80 45 75 C30 70 25 55 30 40 C35 25 40 25 50 25 Z"
           fill="currentColor"
@@ -1630,12 +2223,25 @@ function OriginIllustration() {
           fill="currentColor"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1.2, opacity: [0, 0.25, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.8 }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeOut",
+            delay: 0.8,
+          }}
           style={{ transformOrigin: "50px 50px" }}
         />
-        <m.g initial={{ y: -5, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
-          <path d="M50 35 C43 35 38 40 38 48 C38 57 50 70 50 70 C50 70 62 57 62 48 C62 40 57 35 50 35 Z" fill="currentColor" opacity="0.9" />
-          <circle cx="50" cy="46" r="3.5" fill="#18181c" />
+        <m.g
+          initial={{ y: -5, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <path
+            d="M50 35 C43 35 38 40 38 48 C38 57 50 70 50 70 C50 70 62 57 62 48 C62 40 57 35 50 35 Z"
+            fill="currentColor"
+            opacity="0.9"
+          />
+          <circle cx="50" cy="46" r="3.5" fill="#ffffff" />
         </m.g>
       </svg>
     </div>
@@ -1644,19 +2250,46 @@ function OriginIllustration() {
 
 function DestinationIllustration() {
   return (
-    <div className="relative w-32 h-32 mb-1 text-slate-500/80">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <path d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.15" strokeLinejoin="round" />
-        <path d="M30 35 C40 35 45 45 45 55 C45 65 35 70 25 65 C15 60 15 50 20 40 C25 30 25 35 30 35 Z" fill="currentColor" fillOpacity="0.1" />
-        <path d="M28 40 C24 40 21 44 21 48 C21 54 28 62 28 62 C28 62 35 54 35 48 C35 44 32 40 28 40 Z" fill="currentColor" opacity="0.6" />
-        <circle cx="28" cy="46" r="2.5" fill="#18181c" />
-        <m.g initial={{ y: 0 }} animate={{ y: [0, -6, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
-          <path d="M72 32 C65 32 59 38 59 46 C59 55 72 70 72 70 C72 70 85 55 85 46 C85 38 79 32 72 32 Z" fill="currentColor" opacity="0.9" />
-          <circle cx="72" cy="42" r="3.5" fill="#18181c" />
+    <div className="relative mb-1 h-32 w-32 text-slate-500/80">
+      <svg viewBox="0 0 100 100" className="h-full w-full">
+        <path
+          d="M15 25 L35 15 L70 25 L90 15 L90 75 L70 85 L35 75 L15 85 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeOpacity="0.15"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M30 35 C40 35 45 45 45 55 C45 65 35 70 25 65 C15 60 15 50 20 40 C25 30 25 35 30 35 Z"
+          fill="currentColor"
+          fillOpacity="0.1"
+        />
+        <path
+          d="M28 40 C24 40 21 44 21 48 C21 54 28 62 28 62 C28 62 35 54 35 48 C35 44 32 40 28 40 Z"
+          fill="currentColor"
+          opacity="0.6"
+        />
+        <circle cx="28" cy="46" r="2.5" fill="#ffffff" />
+        <m.g
+          initial={{ y: 0 }}
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <path
+            d="M72 32 C65 32 59 38 59 46 C59 55 72 70 72 70 C72 70 85 55 85 46 C85 38 79 32 72 32 Z"
+            fill="currentColor"
+            opacity="0.9"
+          />
+          <circle cx="72" cy="42" r="3.5" fill="#ffffff" />
         </m.g>
         <m.path
-          d="M32 58 Q50 75 66 62" fill="none" stroke="currentColor" strokeWidth="2.5"
-          strokeDasharray="6 4" opacity="0.6"
+          d="M32 58 Q50 75 66 62"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeDasharray="6 4"
+          opacity="0.6"
           animate={{ strokeDashoffset: [10, 0] }}
           transition={{ duration: 0.6, repeat: Infinity, ease: "linear" }}
         />
@@ -1666,35 +2299,65 @@ function DestinationIllustration() {
 }
 
 function EmptyStateIllustration({ type }: { type: "origin" | "destination" }) {
-  return type === "origin" ? <OriginIllustration /> : <DestinationIllustration />
+  return type === "origin" ? (
+    <OriginIllustration />
+  ) : (
+    <DestinationIllustration />
+  )
 }
 
-function SidePanelIdleContent({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+function SidePanelIdleContent({
+  p,
+  mapRef,
+}: {
+  p: Omit<
+    TransitMapViewProps,
+    "containerRef" | "mapRef" | "statsCtaDismissedRef"
+  > & { ease: Ease }
+  mapRef: React.RefObject<maplibregl.Map | null>
+}) {
   const { geoError, locate } = useIdleGeo(mapRef, p.setCoords, p.setOriginName)
   return (
     <div className="flex flex-1 flex-col">
-      {geoError && <div className="px-5 py-2 text-[12px] text-red-400">{geoError}</div>}
+      {geoError && (
+        <div className="px-5 py-2 text-[12px] text-red-400">{geoError}</div>
+      )}
       <IdleInputs
         hasOrigin={p.hasOrigin}
         originName={p.originName ?? undefined}
-        onReset={() => { p.setCoords({ lat: null, lon: null }); p.setOriginName(null); p.setDestName(null) }}
-        onSelectOrigin={(lat, lon, name) => { p.setOriginName(name); p.setCoords({ lat, lon }); mapRef.current?.easeTo({ center: [lon, lat], duration: 400 }) }}
-        onSelectDestination={(lat, lon, name) => { p.setDestName(name); p.handleDestinationRef.current?.(lat, lon) }}
+        onReset={() => {
+          p.setCoords({ lat: null, lon: null })
+          p.setOriginName(null)
+          p.setDestName(null)
+        }}
+        onSelectOrigin={(lat, lon, name) => {
+          p.setOriginName(name)
+          p.setCoords({ lat, lon })
+          mapRef.current?.easeTo({ center: [lon, lat], duration: 400 })
+        }}
+        onSelectDestination={(lat, lon, name) => {
+          p.setDestName(name)
+          p.handleDestinationRef.current?.(lat, lon)
+        }}
         onCurrentLocation={locate}
       />
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 text-center mt-4">
-        <EmptyStateIllustration type={!p.hasOrigin ? "origin" : "destination"} />
+      <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-3 px-5 text-center">
+        <EmptyStateIllustration
+          type={!p.hasOrigin ? "origin" : "destination"}
+        />
         {!p.hasOrigin ? (
-          <p className="text-[14px] leading-relaxed text-slate-400 max-w-[200px]">
+          <p className="max-w-[200px] text-[14px] leading-relaxed text-slate-400">
             Klikni bilo gdje na karti da vidiš dokle možeš stići.
           </p>
         ) : (
           <>
-            <p className="text-[14px] text-slate-400">Klikni odredište na karti za rutu</p>
+            <p className="text-[14px] text-slate-400">
+              Klikni odredište na karti za rutu
+            </p>
             <button
               type="button"
               onClick={() => p.setCoords({ lat: null, lon: null })}
-              className="mt-1 rounded-lg bg-white/[0.07] px-5 py-2.5 text-[13px] font-medium text-slate-300 transition-[background-color,transform] duration-160 ease-out hover:bg-white/[0.12] hover:text-white active:scale-[0.97]"
+              className="mt-1 rounded-2xl bg-slate-100 px-5 py-2.5 text-[13px] font-medium text-slate-900 transition-all duration-300 ease-out hover:bg-[#1264ab]/15 hover:text-[#1264ab] active:scale-[0.97]"
             >
               Promijeni polazište
             </button>
@@ -1705,7 +2368,16 @@ function SidePanelIdleContent({ p, mapRef }: { p: Omit<TransitMapViewProps, "con
   )
 }
 
-function MobileSearchOverlay({ p, mapRef }: { p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }; mapRef: React.RefObject<maplibregl.Map | null> }) {
+function MobileSearchOverlay({
+  p,
+  mapRef,
+}: {
+  p: Omit<
+    TransitMapViewProps,
+    "containerRef" | "mapRef" | "statsCtaDismissedRef"
+  > & { ease: Ease }
+  mapRef: React.RefObject<maplibregl.Map | null>
+}) {
   const { geoError, locate } = useIdleGeo(mapRef, p.setCoords, p.setOriginName)
   const destRef = useRef<HTMLDivElement>(null)
   return (
@@ -1713,44 +2385,81 @@ function MobileSearchOverlay({ p, mapRef }: { p: Omit<TransitMapViewProps, "cont
       {p.mobileSearchOpen && (
         <m.div
           key="mobile-search"
-          className="fixed inset-0 z-50 bg-[rgba(24,24,28,0.98)] flex flex-col"
-          initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+          className="fixed inset-0 z-50 flex flex-col bg-white/80 backdrop-blur-md"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
           transition={{ duration: 0.3, ease: p.ease }}
         >
-          <div className="flex items-center gap-2 px-3 py-3 shrink-0">
-            <button type="button" onClick={() => p.setMobileSearchOpen(false)} className="h-10 w-10 shrink-0 flex items-center justify-center text-slate-300 hover:text-white rounded-full hover:bg-white/10" aria-label="Zatvori">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          <div className="flex shrink-0 items-center gap-2 px-3 py-3">
+            <button
+              type="button"
+              onClick={() => p.setMobileSearchOpen(false)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+              aria-label="Zatvori"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M19.5 12H4.5M10.5 18L4.5 12l6-6" />
+              </svg>
             </button>
-            <span className="text-[16px] font-medium text-white">Pretraži</span>
+            <span className="text-[16px] font-medium text-slate-900">
+              Pretraži
+            </span>
           </div>
-          {geoError && <div className="px-5 py-1 text-[12px] text-red-400">{geoError}</div>}
-          <MobileSearchFields p={p} mapRef={mapRef} locate={locate} destRef={destRef} />
+          {geoError && (
+            <div className="px-5 py-1 text-[12px] text-red-400">{geoError}</div>
+          )}
+          <MobileSearchFields
+            p={p}
+            mapRef={mapRef}
+            locate={locate}
+            destRef={destRef}
+          />
         </m.div>
       )}
     </AnimatePresence>
   )
 }
 
-function MobileSearchFields({ p, mapRef, locate, destRef }: {
-  p: Omit<TransitMapViewProps, "containerRef" | "mapRef" | "statsCtaDismissedRef"> & { ease: Ease }
+function MobileSearchFields({
+  p,
+  mapRef,
+  locate,
+  destRef,
+}: {
+  p: Omit<
+    TransitMapViewProps,
+    "containerRef" | "mapRef" | "statsCtaDismissedRef"
+  > & { ease: Ease }
   mapRef: React.RefObject<maplibregl.Map | null>
   locate: () => void
   destRef: React.RefObject<HTMLDivElement | null>
 }) {
   return (
-    <div className="px-3 flex gap-3">
-      <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
-        <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-        <div className="flex flex-col gap-[3px] my-1 shrink-0">
-          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-          <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+    <div className="flex gap-3 px-3">
+      <div className="mt-3 ml-1 flex shrink-0 flex-col items-center">
+        <div className="h-3.5 w-3.5 shrink-0 rounded-full border-[2.5px] border-slate-300" />
+        <div className="my-1 flex shrink-0 flex-col gap-[3px]">
+          <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+          <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+          <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
         </div>
-        <div className="h-5 w-5 flex items-center justify-center text-[#ea4335]/50">
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
+        <div className="flex h-5 w-5 items-center justify-center text-[#ea4335]/50">
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
         </div>
       </div>
-      <div className="flex-1 flex flex-col gap-2 mt-0.5 min-w-0">
+      <div className="mt-0.5 flex min-w-0 flex-1 flex-col gap-2">
         <AddressInput
           placeholder="Polazište"
           value={p.originName || (p.hasOrigin ? "Polazište" : "")}
@@ -1780,20 +2489,50 @@ function MobileSearchFields({ p, mapRef, locate, destRef }: {
   )
 }
 
-function TransitMapView({ containerRef, mapRef, statsCtaDismissedRef, ...rest }: TransitMapViewProps) {
+function TransitMapView({
+  containerRef,
+  mapRef,
+  statsCtaDismissedRef,
+  ...rest
+}: TransitMapViewProps) {
   const ease = [0.23, 1, 0.32, 1] as const
   return (
     <MotionConfig reducedMotion="user">
       {/* pointer-events-auto: vaul's Radix Dialog sets pointer-events:none on <body> when drawer opens */}
-      <div className="flex h-svh w-full pointer-events-auto">
+      <div className="pointer-events-auto flex h-svh w-full">
         <PersistentSidePanel p={{ ...rest, ease }} mapRef={mapRef} />
         <div className="relative flex-1">
-          <div ref={containerRef} className="h-full w-full" role="application" aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu" />
+          <div
+            ref={containerRef}
+            className="h-full w-full"
+            role="application"
+            aria-label="Interaktivna karta dosega javnog prijevoza u Zagrebu"
+          />
           <LoadingBar loading={rest.loading} ease={ease} />
-          <LayerLegend bajsEnabled={rest.bajsEnabled} poiEnabled={rest.poiEnabled} ease={ease} />
-          <HudOverlay {...rest} mapRef={mapRef} statsCtaDismissedRef={statsCtaDismissedRef} ease={ease} />
-          <div id="route-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
-          <OnboardingDialog open={rest.onboardingOpen} onClose={() => { localStorage.setItem(ONBOARDING_KEY, "1"); rest.setOnboardingOpen(false) }} />
+          <LayerLegend
+            bajsEnabled={rest.bajsEnabled}
+            poiEnabled={rest.poiEnabled}
+            ease={ease}
+          />
+          <HudOverlay
+            {...rest}
+            mapRef={mapRef}
+            statsCtaDismissedRef={statsCtaDismissedRef}
+            ease={ease}
+          />
+          <div
+            id="route-announcer"
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+          />
+          <OnboardingDialog
+            open={rest.onboardingOpen}
+            onClose={() => {
+              localStorage.setItem(ONBOARDING_KEY, "1")
+              rest.setOnboardingOpen(false)
+            }}
+          />
         </div>
         <MobileSearchOverlay p={{ ...rest, ease }} mapRef={mapRef} />
       </div>
@@ -1801,7 +2540,13 @@ function TransitMapView({ containerRef, mapRef, statsCtaDismissedRef, ...rest }:
   )
 }
 
-function LoadingBar({ loading, ease }: { loading: boolean; ease: readonly [number, number, number, number] }) {
+function LoadingBar({
+  loading,
+  ease,
+}: {
+  loading: boolean
+  ease: readonly [number, number, number, number]
+}) {
   return (
     <AnimatePresence>
       {loading && (
@@ -1825,11 +2570,15 @@ function LoadingBar({ loading, ease }: { loading: boolean; ease: readonly [numbe
 function BajsLegend() {
   return (
     <div className="flex flex-col gap-1">
-      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">BAJS</div>
+      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">
+        BAJS
+      </div>
       <div className="flex items-center gap-2.5">
         <div className="flex items-center gap-1">
           <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
-          <span className="text-[9px] font-medium text-slate-300">Dostupno</span>
+          <span className="text-[9px] font-medium text-slate-300">
+            Dostupno
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
@@ -1851,23 +2600,35 @@ function BajsLegend() {
 function PoiLegend() {
   return (
     <div className="flex flex-col gap-1">
-      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">Ustanove</div>
+      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">
+        Ustanove
+      </div>
       <div className="flex items-center gap-2.5">
         <div className="flex items-center gap-1">
-          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-white">H</div>
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-slate-900">
+            H
+          </div>
           <span className="text-[9px] font-medium text-slate-300">Bolnica</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-white">Š</div>
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-slate-900">
+            Š
+          </div>
           <span className="text-[9px] font-medium text-slate-300">Škola</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-white">P</div>
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-slate-900">
+            P
+          </div>
           <span className="text-[9px] font-medium text-slate-300">Park</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-white">Lj</div>
-          <span className="text-[9px] font-medium text-slate-300">Ljekarna</span>
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-slate-900">
+            Lj
+          </div>
+          <span className="text-[9px] font-medium text-slate-300">
+            Ljekarna
+          </span>
         </div>
       </div>
     </div>
@@ -1923,8 +2684,10 @@ type IslandToolbarProps = {
 function IslandToolbar(props: IslandToolbarProps) {
   return (
     <m.div
-      className="island pointer-events-auto"
-      initial={{ opacity: 0, scale: 0.9 }}
+      className={`island pointer-events-auto flex max-w-[min(100vw-1.5rem,520px)] flex-col gap-1.5 sm:gap-2 ${
+        props.layersOpen ? "island-expanded" : "island-compact"
+      }`}
+      initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3, ease: props.ease }}
     >
@@ -1971,64 +2734,101 @@ type IslandMainRowProps = {
 
 function IslandMainRow(p: IslandMainRowProps) {
   return (
-    <div className="flex items-center gap-2 sm:gap-3">
-      <div className="flex items-center gap-1.5">
-        <TimePicker value={p.effectiveTime} onChange={(v) => p.setTime(v)} />
+    <div className="flex min-w-0 flex-nowrap items-center justify-center gap-1 sm:gap-4">
+      <div className="flex shrink-0 items-center">
+        <TimePicker
+          value={p.effectiveTime}
+          onChange={(v) => p.setTime(v)}
+          triggerClassName="max-sm:h-8 max-sm:min-h-0"
+        />
       </div>
-      <div className="h-6 w-px bg-white/10" />
+      <div className="h-6 w-px shrink-0 bg-neutral-200/90 sm:h-7" />
       <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
-      <LayersButton layersOpen={p.layersOpen} vehiclesEnabled={p.vehiclesEnabled} poiEnabled={p.poiEnabled} setLayersOpen={p.setLayersOpen} />
+      <LayersButton
+        layersOpen={p.layersOpen}
+        vehiclesEnabled={p.vehiclesEnabled}
+        poiEnabled={p.poiEnabled}
+        setLayersOpen={p.setLayersOpen}
+      />
       <LocateMeButton mapRef={p.mapRef} setCoords={p.setCoords} />
       <button
         type="button"
         onClick={() => p.setMobileSearchOpen(true)}
-        className="flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200 transition-[background-color,color,transform] duration-160 ease-out active:scale-[0.97] sm:hidden"
+        className="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[background-color,color,transform] duration-160 ease-out hover:bg-neutral-200/90 hover:text-neutral-900 active:scale-[0.97] sm:hidden"
         aria-label="Pretraži adresu"
       >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
       </button>
-      <div className="hidden h-6 w-px bg-white/10 sm:block" />
-      <div className="hidden sm:block">
-        <ColorScale />
-      </div>
     </div>
   )
 }
 
-function BajsToggleButton({ bajsEnabled, setBajs }: { bajsEnabled: boolean; setBajs: (v: string | null) => void }) {
+function BajsToggleButton({
+  bajsEnabled,
+  setBajs,
+}: {
+  bajsEnabled: boolean
+  setBajs: (v: string | null) => void
+}) {
   return (
     <button
       type="button"
       onClick={() => setBajs(bajsEnabled ? null : "1")}
       aria-pressed={bajsEnabled}
-      className={`flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+      className={`group flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none sm:h-9 sm:gap-2 sm:px-4 sm:text-[12px] active:scale-[0.96] ${
         bajsEnabled
-          ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/40"
-          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+          ? "bg-[#1264ab]/15 text-[#1264ab]"
+          : "bg-neutral-100 text-neutral-600 hover:bg-[#1264ab]/15 hover:text-[#1264ab]"
       }`}
       title="Dodaj BAJS bicikl u izračun rute"
+      aria-label="Dodaj BAJS bicikl u izračun rute"
     >
-      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        aria-hidden="true"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`shrink-0 transition-transform duration-300 ease-out ${
+          bajsEnabled ? "scale-110" : "group-hover:scale-110 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        }`}
+      >
         <circle cx="5.5" cy="17.5" r="3.5" />
         <circle cx="18.5" cy="17.5" r="3.5" />
         <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2" />
       </svg>
-      <span>+ BAJS</span>
+      <span className="hidden sm:inline">+ BAJS</span>
     </button>
   )
 }
 
 function ColorScale() {
+  const [a, b, c, d] = ISOCHRONE_LINE_COLORS
   return (
     <div className="flex flex-col justify-center py-0.5">
       <div
         className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
         style={{
-          background:
-            "linear-gradient(to right, #16a34a, #0891b2, #2563eb, #9333ea)",
+          background: `linear-gradient(to right, ${a}, ${b}, ${c}, ${d})`,
         }}
       />
-      <div className="mt-1 flex w-[140px] justify-between text-[9px] leading-none font-medium text-slate-400 tabular-nums sm:w-[200px]">
+      <div className="mt-1.5 flex w-[140px] justify-between text-[9px] leading-none font-medium text-neutral-400 tabular-nums sm:w-[200px]">
         <span>0</span>
         <span>15</span>
         <span>30</span>
@@ -2053,10 +2853,10 @@ function LayersButton({
     <button
       type="button"
       onClick={() => setLayersOpen((v) => !v)}
-      className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none ${
+      className={`flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none sm:h-9 sm:px-4 ${
         layersOpen || vehiclesEnabled || poiEnabled
-          ? "bg-slate-500/20 text-slate-200 ring-1 ring-slate-400/40"
-          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+          ? "bg-neutral-200/95 text-neutral-900"
+          : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
       }`}
     >
       <svg
@@ -2076,7 +2876,7 @@ function LayersButton({
       </svg>
       <span className="hidden sm:inline">Slojevi</span>
       {!layersOpen && (vehiclesEnabled || poiEnabled) && (
-        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-500/80 text-[8px] font-bold text-white">
+        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-neutral-300/90 text-[8px] font-semibold text-neutral-800">
           {(vehiclesEnabled ? 1 : 0) + (poiEnabled ? 1 : 0)}
         </span>
       )}
@@ -2126,9 +2926,13 @@ function GeoErrorTooltip({ message }: { message: string | null }) {
           key="geo-error"
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4, transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] } }}
+          exit={{
+            opacity: 0,
+            y: -4,
+            transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] },
+          }}
           transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[rgba(30,30,30,0.92)] px-3 py-1.5 text-[11px] text-red-400 shadow-lg backdrop-blur-md"
+          className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 rounded-2xl border border-neutral-100/90 bg-white/95 px-4 py-2 text-[11px] font-medium whitespace-nowrap text-neutral-800 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-md"
         >
           {message}
         </m.div>
@@ -2137,7 +2941,13 @@ function GeoErrorTooltip({ message }: { message: string | null }) {
   )
 }
 
-function LocateMeButton({ mapRef, setCoords }: { mapRef: React.RefObject<maplibregl.Map | null>; setCoords: SetCoords }) {
+function LocateMeButton({
+  mapRef,
+  setCoords,
+}: {
+  mapRef: React.RefObject<maplibregl.Map | null>
+  setCoords: SetCoords
+}) {
   const [locating, setLocating] = useState(false)
   const [geoError, setGeoError] = useState<string | null>(null)
   useEffect(() => {
@@ -2149,30 +2959,37 @@ function LocateMeButton({ mapRef, setCoords }: { mapRef: React.RefObject<maplibr
     <div className="relative">
       <button
         type="button"
-        onClick={() => requestGeolocation(mapRef, setCoords, setLocating, setGeoError)}
+        onClick={() =>
+          requestGeolocation(mapRef, setCoords, setLocating, setGeoError)
+        }
         disabled={locating}
-        className={`flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-semibold transition-[background-color,color,transform] duration-160 ease-out focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none active:scale-[0.97] ${
+        className={`flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium transition-[background-color,color,transform] duration-160 ease-out focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none active:scale-[0.97] sm:h-9 sm:px-4 ${
           locating
-            ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
-            : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+            ? "bg-neutral-200/95 text-neutral-900"
+            : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
         }`}
         title="Pronađi moju lokaciju"
         aria-label="Pronađi moju lokaciju"
       >
         <svg
-          aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          className={locating ? "animate-pulse" : ""}
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={`max-sm:h-4 max-sm:w-4 ${locating ? "animate-pulse" : ""}`}
         >
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+          <path d="M10.88 17.182L9.2 13.8a1 1 0 0 0-.546-.546L5.27 11.57a.5.5 0 0 1 .054-.925L18.42 5.56a.5.5 0 0 1 .62.62L13.965 19.3a.5.5 0 0 1-.926.055L11.353 17.67a1 1 0 0 0-.473-.488z" />
         </svg>
       </button>
       <GeoErrorTooltip message={geoError} />
     </div>
   )
 }
-
 
 type IslandLayerTogglesProps = {
   layersOpen: boolean
@@ -2195,10 +3012,15 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
           transition={{ duration: 0.2, ease: p.ease }}
           className="overflow-hidden"
         >
-          <div className="flex flex-col items-center gap-1.5 border-t border-white/10 px-3 pt-2 pb-0.5">
-            <span className="text-[9px] font-medium tracking-wide text-slate-500 uppercase">Na karti</span>
-            <div className="flex items-center gap-2">
-              <VehiclesToggle enabled={p.vehiclesEnabled} onToggle={p.setVehiclesEnabled} />
+          <div className="mt-1 flex flex-col items-center gap-3 border-t border-neutral-100/90 px-1 pt-4 pb-1">
+            <span className="text-[9px] font-medium tracking-[0.12em] text-neutral-400 uppercase">
+              Na karti
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-2.5">
+              <VehiclesToggle
+                enabled={p.vehiclesEnabled}
+                onToggle={p.setVehiclesEnabled}
+              />
               <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
             </div>
           </div>
@@ -2208,19 +3030,35 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
   )
 }
 
-function VehiclesToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Dispatch<React.SetStateAction<boolean>> }) {
+function VehiclesToggle({
+  enabled,
+  onToggle,
+}: {
+  enabled: boolean
+  onToggle: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   return (
     <button
       type="button"
       onClick={() => onToggle((v) => !v)}
       title="Prikaži gdje se tramvaji i busevi trenutno nalaze"
-      className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+      className={`flex h-9 items-center gap-2 rounded-full px-4 text-[12px] font-medium transition-colors ${
         enabled
-          ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/40"
-          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+          ? "bg-neutral-200/95 text-neutral-900"
+          : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
       }`}
     >
-      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        aria-hidden="true"
+        width="11"
+        height="11"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <circle cx="12" cy="12" r="3" />
         <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
       </svg>
@@ -2229,18 +3067,34 @@ function VehiclesToggle({ enabled, onToggle }: { enabled: boolean; onToggle: Rea
   )
 }
 
-function PoiToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Dispatch<React.SetStateAction<boolean>> }) {
+function PoiToggle({
+  enabled,
+  onToggle,
+}: {
+  enabled: boolean
+  onToggle: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   return (
     <button
       type="button"
       onClick={() => onToggle((v) => !v)}
-      className={`flex h-7 items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold transition-colors ${
+      className={`flex h-9 items-center gap-2 rounded-full px-4 text-[12px] font-medium transition-colors ${
         enabled
-          ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/40"
-          : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200"
+          ? "bg-neutral-200/95 text-neutral-900"
+          : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
       }`}
     >
-      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        aria-hidden="true"
+        width="11"
+        height="11"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         <polyline points="9 22 9 12 15 12 15 22" />
       </svg>
@@ -2249,11 +3103,19 @@ function PoiToggle({ enabled, onToggle }: { enabled: boolean; onToggle: React.Di
   )
 }
 
-function HintBubble({ k, ease, children }: { k: string; ease: Ease; children: React.ReactNode }) {
+function HintBubble({
+  k,
+  ease,
+  children,
+}: {
+  k: string
+  ease: Ease
+  children: React.ReactNode
+}) {
   return (
     <m.div
       key={k}
-      className="panel pointer-events-auto"
+      className="panel pointer-events-auto border border-neutral-100/60 shadow-[0_8px_40px_rgba(15,23,42,0.06)]"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -2264,27 +3126,72 @@ function HintBubble({ k, ease, children }: { k: string; ease: Ease; children: Re
   )
 }
 
-function BottomHintPanel({ hasOrigin, everHadOrigin, route, loading, routeLoading, ease, setCoords }: {
-  hasOrigin: boolean; everHadOrigin: boolean; route: Itinerary | null; loading: boolean
-  routeLoading: boolean; ease: Ease; setCoords: SetCoords
+function BottomHintPanel({
+  hasOrigin,
+  everHadOrigin,
+  route,
+  loading,
+  routeLoading,
+  ease,
+  setCoords,
+  onClearDestination,
+}: {
+  hasOrigin: boolean
+  everHadOrigin: boolean
+  route: Itinerary | null
+  loading: boolean
+  routeLoading: boolean
+  ease: Ease
+  setCoords: SetCoords
+  onClearDestination: () => void
 }) {
   return (
     <AnimatePresence mode="wait">
       {!hasOrigin && !everHadOrigin && (
         <HintBubble k="origin" ease={ease}>
-          <div className="text-center text-[13px] text-slate-300">
+          <div className="text-center text-[13px] font-medium text-neutral-700">
             Klikni bilo gdje da vidiš dokle možeš stići tramvajem i busom
           </div>
         </HintBubble>
       )}
       {hasOrigin && !route && !loading && !routeLoading && (
         <HintBubble k="dest" ease={ease}>
-          <div className="flex items-center justify-center gap-3">
-            <span className="text-[13px] text-slate-300">Klikni odredište</span>
-            <span className="text-slate-600">·</span>
-            <button type="button" onClick={() => setCoords({ lat: null, lon: null })}
-              className="text-[12px] text-slate-500 transition-[color,transform] duration-160 ease-out hover:text-slate-300 active:scale-[0.97]">
-              promijeni polazište
+          <div className="flex items-center justify-center gap-2 py-1 pr-1 pl-4">
+            <span className="text-[13px] font-medium text-neutral-700">
+              Klikni odredište
+            </span>
+            <button
+              type="button"
+              onClick={() => setCoords({ lat: null, lon: null })}
+              className="group relative flex items-center gap-2 rounded-full pr-3 pl-1.5 py-1.5 text-[12px] font-medium text-neutral-500 transition-all duration-300 ease-out hover:bg-[#1264ab]/15 hover:text-[#1264ab] active:scale-[0.96]"
+            >
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-300 group-hover:bg-[#1264ab] group-hover:text-white">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 ease-out group-hover:rotate-180 group-hover:scale-110">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+              </div>
+              Promijeni polazište
+            </button>
+          </div>
+        </HintBubble>
+      )}
+      {hasOrigin && (route !== null || routeLoading) && (
+        <HintBubble k="dest-clear" ease={ease}>
+          <div className="flex items-center justify-center gap-2 py-1 pr-1 pl-4">
+            <span className="text-[13px] font-medium text-neutral-700">
+              Drugo odredište?
+            </span>
+            <button
+              type="button"
+              onClick={onClearDestination}
+              className="group relative flex items-center gap-2 rounded-full pr-3 pl-1.5 py-1.5 text-[12px] font-medium text-neutral-500 transition-all duration-300 ease-out hover:bg-[#1264ab]/15 hover:text-[#1264ab] active:scale-[0.96]"
+            >
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-300 group-hover:bg-[#1264ab] group-hover:text-white">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 ease-out group-hover:rotate-180 group-hover:scale-110">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+              </div>
+              Promijeni odredište
             </button>
           </div>
         </HintBubble>
@@ -2292,7 +3199,6 @@ function BottomHintPanel({ hasOrigin, everHadOrigin, route, loading, routeLoadin
     </AnimatePresence>
   )
 }
-
 
 function RouteDetailsPanel({
   route,
@@ -2302,6 +3208,7 @@ function RouteDetailsPanel({
   mapRef,
   setLinkCopied,
   setCoords,
+  onClearDestination,
 }: {
   route: Itinerary | null
   routeLoading: boolean
@@ -2310,6 +3217,7 @@ function RouteDetailsPanel({
   mapRef: React.RefObject<maplibregl.Map | null>
   setLinkCopied: (v: boolean) => void
   setCoords: SetCoords
+  onClearDestination: () => void
 }) {
   const [dismissedRoute, setDismissedRoute] = useState<Itinerary | null>(null)
   const isDismissed = dismissedRoute !== null && dismissedRoute === route
@@ -2337,16 +3245,19 @@ function RouteDetailsPanel({
         link.click()
       }}
       onReset={() => setCoords({ lat: null, lon: null })}
+      onClearDestination={onClearDestination}
       shareConfirm={linkCopied}
     />
   )
 }
 
-type HudOverlayProps = Omit<TransitMapViewProps, "containerRef"> & { ease: Ease }
+type HudOverlayProps = Omit<TransitMapViewProps, "containerRef"> & {
+  ease: Ease
+}
 
 function HudOverlay(p: HudOverlayProps) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 grid grid-rows-[auto_1fr_auto] grid-cols-[auto_1fr_auto] gap-0 px-3 pt-3 pb-10 sm:p-4">
+    <div className="pointer-events-none absolute inset-0 z-10 grid grid-cols-[auto_1fr_auto] grid-rows-[auto_1fr_auto] gap-0 px-2.5 pt-2 pb-10 sm:p-4">
       <HudTopRow p={p} />
       <div className="col-start-1 row-start-3" />
       <HudBottomRow p={p} />
@@ -2360,7 +3271,8 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
     <>
       <div className="col-start-1 row-start-1" />
       <HudTopCenter p={p} />
-      <div className="col-start-3 row-start-1">
+      <div className="pointer-events-auto col-start-3 row-start-1 hidden justify-self-end self-start pt-0.5 sm:block">
+        <ColorScale />
       </div>
     </>
   )
@@ -2368,7 +3280,7 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
 
 function HudTopCenter({ p }: { p: HudOverlayProps }) {
   return (
-    <div className="col-start-2 row-start-1 flex flex-col items-center gap-2 justify-self-center sm:col-start-3 sm:items-end sm:justify-self-end">
+    <div className="col-start-2 row-start-1 flex w-full min-w-0 flex-col items-center gap-1.5 justify-self-center sm:gap-2">
       <IslandToolbar
         effectiveTime={p.effectiveTime}
         bajsEnabled={p.bajsEnabled}
@@ -2386,16 +3298,39 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         setCoords={p.setCoords}
         setMobileSearchOpen={p.setMobileSearchOpen}
       />
-      <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-black/30 px-4 py-1.5 backdrop-blur-md mt-1">
-        <Link href="/o-projektu" prefetch={false} className="text-[12px] font-medium text-slate-300 transition-colors hover:text-slate-200">
+      <div className="pointer-events-auto mt-0 flex max-w-full items-center gap-1 rounded-2xl bg-white/94 px-2.5 py-2 shadow-[0_6px_28px_rgba(15,23,42,0.05)] backdrop-blur-[20px] sm:mt-3 sm:gap-3 sm:px-6 sm:py-3 sm:shadow-[0_8px_40px_rgba(15,23,42,0.06)]">
+        <Link
+          href="/o-projektu"
+          prefetch={false}
+          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+        >
           O projektu
         </Link>
-        <Link href="/statistika" prefetch={false} className="text-[12px] font-medium text-amber-200/90 transition-colors hover:text-amber-100 flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        <Link
+          href="/statistika"
+          prefetch={false}
+          className="flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1.5 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-200/90"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 3v18h18" />
+            <path d="m19 9-5 5-4-4-3 3" />
+          </svg>
           Statistika
         </Link>
-        <button type="button" onClick={() => p.setOnboardingOpen(true)}
-          className="text-[12px] font-medium text-slate-300 transition-[color,transform] duration-160 ease-out hover:text-slate-200 active:scale-[0.95]">
+        <button
+          type="button"
+          onClick={() => p.setOnboardingOpen(true)}
+          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-[color,transform,background-color] duration-160 ease-out hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.95]"
+        >
           Pomoć
         </button>
       </div>
@@ -2412,7 +3347,7 @@ function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
           key="error"
           role="alert"
           aria-live="assertive"
-          className="island pointer-events-auto text-[12px] text-red-400"
+          className="island island-compact pointer-events-auto text-[12px] font-medium text-red-600/95"
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4, transition: { duration: 0.15 } }}
@@ -2427,8 +3362,17 @@ function ErrorOverlay({ error, ease }: { error: string | null; ease: Ease }) {
 
 function HudBottomRow({ p }: { p: HudOverlayProps }) {
   return (
-    <div className="col-start-1 col-span-full row-start-3 self-end justify-self-stretch sm:col-start-2 sm:col-span-1 sm:justify-self-center">
-      <BottomHintPanel hasOrigin={p.hasOrigin} everHadOrigin={p.everHadOrigin} route={p.route} loading={p.loading} routeLoading={p.routeLoading} ease={p.ease} setCoords={p.setCoords} />
+    <div className="col-span-full col-start-1 row-start-3 self-end justify-self-stretch sm:col-span-1 sm:col-start-2 sm:justify-self-center">
+      <BottomHintPanel
+        hasOrigin={p.hasOrigin}
+        everHadOrigin={p.everHadOrigin}
+        route={p.route}
+        loading={p.loading}
+        routeLoading={p.routeLoading}
+        ease={p.ease}
+        setCoords={p.setCoords}
+        onClearDestination={p.onClearDestination}
+      />
       <RouteDetailsPanel
         route={p.route}
         routeLoading={p.routeLoading}
@@ -2437,6 +3381,7 @@ function HudBottomRow({ p }: { p: HudOverlayProps }) {
         mapRef={p.mapRef}
         setLinkCopied={p.setLinkCopied}
         setCoords={p.setCoords}
+        onClearDestination={p.onClearDestination}
       />
     </div>
   )

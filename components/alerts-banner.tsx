@@ -165,7 +165,7 @@ export function AlertsBanner() {
       <m.div
         role="alert"
         aria-live="polite"
-        className="pointer-events-auto w-full max-w-lg rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 shadow-lg backdrop-blur-md"
+        className="pointer-events-auto w-full max-w-lg rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 backdrop-blur-md"
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -12 }}

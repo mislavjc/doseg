@@ -15,7 +15,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#2f2e2a",
+  themeColor: "#f8fafc",
 }
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="hr" className={`dark antialiased ${inter.variable} font-sans`}>
+    <html lang="hr" className={`antialiased ${inter.variable} font-sans`}>
       <body>
         <PlausibleProvider />
         <a

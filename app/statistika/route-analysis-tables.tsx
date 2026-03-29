@@ -3,6 +3,7 @@
 import { useId, useState } from "react"
 import type { RouteStatsRoute as RouteInfo } from "@/lib/generated"
 import { fmtHR } from "@/lib/format"
+import { StatEyebrow } from "./stat-typography"
 
 const INITIAL_VISIBLE = 12
 
@@ -30,7 +31,8 @@ export default function RouteAnalysisTables({
 }
 
 const COLUMNS = ["Linija", "Polasci", "Brzina", "Takt", "Vožnja"] as const
-const TH_CLASS = "pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400"
+const TH_CLASS =
+  "pb-4 pr-4 font-mono text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400"
 
 function RouteTableHead() {
   return (
@@ -40,7 +42,11 @@ function RouteTableHead() {
           <th
             key={col}
             scope="col"
-            className={i === COLUMNS.length - 1 ? `${TH_CLASS} text-right !pr-0` : TH_CLASS}
+            className={
+              i === COLUMNS.length - 1
+                ? `${TH_CLASS} !pr-0 text-right`
+                : TH_CLASS
+            }
           >
             {col}
           </th>
@@ -50,7 +56,15 @@ function RouteTableHead() {
   )
 }
 
-function ExpandableRouteTable({ title, routes, mode }: { title: string; routes: RouteInfo[]; mode: "TRAM" | "BUS" }) {
+function ExpandableRouteTable({
+  title,
+  routes,
+  mode,
+}: {
+  title: string
+  routes: RouteInfo[]
+  mode: "TRAM" | "BUS"
+}) {
   const [expanded, setExpanded] = useState(false)
   const tableId = useId().replace(/:/g, "")
   const regionId = `route-table-${mode}-${tableId}`
@@ -59,20 +73,29 @@ function ExpandableRouteTable({ title, routes, mode }: { title: string; routes: 
 
   return (
     <div className="flex flex-col">
-      <h3 className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-        {title}
-      </h3>
-      <div className={needsToggle && !expanded ? "relative max-h-[min(28rem,70vh)] overflow-hidden" : "relative"}>
+      <StatEyebrow className="mb-6 text-[11px] font-bold">{title}</StatEyebrow>
+      <div
+        className={
+          needsToggle && !expanded
+            ? "relative max-h-[min(28rem,70vh)] overflow-hidden"
+            : "relative"
+        }
+      >
         <div className="overflow-x-auto">
           <table id={regionId} className="w-full text-left" aria-label={title}>
             <RouteTableHead />
             <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-              {visible.map((r) => <RouteRow key={`${mode}-${r.name}`} route={r} />)}
+              {visible.map((r) => (
+                <RouteRow key={`${mode}-${r.name}`} route={r} />
+              ))}
             </tbody>
           </table>
         </div>
         {needsToggle && !expanded && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-page-bg,#F6F5F2)] to-transparent dark:from-background" aria-hidden />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-page-bg,#F6F5F2)] to-transparent dark:from-background"
+            aria-hidden
+          />
         )}
       </div>
       {needsToggle && (
@@ -83,7 +106,9 @@ function ExpandableRouteTable({ title, routes, mode }: { title: string; routes: 
           aria-controls={regionId}
           onClick={() => setExpanded((e) => !e)}
         >
-          {expanded ? "Suzi prikaz" : `Prikaži sve linije (${routes.length} ukupno)`}
+          {expanded
+            ? "Suzi prikaz"
+            : `Prikaži sve linije (${routes.length} ukupno)`}
         </button>
       )}
     </div>
@@ -113,21 +138,29 @@ function RouteRow({ route }: { route: RouteInfo }) {
       </td>
       <td className="py-4 pr-4 font-mono text-[14px] text-slate-700 tabular-nums dark:text-slate-300">
         {fmtHR(route.commercialSpeedKmh, 1)}{" "}
-        <span className="text-[12px] text-slate-400 dark:text-slate-500">km/h</span>
+        <span className="text-[12px] text-slate-400 dark:text-slate-500">
+          km/h
+        </span>
       </td>
       <td className="py-4 pr-4 font-mono text-[14px] text-slate-700 tabular-nums dark:text-slate-300">
         {route.avgHeadwayMin != null ? (
           <>
             ~{fmtHR(route.avgHeadwayMin, 1)}{" "}
-            <span className="text-[12px] text-slate-400 dark:text-slate-500">min</span>
+            <span className="text-[12px] text-slate-400 dark:text-slate-500">
+              min
+            </span>
           </>
         ) : (
-          <span className="text-slate-400 dark:text-slate-500">—<span className="sr-only">Nije dostupno</span></span>
+          <span className="text-slate-400 dark:text-slate-500">
+            —<span className="sr-only">Nije dostupno</span>
+          </span>
         )}
       </td>
       <td className="py-4 text-right font-mono text-[14px] text-slate-600 tabular-nums dark:text-slate-400">
         {route.travelTimeMin}{" "}
-        <span className="text-[12px] text-slate-400 dark:text-slate-500">min</span>
+        <span className="text-[12px] text-slate-400 dark:text-slate-500">
+          min
+        </span>
       </td>
     </tr>
   )

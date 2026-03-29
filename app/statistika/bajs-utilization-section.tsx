@@ -4,8 +4,11 @@ import useSWR from "swr"
 import dynamic from "next/dynamic"
 import { fmtHR } from "@/lib/format"
 import BajsUsageChart from "./bajs-usage-chart"
+import { StatModuleLead, StatModuleTitle } from "./stat-typography"
 
-const BajsStationMap = dynamic(() => import("./bajs-station-map"), { ssr: false })
+const BajsStationMap = dynamic(() => import("./bajs-station-map"), {
+  ssr: false,
+})
 
 interface BajsUtilizationData {
   totalStations: number
@@ -29,26 +32,32 @@ function pctColor(pct: number): string {
 export default function BajsUtilizationSection() {
   const { data, error, isLoading } = useSWR<BajsUtilizationData>(
     "/api/rt/bajs-utilization",
-    { refreshInterval: 60_000, keepPreviousData: true },
+    { refreshInterval: 60_000, keepPreviousData: true }
   )
 
   return (
     <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
-            BAJS iskorištenost
-          </h2>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-            Trenutna iskorištenost BAJS sustava dijeljenih bicikala — koliko
-            je bicikala u uporabi, te prazne i pune stanice.
-          </p>
+          <StatModuleTitle>BAJS iskorištenost</StatModuleTitle>
+          <StatModuleLead>
+            Trenutna iskorištenost BAJS sustava dijeljenih bicikala — koliko je
+            bicikala u uporabi, te prazne i pune stanice.
+          </StatModuleLead>
         </div>
       </div>
 
-      {error && <p className="text-[13px] text-slate-500 dark:text-slate-400">{error.message}</p>}
+      {error && (
+        <p className="text-[13px] text-slate-500 dark:text-slate-400">
+          {error.message}
+        </p>
+      )}
       {isLoading && !data && (
-        <div className="flex h-40 items-center justify-center" role="status" aria-label="Učitavanje">
+        <div
+          className="flex h-40 items-center justify-center"
+          role="status"
+          aria-label="Učitavanje"
+        >
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-lime-500" />
           <span className="sr-only">Učitavanje...</span>
         </div>
@@ -59,13 +68,16 @@ export default function BajsUtilizationSection() {
 }
 
 function MetricsCard({ data }: { data: BajsUtilizationData }) {
-  const normal = data.activeStations - data.emptyStations.length - data.fullStations.length
+  const normal =
+    data.activeStations - data.emptyStations.length - data.fullStations.length
 
   return (
-    <div className="flex flex-col gap-12 border-l-2 border-slate-200 pl-6 dark:border-white/10">
+    <div className="flex flex-col gap-12 rounded-[12px] bg-[#f9f9f9] p-6 sm:p-8 dark:bg-[#1a1a1a]">
       <div className="flex flex-col gap-2">
         <div>
-          <span className={`font-serif text-[48px] font-medium leading-none tabular-nums ${pctColor(data.utilizationPct)}`}>
+          <span
+            className={`font-sans text-[48px] leading-none font-semibold tracking-tighter tabular-nums ${pctColor(data.utilizationPct)}`}
+          >
             {fmtHR(data.utilizationPct, 1)}%
           </span>
         </div>
@@ -75,13 +87,28 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
         <div className="mt-2 flex flex-col gap-3 text-[13px] text-slate-600 dark:text-slate-400">
           <Metric value={data.bikesInUse} label="u uporabi" />
           <Metric value={data.totalBikesAvailable} label="na stanicama" />
-          <Metric value={data.knownFleet ?? data.totalCapacity} label="ukupni bicikli" />
+          <Metric
+            value={data.knownFleet ?? data.totalCapacity}
+            label="ukupni bicikli"
+          />
         </div>
       </div>
       <div className="flex flex-col">
-        <StatusBadge count={data.emptyStations.length} label="praznih" dotColor="bg-red-500" />
-        <StatusBadge count={data.fullStations.length} label="punih" dotColor="bg-amber-500" />
-        <StatusBadge count={normal} label="dostupnih" dotColor="bg-emerald-500" />
+        <StatusBadge
+          count={data.emptyStations.length}
+          label="praznih"
+          dotColor="bg-red-500"
+        />
+        <StatusBadge
+          count={data.fullStations.length}
+          label="punih"
+          dotColor="bg-amber-500"
+        />
+        <StatusBadge
+          count={normal}
+          label="dostupnih"
+          dotColor="bg-emerald-500"
+        />
       </div>
     </div>
   )
@@ -113,12 +140,16 @@ function StatusBadge({
   dotColor: string
 }) {
   return (
-    <div className={`flex items-center gap-3 border-b border-slate-100 py-3 last:border-0 dark:border-white/5`}>
+    <div
+      className={`flex items-center gap-3 border-b border-slate-100 py-3 last:border-0 dark:border-white/5`}
+    >
       <div className="flex items-center gap-3">
         <span className={`inline-block h-3 w-3 rounded ${dotColor}`} />
-        <span className="text-[14px] text-slate-700 dark:text-slate-300">{label}</span>
+        <span className="text-[14px] text-slate-700 dark:text-slate-300">
+          {label}
+        </span>
       </div>
-      <span className="font-serif text-[15px] font-medium tabular-nums text-slate-900 dark:text-slate-100">
+      <span className="font-sans text-[15px] font-medium text-slate-900 tabular-nums dark:text-slate-100">
         {count}
       </span>
     </div>
@@ -128,7 +159,7 @@ function StatusBadge({
 function Metric({ value, label }: { value: number; label: string }) {
   return (
     <span className="flex items-center gap-2">
-      <strong className="font-serif text-[18px] font-medium text-slate-900 dark:text-slate-100">
+      <strong className="font-sans text-[18px] font-semibold text-slate-900 dark:text-slate-100">
         {value.toLocaleString("hr-HR")}
       </strong>{" "}
       {label}

@@ -31,6 +31,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::Router;
 use serde::{Deserialize, Serialize};
+use rayon::prelude::*;
 use tower_http::compression::CompressionLayer;
 use ts_rs::TS;
 
@@ -42,15 +43,29 @@ use crate::walk_graph::WalkGraph;
 
 // --- Constants matching the TS implementation ---
 
-const MAX_SECONDS: f64 = 45.0 * 60.0;
-const RENDER_CAP_SECONDS: f64 = MAX_SECONDS - 60.0;
-const MIN_RENDER_EDGE_METERS: f64 = 40.0;
+const MAX_SECONDS: f64 = 30.0 * 60.0;
 const CM_TO_SECONDS: f64 = 0.0072;
 const BUCKET_SECONDS: f64 = 60.0;
-const TRANSIT_COORD_SCALE: f64 = 10_000.0; // 10^4
+const TRANSIT_COORD_SCALE: f64 = 1_000_000.0; // 6 decimals — finer alignment with map tiles
+/// Max distance² (km²) for snapping GTFS vertices to walk graph (~80m).
+const TRANSIT_SNAP_MAX_KM2: f64 = 0.0064;
+
+/// Grid cell size for edge-rasterized isochrone contours (~100m).
+const WALK_AREA_CELL_SIZE: f64 = 0.001;
+/// Conservative buffer (seconds) subtracted from each threshold to account for
+/// grid discretization, morphological closing, smoothing, and model differences
+/// vs real-time routing.
+const THRESHOLD_BUFFER: f64 = 120.0;
 
 const WALK_MAX_KM: f64 = 1.2;
 const MAX_WAIT: f64 = 3600.0;
+/// Straight-line → road distance multiplier (urban street grid detour).
+const WALK_DETOUR: f64 = 1.35;
+
+/// Convert straight-line distance (km) to walking time (seconds), accounting for detour.
+fn walk_seconds(dist_km: f64) -> f64 {
+    (dist_km * WALK_DETOUR / WALK_SPEED) * 3600.0
+}
 
 const BAJS_TRANSFER_MAX_KM: f64 = 0.35;
 const BAJS_BIKE_MAX_KM: f64 = 6.0;
@@ -67,8 +82,8 @@ struct AppState {
     rt_store: gtfs_rt::RtStore,
     vehicle_store: gtfs_rt::VehicleStore,
     rt_last_refresh: gtfs_rt::RtLastRefresh,
-    /// Decoded polyline geometries per pattern: Vec<Vec<[lon, lat]>>
-    pattern_geometries: Vec<Vec<[f64; 2]>>,
+    /// Pre-snapped polyline segments: [pattern][stop_pair] → coords
+    snapped_segments: Vec<Vec<Vec<[f64; 2]>>>,
     /// Pre-built BAJS adjacency for the idealized stations
     bajs_adjacency: Option<BajsAdjacency>,
     /// Read-only SQLite connection for RT history queries
@@ -77,6 +92,8 @@ struct AppState {
     scheduled_speeds: HashMap<String, f64>,
     /// Route name → mode ("TRAM", "BUS", etc.), precomputed from transit graph
     route_mode_map: HashMap<String, String>,
+    /// Stop key → index into transit_graph.stops, precomputed for O(1) lookup
+    stop_key_to_idx: HashMap<String, usize>,
     /// Live BAJS station status (refreshed every 60s)
     bajs_status_store: BajsStatusStore,
     /// BAJS fleet tracking state (shared with background poll task)
@@ -297,12 +314,14 @@ fn compute_travel_times(
     use_bajs: bool,
     bajs_adj: Option<&BajsAdjacency>,
     rt_data: &HashMap<String, gtfs_rt::TripRT>,
+    walk_graph: &WalkGraph,
+    stop_snaps: &[Option<StopSnap>],
+    stop_key_to_idx: &HashMap<String, usize>,
 ) -> TravelTimeResult {
     let time_cap = 3600.0; // 1 hour
     let mut best: HashMap<String, f64> = HashMap::new();
     let mut preds: HashMap<String, Predecessor> = HashMap::new();
     let mut heap = FlatHeap::new();
-    // Map heap node indices back to keys
     let mut node_keys: Vec<String> = Vec::new();
     let mut key_to_node: HashMap<String, u32> = HashMap::new();
 
@@ -318,40 +337,84 @@ fn compute_travel_times(
             }
         };
 
-    // Seed: walk from origin to all stops within walking distance
-    for stop in &graph.stops {
-        let d = fast_dist_km(origin_lat, origin_lon, stop.lat, stop.lon);
-        if d <= WALK_MAX_KM {
-            let walk_time = (d / WALK_SPEED) * 3600.0;
-            best.insert(stop.key.clone(), walk_time);
-            let node_idx = get_or_insert_node(&stop.key, &mut node_keys, &mut key_to_node);
-            heap.push(walk_time, node_idx);
-        }
+    // Walk-graph Dijkstra from origin for accurate walking times
+    let walk_cap = (WALK_MAX_KM / WALK_SPEED) * 3600.0;
+    let wg_node_count = walk_graph.node_count as usize;
+    let mut wg_best = vec![f64::INFINITY; wg_node_count];
+    let mut wg_heap = FlatHeap::new();
+
+    if let Some(origin_node) = find_nearest_node(walk_graph, origin_lat, origin_lon, 0.25) {
+        let olat = walk_graph.lat(origin_node);
+        let olon = walk_graph.lon(origin_node);
+        let snap_time = walk_seconds(fast_dist_km(origin_lat, origin_lon, olat, olon));
+        wg_best[origin_node as usize] = snap_time;
+        wg_heap.push(snap_time, origin_node);
     }
 
-    // Seed: walk to nearby BAJS stations
-    if use_bajs {
-        if let Some(adj) = bajs_adj {
-            for station in adj.stations_by_key.values() {
-                let dist_km = fast_dist_km(origin_lat, origin_lon, station.lat, station.lon);
-                if dist_km > WALK_MAX_KM {
-                    continue;
-                }
-                let walk_time = (dist_km / WALK_SPEED) * 3600.0;
-                let existing = best.get(&station.key).copied().unwrap_or(f64::INFINITY);
-                if walk_time < existing {
-                    best.insert(station.key.clone(), walk_time);
-                    let node_idx =
-                        get_or_insert_node(&station.key, &mut node_keys, &mut key_to_node);
-                    heap.push(walk_time, node_idx);
-                }
+    let wg_offsets = walk_graph.offsets.as_slice();
+    let wg_targets = walk_graph.edge_targets.as_slice();
+    let wg_dist = walk_graph.edge_dist_cm.as_slice();
+
+    while !wg_heap.is_empty() {
+        let time = wg_heap.peek_time();
+        let node = wg_heap.peek_node();
+        wg_heap.pop();
+        if time > wg_best[node as usize] {
+            continue;
+        }
+        if time > walk_cap {
+            break;
+        }
+        let es = wg_offsets[node as usize] as usize;
+        let ee = wg_offsets[node as usize + 1] as usize;
+        for e in es..ee {
+            let to = wg_targets[e];
+            let arr = time + wg_dist[e] as f64 * CM_TO_SECONDS;
+            if arr < walk_cap && arr < wg_best[to as usize] {
+                wg_best[to as usize] = arr;
+                wg_heap.push(arr, to);
             }
         }
     }
 
-    // Build stop key lookup for fast access
-    let stop_by_key: HashMap<&str, &transit_graph::StopNode> =
-        graph.stops.iter().map(|s| (s.key.as_str(), s)).collect();
+    // Seed transit stops using real walk-graph times (via stop_snaps)
+    for (si, stop) in graph.stops.iter().enumerate() {
+        let snap = match &stop_snaps[si] {
+            Some(s) => s,
+            None => continue,
+        };
+        let walk_time = wg_best[snap.node_idx as usize];
+        if walk_time < f64::INFINITY {
+            let total = walk_time + snap.walk_seconds;
+            let existing = best.get(stop.key.as_str()).copied().unwrap_or(f64::INFINITY);
+            if total < existing {
+                best.insert(stop.key.clone(), total);
+                let ni = get_or_insert_node(&stop.key, &mut node_keys, &mut key_to_node);
+                heap.push(total, ni);
+            }
+        }
+    }
+
+    // Seed BAJS stations using real walk-graph times
+    if use_bajs {
+        if let Some(adj) = bajs_adj {
+            for station in adj.stations_by_key.values() {
+                // BAJS stations aren't in stop_snaps — use straight-line with detour
+                let dist_km = fast_dist_km(origin_lat, origin_lon, station.lat, station.lon);
+                if dist_km > WALK_MAX_KM {
+                    continue;
+                }
+                let wt = walk_seconds(dist_km);
+                let existing = best.get(&station.key).copied().unwrap_or(f64::INFINITY);
+                if wt < existing {
+                    best.insert(station.key.clone(), wt);
+                    let node_idx =
+                        get_or_insert_node(&station.key, &mut node_keys, &mut key_to_node);
+                    heap.push(wt, node_idx);
+                }
+            }
+        }
+    }
 
     while !heap.is_empty() {
         let time = heap.peek_time();
@@ -368,12 +431,12 @@ fn compute_travel_times(
             continue;
         }
 
-        let is_stop = stop_by_key.contains_key(key.as_str());
+        let stop_idx = stop_key_to_idx.get(key.as_str()).copied();
         let is_station =
             use_bajs && bajs_adj.is_some_and(|adj| adj.stations_by_key.contains_key(key.as_str()));
 
-        if is_stop {
-            let stop = stop_by_key[key.as_str()];
+        if let Some(si) = stop_idx {
+            let stop = &graph.stops[si];
 
             // Try all patterns serving this stop
             for sp in &stop.patterns {
@@ -447,7 +510,7 @@ fn compute_travel_times(
             // Transfer walks to nearby stops
             for ns in &stop.nearby_stop_indices {
                 let nearby_key = &graph.stops[ns.idx].key;
-                let walk_time = time + (ns.dist_km / WALK_SPEED) * 3600.0;
+                let walk_time = time + walk_seconds(ns.dist_km);
                 let existing = best
                     .get(nearby_key.as_str())
                     .copied()
@@ -474,7 +537,7 @@ fn compute_travel_times(
                 if let Some(adj) = bajs_adj {
                     if let Some(links) = adj.stop_walk_links.get(key.as_str()) {
                         for link in links {
-                            let walk_time = time + (link.dist_km / WALK_SPEED) * 3600.0;
+                            let walk_time = time + walk_seconds(link.dist_km);
                             let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
                             if walk_time < existing {
                                 best.insert(link.key.clone(), walk_time);
@@ -503,7 +566,7 @@ fn compute_travel_times(
                 // Walk to nearby transit stops
                 if let Some(links) = adj.station_walk_links.get(key.as_str()) {
                     for link in links {
-                        let walk_time = time + (link.dist_km / WALK_SPEED) * 3600.0;
+                        let walk_time = time + walk_seconds(link.dist_km);
                         let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
                         if walk_time < existing {
                             best.insert(link.key.clone(), walk_time);
@@ -559,6 +622,30 @@ fn compute_travel_times(
 
 // --- GeoJSON feature generation ---
 
+/// Snap GTFS polyline vertices onto OSM walk-graph nodes.
+fn snap_polyline_to_walk_graph(graph: &WalkGraph, line: Vec<[f64; 2]>) -> Vec<[f64; 2]> {
+    let mut out: Vec<[f64; 2]> = Vec::with_capacity(line.len());
+    for [lon, lat] in line {
+        let (plon, plat) =
+            if let Some(n) = find_nearest_node(graph, lat, lon, TRANSIT_SNAP_MAX_KM2) {
+                (graph.lon(n), graph.lat(n))
+            } else {
+                (lon, lat)
+            };
+        if out
+            .last()
+            .map_or(true, |p: &[f64; 2]| p[0] != plon || p[1] != plat)
+        {
+            out.push([plon, plat]);
+        }
+    }
+    if out.len() < 2 {
+        vec![]
+    } else {
+        out
+    }
+}
+
 fn round_coord(value: f64) -> f64 {
     (value * TRANSIT_COORD_SCALE).round() / TRANSIT_COORD_SCALE
 }
@@ -611,10 +698,38 @@ struct FeatureGeometry {
     coordinates: Vec<Vec<[f64; 2]>>,
 }
 
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+struct WalkAreaFeature {
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"Feature\"")]
+    kind: &'static str,
+    properties: FeatureProperties,
+    geometry: WalkAreaGeometry,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+struct WalkAreaGeometry {
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"MultiPolygon\"")]
+    kind: &'static str,
+    coordinates: Vec<Vec<Vec<[f64; 2]>>>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+struct WalkAreaResponse {
+    #[serde(rename = "type")]
+    #[ts(rename = "type", type = "\"FeatureCollection\"")]
+    kind: &'static str,
+    features: Vec<WalkAreaFeature>,
+}
+
 fn generate_transit_features(
     graph: &TransitGraphJson,
     travel_times: &HashMap<String, f64>,
-    pattern_geometries: &[Vec<[f64; 2]>],
+    snapped_segments: &[Vec<Vec<[f64; 2]>>],
 ) -> Vec<GeoJsonFeature> {
     let mut buckets: HashMap<i64, Vec<Vec<[f64; 2]>>> = HashMap::new();
 
@@ -623,10 +738,9 @@ fn generate_transit_features(
             continue;
         }
 
-        let geo = &pattern_geometries[pi];
+        let segments = &snapped_segments[pi];
         let num_stops = pattern.stop_indices.len();
-        let num_pts = geo.len();
-        if num_stops < 2 || num_pts < 2 {
+        if num_stops < 2 || segments.is_empty() {
             continue;
         }
 
@@ -642,20 +756,14 @@ fn generate_transit_features(
                 _ => continue,
             };
 
-            let time = t1.min(t2);
-            let start_idx = (i * (num_pts - 1)) / (num_stops - 1);
-            let end_idx = ((i + 1) * (num_pts - 1)) / (num_stops - 1);
-            if end_idx <= start_idx {
-                continue;
-            }
-
-            let coords = quantize_transit_line(&geo[start_idx..=end_idx]);
+            let coords = &segments[i];
             if coords.len() < 2 {
                 continue;
             }
 
+            let time = t1.min(t2);
             let bucket = ((time / BUCKET_SECONDS).floor() * BUCKET_SECONDS) as i64;
-            buckets.entry(bucket).or_default().push(coords);
+            buckets.entry(bucket).or_default().push(coords.clone());
         }
     }
 
@@ -672,32 +780,279 @@ fn generate_transit_features(
         .collect()
 }
 
-fn generate_walk_features(
+/// Trace the boundary of a set of grid cells into closed polygon rings.
+/// Returns MultiPolygon coordinates: Vec<polygon>, each polygon = Vec<ring>,
+/// each ring = Vec<[lon, lat]>.
+fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<Vec<[f64; 2]>>> {
+    // Build directed boundary edges (oriented so inside is on the right → CCW exterior)
+    let mut edge_map: HashMap<(i32, i32), Vec<(i32, i32)>> = HashMap::new();
+
+    for &(cx, cy) in cells {
+        if !cells.contains(&(cx - 1, cy)) {
+            edge_map.entry((cx, cy)).or_default().push((cx, cy + 1));
+        }
+        if !cells.contains(&(cx + 1, cy)) {
+            edge_map
+                .entry((cx + 1, cy + 1))
+                .or_default()
+                .push((cx + 1, cy));
+        }
+        if !cells.contains(&(cx, cy - 1)) {
+            edge_map.entry((cx + 1, cy)).or_default().push((cx, cy));
+        }
+        if !cells.contains(&(cx, cy + 1)) {
+            edge_map
+                .entry((cx, cy + 1))
+                .or_default()
+                .push((cx + 1, cy + 1));
+        }
+    }
+
+    // Trace closed rings by following directed edges
+    let mut visited: HashSet<((i32, i32), (i32, i32))> = HashSet::new();
+    let mut rings: Vec<Vec<[f64; 2]>> = Vec::new();
+
+    let corners: Vec<(i32, i32)> = edge_map.keys().cloned().collect();
+    for start in corners {
+        let dests = match edge_map.get(&start) {
+            Some(d) => d,
+            None => continue,
+        };
+        for &first_dest in dests {
+            if visited.contains(&(start, first_dest)) {
+                continue;
+            }
+
+            let mut ring: Vec<[f64; 2]> = Vec::new();
+            let mut current = start;
+            let mut next = first_dest;
+
+            loop {
+                visited.insert((current, next));
+                ring.push([
+                    current.0 as f64 * cell_size,
+                    current.1 as f64 * cell_size,
+                ]);
+
+                let dir = (next.0 - current.0, next.1 - current.1);
+                current = next;
+
+                if current == start {
+                    break;
+                }
+
+                let outgoing = match edge_map.get(&current) {
+                    Some(o) => o,
+                    None => break,
+                };
+
+                // Prefer right turns to stay on exterior boundary (CCW winding)
+                let right = (current.0 + dir.1, current.1 - dir.0);
+                let straight = (current.0 + dir.0, current.1 + dir.1);
+                let left = (current.0 - dir.1, current.1 + dir.0);
+                let back = (current.0 - dir.0, current.1 - dir.1);
+
+                next = if outgoing.contains(&right) && !visited.contains(&(current, right)) {
+                    right
+                } else if outgoing.contains(&straight)
+                    && !visited.contains(&(current, straight))
+                {
+                    straight
+                } else if outgoing.contains(&left) && !visited.contains(&(current, left)) {
+                    left
+                } else if outgoing.contains(&back) && !visited.contains(&(current, back)) {
+                    back
+                } else {
+                    break;
+                };
+
+                if ring.len() > 500_000 {
+                    break;
+                }
+            }
+
+            if ring.len() >= 3 {
+                ring.push(ring[0]); // close the ring
+                rings.push(ring);
+            }
+        }
+    }
+
+    // Each ring becomes a separate polygon; drop tiny fragments
+    rings
+        .into_iter()
+        .filter(|ring| ring.len() >= 10)
+        .map(|ring| vec![ring])
+        .collect()
+}
+
+/// Chaikin corner-cutting smoothing with grid-boundary clamping.
+fn chaikin_smooth(
+    ring: &[[f64; 2]],
+    iterations: usize,
+    grid: &[bool],
+    ox: i32,
+    oy: i32,
+    w: usize,
+    h: usize,
+    cell_size: f64,
+) -> Vec<[f64; 2]> {
+    let mut current = ring.to_vec();
+    for _ in 0..iterations {
+        let n = current.len() - 1; // last == first (closed)
+        if n < 2 {
+            break;
+        }
+        let mut smoothed = Vec::with_capacity(n * 2 + 1);
+        for i in 0..n {
+            let p0 = current[i];
+            let p1 = current[i + 1];
+            smoothed.push([0.75 * p0[0] + 0.25 * p1[0], 0.75 * p0[1] + 0.25 * p1[1]]);
+            smoothed.push([0.25 * p0[0] + 0.75 * p1[0], 0.25 * p0[1] + 0.75 * p1[1]]);
+        }
+        smoothed.push(smoothed[0]);
+        current = smoothed;
+    }
+    // Clamp points outside the cell grid to the nearest cell edge
+    let inv = 1.0 / cell_size;
+    let w_i = w as i32;
+    let h_i = h as i32;
+    for pt in &mut current {
+        let cx = pt[0] * inv;
+        let cy = pt[1] * inv;
+        let gx = cx.floor() as i32 - ox;
+        let gy = cy.floor() as i32 - oy;
+        if gx >= 0 && gx < w_i && gy >= 0 && gy < h_i && grid[gx as usize * h + gy as usize] {
+            continue; // already inside a valid cell
+        }
+        let mut best_cx = 0.0_f64;
+        let mut best_cy = 0.0_f64;
+        let mut best_dist = f64::INFINITY;
+        for ddx in -1..=1_i32 {
+            for ddy in -1..=1_i32 {
+                let nx = gx + ddx;
+                let ny = gy + ddy;
+                if nx >= 0 && nx < w_i && ny >= 0 && ny < h_i && grid[nx as usize * h + ny as usize] {
+                    let abs_nx = (nx + ox) as f64;
+                    let abs_ny = (ny + oy) as f64;
+                    let clamped_x = cx.max(abs_nx).min(abs_nx + 1.0);
+                    let clamped_y = cy.max(abs_ny).min(abs_ny + 1.0);
+                    let d = (clamped_x - cx).powi(2) + (clamped_y - cy).powi(2);
+                    if d < best_dist {
+                        best_dist = d;
+                        best_cx = clamped_x;
+                        best_cy = clamped_y;
+                    }
+                }
+            }
+        }
+        if best_dist < f64::INFINITY {
+            pt[0] = best_cx * cell_size;
+            pt[1] = best_cy * cell_size;
+        }
+    }
+    current
+}
+
+/// Rasterize a line segment onto the grid using Bresenham's algorithm,
+/// recording the minimum arrival time for each cell.
+/// Bresenham rasterization directly into flat grid (no HashMap).
+fn rasterize_edge_timed_grid(
+    x0: i32, y0: i32, x1: i32, y1: i32,
+    time0: f64, time1: f64,
+    grid: &mut [f64], ox: i32, oy: i32, h: usize,
+) {
+    let dx = (x1 - x0).abs();
+    let dy = (y1 - y0).abs();
+    let total_steps = dx.max(dy);
+    let inv_steps = if total_steps > 0 { 1.0 / total_steps as f64 } else { 0.0 };
+    let sx = if x0 < x1 { 1 } else { -1 };
+    let sy = if y0 < y1 { 1 } else { -1 };
+    let mut err = dx - dy;
+    let mut x = x0;
+    let mut y = y0;
+    let mut step = 0;
+    loop {
+        let t = step as f64 * inv_steps;
+        let time = time0 + (time1 - time0) * t;
+        let idx = (x - ox) as usize * h + (y - oy) as usize;
+        if time < grid[idx] {
+            grid[idx] = time;
+        }
+        if x == x1 && y == y1 {
+            break;
+        }
+        let e2 = 2 * err;
+        if e2 > -dy { err -= dy; x += sx; }
+        if e2 < dx { err += dx; y += sy; }
+        step += 1;
+    }
+}
+
+fn grid_dilate(src: &[bool], dst: &mut [bool], w: usize, h: usize) {
+    dst.iter_mut().for_each(|b| *b = false);
+    for x in 0..w {
+        for y in 0..h {
+            if src[x * h + y] {
+                let x0 = if x > 0 { x - 1 } else { 0 };
+                let y0 = if y > 0 { y - 1 } else { 0 };
+                let x1 = (x + 1).min(w - 1);
+                let y1 = (y + 1).min(h - 1);
+                for nx in x0..=x1 {
+                    for ny in y0..=y1 {
+                        dst[nx * h + ny] = true;
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn grid_erode(src: &[bool], dst: &mut [bool], w: usize, h: usize) {
+    dst.iter_mut().for_each(|b| *b = false);
+    for x in 1..w.saturating_sub(1) {
+        for y in 1..h.saturating_sub(1) {
+            if !src[x * h + y] {
+                continue;
+            }
+            let mut keep = true;
+            'check: for nx in x - 1..=x + 1 {
+                for ny in y - 1..=y + 1 {
+                    if !src[nx * h + ny] {
+                        keep = false;
+                        break 'check;
+                    }
+                }
+            }
+            dst[x * h + y] = keep;
+        }
+    }
+}
+
+/// Generate isochrone polygons by rasterizing reached walk-graph edges onto a
+/// grid, then morphological closing + boundary tracing + smoothing.
+fn generate_walk_area(
     walk_graph: &WalkGraph,
     transit_times: &HashMap<String, f64>,
     stop_snaps: &[Option<StopSnap>],
     stops: &[transit_graph::StopNode],
     origin_lat: f64,
     origin_lon: f64,
-) -> Vec<GeoJsonFeature> {
+) -> Vec<WalkAreaFeature> {
     let node_count = walk_graph.node_count as usize;
     let mut best = vec![f64::INFINITY; node_count];
-    let mut touched: Vec<u32> = Vec::with_capacity(32000);
     let mut heap = FlatHeap::new();
 
-    // Seed 1: Origin point
     if let Some(origin_node) = find_nearest_node(walk_graph, origin_lat, origin_lon, 0.25) {
         let olat = walk_graph.lat(origin_node);
         let olon = walk_graph.lon(origin_node);
-        let walk_time = (fast_dist_km(origin_lat, origin_lon, olat, olon) / WALK_SPEED) * 3600.0;
+        let walk_time = walk_seconds(fast_dist_km(origin_lat, origin_lon, olat, olon));
         if walk_time < MAX_SECONDS {
-            touched.push(origin_node);
             best[origin_node as usize] = walk_time;
             heap.push(walk_time, origin_node);
         }
     }
 
-    // Seed 2: Each reachable transit stop → nearest walk node
     for (si, stop) in stops.iter().enumerate() {
         let time = match transit_times.get(stop.key.as_str()) {
             Some(&t) if t < MAX_SECONDS => t,
@@ -709,13 +1064,11 @@ fn generate_walk_features(
         };
         let total_time = time + snap.walk_seconds;
         if total_time < MAX_SECONDS && total_time < best[snap.node_idx as usize] {
-            touched.push(snap.node_idx);
             best[snap.node_idx as usize] = total_time;
             heap.push(total_time, snap.node_idx);
         }
     }
 
-    // Dijkstra on walking graph
     let mut reached: Vec<u32> = Vec::with_capacity(32000);
     let coords = walk_graph.coords.as_slice();
     let offsets = walk_graph.offsets.as_slice();
@@ -726,85 +1079,142 @@ fn generate_walk_features(
         let time = heap.peek_time();
         let node_idx = heap.peek_node();
         heap.pop();
-
         if time > best[node_idx as usize] {
             continue;
         }
         if time > MAX_SECONDS {
             break;
         }
-
         reached.push(node_idx);
-
         let es = offsets[node_idx as usize] as usize;
         let ee = offsets[node_idx as usize + 1] as usize;
         for e in es..ee {
             let to_idx = edge_targets[e];
             let arrival_time = time + edge_dist_cm[e] as f64 * CM_TO_SECONDS;
-
             if arrival_time < MAX_SECONDS && arrival_time < best[to_idx as usize] {
-                touched.push(to_idx);
                 best[to_idx as usize] = arrival_time;
                 heap.push(arrival_time, to_idx);
             }
         }
     }
 
-    // Generate features from reached nodes
-    let mut buckets: HashMap<i64, Vec<Vec<[f64; 2]>>> = HashMap::new();
+    // Rasterize all reached edges ONCE into a cell -> min_time map, then threshold per band.
+    // This avoids re-rasterizing every edge for each of the 5 thresholds.
+    let inv_cell = 1.0 / WALK_AREA_CELL_SIZE;
+    let thresholds: &[(f64, f64)] = &[
+        (300.0, 300.0 - THRESHOLD_BUFFER),
+        (600.0, 600.0 - THRESHOLD_BUFFER),
+        (900.0, 900.0 - THRESHOLD_BUFFER),
+        (1200.0, 1200.0 - THRESHOLD_BUFFER),
+        (1800.0, 1800.0 - THRESHOLD_BUFFER),
+    ];
+    let mut features = Vec::new();
 
+    // Compute grid bounds from reached nodes (avoids HashMap entirely)
+    let mut min_x = i32::MAX;
+    let mut max_x = i32::MIN;
+    let mut min_y = i32::MAX;
+    let mut max_y = i32::MIN;
     for &node_idx in &reached {
-        let node_time = best[node_idx as usize];
         let ni2 = node_idx as usize * 2;
-        let from_lat = coords[ni2];
-        let from_lon = coords[ni2 + 1];
+        let cx = (coords[ni2 + 1] * inv_cell).floor() as i32;
+        let cy = (coords[ni2] * inv_cell).floor() as i32;
+        min_x = min_x.min(cx);
+        max_x = max_x.max(cx);
+        min_y = min_y.min(cy);
+        max_y = max_y.max(cy);
+    }
 
-        let es = offsets[node_idx as usize] as usize;
-        let ee = offsets[node_idx as usize + 1] as usize;
+    if !reached.is_empty() {
+        let pad = 2_i32;
+        let ox = min_x - pad;
+        let oy = min_y - pad;
+        let w = (max_x - ox + pad + 1) as usize;
+        let h = (max_y - oy + pad + 1) as usize;
+        let wh = w * h;
 
-        for e in es..ee {
-            let to_idx = edge_targets[e];
-            let to_time = best[to_idx as usize];
-            if to_time == f64::INFINITY || to_idx <= node_idx {
+        // Rasterize directly into flat grid (no HashMap)
+        let mut time_grid = vec![f64::INFINITY; wh];
+        for &node_idx in &reached {
+            let node_time = best[node_idx as usize];
+            let ni2 = node_idx as usize * 2;
+            let ax = (coords[ni2 + 1] * inv_cell).floor() as i32;
+            let ay = (coords[ni2] * inv_cell).floor() as i32;
+
+            let es = offsets[node_idx as usize] as usize;
+            let ee = offsets[node_idx as usize + 1] as usize;
+            for e in es..ee {
+                let to_idx = edge_targets[e];
+                if to_idx <= node_idx {
+                    continue;
+                }
+                let to_time = best[to_idx as usize];
+                if to_time == f64::INFINITY {
+                    continue;
+                }
+                let ti2 = to_idx as usize * 2;
+                let bx = (coords[ti2 + 1] * inv_cell).floor() as i32;
+                let by = (coords[ti2] * inv_cell).floor() as i32;
+                rasterize_edge_timed_grid(
+                    ax, ay, bx, by, node_time, to_time,
+                    &mut time_grid, ox, oy, h,
+                );
+            }
+        }
+
+        let mut buf_a = vec![false; wh];
+        let mut buf_b = vec![false; wh];
+
+        for &(nominal, effective) in thresholds {
+            for i in 0..wh {
+                buf_a[i] = time_grid[i] <= effective;
+            }
+
+            // 1 round of closing: fills city blocks without expanding too far
+            grid_dilate(&buf_a, &mut buf_b, w, h);
+            grid_erode(&buf_b, &mut buf_a, w, h);
+
+            // Build HashSet for boundary tracing (trace_grid_boundary needs it)
+            let mut cells: HashSet<(i32, i32)> = HashSet::new();
+            for x in 0..w {
+                for y in 0..h {
+                    if buf_a[x * h + y] {
+                        cells.insert((x as i32 + ox, y as i32 + oy));
+                    }
+                }
+            }
+
+            if cells.len() < 3 {
                 continue;
             }
-            if node_time > RENDER_CAP_SECONDS || to_time > RENDER_CAP_SECONDS {
+
+            let raw_polygons = trace_grid_boundary(&cells, WALK_AREA_CELL_SIZE);
+            if raw_polygons.is_empty() {
                 continue;
             }
-            if (edge_dist_cm[e] as f64) < MIN_RENDER_EDGE_METERS * 100.0 {
-                continue;
-            }
 
-            let ti2 = to_idx as usize * 2;
-            let bucket =
-                ((node_time.min(to_time) / BUCKET_SECONDS).floor() * BUCKET_SECONDS) as i64;
+            let smoothed: Vec<Vec<Vec<[f64; 2]>>> = raw_polygons
+                .into_iter()
+                .map(|polygon| {
+                    polygon
+                        .into_iter()
+                        .map(|ring| chaikin_smooth(&ring, 3, &buf_a, ox, oy, w, h, WALK_AREA_CELL_SIZE))
+                        .collect()
+                })
+                .collect();
 
-            let from = [
-                (from_lon * 10000.0).round() / 10000.0,
-                (from_lat * 10000.0).round() / 10000.0,
-            ];
-            let to = [
-                (coords[ti2 + 1] * 10000.0).round() / 10000.0,
-                (coords[ti2] * 10000.0).round() / 10000.0,
-            ];
-
-            buckets.entry(bucket).or_default().push(vec![from, to]);
+            features.push(WalkAreaFeature {
+                kind: "Feature",
+                properties: FeatureProperties { time: nominal },
+                geometry: WalkAreaGeometry {
+                    kind: "MultiPolygon",
+                    coordinates: smoothed,
+                },
+            });
         }
     }
 
-    // No need to reset best — it's stack-allocated per request
-
-    buckets
-        .into_iter()
-        .map(|(time, lines)| GeoJsonFeature {
-            kind: "Feature",
-            properties: FeatureProperties { time: time as f64 },
-            geometry: FeatureGeometry {
-                kind: "MultiLineString",
-                coordinates: lines,
-            },
-        })
-        .collect()
+    features
 }
 
 // --- Routing payload ---
@@ -868,6 +1278,7 @@ fn build_routing_payload(
     travel_times: &HashMap<String, f64>,
     preds: &HashMap<String, Predecessor>,
     bajs_adj: Option<&BajsAdjacency>,
+    stop_key_to_idx: &HashMap<String, usize>,
 ) -> RoutingPayload {
     let mut used_patterns = std::collections::HashSet::new();
     for pred in preds.values() {
@@ -894,12 +1305,10 @@ fn build_routing_payload(
         });
     }
 
-    let stop_by_key: HashMap<&str, &transit_graph::StopNode> =
-        graph.stops.iter().map(|s| (s.key.as_str(), s)).collect();
-
     let mut routing_nodes = Vec::new();
     for (key, &time) in travel_times {
-        let (kind, lat, lon, name) = if let Some(stop) = stop_by_key.get(key.as_str()) {
+        let (kind, lat, lon, name) = if let Some(&si) = stop_key_to_idx.get(key.as_str()) {
+            let stop = &graph.stops[si];
             ("STOP", stop.lat, stop.lon, stop.name.clone())
         } else if let Some(adj) = bajs_adj {
             if let Some(station) = adj.stations_by_key.get(key.as_str()) {
@@ -956,23 +1365,14 @@ struct IsochroneResponse {
     #[ts(rename = "type", type = "\"FeatureCollection\"")]
     kind: &'static str,
     features: Vec<GeoJsonFeature>,
-    #[serde(rename = "walkRing")]
+    #[serde(rename = "walkArea")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[ts(rename = "walkRing", optional)]
-    walk_ring: Option<WalkRingResponse>,
+    #[ts(rename = "walkArea", optional)]
+    walk_area: Option<WalkAreaResponse>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     routing: Option<RoutingPayload>,
     realtime: bool,
-}
-
-#[derive(Serialize, TS)]
-#[ts(export, export_to = "../../lib/generated/")]
-struct WalkRingResponse {
-    #[serde(rename = "type")]
-    #[ts(rename = "type", type = "\"FeatureCollection\"")]
-    kind: &'static str,
-    features: Vec<GeoJsonFeature>,
 }
 
 #[derive(Serialize, TS)]
@@ -1045,6 +1445,9 @@ async fn handle_isochrone(
         use_bajs,
         state.bajs_adjacency.as_ref(),
         &rt_data,
+        &state.walk_graph,
+        &state.stop_snaps,
+        &state.stop_key_to_idx,
     );
     let has_realtime = !rt_data.is_empty();
     drop(rt_data);
@@ -1052,16 +1455,16 @@ async fn handle_isochrone(
 
     // 2. Generate features
     let mut features = Vec::new();
-    let mut walk_ring_features = Vec::new();
+    let mut walk_area_features = Vec::new();
     let t_walk;
 
     if routing_mode != "only" {
         let transit_features = generate_transit_features(
             &state.transit_graph,
             &result.times,
-            &state.pattern_geometries,
+            &state.snapped_segments,
         );
-        let walk_features = generate_walk_features(
+        walk_area_features = generate_walk_area(
             &state.walk_graph,
             &result.times,
             &state.stop_snaps,
@@ -1070,18 +1473,6 @@ async fn handle_isochrone(
             lon,
         );
         features.extend(transit_features);
-        features.extend(walk_features);
-
-        // Walk-only ring (no transit times)
-        let empty_times = HashMap::new();
-        walk_ring_features = generate_walk_features(
-            &state.walk_graph,
-            &empty_times,
-            &state.stop_snaps,
-            &state.transit_graph.stops,
-            lat,
-            lon,
-        );
         t_walk = Instant::now();
     } else {
         t_walk = Instant::now();
@@ -1094,16 +1485,17 @@ async fn handle_isochrone(
             &result.times,
             &result.preds,
             state.bajs_adjacency.as_ref(),
+            &state.stop_key_to_idx,
         ))
     } else {
         None
     };
     let t_payload = Instant::now();
 
-    let walk_ring = if !walk_ring_features.is_empty() {
-        Some(WalkRingResponse {
+    let walk_area = if !walk_area_features.is_empty() {
+        Some(WalkAreaResponse {
             kind: "FeatureCollection",
-            features: walk_ring_features,
+            features: walk_area_features,
         })
     } else {
         None
@@ -1119,7 +1511,7 @@ async fn handle_isochrone(
         let response = IsochroneResponse {
             kind: "FeatureCollection",
             features,
-            walk_ring,
+            walk_area,
             routing,
             realtime: has_realtime,
         };
@@ -2360,6 +2752,41 @@ async fn main() {
         snapped_count, transit_graph.stop_count
     );
 
+    // Pre-snap transit polyline segments to walk graph (avoids per-request cost)
+    let t_snap = Instant::now();
+    let snapped_segments: Vec<Vec<Vec<[f64; 2]>>> = transit_graph
+        .patterns
+        .par_iter()
+        .enumerate()
+        .map(|(pi, pattern)| {
+            let geo = &pattern_geometries[pi];
+            let num_stops = pattern.stop_indices.len();
+            let num_pts = geo.len();
+            if num_stops < 2 || num_pts < 2 {
+                return vec![];
+            }
+            (0..num_stops - 1)
+                .map(|i| {
+                    let start_idx = (i * (num_pts - 1)) / (num_stops - 1);
+                    let end_idx = ((i + 1) * (num_pts - 1)) / (num_stops - 1);
+                    if end_idx <= start_idx {
+                        return vec![];
+                    }
+                    let coords = quantize_transit_line(&geo[start_idx..=end_idx]);
+                    if coords.len() < 2 {
+                        return vec![];
+                    }
+                    snap_polyline_to_walk_graph(&walk_graph, coords)
+                })
+                .collect()
+        })
+        .collect();
+    println!(
+        "Pre-snapped {} pattern segment groups in {:?}",
+        snapped_segments.len(),
+        t_snap.elapsed()
+    );
+
     // Build BAJS adjacency
     let bajs_adjacency = build_bajs_adjacency(&transit_graph);
     if let Some(ref adj) = bajs_adjacency {
@@ -2445,6 +2872,13 @@ async fn main() {
         m
     };
 
+    let stop_key_to_idx: HashMap<String, usize> = transit_graph
+        .stops
+        .iter()
+        .enumerate()
+        .map(|(i, s)| (s.key.clone(), i))
+        .collect();
+
     let state = Arc::new(AppState {
         transit_graph,
         walk_graph,
@@ -2452,11 +2886,12 @@ async fn main() {
         rt_store,
         vehicle_store,
         rt_last_refresh,
-        pattern_geometries,
+        snapped_segments,
         bajs_adjacency,
         rt_db_reader,
         scheduled_speeds,
         route_mode_map,
+        stop_key_to_idx,
         bajs_status_store,
         bajs_fleet,
     });

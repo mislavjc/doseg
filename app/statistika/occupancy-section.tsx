@@ -1,6 +1,7 @@
 "use client"
 
 import useSWR from "swr"
+import { StatModuleTitle, StatProse } from "./stat-typography"
 
 interface OccupancyRouteHour {
   hour: number
@@ -51,16 +52,14 @@ export default function OccupancySection() {
 
   return (
     <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
-      <h2 className="mb-12 font-serif text-[28px] tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100">
-        Zauzetost vozila
-      </h2>
+      <StatModuleTitle className="mb-12">Zauzetost vozila</StatModuleTitle>
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-        <div className="flex-1 space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           <p>
             Razina popunjenosti vozila po liniji i satu iz GTFS-RT feeda.
             Prikazano ako ZET šalje podatke o popunjenosti.
           </p>
-        </div>
+        </StatProse>
         <div className="w-full lg:w-[600px] lg:shrink-0">
           <div className="flex flex-col">
             <Legend />
@@ -77,7 +76,10 @@ function Legend() {
     <div className="mb-8 flex flex-wrap gap-6 text-[11px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
       {Object.entries(LEVEL_COLORS).map(([key, val]) => (
         <div key={key} className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded" style={{ backgroundColor: val.bg }} />
+          <div
+            className="h-3 w-3 rounded"
+            style={{ backgroundColor: val.bg }}
+          />
           <span>{val.label}</span>
         </div>
       ))}
@@ -93,9 +95,15 @@ function HeatmapGrid({ routes }: { routes: OccupancyRoute[] }) {
       <table className="w-full border-collapse text-[11px]">
         <thead>
           <tr>
-            <th className="w-14 pb-4 text-right font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">Linija</th>
+            <th className="w-14 pb-4 text-right font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              Linija
+            </th>
             {SERVICE_HOURS.map((h) => (
-              <th key={h} className="pb-4 text-center font-medium tracking-wider text-slate-400 dark:text-slate-500" style={{ minWidth: 24 }}>
+              <th
+                key={h}
+                className="pb-4 text-center font-medium tracking-wider text-slate-400 dark:text-slate-500"
+                style={{ minWidth: 24 }}
+              >
                 {h % 4 === 0 ? h : ""}
               </th>
             ))}
@@ -119,13 +127,26 @@ function HeatmapRow({ route }: { route: OccupancyRoute }) {
         {route.routeId}
       </td>
       {SERVICE_HOURS.map((h) => (
-        <HeatmapCell key={h} routeId={route.routeId} hour={h} data={hourMap.get(h)} />
+        <HeatmapCell
+          key={h}
+          routeId={route.routeId}
+          hour={h}
+          data={hourMap.get(h)}
+        />
       ))}
     </tr>
   )
 }
 
-function HeatmapCell({ routeId, hour, data }: { routeId: string; hour: number; data?: OccupancyRouteHour }) {
+function HeatmapCell({
+  routeId,
+  hour,
+  data,
+}: {
+  routeId: string
+  hour: number
+  data?: OccupancyRouteHour
+}) {
   if (!data || data.total === 0) {
     return (
       <td className="p-[1px]">
@@ -141,7 +162,10 @@ function HeatmapCell({ routeId, hour, data }: { routeId: string; hour: number; d
       >
         <div
           className="absolute inset-0 rounded"
-          style={{ backgroundColor: dominantColor(data), opacity: cellOpacity(data) }}
+          style={{
+            backgroundColor: dominantColor(data),
+            opacity: cellOpacity(data),
+          }}
         />
       </div>
     </td>

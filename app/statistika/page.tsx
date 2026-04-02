@@ -62,13 +62,6 @@ export const metadata: Metadata = {
     description:
       "Ranking svih 17 zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima. Bodovi, karte, analiza mreže i usporedba linija.",
     type: "article",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Statistika dostupnosti — Doseg | Zagreb Transit Reachability",
-    description:
-      "Ranking svih 17 zagrebačkih gradskih četvrti po dostupnosti javnim prijevozom i BAJS biciklima. Bodovi, karte, analiza mreže i usporedba linija.",
   },
 }
 

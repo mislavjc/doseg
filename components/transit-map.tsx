@@ -1808,10 +1808,7 @@ function useTransitMapCallbacks(s: ReturnType<typeof useTransitMapState>) {
   return { onEscape, resetFetchState }
 }
 
-export function TransitMap() {
-  const s = useTransitMapState()
-  const refs = useTransitMapRefs(s)
-  const { onEscape, resetFetchState } = useTransitMapCallbacks(s)
+function useMapNameActionsRef(s: ReturnType<typeof useTransitMapState>) {
   const mapNameActionsRef = useRef<MapNameActions>({
     clearAll: () => {},
     clearDestOnly: () => {},
@@ -1829,22 +1826,104 @@ export function TransitMap() {
     setOriginName: s.setOriginName,
     setDestName: s.setDestName,
   }
+  return mapNameActionsRef
+}
+
+function useOnboardingAndOriginTracking(hasOrigin: boolean) {
   const [onboardingOpen, setOnboardingOpen] = useState(() => {
     if (typeof window === "undefined") return false
     return !localStorage.getItem(ONBOARDING_KEY)
   })
-
-  const [everHadOrigin, setEverHadOrigin] = useState(s.hasOrigin)
+  const [everHadOrigin, setEverHadOrigin] = useState(hasOrigin)
   useEffect(() => {
-    if (s.hasOrigin) setEverHadOrigin(true)
-  }, [s.hasOrigin])
+    if (hasOrigin) setEverHadOrigin(true)
+  }, [hasOrigin])
+  return { onboardingOpen, setOnboardingOpen, everHadOrigin }
+}
+
+function useRefSyncEffects(refs: MapRefs, s: ReturnType<typeof useTransitMapState>) {
   useEffect(() => {
     refs.effectiveTimeRef.current = s.effectiveTime
   }, [s.effectiveTime]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
   useEffect(() => {
     refs.bajsEnabledRef.current = s.bajsEnabled
   }, [s.bajsEnabled]) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/immutability
+}
 
+function useWalkAreaDimming(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  mapReady: boolean,
+  route: Itinerary | null
+) {
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady) return
+    const hasRoute = route !== null
+    if (map.getLayer("walk-area-fill")) {
+      map.setLayoutProperty(
+        "walk-area-fill",
+        "visibility",
+        hasRoute ? "none" : "visible"
+      )
+    }
+    if (map.getLayer("walk-area-border")) {
+      map.setPaintProperty(
+        "walk-area-border",
+        "line-opacity",
+        hasRoute
+          ? 0.15
+          : ["interpolate", ["linear"], ["get", "time"], 600, 0.7, 2700, 0.4]
+      )
+    }
+  }, [route, mapReady]) // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+function useClearDestination(
+  refs: MapRefs,
+  s: ReturnType<typeof useTransitMapState>
+) {
+  return useCallback(() => {
+    const map = refs.mapRef.current
+    if (map) clearDestinationRouteOnMap(map, refs, s.setRouteLoading)
+    s.setRoute(null)
+    s.setRouteLoading(false)
+    s.setDestName(null)
+    s.setError(null)
+    s.setSwapping(false)
+  }, [
+    s.setRoute,
+    s.setRouteLoading,
+    s.setDestName,
+    s.setError,
+    s.setSwapping,
+  ]) // eslint-disable-line react-hooks/exhaustive-deps -- refs from useTransitMapRefs
+}
+
+function useOriginReverseLabel(
+  refs: MapRefs,
+  coords: { lat: number | null; lon: number | null },
+  originName: string | null,
+  setOriginName: (v: string | null) => void
+) {
+  useEffect(() => {
+    const lat = coords.lat
+    const lon = coords.lon
+    if (lat == null || lon == null) return
+    if (originName != null) return
+    scheduleReverseLabel(refs, lat, lon, (name) => {
+      setOriginName(name)
+    })
+  }, [coords.lat, coords.lon, originName]) // eslint-disable-line react-hooks/exhaustive-deps -- refs stable
+}
+
+function useTransitMapHooks(
+  refs: MapRefs,
+  s: ReturnType<typeof useTransitMapState>,
+  mapNameActionsRef: React.RefObject<MapNameActions>,
+  onEscape: () => void,
+  resetFetchState: () => void
+) {
+  useRefSyncEffects(refs, s)
   useEscapeKey(refs.originRef, onEscape)
   useMapInit(
     refs,
@@ -1887,57 +1966,20 @@ export function TransitMap() {
     s.setError,
     s.setShowStatsCta
   )
+  useWalkAreaDimming(refs.mapRef, s.mapReady, s.route)
+  useOriginReverseLabel(refs, s.coords, s.originName, s.setOriginName)
+}
 
-  // Dim walk area when a route is displayed
-  useEffect(() => {
-    const map = refs.mapRef.current
-    if (!map || !s.mapReady) return
-    const hasRoute = s.route !== null
-    if (map.getLayer("walk-area-fill")) {
-      map.setLayoutProperty(
-        "walk-area-fill",
-        "visibility",
-        hasRoute ? "none" : "visible"
-      )
-    }
-    if (map.getLayer("walk-area-border")) {
-      map.setPaintProperty(
-        "walk-area-border",
-        "line-opacity",
-        hasRoute
-          ? 0.15
-          : ["interpolate", ["linear"], ["get", "time"], 600, 0.7, 2700, 0.4]
-      )
-    }
-  }, [s.route, s.mapReady]) // eslint-disable-line react-hooks/exhaustive-deps
+export function TransitMap() {
+  const s = useTransitMapState()
+  const refs = useTransitMapRefs(s)
+  const { onEscape, resetFetchState } = useTransitMapCallbacks(s)
+  const mapNameActionsRef = useMapNameActionsRef(s)
+  const { onboardingOpen, setOnboardingOpen, everHadOrigin } =
+    useOnboardingAndOriginTracking(s.hasOrigin)
 
-  const clearDestinationOnly = useCallback(() => {
-    const map = refs.mapRef.current
-    if (map) clearDestinationRouteOnMap(map, refs, s.setRouteLoading)
-    s.setRoute(null)
-    s.setRouteLoading(false)
-    s.setDestName(null)
-    s.setError(null)
-    s.setSwapping(false)
-  }, [
-    s.setRoute,
-    s.setRouteLoading,
-    s.setDestName,
-    s.setError,
-    s.setSwapping,
-  ]) // eslint-disable-line react-hooks/exhaustive-deps -- refs from useTransitMapRefs
-
-  // Polazište: use reverse-geocoded street when we have coords but no label yet (shared URL, HUD locate, etc.).
-  // Map click already calls scheduleReverseLabel; this covers the rest without duplicating requests when name is set.
-  useEffect(() => {
-    const lat = s.coords.lat
-    const lon = s.coords.lon
-    if (lat == null || lon == null) return
-    if (s.originName != null) return
-    scheduleReverseLabel(refs, lat, lon, (name) => {
-      s.setOriginName(name)
-    })
-  }, [s.coords.lat, s.coords.lon, s.originName]) // eslint-disable-line react-hooks/exhaustive-deps -- refs stable
+  useTransitMapHooks(refs, s, mapNameActionsRef, onEscape, resetFetchState)
+  const clearDestinationOnly = useClearDestination(refs, s)
 
   const originDisplayName =
     s.originName ?? s.route?.legs[0]?.from?.name ?? null

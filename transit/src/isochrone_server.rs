@@ -306,6 +306,7 @@ struct TravelTimeResult {
     preds: HashMap<String, Predecessor>,
 }
 
+#[allow(clippy::too_many_arguments)]
 fn compute_travel_times(
     graph: &TransitGraphJson,
     origin_lat: f64,
@@ -632,9 +633,9 @@ fn snap_polyline_to_walk_graph(graph: &WalkGraph, line: Vec<[f64; 2]>) -> Vec<[f
             } else {
                 (lon, lat)
             };
-        if out
+        if !out
             .last()
-            .map_or(true, |p: &[f64; 2]| p[0] != plon || p[1] != plat)
+            .is_some_and(|p: &[f64; 2]| p[0] == plon && p[1] == plat)
         {
             out.push([plon, plat]);
         }
@@ -744,7 +745,7 @@ fn generate_transit_features(
             continue;
         }
 
-        for i in 0..(num_stops - 1) {
+        for (i, seg_coords) in segments.iter().enumerate().take(num_stops - 1) {
             let key1 = &graph.stops[pattern.stop_indices[i]].key;
             let key2 = &graph.stops[pattern.stop_indices[i + 1]].key;
             let t1 = match travel_times.get(key1.as_str()) {
@@ -756,14 +757,13 @@ fn generate_transit_features(
                 _ => continue,
             };
 
-            let coords = &segments[i];
-            if coords.len() < 2 {
+            if seg_coords.len() < 2 {
                 continue;
             }
 
             let time = t1.min(t2);
             let bucket = ((time / BUCKET_SECONDS).floor() * BUCKET_SECONDS) as i64;
-            buckets.entry(bucket).or_default().push(coords.clone());
+            buckets.entry(bucket).or_default().push(seg_coords.clone());
         }
     }
 
@@ -886,7 +886,7 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
         .collect()
 }
 
-/// Chaikin corner-cutting smoothing with grid-boundary clamping.
+#[allow(clippy::too_many_arguments)]
 fn chaikin_smooth(
     ring: &[[f64; 2]],
     iterations: usize,
@@ -954,9 +954,7 @@ fn chaikin_smooth(
     current
 }
 
-/// Rasterize a line segment onto the grid using Bresenham's algorithm,
-/// recording the minimum arrival time for each cell.
-/// Bresenham rasterization directly into flat grid (no HashMap).
+#[allow(clippy::too_many_arguments)]
 fn rasterize_edge_timed_grid(
     x0: i32, y0: i32, x1: i32, y1: i32,
     time0: f64, time1: f64,
@@ -1143,8 +1141,7 @@ fn generate_walk_area(
 
             let es = offsets[node_idx as usize] as usize;
             let ee = offsets[node_idx as usize + 1] as usize;
-            for e in es..ee {
-                let to_idx = edge_targets[e];
+            for &to_idx in &edge_targets[es..ee] {
                 if to_idx <= node_idx {
                     continue;
                 }

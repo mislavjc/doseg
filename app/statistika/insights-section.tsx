@@ -98,22 +98,15 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    const cardW =
-      gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
-    el.style.setProperty("--card-w", `${Math.round(cardW)}px`)
-    measure()
-  }, [gaps.length, measure])
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    el.addEventListener("scroll", measure, { passive: true })
-    const ro = new ResizeObserver(() => {
+    const updateCardWidth = () => {
       const cardW =
         gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
       el.style.setProperty("--card-w", `${Math.round(cardW)}px`)
       measure()
-    })
+    }
+    updateCardWidth()
+    el.addEventListener("scroll", measure, { passive: true })
+    const ro = new ResizeObserver(updateCardWidth)
     ro.observe(el)
     return () => {
       el.removeEventListener("scroll", measure)
@@ -155,86 +148,111 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
         ))}
       </div>
       {gaps.length > 1 && (
-        <div className="mt-1 flex items-center justify-center gap-3">
-          <button
-            type="button"
-            aria-label="Prethodni nalaz"
-            disabled={!canScrollLeft}
-            onClick={() => scrollToIndex(Math.max(0, active - 1))}
-            className={cn(
-              "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
-              canScrollLeft
-                ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
-                : "cursor-not-allowed opacity-40"
-            )}
-          >
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <title>Strelica lijevo</title>
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-          <div
-            className="flex gap-2"
-            role="tablist"
-            aria-label="Nalazi"
-          >
-            {gaps.map((gap, i) => (
-              <button
-                key={gap.issue}
-                type="button"
-                role="tab"
-                aria-selected={i === active}
-                aria-label={`Nalaz ${i + 1}`}
-                onClick={() => scrollToIndex(i)}
-                className={cn(
-                  "h-2 rounded-full transition-[width,background-color] duration-200 ease-out",
-                  i === active
-                    ? "w-6 bg-slate-800 dark:bg-slate-200"
-                    : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
-                )}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            aria-label="Sljedeći nalaz"
-            disabled={!canScrollRight}
-            onClick={() =>
-              scrollToIndex(Math.min(gaps.length - 1, active + 1))
-            }
-            className={cn(
-              "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
-              canScrollRight
-                ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
-                : "cursor-not-allowed opacity-40"
-            )}
-          >
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <title>Strelica desno</title>
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
-        </div>
+        <CarouselNav
+          gaps={gaps}
+          active={active}
+          canScrollLeft={canScrollLeft}
+          canScrollRight={canScrollRight}
+          onScrollToIndex={scrollToIndex}
+        />
       )}
     </div>
+  )
+}
+
+// --- Carousel navigation ---
+
+function CarouselNav({
+  gaps,
+  active,
+  canScrollLeft,
+  canScrollRight,
+  onScrollToIndex,
+}: {
+  gaps: ConnectivityGap[]
+  active: number
+  canScrollLeft: boolean
+  canScrollRight: boolean
+  onScrollToIndex: (i: number) => void
+}) {
+  return (
+    <div className="mt-1 flex items-center justify-center gap-3">
+      <CarouselArrowButton
+        direction="left"
+        enabled={canScrollLeft}
+        onClick={() => onScrollToIndex(Math.max(0, active - 1))}
+      />
+      <div
+        className="flex gap-2"
+        role="tablist"
+        aria-label="Nalazi"
+      >
+        {gaps.map((gap, i) => (
+          <button
+            key={gap.issue}
+            type="button"
+            role="tab"
+            aria-selected={i === active}
+            aria-label={`Nalaz ${i + 1}`}
+            onClick={() => onScrollToIndex(i)}
+            className={cn(
+              "h-2 rounded-full transition-[width,background-color] duration-200 ease-out",
+              i === active
+                ? "w-6 bg-slate-800 dark:bg-slate-200"
+                : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
+            )}
+          />
+        ))}
+      </div>
+      <CarouselArrowButton
+        direction="right"
+        enabled={canScrollRight}
+        onClick={() => onScrollToIndex(Math.min(gaps.length - 1, active + 1))}
+      />
+    </div>
+  )
+}
+
+function CarouselArrowButton({
+  direction,
+  enabled,
+  onClick,
+}: {
+  direction: "left" | "right"
+  enabled: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={direction === "left" ? "Prethodni nalaz" : "Sljedeći nalaz"}
+      disabled={!enabled}
+      onClick={onClick}
+      className={cn(
+        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
+        enabled
+          ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
+          : "cursor-not-allowed opacity-40"
+      )}
+    >
+      <svg
+        className="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <title>
+          {direction === "left" ? "Strelica lijevo" : "Strelica desno"}
+        </title>
+        <path
+          d={direction === "left" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"}
+        />
+      </svg>
+    </button>
   )
 }
 

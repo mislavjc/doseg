@@ -142,95 +142,96 @@ export const sectionBgMap: Record<string, string> = {
   indigo: "dark:bg-indigo-500/20",
 }
 
+const sectionIconPaths: Record<string, React.ReactNode> = {
+  info: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </>
+  ),
+  warning: (
+    <>
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M3 3v18h18" />
+      <path d="m19 9-5 5-4-4-3 3" />
+    </>
+  ),
+  tram: (
+    <>
+      <rect x="4" y="3" width="16" height="14" rx="2" />
+      <path d="M12 3v14" />
+      <path d="M4 10h16" />
+      <path d="M7 21l2-4" />
+      <path d="M17 21l-2-4" />
+    </>
+  ),
+  flag: (
+    <>
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+      <line x1="4" y1="22" x2="4" y2="15" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </>
+  ),
+  venn: (
+    <>
+      <circle cx="7.5" cy="7.5" r="5.5" />
+      <circle cx="16.5" cy="16.5" r="5.5" />
+    </>
+  ),
+  moon: (
+    <>
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </>
+  ),
+  pin: (
+    <>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </>
+  ),
+  bars: (
+    <>
+      <path d="M2 20h.01" />
+      <path d="M7 20v-4" />
+      <path d="M12 20v-8" />
+      <path d="M17 20V8" />
+      <path d="M22 4v16" />
+    </>
+  ),
+  bolt: (
+    <>
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    </>
+  ),
+  "circle-down": (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m16 10-4 4-4-4" />
+    </>
+  ),
+}
+
 export function SectionIconSvg({ icon }: { icon: string }) {
-  const paths: Record<string, React.ReactNode> = {
-    info: (
-      <>
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 16v-4" />
-        <path d="M12 8h.01" />
-      </>
-    ),
-    warning: (
-      <>
-        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-        <path d="M12 9v4" />
-        <path d="M12 17h.01" />
-      </>
-    ),
-    chart: (
-      <>
-        <path d="M3 3v18h18" />
-        <path d="m19 9-5 5-4-4-3 3" />
-      </>
-    ),
-    tram: (
-      <>
-        <rect x="4" y="3" width="16" height="14" rx="2" />
-        <path d="M12 3v14" />
-        <path d="M4 10h16" />
-        <path d="M7 21l2-4" />
-        <path d="M17 21l-2-4" />
-      </>
-    ),
-    flag: (
-      <>
-        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-        <line x1="4" y1="22" x2="4" y2="15" />
-      </>
-    ),
-    clock: (
-      <>
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </>
-    ),
-    venn: (
-      <>
-        <circle cx="7.5" cy="7.5" r="5.5" />
-        <circle cx="16.5" cy="16.5" r="5.5" />
-      </>
-    ),
-    moon: (
-      <>
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-      </>
-    ),
-    calendar: (
-      <>
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-      </>
-    ),
-    pin: (
-      <>
-        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-        <circle cx="12" cy="10" r="3" />
-      </>
-    ),
-    bars: (
-      <>
-        <path d="M2 20h.01" />
-        <path d="M7 20v-4" />
-        <path d="M12 20v-8" />
-        <path d="M17 20V8" />
-        <path d="M22 4v16" />
-      </>
-    ),
-    bolt: (
-      <>
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-      </>
-    ),
-    "circle-down": (
-      <>
-        <circle cx="12" cy="12" r="10" />
-        <path d="m16 10-4 4-4-4" />
-      </>
-    ),
-  }
   return (
     <svg
       aria-hidden="true"
@@ -243,7 +244,7 @@ export function SectionIconSvg({ icon }: { icon: string }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {paths[icon]}
+      {sectionIconPaths[icon]}
     </svg>
   )
 }

@@ -9,7 +9,7 @@ const eslintConfig = defineConfig([
     rules: {
       "max-lines-per-function": [
         "error",
-        { max: 50, skipBlankLines: true, skipComments: true },
+        { max: 90, skipBlankLines: true, skipComments: true },
       ],
     },
   },

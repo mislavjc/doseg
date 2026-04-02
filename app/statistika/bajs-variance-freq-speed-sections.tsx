@@ -804,6 +804,87 @@ function LineSpeedCards({
   )
 }
 
+const speedModeIconPaths: Record<string, React.ReactNode> = {
+  tram: (
+    <>
+      <rect x="4" y="3" width="16" height="14" rx="2" />
+      <path d="M12 3v14" />
+      <path d="M4 10h16" />
+      <path d="M7 21l2-4" />
+      <path d="M17 21l-2-4" />
+    </>
+  ),
+  bus: (
+    <>
+      <path d="M8 6v6" />
+      <path d="M15 6v6" />
+      <path d="M2 12h19.6" />
+      <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
+      <circle cx="7" cy="18" r="2" />
+      <path d="M9 18h5" />
+      <circle cx="16" cy="18" r="2" />
+    </>
+  ),
+  train: (
+    <>
+      <rect x="4" y="3" width="16" height="14" rx="2" />
+      <path d="M4 11h16" />
+      <path d="M12 3v8" />
+      <circle cx="8" cy="20" r="1" />
+      <circle cx="16" cy="20" r="1" />
+    </>
+  ),
+}
+
+const speedModeColorMap: Record<
+  string,
+  { icon: string; text: string; bg: string; bar: string }
+> = {
+  rose: {
+    icon: "text-rose-600 dark:text-rose-400",
+    text: "text-rose-600 dark:text-rose-400",
+    bg: "bg-rose-50 dark:bg-rose-900/20",
+    bar: "bg-rose-100 dark:bg-rose-900/30",
+  },
+  blue: {
+    icon: "text-blue-600 dark:text-blue-400",
+    text: "text-blue-600 dark:text-blue-400",
+    bg: "bg-blue-50 dark:bg-blue-900/20",
+    bar: "bg-blue-100 dark:bg-blue-900/30",
+  },
+  teal: {
+    icon: "text-teal-600 dark:text-teal-400",
+    text: "text-teal-600 dark:text-teal-400",
+    bg: "bg-teal-50 dark:bg-teal-900/20",
+    bar: "bg-teal-100 dark:bg-teal-900/30",
+  },
+}
+
+const speedModeBarColor: Record<string, string> = {
+  rose: "bg-rose-500",
+  blue: "bg-blue-500",
+  teal: "bg-teal-500",
+}
+
+function SpeedModeIcon({ icon, className }: { icon: string; className: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      {speedModeIconPaths[icon]}
+    </svg>
+  )
+}
+
 function SpeedModeRow({
   icon,
   label,
@@ -819,86 +900,14 @@ function SpeedModeRow({
   note: string
   pct: number
 }) {
-  const iconPaths: Record<string, React.ReactNode> = {
-    tram: (
-      <>
-        <rect x="4" y="3" width="16" height="14" rx="2" />
-        <path d="M12 3v14" />
-        <path d="M4 10h16" />
-        <path d="M7 21l2-4" />
-        <path d="M17 21l-2-4" />
-      </>
-    ),
-    bus: (
-      <>
-        <path d="M8 6v6" />
-        <path d="M15 6v6" />
-        <path d="M2 12h19.6" />
-        <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
-        <circle cx="7" cy="18" r="2" />
-        <path d="M9 18h5" />
-        <circle cx="16" cy="18" r="2" />
-      </>
-    ),
-    train: (
-      <>
-        <rect x="4" y="3" width="16" height="14" rx="2" />
-        <path d="M4 11h16" />
-        <path d="M12 3v8" />
-        <circle cx="8" cy="20" r="1" />
-        <circle cx="16" cy="20" r="1" />
-      </>
-    ),
-  }
-  const colorMap: Record<
-    string,
-    { icon: string; text: string; bg: string; bar: string }
-  > = {
-    rose: {
-      icon: "text-rose-600 dark:text-rose-400",
-      text: "text-rose-600 dark:text-rose-400",
-      bg: "bg-rose-50 dark:bg-rose-900/20",
-      bar: "bg-rose-100 dark:bg-rose-900/30",
-    },
-    blue: {
-      icon: "text-blue-600 dark:text-blue-400",
-      text: "text-blue-600 dark:text-blue-400",
-      bg: "bg-blue-50 dark:bg-blue-900/20",
-      bar: "bg-blue-100 dark:bg-blue-900/30",
-    },
-    teal: {
-      icon: "text-teal-600 dark:text-teal-400",
-      text: "text-teal-600 dark:text-teal-400",
-      bg: "bg-teal-50 dark:bg-teal-900/20",
-      bar: "bg-teal-100 dark:bg-teal-900/30",
-    },
-  }
-  const c = colorMap[color]!
-  const barColorFull =
-    color === "rose"
-      ? "bg-rose-500"
-      : color === "blue"
-        ? "bg-blue-500"
-        : "bg-teal-500"
+  const c = speedModeColorMap[color]!
+  const barColorFull = speedModeBarColor[color] ?? "bg-teal-500"
   return (
     <div className="flex items-center gap-4">
       <div
         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${c.bg}`}
       >
-        <svg
-          aria-hidden="true"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={c.icon}
-        >
-          {iconPaths[icon]}
-        </svg>
+        <SpeedModeIcon icon={icon} className={c.icon} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between">

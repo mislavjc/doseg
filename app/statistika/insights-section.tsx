@@ -55,15 +55,6 @@ export default function InsightsSection({
             key={connectivityGaps.map((g) => g.issue).join("|")}
             gaps={connectivityGaps}
           />
-
-          <div className="mt-6">
-            <a
-              href="#preporuke"
-              className="text-[13px] font-medium text-[#FF6B4A] hover:text-[#FF8B6A] dark:text-[#FF8B6A] dark:hover:text-[#FFA08A]"
-            >
-              Vidi sve preporuke &rarr;
-            </a>
-          </div>
         </>
       )}
 
@@ -77,6 +68,7 @@ export default function InsightsSection({
 function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const GAP = 12
   const PEEK = 48
@@ -86,6 +78,7 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
     if (!el) return
     const { scrollLeft, scrollWidth, clientWidth } = el
     const maxScroll = scrollWidth - clientWidth
+    setCanScrollLeft(maxScroll > 6 && scrollLeft > 6)
     setCanScrollRight(maxScroll > 6 && scrollLeft < maxScroll - 6)
 
     const pad = Number.parseFloat(getComputedStyle(el).paddingLeft) || 0
@@ -162,27 +155,83 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
         ))}
       </div>
       {gaps.length > 1 && (
-        <div
-          className="mt-1 flex justify-center gap-2"
-          role="tablist"
-          aria-label="Nalazi"
-        >
-          {gaps.map((gap, i) => (
-            <button
-              key={gap.issue}
-              type="button"
-              role="tab"
-              aria-selected={i === active}
-              aria-label={`Nalaz ${i + 1}`}
-              onClick={() => scrollToIndex(i)}
-              className={cn(
-                "h-2 rounded-full transition-[width,background-color] duration-200 ease-out",
-                i === active
-                  ? "w-6 bg-slate-800 dark:bg-slate-200"
-                  : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
-              )}
-            />
-          ))}
+        <div className="mt-1 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            aria-label="Prethodni nalaz"
+            disabled={!canScrollLeft}
+            onClick={() => scrollToIndex(Math.max(0, active - 1))}
+            className={cn(
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
+              canScrollLeft
+                ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
+                : "cursor-not-allowed opacity-40"
+            )}
+          >
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <title>Strelica lijevo</title>
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <div
+            className="flex gap-2"
+            role="tablist"
+            aria-label="Nalazi"
+          >
+            {gaps.map((gap, i) => (
+              <button
+                key={gap.issue}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Nalaz ${i + 1}`}
+                onClick={() => scrollToIndex(i)}
+                className={cn(
+                  "h-2 rounded-full transition-[width,background-color] duration-200 ease-out",
+                  i === active
+                    ? "w-6 bg-slate-800 dark:bg-slate-200"
+                    : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
+                )}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label="Sljedeći nalaz"
+            disabled={!canScrollRight}
+            onClick={() =>
+              scrollToIndex(Math.min(gaps.length - 1, active + 1))
+            }
+            className={cn(
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
+              canScrollRight
+                ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
+                : "cursor-not-allowed opacity-40"
+            )}
+          >
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <title>Strelica desno</title>
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
         </div>
       )}
     </div>
@@ -195,7 +244,7 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
   const isCritical = gap.severity === "critical"
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-5 dark:bg-[#1a1a1a]">
+    <div className="flex h-full min-h-[180px] flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-4 sm:min-h-[200px] sm:p-6 dark:bg-[#1a1a1a]">
       <div className="flex items-center gap-3">
         <span
           className={`inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
@@ -210,8 +259,9 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
           Nalaz {index < 10 ? `0${index}` : index}
         </span>
       </div>
-      <div className="mt-1 text-[14px] leading-relaxed text-slate-900 dark:text-slate-100">
-        <span className="font-medium">{gap.issue}</span>. {gap.impact}
+      <div className="mt-1 flex flex-col gap-1.5 text-[15px] leading-relaxed text-slate-900 dark:text-slate-100">
+        <span className="font-medium">{gap.issue.replaceAll("\u2014", "\u2013")}</span>
+        <span className="text-slate-600 dark:text-slate-400">{gap.impact.replaceAll("\u2014", "\u2013")}</span>
       </div>
     </div>
   )
@@ -293,9 +343,9 @@ function HealthTable({ routes }: { routes: RouteHealth[] }) {
           <tr className="border-b border-slate-200 text-left text-[11px] font-bold tracking-wider text-slate-500 uppercase dark:border-white/10 dark:text-slate-400">
             <th className="py-2 pr-3">Linija</th>
             <th className="py-2 pr-3">Stanje</th>
-            <th className="py-2 pr-6 text-right">Na vrijeme</th>
-            <th className="py-2 pr-6 text-right">Kašnjenje</th>
-            <th className="py-2 pr-3 text-right">
+            <th className="py-2 pr-2 sm:pr-6 text-right">Na vrijeme</th>
+            <th className="py-2 pr-2 sm:pr-6 text-right">Kašnjenje</th>
+            <th className="py-2 pr-1 sm:pr-3 text-right">
               <Term title="Koeficijent varijacije razmaka — mjeri koliko pravilno dolaze vozila (niži = bolje)">
                 Regularnost
               </Term>
@@ -362,10 +412,10 @@ function SeverityBar({ score }: { score: number }) {
           : "bg-emerald-500"
   return (
     <div className="flex items-center justify-end gap-2">
-      <span className="font-mono text-[12px] text-slate-500 tabular-nums dark:text-slate-400">
+      <span className="font-mono text-[13px] text-slate-500 tabular-nums dark:text-slate-400">
         {Math.round(score)}
       </span>
-      <div className="h-2 w-16 rounded-full bg-slate-100 dark:bg-slate-800">
+      <div className="h-2 w-12 sm:w-16 rounded-full bg-slate-100 dark:bg-slate-800">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${Math.min(score, 100)}%` }}

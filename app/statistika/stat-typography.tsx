@@ -60,7 +60,7 @@ export function StatGroupTitle({
   return (
     <h2
       className={cn(
-        "font-sans text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100",
+        "font-sans text-[26px] font-medium tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100",
         className
       )}
       {...props}
@@ -75,7 +75,7 @@ export function StatGroupLead({
   return (
     <p
       className={cn(
-        "mb-12 max-w-[650px] text-base leading-relaxed text-slate-600 sm:text-[17px] dark:text-slate-400",
+        "mb-12 max-w-[650px] text-base leading-relaxed text-slate-600 sm:text-[18px] dark:text-slate-400",
         className
       )}
       {...props}
@@ -112,7 +112,7 @@ export function StatModuleLead({
   return (
     <p
       className={cn(
-        "mt-4 max-w-xl text-[17px] leading-relaxed text-slate-700 sm:text-[18px] dark:text-slate-300",
+        "mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300",
         className
       )}
       {...props}

@@ -72,8 +72,8 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
     data.activeStations - data.emptyStations.length - data.fullStations.length
 
   return (
-    <div className="flex flex-col gap-12 rounded-[12px] bg-[#f9f9f9] p-6 sm:p-8 dark:bg-[#1a1a1a]">
-      <div className="flex flex-col gap-2">
+    <div className="grid grid-cols-1 gap-8 rounded-[12px] bg-[#f9f9f9] p-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-slate-200 sm:p-10 sm:dark:divide-white/10 dark:bg-[#1a1a1a]">
+      <div className="flex flex-col gap-3 sm:pr-10">
         <div>
           <span
             className={`font-sans text-[48px] leading-none font-semibold tracking-tighter tabular-nums ${pctColor(data.utilizationPct)}`}
@@ -81,19 +81,19 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
             {fmtHR(data.utilizationPct, 1)}%
           </span>
         </div>
-        <div className="text-[14px] text-slate-500 dark:text-slate-400">
+        <div className="text-[15px] text-slate-500 dark:text-slate-400">
           iskorištenost
         </div>
-        <div className="mt-2 flex flex-col gap-3 text-[13px] text-slate-600 dark:text-slate-400">
-          <Metric value={data.bikesInUse} label="u uporabi" />
-          <Metric value={data.totalBikesAvailable} label="na stanicama" />
-          <Metric
-            value={data.knownFleet ?? data.totalCapacity}
-            label="ukupni bicikli"
-          />
-        </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-[13px] text-slate-600 sm:border-0 sm:pt-0 sm:pl-10 sm:pr-10 dark:border-white/10 dark:text-slate-400">
+        <Metric value={data.bikesInUse} label="u uporabi" />
+        <Metric value={data.totalBikesAvailable} label="na stanicama" />
+        <Metric
+          value={data.knownFleet ?? data.totalCapacity}
+          label="ukupni bicikli"
+        />
+      </div>
+      <div className="flex flex-col border-t border-slate-200 pt-8 sm:border-0 sm:pt-0 sm:pl-10 dark:border-white/10">
         <StatusBadge
           count={data.emptyStations.length}
           label="praznih"
@@ -116,11 +116,11 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
 
 function UtilizationContent({ data }: { data: BajsUtilizationData }) {
   return (
-    <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-      <div className="flex-1 space-y-12">
+    <div className="flex flex-col gap-12 overflow-hidden">
+      <div className="w-full space-y-12">
         <MetricsCard data={data} />
       </div>
-      <div className="w-full lg:w-[600px] lg:shrink-0">
+      <div className="w-full">
         <div className="flex flex-col gap-12">
           <BajsUsageChart />
           <BajsStationMap />
@@ -141,11 +141,11 @@ function StatusBadge({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 border-b border-slate-100 py-3 last:border-0 dark:border-white/5`}
+      className={`flex items-center gap-3 border-b border-slate-100 py-4 last:border-0 dark:border-white/5`}
     >
       <div className="flex items-center gap-3">
         <span className={`inline-block h-3 w-3 rounded ${dotColor}`} />
-        <span className="text-[14px] text-slate-700 dark:text-slate-300">
+        <span className="text-[15px] text-slate-700 dark:text-slate-300">
           {label}
         </span>
       </div>
@@ -158,11 +158,11 @@ function StatusBadge({
 
 function Metric({ value, label }: { value: number; label: string }) {
   return (
-    <span className="flex items-center gap-2">
+    <span className="flex items-center gap-3">
       <strong className="font-sans text-[18px] font-semibold text-slate-900 dark:text-slate-100">
         {value.toLocaleString("hr-HR")}
-      </strong>{" "}
-      {label}
+      </strong>
+      <span>{label}</span>
     </span>
   )
 }

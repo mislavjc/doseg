@@ -146,7 +146,7 @@ export default function BajsStationMap() {
 
   return (
     <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] dark:bg-[#1a1a1a]">
-      <div className="relative">
+      <div className="relative overflow-hidden rounded-[12px]">
         <div ref={containerRef} role="application" aria-label="Karta BAJS stanica u Zagrebu" style={{ height: 400, width: "100%" }} />
         <MapLegend />
       </div>

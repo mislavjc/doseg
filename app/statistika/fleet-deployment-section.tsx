@@ -43,7 +43,7 @@ export default function FleetDeploymentSection() {
       <StatModuleTitle className="mb-12">
         Pokrivenost flote u stvarnom vremenu
       </StatModuleTitle>
-      <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
+      <div className="flex flex-col gap-12">
         <StatProse className="flex-1 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           <p>
             Koliko planiranih polazaka trenutačno šalje podatke o poziciji
@@ -52,7 +52,7 @@ export default function FleetDeploymentSection() {
             vozila ne voze.
           </p>
         </StatProse>
-        <div className="w-full lg:w-[600px] lg:shrink-0">
+        <div className="w-full">
           {error && !data && (
             <p className="text-[13px] text-slate-500 dark:text-slate-400">
               Podaci nisu dostupni
@@ -114,7 +114,7 @@ function SummaryRow({
           {Math.round(data.totalDeploymentPct)}%
         </span>
       </div>
-      <div className="text-[14px] text-slate-500 dark:text-slate-400">
+      <div className="text-[15px] text-slate-500 dark:text-slate-400">
         ukupno pokriveno ({data.totalActive} / {data.totalScheduled} polazaka)
       </div>
       <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
@@ -158,7 +158,7 @@ function ActiveRoutesTable({ routes }: { routes: FleetRouteDeployment[] }) {
 function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
   return (
     <div className="flex items-center gap-2 py-1">
-      <span className="w-10 shrink-0 text-right font-mono text-[12px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
+      <span className="w-10 shrink-0 text-right font-mono text-[13px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
         {r.routeId}
       </span>
       <div className="h-1.5 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
@@ -188,7 +188,7 @@ function SilentRoutesList({ routes }: { routes: FleetRouteDeployment[] }) {
         {routes.map((r) => (
           <span
             key={r.routeId}
-            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-400 dark:bg-slate-800 dark:text-slate-500"
           >
             {r.routeId}
           </span>

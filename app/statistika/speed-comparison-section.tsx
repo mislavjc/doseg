@@ -79,7 +79,7 @@ function SpeedContent({
   if (!data.hasData) {
     return (
       <div className="rounded-[12px] bg-[#f9f9f9] p-8 text-center sm:p-12 dark:bg-[#1a1a1a]">
-        <p className="text-[14px] text-slate-500 dark:text-slate-400">
+        <p className="text-[15px] text-slate-500 dark:text-slate-400">
           ZET-ov sustav praćenja trenutno ne šalje podatke o brzini vozila.
           Usporedba stvarne i planirane brzine bit će dostupna kada ti podaci
           postanu dostupni.
@@ -142,7 +142,7 @@ function SummaryRow({
           {fmtHR(avgActual, 1)} km/h
         </span>
       </div>
-      <div className="text-[14px] text-slate-500 dark:text-slate-400">
+      <div className="text-[15px] text-slate-500 dark:text-slate-400">
         stvarna (planirana: {fmtHR(avgScheduled, 1)} km/h)
       </div>
       <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
@@ -194,7 +194,7 @@ function SpeedRow({ r }: { r: SpeedRouteComparison }) {
 
   return (
     <div className="flex items-center gap-3 border-b border-slate-100 py-2 dark:border-white/5">
-      <span className="w-10 shrink-0 font-mono text-[14px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
+      <span className="w-10 shrink-0 font-mono text-[15px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
         {r.routeId}
       </span>
       <div className="relative h-2 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">

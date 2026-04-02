@@ -34,7 +34,7 @@ import {
   getMapStyleUrl,
   type MapStyleId,
 } from "@/lib/map-styles"
-import { modeColor } from "@/lib/transit"
+import { modeColor, ISOCHRONE_COLORS } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
 import {
   PANEL_SEARCH_SHELL,
@@ -56,13 +56,7 @@ const EMPTY_FC: GeoJSON.FeatureCollection = {
   features: [],
 }
 
-/** Muted time ramp for light basemap + legend strip */
-const ISOCHRONE_LINE_COLORS = [
-  "#1a7a52",
-  "#16949e",
-  "#2d7ec4",
-  "#7b68b8",
-] as const
+const ISOCHRONE_LINE_COLORS = ISOCHRONE_COLORS
 
 const TIME_COLOR_STOPS: maplibregl.ExpressionSpecification = [
   "interpolate",

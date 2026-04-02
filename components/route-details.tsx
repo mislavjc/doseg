@@ -1,4 +1,5 @@
 import { type ReactNode, useState, useEffect } from "react"
+import { Calligraph } from "calligraph"
 import { m, AnimatePresence } from "motion/react"
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer"
 
@@ -61,6 +62,9 @@ export interface RouteDetailsProps {
 
 const crossfade = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.12 } }
 
+/** Calligraph uses inline-flex + autoSize wrappers; in flex layouts that can space graphemes apart. Inline-block + no autoSize fixes it. */
+const CG_INLINE = { autoSize: false, animation: "smooth" as const, style: { display: "inline-block" as const } }
+
 /* ── Icons ── */
 
 function WalkIconSmall() {
@@ -81,7 +85,7 @@ function TransitIcon({ mode, color }: { mode: string, color: string }) {
   return <svg className="h-[14px] w-[14px]" style={{color}} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-4 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h12v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zm0 13c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
 }
 
-function PinIcon() {
+export function PinIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#ea4335]" fill="currentColor">
       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -89,15 +93,7 @@ function PinIcon() {
   )
 }
 
-function BackArrow() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19.5 12H4.5M10.5 18L4.5 12l6-6" />
-    </svg>
-  )
-}
-
-function SwapIcon() {
+export function SwapIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M8 19V5m0 0L4 9m4-4l4 4M16 5v14m0 0l-4-4m4 4l4-4" />
@@ -127,7 +123,8 @@ function ExportIconBtn({ onExport }: { onExport: () => void }) {
 
 /* ── Utilities ── */
 
-function findDestName(itinerary: Itinerary): string {
+/** Last leg destination label from OTP; used when no explicit pin/search name. */
+export function findDestName(itinerary: Itinerary): string {
   for (let i = itinerary.legs.length - 1; i >= 0; i--) {
     if (itinerary.legs[i].to.name) return itinerary.legs[i].to.name
   }
@@ -141,85 +138,102 @@ function isShortRoute(route?: string): boolean {
 
 /* ── Panel header (Desktop) ── */
 
-function PanelHeader({ itinerary, originName, destName: destNameProp, onReset, onClearDestination, onSwap }: { itinerary: Itinerary; originName?: string; destName?: string; onReset?: () => void; onClearDestination?: () => void; onSwap?: () => void }) {
+/** Two 44px fields + gap-2 + py-4 — idle + route header use the same shell */
+export const PANEL_SEARCH_SHELL =
+  "flex min-w-0 shrink-0 items-start gap-1 border-b border-slate-100/80 bg-[rgba(255,255,255,0.98)] px-4 py-4 min-h-[138px]"
+
+function PanelHeader({ itinerary, originName, destName: destNameProp, onSwap }: { itinerary: Itinerary; originName?: string; destName?: string; onSwap?: () => void }) {
   const origin = originName || itinerary.legs[0].from.name || "Polazište"
   const destName = destNameProp || findDestName(itinerary)
-  const backAction = onClearDestination ?? onReset
   return (
-    <div className="bg-[rgba(255,255,255,0.98)] px-4 py-4 shrink-0 flex gap-1">
-      {backAction && (
-        <button type="button" onClick={backAction} className="group mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500 transition-all duration-300 hover:text-[#1264ab] rounded-full hover:bg-[#1264ab]/10 active:scale-95" aria-label="Promijeni odredište">
-          <div className="transition-transform duration-300 ease-out group-hover:-translate-x-1">
-            <BackArrow />
-          </div>
-        </button>
-      )}
-      <div className="min-w-0 flex-1 flex gap-3">
-        <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
-          <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-          <div className="flex flex-col gap-[3px] my-1 shrink-0">
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
-            <div className="w-[3px] h-[3px] rounded-full bg-slate-500" />
+    <div className={PANEL_SEARCH_SHELL}>
+      <div className="flex min-w-0 flex-1 gap-3">
+        <div className="mt-4 ml-1 flex shrink-0 flex-col items-center">
+          <div className="h-3.5 w-3.5 shrink-0 rounded-full border-[2.5px] border-slate-300" />
+          <div className="my-1.5 flex shrink-0 flex-col gap-[3px]">
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
           </div>
           <PinIcon />
         </div>
-        <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
-          <input readOnly value={origin} className="h-[44px] rounded-2xl bg-slate-100 focus:bg-slate-200 hover:bg-slate-200 transition-colors outline-none px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis" />
-          <input readOnly value={destName} className="h-[44px] rounded-2xl bg-slate-100 focus:bg-slate-200 hover:bg-slate-200 transition-colors outline-none px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis" />
+        <div className="relative flex min-w-0 flex-1 flex-col rounded-2xl bg-slate-100 p-1">
+          <input readOnly value={origin} className="h-10 rounded-[12px] bg-transparent px-4 text-[15px] text-slate-900 w-full cursor-default text-ellipsis outline-none transition-colors hover:bg-slate-200/60 focus:bg-white focus:shadow-sm" />
+          <div className="mx-3 h-[1px] bg-slate-200" />
+          <input readOnly value={destName} className="h-10 rounded-[12px] bg-transparent px-4 text-[15px] text-slate-900 w-full cursor-default text-ellipsis outline-none transition-colors hover:bg-slate-200/60 focus:bg-white focus:shadow-sm" />
+          {onSwap && (
+            <button type="button" onClick={onSwap} className="absolute right-1.5 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white text-slate-400 shadow-sm transition-all hover:text-slate-900 hover:shadow-md active:scale-95" aria-label="Zamijeni polazište i odredište">
+              <div className="scale-90 transition-transform duration-500 ease-in-out hover:rotate-180"><SwapIcon /></div>
+            </button>
+          )}
         </div>
       </div>
-      <button type="button" onClick={onSwap} className="group self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 transition-all duration-300 hover:text-[#1264ab] rounded-full hover:bg-[#1264ab]/10 ml-1 active:scale-95" aria-label="Zamijeni polazište i odredište">
-        <div className="transition-transform duration-500 ease-in-out group-hover:rotate-180 group-active:scale-90">
-          <SwapIcon />
-        </div>
-      </button>
     </div>
   )
 }
 
 /* ── Summary bar (Desktop) ── */
 
-function SummaryBar({ itinerary, departureTime, loading, onShare, onExport, shareConfirm }: {
+function SummaryBar({ itinerary, departureTime, loading }: {
   itinerary: Itinerary; departureTime?: string; loading: boolean
-  onShare?: () => void; onExport?: () => void; shareConfirm?: boolean
 }) {
   const dep = departureTime ?? "00:00"
   const arr = formatArrivalTime(dep, itinerary.duration)
   return (
-    <div className="px-6 py-6 bg-transparent">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-[20px] font-medium text-slate-900 tabular-nums">
-              {dep} – {arr}
-            </span>
-            <span className="text-[16px] text-slate-400 tabular-nums">
-              ({formatDuration(itinerary.duration)})
-            </span>
-            {loading && <span className="route-spinner ml-2" />}
-          </div>
-          <TripStats itinerary={itinerary} />
-        </div>
-        <div className="flex items-center gap-1">
-          {onShare && <ShareIconBtn onShare={onShare} shareConfirm={shareConfirm} />}
-          {onExport && <ExportIconBtn onExport={onExport} />}
-        </div>
+    <div className="min-w-0 bg-transparent px-4 pb-1 pt-5 md:px-6 md:pb-2 md:pt-6">
+      <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+        <Calligraph
+          {...CG_INLINE}
+          className="text-[20px] font-medium text-slate-900 tabular-nums"
+        >
+          {`${dep} – ${arr}`}
+        </Calligraph>
+        <span className="text-[16px] text-slate-400 tabular-nums">
+          {"("}
+          <Calligraph {...CG_INLINE} className="tabular-nums">
+            {formatDuration(itinerary.duration)}
+          </Calligraph>
+          {")"}
+        </span>
+        <span
+          className="ml-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center"
+          aria-hidden={!loading}
+        >
+          {loading ? <span className="route-spinner" /> : null}
+        </span>
       </div>
+      <TripStats itinerary={itinerary} />
     </div>
   )
 }
 
 function TripStats({ itinerary }: { itinerary: Itinerary }) {
   return (
-    <div className="mt-1 flex gap-2 text-[13px] text-slate-400">
+    <div className="mt-1 flex min-w-0 flex-wrap content-start gap-x-2 gap-y-0.5 text-[13px] leading-snug text-slate-400">
       {itinerary.transfers > 0 && (
-        <span>{itinerary.transfers} {itinerary.transfers === 1 ? "presjedanje" : "presjedanja"}</span>
+        <span>
+          <Calligraph {...CG_INLINE} className="tabular-nums">
+            {String(itinerary.transfers)}
+          </Calligraph>{" "}
+          {itinerary.transfers === 1 ? "presjedanje" : "presjedanja"}
+        </span>
       )}
       {itinerary.transfers > 0 && <span aria-hidden>·</span>}
-      <span>{formatDistance(itinerary.walkDistance)} hodanja</span>
+      <span>
+        <Calligraph {...CG_INLINE} className="tabular-nums">
+          {formatDistance(itinerary.walkDistance)}
+        </Calligraph>{" "}
+        hodanja
+      </span>
       {itinerary.bikeDistance > 0 && <span aria-hidden>·</span>}
-      {itinerary.bikeDistance > 0 && <span>{formatDistance(itinerary.bikeDistance)} BAJS</span>}
+      {itinerary.bikeDistance > 0 && (
+        <span>
+          <Calligraph {...CG_INLINE} className="tabular-nums">
+            {formatDistance(itinerary.bikeDistance)}
+          </Calligraph>{" "}
+          BAJS
+        </span>
+      )}
     </div>
   )
 }
@@ -239,7 +253,7 @@ function computeLegTimes(legs: Leg[], departureTime: string) {
 function Timeline({ legs, departureTime }: { legs: Leg[]; departureTime: string }) {
   const { times, totalElapsed } = computeLegTimes(legs, departureTime)
   return (
-    <div className="px-3 py-6 pb-20">
+    <div className="min-w-0 px-4 py-6 pb-20 md:px-6">
       {legs.map((leg, i) => (
         <TimelineLeg key={`${i}-${leg.mode}-${leg.from.name}`} leg={leg} time={times[i]} isFirst={i === 0} />
       ))}
@@ -271,8 +285,8 @@ function TimelineLeg({ leg, time, isFirst }: { leg: Leg; time: string; isFirst: 
 function TimelineConnector({ leg, color }: { leg: Leg; color: string }) {
   const isWalk = leg.mode === "WALK"
   return (
-    <div className="flex">
-      <div className="w-[66px] shrink-0" />
+    <div className="flex min-w-0">
+      <div className="w-[4.25rem] shrink-0" aria-hidden />
       <div className="flex w-[20px] shrink-0 justify-center">
         <div
           className="w-[5px] rounded-full my-1 relative flex items-center justify-center"
@@ -320,11 +334,20 @@ function LegInfo({ leg }: { leg: Leg }) {
           {isWalk ? "Hodanje" : description}
         </span>
       </div>
-      <div className="mt-1 flex items-center gap-2 text-[13px] text-slate-400">
-        <span className="tabular-nums">Oko {formatDuration(leg.duration)}, {formatDistance(leg.distance)}</span>
+      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] text-slate-400">
+        <span className="tabular-nums">
+          Oko{" "}
+          <Calligraph {...CG_INLINE} className="tabular-nums">
+            {`${formatDuration(leg.duration)}, ${formatDistance(leg.distance)}`}
+          </Calligraph>
+        </span>
         {leg.delay !== undefined && !isWalk && (() => {
           const badge = delayBadge(leg.delay)
-          return <span className={`font-medium tabular-nums ${badge.color}`}>{badge.label}</span>
+          return (
+            <Calligraph {...CG_INLINE} className={`font-medium tabular-nums ${badge.color}`}>
+              {badge.label}
+            </Calligraph>
+          )
         })()}
       </div>
     </>
@@ -333,9 +356,11 @@ function LegInfo({ leg }: { leg: Leg }) {
 
 function TimelineStop({ time, name, isOrigin, isEnd }: { time: string; name: string; color?: string; isOrigin?: boolean; isEnd?: boolean }) {
   return (
-    <div className="flex items-start py-0.5">
-      <span className="w-[66px] shrink-0 text-right text-[13px] font-medium text-slate-500 pt-[2px] pr-3">
-        {time}
+    <div className="flex min-w-0 items-start py-0.5">
+      <span className="min-w-[4.25rem] max-w-[5.5rem] shrink-0 text-right text-[13px] font-medium text-slate-500 pt-[2px] pr-3 tabular-nums">
+        <Calligraph {...CG_INLINE} className="tabular-nums">
+          {time}
+        </Calligraph>
       </span>
       <div className="flex w-[20px] shrink-0 items-center justify-center pt-[4px]">
         {isEnd ? (
@@ -346,7 +371,7 @@ function TimelineStop({ time, name, isOrigin, isEnd }: { time: string; name: str
           <div className="h-[10px] w-[10px] rounded-full border-[2px] border-white bg-slate-400" />
         )}
       </div>
-      <span className={`flex-1 pl-4 text-[16px] leading-tight pt-[1px] ${isOrigin || isEnd ? "font-semibold text-slate-900" : "font-medium text-slate-600"}`}>
+      <span className={`min-w-0 flex-1 pl-4 text-[16px] leading-tight pt-[1px] ${isOrigin || isEnd ? "font-semibold text-slate-900" : "font-medium text-slate-600"}`}>
         {name}
       </span>
     </div>
@@ -363,7 +388,7 @@ function ResetButton({
   onClearDestination?: () => void
 }) {
   return (
-    <div className="space-y-2 px-6 py-6 bg-transparent">
+    <div className="space-y-2 bg-transparent px-4 py-6 md:px-6">
       {onClearDestination && (
         <button
           type="button"
@@ -408,39 +433,36 @@ function SkeletonTimeline() {
 
 function RoutePanelSkeleton({
   originName,
-  onReset,
-  onClearDestination,
 }: {
   originName?: string
-  onReset?: () => void
-  onClearDestination?: () => void
 }) {
   const origin = originName || "Polazište"
-  const backAction = onClearDestination ?? onReset
   return (
-    <m.div key="loading" {...crossfade} aria-hidden="true" className="flex flex-col h-full">
-      <div className="bg-[rgba(255,255,255,0.98)] px-4 py-4 shrink-0 flex gap-1">
-        {backAction && (
-          <button type="button" onClick={backAction} className="mt-1 h-10 w-10 shrink-0 flex items-center justify-center text-slate-400 hover:text-slate-900 rounded-full hover:bg-slate-100" aria-label="Promijeni odredište">
-            <BackArrow />
-          </button>
-        )}
-        <div className="min-w-0 flex-1 flex gap-3">
-          <div className="flex flex-col items-center mt-3 ml-1 shrink-0">
-            <div className="h-3.5 w-3.5 rounded-full border-[2.5px] border-slate-300 shrink-0" />
-            <div className="flex flex-col gap-[3px] my-1 shrink-0"><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /><div className="w-[3px] h-[3px] rounded-full bg-slate-400" /></div>
+    <m.div key="loading" {...crossfade} aria-hidden="true" className="flex h-full flex-col">
+      <div className={PANEL_SEARCH_SHELL}>
+        <div className="flex min-w-0 flex-1 gap-3">
+          <div className="mt-4 ml-1 flex shrink-0 flex-col items-center">
+            <div className="h-3.5 w-3.5 shrink-0 rounded-full border-[2.5px] border-slate-300" />
+            <div className="my-1.5 flex shrink-0 flex-col gap-[3px]">
+              <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
+              <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
+              <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
+            </div>
             <PinIcon />
           </div>
-          <div className="min-w-0 flex-1 flex flex-col gap-2 mt-0.5">
-            <input readOnly value={origin} className="h-[44px] rounded-2xl bg-slate-100 px-4 text-[14px] text-slate-900 w-full cursor-default text-ellipsis outline-none" />
-            <div className="relative h-[44px] rounded-2xl bg-slate-100 flex items-center px-4 overflow-hidden">
-               <div className="shimmer absolute inset-0" /><span className="relative text-[14px] text-slate-400">Tražim rutu...</span>
+          <div className="relative flex min-w-0 flex-1 flex-col rounded-2xl bg-slate-100 p-1">
+            <input readOnly value={origin} className="h-10 rounded-[12px] bg-transparent px-4 text-[15px] text-slate-900 w-full cursor-default text-ellipsis outline-none" />
+            <div className="mx-3 h-[1px] bg-slate-200" />
+            <div className="relative flex h-10 items-center overflow-hidden rounded-[12px] bg-transparent px-4">
+               <div className="shimmer absolute inset-0" /><span className="relative text-[15px] text-slate-400">Tražim rutu...</span>
+            </div>
+            <div className="absolute right-1.5 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white text-slate-400 shadow-sm" aria-hidden>
+              <div className="scale-90"><SwapIcon /></div>
             </div>
           </div>
         </div>
-        <div className="self-center mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center text-slate-500 ml-1"><SwapIcon /></div>
       </div>
-      <div className="px-6 py-6 bg-transparent flex items-center gap-3">
+      <div className="flex items-center gap-3 bg-transparent px-4 py-6 md:px-6">
         <div className="route-spinner !w-5 !h-5 shrink-0" /><div className="shimmer skeleton-block h-5 w-32" />
       </div>
       <SkeletonTimeline />
@@ -452,9 +474,49 @@ function RoutePanelSkeleton({
 
 export function SidePanel({ children }: { children: ReactNode }) {
   return (
-    <aside className="hidden sm:flex h-full w-[400px] shrink-0 flex-col bg-white border-r border-slate-100 z-20">
+    <aside className="@container/side hidden h-full min-h-0 min-w-0 w-72 shrink-0 flex-col border-r border-slate-100 bg-white z-20 sm:flex md:w-80 xl:w-[400px]">
       {children}
     </aside>
+  )
+}
+
+function ActionStrip({
+  onShare,
+  onExport,
+  shareConfirm,
+}: Pick<RouteDetailsProps, "onShare" | "onExport" | "shareConfirm">) {
+  if (!onShare && !onExport) return null
+  return (
+    <div className="flex flex-wrap items-center gap-2 px-4 pb-4 pt-1 md:px-6 md:pb-5">
+      {onShare && (
+        <button
+          type="button"
+          onClick={onShare}
+          className="flex h-9 items-center gap-2 rounded-full bg-slate-100 pl-3 pr-4 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-200"
+        >
+          <div className="text-slate-500">
+            {shareConfirm ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+            )}
+          </div>
+          {shareConfirm ? "Kopirano!" : "Dijeli"}
+        </button>
+      )}
+      {onExport && (
+        <button
+          type="button"
+          onClick={onExport}
+          className="flex h-9 items-center gap-2 rounded-full bg-slate-100 pl-3 pr-4 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-200"
+        >
+          <div className="text-slate-500">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+          </div>
+          Spremi kartu
+        </button>
+      )}
+    </div>
   )
 }
 
@@ -462,11 +524,17 @@ export function RoutePanelContent({ itinerary, loading, departureTime, originNam
   return (
     <AnimatePresence mode="wait" initial={false}>
       {loading && !itinerary ? (
-        <RoutePanelSkeleton originName={originName} onReset={onReset} onClearDestination={onClearDestination} />
+        <RoutePanelSkeleton originName={originName} />
       ) : itinerary ? (
-        <m.div key="route" {...crossfade} className="flex min-h-0 flex-1 flex-col">
-          <PanelHeader itinerary={itinerary} originName={originName} destName={destName} onReset={onReset} onClearDestination={onClearDestination} onSwap={onSwap} />
-          <SummaryBar itinerary={itinerary} departureTime={departureTime} loading={loading} onShare={onShare} onExport={onExport} shareConfirm={shareConfirm} />
+        <m.div key="route" {...crossfade} className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <PanelHeader
+            itinerary={itinerary}
+            originName={originName}
+            destName={destName}
+            onSwap={onSwap}
+          />
+          <SummaryBar itinerary={itinerary} departureTime={departureTime} loading={loading} />
+          <ActionStrip onShare={onShare} onExport={onExport} shareConfirm={shareConfirm} />
           <div className="min-h-0 flex-1 overflow-y-auto">
             <Timeline legs={itinerary.legs} departureTime={departureTime ?? "00:00"} />
           </div>
@@ -505,16 +573,18 @@ function MobileLegStrip({ legs }: { legs: Leg[] }) {
 
 function MobileActions({
   onShare,
+  onExport,
   onReset,
   onClearDestination,
   shareConfirm,
 }: Pick<
   RouteDetailsProps,
-  "onShare" | "onReset" | "onClearDestination" | "shareConfirm"
+  "onShare" | "onExport" | "onReset" | "onClearDestination" | "shareConfirm"
 >) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-1.5 pt-0.5">
       {onShare && <ShareIconBtn onShare={onShare} shareConfirm={shareConfirm} />}
+      {onExport && <ExportIconBtn onExport={onExport} />}
       {onClearDestination && (
         <button
           type="button"
@@ -543,6 +613,7 @@ function MobileRouteSheetContent({
   loading,
   departureTime,
   onShare,
+  onExport,
   onReset,
   onClearDestination,
   shareConfirm,
@@ -555,17 +626,23 @@ function MobileRouteSheetContent({
       <div className="shrink-0 pt-0 pb-3 border-b border-white/10">
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-col gap-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-[24px] font-medium text-slate-900 tabular-nums tracking-tight leading-none">
+            <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-1">
+              <Calligraph
+                {...CG_INLINE}
+                className="text-[24px] font-medium text-slate-900 tabular-nums tracking-tight leading-none"
+              >
                 {formatDuration(itinerary.duration)}
-              </span>
-              <span className="text-[14px] text-slate-400 tabular-nums">{dep} – {arr}</span>
+              </Calligraph>
+              <Calligraph {...CG_INLINE} className="text-[14px] text-slate-400 tabular-nums">
+                {`${dep} – ${arr}`}
+              </Calligraph>
               {loading && <span className="route-spinner ml-1" />}
             </div>
             <MobileLegStrip legs={itinerary.legs} />
           </div>
           <MobileActions
             onShare={onShare}
+            onExport={onExport}
             onReset={onReset}
             onClearDestination={onClearDestination}
             shareConfirm={shareConfirm}

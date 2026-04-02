@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useAddressSearch, type GeocodeSuggestion } from "@/lib/use-address-search"
+import { cn } from "@/lib/utils"
 
 type AddressInputProps = {
   placeholder: string
@@ -10,6 +11,7 @@ type AddressInputProps = {
   onCurrentLocation?: () => void
   readOnly?: boolean
   autoFocus?: boolean
+  className?: string
 }
 
 type DropdownItem = { type: "location" | "result"; result?: GeocodeSuggestion }
@@ -63,13 +65,13 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, onClose: () =
   }, [ref])
 }
 
-const INPUT_CLASS = "h-[44px] rounded-2xl border-transparent bg-slate-100 px-4 text-[16px] sm:text-[14px] text-slate-900 w-full placeholder:text-slate-400 text-ellipsis outline-none transition-colors"
+const INPUT_CLASS = "h-[44px] rounded-2xl border-transparent bg-slate-100 px-4 text-[15px] text-slate-900 w-full placeholder:text-slate-400 text-ellipsis outline-none transition-colors"
 
 function displayName(result: GeocodeSuggestion) {
   return result.display_name.split(",")[0]
 }
 
-export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, readOnly, autoFocus }: AddressInputProps) {
+export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, readOnly, autoFocus, className }: AddressInputProps) {
   const search = useAddressSearch()
   const [focused, setFocused] = useState(false)
   const [rawActiveIndex, setActiveIndex] = useState(-1)
@@ -103,7 +105,9 @@ export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, 
     else if (e.key === "Enter" && activeIndex >= 0) { e.preventDefault(); selectItem(items[activeIndex]) }
   }
 
-  if (readOnly) return <input readOnly value={value} placeholder={placeholder} className={`${INPUT_CLASS} cursor-default`} />
+  const finalInputClass = cn(INPUT_CLASS, className)
+
+  if (readOnly) return <input readOnly value={value} placeholder={placeholder} className={cn(finalInputClass, "cursor-default")} />
 
   const noResults = !search.loading && search.query.length >= 2 && search.results.length === 0 && search.isOpen
   const dropdownVisible = focused && (items.length > 0 || search.loading || noResults)
@@ -113,7 +117,7 @@ export function AddressInput({ placeholder, value, onSelect, onCurrentLocation, 
         onChange={(e) => search.setQuery(e.target.value)}
         onFocus={(e) => { setFocused(true); if (value && !search.query) search.setQuery(value); search.setIsOpen(true); requestAnimationFrame(() => e.target.select()) }}
         onKeyDown={handleKeyDown}
-        className={`${INPUT_CLASS} focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all`} />
+        className={cn(finalInputClass, "focus:border-blue-500 focus:ring-1 focus:ring-blue-500")} />
       {search.loading && focused && <div className="absolute right-2 top-1/2 -translate-y-1/2"><div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-slate-300" /></div>}
       {dropdownVisible && <Dropdown items={items} activeIndex={activeIndex} showLoading={search.loading && items.length === 0} showNoResults={noResults} onSelect={selectItem} />}
     </div>

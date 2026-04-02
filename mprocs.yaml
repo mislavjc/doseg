@@ -1,12 +1,15 @@
 procs:
   next:
-    shell: "bun dev"
+    shell: "exec bun dev"
+    stop:
+      send-keys: ["<C-c>"]
     env:
       ISOCHRONE_URL: "http://localhost:3002"
 
   isochrone:
-    shell: "cd transit && cargo watch -x 'run --bin isochrone-server'"
-    stop: "SIGINT"
+    shell: "cd transit && exec cargo watch -x 'run --bin isochrone-server'"
+    stop:
+      send-keys: ["<C-c>"]
     env:
       OTP_URL: "http://localhost:8080"
       DATA_DIR: "../data"
@@ -15,4 +18,6 @@ procs:
 
   otp-tunnel:
     shell: |
-      ssh -NL 8080:$(ssh netcup "docker inspect doseg-otp-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'"):8080 netcup
+      exec ssh -NL 8080:$(ssh netcup "docker inspect doseg-otp-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'"):8080 netcup
+    stop:
+      send-keys: ["<C-c>"]

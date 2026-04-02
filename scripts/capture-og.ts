@@ -6,7 +6,7 @@
  */
 import { chromium } from "playwright"
 
-const URL = "http://doseg.localhost:1355/?lat=45.8131&lon=15.9775"
+const URL = "https://doseg.localhost/?lat=45.8131&lon=15.9775"
 const OUTPUT = "public/og.png"
 const W = 1200
 const H = 630
@@ -14,7 +14,7 @@ const H = 630
 async function captureMapScreenshot(browser: import("playwright").Browser) {
   const map = await browser.newPage({ viewport: { width: W, height: H } })
 
-  await map.goto("http://doseg.localhost:1355", {
+  await map.goto("https://doseg.localhost", {
     waitUntil: "domcontentloaded",
   })
   await map.evaluate(() => localStorage.setItem("doseg-onboarded", "1"))

@@ -79,7 +79,7 @@ A separate binary (`transit-scorer`) runs 4 scoring passes across all 17 distric
 - [Rust](https://rustup.rs/) (isochrone server)
 - [Docker](https://docs.docker.com/get-docker/) (for OTP, or full-stack local)
 - [mprocs](https://github.com/pvolok/mprocs) (optional, runs all processes in one terminal)
-- [portless](https://github.com/nicholasgasior/portless) (optional, gives `doseg.localhost:1355` instead of `localhost:3000`)
+- [portless](https://github.com/vercel-labs/portless) (optional, gives `https://doseg.localhost` instead of `http://localhost:3000`)
 
 ### Quick start
 
@@ -95,7 +95,7 @@ Then start everything:
 mprocs
 ```
 
-This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server. Visit `http://doseg.localhost:1355` (requires [portless](https://github.com/nicholasgasior/portless)) or `http://localhost:3000`.
+This starts 3 processes: SSH tunnel to OTP on the server, Rust isochrone service, and Next.js dev server. Visit `https://doseg.localhost` (requires [portless](https://github.com/vercel-labs/portless)) or `http://localhost:3000`.
 
 <details>
 <summary>Without SSH access to the server</summary>

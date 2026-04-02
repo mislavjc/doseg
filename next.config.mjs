@@ -3,6 +3,9 @@ const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
   compress: true,
+  experimental: {
+    serverComponentsHmrCache: false,
+  },
   async rewrites() {
     return [
       {

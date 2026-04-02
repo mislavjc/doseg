@@ -1,13 +1,6 @@
 "use client"
 
-import {
-  startTransition,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
@@ -27,7 +20,6 @@ import {
   fetchIsochroneRouting,
   type IsochroneResponse,
   type Itinerary,
-  type Leg,
 } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
 import {
@@ -45,9 +37,13 @@ import {
 import { modeColor } from "@/lib/transit"
 import { formatTime } from "@/lib/zagreb-time"
 import {
+  PANEL_SEARCH_SHELL,
+  PinIcon,
   RouteDetails,
-  SidePanel,
   RoutePanelContent,
+  SidePanel,
+  SwapIcon,
+  findDestName,
 } from "@/components/route-details"
 import { TimePicker } from "@/components/time-picker"
 import { AddressInput } from "@/components/address-input"
@@ -854,6 +850,7 @@ function cleanupMapInit(
     >
     routeTailOriginRef: React.MutableRefObject<[number, number] | null>
     rafRef: React.MutableRefObject<number>
+    reverseLabelAbortRef: React.MutableRefObject<AbortController | null>
   },
   setMapReady: (v: boolean) => void
 ) {
@@ -864,6 +861,10 @@ function cleanupMapInit(
     window.clearTimeout(refs.exactRouteTimerRef.current)
   }
   if (refs.poiAbortRef.current) refs.poiAbortRef.current.abort()
+  if (refs.reverseLabelAbortRef.current) {
+    refs.reverseLabelAbortRef.current.abort()
+    refs.reverseLabelAbortRef.current = null
+  }
   map.remove()
   refs.mapRef.current = null
   refs.handleDestinationRef.current = null
@@ -955,6 +956,7 @@ function clearDestinationRouteOnMap(
     | "exactRouteTimerRef"
     | "exactRouteSeqRef"
     | "pendingDestinationRef"
+    | "swapResumeDestinationRef"
     | "lastNearestRef"
     | "routeTailOriginRef"
   >,
@@ -977,6 +979,7 @@ function clearDestinationRouteOnMap(
   if (dotSrc) dotSrc.setData(EMPTY_FC)
   setRouteLoading(false)
   refs.pendingDestinationRef.current = null
+  refs.swapResumeDestinationRef.current = null
   refs.lastNearestRef.current = null
   refs.routeTailOriginRef.current = null
   map.getCanvas().style.cursor = "crosshair"
@@ -986,7 +989,7 @@ function clearOriginFromMap(
   map: maplibregl.Map,
   refs: Pick<
     MapRefs,
-    "originRef" | "routeTailOriginRef" | "latestIsochroneRef"
+    "originRef" | "routeTailOriginRef" | "latestIsochroneRef" | "swapResumeDestinationRef"
   >,
   setRoute: (r: Itinerary | null) => void
 ) {
@@ -999,6 +1002,7 @@ function clearOriginFromMap(
   refs.originRef.current = null
   refs.routeTailOriginRef.current = null
   refs.latestIsochroneRef.current = null
+  refs.swapResumeDestinationRef.current = null
   setRoute(null)
 }
 
@@ -1057,6 +1061,10 @@ function startIsochroneFetches(
   statsCtaDismissedRef: React.RefObject<boolean>,
   routingDataRef: React.MutableRefObject<RoutingData | null>,
   pendingDestinationRef: React.RefObject<{ lat: number; lng: number } | null>,
+  swapResumeDestinationRef: React.MutableRefObject<{
+    lat: number
+    lng: number
+  } | null>,
   handleDestinationRef: React.RefObject<
     ((lat: number, lng: number) => void) | null
   >,
@@ -1097,6 +1105,11 @@ function startIsochroneFetches(
         originLat,
         originLon
       )
+      const swapResume = swapResumeDestinationRef.current
+      if (swapResume) {
+        swapResumeDestinationRef.current = null
+        pendingDestinationRef.current = swapResume
+      }
       const pendingDestination = pendingDestinationRef.current
       if (pendingDestination && handleDestinationRef.current) {
         handleDestinationRef.current(
@@ -1107,6 +1120,7 @@ function startIsochroneFetches(
     })
     .catch((err) => {
       if (routingController.signal.aborted) return
+      swapResumeDestinationRef.current = null
       console.error("Isochrone routing fetch failed:", err)
     })
 }
@@ -1130,6 +1144,11 @@ type MapRefs = {
     lat: number
     lng: number
   } | null>
+  /** Survives resetOriginMapState; applied when routing graph loads after origin swap */
+  swapResumeDestinationRef: React.MutableRefObject<{
+    lat: number
+    lng: number
+  } | null>
   lastNearestRef: React.MutableRefObject<string | null>
   routeTailOriginRef: React.MutableRefObject<[number, number] | null>
   rafRef: React.MutableRefObject<number>
@@ -1140,6 +1159,7 @@ type MapRefs = {
   poiAbortRef: React.MutableRefObject<AbortController | null>
   initialLoadRef: React.MutableRefObject<boolean>
   latestIsochroneRef: React.MutableRefObject<GeoJSON.FeatureCollection | null>
+  reverseLabelAbortRef: React.MutableRefObject<AbortController | null>
 }
 
 function useTransitMapRefs(s: {
@@ -1164,6 +1184,10 @@ function useTransitMapRefs(s: {
   const pendingDestinationRef = useRef<{ lat: number; lng: number } | null>(
     null
   )
+  const swapResumeDestinationRef = useRef<{
+    lat: number
+    lng: number
+  } | null>(null)
   const lastNearestRef = useRef<string | null>(null)
   const routeTailOriginRef = useRef<[number, number] | null>(null)
   const rafRef = useRef<number>(0)
@@ -1174,6 +1198,7 @@ function useTransitMapRefs(s: {
   const poiAbortRef = useRef<AbortController | null>(null)
   const initialLoadRef = useRef(s.hasOrigin)
   const latestIsochroneRef = useRef<GeoJSON.FeatureCollection | null>(null)
+  const reverseLabelAbortRef = useRef<AbortController | null>(null)
 
   return {
     containerRef,
@@ -1189,6 +1214,7 @@ function useTransitMapRefs(s: {
     routingDataRef,
     handleDestinationRef,
     pendingDestinationRef,
+    swapResumeDestinationRef,
     lastNearestRef,
     routeTailOriginRef,
     rafRef,
@@ -1199,6 +1225,7 @@ function useTransitMapRefs(s: {
     poiAbortRef,
     initialLoadRef,
     latestIsochroneRef,
+    reverseLabelAbortRef,
   }
 }
 
@@ -1215,6 +1242,13 @@ function useEscapeKey(
   }, [originRef, onEscape])
 }
 
+type MapNameActions = {
+  clearAll: () => void
+  clearDestOnly: () => void
+  setOriginName: (v: string | null) => void
+  setDestName: (v: string | null) => void
+}
+
 function useMapInit(
   refs: MapRefs,
   mapStyleId: MapStyleId,
@@ -1224,18 +1258,21 @@ function useMapInit(
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
   setCoords: SetCoords,
-  clearNames?: () => void
+  mapNameActionsRef: React.MutableRefObject<MapNameActions>
 ) {
   useEffect(() => {
     if (!refs.containerRef.current) return
 
-    const map = createMap(
-      refs.containerRef.current,
-      refs.isTouchRef,
-      mapStyleId
-    )
+    const container = refs.containerRef.current
+    const map = createMap(container, refs.isTouchRef, mapStyleId)
+
+    const ro = new ResizeObserver(() => {
+      map.resize()
+    })
+    ro.observe(container)
 
     map.on("load", () => {
+      map.resize()
       refs.mapRef.current = map
       addAllMapSources(map, mapStyleId)
       addPoiClickHandler(map, refs.originRef)
@@ -1248,12 +1285,13 @@ function useMapInit(
         setLoading,
         setError,
         setCoords,
-        clearNames
+        mapNameActionsRef
       )
       setMapReady(true)
     })
 
     return () => {
+      ro.disconnect()
       cleanupMapInit(map, refs, setMapReady)
     }
   }, [setCoords]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -1344,7 +1382,7 @@ function bindMapInteractions(
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
   setCoords: SetCoords,
-  clearNames?: () => void
+  mapNameActionsRef: React.MutableRefObject<MapNameActions>
 ) {
   const destOpts: HandleDestinationOpts = {
     map,
@@ -1385,8 +1423,27 @@ function bindMapInteractions(
     setLoading,
     setError,
     setCoords,
-    clearNames
+    mapNameActionsRef
   )
+}
+
+function scheduleReverseLabel(
+  refs: MapRefs,
+  lat: number,
+  lng: number,
+  setLabel: (s: string) => void
+) {
+  if (refs.reverseLabelAbortRef.current) {
+    refs.reverseLabelAbortRef.current.abort()
+  }
+  const c = new AbortController()
+  refs.reverseLabelAbortRef.current = c
+  fetch(`/api/reverse?lat=${lat}&lon=${lng}`, { signal: c.signal })
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((d: { display_name: string }) => {
+      if (!c.signal.aborted) setLabel(d.display_name)
+    })
+    .catch(() => {})
 }
 
 function bindMapClickEvents(
@@ -1398,25 +1455,30 @@ function bindMapClickEvents(
   setLoading: (l: boolean) => void,
   setError: (e: string | null) => void,
   setCoords: SetCoords,
-  clearNames?: () => void
+  mapNameActionsRef: React.MutableRefObject<MapNameActions>
 ) {
   map.on("click", (e) => {
+    const a = mapNameActionsRef.current
+    const lat = e.lngLat.lat
+    const lng = e.lngLat.lng
     if (refs.originRef.current) {
-      clearNames?.()
-      handleDestination(e.lngLat.lat, e.lngLat.lng)
+      a.clearDestOnly()
+      handleDestination(lat, lng)
+      scheduleReverseLabel(refs, lat, lng, (name) => a.setDestName(name))
       return
     }
-    refs.originRef.current = [e.lngLat.lng, e.lngLat.lat]
+    refs.originRef.current = [lng, lat]
     setRoute(null)
     setRouteLoading(false)
     setLoading(true)
     setError(null)
-    clearNames?.()
+    a.clearAll()
     setCoords({
-      lat: Math.round(e.lngLat.lat * 1e5) / 1e5,
-      lon: Math.round(e.lngLat.lng * 1e5) / 1e5,
+      lat: Math.round(lat * 1e5) / 1e5,
+      lon: Math.round(lng * 1e5) / 1e5,
     })
-    map.easeTo({ center: [e.lngLat.lng, e.lngLat.lat], duration: 400 })
+    scheduleReverseLabel(refs, lat, lng, (name) => a.setOriginName(name))
+    map.easeTo({ center: [lng, lat], duration: 400 })
   })
 }
 
@@ -1602,6 +1664,7 @@ function useOriginIsochrone(
       refs.statsCtaDismissedRef,
       refs.routingDataRef,
       refs.pendingDestinationRef,
+      refs.swapResumeDestinationRef,
       refs.handleDestinationRef,
       setLoading,
       setShowStatsCta,
@@ -1748,17 +1811,30 @@ function useTransitMapCallbacks(s: ReturnType<typeof useTransitMapState>) {
     setRoute(null)
     setRouteLoading(false)
   }, [setLoading, setError, setRoute, setRouteLoading])
-  const clearNames = useCallback(() => {
-    setOriginName(null)
-    setDestName(null)
-  }, [setOriginName, setDestName])
-  return { onEscape, resetFetchState, clearNames }
+  return { onEscape, resetFetchState }
 }
 
 export function TransitMap() {
   const s = useTransitMapState()
   const refs = useTransitMapRefs(s)
-  const { onEscape, resetFetchState, clearNames } = useTransitMapCallbacks(s)
+  const { onEscape, resetFetchState } = useTransitMapCallbacks(s)
+  const mapNameActionsRef = useRef<MapNameActions>({
+    clearAll: () => {},
+    clearDestOnly: () => {},
+    setOriginName: () => {},
+    setDestName: () => {},
+  })
+  mapNameActionsRef.current = {
+    clearAll: () => {
+      s.setOriginName(null)
+      s.setDestName(null)
+    },
+    clearDestOnly: () => {
+      s.setDestName(null)
+    },
+    setOriginName: s.setOriginName,
+    setDestName: s.setDestName,
+  }
   const [onboardingOpen, setOnboardingOpen] = useState(() => {
     if (typeof window === "undefined") return false
     return !localStorage.getItem(ONBOARDING_KEY)
@@ -1785,7 +1861,7 @@ export function TransitMap() {
     s.setLoading,
     s.setError,
     s.setCoords,
-    clearNames
+    mapNameActionsRef
   )
   useMapBasemapStyle(refs, s.mapReady, s.mapStyle, s.route)
   useBajsLayer(
@@ -1857,6 +1933,23 @@ export function TransitMap() {
     s.setSwapping,
   ]) // eslint-disable-line react-hooks/exhaustive-deps -- refs from useTransitMapRefs
 
+  // Polazište: use reverse-geocoded street when we have coords but no label yet (shared URL, HUD locate, etc.).
+  // Map click already calls scheduleReverseLabel; this covers the rest without duplicating requests when name is set.
+  useEffect(() => {
+    const lat = s.coords.lat
+    const lon = s.coords.lon
+    if (lat == null || lon == null) return
+    if (s.originName != null) return
+    scheduleReverseLabel(refs, lat, lon, (name) => {
+      s.setOriginName(name)
+    })
+  }, [s.coords.lat, s.coords.lon, s.originName]) // eslint-disable-line react-hooks/exhaustive-deps -- refs stable
+
+  const originDisplayName =
+    s.originName ?? s.route?.legs[0]?.from?.name ?? null
+  const destDisplayName =
+    s.destName ?? (s.route ? findDestName(s.route) : null)
+
   return (
     <TransitMapView
       containerRef={refs.containerRef}
@@ -1887,9 +1980,10 @@ export function TransitMap() {
       setLinkCopied={s.setLinkCopied}
       handleDestinationRef={refs.handleDestinationRef}
       pendingDestinationRef={refs.pendingDestinationRef}
-      originName={s.originName}
+      setSwapResumeDestination={(v) => { refs.swapResumeDestinationRef.current = v }}
+      originName={originDisplayName}
       setOriginName={s.setOriginName}
-      destName={s.destName}
+      destName={destDisplayName}
       setDestName={s.setDestName}
       swapping={s.swapping}
       setSwapping={s.setSwapping}
@@ -1937,6 +2031,7 @@ type TransitMapViewProps = {
     lat: number
     lng: number
   } | null>
+  setSwapResumeDestination: (v: { lat: number; lng: number } | null) => void
   originName: string | null
   setOriginName: (v: string | null) => void
   destName: string | null
@@ -1949,31 +2044,6 @@ type TransitMapViewProps = {
   onClearDestination: () => void
 }
 
-function useStableOriginName(
-  route: Itinerary | null,
-  hasOrigin: boolean,
-  explicitName: string | null
-) {
-  const [routeName, setRouteName] = useState<string | null>(null)
-  useEffect(() => {
-    if (!hasOrigin) {
-      startTransition(() => setRouteName(null))
-      return
-    }
-    if (!route) return
-    startTransition(() =>
-      setRouteName((prev) => {
-        if (prev) return prev
-        for (const leg of route.legs) {
-          if (leg.from.name) return leg.from.name
-        }
-        return null
-      })
-    )
-  }, [route, hasOrigin])
-  return explicitName ?? routeName ?? undefined
-}
-
 function PersistentSidePanel({
   p,
   mapRef,
@@ -1984,8 +2054,6 @@ function PersistentSidePanel({
   > & { ease: Ease }
   mapRef: React.RefObject<maplibregl.Map | null>
 }) {
-  const originName = useStableOriginName(p.route, p.hasOrigin, p.originName)
-
   // Keep old route visible during swap until new one arrives
   const [staleRoute, setStaleRoute] = useState<Itinerary | null>(null)
   useEffect(() => {
@@ -1999,13 +2067,13 @@ function PersistentSidePanel({
 
   return (
     <SidePanel>
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {showRoute ? (
           <RoutePanelContent
             itinerary={displayItinerary}
             loading={p.routeLoading || isSwapLoading}
             departureTime={p.effectiveTime}
-            originName={originName}
+            originName={p.originName ?? undefined}
             destName={p.destName ?? undefined}
             onSwap={() => {
               const route = p.route ?? staleRoute
@@ -2017,24 +2085,21 @@ function PersistentSidePanel({
                 lat: route.legs[0].from.lat,
                 lon: route.legs[0].from.lon,
               }
-              const newOriginName =
-                p.destName ??
-                route.legs.findLast((l: Leg) => l.to.name)?.to.name ??
-                null
-              p.setOriginName(newOriginName)
-              p.setDestName(originName ?? null)
+              const oldDestLabel = p.destName ?? findDestName(route)
+              const oldOriginLabel =
+                p.originName ?? route.legs[0]?.from?.name ?? null
+              p.setOriginName(oldDestLabel)
+              p.setDestName(oldOriginLabel)
               p.setSwapping(true)
+              p.setSwapResumeDestination({
+                lat: oldOrigin.lat,
+                lng: oldOrigin.lon,
+              })
               p.setCoords(newOrigin)
               mapRef.current?.easeTo({
                 center: [newOrigin.lon, newOrigin.lat],
                 duration: 400,
               })
-              setTimeout(() => {
-                p.pendingDestinationRef.current = {
-                  lat: oldOrigin.lat,
-                  lng: oldOrigin.lon,
-                }
-              }, 50)
             }}
             onShare={() => {
               navigator.clipboard.writeText(window.location.href).then(() => {
@@ -2066,88 +2131,39 @@ function PersistentSidePanel({
   )
 }
 
-function IdleInputs({
-  hasOrigin,
-  originName,
-  onReset,
-  onSelectOrigin,
-  onSelectDestination,
-  onCurrentLocation,
-}: {
-  hasOrigin: boolean
-  originName?: string
-  onReset: () => void
-  onSelectOrigin: (lat: number, lon: number, name: string) => void
-  onSelectDestination: (lat: number, lon: number, name: string) => void
-  onCurrentLocation: () => void
-}) {
+function IdleInputs({ hasOrigin, originName, onSelectOrigin, onSelectDestination, onCurrentLocation }: { hasOrigin: boolean; originName?: string; onSelectOrigin: (lat: number, lon: number, name: string) => void; onSelectDestination: (lat: number, lon: number, name: string) => void; onCurrentLocation: () => void }) {
   return (
-    <div className="flex shrink-0 gap-1 bg-[rgba(255,255,255,0.98)] px-4 py-4">
-      {hasOrigin ? (
-        <button
-          type="button"
-          onClick={onReset}
-          className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-          aria-label="Natrag"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19.5 12H4.5M10.5 18L4.5 12l6-6" />
-          </svg>
-        </button>
-      ) : (
-        <div className="h-10 w-10 shrink-0" />
-      )}
-      <div className="flex flex-1 gap-3">
-        <div className="mt-3 ml-1 flex shrink-0 flex-col items-center">
+    <div className={PANEL_SEARCH_SHELL}>
+      <div className="flex min-w-0 flex-1 gap-3">
+        <div className="mt-4 ml-1 flex shrink-0 flex-col items-center">
           <div className="h-3.5 w-3.5 shrink-0 rounded-full border-[2.5px] border-slate-300" />
-          <div className="my-1 flex shrink-0 flex-col gap-[3px]">
-            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
-            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
-            <div className="h-[3px] w-[3px] rounded-full bg-slate-500" />
+          <div className="my-1.5 flex shrink-0 flex-col gap-[3px]">
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
+            <div className="h-[3px] w-[3px] rounded-full bg-slate-400" />
           </div>
-          <div className="flex h-5 w-5 items-center justify-center text-[#ea4335]/70">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-          </div>
+          <PinIcon />
         </div>
-        <div className="mt-0.5 flex min-w-0 flex-1 flex-col gap-2">
+        <div className="relative flex min-w-0 flex-1 flex-col rounded-2xl bg-slate-100 p-1">
           <AddressInput
+            className="h-10 rounded-[12px] bg-transparent hover:bg-slate-200/60 focus:bg-white focus:shadow-sm focus:ring-0"
             placeholder="Pretraži adresu ili klikni kartu"
             value={originName || (hasOrigin ? "Polazište" : "")}
             onSelect={onSelectOrigin}
             onCurrentLocation={onCurrentLocation}
           />
+          <div className="mx-3 h-[1px] bg-slate-200" />
           <AddressInput
+            className="h-10 rounded-[12px] bg-transparent hover:bg-slate-200/60 focus:bg-white focus:shadow-sm focus:ring-0"
             placeholder="Odaberi odredište"
             value=""
             onSelect={onSelectDestination}
             readOnly={!hasOrigin}
           />
+          <div className="absolute right-1.5 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white text-slate-400 shadow-sm" aria-hidden>
+            <div className="scale-90"><SwapIcon /></div>
+          </div>
         </div>
-      </div>
-      <div className="mt-0.5 ml-1 flex h-10 w-10 shrink-0 items-center justify-center self-center text-slate-500/50">
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M8 19V5m0 0L4 9m4-4l4 4M16 5v14m0 0l-4-4m4 4l4-4" />
-        </svg>
       </div>
     </div>
   )
@@ -2325,11 +2341,6 @@ function SidePanelIdleContent({
       <IdleInputs
         hasOrigin={p.hasOrigin}
         originName={p.originName ?? undefined}
-        onReset={() => {
-          p.setCoords({ lat: null, lon: null })
-          p.setOriginName(null)
-          p.setDestName(null)
-        }}
         onSelectOrigin={(lat, lon, name) => {
           p.setOriginName(name)
           p.setCoords({ lat, lon })
@@ -2341,7 +2352,7 @@ function SidePanelIdleContent({
         }}
         onCurrentLocation={locate}
       />
-      <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-3 px-5 text-center">
+      <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-4 px-5 text-center sm:px-6">
         <EmptyStateIllustration
           type={!p.hasOrigin ? "origin" : "destination"}
         />
@@ -2570,27 +2581,27 @@ function LoadingBar({
 function BajsLegend() {
   return (
     <div className="flex flex-col gap-1">
-      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">
+      <div className="text-[9px] font-semibold tracking-wider text-neutral-500 uppercase">
         BAJS
       </div>
       <div className="flex items-center gap-2.5">
         <div className="flex items-center gap-1">
-          <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-amber-500/80" />
-          <span className="text-[9px] font-medium text-slate-300">
+          <div className="h-2 w-2 shrink-0 rounded-full border border-neutral-300/90 bg-amber-500/80" />
+          <span className="text-[9px] font-medium text-neutral-600">
             Dostupno
           </span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="h-2 w-2 shrink-0 rounded-full border border-white/40 bg-orange-500/80" />
-          <span className="text-[9px] font-medium text-slate-300">0 bic.</span>
+          <div className="h-2 w-2 shrink-0 rounded-full border border-neutral-300/90 bg-orange-500/80" />
+          <span className="text-[9px] font-medium text-neutral-600">0 bic.</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-amber-500/80" />
-          <span className="text-[9px] font-medium text-slate-300">Puna</span>
+          <span className="text-[9px] font-medium text-neutral-600">Puna</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-2 w-2 shrink-0 rounded-full border border-red-500/80 bg-slate-400/80" />
-          <span className="text-[9px] font-medium text-slate-300">Ne radi</span>
+          <span className="text-[9px] font-medium text-neutral-600">Ne radi</span>
         </div>
       </div>
     </div>
@@ -2600,7 +2611,7 @@ function BajsLegend() {
 function PoiLegend() {
   return (
     <div className="flex flex-col gap-1">
-      <div className="text-[9px] font-semibold tracking-wider text-slate-500 uppercase">
+      <div className="text-[9px] font-semibold tracking-wider text-neutral-500 uppercase">
         Ustanove
       </div>
       <div className="flex items-center gap-2.5">
@@ -2608,25 +2619,25 @@ function PoiLegend() {
           <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[7px] font-bold text-slate-900">
             H
           </div>
-          <span className="text-[9px] font-medium text-slate-300">Bolnica</span>
+          <span className="text-[9px] font-medium text-neutral-600">Bolnica</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[7px] font-bold text-slate-900">
             Š
           </div>
-          <span className="text-[9px] font-medium text-slate-300">Škola</span>
+          <span className="text-[9px] font-medium text-neutral-600">Škola</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-green-500 text-[7px] font-bold text-slate-900">
             P
           </div>
-          <span className="text-[9px] font-medium text-slate-300">Park</span>
+          <span className="text-[9px] font-medium text-neutral-600">Park</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500 text-[6px] font-bold text-slate-900">
             Lj
           </div>
-          <span className="text-[9px] font-medium text-slate-300">
+          <span className="text-[9px] font-medium text-neutral-600">
             Ljekarna
           </span>
         </div>
@@ -2655,7 +2666,7 @@ function LayerLegend({
           transition={{ duration: 0.2, ease }}
         >
           {bajsEnabled && <BajsLegend />}
-          {bajsEnabled && poiEnabled && <div className="h-px bg-white/10" />}
+          {bajsEnabled && poiEnabled && <div className="h-px bg-neutral-200/90" />}
           {poiEnabled && <PoiLegend />}
         </m.div>
       )}
@@ -2679,12 +2690,13 @@ type IslandToolbarProps = {
   setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
   setCoords: SetCoords
   setMobileSearchOpen: (v: boolean) => void
+  setOnboardingOpen: (v: boolean) => void
 }
 
 function IslandToolbar(props: IslandToolbarProps) {
   return (
     <m.div
-      className={`island pointer-events-auto flex max-w-[min(100vw-1.5rem,520px)] flex-col gap-1.5 sm:gap-2 ${
+      className={`island pointer-events-auto flex min-w-0 max-w-[min(100%,520px)] flex-col gap-1.5 sm:gap-2 ${
         props.layersOpen ? "island-expanded" : "island-compact"
       }`}
       initial={{ opacity: 0, scale: 0.96 }}
@@ -2712,6 +2724,7 @@ function IslandToolbar(props: IslandToolbarProps) {
         ease={props.ease}
         setVehiclesEnabled={props.setVehiclesEnabled}
         setPoiEnabled={props.setPoiEnabled}
+        setOnboardingOpen={props.setOnboardingOpen}
       />
     </m.div>
   )
@@ -2734,43 +2747,56 @@ type IslandMainRowProps = {
 
 function IslandMainRow(p: IslandMainRowProps) {
   return (
-    <div className="flex min-w-0 flex-nowrap items-center justify-center gap-1 sm:gap-4">
-      <div className="flex shrink-0 items-center">
+    <div className="scrollbar-hide flex min-w-0 w-full max-w-full flex-nowrap items-center justify-between gap-1 overflow-x-auto overflow-y-hidden sm:justify-center sm:gap-1.5 md:gap-2 lg:gap-4">
+      {/* Left group */}
+      <div className="flex shrink-0 items-center gap-[4px] sm:gap-1.5 md:gap-2 lg:gap-4">
         <TimePicker
           value={p.effectiveTime}
           onChange={(v) => p.setTime(v)}
-          triggerClassName="max-sm:h-8 max-sm:min-h-0"
+          triggerClassName="max-sm:h-8 max-sm:min-h-0 max-sm:px-2.5 max-sm:text-[11px]"
+        />
+        <div className="h-6 w-px shrink-0 bg-neutral-200/90 sm:h-7" />
+        <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
+        <LayersButton
+          layersOpen={p.layersOpen}
+          vehiclesEnabled={p.vehiclesEnabled}
+          poiEnabled={p.poiEnabled}
+          setLayersOpen={p.setLayersOpen}
         />
       </div>
-      <div className="h-6 w-px shrink-0 bg-neutral-200/90 sm:h-7" />
-      <BajsToggleButton bajsEnabled={p.bajsEnabled} setBajs={p.setBajs} />
-      <LayersButton
-        layersOpen={p.layersOpen}
-        vehiclesEnabled={p.vehiclesEnabled}
-        poiEnabled={p.poiEnabled}
-        setLayersOpen={p.setLayersOpen}
-      />
-      <LocateMeButton mapRef={p.mapRef} setCoords={p.setCoords} />
-      <button
-        type="button"
-        onClick={() => p.setMobileSearchOpen(true)}
-        className="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[background-color,color,transform] duration-160 ease-out hover:bg-neutral-200/90 hover:text-neutral-900 active:scale-[0.97] sm:hidden"
-        aria-label="Pretraži adresu"
-      >
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+
+      {/* Right group */}
+      <div className="flex shrink-0 items-center gap-[4px] sm:gap-1.5 md:gap-2 lg:gap-4">
+        <Link
+          href="/statistika"
+          prefetch={false}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[background-color,color,transform] duration-160 ease-out hover:bg-neutral-200/90 hover:text-neutral-900 active:scale-[0.97] sm:hidden"
+          aria-label="Statistika"
         >
-          <circle cx="11" cy="11" r="7" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
-      </button>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>
+        </Link>
+        <LocateMeButton mapRef={p.mapRef} setCoords={p.setCoords} />
+        <button
+          type="button"
+          onClick={() => p.setMobileSearchOpen(true)}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[background-color,color,transform] duration-160 ease-out hover:bg-neutral-200/90 hover:text-neutral-900 active:scale-[0.97] sm:hidden"
+          aria-label="Pretraži adresu"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }
@@ -2787,7 +2813,7 @@ function BajsToggleButton({
       type="button"
       onClick={() => setBajs(bajsEnabled ? null : "1")}
       aria-pressed={bajsEnabled}
-      className={`group flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none sm:h-9 sm:gap-2 sm:px-4 sm:text-[12px] active:scale-[0.96] ${
+      className={`group flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none lg:h-9 lg:w-auto lg:gap-2 lg:px-4 lg:text-[12px] active:scale-[0.96] ${
         bajsEnabled
           ? "bg-[#1264ab]/15 text-[#1264ab]"
           : "bg-neutral-100 text-neutral-600 hover:bg-[#1264ab]/15 hover:text-[#1264ab]"
@@ -2797,15 +2823,15 @@ function BajsToggleButton({
     >
       <svg
         aria-hidden="true"
-        width="12"
-        height="12"
+        width="15"
+        height="15"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={`shrink-0 transition-transform duration-300 ease-out ${
+        className={`shrink-0 transition-transform duration-300 ease-out lg:h-3 lg:w-3 lg:stroke-2 ${
           bajsEnabled ? "scale-110" : "group-hover:scale-110 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
         }`}
       >
@@ -2813,28 +2839,8 @@ function BajsToggleButton({
         <circle cx="18.5" cy="17.5" r="3.5" />
         <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2" />
       </svg>
-      <span className="hidden sm:inline">+ BAJS</span>
+      <span className="hidden lg:inline">+ BAJS</span>
     </button>
-  )
-}
-
-function ColorScale() {
-  const [a, b, c, d] = ISOCHRONE_LINE_COLORS
-  return (
-    <div className="flex flex-col justify-center py-0.5">
-      <div
-        className="h-1.5 w-[140px] rounded-full sm:w-[200px]"
-        style={{
-          background: `linear-gradient(to right, ${a}, ${b}, ${c}, ${d})`,
-        }}
-      />
-      <div className="mt-1.5 flex w-[140px] justify-between text-[9px] leading-none font-medium text-neutral-400 tabular-nums sm:w-[200px]">
-        <span>0</span>
-        <span>15</span>
-        <span>30</span>
-        <span>45m</span>
-      </div>
-    </div>
   )
 }
 
@@ -2853,30 +2859,32 @@ function LayersButton({
     <button
       type="button"
       onClick={() => setLayersOpen((v) => !v)}
-      className={`flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none sm:h-9 sm:px-4 ${
+      className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none lg:h-9 lg:w-auto lg:gap-1.5 lg:px-4 ${
         layersOpen || vehiclesEnabled || poiEnabled
           ? "bg-neutral-200/95 text-neutral-900"
           : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
       }`}
+      aria-label="Slojevi karte"
     >
       <svg
         aria-hidden="true"
-        width="12"
-        height="12"
+        width="15"
+        height="15"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="lg:h-3 lg:w-3 lg:stroke-2"
       >
         <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z" />
         <path d="M2 12l8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
         <path d="M2 17l8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
       </svg>
-      <span className="hidden sm:inline">Slojevi</span>
+      <span className="hidden lg:inline">Slojevi</span>
       {!layersOpen && (vehiclesEnabled || poiEnabled) && (
-        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-neutral-300/90 text-[8px] font-semibold text-neutral-800">
+        <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-neutral-300/90 text-[8px] font-semibold text-neutral-800 lg:static lg:h-3.5 lg:w-3.5 lg:bg-neutral-300/90">
           {(vehiclesEnabled ? 1 : 0) + (poiEnabled ? 1 : 0)}
         </span>
       )}
@@ -2963,7 +2971,7 @@ function LocateMeButton({
           requestGeolocation(mapRef, setCoords, setLocating, setGeoError)
         }
         disabled={locating}
-        className={`flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium transition-[background-color,color,transform] duration-160 ease-out focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none active:scale-[0.97] sm:h-9 sm:px-4 ${
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-[background-color,color,transform] duration-160 ease-out focus-visible:ring-2 focus-visible:ring-neutral-300 focus-visible:outline-none active:scale-[0.97] lg:h-9 lg:w-auto lg:gap-1.5 lg:px-4 lg:text-[12px] lg:font-medium ${
           locating
             ? "bg-neutral-200/95 text-neutral-900"
             : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200/90 hover:text-neutral-900"
@@ -2973,18 +2981,19 @@ function LocateMeButton({
       >
         <svg
           aria-hidden="true"
-          width="18"
-          height="18"
+          width="15"
+          height="15"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`max-sm:h-4 max-sm:w-4 ${locating ? "animate-pulse" : ""}`}
+          className={`lg:h-4 lg:w-4 lg:stroke-[1.5] ${locating ? "animate-pulse" : ""}`}
         >
           <path d="M10.88 17.182L9.2 13.8a1 1 0 0 0-.546-.546L5.27 11.57a.5.5 0 0 1 .054-.925L18.42 5.56a.5.5 0 0 1 .62.62L13.965 19.3a.5.5 0 0 1-.926.055L11.353 17.67a1 1 0 0 0-.473-.488z" />
         </svg>
+        <span className="hidden lg:inline">Lokacija</span>
       </button>
       <GeoErrorTooltip message={geoError} />
     </div>
@@ -2998,6 +3007,48 @@ type IslandLayerTogglesProps = {
   ease: Ease
   setVehiclesEnabled: React.Dispatch<React.SetStateAction<boolean>>
   setPoiEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setOnboardingOpen: (v: boolean) => void
+}
+
+function MobileIslandMenu({ setOnboardingOpen }: { setOnboardingOpen: (v: boolean) => void }) {
+  return (
+    <div className="mt-2 flex w-full flex-wrap justify-center gap-2 border-t border-neutral-100/90 pt-3 sm:hidden">
+      <Link
+        href="/o-projektu"
+        prefetch={false}
+        className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+      >
+        O projektu
+      </Link>
+      <button
+        type="button"
+        onClick={() => setOnboardingOpen(true)}
+        className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-[color,transform,background-color] duration-160 ease-out hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.95]"
+      >
+        Pomoć
+      </button>
+    </div>
+  )
+}
+
+function ColorScale() {
+  const [a, b, c, d] = ISOCHRONE_LINE_COLORS
+  return (
+    <div className="flex w-full max-w-[200px] flex-col justify-center">
+      <div
+        className="h-1.5 w-full rounded-full"
+        style={{
+          background: `linear-gradient(to right, ${a}, ${b}, ${c}, ${d})`,
+        }}
+      />
+      <div className="mt-1.5 flex w-full justify-between text-[9px] leading-none font-medium text-neutral-400 tabular-nums">
+        <span>0</span>
+        <span>10</span>
+        <span>20</span>
+        <span>30 min</span>
+      </div>
+    </div>
+  )
 }
 
 function IslandLayerToggles(p: IslandLayerTogglesProps) {
@@ -3013,16 +3064,28 @@ function IslandLayerToggles(p: IslandLayerTogglesProps) {
           className="overflow-hidden"
         >
           <div className="mt-1 flex flex-col items-center gap-3 border-t border-neutral-100/90 px-1 pt-4 pb-1">
-            <span className="text-[9px] font-medium tracking-[0.12em] text-neutral-400 uppercase">
-              Na karti
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-2.5">
-              <VehiclesToggle
-                enabled={p.vehiclesEnabled}
-                onToggle={p.setVehiclesEnabled}
-              />
-              <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
+            <div className="flex w-full flex-col items-center gap-2">
+              <span className="text-[9px] font-medium tracking-[0.12em] text-neutral-400 uppercase">
+                Doseg
+              </span>
+              <ColorScale />
             </div>
+
+            <div className="mt-2 h-px w-8 bg-neutral-100/80" />
+
+            <div className="flex w-full flex-col items-center gap-2.5">
+              <span className="text-[9px] font-medium tracking-[0.12em] text-neutral-400 uppercase">
+                Na karti
+              </span>
+              <div className="flex flex-wrap items-center justify-center gap-2.5">
+                <VehiclesToggle
+                  enabled={p.vehiclesEnabled}
+                  onToggle={p.setVehiclesEnabled}
+                />
+                <PoiToggle enabled={p.poiEnabled} onToggle={p.setPoiEnabled} />
+              </div>
+            </div>
+            <MobileIslandMenu setOnboardingOpen={p.setOnboardingOpen} />
           </div>
         </m.div>
       )}
@@ -3146,7 +3209,8 @@ function BottomHintPanel({
   onClearDestination: () => void
 }) {
   return (
-    <AnimatePresence mode="wait">
+    <div className="sm:hidden">
+      <AnimatePresence mode="wait">
       {!hasOrigin && !everHadOrigin && (
         <HintBubble k="origin" ease={ease}>
           <div className="text-center text-[13px] font-medium text-neutral-700">
@@ -3196,7 +3260,8 @@ function BottomHintPanel({
           </div>
         </HintBubble>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -3257,7 +3322,7 @@ type HudOverlayProps = Omit<TransitMapViewProps, "containerRef"> & {
 
 function HudOverlay(p: HudOverlayProps) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 grid grid-cols-[auto_1fr_auto] grid-rows-[auto_1fr_auto] gap-0 px-2.5 pt-2 pb-10 sm:p-4">
+    <div className="pointer-events-none absolute inset-0 z-10 grid grid-cols-[auto_1fr_auto] grid-rows-[auto_1fr_auto] gap-0 px-2.5 pt-3 pb-10 sm:p-4 sm:pt-5">
       <HudTopRow p={p} />
       <div className="col-start-1 row-start-3" />
       <HudBottomRow p={p} />
@@ -3271,16 +3336,54 @@ function HudTopRow({ p }: { p: HudOverlayProps }) {
     <>
       <div className="col-start-1 row-start-1" />
       <HudTopCenter p={p} />
-      <div className="pointer-events-auto col-start-3 row-start-1 hidden justify-self-end self-start pt-0.5 sm:block">
-        <ColorScale />
-      </div>
     </>
+  )
+}
+
+function DesktopLinksMenu({ setOnboardingOpen }: { setOnboardingOpen: (v: boolean) => void }) {
+  return (
+    <div className="pointer-events-auto hidden max-w-full min-w-0 flex-wrap items-center justify-center gap-1.5 rounded-2xl bg-white/94 px-3 py-2.5 shadow-[0_6px_28px_rgba(15,23,42,0.05)] backdrop-blur-[20px] sm:flex sm:gap-2 sm:px-5 sm:py-3 md:gap-3 md:px-6 md:py-3.5 sm:shadow-[0_8px_40px_rgba(15,23,42,0.06)]">
+      <Link
+        href="/o-projektu"
+        prefetch={false}
+        className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+      >
+        O projektu
+      </Link>
+      <Link
+        href="/statistika"
+        prefetch={false}
+        className="flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1.5 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-200/90"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 3v18h18" />
+          <path d="m19 9-5 5-4-4-3 3" />
+        </svg>
+        Statistika
+      </Link>
+      <button
+        type="button"
+        onClick={() => setOnboardingOpen(true)}
+        className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-[color,transform,background-color] duration-160 ease-out hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.95]"
+      >
+        Pomoć
+      </button>
+    </div>
   )
 }
 
 function HudTopCenter({ p }: { p: HudOverlayProps }) {
   return (
-    <div className="col-start-2 row-start-1 flex w-full min-w-0 flex-col items-center gap-1.5 justify-self-center sm:gap-2">
+    <div className="col-start-2 row-start-1 flex w-full min-w-0 max-w-full flex-col items-center gap-3 justify-self-center sm:gap-4 md:gap-5">
       <IslandToolbar
         effectiveTime={p.effectiveTime}
         bajsEnabled={p.bajsEnabled}
@@ -3297,43 +3400,9 @@ function HudTopCenter({ p }: { p: HudOverlayProps }) {
         setPoiEnabled={p.setPoiEnabled}
         setCoords={p.setCoords}
         setMobileSearchOpen={p.setMobileSearchOpen}
+        setOnboardingOpen={p.setOnboardingOpen}
       />
-      <div className="pointer-events-auto mt-0 flex max-w-full items-center gap-1 rounded-2xl bg-white/94 px-2.5 py-2 shadow-[0_6px_28px_rgba(15,23,42,0.05)] backdrop-blur-[20px] sm:mt-3 sm:gap-3 sm:px-6 sm:py-3 sm:shadow-[0_8px_40px_rgba(15,23,42,0.06)]">
-        <Link
-          href="/o-projektu"
-          prefetch={false}
-          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
-        >
-          O projektu
-        </Link>
-        <Link
-          href="/statistika"
-          prefetch={false}
-          className="flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1.5 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-200/90"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M3 3v18h18" />
-            <path d="m19 9-5 5-4-4-3 3" />
-          </svg>
-          Statistika
-        </Link>
-        <button
-          type="button"
-          onClick={() => p.setOnboardingOpen(true)}
-          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-neutral-600 transition-[color,transform,background-color] duration-160 ease-out hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.95]"
-        >
-          Pomoć
-        </button>
-      </div>
+      <DesktopLinksMenu setOnboardingOpen={p.setOnboardingOpen} />
       <ErrorOverlay error={p.error} ease={p.ease} />
     </div>
   )

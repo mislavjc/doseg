@@ -22,7 +22,7 @@ export default function SwrProvider({ children }: { children: React.ReactNode })
         dedupingInterval: 5000,
       }}
     >
-      <LazyMotion features={domAnimation} strict>
+      <LazyMotion features={domAnimation}>
         {children}
       </LazyMotion>
     </SWRConfig>

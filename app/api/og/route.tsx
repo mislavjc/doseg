@@ -129,6 +129,32 @@ function seededRand(seed: number): () => number {
   }
 }
 
+/** Snap points to grid and build SVG path with H/V stepping for blocky edges. */
+function gridSnappedPath(pts: [number, number][]): string {
+  const grid = 5
+  const s = pts.map(([x, y]) => [
+    Math.round(x / grid) * grid,
+    Math.round(y / grid) * grid,
+  ] as [number, number])
+
+  const parts: string[] = [`M ${s[0][0]} ${s[0][1]}`]
+  for (let i = 1; i < s.length; i++) {
+    const [px, py] = s[i - 1]
+    const [x, y] = s[i]
+    if (Math.abs(x - px) > grid || Math.abs(y - py) > grid) {
+      if (i % 3 !== 0) {
+        parts.push(`L ${x} ${py}`, `L ${x} ${y}`)
+      } else {
+        parts.push(`L ${px} ${y}`, `L ${x} ${y}`)
+      }
+    } else {
+      parts.push(`L ${x} ${y}`)
+    }
+  }
+  parts.push("Z")
+  return parts.join(" ")
+}
+
 function isoRing(
   cx: number,
   cy: number,
@@ -145,8 +171,6 @@ function isoRing(
 
   for (let i = 0; i < segments; i++) {
     const t = (i / segments) * Math.PI * 2
-
-    // Corridor influence
     let maxInf = 0
     for (const c of corridors) {
       let diff = Math.abs(t - c.angle)
@@ -154,42 +178,11 @@ function isoRing(
       const inf = Math.max(0, 1 - diff / c.width)
       maxInf = Math.max(maxInf, inf * inf * (3 - 2 * inf) * c.reach)
     }
-
     const r = (baseR + (spikeR - baseR) * maxInf) * (1 + (rand() - 0.5) * 0.12)
-    pts.push([
-      cx + Math.cos(t) * r * stretchX,
-      cy + Math.sin(t) * r * stretchY,
-    ])
+    pts.push([cx + Math.cos(t) * r * stretchX, cy + Math.sin(t) * r * stretchY])
   }
 
-  // Quantize to grid to create blocky/angular edges like the real walk-area polygons
-  const grid = 5
-  const snapped = pts.map(([x, y]) => [
-    Math.round(x / grid) * grid,
-    Math.round(y / grid) * grid,
-  ] as [number, number])
-
-  // Build path — connect with horizontal/vertical segments for blocky feel
-  const parts: string[] = [`M ${snapped[0][0]} ${snapped[0][1]}`]
-  for (let i = 1; i < snapped.length; i++) {
-    const [px, py] = snapped[i - 1]
-    const [x, y] = snapped[i]
-    // Step: horizontal then vertical (like grid walking)
-    if (Math.abs(x - px) > grid || Math.abs(y - py) > grid) {
-      // Alternate between H-then-V and V-then-H for variety
-      if (i % 3 !== 0) {
-        parts.push(`L ${x} ${py}`)
-        parts.push(`L ${x} ${y}`)
-      } else {
-        parts.push(`L ${px} ${y}`)
-        parts.push(`L ${x} ${y}`)
-      }
-    } else {
-      parts.push(`L ${x} ${y}`)
-    }
-  }
-  parts.push("Z")
-  return parts.join(" ")
+  return gridSnappedPath(pts)
 }
 
 const CX = 320
@@ -386,80 +379,159 @@ function BandLegend() {
   )
 }
 
-function FallbackImage() {
+const ogShell: React.CSSProperties = {
+  width: "1200px",
+  height: "630px",
+  display: "flex",
+  flexDirection: "column",
+  background: "#f8fafc",
+  padding: "64px 72px",
+  fontFamily: "Inter, system-ui, sans-serif",
+  color: "#0f172a",
+  position: "relative",
+  overflow: "hidden",
+}
+
+const zFront: React.CSSProperties = { position: "relative", zIndex: 1 }
+
+function MetaField({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+      <div
+        style={{
+          fontSize: "12px",
+          color: "#94a3b8",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          display: "flex",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: "18px",
+          color: "#475569",
+          fontFeatureSettings: '"tnum"',
+          display: "flex",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  )
+}
+
+function CoordsTopBar() {
   return (
     <div
       style={{
-        width: "1200px",
-        height: "630px",
         display: "flex",
-        flexDirection: "column",
-        background: "#f8fafc",
-        padding: "64px 72px",
-        fontFamily: "Inter, system-ui, sans-serif",
-        color: "#0f172a",
-        position: "relative",
-        overflow: "hidden",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "auto",
+        ...zFront,
       }}
     >
-      <IsochroneIllustration />
+      <div
+        style={{
+          fontSize: "28px",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <div
+          style={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            background: "#1a7a52",
+            display: "flex",
+          }}
+        />
+        Doseg
+      </div>
+      <div style={{ display: "flex" }}>
+        <ModePills />
+      </div>
+    </div>
+  )
+}
 
+function FallbackImage() {
+  return (
+    <div style={ogShell}>
+      <IsochroneIllustration />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           flex: 1,
           justifyContent: "center",
-          position: "relative",
-          zIndex: 1,
           maxWidth: "560px",
+          ...zFront,
         }}
       >
-        <div
-          style={{
-            fontSize: "68px",
-            fontWeight: 700,
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            display: "flex",
-          }}
-        >
+        <div style={{ fontSize: "68px", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, display: "flex" }}>
           Doseg
         </div>
-
-        <div
-          style={{
-            fontSize: "26px",
-            color: "#64748b",
-            lineHeight: 1.4,
-            marginTop: "16px",
-            display: "flex",
-          }}
-        >
+        <div style={{ fontSize: "26px", color: "#64748b", lineHeight: 1.4, marginTop: "16px", display: "flex" }}>
           Karta dosega javnog prijevoza u Zagrebu
         </div>
+        <div style={{ marginTop: "28px", display: "flex" }}><ModePills /></div>
+        <div style={{ marginTop: "20px", display: "flex" }}><BandLegend /></div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", ...zFront }}>
+        <div style={{ fontSize: "15px", color: "#cbd5e1", display: "flex" }}>doseg.hr</div>
+      </div>
+    </div>
+  )
+}
 
-        <div style={{ marginTop: "28px", display: "flex" }}>
-          <ModePills />
-        </div>
-
-        <div style={{ marginTop: "20px", display: "flex" }}>
-          <BandLegend />
-        </div>
+function CoordsContent({
+  district,
+  lat,
+  lon,
+  timeStr,
+}: {
+  district: { name: string; score: number; rank: number } | null
+  lat: number
+  lon: number
+  timeStr: string | null
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "14px", maxWidth: "560px", ...zFront }}>
+      <div style={{ fontSize: "60px", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, display: "flex" }}>
+        {district ? district.name : "Zagreb"}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div style={{ fontSize: "15px", color: "#cbd5e1", display: "flex" }}>
-          doseg.hr
+      {district && district.score > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <div
+            style={{
+              background: scoreColor(district.score),
+              borderRadius: "10px",
+              padding: "5px 14px",
+              fontSize: "22px",
+              fontWeight: 700,
+              color: "white",
+              display: "flex",
+            }}
+          >
+            {district.score}/100
+          </div>
+          <div style={{ fontSize: "18px", color: "#94a3b8", display: "flex" }}>
+            #{district.rank} od 17 četvrti
+          </div>
         </div>
+      )}
+
+      <div style={{ display: "flex", gap: "28px", marginTop: "4px" }}>
+        <MetaField label="Koordinate" value={formatCoords(lat, lon)} />
+        {timeStr && <MetaField label="Polazak" value={formatTime(timeStr)} />}
       </div>
     </div>
   )
@@ -477,170 +549,12 @@ function CoordsImage({
   timeStr: string | null
 }) {
   return (
-    <div
-      style={{
-        width: "1200px",
-        height: "630px",
-        display: "flex",
-        flexDirection: "column",
-        background: "#f8fafc",
-        padding: "64px 72px",
-        fontFamily: "Inter, system-ui, sans-serif",
-        color: "#0f172a",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div style={ogShell}>
       <IsochroneIllustration />
-
-      {/* Top bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "auto",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: "28px",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <div
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              background: "#1a7a52",
-              display: "flex",
-            }}
-          />
-          Doseg
-        </div>
-        <div style={{ display: "flex" }}>
-          <ModePills />
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "14px",
-          position: "relative",
-          zIndex: 1,
-          maxWidth: "560px",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "60px",
-            fontWeight: 700,
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            display: "flex",
-          }}
-        >
-          {district ? district.name : "Zagreb"}
-        </div>
-
-        {district && district.score > 0 && (
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div
-              style={{
-                background: scoreColor(district.score),
-                borderRadius: "10px",
-                padding: "5px 14px",
-                fontSize: "22px",
-                fontWeight: 700,
-                color: "white",
-                display: "flex",
-              }}
-            >
-              {district.score}/100
-            </div>
-            <div style={{ fontSize: "18px", color: "#94a3b8", display: "flex" }}>
-              #{district.rank} od 17 četvrti
-            </div>
-          </div>
-        )}
-
-        <div style={{ display: "flex", gap: "28px", marginTop: "4px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <div
-              style={{
-                fontSize: "12px",
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                display: "flex",
-              }}
-            >
-              Koordinate
-            </div>
-            <div
-              style={{
-                fontSize: "18px",
-                color: "#475569",
-                fontFeatureSettings: '"tnum"',
-                display: "flex",
-              }}
-            >
-              {formatCoords(lat, lon)}
-            </div>
-          </div>
-          {timeStr && (
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "2px" }}
-            >
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#94a3b8",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  display: "flex",
-                }}
-              >
-                Polazak
-              </div>
-              <div
-                style={{
-                  fontSize: "18px",
-                  color: "#475569",
-                  display: "flex",
-                }}
-              >
-                {formatTime(timeStr)}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          marginTop: "auto",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div style={{ fontSize: "14px", color: "#cbd5e1", display: "flex" }}>
-          doseg.hr
-        </div>
+      <CoordsTopBar />
+      <CoordsContent district={district} lat={lat} lon={lon} timeStr={timeStr} />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: "auto", ...zFront }}>
+        <div style={{ fontSize: "14px", color: "#cbd5e1", display: "flex" }}>doseg.hr</div>
         <BandLegend />
       </div>
     </div>

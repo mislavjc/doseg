@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 
 import { PlausibleProvider } from "@/components/plausible-provider"
+import { Agentation } from "@/components/agentation"
 import SwrProvider from "@/lib/swr-config"
 
 import "./globals.css"
@@ -48,6 +49,7 @@ export default function RootLayout({
           Preskoči na sadržaj
         </a>
         <SwrProvider>{children}</SwrProvider>
+        <Agentation />
       </body>
     </html>
   )

@@ -30,8 +30,8 @@ use axum::http::header;
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::Router;
-use serde::{Deserialize, Serialize};
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 use tower_http::compression::CompressionLayer;
 use ts_rs::TS;
 
@@ -387,7 +387,10 @@ fn compute_travel_times(
         let walk_time = wg_best[snap.node_idx as usize];
         if walk_time < f64::INFINITY {
             let total = walk_time + snap.walk_seconds;
-            let existing = best.get(stop.key.as_str()).copied().unwrap_or(f64::INFINITY);
+            let existing = best
+                .get(stop.key.as_str())
+                .copied()
+                .unwrap_or(f64::INFINITY);
             if total < existing {
                 best.insert(stop.key.clone(), total);
                 let ni = get_or_insert_node(&stop.key, &mut node_keys, &mut key_to_node);
@@ -627,12 +630,12 @@ fn compute_travel_times(
 fn snap_polyline_to_walk_graph(graph: &WalkGraph, line: Vec<[f64; 2]>) -> Vec<[f64; 2]> {
     let mut out: Vec<[f64; 2]> = Vec::with_capacity(line.len());
     for [lon, lat] in line {
-        let (plon, plat) =
-            if let Some(n) = find_nearest_node(graph, lat, lon, TRANSIT_SNAP_MAX_KM2) {
-                (graph.lon(n), graph.lat(n))
-            } else {
-                (lon, lat)
-            };
+        let (plon, plat) = if let Some(n) = find_nearest_node(graph, lat, lon, TRANSIT_SNAP_MAX_KM2)
+        {
+            (graph.lon(n), graph.lat(n))
+        } else {
+            (lon, lat)
+        };
         if !out
             .last()
             .is_some_and(|p: &[f64; 2]| p[0] == plon && p[1] == plat)
@@ -829,10 +832,7 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
 
             loop {
                 visited.insert((current, next));
-                ring.push([
-                    current.0 as f64 * cell_size,
-                    current.1 as f64 * cell_size,
-                ]);
+                ring.push([current.0 as f64 * cell_size, current.1 as f64 * cell_size]);
 
                 let dir = (next.0 - current.0, next.1 - current.1);
                 current = next;
@@ -854,9 +854,7 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
 
                 next = if outgoing.contains(&right) && !visited.contains(&(current, right)) {
                     right
-                } else if outgoing.contains(&straight)
-                    && !visited.contains(&(current, straight))
-                {
+                } else if outgoing.contains(&straight) && !visited.contains(&(current, straight)) {
                     straight
                 } else if outgoing.contains(&left) && !visited.contains(&(current, left)) {
                     left
@@ -932,7 +930,8 @@ fn chaikin_smooth(
             for ddy in -1..=1_i32 {
                 let nx = gx + ddx;
                 let ny = gy + ddy;
-                if nx >= 0 && nx < w_i && ny >= 0 && ny < h_i && grid[nx as usize * h + ny as usize] {
+                if nx >= 0 && nx < w_i && ny >= 0 && ny < h_i && grid[nx as usize * h + ny as usize]
+                {
                     let abs_nx = (nx + ox) as f64;
                     let abs_ny = (ny + oy) as f64;
                     let clamped_x = cx.max(abs_nx).min(abs_nx + 1.0);
@@ -956,14 +955,25 @@ fn chaikin_smooth(
 
 #[allow(clippy::too_many_arguments)]
 fn rasterize_edge_timed_grid(
-    x0: i32, y0: i32, x1: i32, y1: i32,
-    time0: f64, time1: f64,
-    grid: &mut [f64], ox: i32, oy: i32, h: usize,
+    x0: i32,
+    y0: i32,
+    x1: i32,
+    y1: i32,
+    time0: f64,
+    time1: f64,
+    grid: &mut [f64],
+    ox: i32,
+    oy: i32,
+    h: usize,
 ) {
     let dx = (x1 - x0).abs();
     let dy = (y1 - y0).abs();
     let total_steps = dx.max(dy);
-    let inv_steps = if total_steps > 0 { 1.0 / total_steps as f64 } else { 0.0 };
+    let inv_steps = if total_steps > 0 {
+        1.0 / total_steps as f64
+    } else {
+        0.0
+    };
     let sx = if x0 < x1 { 1 } else { -1 };
     let sy = if y0 < y1 { 1 } else { -1 };
     let mut err = dx - dy;
@@ -981,8 +991,14 @@ fn rasterize_edge_timed_grid(
             break;
         }
         let e2 = 2 * err;
-        if e2 > -dy { err -= dy; x += sx; }
-        if e2 < dx { err += dx; y += sy; }
+        if e2 > -dy {
+            err -= dy;
+            x += sx;
+        }
+        if e2 < dx {
+            err += dx;
+            y += sy;
+        }
         step += 1;
     }
 }
@@ -1153,8 +1169,16 @@ fn generate_walk_area(
                 let bx = (coords[ti2 + 1] * inv_cell).floor() as i32;
                 let by = (coords[ti2] * inv_cell).floor() as i32;
                 rasterize_edge_timed_grid(
-                    ax, ay, bx, by, node_time, to_time,
-                    &mut time_grid, ox, oy, h,
+                    ax,
+                    ay,
+                    bx,
+                    by,
+                    node_time,
+                    to_time,
+                    &mut time_grid,
+                    ox,
+                    oy,
+                    h,
                 );
             }
         }
@@ -1195,7 +1219,9 @@ fn generate_walk_area(
                 .map(|polygon| {
                     polygon
                         .into_iter()
-                        .map(|ring| chaikin_smooth(&ring, 3, &buf_a, ox, oy, w, h, WALK_AREA_CELL_SIZE))
+                        .map(|ring| {
+                            chaikin_smooth(&ring, 3, &buf_a, ox, oy, w, h, WALK_AREA_CELL_SIZE)
+                        })
                         .collect()
                 })
                 .collect();
@@ -1456,11 +1482,8 @@ async fn handle_isochrone(
     let t_walk;
 
     if routing_mode != "only" {
-        let transit_features = generate_transit_features(
-            &state.transit_graph,
-            &result.times,
-            &state.snapped_segments,
-        );
+        let transit_features =
+            generate_transit_features(&state.transit_graph, &result.times, &state.snapped_segments);
         walk_area_features = generate_walk_area(
             &state.walk_graph,
             &result.times,

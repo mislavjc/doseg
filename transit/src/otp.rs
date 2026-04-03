@@ -97,10 +97,11 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
     let body = GetPatterns::build_query(get_patterns::Variables {});
     let resp: graphql_client::Response<get_patterns::ResponseData> =
         ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
-            .set("Content-Type", "application/json")
+            .header("Content-Type", "application/json")
             .send_json(&body)
             .unwrap_or_else(|e| panic!("OTP request failed: {}", e))
-            .into_json()
+            .body_mut()
+            .read_json()
             .expect("Failed to parse OTP response");
 
     let data = resp.data.expect("OTP returned no data");
@@ -150,10 +151,11 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
     });
     let resp: graphql_client::Response<get_patterns_for_date::ResponseData> =
         ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
-            .set("Content-Type", "application/json")
+            .header("Content-Type", "application/json")
             .send_json(&body)
             .unwrap_or_else(|e| panic!("OTP request failed: {}", e))
-            .into_json()
+            .body_mut()
+            .read_json()
             .expect("Failed to parse OTP response");
 
     let data = resp.data.expect("OTP returned no data");
@@ -435,7 +437,8 @@ pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
     let feed: GbfsStationInfoFeed = ureq::get(STATION_INFORMATION_URL)
         .call()
         .unwrap_or_else(|e| panic!("BAJS feed request failed: {}", e))
-        .into_json()
+        .body_mut()
+        .read_json()
         .expect("Failed to parse BAJS feed");
 
     let stations = feed
@@ -484,14 +487,14 @@ pub struct GbfsStationStatus {
 
 #[allow(dead_code)]
 pub fn fetch_station_status() -> Option<Vec<GbfsStationStatus>> {
-    let resp = match ureq::get(STATION_STATUS_URL).call() {
+    let mut resp = match ureq::get(STATION_STATUS_URL).call() {
         Ok(r) => r,
         Err(e) => {
             eprintln!("BAJS status: fetch failed: {}", e);
             return None;
         }
     };
-    let feed: GbfsStationStatusFeed = match resp.into_json() {
+    let feed: GbfsStationStatusFeed = match resp.body_mut().read_json() {
         Ok(f) => f,
         Err(e) => {
             eprintln!("BAJS status: parse failed: {}", e);
@@ -540,14 +543,14 @@ pub struct FreeBikeSnapshot {
 /// Fetch individual bike records from the free_bike_status feed.
 #[allow(dead_code)]
 pub fn fetch_free_bike_status() -> Option<FreeBikeSnapshot> {
-    let resp = match ureq::get(FREE_BIKE_STATUS_URL).call() {
+    let mut resp = match ureq::get(FREE_BIKE_STATUS_URL).call() {
         Ok(r) => r,
         Err(e) => {
             eprintln!("BAJS free bikes: fetch failed: {}", e);
             return None;
         }
     };
-    let feed: GbfsFreeBikeStatusFeed = match resp.into_json() {
+    let feed: GbfsFreeBikeStatusFeed = match resp.body_mut().read_json() {
         Ok(f) => f,
         Err(e) => {
             eprintln!("BAJS free bikes: parse failed: {}", e);

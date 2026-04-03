@@ -317,7 +317,7 @@ fn effect_str(v: i32) -> &'static str {
 
 /// Fetch and parse the GTFS-RT feed.
 fn fetch_and_parse() -> Option<FeedParseResult> {
-    let resp = match ureq::get(ZET_RT_URL).call() {
+    let mut resp = match ureq::get(ZET_RT_URL).call() {
         Ok(r) => r,
         Err(e) => {
             eprintln!("GTFS-RT: fetch failed: {}", e);
@@ -325,7 +325,7 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
         }
     };
     let mut buf = Vec::new();
-    if let Err(e) = resp.into_reader().read_to_end(&mut buf) {
+    if let Err(e) = resp.body_mut().as_reader().read_to_end(&mut buf) {
         eprintln!("GTFS-RT: read failed: {}", e);
         return None;
     }

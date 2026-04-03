@@ -3,6 +3,7 @@ const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
   compress: true,
+  allowedDevOrigins: ["doseg.test"],
   experimental: {
     serverComponentsHmrCache: false,
   },

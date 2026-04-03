@@ -274,15 +274,7 @@ function ChartHeader({
 }) {
   return (
     <div className="flex flex-col mb-8">
-      <div className="flex items-center gap-2 mb-6">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-900 dark:text-white" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 2v20M2 12h20M12 12L2 2" strokeOpacity={0}/>
-          <circle cx="12" cy="12" r="3" fill="currentColor"/>
-          <path d="M14.5 9.5L19 5M9.5 14.5L5 19M14.5 14.5L19 19M9.5 9.5L5 5"/>
-        </svg>
-        <h3 className="font-sans text-[18px] font-bold tracking-tight text-slate-900 dark:text-white">Trend korištenja</h3>
-      </div>
+      <h3 className="mb-6 font-sans text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">Trend korištenja</h3>
       
       <div className="flex flex-wrap gap-8 sm:gap-12">
         <div className="flex flex-col">

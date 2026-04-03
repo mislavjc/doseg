@@ -1031,12 +1031,39 @@ pub fn query_bajs_usage(
     rows.collect()
 }
 
+/// Spawn a dedicated OS thread that receives snapshots and writes to SQLite.
+pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Receiver<RtSnapshot>) {
+    std::thread::spawn(move || {
+        let mut db = match RtDb::open(&db_path) {
+            Ok(db) => db,
+            Err(e) => {
+                eprintln!("RT DB: failed to open {}: {}", db_path.display(), e);
+                return;
+            }
+        };
+
+        eprintln!("RT DB: writer started, storing to {}", db_path.display());
+
+        let mut ingest_count = 0u64;
+
+        for snapshot in rx.iter() {
+            db.ingest(&snapshot);
+            ingest_count += 1;
+
+            // Run maintenance every ~1000 ingests (~16 hours at 60s intervals)
+            if ingest_count.is_multiple_of(1000) {
+                db.maintain(snapshot.timestamp);
+            }
+        }
+
+        eprintln!("RT DB: writer stopped");
+    });
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::gtfs_rt::{
-        RtSnapshot, SnapshotAlert, SnapshotStopTime, SnapshotTrip, SnapshotVehicle,
-    };
+    use crate::gtfs_rt::{RtSnapshot, SnapshotAlert, SnapshotStopTime, SnapshotTrip};
 
     fn make_snapshot(ts: i64) -> RtSnapshot {
         RtSnapshot {
@@ -1192,33 +1219,4 @@ mod tests {
             .unwrap();
         assert_eq!(after, 0);
     }
-}
-
-/// Spawn a dedicated OS thread that receives snapshots and writes to SQLite.
-pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Receiver<RtSnapshot>) {
-    std::thread::spawn(move || {
-        let mut db = match RtDb::open(&db_path) {
-            Ok(db) => db,
-            Err(e) => {
-                eprintln!("RT DB: failed to open {}: {}", db_path.display(), e);
-                return;
-            }
-        };
-
-        eprintln!("RT DB: writer started, storing to {}", db_path.display());
-
-        let mut ingest_count = 0u64;
-
-        for snapshot in rx.iter() {
-            db.ingest(&snapshot);
-            ingest_count += 1;
-
-            // Run maintenance every ~1000 ingests (~16 hours at 60s intervals)
-            if ingest_count.is_multiple_of(1000) {
-                db.maintain(snapshot.timestamp);
-            }
-        }
-
-        eprintln!("RT DB: writer stopped");
-    });
 }

@@ -91,7 +91,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
               <line x1={0} y1={yScale(0)} x2={innerW} y2={yScale(0)} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.6} strokeDasharray="4 4" />
             )}
             {yScale.ticks(4).map(t => (
-              <text key={t} x={-8} y={yScale(t)} textAnchor="end" fill="#94a3b8" fontSize={11} dominantBaseline="central">
+              <text key={t} x={-8} y={yScale(t)} textAnchor="end" fontSize={11} dominantBaseline="central" className="fill-slate-600 dark:fill-slate-400">
                 {fmtDelaySec(t)}
               </text>
             ))}

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sk -o /dev/null -w \"%{http_code}\" https://doseg.localhost/)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P)",
+      "Bash(bun run:*)",
+      "mcp__browser__open",
+      "mcp__browser__screenshot",
+      "mcp__browser__console_logs",
+      "mcp__browser__playwright",
+      "mcp__browser__network_requests",
+      "mcp__browser__close",
+      "Bash(grep -E \"^d|\\\\.tsx$|\\\\.ts$\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002/health)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/health)",
+      "Bash(curl -s \"http://localhost:3002/api/isochrone?lat=45.78807&lon=16.01984&time=04:07&routing=0\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s \"http://localhost:3001/api/isochrone?lat=45.78807&lon=16.01984&time=04:07&routing=0\" -o /dev/null -w \"%{http_code}\")"
+    ]
+  }
+}

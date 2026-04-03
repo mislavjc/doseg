@@ -18,17 +18,17 @@ rayon = "1.10"
 memmap2 = "0.9"
 osmpbf = "0.3"
 rustc-hash = "2"
-graphql_client = { version = "0.14", features = ["reqwest-blocking"] }
-ureq = { version = "2", features = ["json"] }
+graphql_client = { version = "0.16", features = ["reqwest-blocking"] }
+ureq = { version = "3", features = ["json"] }
 indexmap = "2"
 axum = "0.8"
 tokio = { version = "1", features = ["full"] }
 tower-http = { version = "0.6", features = ["compression-full", "cors"] }
 ts-rs = { version = "12", features = ["serde-compat"] }
-prost = "0.13"
-zip = "2"
+prost = "0.14"
+zip = "8"
 csv = "1"
-rusqlite = { version = "0.32", features = ["bundled"] }
+rusqlite = { version = "0.39", features = ["bundled"] }
 
 [dev-dependencies]
 tempfile = "3"

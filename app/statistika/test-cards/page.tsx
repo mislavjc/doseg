@@ -31,12 +31,55 @@ import {
   DistrictCardV26,
   DistrictCardV27,
 } from "../district-card-variants"
-import type { District as DistrictScore } from "@/lib/generated"
 
 export const metadata: Metadata = {
   title: "Testiranje Kartica Kvartova",
   description: "Pregled svih 10 dizajn varijanti kartica.",
 }
+
+type CardVariant = {
+  title: string
+  Component: React.ComponentType<{
+    district: ReturnType<typeof loadAllData>["bands"][number]["districts"][number]
+    emblemPath?: string
+    totalGridCells: number
+    bandColor: string
+    cityAvg: number
+    bestDistrict: string
+    mapLink: string
+  }>
+  fullWidth?: boolean
+}
+
+const variants: CardVariant[] = [
+  { title: "V1: Vercel Style", Component: DistrictCardV1 },
+  { title: "V2: Linear Style", Component: DistrictCardV2 },
+  { title: "V3: Apple iOS Style", Component: DistrictCardV3 },
+  { title: "V4: Horizontal Flow (Puni red)", Component: DistrictCardV4, fullWidth: true },
+  { title: "V5: Swiss Poster", Component: DistrictCardV5 },
+  { title: "V6: Soft Clean", Component: DistrictCardV6 },
+  { title: "V7: Outline Style", Component: DistrictCardV7 },
+  { title: "V8: Notion Style", Component: DistrictCardV8 },
+  { title: "V9: Floating Badges", Component: DistrictCardV9 },
+  { title: "V10: Clean Modern Baseline", Component: DistrictCardV10 },
+  { title: "V11: V1 Airy (Veće margine)", Component: DistrictCardV11 },
+  { title: "V12: V6 Minimal Line (Obojani rub)", Component: DistrictCardV12 },
+  { title: "V13: V1 Glass (Zamućena pozadina)", Component: DistrictCardV13 },
+  { title: "V14: V6 Structured Grid (Mreža)", Component: DistrictCardV14 },
+  { title: "V15: V1 Typographic (Samo tipografija)", Component: DistrictCardV15 },
+  { title: "V16: V6 Elevated (Uzdignuto)", Component: DistrictCardV16 },
+  { title: "V17: V1 Precision (Tablični redovi)", Component: DistrictCardV17 },
+  { title: "V18: V6 Data Dense (Podijeljen layout)", Component: DistrictCardV18 },
+  { title: "V19: V1 Soft Shadow (Meke sjene)", Component: DistrictCardV19 },
+  { title: "V20: V1/V6 Hybrid (Vanjski okvir + V1 struktura)", Component: DistrictCardV20 },
+  { title: "V21: V1 Data Dense (Svi podaci)", Component: DistrictCardV21 },
+  { title: "V22: V6 Data Rich (Svi podaci)", Component: DistrictCardV22 },
+  { title: "V23: V1 Comprehensive Dashboard", Component: DistrictCardV23 },
+  { title: "V24: V6 Expanded Vertical", Component: DistrictCardV24 },
+  { title: "V25: The Ultimate Data Card", Component: DistrictCardV25 },
+  { title: "V26: V21/V22 Mix (Amblem + V6 okvir)", Component: DistrictCardV26 },
+  { title: "V27: V21/V22 Mix (Alternative)", Component: DistrictCardV27 },
+]
 
 export default function TestCardsPage() {
   const data = loadScores()
@@ -52,8 +95,6 @@ export default function TestCardsPage() {
   }
 
   const all = loadAllData(data)
-  
-  // Uzimamo prvi kvart za primjer prikaza
   const sampleDistrict = all.bands[0].districts[0]
   const sampleColor = all.bands[0].color
   const sampleEmblem = all.districtEmblems[String(sampleDistrict.osmId)]
@@ -70,7 +111,7 @@ export default function TestCardsPage() {
 
   return (
     <Shell>
-      <div className="mx-auto w-full max-w-[1200px] px-4 pb-24 sm:px-6 pt-8">
+      <div className="mx-auto w-full max-w-[1200px] px-4 pt-8 pb-24 sm:px-6">
         <BackLink />
         <StatPageTitle className="mt-8 mb-4">Testiranje Kartica Kvartova</StatPageTitle>
         <StatGroupLead>
@@ -78,122 +119,24 @@ export default function TestCardsPage() {
         </StatGroupLead>
 
         <div className="mt-16 space-y-24">
-          <VariantSection title="V1: Vercel Style">
-            <DistrictCardV1 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V2: Linear Style">
-            <DistrictCardV2 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V3: Apple iOS Style">
-            <DistrictCardV3 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V4: Horizontal Flow (Puni red)">
-            <div className="w-full">
-              <DistrictCardV4 {...props} />
-            </div>
-          </VariantSection>
-
-          <VariantSection title="V5: Swiss Poster">
-            <DistrictCardV5 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V6: Soft Clean">
-            <DistrictCardV6 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V7: Outline Style">
-            <DistrictCardV7 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V8: Notion Style">
-            <DistrictCardV8 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V9: Floating Badges">
-            <DistrictCardV9 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V10: Clean Modern Baseline">
-            <DistrictCardV10 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V11: V1 Airy (Veće margine)">
-            <DistrictCardV11 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V12: V6 Minimal Line (Obojani rub)">
-            <DistrictCardV12 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V13: V1 Glass (Zamućena pozadina)">
-            <DistrictCardV13 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V14: V6 Structured Grid (Mreža)">
-            <DistrictCardV14 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V15: V1 Typographic (Samo tipografija)">
-            <DistrictCardV15 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V16: V6 Elevated (Uzdignuto)">
-            <DistrictCardV16 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V17: V1 Precision (Tablični redovi)">
-            <DistrictCardV17 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V18: V6 Data Dense (Podijeljen layout)">
-            <DistrictCardV18 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V19: V1 Soft Shadow (Meke sjene)">
-            <DistrictCardV19 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V20: V1/V6 Hybrid (Vanjski okvir + V1 struktura)">
-            <DistrictCardV20 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V21: V1 Data Dense (Svi podaci)">
-            <DistrictCardV21 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V22: V6 Data Rich (Svi podaci)">
-            <DistrictCardV22 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V23: V1 Comprehensive Dashboard">
-            <DistrictCardV23 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V24: V6 Expanded Vertical">
-            <DistrictCardV24 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V25: The Ultimate Data Card">
-            <DistrictCardV25 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V26: V21/V22 Mix (Amblem + V6 okvir)">
-            <DistrictCardV26 {...props} />
-          </VariantSection>
-
-          <VariantSection title="V27: V21/V22 Mix (Alternative)">
-            <DistrictCardV27 {...props} />
-          </VariantSection>
+          {variants.map(({ title, Component, fullWidth }) => (
+            <VariantSection key={title} title={title}>
+              {fullWidth ? (
+                <div className="w-full">
+                  <Component {...props} />
+                </div>
+              ) : (
+                <Component {...props} />
+              )}
+            </VariantSection>
+          ))}
         </div>
       </div>
     </Shell>
   )
 }
 
-function VariantSection({ title, children }: { title: string, children: React.ReactNode }) {
+function VariantSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
       <h2 className="mb-6 font-mono text-sm font-bold uppercase tracking-widest text-slate-500">

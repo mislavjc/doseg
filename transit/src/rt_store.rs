@@ -709,7 +709,7 @@ fn sorted_label_counts(counts: HashMap<String, i64>) -> Vec<LabelCount> {
         .into_iter()
         .map(|(label, count)| LabelCount { label, count })
         .collect();
-    v.sort_by(|a, b| b.count.cmp(&a.count));
+    v.sort_by_key(|lc| std::cmp::Reverse(lc.count));
     v
 }
 

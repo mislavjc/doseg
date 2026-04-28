@@ -997,7 +997,7 @@ fn main() {
     }
 
     // Sort descending by base score
-    results.sort_by(|a, b| b.avg_reachable_cells.cmp(&a.avg_reachable_cells));
+    results.sort_by_key(|r| std::cmp::Reverse(r.avg_reachable_cells));
 
     // Assign ranks and normalize to 0-100
     let max_score = results.first().map_or(1, |r| r.avg_reachable_cells.max(1));

@@ -267,7 +267,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
     }
 
     // Sort by daily departures descending
-    routes.sort_by(|a, b| b.daily_departures.cmp(&a.daily_departures));
+    routes.sort_by_key(|r| std::cmp::Reverse(r.daily_departures));
 
     // Transfer hub analysis
     let mut stop_routes: Vec<(HashSet<String>, HashSet<String>, HashSet<String>)> =
@@ -376,7 +376,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         });
     }
 
-    hubs.sort_by(|a, b| b.route_count.cmp(&a.route_count));
+    hubs.sort_by_key(|h| std::cmp::Reverse(h.route_count));
     hubs.truncate(30);
 
     // Summary

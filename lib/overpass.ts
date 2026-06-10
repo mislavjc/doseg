@@ -1,3 +1,6 @@
+import { readFileSync, writeFileSync } from "node:fs"
+import { join } from "node:path"
+
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter"
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
@@ -109,20 +112,70 @@ function matchCategory(
   return null
 }
 
+/** Fallback mirrors — overpass-api.de regularly 50xes under load. */
+const OVERPASS_MIRRORS = [
+  OVERPASS_API_URL,
+  "https://overpass.kumi.systems/api/interpreter",
+]
+
+/**
+ * Disk snapshot (data/poi-snapshot.json): refreshed after every successful
+ * Overpass fetch, served whenever every mirror is down — POIs change rarely,
+ * a stale list beats an empty map.
+ */
+function snapshotPath() {
+  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
+  return join(dataDir, "poi-snapshot.json")
+}
+
+function readSnapshot(categories: POICategory[]): POI[] | null {
+  try {
+    const data = JSON.parse(readFileSync(snapshotPath(), "utf-8")) as {
+      pois: POI[]
+    }
+    const wanted = new Set(categories)
+    return data.pois.filter((p) => wanted.has(p.category))
+  } catch {
+    return null
+  }
+}
+
+function writeSnapshot(pois: POI[]) {
+  try {
+    writeFileSync(
+      snapshotPath(),
+      JSON.stringify({ generatedAt: new Date().toISOString(), pois })
+    )
+  } catch {
+    // best effort — read-only fs in some deploys
+  }
+}
+
 async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
   const query = buildQuery(categories)
-  const response = await fetch(OVERPASS_API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `data=${encodeURIComponent(query)}`,
-  })
-
-  if (!response.ok) {
-    throw new Error(`Overpass API request failed: ${response.status}`)
+  let lastError: Error | null = null
+  for (const url of OVERPASS_MIRRORS) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+      })
+      if (!response.ok) {
+        lastError = new Error(`Overpass API request failed: ${response.status}`)
+        continue
+      }
+      const json = (await response.json()) as OverpassResponse
+      const pois = parseElements(json.elements, categories)
+      writeSnapshot(pois)
+      return pois
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+    }
   }
-
-  const json = (await response.json()) as OverpassResponse
-  return parseElements(json.elements, categories)
+  const snapshot = readSnapshot(categories)
+  if (snapshot && snapshot.length > 0) return snapshot
+  throw lastError ?? new Error("Overpass API request failed")
 }
 
 export async function fetchPOIs(

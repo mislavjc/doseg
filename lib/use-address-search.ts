@@ -6,6 +6,7 @@ export type GeocodeSuggestion = {
   display_name: string
   lat: number
   lon: number
+  kind?: "hospital" | "school" | "park" | "street" | "address" | "place"
 }
 
 function useDebouncedFetch(query: string, onResults: () => void) {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { HomeClient } from "./home-client"
+import { Client } from "@/components/home/client"
 
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -25,7 +25,7 @@ export async function generateMetadata({
 
   const title = "Doseg | Zagreb Transit Reachability"
   const description =
-    "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle mozes stici tramvajem i busom u 15, 30 ili 45 minuta."
+    "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta."
 
   return {
     title,
@@ -41,5 +41,5 @@ export async function generateMetadata({
 }
 
 export default function Page() {
-  return <HomeClient />
+  return <Client />
 }

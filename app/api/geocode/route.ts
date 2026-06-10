@@ -7,7 +7,35 @@ const ZAGREB_CENTER = { lat: 45.815, lon: 15.982 }
 const ZAGREB_BBOX = "15.82,45.72,16.14,45.90"
 const NEARBY_THRESHOLD = 0.3 // ~30km
 
-type Result = { display_name: string; lat: number; lon: number }
+/** Coarse place kind — drives the category dot in the autocomplete (spec §7). */
+export type GeocodeKind =
+  | "hospital"
+  | "school"
+  | "park"
+  | "street"
+  | "address"
+  | "place"
+
+type Result = { display_name: string; lat: number; lon: number; kind: GeocodeKind }
+
+function kindFromOsm(key?: string, value?: string, type?: string): GeocodeKind {
+  if (key === "amenity") {
+    if (value === "hospital" || value === "clinic" || value === "doctors")
+      return "hospital"
+    if (
+      value === "school" ||
+      value === "university" ||
+      value === "college" ||
+      value === "kindergarten"
+    )
+      return "school"
+  }
+  if (key === "leisure" && (value === "park" || value === "garden"))
+    return "park"
+  if (key === "highway" || type === "street") return "street"
+  if (type === "house") return "address"
+  return "place"
+}
 
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get("q")?.trim()
@@ -50,7 +78,10 @@ async function searchPhoton(q: string): Promise<Result[]> {
       if (p.street && p.street !== p.name) parts.push(p.street)
       if (p.housenumber) parts[parts.length - 1] += ` ${p.housenumber}`
       if (p.city) parts.push(p.city)
-      return { display_name: parts.join(", "), lat, lon }
+      const kind = p.housenumber
+        ? "address"
+        : kindFromOsm(p.osm_key, p.osm_value, p.type)
+      return { display_name: parts.join(", "), lat, lon, kind }
     })
     .slice(0, 5)
 }
@@ -72,15 +103,35 @@ async function searchNominatim(q: string): Promise<Result[]> {
       display_name: item.display_name,
       lat: parseFloat(item.lat),
       lon: parseFloat(item.lon),
+      kind: kindFromOsm(
+        item.category,
+        item.type,
+        item.addresstype === "road" ? "street" : undefined
+      ),
     }))
 }
 
 type PhotonFeature = {
-  properties: { name?: string; street?: string; housenumber?: string; city?: string }
+  properties: {
+    name?: string
+    street?: string
+    housenumber?: string
+    city?: string
+    osm_key?: string
+    osm_value?: string
+    type?: string
+  }
   geometry: { coordinates: [number, number] }
 }
 
-type NominatimResult = { display_name: string; lat: string; lon: string }
+type NominatimResult = {
+  display_name: string
+  lat: string
+  lon: string
+  category?: string
+  type?: string
+  addresstype?: string
+}
 
 function toWildcardPattern(q: string): string {
   return q.replace(/'/g, "''").replace(/[cszdCSZD]/g, "_")
@@ -127,7 +178,12 @@ async function fetchDGU(cql: string, house?: string): Promise<Result[]> {
     const parts = [f.properties.ulica]
     if (house && f.properties.kucni_broj) parts[0] += ` ${f.properties.kucni_broj}`
     if (f.properties.naselje) parts.push(f.properties.naselje)
-    out.push({ display_name: parts.join(", "), lat, lon })
+    out.push({
+      display_name: parts.join(", "),
+      lat,
+      lon,
+      kind: house ? "address" : "street",
+    })
   }
   return out
 }

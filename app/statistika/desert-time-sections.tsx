@@ -77,7 +77,7 @@ function DesertRanking({
         )}
       </div>
       <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Udio uzorkovanih točaka u svakoj četvrti udaljenijih više od 500m od
+        Udio uzorkovanih točaka u svakom kvartu udaljenijih više od 500m od
         najbliže stanice javnog prijevoza.
       </p>
       <RankingList
@@ -136,7 +136,7 @@ function DesertStatCards({
           {desert.desertDistricts.length}
         </div>
         <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
-          od {data.districts.length} četvrti ima barem
+          od {data.districts.length} kvartova ima barem
           <br className="hidden sm:block" /> jednu pustinjsku zonu
         </div>
       </div>
@@ -170,8 +170,13 @@ function DesertInterpretationText({
             {desert.lowFreqDistricts.length}
           </strong>{" "}
           {desert.lowFreqDistricts.length === 1
-            ? "četvrt ima"
-            : "četvrti imaju"}{" "}
+            ? "kvart ima"
+            : desert.lowFreqDistricts.length % 10 >= 2 &&
+                desert.lowFreqDistricts.length % 10 <= 4 &&
+                (desert.lowFreqDistricts.length % 100 < 12 ||
+                  desert.lowFreqDistricts.length % 100 > 14)
+              ? "kvarta imaju"
+              : "kvartova ima"}{" "}
           medijan intervala ≥30 min - manje od 2 polaska na sat (
           {desert.lowFreqDistricts.map((d) => d.name).join(", ")}).
         </p>
@@ -227,7 +232,7 @@ function StopDistanceChart({
   return (
     <div>
       <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-        Prosječna udaljenost po četvrti (m)
+        Prosječna udaljenost po kvartu (m)
       </h3>
       <div className="flex flex-col gap-2">
         {desert.stopDistSorted.slice(0, 10).map((d, i) => (
@@ -401,7 +406,7 @@ function StopDistInterpretationText({
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           {desert.stopDistOver400.length}
         </strong>{" "}
-        od {desert.stopDistSorted.length} četvrti prelazi prag od 400m ugodne
+        od {desert.stopDistSorted.length} kvartova prelazi prag od 400m ugodne
         pješačke udaljenosti
         {desert.stopDistOver400.length > 0 && (
           <> ({desert.stopDistOver400.map((d) => d.name).join(", ")})</>
@@ -450,7 +455,7 @@ function PeakOffPeakHeader({ departureTime }: { departureTime: string }) {
       <div>
         <StatModuleTitle>Jutro vs. večer</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Koliko dostupnosti svaka četvrt gubi navečer (21:00) u usporedbi s
+          Koliko dostupnosti svaki kvart gubi navečer (21:00) u usporedbi s
           jutarnjim vršnim satom ({departureTime}). Ista mreža, manji broj
           polazaka.
         </p>
@@ -516,7 +521,7 @@ function PeakOffPeakInterpretation({
           <strong className="font-medium text-slate-900 dark:text-slate-100">
             {evening.cityEveningDrop}%
           </strong>{" "}
-          navečer. Najviše gube rubne četvrti koje ovise o rijetkim autobusnim
+          navečer. Najviše gube rubni kvartovi koji ovise o rijetkim autobusnim
           linijama, dok centar s gustom tramvajskom mrežom zadržava većinu
           povezanosti.
         </p>
@@ -590,7 +595,7 @@ function WeekendHeader({ cityWeekendChange }: { cityWeekendChange: number }) {
           Usporedba rezultata dostupnosti radnim danom i subotom.
           {cityWeekendChange > 0
             ? " Iznenađujuće, subotom je povezanost u prosjeku bolja. OTP model koristi subotnja vremena vožnje koja su kraća zbog manjeg prometa, što više nego kompenzira rjeđi vozni red."
-            : " Manji broj polazaka subotom smanjuje doseg većine četvrti."}
+            : " Manji broj polazaka subotom smanjuje doseg većine kvartova."}
         </p>
       </div>
     </div>
@@ -777,7 +782,7 @@ function WeekendPositiveText({
             .map((p) => p.name)
             .join(", ")}
         </strong>{" "}
-        ,četvrti gdje radnim danom gužva usporava promet.
+        ,kvartovi gdje radnim danom gužva usporava promet.
       </p>
       {hasNegative ? (
         <p>
@@ -792,7 +797,7 @@ function WeekendPositiveText({
         </p>
       ) : (
         <p>
-          Sve četvrti imaju jednaku ili bolju povezanost subotom ,rijetka
+          Svi kvartovi imaju jednaku ili bolju povezanost subotom ,rijetka
           pozitivna priča u javnom prijevozu.
         </p>
       )}
@@ -822,7 +827,7 @@ function WeekendNegativeText({
             .map((p) => p.name)
             .join(", ")}
         </strong>{" "}
-        ,četvrti koje ovise o autobusnim linijama s rijetkim vikend voznim
+        ,kvartovi koji ovise o autobusnim linijama s rijetkim vikend voznim
         redom.
       </p>
       <p>

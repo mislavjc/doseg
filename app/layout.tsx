@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Geist_Mono } from "next/font/google"
+import localFont from "next/font/local"
 
 import { PlausibleProvider } from "@/components/plausible-provider"
 import { Agentation } from "@/components/agentation"
@@ -10,6 +11,30 @@ import "./globals.css"
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
+})
+
+// Geist Mono — labels, eyebrows, nav, data cells (statistika editorial system).
+const geistMono = Geist_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-mono",
+})
+
+// TeX Gyre Heros (self-hosted) — prose, hooks, stat numbers (statistika editorial system).
+const heros = localFont({
+  src: [
+    {
+      path: "./fonts/TeXGyreHeros-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/TeXGyreHeros-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-heros",
+  display: "swap",
 })
 
 export const viewport: Viewport = {
@@ -31,6 +56,20 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" }],
   },
+  twitter: {
+    card: "summary_large_image",
+  },
+}
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Doseg",
+  alternateName: "doseg.hr",
+  url: "https://doseg.hr",
+  description:
+    "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta.",
+  inLanguage: "hr",
 }
 
 export default function RootLayout({
@@ -39,8 +78,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="hr" className={`antialiased ${inter.variable} font-sans`}>
+    <html
+      lang="hr"
+      className={`antialiased ${inter.variable} ${geistMono.variable} ${heros.variable} font-sans`}
+    >
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <PlausibleProvider />
         <a
           href="#main-content"

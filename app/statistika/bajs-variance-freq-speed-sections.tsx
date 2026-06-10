@@ -49,7 +49,7 @@ function BajsHeader() {
     <div>
       <StatModuleTitle>Utjecaj BAJS bicikala</StatModuleTitle>
       <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-        Koliko se dostupnost svake četvrti poboljšava kada se uz javni prijevoz
+        Koliko se dostupnost svakog kvarta poboljšava kada se uz javni prijevoz
         koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje je svaka
         stanica operativna s barem jednim biciklom.
       </p>
@@ -148,11 +148,11 @@ function BajsEquityText({ data }: { data: ScoreData }) {
   if (narrows) {
     return (
       <>
-        Da. Slabije povezane četvrti prosječno dobivaju{" "}
+        Da. Slabije povezani kvartovi prosječno dobivaju{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           +{Math.round(bottomBoost)}%
         </strong>{" "}
-        poboljšanja, dok bolje povezane dobivaju{" "}
+        poboljšanja, dok bolje povezani dobivaju{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           +{Math.round(topBoost)}%
         </strong>
@@ -162,18 +162,18 @@ function BajsEquityText({ data }: { data: ScoreData }) {
   }
   return (
     <>
-      Ne u dovoljnoj mjeri. Bolje povezane četvrti dobivaju{" "}
+      Ne u dovoljnoj mjeri. Bolje povezani kvartovi dobivaju{" "}
       <strong className="font-medium text-slate-900 dark:text-slate-100">
         +{Math.round(topBoost)}%
       </strong>{" "}
-      poboljšanja, dok slabije povezane dobivaju{" "}
+      poboljšanja, dok slabije povezani dobivaju{" "}
       <strong className="font-medium text-slate-900 dark:text-slate-100">
         +{Math.round(bottomBoost)}%
       </strong>
       . BAJS stanice su koncentrirane u centru - proširenje mreže prema rubnim
-      četvrtima moglo bi smanjiti nejednakost. Četvrti bez vlastitih stanica
+      kvartovima moglo bi smanjiti nejednakost. Kvartovi bez vlastitih stanica
       mogu ipak imati mali dobitak jer stanovnici na rubu mogu doseći stanice u
-      susjednoj četvrti.
+      susjednom kvartu.
     </>
   )
 }
@@ -286,19 +286,19 @@ function BajsCoverageCard({
               <strong className="font-medium text-slate-900 dark:text-slate-100">
                 {bajs.zeroBajsDistricts.length}{" "}
                 {bajs.zeroBajsDistricts.length === 1
-                  ? "četvrt nema"
+                  ? "kvart nema"
                   : bajs.zeroBajsDistricts.length < 5
-                    ? "četvrti nemaju"
-                    : "četvrti nema"}
+                    ? "kvarta nemaju"
+                    : "kvartova nema"}
               </strong>{" "}
               nijednu BAJS stanicu:{" "}
               {bajs.zeroBajsDistricts.map((d) => d.name).join(", ")}. Za
-              stanovnike tih četvrti, kombinacija bicikla i javnog prijevoza
+              stanovnike tih kvartova, kombinacija bicikla i javnog prijevoza
               jednostavno ne postoji.
             </>
           ) : (
             <>
-              Svaka četvrt ima barem jednu BAJS stanicu, ali gustoća varira
+              Svaki kvart ima barem jednu BAJS stanicu, ali gustoća varira
               drastično.
             </>
           )}
@@ -388,11 +388,11 @@ function VarianceHeader() {
   return (
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <StatModuleTitle>Nejednakost unutar četvrti</StatModuleTitle>
+        <StatModuleTitle>Nejednakost unutar kvarta</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Neke četvrti imaju odlične dijelove i prometne pustinje unutar istog
+          Neki kvartovi imaju odlične dijelove i prometne pustinje unutar istog
           područja. Standardna devijacija mjeri koliko se rezultati razlikuju
-          unutar jedne četvrti.
+          unutar jednog kvarta.
         </p>
       </div>
     </div>
@@ -489,7 +489,7 @@ function VarianceInterpretation({
         </h3>
         <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
           <p>
-            Najnejednakija četvrt je{" "}
+            Najnejednakiji kvart je{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {mostUnequal.name}
             </strong>{" "}
@@ -497,7 +497,7 @@ function VarianceInterpretation({
             susjedi 500 metara uzbrdo nemaju gotovo ništa.
           </p>
           <p>
-            Ovakav nesrazmjer obično znači da jedan dio četvrti ima odličan
+            Ovakav nesrazmjer obično znači da jedan dio kvarta ima odličan
             pristup tramvajskoj ili željezničkoj pruzi, dok drugi dio ovisi o
             rijetkim autobusnim linijama ili je izoliran.
           </p>
@@ -514,7 +514,7 @@ function VarianceInterpretation({
           Rezultati se kreću u uskom rasponu od{" "}
           {Math.round(mostEqual.minReachableCells ?? 0)} do{" "}
           {Math.round(mostEqual.maxReachableCells ?? 0)}. Ovo ukazuje na
-          ravnomjernu raspodjelu infrastrukture kroz cijelu četvrt, gdje god se
+          ravnomjernu raspodjelu infrastrukture kroz cijeli kvart, gdje god se
           nalazili.
         </p>
       </div>
@@ -549,7 +549,7 @@ function VarianceStatCards({
         <div className="mt-2 text-[15px] text-slate-500 dark:text-slate-400">
           max raspon ćelija
           <br />
-          (min → max unutar četvrti)
+          (min → max unutar kvarta)
         </div>
       </div>
     </div>
@@ -584,7 +584,7 @@ function FrequencyHeader() {
       <div>
         <StatModuleTitle>Frekvencija prijevoza</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Prosječni interval dolaska vozila po četvrti. Četvrti s intervalom od
+          Prosječni interval dolaska vozila po kvartu. Kvartovi s intervalom od
           1-2 minute uglavnom imaju gustu mrežu tramvaja ili autobusa; 3+ minute
           znači oslanjanje na rjeđe autobusne linije.
         </p>
@@ -601,7 +601,7 @@ function FrequencyChart({
   return (
     <div className="min-w-0 flex flex-col">
       <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-        Interval po četvrti (minuta)
+        Interval po kvartu (minuta)
       </div>
       <div className="space-y-2 overflow-hidden">
         {freq.freqRanked.map((d, i) => (
@@ -676,12 +676,12 @@ function FrequencyInterpretation({
           Jaz u frekvenciji
         </h3>
         <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Četvrti s intervalom od{" "}
+          Kvartovi s intervalom od{" "}
           <strong className="font-medium text-slate-900 dark:text-slate-100">
             1 minute
           </strong>{" "}
           uglavnom imaju gustu mrežu s više linija koje se preklapaju (svakih
-          7-10 min po liniji, ali efektivno češće). Rubne četvrti s intervalom
+          7-10 min po liniji, ali efektivno češće). Rubni kvartovi s intervalom
           od 3-4 minute ovise o rijetkim autobusnim linijama - čekanje od 15-30
           minuta značajno umanjuje praktičnu dostupnost.
         </p>
@@ -689,7 +689,7 @@ function FrequencyInterpretation({
       <div className="mt-4 border-l-2 border-slate-300 py-2 pl-6">
         <p className="text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
           Noćne tramvajske linije (31-34) održavaju promet do ~05:30, dajući
-          četvrtima s tramvajem praktično 24-satnu pokrivenost.
+          kvartovima s tramvajem praktično 24-satnu pokrivenost.
         </p>
       </div>
     </div>
@@ -777,7 +777,7 @@ function LineSpeedCards({
           label="Tramvaj"
           speed={TRAM_SPEED_KMH}
           color="rose"
-          note={`${lineSpeed.tramLineCount} linija, prosj. ${lineSpeed.avgTramCoverage} četvrti po liniji`}
+          note={`${lineSpeed.tramLineCount} linija, prosj. ${lineSpeed.avgTramCoverage} ${lineSpeed.avgTramCoverage === 1 ? "kvart" : lineSpeed.avgTramCoverage < 5 ? "kvarta" : "kvartova"} po liniji`}
           pct={(TRAM_SPEED_KMH / TRAIN_SPEED_KMH) * 100}
         />
         <SpeedModeRow
@@ -785,7 +785,7 @@ function LineSpeedCards({
           label="Autobus"
           speed={BUS_SPEED_KMH}
           color="blue"
-          note={`${lineSpeed.busLineCount} linija, prosj. ${lineSpeed.avgBusCoverage} četvrti po liniji`}
+          note={`${lineSpeed.busLineCount} linija, prosj. ${lineSpeed.avgBusCoverage} ${lineSpeed.avgBusCoverage === 1 ? "kvart" : lineSpeed.avgBusCoverage < 5 ? "kvarta" : "kvartova"} po liniji`}
           pct={(BUS_SPEED_KMH / TRAIN_SPEED_KMH) * 100}
         />
         {lineSpeed.trainLineCount > 0 && (

@@ -5,5 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://doseg.hr", lastModified: new Date() },
     { url: "https://doseg.hr/o-projektu", lastModified: new Date() },
     { url: "https://doseg.hr/statistika", lastModified: new Date() },
+    { url: "https://doseg.hr/statistika/podaci", lastModified: new Date() },
+    { url: "https://doseg.hr/karta-tramvaja", lastModified: new Date() },
   ]
 }

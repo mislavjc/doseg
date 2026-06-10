@@ -226,11 +226,11 @@ function LorenzAccessibilityTable({
     <div className="sr-only">
       <table>
         <caption>
-          Lorenzova krivulja - podaci po četvrtima sortirani po dostupnosti
+          Lorenzova krivulja - podaci po kvartovima sortirani po dostupnosti
         </caption>
         <thead>
           <tr>
-            <th scope="col">Četvrt</th>
+            <th scope="col">Kvart</th>
             <th scope="col">Rezultat</th>
             <th scope="col">Populacija</th>
           </tr>
@@ -339,7 +339,7 @@ function GiniInterpretation({
       {giniData.giniDiff > 0 ? "pogor\u0161ava" : "pobolj\u0161ava"} jednakost
       (Gini {giniData.giniDiff > 0 ? "+" : ""}
       {fmtHR(giniData.giniDiff, 3)}) jer su stanice koncentrirane u već dobro
-      povezanim četvrtima. Proširenje mreže prema rubnim četvrtima moglo bi
+      povezanim kvartovima. Proširenje mreže prema rubnim kvartovima moglo bi
       smanjiti nejednakost.
     </p>
   )

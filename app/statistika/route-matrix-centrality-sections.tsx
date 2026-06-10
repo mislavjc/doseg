@@ -82,7 +82,7 @@ function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
       <div>
         <StatModuleTitle>Matrica putovanja</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Vrijeme putovanja javnim prijevozom između središta svake četvrti,
+          Vrijeme putovanja javnim prijevozom između središta svakog kvarta,
           polazak u {travelMatrix.departureTime ?? "08:00"}. Boja označava
           trajanje - od zelene (brzo) do crvene (sporo).
         </p>
@@ -103,7 +103,7 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
           <table
           className="w-max border-collapse text-[11px]"
           role="grid"
-          aria-label="Matrica putovanja između četvrti"
+          aria-label="Matrica putovanja između kvartova"
         >
           <thead>
             <tr>
@@ -207,7 +207,7 @@ function MatrixCell({
   return (
     <td
       className="min-w-[44px] p-0.5 text-center group-hover/row:brightness-95"
-      title={`${rowName} → ${travelMatrix.districts[ci]}: ${isDiag ? "ista četvrt" : time < 0 ? "nema rute" : `${time} min, ${transfers} presjedanja`}`}
+      title={`${rowName} → ${travelMatrix.districts[ci]}: ${isDiag ? "isti kvart" : time < 0 ? "nema rute" : `${time} min, ${transfers} presjedanja`}`}
     >
       <div
         className="flex flex-col items-center justify-center rounded px-1 py-0.5"
@@ -444,7 +444,7 @@ function TransferStackedBar({
               {d.count}
             </div>
             <div className="text-[15px] text-slate-600 dark:text-slate-400">
-              parova četvrti ({d.pct}%)
+              parova kvartova ({d.pct}%)
             </div>
           </div>
         ))}
@@ -510,7 +510,7 @@ export function TransferDependencySection({
           <StatModuleTitle>Ovisnost o presjedanjima</StatModuleTitle>
           <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
             Koliko presjedanja zahtijeva tipično putovanje između zagrebačkih
-            četvrti? Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
+            kvartova? Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
           </p>
         </div>
       </div>
@@ -520,7 +520,7 @@ export function TransferDependencySection({
 
         <div className="mt-8 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           <p>
-            Od {td.totalPairs} mogućih parova četvrti,{" "}
+            Od {td.totalPairs} mogućih parova kvartova,{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {td.directPct}%
             </strong>{" "}

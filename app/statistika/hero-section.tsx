@@ -42,12 +42,12 @@ export function StatHero({
           {departureTime}
         </span>
       </StatHeroMeta>
-      <StatPageTitle className="mb-8">Povezanost četvrti</StatPageTitle>
+      <StatPageTitle className="mb-8">Povezanost kvartova</StatPageTitle>
       <StatBodyLarge>
-        U Zagrebu, prosječni stanovnik četvrti{" "}
+        U Zagrebu, prosječni stanovnik kvarta{" "}
         <StatEmphasis>{best.name}</StatEmphasis> može doseći
         <StatEmphasis> {bestPct}% grada </StatEmphasis>u {maxMinutes} minuta. S
-        druge strane, oni u četvrti <StatEmphasis>{worst.name}</StatEmphasis>{" "}
+        druge strane, oni u kvartu <StatEmphasis>{worst.name}</StatEmphasis>{" "}
         imaju{" "}
         <StatEmphasis>
           {ratio === Infinity ? "čak ∞" : `čak ${ratio}x`} slabiji
@@ -76,15 +76,15 @@ export function HeadlineInsights({
           value={String(base.cityWeightedScore)}
         />
         <EditorialStat
-          detail={`Od ${data.districts.length} četvrti ima rezultat iznad 50 bodova (dobra povezanost).`}
+          detail={`Od ${data.districts.length} kvartova ima rezultat iznad 50 bodova (dobra povezanost).`}
           value={String(base.goodDistricts.length)}
         />
         <EditorialStat
-          detail="Stanovnika živi u četvrtima s rezultatom manjim od 25 (jaz u dostupnosti)."
+          detail="Stanovnika živi u kvartovima s rezultatom manjim od 25 (jaz u dostupnosti)."
           value={`${base.totalPop > 0 ? Math.round((base.poorPop / base.totalPop) * 100) : 0}%`}
         />
         <EditorialStat
-          detail={`Grada može se doseći iz najbolje četvrti (${base.best.name}).`}
+          detail={`Grada može se doseći iz najboljeg kvarta (${base.best.name}).`}
           value={`${base.bestPct}%`}
         />
         <HzEditorialStat data={data} />
@@ -102,7 +102,7 @@ function HzEditorialStat({ data }: { data: ScoreData }) {
   return (
     <EditorialStat
       value={String(districtsWithTrains)}
-      detail={`Od ${data.districts.length} četvrti imaju vlak, uz 0% doprinosa dosegu zbog rijetkih intervala.`}
+      detail={`Od ${data.districts.length} kvartova imaju vlak, uz 0% doprinosa dosegu zbog rijetkih intervala.`}
     />
   )
 }
@@ -231,12 +231,12 @@ export function AccessibilityGapSection({
               {goodPct}%
             </strong>{" "}
             Zagrepčana ({base.goodPop.toLocaleString("hr-HR")} stan.) živi u
-            četvrtima s rezultatom ≥50. Istovremeno,{" "}
+            kvartovima s rezultatom ≥50. Istovremeno,{" "}
             <strong className="font-medium text-rose-900 dark:text-rose-300">
               {poorPct}%
             </strong>{" "}
-            ({base.poorPop.toLocaleString("hr-HR")} stan.) živi u četvrtima gdje
-            je rezultat ispod 25 - to uključuje{" "}
+            ({base.poorPop.toLocaleString("hr-HR")} stan.) živi u kvartovima
+            gdje je rezultat ispod 25 - to uključuje{" "}
             <span className="text-slate-600 dark:text-slate-400">
               {base.poorDistricts.map((d) => d.name).join(", ")}
             </span>

@@ -263,7 +263,7 @@ function NetworkOverview({ data }: { data: NetworkStatsOutput }) {
       <NetworkOverviewCards data={data} />
       <Insight>
         Tramvaji čine samo {tramPct}% prijeđenih kilometara, ali su srce mreže -
-        četvrti s tramvajskim linijama postižu u prosjeku{" "}
+        kvartovi s tramvajskim linijama postižu u prosjeku{" "}
         <strong>18 bodova više</strong> od onih bez. Od slijepih stanica,{" "}
         {deadEndBusPct}% su autobusne - poremećaj na jednoj liniji ostavlja te
         putnike bez alternative.
@@ -1232,7 +1232,7 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
         </StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           Kada stajalište dobije prvi polazak ujutro, a kada ostaje bez usluge
-          navečer. Zagreb ne spava u isto vrijeme - neke četvrti gube prijevoz
+          navečer. Zagreb ne spava u isto vrijeme - neki kvartovi gube prijevoz
           satima prije ostatka grada.
         </p>
       </div>

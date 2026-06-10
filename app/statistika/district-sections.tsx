@@ -62,7 +62,11 @@ function BandHeader({
       </div>
       <span className="pl-7 text-[15px] font-medium text-slate-500 dark:text-slate-400">
         {band.districts.length}{" "}
-        {band.districts.length === 1 ? "četvrt" : "četvrti"}
+        {band.districts.length === 1
+          ? "kvart"
+          : band.districts.length >= 2 && band.districts.length <= 4
+            ? "kvarta"
+            : "kvartova"}
       </span>
     </div>
   )
@@ -251,7 +255,7 @@ function MethodologyDownload() {
         Preuzmi podatke (JSON)
       </a>
       <span className="max-w-xs sm:max-w-md text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
-        Svi izračunati podaci po četvrtima - rezultati, populacija, pustinjski
+        Svi izračunati podaci po kvartovima - rezultati, populacija, pustinjski
         indeks, BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu.
         Slobodno za korištenje uz navođenje izvora.
       </span>

@@ -37,10 +37,86 @@
   --sidebar-accent-foreground: oklch(0.214 0.009 43.1);
   --sidebar-border: oklch(0.922 0.005 34.3);
   --sidebar-ring: oklch(0.714 0.014 41.2);
+
+  /* ── Statistika editorial system (docs/design-system.md) ─────────────── */
+  /* Ink ramp */
+  --ink: #0a0a0a; /* text primary */
+  --ink-2: #2a2f35; /* text secondary / body */
+  --ink-muted: #6a7178; /* text tertiary */
+  --ink-faint: #9aa0a6; /* eyebrow / mono caption */
+  /* Ground & hairlines */
+  --ground: #ffffff;
+  --hairline: #eceef0;
+  --hairline-strong: #e4e7ea;
+  /* Accent */
+  --zg-blue: #0e51c9; /* accent / active / links */
+  --navy: #0e3fb0; /* ranking near-end / dest marker */
+  --highlight: #1e63f2; /* hover highlight — shared by 3D map + ranking row */
+  /* Surfaces (subtle fills) */
+  --surface: #f4f6f8; /* chips, subtle cards */
+  --track: #f1f3f5; /* bar tracks, light dividers */
+  --surface-blue: #eaf0fa; /* blue-tinted panel surface (onboarding header) */
+  --chip-blue: #eef1fb; /* blue chip fill (step numbers, selected states) */
+  --scrim: rgba(13, 18, 33, 0.5); /* map dim behind modals */
+  /* POI palette — shared sidebar counts ↔ map markers (map redesign §1) */
+  --poi-hospital: #e05b4f;
+  --poi-school: #3d7bd9;
+  --poi-park: #3fa76b;
+  --row-tint: #f4f7fe; /* hover/active row in dropdowns (spec §7) */
+  --note-bg: #fbf6ee; /* calm data-story note (polazak popover) */
+  --note-ink: #7a5c33;
+  /* Score ramp endpoints (navy → pale by score; full ramp in lib/score-color.ts) */
+  --rank-100: #0e3fb0;
+  --rank-0: #f4f8fe;
 }
 
 @theme inline {
   --font-sans: var(--font-sans);
+  /* ── Statistika editorial system ── */
+  --font-heros: var(--font-heros), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "SF Mono", monospace;
+  /* Two physical sizes (16px Heros prose / 12px Mono labels); hierarchy from
+     weight + colour + line-height. Values match the Paper source exactly. */
+  --text-head: 16px; /* bold headings / hooks — pair with font-bold */
+  --text-head--line-height: 22px;
+  --text-head--letter-spacing: -0.01em;
+  --text-body: 16px; /* regular prose */
+  --text-body--line-height: 24px;
+  --text-label: 12px; /* Geist Mono labels / eyebrows / data cells */
+  --text-label--line-height: 16px;
+  /* Editorial colours → utilities (text-ink, bg-zg-blue, border-hairline, …) */
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-ground: var(--ground);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-zg-blue: var(--zg-blue);
+  --color-navy: var(--navy);
+  --color-highlight: var(--highlight);
+  --color-surface: var(--surface);
+  --color-track: var(--track);
+  --color-surface-blue: var(--surface-blue);
+  --color-chip-blue: var(--chip-blue);
+  --color-scrim: var(--scrim);
+  --color-poi-hospital: var(--poi-hospital);
+  --color-poi-school: var(--poi-school);
+  --color-poi-park: var(--poi-park);
+  --color-row-tint: var(--row-tint);
+  --color-note-bg: var(--note-bg);
+  --color-note-ink: var(--note-ink);
+  /* Soft shadows (popovers, the tilted ticket) */
+  --shadow-soft: 0 8px 24px rgba(10, 10, 10, 0.1);
+  --shadow-ticket: 0 4px 14px rgba(20, 30, 50, 0.1);
+  /* Map redesign (docs/map-redesign-spec.md) — controls over the map / sidebar / modal */
+  --shadow-map: 0 2px 12px rgba(15, 23, 42, 0.06);
+  --shadow-panel: 2px 0 16px rgba(15, 23, 42, 0.06);
+  --shadow-modal: 0 24px 70px rgba(13, 18, 33, 0.4);
+  --shadow-dropdown: 0 14px 40px rgba(15, 23, 42, 0.16);
+  /* Strong easing curves (Emil — the built-in CSS easings lack punch) */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-soft: cubic-bezier(0.77, 0, 0.175, 1);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -396,6 +472,209 @@
   }
 }
 
+/* Map redesign — empty-state "klikni kartu" radar pulse */
+.radar {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+.radar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--zg-blue) 28%, transparent);
+  background: color-mix(in srgb, var(--zg-blue) 7%, transparent);
+  opacity: 0;
+  animation: radar-pulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.radar-ring:nth-child(2) {
+  animation-delay: 0.9s;
+}
+.radar-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px;
+  border-radius: 50%;
+  background: var(--zg-blue);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--zg-blue) 40%, transparent);
+}
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.16);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Map redesign — origin pin (white circle, zg-blue core; ring pulses while loading) */
+.origin-pin {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.origin-pin-dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--ground);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.35);
+}
+.origin-pin-dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--zg-blue);
+}
+/* Destination dot matching the `/` map's dest-dot layer */
+.dest-dot-marker {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1.5px solid rgba(30, 41, 59, 0.3);
+}
+
+/* Destination — navy square in a white tile (spec §4) */
+.dest-pin {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+.dest-pin-dot {
+  position: absolute;
+  inset: 0;
+  background: var(--ground);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.4);
+}
+.dest-pin-dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--navy);
+}
+.origin-pin-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--zg-blue) 45%, transparent);
+  background: color-mix(in srgb, var(--zg-blue) 10%, transparent);
+  display: none;
+}
+.origin-pin.is-loading .origin-pin-ring {
+  display: block;
+  animation: radar-pulse 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Scroll-edge fade hints (progressive enhancement via scroll-driven
+   animations; without support the edges simply don't fade). The gradient
+   layers stop 10px short of the right edge so the scrollbar is never
+   masked; a full-height layer keeps that gutter opaque. */
+@property --fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.scroll-fade {
+  mask-image:
+    linear-gradient(to bottom, transparent, black),
+    linear-gradient(black, black),
+    linear-gradient(to top, transparent, black),
+    linear-gradient(black, black);
+  mask-size:
+    calc(100% - 10px) var(--fade-top),
+    calc(100% - 10px) calc(100% - var(--fade-top) - var(--fade-bottom)),
+    calc(100% - 10px) var(--fade-bottom),
+    10px 100%;
+  mask-position:
+    left top,
+    left var(--fade-top),
+    left bottom,
+    right top;
+  mask-repeat: no-repeat;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation:
+      scroll-fade-top linear both,
+      scroll-fade-bottom linear both;
+    animation-timeline: scroll(self), scroll(self);
+    animation-range:
+      0 32px,
+      calc(100% - 32px) 100%;
+  }
+  @keyframes scroll-fade-top {
+    from {
+      --fade-top: 0px;
+    }
+    to {
+      --fade-top: 48px;
+    }
+  }
+  @keyframes scroll-fade-bottom {
+    from {
+      --fade-bottom: 48px;
+    }
+    to {
+      --fade-bottom: 0px;
+    }
+  }
+}
+
+/* Map redesign — motion (spec §10): under 300ms, transform/opacity only */
+/* Popovers scale in from their trigger (origin set per consumer) */
+.pop-enter {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 180ms var(--ease-out-strong),
+    transform 180ms var(--ease-out-strong);
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* Panel body state change — cross-fade + 6px rise */
+.panel-swap {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 220ms var(--ease-out-strong),
+    transform 220ms var(--ease-out-strong);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Itinerary legs enter with a 40ms stagger (delay set inline) */
+.leg-stagger {
+  opacity: 0;
+  animation: row-in 250ms var(--ease-out-strong) forwards;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .origin-marker-ring,
@@ -421,5 +700,28 @@
     animation: none;
     transform: translateX(0);
     opacity: 0.5;
+  }
+  /* Motion pass: keep the fades, drop the movement */
+  .pop-enter,
+  .panel-swap {
+    transition-property: opacity;
+    transform: none !important;
+  }
+  .leg-stagger {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  /* Static rings (the Paper mock look) instead of the pulse */
+  .radar-ring {
+    animation: none !important;
+    opacity: 1;
+  }
+  .radar-ring:nth-child(2) {
+    transform: scale(0.5);
+  }
+  .origin-pin.is-loading .origin-pin-ring {
+    animation: none !important;
+    opacity: 0.6;
+    transform: scale(0.6);
   }
 }

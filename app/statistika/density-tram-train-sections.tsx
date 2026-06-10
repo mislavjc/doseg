@@ -78,8 +78,8 @@ function DensitySectionHeader() {
       <div>
         <StatModuleTitle>Gustoća vs. povezanost</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Svaka točka je jedna gradska četvrt. Idealno bi gušće naseljene
-          četvrti trebale imati bolji javni prijevoz - ali to u Zagrebu često
+          Svaka točka je jedan gradski kvart. Idealno bi gušće naseljeni
+          kvartovi trebali imati bolji javni prijevoz - ali to u Zagrebu često
           nije slučaj.
         </p>
       </div>
@@ -115,7 +115,7 @@ function ScatterPlot({
       viewBox={`0 0 ${scatterW} ${scatterH}`}
       className="w-full"
       role="img"
-      aria-label="Raspršeni dijagram gustoće stanovništva i rezultata povezanosti po četvrtima"
+      aria-label="Raspršeni dijagram gustoće stanovništva i rezultata povezanosti po kvartovima"
     >
       <Group top={scatterMargin.top} left={scatterMargin.left}>
         <ScatterGrid
@@ -389,10 +389,10 @@ function ScatterAccessibilityTable({
   return (
     <div className="sr-only">
       <table>
-        <caption>Gustoća vs. povezanost - podaci po četvrtima</caption>
+        <caption>Gustoća vs. povezanost - podaci po kvartovima</caption>
         <thead>
           <tr>
-            <th scope="col">Četvrt</th>
+            <th scope="col">Kvart</th>
             <th scope="col">Rezultat</th>
             <th scope="col">Gustoća (stan./uzorak)</th>
             <th scope="col">Populacija</th>
@@ -425,8 +425,8 @@ function DensityInterpretation({
       <SectionIcon icon="venn" color="violet" title="Što graf otkriva?" />
       <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         <p>
-          Četvrti s tramvajem (zelene) grupiraju se iznad rezultata 30, dok
-          četvrti bez tramvaja (ljubičaste) konzistentno zaostaju.
+          Kvartovi s tramvajem (zeleni) grupiraju se iznad rezultata 30, dok
+          kvartovi bez tramvaja (ljubičasti) konzistentno zaostaju.
         </p>
         <DensitySesveteInsight scatter={scatter} />
         <DensityDonjiGradInsight scatter={scatter} />
@@ -500,11 +500,11 @@ export function TramSection({
         <div>
           <StatModuleTitle>Tramvaj je kralj</StatModuleTitle>
           <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-            Nijedna četvrt bez tramvaja ne prelazi rezultat{" "}
+            Nijedan kvart bez tramvaja ne prelazi rezultat{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {freq.bestTramless}
             </strong>
-            . Broj tramvajskih linija je najjači prediktor rezultata - četvrti s
+            . Broj tramvajskih linija je najjači prediktor rezultata - kvartovi s
             više od 10 linija prosječno imaju rezultat{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {freq.avgScoreWithManyTramLines}
@@ -515,7 +515,7 @@ export function TramSection({
       </div>
       <div>
         <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-          {freq.tramlessDistricts.length} četvrti bez tramvaja
+          {freq.tramlessDistricts.length} kvartova bez tramvaja
         </div>
         <TramlessScores districts={freq.tramlessDistricts} />
       </div>
@@ -559,7 +559,7 @@ export function HzTrainSection({ data }: { data: ScoreData }) {
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {withTrains.length}
             </strong>{" "}
-            od {data.districts.length} četvrti. Međutim, doprinos vlaka u
+            od {data.districts.length} kvartova. Međutim, doprinos vlaka u
             prosječnom 30-minutnom putovanju je zanemariv.
           </p>
         </div>
@@ -577,7 +577,7 @@ export function HzTrainSection({ data }: { data: ScoreData }) {
         </div>
         <div className="mt-8 md:mt-0 md:w-1/2">
           <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-            Četvrti uz željeznicu
+            Kvartovi uz željeznicu
           </div>
           <HzTrainDistrictList withTrains={withTrains} />
         </div>
@@ -609,7 +609,7 @@ function HzTrainStatStrip({
           {withTrains.length}/{totalDistricts}
         </div>
         <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
-          četvrti s pristupom
+          kvartova s pristupom
           <br className="hidden sm:block" /> željezničkoj mreži
         </div>
       </div>
@@ -637,7 +637,7 @@ function HzTrainBody({
     <div className="flex flex-col gap-6">
       <p className="text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
         <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {withTrains.length} od {totalDistricts} četvrti
+          {withTrains.length} od {totalDistricts} kvartova
         </strong>{" "}
         ima pristup željezničkoj mreži - ali vlak ne poboljšava 30-minutnu
         dostupnost ni u jednoj od njih.
@@ -657,7 +657,7 @@ function HzTrainBody({
           Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji, ali na
           frekventnim stanicama s više linija efektivno čekanje je ~2-3 min.
           Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi
-          značajno proširio doseg perifernih četvrti poput Sesveta i Velike
+          značajno proširio doseg perifernih kvartova poput Sesveta i Velike
           Gorice.
         </p>
       </div>

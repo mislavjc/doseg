@@ -184,7 +184,7 @@ function ProfileHeader() {
       <div>
         <StatModuleTitle>24-satni profil dostupnosti</StatModuleTitle>
         <StatModuleLead>
-          Kada se tvoja četvrt &ldquo;budi&rdquo;, a kada &ldquo;zaspi&rdquo;?
+          Kada se tvoj kvart &ldquo;budi&rdquo;, a kada &ldquo;zaspi&rdquo;?
           Svaki sat od 5 do 23h mjeri koliko je grada dostupno autobusom i
           tramvajem u 30 minuta.
         </StatModuleLead>
@@ -206,7 +206,7 @@ function ProfileChartCard({
         Dostupnost kroz dan
       </StatEyebrow>
       <p className="mb-8 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Broj dosežnih ćelija po satu za odabrane četvrti i gradski prosjek.
+        Broj dosežnih ćelija po satu za odabrane kvartove i gradski prosjek.
       </p>
       <ProfileChart data={data} insights={insights} />
       <ProfileLegend insights={insights} data={data} />
@@ -599,7 +599,7 @@ function InterpretationText({ insights }: { insights: ProfileInsights }) {
         uslugu kroz dan.
       </p>
       <p>
-        Rubne četvrti s rijetkim autobusima pokazuju oštre padove u kasnim
+        Rubni kvartovi s rijetkim autobusima pokazuju oštre padove u kasnim
         satima, dok centar s gustom tramvajskom mrežom zadržava relativno
         stabilnu razinu dostupnosti.
       </p>
@@ -636,14 +636,14 @@ function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
     <div className="mb-6 flex flex-col gap-2 border-l-2 border-slate-200 pl-4 dark:border-white/10">
       <div className="flex items-baseline justify-between">
         <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-          Dnevna stabilnost po četvrtima
+          Dnevna stabilnost po kvartovima
         </h3>
         <span className="font-sans text-[15px] tracking-tight text-slate-500 dark:text-slate-400">
           prosječni pad -{fmtHR(cityDropPct, 1)}%
         </span>
       </div>
       <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Poredano po padu usluge - četvrti s najvećim raskorakom između najboljeg
+        Poredano po padu usluge - kvartovi s najvećim raskorakom između najboljeg
         i najgoreg sata.
       </p>
     </div>
@@ -657,7 +657,7 @@ function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
         <thead>
           <tr className="border-b-2 border-slate-200 text-left text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:border-white/10 dark:text-slate-400">
             <th className="w-8 pr-4 pb-3">#</th>
-            <th className="pr-4 pb-3">Četvrt</th>
+            <th className="pr-4 pb-3">Kvart</th>
             <th className="pr-4 pb-3 text-right">Vrh</th>
             <th className="pr-4 pb-3 text-right">Dno</th>
             <th className="pr-4 pb-3 text-right">Pad</th>

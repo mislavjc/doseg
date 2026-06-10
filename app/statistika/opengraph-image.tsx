@@ -117,11 +117,11 @@ function LeftPanel({ best, worst }: { best?: District; worst?: District }) {
 
       <div style={{ fontSize: "44px", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1.1, display: "flex", flexDirection: "column" }}>
         <span style={{ display: "flex" }}>Povezanost</span>
-        <span style={{ display: "flex" }}>četvrti</span>
+        <span style={{ display: "flex" }}>kvartova</span>
       </div>
 
       <div style={{ fontSize: "18px", color: "#64748b", lineHeight: 1.5, marginTop: "16px", display: "flex" }}>
-        17 gradskih četvrti, rangirano po dostupnosti javnim prijevozom
+        17 gradskih kvartova, rangirano po dostupnosti javnim prijevozom
       </div>
 
       {best && worst && (
@@ -144,7 +144,7 @@ function RightPanel({ top, maxScore, remaining }: { top: District[]; maxScore: n
       ))}
       {remaining > 0 && (
         <div style={{ display: "flex", marginLeft: "122px", fontSize: "14px", color: "#94a3b8", marginTop: "4px" }}>
-          + {remaining} četvrti
+          + {remaining} kvartova
         </div>
       )}
     </div>

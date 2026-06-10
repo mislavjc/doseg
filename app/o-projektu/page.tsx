@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
-import Link from "next/link"
+
+import { MonoLabel } from "@/app/new/ui"
+import { Hero } from "@/app/statistika/editorial/hero"
 
 export const metadata: Metadata = {
   title: "O projektu — Doseg | Zagreb Transit Reachability",
@@ -15,202 +17,88 @@ export const metadata: Metadata = {
   },
 }
 
-function BackLink() {
-  return (
-    <Link
-      href="/"
-      className="inline-flex items-center gap-2 text-[13px] font-medium text-slate-500 lowercase transition-colors duration-150 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
-    >
-      <svg
-        aria-hidden="true"
-        width="14"
-        height="14"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10 12L6 8l4-4" />
-      </svg>
-      natrag na kartu
-    </Link>
-  )
-}
+/**
+ * O projektu — "Kolofon B / memorandum": a short author's note on letterhead.
+ * Shared header band (Paper "Nav unifikacija — U3" — same height + nav offset
+ * as /statistika, park-belt map crop), mono sender line over a strong
+ * hairline, three paragraphs, signature, p.s. with sources + repo link.
+ * Matches Paper node LGZ-0 (Kolofon B). Same editorial system as /statistika.
+ */
 
-function Section({
-  number,
-  eyebrow,
-  children,
-}: {
-  number: number
-  eyebrow: string
-  children: React.ReactNode
-}) {
-  const numLabel = String(number).padStart(2, "0")
+function SenderLine() {
   return (
-    <section className="mt-16 sm:mt-20">
-      <div className="flex items-center gap-0">
-        <div className="h-[2px] w-12 rounded-full bg-gradient-to-r from-slate-400 to-slate-200 dark:from-white/40 dark:to-white/10" />
-        <div className="h-px flex-1 bg-slate-200/80 dark:bg-white/[0.08]" />
-      </div>
-      <div className="pt-8">
-        <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-          {numLabel} &mdash; {eyebrow}
-        </p>
-        <div className="mt-6">{children}</div>
-      </div>
-    </section>
-  )
-}
-
-function Em({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="font-medium text-slate-900 dark:text-slate-100">
-      {children}
-    </span>
-  )
-}
-
-function Body({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[15px] leading-[1.7] text-slate-600 sm:text-[16px] dark:text-slate-300">
-      {children}
-    </p>
-  )
-}
-
-function HowItWorks() {
-  return (
-    <Section number={1} eyebrow="kako radi">
-      <Body>
-        Klikom na kartu Doseg izračunava izokrone koristeći{" "}
-        <Em>Dijkstrin algoritam</Em> nad ZET-ovim voznim redom. Rute se
-        rekonstruiraju na klijentskoj strani, pa pregled prijelaza između linija
-        radi trenutno dok pomičeš miš.
-      </Body>
-    </Section>
-  )
-}
-
-function DataRow({ source, detail }: { source: string; detail: string }) {
-  return (
-    <div className="grid grid-cols-[140px_1fr] items-baseline gap-x-6 border-t border-slate-200/80 py-4 first:border-t-0 sm:grid-cols-[180px_1fr] dark:border-white/[0.08]">
-      <span className="font-medium text-slate-900 dark:text-slate-100">
-        {source}
-      </span>
-      <span className="text-[14px] text-slate-600 dark:text-slate-400">
-        {detail}
-      </span>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 border-b border-hairline-strong pb-3">
+      <span className="font-mono text-label text-ink">doseg · o projektu</span>
+      <MonoLabel>zagreb, lipanj 2026.</MonoLabel>
     </div>
   )
 }
 
-function Data() {
+function Signature() {
   return (
-    <Section number={2} eyebrow="podaci">
-      <div>
-        <DataRow source="ZET GTFS" detail="vozni red tramvaja i buseva" />
-        <DataRow source="ZET GTFS-RT" detail="kašnjenja u stvarnom vremenu" />
-        <DataRow source="OpenStreetMap" detail="pješačka mreža" />
-        <DataRow source="OpenTripPlanner" detail="server za rutiranje" />
-      </div>
-    </Section>
+    <div className="flex flex-col gap-1 pt-10">
+      <p className="font-heros text-body font-bold text-ink">— Mislav</p>
+      <a
+        href="https://mislavjc.com"
+        className="w-fit font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink"
+      >
+        mislavjc.com
+      </a>
+    </div>
   )
 }
 
-function Privacy() {
+function PostScriptum() {
   return (
-    <Section number={3} eyebrow="privatnost">
-      <Body>
-        Nema kolačića, praćenja ni osobnih podataka. Svi upiti ostaju između tvog
-        preglednika i servera za rutiranje.
-      </Body>
-    </Section>
-  )
-}
-
-function Architecture() {
-  return (
-    <Section number={4} eyebrow="arhitektura">
-      <div className="flex flex-col gap-5">
-        <Body>
-          Teški dio posla radi <Em>Rust servis</Em> (axum). Dijkstrin algoritam
-          po transit grafu, zatim ekspanzija pješačkom mrežom od 422K čvorova iz
-          OpenStreetMapa.
-        </Body>
-        <Body>
-          <Em>GTFS-RT</Em> kašnjenja dolaze iz ZET-ovog protobuf feeda svake 30
-          sekundi (~600 trip updateova po osvježavanju).
-        </Body>
-        <Body>
-          <Em>ts-rs</Em> generira TypeScript tipove iz Rust structova, jedan
-          izvor istine za cijeli stack.
-        </Body>
-        <Body>
-          <Em>Next.js</Em> servira SSR stranice i lakše API endpointe.{" "}
-          <Em>OpenTripPlanner</Em> radi planiranje ruta.
-        </Body>
-        <Body>
-          Ispred svega stoji <Em>Caddy</Em> reverse proxy s Cloudflareom.
-          Koordinate se snappaju na mrežu (~100&thinsp;m) tako da CDN može
-          cachirati odgovore.
-        </Body>
-      </div>
-    </Section>
-  )
-}
-
-function OpenSource() {
-  return (
-    <Section number={5} eyebrow="otvoreni kod">
-      <Body>
-        Cjelokupni izvorni kod je dostupan na{" "}
+    <div className="flex gap-3 pt-7">
+      <MonoLabel>p.s.</MonoLabel>
+      <div className="flex flex-col font-mono text-label">
+        <span className="text-ink-muted">
+          izvori: zet gtfs + gtfs-rt · openstreetmap · opentripplanner
+        </span>
         <a
           href="https://github.com/mislavjc/doseg"
-          className="font-medium text-slate-900 underline decoration-slate-300 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:decoration-slate-500 dark:text-slate-100 dark:decoration-slate-600 dark:hover:decoration-slate-400"
+          className="w-fit text-zg-blue transition-colors duration-150 hover:text-navy"
         >
-          GitHubu
+          kod: github.com/mislavjc/doseg ↗
         </a>
-        .
-      </Body>
-    </Section>
+      </div>
+    </div>
   )
 }
 
 export default function AboutPage() {
   return (
-    <div className="min-h-svh bg-slate-50 dark:bg-background">
+    <div className="min-h-svh bg-ground font-heros text-ink-2 antialiased selection:bg-zg-blue/15">
+      <Hero active="o projektu" mapPosition="center 70%" />
+
       <main
         id="main-content"
-        className="mx-auto max-w-3xl px-5 pt-12 pb-20 sm:px-6 sm:pt-16 sm:pb-28"
+        className="mx-auto w-full max-w-[512px] px-4 pt-4 pb-24 sm:pb-32"
       >
-        <BackLink />
+        <SenderLine />
 
-        <h1 className="mt-12 font-sans text-[44px] font-medium leading-[1.05] tracking-tight text-slate-900 sm:text-[56px] dark:text-white">
-          Doseg
-        </h1>
-        <p className="mt-6 max-w-xl text-base leading-[1.7] text-slate-600 sm:text-[18px] dark:text-slate-400">
-          Interaktivna karta dosega javnog prijevoza u Zagrebu. Klikni bilo gdje
-          i vidi dokle možeš stići tramvajem ili busom u 15, 30 ili 45 minuta.
-        </p>
+        <div className="flex flex-col gap-[22px] pt-11 text-body">
+          <p>
+            Doseg mjeri koliko je grada stvarno dostupno javnim prijevozom.
+            Klik na kartu vraća izokrone za 15, 30 i 45 minuta, prema stvarnom
+            voznom redu i s kašnjenjima koja se osvježavaju svakih trideset
+            sekundi.
+          </p>
+          <p>
+            Izračun je Dijkstrin algoritam: prvo mrežom tramvaja i buseva,
+            zatim pješice, kroz 422 tisuće čvorova OpenStreetMapa. Težak dio
+            računa Rust servis, rute se sklapaju u pregledniku, a odgovori se
+            cachiraju na mreži od stotinjak metara, pa karta reagira odmah.
+          </p>
+          <p>
+            Stranica ne koristi kolačiće ni praćenje; upiti ostaju između
+            preglednika i servera. Podaci i kod su javni.
+          </p>
+        </div>
 
-        <HowItWorks />
-        <Data />
-        <Privacy />
-        <Architecture />
-        <OpenSource />
-
-        <p className="mt-20 text-[13px] font-medium text-slate-500 dark:text-slate-400">
-          Napravio{" "}
-          <a
-            href="https://mislavjc.com"
-            className="text-slate-900 underline decoration-slate-300 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:decoration-slate-500 dark:text-slate-100 dark:decoration-slate-600 dark:hover:decoration-slate-400"
-          >
-            Mislav Jovanović
-          </a>
-        </p>
+        <Signature />
+        <PostScriptum />
       </main>
     </div>
   )

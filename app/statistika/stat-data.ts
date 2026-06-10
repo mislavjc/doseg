@@ -644,7 +644,7 @@ function findMatrixGaps(
       impact:
         "Nema izravne veze \u2014 zahtijeva presjedanje kroz centar, što udvostručuje vrijeme putovanja",
       recommendation:
-        "Razmotriti dijagonalnu ili kružnu liniju koja povezuje rubne četvrti bez prolaska kroz centar",
+        "Razmotriti dijagonalnu ili kružnu liniju koja povezuje rubne kvartove bez prolaska kroz centar",
     })
     added++
   }

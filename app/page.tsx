@@ -21,7 +21,9 @@ export async function generateMetadata({
     if (time) ogParams.set("time", time)
   }
   const ogQuery = ogParams.toString()
-  const ogUrl = ogQuery ? `/api/og?${ogQuery}` : "/api/og"
+  // Static Paper export for the plain homepage; satori render only for
+  // shared map links where the card shows the clicked district.
+  const ogUrl = ogQuery ? `/api/og?${ogQuery}` : "/og.jpg"
 
   const title = "Doseg | Zagreb Transit Reachability"
   const description =

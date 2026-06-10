@@ -20,12 +20,12 @@ import { EditorialShell } from "./editorial/primitives"
 import { Sesvete } from "./editorial/sesvete"
 
 export const metadata: Metadata = {
-  title: "Povezanost zagrebačkih kvartova — karta i rang | Doseg",
+  title: "Karta i rang povezanosti zagrebačkih kvartova | Doseg",
   description:
-    "Koji su najbolje povezani kvartovi u Zagrebu? Koliko grada dosegneš iz svakog od 17 kvartova u 30 minuta javnim prijevozom — rang, karta kvartova, nejednakost i metodologija.",
+    "Koji su najbolje povezani kvartovi u Zagrebu? Koliko grada dosegneš iz svakog od 17 kvartova u 30 minuta javnim prijevozom: rang, karta kvartova, nejednakost i metodologija.",
   alternates: { canonical: "/statistika" },
   openGraph: {
-    title: "Povezanost zagrebačkih kvartova — karta i rang | Doseg",
+    title: "Karta i rang povezanosti zagrebačkih kvartova | Doseg",
     description:
       "Koji su najbolje povezani kvartovi u Zagrebu? Koliko grada dosegneš iz svakog od 17 kvartova u 30 minuta javnim prijevozom.",
     type: "article",

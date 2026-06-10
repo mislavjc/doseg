@@ -16,8 +16,9 @@ procs:
       RT_DB_DIR: "../data"
       PORT: "3002"
 
-  otp-tunnel:
-    shell: |
-      exec ssh -NL 8080:$(ssh netcup "docker inspect doseg-otp-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'"):8080 netcup
+  # OTP on :8080 — auto-selects source (see scripts/otp.sh):
+  #   reuse running OTP -> SSH tunnel to netcup if reachable -> local Docker.
+  otp:
+    shell: "exec ./scripts/otp.sh"
     stop:
       send-keys: ["<C-c>"]

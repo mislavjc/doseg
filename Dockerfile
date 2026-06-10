@@ -1,6 +1,8 @@
 FROM oven/bun:1 AS deps
 WORKDIR /app
 COPY package.json bun.lock ./
+# patchedDependencies (vaul) — bun install needs the patch files present
+COPY patches ./patches
 RUN bun install --frozen-lockfile
 
 FROM oven/bun:1 AS builder

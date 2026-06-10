@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { MonoLabel } from "@/app/new/ui"
+import { MonoLabel } from "@/components/home/ui"
 import { Hero } from "@/app/statistika/editorial/hero"
 
 export const metadata: Metadata = {
@@ -76,6 +76,7 @@ export default function AboutPage() {
         id="main-content"
         className="mx-auto w-full max-w-[512px] px-4 pt-4 pb-24 sm:pb-32"
       >
+        <h1 className="sr-only">O projektu</h1>
         <SenderLine />
 
         <div className="flex flex-col gap-[22px] pt-11 text-body">

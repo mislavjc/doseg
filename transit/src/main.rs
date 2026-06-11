@@ -9,6 +9,7 @@ mod centrality;
 mod districts;
 mod geo;
 mod heap;
+mod line_pages;
 mod network_stats;
 mod osm;
 mod otp;
@@ -75,6 +76,10 @@ struct Args {
     service_date: Option<String>,
     otp_url: String,
     centrality: bool,
+    line_pages: bool,
+    isochrone_url: String,
+    skip_isochrone: bool,
+    line: Option<String>,
 }
 
 /// Convert days since Unix epoch (1970-01-01) to (year, month 1-based, day 1-based).
@@ -141,6 +146,11 @@ fn parse_args() -> Args {
     let mut day: Option<String> = None;
     let mut otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".into());
     let mut centrality = false;
+    let mut line_pages = false;
+    let mut isochrone_url =
+        std::env::var("ISOCHRONE_URL").unwrap_or_else(|_| "http://localhost:3002".into());
+    let mut skip_isochrone = false;
+    let mut line: Option<String> = None;
 
     let mut i = 1;
     while i < args.len() {
@@ -178,6 +188,22 @@ fn parse_args() -> Args {
                 centrality = true;
                 i += 1;
             }
+            "--line-pages" => {
+                line_pages = true;
+                i += 1;
+            }
+            "--isochrone-url" if i + 1 < args.len() => {
+                isochrone_url = args[i + 1].clone();
+                i += 2;
+            }
+            "--skip-isochrone" => {
+                skip_isochrone = true;
+                i += 1;
+            }
+            "--line" if i + 1 < args.len() => {
+                line = Some(args[i + 1].clone());
+                i += 2;
+            }
             _ => {
                 i += 1;
             }
@@ -194,6 +220,10 @@ fn parse_args() -> Args {
         service_date,
         otp_url,
         centrality,
+        line_pages,
+        isochrone_url,
+        skip_isochrone,
+        line,
     }
 }
 
@@ -476,6 +506,19 @@ pub struct BestPoint {
 
 fn main() {
     let args = parse_args();
+
+    // Standalone line-page generation: no walk graph / OSM / scoring needed.
+    if args.line_pages {
+        line_pages::generate(
+            &args.otp_url,
+            &args.isochrone_url,
+            args.skip_isochrone,
+            args.line.as_deref(),
+            Path::new("../data"),
+        );
+        return;
+    }
+
     let max_seconds = args.minutes * 60.0;
 
     // Configure rayon thread pool

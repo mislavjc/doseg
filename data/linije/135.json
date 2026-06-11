@@ -1,0 +1,1547 @@
+{
+  "broj": "135",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Črnomerec",
+    "Graberje"
+  ],
+  "via": [
+    "Ciglanska"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Graberje",
+      "stops": [
+        {
+          "name": "Črnomerec",
+          "lat": 45.8158,
+          "lon": 15.93413,
+          "offsetMin": 0,
+          "tramInterchange": [
+            "2",
+            "6",
+            "11"
+          ]
+        },
+        {
+          "name": "Ciglanska",
+          "lat": 45.81464,
+          "lon": 15.92718,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Graberje",
+          "lat": 45.8178,
+          "lon": 15.92667,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Šuma Grmoščica",
+          "lat": 45.81957,
+          "lon": 15.92296,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kotoripska",
+          "lat": 45.82269,
+          "lon": 15.91797,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Millerova",
+          "lat": 45.82477,
+          "lon": 15.91676,
+          "offsetMin": 9,
+          "tramInterchange": []
+        },
+        {
+          "name": "Graberje-okretište",
+          "lat": 45.8268,
+          "lon": 15.91419,
+          "offsetMin": 11,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.93412,
+          45.81579
+        ],
+        [
+          15.93413,
+          45.81571
+        ],
+        [
+          15.93318,
+          45.81551
+        ],
+        [
+          15.93315,
+          45.81476
+        ],
+        [
+          15.93257,
+          45.81467
+        ],
+        [
+          15.93102,
+          45.81427
+        ],
+        [
+          15.92964,
+          45.81394
+        ],
+        [
+          15.92867,
+          45.81377
+        ],
+        [
+          15.92746,
+          45.81362
+        ],
+        [
+          15.92717,
+          45.81464
+        ],
+        [
+          15.92717,
+          45.81464
+        ],
+        [
+          15.92692,
+          45.81535
+        ],
+        [
+          15.9268,
+          45.8158
+        ],
+        [
+          15.92666,
+          45.81779
+        ],
+        [
+          15.92666,
+          45.8178
+        ],
+        [
+          15.92669,
+          45.81798
+        ],
+        [
+          15.92602,
+          45.81807
+        ],
+        [
+          15.92573,
+          45.81811
+        ],
+        [
+          15.92519,
+          45.81849
+        ],
+        [
+          15.92424,
+          45.81895
+        ],
+        [
+          15.92372,
+          45.81914
+        ],
+        [
+          15.92296,
+          45.81957
+        ],
+        [
+          15.92295,
+          45.81957
+        ],
+        [
+          15.92222,
+          45.81995
+        ],
+        [
+          15.92168,
+          45.82003
+        ],
+        [
+          15.92112,
+          45.82018
+        ],
+        [
+          15.92081,
+          45.82027
+        ],
+        [
+          15.92024,
+          45.82069
+        ],
+        [
+          15.91997,
+          45.82076
+        ],
+        [
+          15.91962,
+          45.82112
+        ],
+        [
+          15.91949,
+          45.82138
+        ],
+        [
+          15.91873,
+          45.82198
+        ],
+        [
+          15.9184,
+          45.82226
+        ],
+        [
+          15.91827,
+          45.82242
+        ],
+        [
+          15.91816,
+          45.82246
+        ],
+        [
+          15.91797,
+          45.82262
+        ],
+        [
+          15.91796,
+          45.82268
+        ],
+        [
+          15.91782,
+          45.82274
+        ],
+        [
+          15.91773,
+          45.82283
+        ],
+        [
+          15.91757,
+          45.82309
+        ],
+        [
+          15.91741,
+          45.82332
+        ],
+        [
+          15.91723,
+          45.82357
+        ],
+        [
+          15.91708,
+          45.82379
+        ],
+        [
+          15.917,
+          45.82391
+        ],
+        [
+          15.91694,
+          45.82403
+        ],
+        [
+          15.91687,
+          45.82446
+        ],
+        [
+          15.91687,
+          45.82461
+        ],
+        [
+          15.91684,
+          45.82468
+        ],
+        [
+          15.91675,
+          45.82476
+        ],
+        [
+          15.91675,
+          45.82477
+        ],
+        [
+          15.91639,
+          45.82499
+        ],
+        [
+          15.9158,
+          45.82544
+        ],
+        [
+          15.91558,
+          45.82556
+        ],
+        [
+          15.91537,
+          45.82571
+        ],
+        [
+          15.91512,
+          45.82597
+        ],
+        [
+          15.91509,
+          45.82609
+        ],
+        [
+          15.91458,
+          45.82644
+        ],
+        [
+          15.91445,
+          45.82651
+        ],
+        [
+          15.91423,
+          45.82663
+        ],
+        [
+          15.91415,
+          45.82667
+        ],
+        [
+          15.91419,
+          45.82679
+        ]
+      ]
+    },
+    {
+      "headsign": "Črnomerec",
+      "stops": [
+        {
+          "name": "Graberje-okretište",
+          "lat": 45.82678,
+          "lon": 15.91426,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Millerova",
+          "lat": 45.82482,
+          "lon": 15.91659,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kotoripska",
+          "lat": 45.82261,
+          "lon": 15.91793,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Šuma Grmoščica",
+          "lat": 45.81972,
+          "lon": 15.92283,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Graberje",
+          "lat": 45.81773,
+          "lon": 15.92661,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Ciglanska",
+          "lat": 45.81432,
+          "lon": 15.92728,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Črnomerec",
+          "lat": 45.81532,
+          "lon": 15.93323,
+          "offsetMin": 8,
+          "tramInterchange": [
+            "2",
+            "6",
+            "11"
+          ]
+        }
+      ],
+      "shape": [
+        [
+          15.91425,
+          45.82677
+        ],
+        [
+          15.91427,
+          45.82665
+        ],
+        [
+          15.91443,
+          45.82653
+        ],
+        [
+          15.9147,
+          45.82639
+        ],
+        [
+          15.915,
+          45.82614
+        ],
+        [
+          15.91543,
+          45.82566
+        ],
+        [
+          15.91572,
+          45.8255
+        ],
+        [
+          15.91658,
+          45.82482
+        ],
+        [
+          15.91659,
+          45.82482
+        ],
+        [
+          15.91688,
+          45.82465
+        ],
+        [
+          15.91689,
+          45.82455
+        ],
+        [
+          15.91688,
+          45.82428
+        ],
+        [
+          15.91714,
+          45.82367
+        ],
+        [
+          15.91756,
+          45.82314
+        ],
+        [
+          15.91793,
+          45.82261
+        ],
+        [
+          15.91793,
+          45.8226
+        ],
+        [
+          15.91812,
+          45.8225
+        ],
+        [
+          15.91897,
+          45.82177
+        ],
+        [
+          15.91952,
+          45.82138
+        ],
+        [
+          15.91957,
+          45.82129
+        ],
+        [
+          15.91974,
+          45.82102
+        ],
+        [
+          15.91996,
+          45.82077
+        ],
+        [
+          15.92018,
+          45.8207
+        ],
+        [
+          15.92064,
+          45.82039
+        ],
+        [
+          15.92104,
+          45.8202
+        ],
+        [
+          15.92142,
+          45.8201
+        ],
+        [
+          15.92195,
+          45.81999
+        ],
+        [
+          15.92282,
+          45.81972
+        ],
+        [
+          15.92283,
+          45.81972
+        ],
+        [
+          15.92333,
+          45.81934
+        ],
+        [
+          15.92358,
+          45.81921
+        ],
+        [
+          15.9241,
+          45.81901
+        ],
+        [
+          15.92588,
+          45.8181
+        ],
+        [
+          15.92673,
+          45.81795
+        ],
+        [
+          15.9266,
+          45.81772
+        ],
+        [
+          15.9266,
+          45.81772
+        ],
+        [
+          15.92665,
+          45.81745
+        ],
+        [
+          15.92667,
+          45.81687
+        ],
+        [
+          15.92676,
+          45.8159
+        ],
+        [
+          15.92689,
+          45.81534
+        ],
+        [
+          15.92715,
+          45.81457
+        ],
+        [
+          15.92728,
+          45.81432
+        ],
+        [
+          15.92728,
+          45.81432
+        ],
+        [
+          15.92728,
+          45.81411
+        ],
+        [
+          15.92744,
+          45.81357
+        ],
+        [
+          15.9289,
+          45.81377
+        ],
+        [
+          15.92982,
+          45.81395
+        ],
+        [
+          15.93174,
+          45.81443
+        ],
+        [
+          15.93269,
+          45.81466
+        ],
+        [
+          15.93329,
+          45.81473
+        ],
+        [
+          15.93325,
+          45.81531
+        ],
+        [
+          15.93323,
+          45.81531
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    15.91415,
+    45.81357,
+    15.93413,
+    45.8268
+  ],
+  "histogram": [
+    0,
+    0,
+    0,
+    0,
+    2,
+    5,
+    5,
+    2,
+    3,
+    3,
+    2,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    2,
+    3,
+    3,
+    4,
+    4,
+    3
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            5,
+            25,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0,
+            45
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0,
+            45
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            25,
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            20,
+            55
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            5,
+            45
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            15
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            15,
+            35
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            5,
+            30,
+            55
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            5,
+            40
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            5,
+            30
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            5,
+            30
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            20
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            0,
+            30
+          ]
+        }
+      ]
+    ],
+    "nedjelja": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            15,
+            55
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            15,
+            55
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15,
+            55
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            15,
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            35
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            10,
+            55
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            10,
+            50
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            10,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            10,
+            50
+          ]
+        }
+      ]
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "2",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "6",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "11",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "31",
+        "mode": "tram",
+        "isNight": true,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "109",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "117",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "119",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "120",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "121",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "122",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "123",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "124",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "125",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "126",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "127",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "128",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "130",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "131",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "134",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "136",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "137",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "144",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "172",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "176",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      },
+      {
+        "broj": "177",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Črnomerec"
+      }
+    ],
+    "tramCrossings": []
+  },
+  "prevBroj": "134",
+  "nextBroj": "136",
+  "reach": {
+    "areaKm2": 19.1,
+    "stopName": "Šuma Grmoščica",
+    "lat": 45.81957,
+    "lon": 15.92296
+  },
+  "stats": {
+    "dailyDepartures": 68,
+    "firstDeparture": "04:35",
+    "lastDeparture": "23:15",
+    "peakHeadwayMin": 47.5,
+    "avgHeadwayMin": 33.9,
+    "travelTimeMin": 10.5,
+    "distanceKm": 2.6
+  }
+}

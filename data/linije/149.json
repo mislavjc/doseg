@@ -1,0 +1,1083 @@
+{
+  "broj": "149",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Kuniščak",
+    "Vrhovec"
+  ],
+  "via": [
+    "Mandaličina"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Vrhovec",
+      "stops": [
+        {
+          "name": "Kuniščak",
+          "lat": 45.81526,
+          "lon": 15.94534,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Mandaličina",
+          "lat": 45.81366,
+          "lon": 15.94911,
+          "offsetMin": 1,
+          "tramInterchange": [
+            "2",
+            "6",
+            "11"
+          ]
+        },
+        {
+          "name": "Zatišje",
+          "lat": 45.81758,
+          "lon": 15.94798,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec 62",
+          "lat": 45.82072,
+          "lon": 15.9476,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vinogradi",
+          "lat": 45.82544,
+          "lon": 15.94716,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec 196",
+          "lat": 45.83118,
+          "lon": 15.94858,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vidovčica",
+          "lat": 45.83347,
+          "lon": 15.94939,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec 233",
+          "lat": 45.83639,
+          "lon": 15.95143,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vidovčica I.",
+          "lat": 45.83966,
+          "lon": 15.95226,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec",
+          "lat": 45.84314,
+          "lon": 15.95286,
+          "offsetMin": 9,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.94534,
+          45.81526
+        ],
+        [
+          15.94911,
+          45.81366
+        ],
+        [
+          15.94798,
+          45.81758
+        ],
+        [
+          15.9476,
+          45.82072
+        ],
+        [
+          15.94716,
+          45.82544
+        ],
+        [
+          15.94858,
+          45.83118
+        ],
+        [
+          15.94939,
+          45.83347
+        ],
+        [
+          15.95143,
+          45.83639
+        ],
+        [
+          15.95226,
+          45.83966
+        ],
+        [
+          15.95286,
+          45.84314
+        ]
+      ]
+    },
+    {
+      "headsign": "Kuniščak",
+      "stops": [
+        {
+          "name": "Vrhovec",
+          "lat": 45.84314,
+          "lon": 15.95286,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vidovčica I.",
+          "lat": 45.84053,
+          "lon": 15.95228,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vidovčica",
+          "lat": 45.83369,
+          "lon": 15.94949,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec 196",
+          "lat": 45.831,
+          "lon": 15.94842,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vinogradi",
+          "lat": 45.82517,
+          "lon": 15.94701,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vrhovec 62",
+          "lat": 45.82073,
+          "lon": 15.94761,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Zatišje",
+          "lat": 45.81783,
+          "lon": 15.9477,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Mandaličina",
+          "lat": 45.81366,
+          "lon": 15.94909,
+          "offsetMin": 8,
+          "tramInterchange": [
+            "2",
+            "6",
+            "11"
+          ]
+        },
+        {
+          "name": "Kuniščak",
+          "lat": 45.81616,
+          "lon": 15.94498,
+          "offsetMin": 9,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.95286,
+          45.84314
+        ],
+        [
+          15.95228,
+          45.84053
+        ],
+        [
+          15.94949,
+          45.83369
+        ],
+        [
+          15.94842,
+          45.831
+        ],
+        [
+          15.94701,
+          45.82517
+        ],
+        [
+          15.94761,
+          45.82073
+        ],
+        [
+          15.9477,
+          45.81783
+        ],
+        [
+          15.94909,
+          45.81366
+        ],
+        [
+          15.94498,
+          45.81616
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    15.94498,
+    45.81366,
+    15.95286,
+    45.84314
+  ],
+  "histogram": [
+    2,
+    0,
+    0,
+    0,
+    2,
+    3,
+    4,
+    4,
+    3,
+    3,
+    3,
+    2,
+    3,
+    4,
+    4,
+    4,
+    3,
+    2,
+    3,
+    3,
+    2,
+    2,
+    2,
+    4
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            10,
+            40
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            10,
+            40
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            10,
+            40
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0,
+            50
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            10,
+            45
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            20,
+            40
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            5,
+            45
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            25
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            5,
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            15,
+            55
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            35
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            5,
+            55
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            25
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            55
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            0,
+            50
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            0,
+            55
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            35
+          ]
+        }
+      ]
+    ],
+    "nedjelja": [
+      [
+        {
+          "hour": 6,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            15
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 6,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            30
+          ]
+        }
+      ]
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "129",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Kuniščak"
+      }
+    ],
+    "tramCrossings": [
+      {
+        "broj": "2",
+        "stopName": "Mandaličina"
+      },
+      {
+        "broj": "6",
+        "stopName": "Mandaličina"
+      },
+      {
+        "broj": "11",
+        "stopName": "Mandaličina"
+      }
+    ]
+  },
+  "prevBroj": "148",
+  "nextBroj": "150",
+  "reach": {
+    "areaKm2": 13.1,
+    "stopName": "Vrhovec 196",
+    "lat": 45.83118,
+    "lon": 15.94858
+  },
+  "stats": {
+    "dailyDepartures": 62,
+    "firstDeparture": "04:25",
+    "lastDeparture": "24:25",
+    "peakHeadwayMin": 36.7,
+    "avgHeadwayMin": 40.0,
+    "travelTimeMin": 8.7,
+    "distanceKm": 3.7
+  }
+}

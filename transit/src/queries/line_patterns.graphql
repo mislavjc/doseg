@@ -1,0 +1,26 @@
+query GetLinePatterns($serviceDate: String!) {
+  patterns {
+    code
+    directionId
+    headsign
+    route {
+      mode
+      shortName
+      longName
+    }
+    patternGeometry {
+      points
+    }
+    stops {
+      name
+      lat
+      lon
+    }
+    tripsForDate(serviceDate: $serviceDate) {
+      gtfsId
+      stoptimes {
+        scheduledDeparture
+      }
+    }
+  }
+}

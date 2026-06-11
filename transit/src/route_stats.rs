@@ -440,7 +440,7 @@ fn find_stop_name(graph: &TransitGraphJson, si: usize) -> &str {
     }
 }
 
-fn compute_headway(
+pub(crate) fn compute_headway(
     departures: &[f64],
     start_sec: Option<f64>,
     end_sec: Option<f64>,

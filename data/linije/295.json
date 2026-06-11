@@ -1,0 +1,588 @@
+{
+  "broj": "295",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Zapruđe",
+    "Šišićeva"
+  ],
+  "via": [],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Šišićeva",
+      "stops": [
+        {
+          "name": "Zapruđe",
+          "lat": 45.78169,
+          "lon": 16.00317,
+          "offsetMin": 0,
+          "tramInterchange": [
+            "6",
+            "7",
+            "8"
+          ]
+        },
+        {
+          "name": "Sajam Jakuševec",
+          "lat": 45.77273,
+          "lon": 16.01841,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Tišinska",
+          "lat": 45.76936,
+          "lon": 16.02179,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Tišinska ul. III odv",
+          "lat": 45.76358,
+          "lon": 16.01782,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Jakuševec, centar",
+          "lat": 45.7605,
+          "lon": 16.01538,
+          "offsetMin": 9,
+          "tramInterchange": []
+        },
+        {
+          "name": "Jakuševec, škola",
+          "lat": 45.76087,
+          "lon": 16.01085,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Sarajev.-Jakuševečka",
+          "lat": 45.76086,
+          "lon": 16.00888,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kauzlarićev prilaz",
+          "lat": 45.76521,
+          "lon": 16.00238,
+          "offsetMin": 13,
+          "tramInterchange": []
+        },
+        {
+          "name": "Božidara Magovca 111",
+          "lat": 45.76937,
+          "lon": 16.00111,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Šišićeva",
+          "lat": 45.77696,
+          "lon": 16.00104,
+          "offsetMin": 16,
+          "tramInterchange": [
+            "6",
+            "7",
+            "14"
+          ]
+        }
+      ],
+      "shape": [
+        [
+          16.00317,
+          45.78169
+        ],
+        [
+          16.01841,
+          45.77273
+        ],
+        [
+          16.02179,
+          45.76936
+        ],
+        [
+          16.01782,
+          45.76358
+        ],
+        [
+          16.01538,
+          45.7605
+        ],
+        [
+          16.01085,
+          45.76087
+        ],
+        [
+          16.00888,
+          45.76086
+        ],
+        [
+          16.00238,
+          45.76521
+        ],
+        [
+          16.00111,
+          45.76937
+        ],
+        [
+          16.00104,
+          45.77696
+        ]
+      ]
+    },
+    {
+      "headsign": "Zapruđe",
+      "stops": [
+        {
+          "name": "Sajam Jakuševec",
+          "lat": 45.77273,
+          "lon": 16.01841,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Zapruđe",
+          "lat": 45.78187,
+          "lon": 16.00269,
+          "offsetMin": 5,
+          "tramInterchange": [
+            "6",
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "shape": [
+        [
+          16.01839,
+          45.77273
+        ],
+        [
+          16.0182,
+          45.77292
+        ],
+        [
+          16.01476,
+          45.77537
+        ],
+        [
+          16.01139,
+          45.77767
+        ],
+        [
+          16.00824,
+          45.77978
+        ],
+        [
+          16.00676,
+          45.78074
+        ],
+        [
+          16.00609,
+          45.78114
+        ],
+        [
+          16.00572,
+          45.78135
+        ],
+        [
+          16.00534,
+          45.78151
+        ],
+        [
+          16.00326,
+          45.78179
+        ],
+        [
+          16.00268,
+          45.78186
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    16.00104,
+    45.7605,
+    16.02179,
+    45.78187
+  ],
+  "histogram": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            5,
+            40
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            45
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            0
+          ]
+        }
+      ],
+      []
+    ],
+    "subota": [
+      [
+        {
+          "hour": 7,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0,
+            40
+          ]
+        }
+      ],
+      []
+    ],
+    "nedjelja": [
+      [
+        {
+          "hour": 7,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0,
+            15
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            0,
+            15
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 7,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15
+          ]
+        }
+      ]
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "14",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Šišićeva"
+      },
+      {
+        "broj": "307",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Šišićeva"
+      },
+      {
+        "broj": "308",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Šišićeva"
+      }
+    ],
+    "tramCrossings": []
+  },
+  "prevBroj": "290",
+  "nextBroj": "307",
+  "reach": {
+    "areaKm2": 7.4,
+    "stopName": "Jakuševec, škola",
+    "lat": 45.76087,
+    "lon": 16.01085
+  },
+  "stats": {
+    "dailyDepartures": 30,
+    "firstDeparture": "04:50",
+    "lastDeparture": "23:00",
+    "peakHeadwayMin": 26.7,
+    "avgHeadwayMin": 37.6,
+    "travelTimeMin": 16.3,
+    "distanceKm": 5.6
+  }
+}

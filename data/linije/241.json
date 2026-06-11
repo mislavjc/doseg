@@ -1,0 +1,1723 @@
+{
+  "broj": "241",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Gl.kolodvor",
+    "Veliko Polje"
+  ],
+  "via": [
+    "Lisinski",
+    "Islandska"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Veliko Polje",
+      "stops": [
+        {
+          "name": "Glavni kolodvor",
+          "lat": 45.80271,
+          "lon": 15.97703,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Lisinski",
+          "lat": 45.79933,
+          "lon": 15.97857,
+          "offsetMin": 3,
+          "tramInterchange": [
+            "3",
+            "5",
+            "13"
+          ]
+        },
+        {
+          "name": "N.S.knjižnica",
+          "lat": 45.79398,
+          "lon": 15.97901,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bundek",
+          "lat": 45.78288,
+          "lon": 15.97974,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Muzej suv.umjetnosti",
+          "lat": 45.77651,
+          "lon": 15.9798,
+          "offsetMin": 7,
+          "tramInterchange": [
+            "7",
+            "14"
+          ]
+        },
+        {
+          "name": "Građevinska škola",
+          "lat": 45.77156,
+          "lon": 15.98173,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Islandska",
+          "lat": 45.77194,
+          "lon": 15.99062,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vatikanska",
+          "lat": 45.76708,
+          "lon": 15.99096,
+          "offsetMin": 11,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bolšićeva",
+          "lat": 45.76352,
+          "lon": 15.99061,
+          "offsetMin": 13,
+          "tramInterchange": []
+        },
+        {
+          "name": "Oreškovićeva",
+          "lat": 45.75935,
+          "lon": 15.98996,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Buzin",
+          "lat": 45.74723,
+          "lon": 15.99358,
+          "offsetMin": 17,
+          "tramInterchange": []
+        },
+        {
+          "name": "Odra",
+          "lat": 45.74277,
+          "lon": 15.99972,
+          "offsetMin": 18,
+          "tramInterchange": []
+        },
+        {
+          "name": "Odra-nadvožnjak",
+          "lat": 45.73832,
+          "lon": 16.00589,
+          "offsetMin": 20,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hrašće Turopolj.",
+          "lat": 45.73488,
+          "lon": 16.01073,
+          "offsetMin": 21,
+          "tramInterchange": []
+        },
+        {
+          "name": "Veliko Polje",
+          "lat": 45.73385,
+          "lon": 16.01619,
+          "offsetMin": 22,
+          "tramInterchange": []
+        },
+        {
+          "name": "Goranska",
+          "lat": 45.73925,
+          "lon": 16.01559,
+          "offsetMin": 24,
+          "tramInterchange": []
+        },
+        {
+          "name": "Galijska",
+          "lat": 45.74356,
+          "lon": 16.01411,
+          "offsetMin": 25,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.97703,
+          45.80271
+        ],
+        [
+          15.9772,
+          45.80267
+        ],
+        [
+          15.97727,
+          45.80188
+        ],
+        [
+          15.97775,
+          45.80188
+        ],
+        [
+          15.97788,
+          45.80186
+        ],
+        [
+          15.97851,
+          45.80161
+        ],
+        [
+          15.97856,
+          45.79933
+        ],
+        [
+          15.97856,
+          45.79933
+        ],
+        [
+          15.97861,
+          45.79894
+        ],
+        [
+          15.97885,
+          45.79486
+        ],
+        [
+          15.97891,
+          45.79446
+        ],
+        [
+          15.97897,
+          45.79427
+        ],
+        [
+          15.97899,
+          45.79397
+        ],
+        [
+          15.979,
+          45.79397
+        ],
+        [
+          15.97908,
+          45.79392
+        ],
+        [
+          15.9792,
+          45.7936
+        ],
+        [
+          15.9793,
+          45.79259
+        ],
+        [
+          15.97952,
+          45.7901
+        ],
+        [
+          15.97964,
+          45.78705
+        ],
+        [
+          15.97963,
+          45.78638
+        ],
+        [
+          15.97979,
+          45.78355
+        ],
+        [
+          15.97974,
+          45.78288
+        ],
+        [
+          15.97974,
+          45.78288
+        ],
+        [
+          15.97979,
+          45.78239
+        ],
+        [
+          15.97991,
+          45.78024
+        ],
+        [
+          15.97984,
+          45.77968
+        ],
+        [
+          15.9798,
+          45.77946
+        ],
+        [
+          15.97977,
+          45.77895
+        ],
+        [
+          15.97977,
+          45.77862
+        ],
+        [
+          15.97982,
+          45.77704
+        ],
+        [
+          15.97985,
+          45.77679
+        ],
+        [
+          15.9798,
+          45.77651
+        ],
+        [
+          15.9802,
+          45.77482
+        ],
+        [
+          15.98021,
+          45.77457
+        ],
+        [
+          15.98022,
+          45.77434
+        ],
+        [
+          15.98026,
+          45.77331
+        ],
+        [
+          15.98028,
+          45.77315
+        ],
+        [
+          15.98034,
+          45.77297
+        ],
+        [
+          15.98036,
+          45.77265
+        ],
+        [
+          15.98036,
+          45.77246
+        ],
+        [
+          15.98034,
+          45.77238
+        ],
+        [
+          15.98036,
+          45.77165
+        ],
+        [
+          15.98153,
+          45.77168
+        ],
+        [
+          15.98172,
+          45.77156
+        ],
+        [
+          15.98173,
+          45.77155
+        ],
+        [
+          15.98613,
+          45.7718
+        ],
+        [
+          15.98853,
+          45.77243
+        ],
+        [
+          15.99016,
+          45.77252
+        ],
+        [
+          15.99066,
+          45.77252
+        ],
+        [
+          15.99061,
+          45.77193
+        ],
+        [
+          15.99062,
+          45.77193
+        ],
+        [
+          15.99062,
+          45.77193
+        ],
+        [
+          15.99067,
+          45.77181
+        ],
+        [
+          15.99095,
+          45.76708
+        ],
+        [
+          15.99095,
+          45.76707
+        ],
+        [
+          15.99094,
+          45.76658
+        ],
+        [
+          15.99091,
+          45.76616
+        ],
+        [
+          15.99086,
+          45.76545
+        ],
+        [
+          15.99083,
+          45.76507
+        ],
+        [
+          15.99076,
+          45.76443
+        ],
+        [
+          15.99072,
+          45.76411
+        ],
+        [
+          15.9906,
+          45.76352
+        ],
+        [
+          15.9906,
+          45.76352
+        ],
+        [
+          15.99063,
+          45.76349
+        ],
+        [
+          15.99027,
+          45.76128
+        ],
+        [
+          15.99022,
+          45.76089
+        ],
+        [
+          15.99011,
+          45.76017
+        ],
+        [
+          15.99004,
+          45.75977
+        ],
+        [
+          15.98995,
+          45.75934
+        ],
+        [
+          15.98995,
+          45.75934
+        ],
+        [
+          15.98993,
+          45.75919
+        ],
+        [
+          15.98987,
+          45.75871
+        ],
+        [
+          15.98928,
+          45.75486
+        ],
+        [
+          15.98904,
+          45.75339
+        ],
+        [
+          15.9889,
+          45.75256
+        ],
+        [
+          15.98878,
+          45.75188
+        ],
+        [
+          15.98877,
+          45.75149
+        ],
+        [
+          15.98881,
+          45.7512
+        ],
+        [
+          15.98892,
+          45.75096
+        ],
+        [
+          15.98902,
+          45.75074
+        ],
+        [
+          15.98929,
+          45.75039
+        ],
+        [
+          15.98945,
+          45.75023
+        ],
+        [
+          15.98962,
+          45.75008
+        ],
+        [
+          15.98983,
+          45.74993
+        ],
+        [
+          15.9906,
+          45.74937
+        ],
+        [
+          15.99251,
+          45.748
+        ],
+        [
+          15.99357,
+          45.74722
+        ],
+        [
+          15.99358,
+          45.74722
+        ],
+        [
+          15.99602,
+          45.74545
+        ],
+        [
+          15.99796,
+          45.74406
+        ],
+        [
+          15.99899,
+          45.74331
+        ],
+        [
+          15.99972,
+          45.74277
+        ],
+        [
+          15.99972,
+          45.74277
+        ],
+        [
+          15.99985,
+          45.74268
+        ],
+        [
+          16.00579,
+          45.73843
+        ],
+        [
+          16.00588,
+          45.73831
+        ],
+        [
+          16.00588,
+          45.73831
+        ],
+        [
+          16.00598,
+          45.73828
+        ],
+        [
+          16.00781,
+          45.737
+        ],
+        [
+          16.01062,
+          45.73497
+        ],
+        [
+          16.01071,
+          45.73488
+        ],
+        [
+          16.01072,
+          45.73488
+        ],
+        [
+          16.01092,
+          45.73485
+        ],
+        [
+          16.01129,
+          45.73465
+        ],
+        [
+          16.01167,
+          45.73445
+        ],
+        [
+          16.012,
+          45.7343
+        ],
+        [
+          16.01242,
+          45.73413
+        ],
+        [
+          16.01278,
+          45.73398
+        ],
+        [
+          16.01321,
+          45.73382
+        ],
+        [
+          16.01365,
+          45.73367
+        ],
+        [
+          16.01411,
+          45.73352
+        ],
+        [
+          16.01468,
+          45.73335
+        ],
+        [
+          16.01518,
+          45.73319
+        ],
+        [
+          16.01581,
+          45.73299
+        ],
+        [
+          16.01592,
+          45.73306
+        ],
+        [
+          16.01601,
+          45.73316
+        ],
+        [
+          16.01609,
+          45.73329
+        ],
+        [
+          16.01619,
+          45.73384
+        ],
+        [
+          16.01619,
+          45.73385
+        ],
+        [
+          16.01638,
+          45.73475
+        ],
+        [
+          16.01671,
+          45.73589
+        ],
+        [
+          16.01558,
+          45.73925
+        ],
+        [
+          16.01558,
+          45.73925
+        ],
+        [
+          16.01557,
+          45.73925
+        ],
+        [
+          16.01481,
+          45.74153
+        ],
+        [
+          16.0141,
+          45.74356
+        ]
+      ]
+    },
+    {
+      "headsign": "Gl.kolodvor",
+      "stops": [
+        {
+          "name": "Galijska",
+          "lat": 45.74287,
+          "lon": 16.01435,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Goranska",
+          "lat": 45.73839,
+          "lon": 16.01587,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Veliko Polje",
+          "lat": 45.73357,
+          "lon": 16.01465,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hrašće Turopolj.",
+          "lat": 45.73606,
+          "lon": 16.01091,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Odra-nadvožnjak",
+          "lat": 45.73983,
+          "lon": 16.00426,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Odra",
+          "lat": 45.7443,
+          "lon": 15.998,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Buzin",
+          "lat": 45.74871,
+          "lon": 15.99181,
+          "offsetMin": 9,
+          "tramInterchange": []
+        },
+        {
+          "name": "Oreškovićeva",
+          "lat": 45.76061,
+          "lon": 15.98775,
+          "offsetMin": 11,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bolšićeva",
+          "lat": 45.76486,
+          "lon": 15.99114,
+          "offsetMin": 13,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vatikanska",
+          "lat": 45.76871,
+          "lon": 15.99118,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Islandska",
+          "lat": 45.77269,
+          "lon": 15.98992,
+          "offsetMin": 15,
+          "tramInterchange": []
+        },
+        {
+          "name": "Građevinska škola",
+          "lat": 45.77246,
+          "lon": 15.98052,
+          "offsetMin": 17,
+          "tramInterchange": []
+        },
+        {
+          "name": "Muzej suv.umjetnosti",
+          "lat": 45.77861,
+          "lon": 15.98067,
+          "offsetMin": 18,
+          "tramInterchange": [
+            "7",
+            "14"
+          ]
+        },
+        {
+          "name": "Bundek",
+          "lat": 45.78417,
+          "lon": 15.98008,
+          "offsetMin": 20,
+          "tramInterchange": []
+        },
+        {
+          "name": "N.S.knjižnica",
+          "lat": 45.79554,
+          "lon": 15.97975,
+          "offsetMin": 22,
+          "tramInterchange": []
+        },
+        {
+          "name": "Lisinski",
+          "lat": 45.79941,
+          "lon": 15.97956,
+          "offsetMin": 23,
+          "tramInterchange": [
+            "3",
+            "5",
+            "13"
+          ]
+        },
+        {
+          "name": "Glavni kolodvor",
+          "lat": 45.80375,
+          "lon": 15.97779,
+          "offsetMin": 25,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          16.01434,
+          45.74286
+        ],
+        [
+          16.01587,
+          45.73839
+        ],
+        [
+          16.01465,
+          45.73357
+        ],
+        [
+          16.0109,
+          45.73605
+        ],
+        [
+          16.00426,
+          45.73983
+        ],
+        [
+          15.99799,
+          45.7443
+        ],
+        [
+          15.99181,
+          45.74871
+        ],
+        [
+          15.98774,
+          45.7606
+        ],
+        [
+          15.99114,
+          45.76486
+        ],
+        [
+          15.99118,
+          45.76871
+        ],
+        [
+          15.98991,
+          45.77268
+        ],
+        [
+          15.98051,
+          45.77245
+        ],
+        [
+          15.98067,
+          45.77861
+        ],
+        [
+          15.98008,
+          45.78416
+        ],
+        [
+          15.97974,
+          45.79553
+        ],
+        [
+          15.97956,
+          45.7994
+        ],
+        [
+          15.97779,
+          45.80374
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    15.97703,
+    45.73299,
+    16.01671,
+    45.80375
+  ],
+  "histogram": [
+    1,
+    0,
+    0,
+    0,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            35
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            5
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            15
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            40
+          ]
+        }
+      ]
+    ],
+    "nedjelja": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            25
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            55
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            50
+          ]
+        }
+      ]
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "108",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "166",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "218",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "219",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "220",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "221",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "229",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "234",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "242",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "243",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "268",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "281",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "310",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "311",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "330",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      }
+    ],
+    "tramCrossings": [
+      {
+        "broj": "3",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "5",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "7",
+        "stopName": "Muzej suv.umjetnosti"
+      },
+      {
+        "broj": "13",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "14",
+        "stopName": "Muzej suv.umjetnosti"
+      }
+    ]
+  },
+  "prevBroj": "239",
+  "nextBroj": "242",
+  "reach": {
+    "areaKm2": 29.4,
+    "stopName": "Bolšićeva",
+    "lat": 45.76352,
+    "lon": 15.99061
+  },
+  "stats": {
+    "dailyDepartures": 36,
+    "firstDeparture": "04:20",
+    "lastDeparture": "23:35",
+    "peakHeadwayMin": 70.0,
+    "avgHeadwayMin": 67.9,
+    "travelTimeMin": 25.0,
+    "distanceKm": 10.9
+  }
+}

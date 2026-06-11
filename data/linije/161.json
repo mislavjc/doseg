@@ -1,0 +1,1505 @@
+{
+  "broj": "161",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Savski most",
+    "Štrpet"
+  ],
+  "via": [
+    "St.dom Stjepan Radić"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Štrpet",
+      "stops": [
+        {
+          "name": "Savski most",
+          "lat": 45.78523,
+          "lon": 15.95277,
+          "offsetMin": 0,
+          "tramInterchange": [
+            "4",
+            "7",
+            "14"
+          ]
+        },
+        {
+          "name": "St.dom Stjepan Radić",
+          "lat": 45.78621,
+          "lon": 15.95076,
+          "offsetMin": 2,
+          "tramInterchange": [
+            "5",
+            "7",
+            "14",
+            "17"
+          ]
+        },
+        {
+          "name": "Remetinečka os.škola",
+          "lat": 45.77465,
+          "lon": 15.95318,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Savski gaj XII.",
+          "lat": 45.77202,
+          "lon": 15.9514,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Naletilićeva",
+          "lat": 45.76717,
+          "lon": 15.94549,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bašćanske ploče",
+          "lat": 45.75758,
+          "lon": 15.93259,
+          "offsetMin": 9,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička 80",
+          "lat": 45.75273,
+          "lon": 15.92656,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička-ekonomija",
+          "lat": 45.74567,
+          "lon": 15.91901,
+          "offsetMin": 12,
+          "tramInterchange": []
+        },
+        {
+          "name": "AGROKOKA",
+          "lat": 45.74304,
+          "lon": 15.91675,
+          "offsetMin": 12,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brez.- pod kestenima",
+          "lat": 45.7328,
+          "lon": 15.9115,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Golobreška",
+          "lat": 45.72771,
+          "lon": 15.9108,
+          "offsetMin": 15,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička-ambulanta",
+          "lat": 45.72385,
+          "lon": 15.90708,
+          "offsetMin": 16,
+          "tramInterchange": []
+        },
+        {
+          "name": "Desprimska",
+          "lat": 45.72147,
+          "lon": 15.9028,
+          "offsetMin": 17,
+          "tramInterchange": []
+        },
+        {
+          "name": "Pekarska",
+          "lat": 45.7145,
+          "lon": 15.89916,
+          "offsetMin": 18,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hudobička 1",
+          "lat": 45.71073,
+          "lon": 15.89667,
+          "offsetMin": 19,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hudobička 36",
+          "lat": 45.70704,
+          "lon": 15.89339,
+          "offsetMin": 20,
+          "tramInterchange": []
+        },
+        {
+          "name": "Grančarska 22",
+          "lat": 45.70384,
+          "lon": 15.89378,
+          "offsetMin": 21,
+          "tramInterchange": []
+        },
+        {
+          "name": "Šolići",
+          "lat": 45.69736,
+          "lon": 15.89119,
+          "offsetMin": 22,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hladnjača",
+          "lat": 45.69095,
+          "lon": 15.88475,
+          "offsetMin": 24,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kraljevečka cesta",
+          "lat": 45.68455,
+          "lon": 15.88018,
+          "offsetMin": 25,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-IIIodvojak",
+          "lat": 45.6791,
+          "lon": 15.87566,
+          "offsetMin": 26,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-VI odvojak",
+          "lat": 45.67507,
+          "lon": 15.87407,
+          "offsetMin": 27,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kup.Kraljevec-škola",
+          "lat": 45.67193,
+          "lon": 15.87276,
+          "offsetMin": 27,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kralj.Brijegi-Lojeni",
+          "lat": 45.66393,
+          "lon": 15.87086,
+          "offsetMin": 29,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kral.Brijegi-Starjak",
+          "lat": 45.66011,
+          "lon": 15.87135,
+          "offsetMin": 30,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-Vodosprema",
+          "lat": 45.65663,
+          "lon": 15.87093,
+          "offsetMin": 30,
+          "tramInterchange": []
+        },
+        {
+          "name": "Štrpet",
+          "lat": 45.66408,
+          "lon": 15.85956,
+          "offsetMin": 32,
+          "tramInterchange": []
+        },
+        {
+          "name": "Štrpet-okretište",
+          "lat": 45.66681,
+          "lon": 15.85706,
+          "offsetMin": 33,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.95277,
+          45.78523
+        ],
+        [
+          15.95076,
+          45.78621
+        ],
+        [
+          15.95318,
+          45.77465
+        ],
+        [
+          15.9514,
+          45.77202
+        ],
+        [
+          15.94549,
+          45.76717
+        ],
+        [
+          15.93259,
+          45.75758
+        ],
+        [
+          15.92656,
+          45.75273
+        ],
+        [
+          15.91901,
+          45.74567
+        ],
+        [
+          15.91675,
+          45.74304
+        ],
+        [
+          15.9115,
+          45.7328
+        ],
+        [
+          15.9108,
+          45.72771
+        ],
+        [
+          15.90708,
+          45.72385
+        ],
+        [
+          15.9028,
+          45.72147
+        ],
+        [
+          15.89916,
+          45.7145
+        ],
+        [
+          15.89667,
+          45.71073
+        ],
+        [
+          15.89339,
+          45.70704
+        ],
+        [
+          15.89378,
+          45.70384
+        ],
+        [
+          15.89119,
+          45.69736
+        ],
+        [
+          15.88475,
+          45.69095
+        ],
+        [
+          15.88018,
+          45.68455
+        ],
+        [
+          15.87566,
+          45.6791
+        ],
+        [
+          15.87407,
+          45.67507
+        ],
+        [
+          15.87276,
+          45.67193
+        ],
+        [
+          15.87086,
+          45.66393
+        ],
+        [
+          15.87135,
+          45.66011
+        ],
+        [
+          15.87093,
+          45.65663
+        ],
+        [
+          15.85956,
+          45.66408
+        ],
+        [
+          15.85706,
+          45.66681
+        ]
+      ]
+    },
+    {
+      "headsign": "Savski most",
+      "stops": [
+        {
+          "name": "Štrpet-okretište",
+          "lat": 45.66681,
+          "lon": 15.85706,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Štrpet",
+          "lat": 45.66402,
+          "lon": 15.85979,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-Vodosprema",
+          "lat": 45.65648,
+          "lon": 15.87112,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kral.Brijegi-Starjak",
+          "lat": 45.6602,
+          "lon": 15.8714,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kralj.Brijegi-Lojeni",
+          "lat": 45.66445,
+          "lon": 15.87116,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kup.Kraljevec-škola",
+          "lat": 45.6722,
+          "lon": 15.87311,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-VI odvojak",
+          "lat": 45.67583,
+          "lon": 15.87424,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "K.Brijegi-IIIodvojak",
+          "lat": 45.6796,
+          "lon": 15.87619,
+          "offsetMin": 6,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kraljevečka cesta",
+          "lat": 45.68441,
+          "lon": 15.88014,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hladnjača",
+          "lat": 45.69147,
+          "lon": 15.88523,
+          "offsetMin": 9,
+          "tramInterchange": []
+        },
+        {
+          "name": "Šolići",
+          "lat": 45.69787,
+          "lon": 15.89162,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Grančarska 22",
+          "lat": 45.70419,
+          "lon": 15.89367,
+          "offsetMin": 11,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hudobička 36",
+          "lat": 45.70758,
+          "lon": 15.89392,
+          "offsetMin": 12,
+          "tramInterchange": []
+        },
+        {
+          "name": "Hudobička 1",
+          "lat": 45.71116,
+          "lon": 15.89707,
+          "offsetMin": 13,
+          "tramInterchange": []
+        },
+        {
+          "name": "Pekarska",
+          "lat": 45.71497,
+          "lon": 15.89939,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Desprimska",
+          "lat": 45.72174,
+          "lon": 15.90333,
+          "offsetMin": 15,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička-ambulanta",
+          "lat": 45.72416,
+          "lon": 15.90774,
+          "offsetMin": 16,
+          "tramInterchange": []
+        },
+        {
+          "name": "Golobreška",
+          "lat": 45.72809,
+          "lon": 15.91091,
+          "offsetMin": 17,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brez.- pod kestenima",
+          "lat": 45.73324,
+          "lon": 15.91204,
+          "offsetMin": 18,
+          "tramInterchange": []
+        },
+        {
+          "name": "AGROKOKA",
+          "lat": 45.74308,
+          "lon": 15.91688,
+          "offsetMin": 19,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička-ekonomija",
+          "lat": 45.74571,
+          "lon": 15.91913,
+          "offsetMin": 21,
+          "tramInterchange": []
+        },
+        {
+          "name": "Brezovička 80",
+          "lat": 45.75277,
+          "lon": 15.92665,
+          "offsetMin": 22,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bašćanske ploče",
+          "lat": 45.75747,
+          "lon": 15.93264,
+          "offsetMin": 23,
+          "tramInterchange": []
+        },
+        {
+          "name": "Naletilićeva",
+          "lat": 45.76716,
+          "lon": 15.9471,
+          "offsetMin": 27,
+          "tramInterchange": []
+        },
+        {
+          "name": "Savski gaj XII.",
+          "lat": 45.77208,
+          "lon": 15.9516,
+          "offsetMin": 29,
+          "tramInterchange": []
+        },
+        {
+          "name": "Remetinečka os.škola",
+          "lat": 45.7749,
+          "lon": 15.95331,
+          "offsetMin": 30,
+          "tramInterchange": []
+        },
+        {
+          "name": "Savski most",
+          "lat": 45.78585,
+          "lon": 15.95284,
+          "offsetMin": 34,
+          "tramInterchange": [
+            "4",
+            "5",
+            "7",
+            "14",
+            "17"
+          ]
+        }
+      ],
+      "shape": [
+        [
+          15.85706,
+          45.66681
+        ],
+        [
+          15.85979,
+          45.66402
+        ],
+        [
+          15.87112,
+          45.65648
+        ],
+        [
+          15.8714,
+          45.6602
+        ],
+        [
+          15.87116,
+          45.66445
+        ],
+        [
+          15.87311,
+          45.6722
+        ],
+        [
+          15.87424,
+          45.67583
+        ],
+        [
+          15.87619,
+          45.6796
+        ],
+        [
+          15.88014,
+          45.68441
+        ],
+        [
+          15.88523,
+          45.69147
+        ],
+        [
+          15.89162,
+          45.69787
+        ],
+        [
+          15.89367,
+          45.70419
+        ],
+        [
+          15.89392,
+          45.70758
+        ],
+        [
+          15.89707,
+          45.71116
+        ],
+        [
+          15.89939,
+          45.71497
+        ],
+        [
+          15.90333,
+          45.72174
+        ],
+        [
+          15.90774,
+          45.72416
+        ],
+        [
+          15.91091,
+          45.72809
+        ],
+        [
+          15.91204,
+          45.73324
+        ],
+        [
+          15.91688,
+          45.74308
+        ],
+        [
+          15.91913,
+          45.74571
+        ],
+        [
+          15.92665,
+          45.75277
+        ],
+        [
+          15.93264,
+          45.75747
+        ],
+        [
+          15.9471,
+          45.76716
+        ],
+        [
+          15.9516,
+          45.77208
+        ],
+        [
+          15.95331,
+          45.7749
+        ],
+        [
+          15.95284,
+          45.78585
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    15.85706,
+    45.65648,
+    15.95331,
+    45.78621
+  ],
+  "histogram": [
+    2,
+    0,
+    0,
+    0,
+    1,
+    5,
+    5,
+    2,
+    4,
+    2,
+    3,
+    3,
+    3,
+    3,
+    4,
+    3,
+    3,
+    3,
+    3,
+    2,
+    4,
+    2,
+    4,
+    2
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            5,
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            0,
+            25
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            10,
+            50
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            15,
+            50
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            10,
+            30
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            15,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0,
+            50
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            10,
+            45
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            5
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            15,
+            45
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            10,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            10,
+            50
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            10,
+            50
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            5
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            5,
+            45
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            5
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 4,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            35
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            20,
+            55
+          ]
+        }
+      ]
+    ],
+    "nedjelja": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            45
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            25
+          ]
+        }
+      ]
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "4",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "7",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "31",
+        "mode": "tram",
+        "isNight": true,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "108",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "110",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "111",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "112",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "132",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "133",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "159",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "160",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "163",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "164",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "168",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "315",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      }
+    ],
+    "tramCrossings": [
+      {
+        "broj": "5",
+        "stopName": "St.dom Stjepan Radić"
+      },
+      {
+        "broj": "7",
+        "stopName": "St.dom Stjepan Radić"
+      },
+      {
+        "broj": "14",
+        "stopName": "St.dom Stjepan Radić"
+      },
+      {
+        "broj": "17",
+        "stopName": "St.dom Stjepan Radić"
+      }
+    ]
+  },
+  "prevBroj": "160",
+  "nextBroj": "162",
+  "reach": {
+    "areaKm2": 7.7,
+    "stopName": "Hudobička 1",
+    "lat": 45.71073,
+    "lon": 15.89667
+  },
+  "stats": {
+    "dailyDepartures": 63,
+    "firstDeparture": "05:05",
+    "lastDeparture": "24:05",
+    "peakHeadwayMin": 40.0,
+    "avgHeadwayMin": 38.0,
+    "travelTimeMin": 32.7,
+    "distanceKm": 18.1
+  }
+}

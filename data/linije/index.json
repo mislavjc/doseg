@@ -1,0 +1,1858 @@
+{
+  "generatedAt": "2026-06-10T18:16:43.000Z",
+  "serviceDates": {
+    "radniDan": "2026-06-10",
+    "subota": "2026-06-13",
+    "nedjelja": "2026-06-14"
+  },
+  "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Z. kolodvor",
+        "Borongaj"
+      ],
+      "dailyDepartures": 160,
+      "peakHeadwayMin": 12.0,
+      "avgHeadwayMin": 14.5
+    },
+    {
+      "broj": "2",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Savišće"
+      ],
+      "dailyDepartures": 236,
+      "peakHeadwayMin": 8.6,
+      "avgHeadwayMin": 10.0
+    },
+    {
+      "broj": "3",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Savišće"
+      ],
+      "dailyDepartures": 160,
+      "peakHeadwayMin": 14.2,
+      "avgHeadwayMin": 14.7
+    },
+    {
+      "broj": "4",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Dubec"
+      ],
+      "dailyDepartures": 229,
+      "peakHeadwayMin": 9.4,
+      "avgHeadwayMin": 10.4
+    },
+    {
+      "broj": "5",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Prečko",
+        "Park Maksimir"
+      ],
+      "dailyDepartures": 207,
+      "peakHeadwayMin": 10.3,
+      "avgHeadwayMin": 11.5
+    },
+    {
+      "broj": "6",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Sopot"
+      ],
+      "dailyDepartures": 294,
+      "peakHeadwayMin": 6.6,
+      "avgHeadwayMin": 8.0
+    },
+    {
+      "broj": "7",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Dubrava"
+      ],
+      "dailyDepartures": 286,
+      "peakHeadwayMin": 7.0,
+      "avgHeadwayMin": 8.2
+    },
+    {
+      "broj": "8",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Zapruđe"
+      ],
+      "dailyDepartures": 154,
+      "peakHeadwayMin": 14.6,
+      "avgHeadwayMin": 15.1
+    },
+    {
+      "broj": "9",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Borongaj"
+      ],
+      "dailyDepartures": 216,
+      "peakHeadwayMin": 9.4,
+      "avgHeadwayMin": 10.8
+    },
+    {
+      "broj": "11",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Dubec"
+      ],
+      "dailyDepartures": 313,
+      "peakHeadwayMin": 6.6,
+      "avgHeadwayMin": 7.6
+    },
+    {
+      "broj": "12",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Dubrava"
+      ],
+      "dailyDepartures": 276,
+      "peakHeadwayMin": 7.8,
+      "avgHeadwayMin": 8.6
+    },
+    {
+      "broj": "13",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Žitnjak",
+        "Kvat. trg"
+      ],
+      "dailyDepartures": 154,
+      "peakHeadwayMin": 13.1,
+      "avgHeadwayMin": 14.9
+    },
+    {
+      "broj": "14",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Zapruđe"
+      ],
+      "dailyDepartures": 265,
+      "peakHeadwayMin": 7.5,
+      "avgHeadwayMin": 8.8
+    },
+    {
+      "broj": "15",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Grač. dolje"
+      ],
+      "dailyDepartures": 200,
+      "peakHeadwayMin": 11.5,
+      "avgHeadwayMin": 11.5
+    },
+    {
+      "broj": "17",
+      "mode": "tram",
+      "isNight": false,
+      "terminals": [
+        "Prečko",
+        "Borongaj"
+      ],
+      "dailyDepartures": 261,
+      "peakHeadwayMin": 7.8,
+      "avgHeadwayMin": 9.0
+    },
+    {
+      "broj": "31",
+      "mode": "tram",
+      "isNight": true,
+      "terminals": [
+        "Črnomerec",
+        "Savski most"
+      ],
+      "dailyDepartures": 12,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 53.2
+    },
+    {
+      "broj": "32",
+      "mode": "tram",
+      "isNight": true,
+      "terminals": [
+        "Prečko",
+        "Borongaj"
+      ],
+      "dailyDepartures": 14,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 48.2
+    },
+    {
+      "broj": "33",
+      "mode": "tram",
+      "isNight": true,
+      "terminals": [
+        "Mihaljevac",
+        "Savišće"
+      ],
+      "dailyDepartures": 12,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 48.5
+    },
+    {
+      "broj": "34",
+      "mode": "tram",
+      "isNight": true,
+      "terminals": [
+        "Ljubljanica",
+        "Dubec"
+      ],
+      "dailyDepartures": 12,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 51.4
+    },
+    {
+      "broj": "101",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Britan. trg",
+        "Šestine"
+      ],
+      "dailyDepartures": 76,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 30.0
+    },
+    {
+      "broj": "102",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Britan. trg",
+        "Mihaljevac"
+      ],
+      "dailyDepartures": 77,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 29.7
+    },
+    {
+      "broj": "103",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Britan. trg",
+        "Kraljevec"
+      ],
+      "dailyDepartures": 78,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 30.0
+    },
+    {
+      "broj": "104",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Dom Ksaver"
+      ],
+      "dailyDepartures": 46,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 31.4
+    },
+    {
+      "broj": "105",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kaptol",
+        "Britan. trg"
+      ],
+      "dailyDepartures": 61,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 35.2
+    },
+    {
+      "broj": "106",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kaptol",
+        "Krematorij"
+      ],
+      "dailyDepartures": 80,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 19.7
+    },
+    {
+      "broj": "107",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "RT Jankomir",
+        "Žitnjak-okr."
+      ],
+      "dailyDepartures": 98,
+      "peakHeadwayMin": 15.7,
+      "avgHeadwayMin": 22.1
+    },
+    {
+      "broj": "108",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Savski most"
+      ],
+      "dailyDepartures": 10,
+      "peakHeadwayMin": 27.5,
+      "avgHeadwayMin": 143.8
+    },
+    {
+      "broj": "109",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Dugave"
+      ],
+      "dailyDepartures": 207,
+      "peakHeadwayMin": 9.5,
+      "avgHeadwayMin": 10.8
+    },
+    {
+      "broj": "110",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Botinec"
+      ],
+      "dailyDepartures": 204,
+      "peakHeadwayMin": 10.0,
+      "avgHeadwayMin": 12.4
+    },
+    {
+      "broj": "111",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Stup. Obrež"
+      ],
+      "dailyDepartures": 33,
+      "peakHeadwayMin": 80.0,
+      "avgHeadwayMin": 72.0
+    },
+    {
+      "broj": "112",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Lučko"
+      ],
+      "dailyDepartures": 54,
+      "peakHeadwayMin": 57.5,
+      "avgHeadwayMin": 41.2
+    },
+    {
+      "broj": "113",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Jarun"
+      ],
+      "dailyDepartures": 69,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 31.8
+    },
+    {
+      "broj": "114",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Prečko"
+      ],
+      "dailyDepartures": 60,
+      "peakHeadwayMin": 39.5,
+      "avgHeadwayMin": 40.0
+    },
+    {
+      "broj": "115",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Špansko-Jank."
+      ],
+      "dailyDepartures": 196,
+      "peakHeadwayMin": 10.8,
+      "avgHeadwayMin": 12.3
+    },
+    {
+      "broj": "116",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Ljubljanica",
+        "Podsus-most"
+      ],
+      "dailyDepartures": 76,
+      "peakHeadwayMin": 36.7,
+      "avgHeadwayMin": 37.8
+    },
+    {
+      "broj": "117",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Jarun"
+      ],
+      "dailyDepartures": 48,
+      "peakHeadwayMin": 52.5,
+      "avgHeadwayMin": 50.0
+    },
+    {
+      "broj": "118",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Trg Mažur.",
+        "Voltino"
+      ],
+      "dailyDepartures": 238,
+      "peakHeadwayMin": 9.0,
+      "avgHeadwayMin": 10.1
+    },
+    {
+      "broj": "119",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Podsused"
+      ],
+      "dailyDepartures": 68,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 35.9
+    },
+    {
+      "broj": "120",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Prečko"
+      ],
+      "dailyDepartures": 71,
+      "peakHeadwayMin": 37.5,
+      "avgHeadwayMin": 31.4
+    },
+    {
+      "broj": "121",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Gajnice"
+      ],
+      "dailyDepartures": 138,
+      "peakHeadwayMin": 15.7,
+      "avgHeadwayMin": 17.4
+    },
+    {
+      "broj": "122",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Susedgrad"
+      ],
+      "dailyDepartures": 0,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": null
+    },
+    {
+      "broj": "123",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Pods. Dolje"
+      ],
+      "dailyDepartures": 78,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 30.0
+    },
+    {
+      "broj": "124",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "G.Stenjevec"
+      ],
+      "dailyDepartures": 74,
+      "peakHeadwayMin": 27.5,
+      "avgHeadwayMin": 31.0
+    },
+    {
+      "broj": "125",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "G. Vrapče"
+      ],
+      "dailyDepartures": 110,
+      "peakHeadwayMin": 22.0,
+      "avgHeadwayMin": 21.9
+    },
+    {
+      "broj": "126",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Krvarić"
+      ],
+      "dailyDepartures": 118,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 20.0
+    },
+    {
+      "broj": "127",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Mikulići"
+      ],
+      "dailyDepartures": 138,
+      "peakHeadwayMin": 11.9,
+      "avgHeadwayMin": 17.1
+    },
+    {
+      "broj": "128",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Lukšić"
+      ],
+      "dailyDepartures": 168,
+      "peakHeadwayMin": 10.0,
+      "avgHeadwayMin": 14.0
+    },
+    {
+      "broj": "129",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kuniščak",
+        "Šestinski dol"
+      ],
+      "dailyDepartures": 68,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 35.2
+    },
+    {
+      "broj": "130",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Borčec"
+      ],
+      "dailyDepartures": 70,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 32.3
+    },
+    {
+      "broj": "131",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Bizek"
+      ],
+      "dailyDepartures": 66,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 35.3
+    },
+    {
+      "broj": "132",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "G.Breg-Brezo."
+      ],
+      "dailyDepartures": 78,
+      "peakHeadwayMin": 37.5,
+      "avgHeadwayMin": 30.3
+    },
+    {
+      "broj": "133",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Čehi"
+      ],
+      "dailyDepartures": 68,
+      "peakHeadwayMin": 24.0,
+      "avgHeadwayMin": 27.6
+    },
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Prečko"
+      ],
+      "dailyDepartures": 106,
+      "peakHeadwayMin": 21.0,
+      "avgHeadwayMin": 21.3
+    },
+    {
+      "broj": "135",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Graberje"
+      ],
+      "dailyDepartures": 68,
+      "peakHeadwayMin": 47.5,
+      "avgHeadwayMin": 33.9
+    },
+    {
+      "broj": "136",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Špansko"
+      ],
+      "dailyDepartures": 140,
+      "peakHeadwayMin": 16.7,
+      "avgHeadwayMin": 16.4
+    },
+    {
+      "broj": "137",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Per.-Borčec"
+      ],
+      "dailyDepartures": 43,
+      "peakHeadwayMin": 47.5,
+      "avgHeadwayMin": 53.8
+    },
+    {
+      "broj": "138",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Britanski trg",
+        "Britan. trg"
+      ],
+      "dailyDepartures": 33,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 30.0
+    },
+    {
+      "broj": "139",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Reljkovićeva",
+        "Reljkovićeva"
+      ],
+      "dailyDepartures": 28,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 38.7
+    },
+    {
+      "broj": "140",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Tomislavov dom"
+      ],
+      "dailyDepartures": 16,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 132.9
+    },
+    {
+      "broj": "141",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Reljkovićeva",
+        "Reljkovićeva"
+      ],
+      "dailyDepartures": 26,
+      "peakHeadwayMin": 33.3,
+      "avgHeadwayMin": 39.8
+    },
+    {
+      "broj": "142",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Vrapčanska aleja",
+        "Vrapčanska aleja"
+      ],
+      "dailyDepartures": 37,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 30.0
+    },
+    {
+      "broj": "143",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Vrapčanska aleja",
+        "Orešje"
+      ],
+      "dailyDepartures": 66,
+      "peakHeadwayMin": 26.3,
+      "avgHeadwayMin": 32.8
+    },
+    {
+      "broj": "144",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Dom Sv.Josipa"
+      ],
+      "dailyDepartures": 3,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": null
+    },
+    {
+      "broj": "146",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Reljkovićeva",
+        "Jankomir"
+      ],
+      "dailyDepartures": 102,
+      "peakHeadwayMin": 23.4,
+      "avgHeadwayMin": 22.2
+    },
+    {
+      "broj": "148",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Reljkovićeva",
+        "Reljkovićeva"
+      ],
+      "dailyDepartures": 22,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 45.0
+    },
+    {
+      "broj": "149",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kuniščak",
+        "Vrhovec"
+      ],
+      "dailyDepartures": 62,
+      "peakHeadwayMin": 36.7,
+      "avgHeadwayMin": 40.0
+    },
+    {
+      "broj": "150",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "G. Tuškanac",
+        "T.b.J.Jelačića"
+      ],
+      "dailyDepartures": 88,
+      "peakHeadwayMin": 15.0,
+      "avgHeadwayMin": 20.9
+    },
+    {
+      "broj": "151",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Završje",
+        "Trg S. Severa"
+      ],
+      "dailyDepartures": 27,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 55.4
+    },
+    {
+      "broj": "159",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Strmec"
+      ],
+      "dailyDepartures": 53,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 45.2
+    },
+    {
+      "broj": "160",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Havidić Selo"
+      ],
+      "dailyDepartures": 46,
+      "peakHeadwayMin": 70.0,
+      "avgHeadwayMin": 50.5
+    },
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Štrpet"
+      ],
+      "dailyDepartures": 63,
+      "peakHeadwayMin": 40.0,
+      "avgHeadwayMin": 38.0
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Ašpergeri"
+      ],
+      "dailyDepartures": 37,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 62.1
+    },
+    {
+      "broj": "163",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "G. Trpuci"
+      ],
+      "dailyDepartures": 28,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 79.2
+    },
+    {
+      "broj": "164",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Horvati"
+      ],
+      "dailyDepartures": 43,
+      "peakHeadwayMin": 100.0,
+      "avgHeadwayMin": 56.3
+    },
+    {
+      "broj": "166",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "D.Dragonožec"
+      ],
+      "dailyDepartures": 19,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 130.0
+    },
+    {
+      "broj": "168",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Prečko"
+      ],
+      "dailyDepartures": 54,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 44.0
+    },
+    {
+      "broj": "172",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "Zaprešić"
+      ],
+      "dailyDepartures": 229,
+      "peakHeadwayMin": 7.9,
+      "avgHeadwayMin": 12.6
+    },
+    {
+      "broj": "174",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Zaprešić",
+        "Hru. Kupljenski"
+      ],
+      "dailyDepartures": 33,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 68.3
+    },
+    {
+      "broj": "176",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "G. Bistra"
+      ],
+      "dailyDepartures": 88,
+      "peakHeadwayMin": 22.0,
+      "avgHeadwayMin": 26.5
+    },
+    {
+      "broj": "177",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Črnomerec",
+        "G. Bistra"
+      ],
+      "dailyDepartures": 15,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 171.7
+    },
+    {
+      "broj": "182",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Zaprešić",
+        "Šibice"
+      ],
+      "dailyDepartures": 51,
+      "peakHeadwayMin": 35.0,
+      "avgHeadwayMin": 44.0
+    },
+    {
+      "broj": "201",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kaptol",
+        "Kvat. trg"
+      ],
+      "dailyDepartures": 84,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 27.2
+    },
+    {
+      "broj": "202",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Kozjak"
+      ],
+      "dailyDepartures": 86,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 27.0
+    },
+    {
+      "broj": "203",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Svetice",
+        "Kaptol"
+      ],
+      "dailyDepartures": 95,
+      "peakHeadwayMin": 26.3,
+      "avgHeadwayMin": 25.3
+    },
+    {
+      "broj": "204",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvaternikov trg",
+        "Kvat. trg"
+      ],
+      "dailyDepartures": 25,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 45.0
+    },
+    {
+      "broj": "205",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Bidrovec"
+      ],
+      "dailyDepartures": 88,
+      "peakHeadwayMin": 28.3,
+      "avgHeadwayMin": 28.0
+    },
+    {
+      "broj": "206",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Miroševec"
+      ],
+      "dailyDepartures": 116,
+      "peakHeadwayMin": 17.5,
+      "avgHeadwayMin": 20.0
+    },
+    {
+      "broj": "207",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvaternikov trg",
+        "Kvat. trg"
+      ],
+      "dailyDepartures": 24,
+      "peakHeadwayMin": 40.0,
+      "avgHeadwayMin": 42.0
+    },
+    {
+      "broj": "208",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Vidovec"
+      ],
+      "dailyDepartures": 84,
+      "peakHeadwayMin": 21.3,
+      "avgHeadwayMin": 27.7
+    },
+    {
+      "broj": "209",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Čučerje"
+      ],
+      "dailyDepartures": 130,
+      "peakHeadwayMin": 16.4,
+      "avgHeadwayMin": 18.6
+    },
+    {
+      "broj": "210",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Novi Retkovec"
+      ],
+      "dailyDepartures": 108,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 22.1
+    },
+    {
+      "broj": "211",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Dubec"
+      ],
+      "dailyDepartures": 28,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 33.3
+    },
+    {
+      "broj": "212",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Sesvete"
+      ],
+      "dailyDepartures": 122,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 20.4
+    },
+    {
+      "broj": "213",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Jalševec"
+      ],
+      "dailyDepartures": 76,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 31.2
+    },
+    {
+      "broj": "214",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Koledinečka",
+        "Kozari Bok"
+      ],
+      "dailyDepartures": 36,
+      "peakHeadwayMin": 65.0,
+      "avgHeadwayMin": 62.9
+    },
+    {
+      "broj": "215",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Trnava"
+      ],
+      "dailyDepartures": 197,
+      "peakHeadwayMin": 10.0,
+      "avgHeadwayMin": 11.9
+    },
+    {
+      "broj": "216",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Ivanja Reka"
+      ],
+      "dailyDepartures": 31,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 78.2
+    },
+    {
+      "broj": "217",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Petruš. nas."
+      ],
+      "dailyDepartures": 112,
+      "peakHeadwayMin": 15.0,
+      "avgHeadwayMin": 16.5
+    },
+    {
+      "broj": "218",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Borovje"
+      ],
+      "dailyDepartures": 78,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 28.9
+    },
+    {
+      "broj": "219",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Sloboština"
+      ],
+      "dailyDepartures": 52,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 45.2
+    },
+    {
+      "broj": "220",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Dugave"
+      ],
+      "dailyDepartures": 168,
+      "peakHeadwayMin": 14.1,
+      "avgHeadwayMin": 15.3
+    },
+    {
+      "broj": "221",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Travno"
+      ],
+      "dailyDepartures": 178,
+      "peakHeadwayMin": 11.1,
+      "avgHeadwayMin": 13.2
+    },
+    {
+      "broj": "222",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Jaruščica",
+        "Žitnjak-okr."
+      ],
+      "dailyDepartures": 34,
+      "peakHeadwayMin": 33.3,
+      "avgHeadwayMin": 56.8
+    },
+    {
+      "broj": "223",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Dubec"
+      ],
+      "dailyDepartures": 106,
+      "peakHeadwayMin": 22.6,
+      "avgHeadwayMin": 22.3
+    },
+    {
+      "broj": "224",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Novoselec"
+      ],
+      "dailyDepartures": 56,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 43.1
+    },
+    {
+      "broj": "225",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "Kozari Bok"
+      ],
+      "dailyDepartures": 37,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 55.6
+    },
+    {
+      "broj": "226",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kaptol",
+        "Svetice"
+      ],
+      "dailyDepartures": 69,
+      "peakHeadwayMin": 40.0,
+      "avgHeadwayMin": 34.4
+    },
+    {
+      "broj": "227",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Svetice",
+        "Grač. dolje"
+      ],
+      "dailyDepartures": 139,
+      "peakHeadwayMin": 13.9,
+      "avgHeadwayMin": 17.1
+    },
+    {
+      "broj": "228",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Borongaj",
+        "Borongaj"
+      ],
+      "dailyDepartures": 86,
+      "peakHeadwayMin": 7.5,
+      "avgHeadwayMin": 11.0
+    },
+    {
+      "broj": "229",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Mala Mlaka"
+      ],
+      "dailyDepartures": 28,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 83.8
+    },
+    {
+      "broj": "230",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Gran. Novaki"
+      ],
+      "dailyDepartures": 92,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 26.9
+    },
+    {
+      "broj": "231",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Borongaj",
+        "Dubec"
+      ],
+      "dailyDepartures": 47,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 50.9
+    },
+    {
+      "broj": "232",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Čret-Melinišće"
+      ],
+      "dailyDepartures": 68,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 34.1
+    },
+    {
+      "broj": "233",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Mihaljevac",
+        "Markuševec"
+      ],
+      "dailyDepartures": 110,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 26.0
+    },
+    {
+      "broj": "234",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Lanište"
+      ],
+      "dailyDepartures": 98,
+      "peakHeadwayMin": 22.5,
+      "avgHeadwayMin": 23.9
+    },
+    {
+      "broj": "235",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubrava",
+        "Kozari Bok"
+      ],
+      "dailyDepartures": 36,
+      "peakHeadwayMin": 65.0,
+      "avgHeadwayMin": 63.2
+    },
+    {
+      "broj": "236",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kampus",
+        "Čavićeva"
+      ],
+      "dailyDepartures": 82,
+      "peakHeadwayMin": 17.5,
+      "avgHeadwayMin": 19.5
+    },
+    {
+      "broj": "237",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Kozari Putevi"
+      ],
+      "dailyDepartures": 49,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 49.3
+    },
+    {
+      "broj": "238",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kaptol",
+        "Kozjak"
+      ],
+      "dailyDepartures": 34,
+      "peakHeadwayMin": 52.5,
+      "avgHeadwayMin": 52.2
+    },
+    {
+      "broj": "239",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Čučerje",
+        "Mark.Trnava"
+      ],
+      "dailyDepartures": 20,
+      "peakHeadwayMin": 55.0,
+      "avgHeadwayMin": 62.2
+    },
+    {
+      "broj": "241",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Veliko Polje"
+      ],
+      "dailyDepartures": 36,
+      "peakHeadwayMin": 70.0,
+      "avgHeadwayMin": 67.9
+    },
+    {
+      "broj": "242",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Podbrežje"
+      ],
+      "dailyDepartures": 51,
+      "peakHeadwayMin": 55.0,
+      "avgHeadwayMin": 45.4
+    },
+    {
+      "broj": "243",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Kajzerica"
+      ],
+      "dailyDepartures": 52,
+      "peakHeadwayMin": 42.5,
+      "avgHeadwayMin": 45.0
+    },
+    {
+      "broj": "261",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Goranec"
+      ],
+      "dailyDepartures": 46,
+      "peakHeadwayMin": 60.0,
+      "avgHeadwayMin": 51.4
+    },
+    {
+      "broj": "262",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Planina Donja"
+      ],
+      "dailyDepartures": 51,
+      "peakHeadwayMin": 42.5,
+      "avgHeadwayMin": 45.0
+    },
+    {
+      "broj": "263",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Planina Gornja"
+      ],
+      "dailyDepartures": 73,
+      "peakHeadwayMin": 25.0,
+      "avgHeadwayMin": 26.6
+    },
+    {
+      "broj": "264",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Jesenovec"
+      ],
+      "dailyDepartures": 33,
+      "peakHeadwayMin": 85.0,
+      "avgHeadwayMin": 70.3
+    },
+    {
+      "broj": "267",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Markovo polje"
+      ],
+      "dailyDepartures": 26,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 55.0
+    },
+    {
+      "broj": "268",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "V. Gorica"
+      ],
+      "dailyDepartures": 200,
+      "peakHeadwayMin": 10.7,
+      "avgHeadwayMin": 14.6
+    },
+    {
+      "broj": "269",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Borongaj",
+        "Ses.Kraljev."
+      ],
+      "dailyDepartures": 140,
+      "peakHeadwayMin": 13.1,
+      "avgHeadwayMin": 16.7
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Blaguša"
+      ],
+      "dailyDepartures": 53,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 45.0
+    },
+    {
+      "broj": "271",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Glavnica D."
+      ],
+      "dailyDepartures": 40,
+      "peakHeadwayMin": 60.0,
+      "avgHeadwayMin": 59.5
+    },
+    {
+      "broj": "272",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Moravče"
+      ],
+      "dailyDepartures": 38,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 63.5
+    },
+    {
+      "broj": "273",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Lužan"
+      ],
+      "dailyDepartures": 43,
+      "peakHeadwayMin": 60.0,
+      "avgHeadwayMin": 54.8
+    },
+    {
+      "broj": "274",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Laktec"
+      ],
+      "dailyDepartures": 47,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 51.1
+    },
+    {
+      "broj": "275",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "Sopnica-škola"
+      ],
+      "dailyDepartures": 17,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 86.4
+    },
+    {
+      "broj": "276",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "Dumovec"
+      ],
+      "dailyDepartures": 52,
+      "peakHeadwayMin": 80.0,
+      "avgHeadwayMin": 44.8
+    },
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "Ses.Selnica"
+      ],
+      "dailyDepartures": 23,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 105.0
+    },
+    {
+      "broj": "278",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "K. Novaki"
+      ],
+      "dailyDepartures": 45,
+      "peakHeadwayMin": 55.0,
+      "avgHeadwayMin": 46.0
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Novi Jelkovec"
+      ],
+      "dailyDepartures": 112,
+      "peakHeadwayMin": 20.0,
+      "avgHeadwayMin": 21.3
+    },
+    {
+      "broj": "280",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Šimunčevec"
+      ],
+      "dailyDepartures": 30,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 79.3
+    },
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Novi Jelkovec"
+      ],
+      "dailyDepartures": 78,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 29.9
+    },
+    {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "Novi Jelkovec"
+      ],
+      "dailyDepartures": 61,
+      "peakHeadwayMin": 26.7,
+      "avgHeadwayMin": 38.4
+    },
+    {
+      "broj": "283",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Dubec",
+        "Sesvete"
+      ],
+      "dailyDepartures": 30,
+      "peakHeadwayMin": 60.0,
+      "avgHeadwayMin": 64.6
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Sesvete",
+        "Ivanja Reka"
+      ],
+      "dailyDepartures": 26,
+      "peakHeadwayMin": 45.0,
+      "avgHeadwayMin": 74.7
+    },
+    {
+      "broj": "290",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Kvat. trg",
+        "V. Gorica"
+      ],
+      "dailyDepartures": 69,
+      "peakHeadwayMin": 35.0,
+      "avgHeadwayMin": 34.7
+    },
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Zapruđe",
+        "Šišićeva"
+      ],
+      "dailyDepartures": 30,
+      "peakHeadwayMin": 26.7,
+      "avgHeadwayMin": 37.6
+    },
+    {
+      "broj": "307",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Zapruđe",
+        "S.Bukevski"
+      ],
+      "dailyDepartures": 22,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 118.9
+    },
+    {
+      "broj": "308",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Zapruđe",
+        "Sasi"
+      ],
+      "dailyDepartures": 23,
+      "peakHeadwayMin": 65.0,
+      "avgHeadwayMin": 101.5
+    },
+    {
+      "broj": "310",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Petrovina"
+      ],
+      "dailyDepartures": 38,
+      "peakHeadwayMin": 30.0,
+      "avgHeadwayMin": 65.3
+    },
+    {
+      "broj": "311",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "Cerov. vrh"
+      ],
+      "dailyDepartures": 13,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 182.0
+    },
+    {
+      "broj": "313",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "V. Gorica",
+        "Vukomerić"
+      ],
+      "dailyDepartures": 5,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": 90.0
+    },
+    {
+      "broj": "315",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Savski most",
+        "Lukavec"
+      ],
+      "dailyDepartures": 31,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 69.0
+    },
+    {
+      "broj": "330",
+      "mode": "bus",
+      "isNight": false,
+      "terminals": [
+        "Gl.kolodvor",
+        "V. Gorica"
+      ],
+      "dailyDepartures": 56,
+      "peakHeadwayMin": 18.8,
+      "avgHeadwayMin": 25.7
+    }
+  ]
+}

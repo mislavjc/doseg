@@ -1,0 +1,818 @@
+{
+  "broj": "108",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Gl.kolodvor",
+    "Savski most"
+  ],
+  "via": [
+    "Lisinski",
+    "N.S.knjižnica"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "Savski most",
+      "stops": [
+        {
+          "name": "Glavni kolodvor",
+          "lat": 45.80328,
+          "lon": 15.9771,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Lisinski",
+          "lat": 45.79933,
+          "lon": 15.97857,
+          "offsetMin": 2,
+          "tramInterchange": [
+            "3",
+            "5",
+            "13"
+          ]
+        },
+        {
+          "name": "N.S.knjižnica",
+          "lat": 45.79501,
+          "lon": 15.97819,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kockica",
+          "lat": 45.79152,
+          "lon": 15.96826,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Boćarski dom",
+          "lat": 45.7905,
+          "lon": 15.96132,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Veslačka",
+          "lat": 45.7885,
+          "lon": 15.95477,
+          "offsetMin": 9,
+          "tramInterchange": [
+            "4",
+            "5",
+            "14",
+            "17"
+          ]
+        },
+        {
+          "name": "Savski most",
+          "lat": 45.78585,
+          "lon": 15.95284,
+          "offsetMin": 11,
+          "tramInterchange": [
+            "4",
+            "5",
+            "7",
+            "14",
+            "17"
+          ]
+        }
+      ],
+      "shape": [
+        [
+          15.97709,
+          45.80328
+        ],
+        [
+          15.97719,
+          45.80329
+        ],
+        [
+          15.97725,
+          45.8019
+        ],
+        [
+          15.97779,
+          45.80188
+        ],
+        [
+          15.97851,
+          45.8016
+        ],
+        [
+          15.97859,
+          45.79988
+        ],
+        [
+          15.97856,
+          45.79933
+        ],
+        [
+          15.97856,
+          45.79933
+        ],
+        [
+          15.97866,
+          45.79869
+        ],
+        [
+          15.97888,
+          45.79518
+        ],
+        [
+          15.97866,
+          45.79502
+        ],
+        [
+          15.97834,
+          45.79502
+        ],
+        [
+          15.97819,
+          45.79501
+        ],
+        [
+          15.97819,
+          45.79501
+        ],
+        [
+          15.97781,
+          45.7949
+        ],
+        [
+          15.97506,
+          45.7947
+        ],
+        [
+          15.96903,
+          45.79432
+        ],
+        [
+          15.96913,
+          45.79227
+        ],
+        [
+          15.96923,
+          45.79158
+        ],
+        [
+          15.96826,
+          45.79152
+        ],
+        [
+          15.96825,
+          45.79152
+        ],
+        [
+          15.9665,
+          45.79143
+        ],
+        [
+          15.96565,
+          45.79125
+        ],
+        [
+          15.96429,
+          45.79077
+        ],
+        [
+          15.96331,
+          45.79054
+        ],
+        [
+          15.96244,
+          45.79049
+        ],
+        [
+          15.96131,
+          45.79049
+        ],
+        [
+          15.9613,
+          45.79049
+        ],
+        [
+          15.96041,
+          45.79045
+        ],
+        [
+          15.95805,
+          45.79072
+        ],
+        [
+          15.95646,
+          45.79101
+        ],
+        [
+          15.95477,
+          45.78849
+        ],
+        [
+          15.95476,
+          45.78849
+        ],
+        [
+          15.95387,
+          45.78717
+        ],
+        [
+          15.95304,
+          45.78604
+        ],
+        [
+          15.95283,
+          45.78585
+        ]
+      ]
+    },
+    {
+      "headsign": "Gl.kolodvor",
+      "stops": [
+        {
+          "name": "Savski most",
+          "lat": 45.78532,
+          "lon": 15.95333,
+          "offsetMin": 0,
+          "tramInterchange": [
+            "4",
+            "7"
+          ]
+        },
+        {
+          "name": "Veslačka",
+          "lat": 45.78889,
+          "lon": 15.9551,
+          "offsetMin": 1,
+          "tramInterchange": [
+            "4",
+            "5",
+            "14",
+            "17"
+          ]
+        },
+        {
+          "name": "Boćarski dom",
+          "lat": 45.7904,
+          "lon": 15.96301,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kockica",
+          "lat": 45.7914,
+          "lon": 15.96866,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Marohnićeva",
+          "lat": 45.79422,
+          "lon": 15.96987,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "N.S.knjižnica",
+          "lat": 45.79554,
+          "lon": 15.97975,
+          "offsetMin": 7,
+          "tramInterchange": []
+        },
+        {
+          "name": "Lisinski",
+          "lat": 45.79941,
+          "lon": 15.97956,
+          "offsetMin": 9,
+          "tramInterchange": [
+            "3",
+            "5",
+            "13"
+          ]
+        },
+        {
+          "name": "Glavni kolodvor",
+          "lat": 45.80375,
+          "lon": 15.97779,
+          "offsetMin": 10,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          15.95331,
+          45.78532
+        ],
+        [
+          15.9533,
+          45.78544
+        ],
+        [
+          15.95293,
+          45.78551
+        ],
+        [
+          15.95281,
+          45.78557
+        ],
+        [
+          15.95509,
+          45.78888
+        ],
+        [
+          15.9551,
+          45.78888
+        ],
+        [
+          15.95643,
+          45.79089
+        ],
+        [
+          15.95852,
+          45.79057
+        ],
+        [
+          15.9598,
+          45.7904
+        ],
+        [
+          15.96093,
+          45.79035
+        ],
+        [
+          15.963,
+          45.79039
+        ],
+        [
+          15.96376,
+          45.79052
+        ],
+        [
+          15.9645,
+          45.79071
+        ],
+        [
+          15.96565,
+          45.79113
+        ],
+        [
+          15.96647,
+          45.79131
+        ],
+        [
+          15.96749,
+          45.79139
+        ],
+        [
+          15.96864,
+          45.79139
+        ],
+        [
+          15.96865,
+          45.79139
+        ],
+        [
+          15.96925,
+          45.7915
+        ],
+        [
+          15.96903,
+          45.79421
+        ],
+        [
+          15.96986,
+          45.79422
+        ],
+        [
+          15.96986,
+          45.79422
+        ],
+        [
+          15.97458,
+          45.79449
+        ],
+        [
+          15.97593,
+          45.79449
+        ],
+        [
+          15.97661,
+          45.79451
+        ],
+        [
+          15.97969,
+          45.79462
+        ],
+        [
+          15.97968,
+          45.79549
+        ],
+        [
+          15.97974,
+          45.79553
+        ],
+        [
+          15.97975,
+          45.79554
+        ],
+        [
+          15.97964,
+          45.79571
+        ],
+        [
+          15.97957,
+          45.79704
+        ],
+        [
+          15.97945,
+          45.79928
+        ],
+        [
+          15.97955,
+          45.7994
+        ],
+        [
+          15.97956,
+          45.7994
+        ],
+        [
+          15.97946,
+          45.79953
+        ],
+        [
+          15.97941,
+          45.80027
+        ],
+        [
+          15.97936,
+          45.80096
+        ],
+        [
+          15.97935,
+          45.80156
+        ],
+        [
+          15.97926,
+          45.80163
+        ],
+        [
+          15.97914,
+          45.80167
+        ],
+        [
+          15.97867,
+          45.80165
+        ],
+        [
+          15.97852,
+          45.80161
+        ],
+        [
+          15.97822,
+          45.80173
+        ],
+        [
+          15.97825,
+          45.80281
+        ],
+        [
+          15.97832,
+          45.80358
+        ],
+        [
+          15.97827,
+          45.8036
+        ],
+        [
+          15.97816,
+          45.80363
+        ],
+        [
+          15.97796,
+          45.80362
+        ],
+        [
+          15.97778,
+          45.80374
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    15.95281,
+    45.78532,
+    15.97975,
+    45.80375
+  ],
+  "histogram": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    5,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 7,
+          "minutes": [
+            15,
+            30
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            20,
+            50
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 7,
+          "minutes": [
+            10,
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            30
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [],
+      []
+    ],
+    "nedjelja": [
+      [],
+      []
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "4",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "7",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "31",
+        "mode": "tram",
+        "isNight": true,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "110",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "111",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "112",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "132",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "133",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "159",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "160",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "161",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "163",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "164",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "166",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "168",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "218",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "219",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "220",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "221",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "229",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "234",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "241",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "242",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "243",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "268",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "281",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "310",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "311",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
+        "broj": "315",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Savski most"
+      },
+      {
+        "broj": "330",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      }
+    ],
+    "tramCrossings": [
+      {
+        "broj": "3",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "4",
+        "stopName": "Veslačka"
+      },
+      {
+        "broj": "5",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "13",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "14",
+        "stopName": "Veslačka"
+      },
+      {
+        "broj": "17",
+        "stopName": "Veslačka"
+      }
+    ]
+  },
+  "prevBroj": "107",
+  "nextBroj": "109",
+  "reach": {
+    "areaKm2": 15.7,
+    "stopName": "Kockica",
+    "lat": 45.79152,
+    "lon": 15.96826
+  },
+  "stats": {
+    "dailyDepartures": 10,
+    "firstDeparture": "07:15",
+    "lastDeparture": "16:50",
+    "peakHeadwayMin": 27.5,
+    "avgHeadwayMin": 143.8,
+    "travelTimeMin": 10.5,
+    "distanceKm": 3.7
+  }
+}

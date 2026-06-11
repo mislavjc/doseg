@@ -1,0 +1,657 @@
+{
+  "broj": "278",
+  "mode": "bus",
+  "isNight": false,
+  "terminals": [
+    "Sesvete",
+    "K. Novaki"
+  ],
+  "via": [
+    "Bistrička-Zagrebačka"
+  ],
+  "oneWay": false,
+  "directions": [
+    {
+      "headsign": "K. Novaki",
+      "stops": [
+        {
+          "name": "Sesvete-ukrcaj",
+          "lat": 45.82609,
+          "lon": 16.10718,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bistrička-Zagrebačka",
+          "lat": 45.8275,
+          "lon": 16.10777,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vladimira Nazora",
+          "lat": 45.82462,
+          "lon": 16.1179,
+          "offsetMin": 2,
+          "tramInterchange": []
+        },
+        {
+          "name": "Blage Zadre",
+          "lat": 45.82382,
+          "lon": 16.12644,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Glavna",
+          "lat": 45.8247,
+          "lon": 16.13159,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Letnička",
+          "lat": 45.83029,
+          "lon": 16.13252,
+          "offsetMin": 5,
+          "tramInterchange": []
+        },
+        {
+          "name": "Letnička - škola",
+          "lat": 45.8306,
+          "lon": 16.13598,
+          "offsetMin": 6,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          16.10715,
+          45.82609
+        ],
+        [
+          16.10634,
+          45.82627
+        ],
+        [
+          16.10631,
+          45.82641
+        ],
+        [
+          16.10656,
+          45.82721
+        ],
+        [
+          16.10665,
+          45.82748
+        ],
+        [
+          16.10658,
+          45.82761
+        ],
+        [
+          16.10776,
+          45.8275
+        ],
+        [
+          16.10811,
+          45.82754
+        ],
+        [
+          16.10918,
+          45.82743
+        ],
+        [
+          16.11114,
+          45.82704
+        ],
+        [
+          16.11252,
+          45.82673
+        ],
+        [
+          16.11362,
+          45.82633
+        ],
+        [
+          16.1143,
+          45.82604
+        ],
+        [
+          16.1153,
+          45.82545
+        ],
+        [
+          16.11632,
+          45.82503
+        ],
+        [
+          16.11788,
+          45.82462
+        ],
+        [
+          16.11789,
+          45.82462
+        ],
+        [
+          16.1197,
+          45.82438
+        ],
+        [
+          16.12148,
+          45.82413
+        ],
+        [
+          16.12292,
+          45.82398
+        ],
+        [
+          16.12643,
+          45.82382
+        ],
+        [
+          16.12643,
+          45.82382
+        ],
+        [
+          16.12956,
+          45.82374
+        ],
+        [
+          16.13085,
+          45.82373
+        ],
+        [
+          16.13129,
+          45.82436
+        ],
+        [
+          16.13158,
+          45.82469
+        ],
+        [
+          16.13158,
+          45.8247
+        ],
+        [
+          16.13204,
+          45.82525
+        ],
+        [
+          16.13233,
+          45.82619
+        ],
+        [
+          16.13243,
+          45.82641
+        ],
+        [
+          16.13237,
+          45.82754
+        ],
+        [
+          16.13203,
+          45.82865
+        ],
+        [
+          16.13251,
+          45.83029
+        ],
+        [
+          16.13251,
+          45.83029
+        ],
+        [
+          16.13259,
+          45.83056
+        ],
+        [
+          16.13481,
+          45.83069
+        ],
+        [
+          16.13557,
+          45.83068
+        ],
+        [
+          16.13597,
+          45.8306
+        ]
+      ]
+    },
+    {
+      "headsign": "Sesvete",
+      "stops": [
+        {
+          "name": "Letnička - škola",
+          "lat": 45.8306,
+          "lon": 16.13598,
+          "offsetMin": 0,
+          "tramInterchange": []
+        },
+        {
+          "name": "Leskovec - Primorska",
+          "lat": 45.82934,
+          "lon": 16.14214,
+          "offsetMin": 1,
+          "tramInterchange": []
+        },
+        {
+          "name": "Popovečka 51",
+          "lat": 45.83254,
+          "lon": 16.14609,
+          "offsetMin": 3,
+          "tramInterchange": []
+        },
+        {
+          "name": "Popovečka -Leskovec",
+          "lat": 45.82857,
+          "lon": 16.14492,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Kraljevečki Novaki",
+          "lat": 45.82571,
+          "lon": 16.14341,
+          "offsetMin": 4,
+          "tramInterchange": []
+        },
+        {
+          "name": "Sesvetska Sela",
+          "lat": 45.82381,
+          "lon": 16.12984,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Blage Zadre",
+          "lat": 45.82398,
+          "lon": 16.12472,
+          "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Vladimira Nazora",
+          "lat": 45.82508,
+          "lon": 16.11644,
+          "offsetMin": 10,
+          "tramInterchange": []
+        },
+        {
+          "name": "Ninska",
+          "lat": 45.82666,
+          "lon": 16.11075,
+          "offsetMin": 11,
+          "tramInterchange": []
+        },
+        {
+          "name": "Sesvete-izlaz",
+          "lat": 45.82544,
+          "lon": 16.10951,
+          "offsetMin": 12,
+          "tramInterchange": []
+        }
+      ],
+      "shape": [
+        [
+          16.13597,
+          45.83059
+        ],
+        [
+          16.14214,
+          45.82933
+        ],
+        [
+          16.14608,
+          45.83254
+        ],
+        [
+          16.14491,
+          45.82856
+        ],
+        [
+          16.14341,
+          45.8257
+        ],
+        [
+          16.12984,
+          45.82381
+        ],
+        [
+          16.12471,
+          45.82398
+        ],
+        [
+          16.11644,
+          45.82507
+        ],
+        [
+          16.11075,
+          45.82666
+        ],
+        [
+          16.10951,
+          45.82544
+        ]
+      ]
+    }
+  ],
+  "bbox": [
+    16.10631,
+    45.82373,
+    16.14609,
+    45.83254
+  ],
+  "histogram": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    3,
+    4,
+    3,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    4,
+    4,
+    0,
+    0,
+    0
+  ],
+  "timetable": {
+    "radniDan": [
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0,
+            45
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            5,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            5,
+            35
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            5,
+            40
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            0,
+            35,
+            50
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            25,
+            40
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            10,
+            35
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            5,
+            40
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            10,
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            15,
+            50
+          ]
+        }
+      ]
+    ],
+    "subota": [
+      [],
+      []
+    ],
+    "nedjelja": [
+      [],
+      []
+    ]
+  },
+  "related": {
+    "sharedTerminal": [
+      {
+        "broj": "212",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "225",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "275",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "277",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "283",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      }
+    ],
+    "tramCrossings": []
+  },
+  "prevBroj": "277",
+  "nextBroj": "279",
+  "reach": {
+    "areaKm2": 13.8,
+    "stopName": "Blage Zadre",
+    "lat": 45.82382,
+    "lon": 16.12644
+  },
+  "stats": {
+    "dailyDepartures": 45,
+    "firstDeparture": "05:20",
+    "lastDeparture": "20:40",
+    "peakHeadwayMin": 55.0,
+    "avgHeadwayMin": 46.0,
+    "travelTimeMin": 5.8,
+    "distanceKm": 3.2
+  }
+}

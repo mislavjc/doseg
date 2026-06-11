@@ -1,5 +1,7 @@
 "use client"
 
+import { ErrorMessage, ErrorShell, RouteBreak } from "@/components/error-page"
+
 export default function Error({
   reset,
 }: {
@@ -7,21 +9,17 @@ export default function Error({
   reset: () => void
 }) {
   return (
-    <div className="flex h-svh w-full items-center justify-center bg-[#14141c]">
-      <div className="panel text-center">
-        <div className="text-[15px] font-semibold text-slate-100">
-          Something went wrong
-        </div>
-        <div className="mt-2 text-[12px] text-slate-400">
-          The map failed to load. Please try again.
-        </div>
-        <button
-          onClick={reset}
-          className="mt-4 rounded-lg bg-white/10 px-4 py-2 text-[13px] font-medium text-slate-200 transition-colors hover:bg-white/15"
-        >
-          Reload
-        </button>
-      </div>
-    </div>
+    <ErrorShell>
+      <ErrorMessage code="500" title="Veza je u prekidu.">
+        Poslužitelj nije odgovorio. Obično se riješi za koju minutu.
+      </ErrorMessage>
+      <RouteBreak />
+      <button
+        onClick={reset}
+        className="font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+      >
+        pokušaj ponovno →
+      </button>
+    </ErrorShell>
   )
 }

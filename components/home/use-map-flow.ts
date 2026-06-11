@@ -230,6 +230,7 @@ export function useMapFlow(initial?: FlowInitial) {
     })
     actions.loadIsochrone(p, seq).then((ok) => {
       if (ok) setPanel({ mode: "reach", origin: p })
+      else if (seqRef.current === seq) setPanel({ mode: "error", origin: p })
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps -- boot once
   }, [])
@@ -331,6 +332,7 @@ function useOriginActions(deps: FlowDeps) {
       }
       loadIsochrone(p, seq).then((ok) => {
         if (ok) setPanel({ mode: "reach", origin: p })
+        else if (seqRef.current === seq) setPanel({ mode: "error", origin: p })
       })
     },
     [loadIsochrone, seqRef, originKeyRef, setPanel, setIso, setOriginName, setDestName, setDistrictCtx]
@@ -438,6 +440,7 @@ function useRefetchForSettings(
       setPanel({ mode: "loading", origin })
       loadIsochrone(origin, seq).then((ok) => {
         if (ok) setPanel({ mode: "reach", origin })
+        else if (seqRef.current === seq) setPanel({ mode: "error", origin })
       })
     }
   }, [panel.mode, origin, dest, destName, seqRef, setPanel, loadIsochrone, startRoute])
@@ -562,5 +565,7 @@ function useFlowActions(deps: FlowDeps) {
     setBajsRouting,
     loadIsochrone,
     reset,
+    /** Re-run the current fetch — the "pokušaj ponovno" action in error mode. */
+    retry: refetchForSettings,
   }
 }

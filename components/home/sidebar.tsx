@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  ErrorContent,
   LjestvicaBlock,
   LoadingContent,
   ReachContent,
@@ -54,6 +55,7 @@ export function Sidebar({
   districtCtx,
   departedAt,
   onBackToReach,
+  onRetry,
 }: {
   panel: PanelState
   search: SearchFieldsProps
@@ -64,6 +66,7 @@ export function Sidebar({
   districtCtx: DistrictContext | null
   departedAt: Date | null
   onBackToReach: () => void
+  onRetry: () => void
 }) {
   const mode = panel.mode
   const isRoute = mode === "route" || mode === "route-loading"
@@ -90,6 +93,7 @@ export function Sidebar({
           <div className="scroll-fade flex min-h-0 grow flex-col gap-[18px] overflow-y-auto">
             {mode === "empty" && <EmptyContent />}
             {mode === "loading" && <LoadingContent />}
+            {mode === "error" && <ErrorContent onRetry={onRetry} />}
             {mode === "reach" && (
               <ReachContent
                 minutes={minutes}

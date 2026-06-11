@@ -175,6 +175,7 @@ function ClientInner() {
     districtCtx: flow.districtCtx,
     departedAt: flow.departedAt,
     onBackToReach: flow.handleBackToReach,
+    onRetry: flow.retry,
   }
 
   return (

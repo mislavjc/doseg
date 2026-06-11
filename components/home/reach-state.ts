@@ -12,6 +12,7 @@ export type LatLon = { lat: number; lon: number }
 export type PanelState =
   | { mode: "empty" }
   | { mode: "loading"; origin: LatLon }
+  | { mode: "error"; origin: LatLon }
   | { mode: "reach"; origin: LatLon }
   | { mode: "route-loading"; origin: LatLon; dest: LatLon }
   | { mode: "route"; origin: LatLon; dest: LatLon; itinerary: Itinerary }

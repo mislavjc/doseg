@@ -54,6 +54,28 @@ export function LoadingContent() {
   )
 }
 
+/* ── error (Paper "Tok · Desktop — 6 greška") ────────────────────────── */
+
+export function ErrorContent({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="flex flex-col gap-[10px]">
+      <MonoLabel>greška pri izračunu</MonoLabel>
+      <Hook>Ne mogu izračunati doseg.</Hook>
+      <p className="font-heros text-[16px] leading-6 text-ink-muted">
+        Podaci o mreži trenutno nisu dostupni. Provjeri vezu pa pokušaj
+        ponovno, adresa ostaje upisana.
+      </p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="w-fit pt-1 font-mono text-[16px] leading-6 text-zg-blue transition-colors duration-150 hover:text-navy"
+      >
+        pokušaj ponovno →
+      </button>
+    </div>
+  )
+}
+
 /* ── reach blocks ────────────────────────────────────────────────────── */
 
 export function ReachReadout({

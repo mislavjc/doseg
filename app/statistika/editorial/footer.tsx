@@ -102,26 +102,35 @@ export function Footer({ updated }: { updated: string }) {
         </div>
       </Section>
 
-      {/* Dither map of the area around Trg žrtava fašizma (east Lower Town —
-          the round pavilion + its radial avenues), fading up from the bottom —
-          a different part of Zagreb that bookends the hero map. */}
-      <div className="relative h-[340px] w-full overflow-hidden sm:h-[480px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/footer-map.png"
-          alt=""
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: "center 66%" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, var(--ground) 0%, color-mix(in srgb, var(--ground) 82%, transparent) 22%, transparent 56%)",
-          }}
-        />
-      </div>
+      <FooterMapBand />
     </footer>
+  )
+}
+
+/**
+ * Dither map of the area around Trg žrtava fašizma (east Lower Town — the
+ * round pavilion + its radial avenues), fading up from the bottom — a
+ * different part of Zagreb that bookends the hero map. Shared with the
+ * error pages (app/not-found.tsx, app/error.tsx).
+ */
+export function FooterMapBand() {
+  return (
+    <div className="relative h-[340px] w-full overflow-hidden sm:h-[480px]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/footer-map.png"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ objectPosition: "center 66%" }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--ground) 0%, color-mix(in srgb, var(--ground) 82%, transparent) 22%, transparent 56%)",
+        }}
+      />
+    </div>
   )
 }

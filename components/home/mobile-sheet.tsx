@@ -6,6 +6,7 @@ import { Drawer } from "vaul"
 import { legLineColors } from "@/lib/mode-colors"
 import type { Itinerary } from "@/lib/otp"
 import {
+  ErrorContent,
   isRouteTooFar,
   JourneyStrip,
   LegList,
@@ -117,6 +118,7 @@ function SheetBody({
   districtCtx,
   departedAt,
   onBackToReach,
+  onRetry,
   peek,
   full,
 }: {
@@ -128,6 +130,7 @@ function SheetBody({
   districtCtx: DistrictContext | null
   departedAt: Date | null
   onBackToReach: () => void
+  onRetry: () => void
   peek: boolean
   full: boolean
 }) {
@@ -142,6 +145,7 @@ function SheetBody({
       <div key={mode} className="panel-swap flex min-h-0 flex-col gap-[14px]">
         {mode === "empty" && <EmptyPeek />}
         {mode === "loading" && <LoadingContent />}
+        {mode === "error" && <ErrorContent onRetry={onRetry} />}
         {mode === "reach" && (
           <>
             <ReachReadout minutes={minutes} stats={stats} />
@@ -175,6 +179,7 @@ export function MobileSheet({
   districtCtx,
   departedAt,
   onBackToReach,
+  onRetry,
 }: {
   panel: PanelState
   minutes: number
@@ -184,6 +189,7 @@ export function MobileSheet({
   districtCtx: DistrictContext | null
   departedAt: Date | null
   onBackToReach: () => void
+  onRetry: () => void
 }) {
   const [snaps] = useState<(number | string)[]>(() => [
     SNAP_PEEK,
@@ -240,6 +246,7 @@ export function MobileSheet({
               districtCtx={districtCtx}
               departedAt={departedAt}
               onBackToReach={onBackToReach}
+              onRetry={onRetry}
               peek={peek}
               full={full}
             />

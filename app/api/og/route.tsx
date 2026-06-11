@@ -1,5 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
+
+import { loadLineData } from "@/lib/line-data"
+
 import { renderOgCard } from "./card"
 
 export const runtime = "nodejs"
@@ -96,6 +99,19 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const latStr = searchParams.get("lat")
   const lonStr = searchParams.get("lon")
+  const linija = searchParams.get("linija")
+
+  if (linija) {
+    const line = loadLineData(linija)
+    if (!line) return new Response("Unknown line", { status: 404 })
+    const peak = line.stats.peakHeadwayMin
+    return renderOgCard({
+      headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,
+      sub: peak
+        ? `vozni red · u špici svakih ${Math.round(peak)} min`
+        : "vozni red i stanice",
+    })
+  }
 
   const hasCoords = latStr && lonStr
   const lat = hasCoords ? parseFloat(latStr) : NaN

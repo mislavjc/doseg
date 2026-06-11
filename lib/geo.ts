@@ -3,6 +3,17 @@ export const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
 export const KM_PER_DEG_LAT = 111.32
 export const KM_PER_DEG_LON = 111.32 * COS_LAT
 
+/** Normalized Web Mercator x (0..1 world) */
+export function mercatorX(lon: number): number {
+  return (lon + 180) / 360
+}
+
+/** Normalized Web Mercator y (0..1 world) */
+export function mercatorY(lat: number): number {
+  const r = (lat * Math.PI) / 180
+  return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2
+}
+
 /** Fast approximate distance in km using flat-earth projection at Zagreb latitude */
 export function fastDistKm(
   lat1: number,

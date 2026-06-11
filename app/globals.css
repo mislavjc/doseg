@@ -68,6 +68,10 @@
   /* Score ramp endpoints (navy → pale by score; full ramp in lib/score-color.ts) */
   --rank-100: #0e3fb0;
   --rank-0: #f4f8fe;
+  /* Linija pages (Paper "Linija 109 — pSEO V1") */
+  --blue-wash: #f2f6fd; /* current-hour row tint in vozni red */
+  --blue-pale: #c2d2f2; /* off-peak histogram bars */
+  --ink-ghost: #c9cdd3; /* departed times / past rows */
 }
 
 @theme inline {
@@ -106,6 +110,9 @@
   --color-row-tint: var(--row-tint);
   --color-note-bg: var(--note-bg);
   --color-note-ink: var(--note-ink);
+  --color-blue-wash: var(--blue-wash);
+  --color-blue-pale: var(--blue-pale);
+  --color-ink-ghost: var(--ink-ghost);
   /* Soft shadows (popovers, the tilted ticket) */
   --shadow-soft: 0 8px 24px rgba(10, 10, 10, 0.1);
   --shadow-ticket: 0 4px 14px rgba(20, 30, 50, 0.1);

@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 const LINKS = [
   { label: "karta", href: "/" },
   { label: "statistika", href: "/statistika" },
+  { label: "linije", href: "/linije" },
   { label: "tramvaji", href: "/karta-tramvaja" },
   { label: "o projektu", href: "/o-projektu" },
 ] as const

@@ -92,16 +92,11 @@ function LineGroup({
 }
 
 export default function LinijeIndexPage() {
+  // index.json is already numerically sorted by the generator.
   const index = loadLineIndex()
-  const byDeps = (a: LineIndexEntry, b: LineIndexEntry) =>
-    b.dailyDepartures - a.dailyDepartures
-  const dayTrams = index.lines
-    .filter((l) => l.mode === "tram" && !l.isNight)
-    .sort(byDeps)
+  const dayTrams = index.lines.filter((l) => l.mode === "tram" && !l.isNight)
   const nightLines = index.lines.filter((l) => l.isNight)
-  const buses = index.lines
-    .filter((l) => l.mode === "bus" && !l.isNight)
-    .sort(byDeps)
+  const buses = index.lines.filter((l) => l.mode === "bus" && !l.isNight)
   const nightHeadway = nightLines[0]?.avgHeadwayMin
 
   return (

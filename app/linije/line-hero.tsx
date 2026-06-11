@@ -178,7 +178,7 @@ function labelBoxSize(name: string): { w: number; h: number } {
   return { w: name.length * 8.9 + 20, h: 28 }
 }
 
-interface Overlay {
+export interface Overlay {
   path: string
   innerDots: [number, number][]
   first: [number, number]
@@ -187,8 +187,9 @@ interface Overlay {
   boxB: Box
 }
 
-/** Project the route into view units and lay out dots + labels. */
-function buildOverlay(
+/** Project the route into view units and lay out dots + labels. Also used by
+ * the /api/og line card so the share image matches the hero exactly. */
+export function buildOverlay(
   data: LinePageData,
   crop: LineHeroCrop,
   viewW: number,

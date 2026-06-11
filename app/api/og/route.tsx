@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { loadLineData } from "@/lib/line-data"
 
 import { renderOgCard } from "./card"
+import { renderLineOgCard } from "./line-card"
 
 export const runtime = "nodejs"
 
@@ -104,6 +105,10 @@ export async function GET(request: Request) {
   if (linija) {
     const line = loadLineData(linija)
     if (!line) return new Response("Unknown line", { status: 404 })
+    // Hero-map card; falls back to the generic tram card when the line's
+    // hero asset is missing.
+    const heroCard = renderLineOgCard(line)
+    if (heroCard) return heroCard
     const peak = line.stats.peakHeadwayMin
     return renderOgCard({
       headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,

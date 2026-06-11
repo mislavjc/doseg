@@ -289,8 +289,12 @@ fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
         .body_mut()
         .read_json()
         .expect("Failed to parse serviceTimeRange");
-    let start = json["data"]["serviceTimeRange"]["start"].as_i64().unwrap_or(0);
-    let end = json["data"]["serviceTimeRange"]["end"].as_i64().unwrap_or(0);
+    let start = json["data"]["serviceTimeRange"]["start"]
+        .as_i64()
+        .unwrap_or(0);
+    let end = json["data"]["serviceTimeRange"]["end"]
+        .as_i64()
+        .unwrap_or(0);
     (start / 86400, end / 86400)
 }
 
@@ -337,7 +341,11 @@ fn pick_date_and_fetch(
     today: i64,
     last_day: i64,
 ) -> (String, Vec<get_line_patterns::GetLinePatternsPatterns>) {
-    let mut best: Option<(String, Vec<get_line_patterns::GetLinePatternsPatterns>, usize)> = None;
+    let mut best: Option<(
+        String,
+        Vec<get_line_patterns::GetLinePatternsPatterns>,
+        usize,
+    )> = None;
     for date in candidate_dates(kind, today, last_day) {
         let patterns = fetch_patterns(otp_url, &date);
         let n = total_trips(&patterns);
@@ -817,7 +825,12 @@ pub fn generate(
 
         // Directions from dominant patterns
         let mut directions: Vec<LineDirection> = Vec::new();
-        let mut bbox = [f64::INFINITY, f64::INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY];
+        let mut bbox = [
+            f64::INFINITY,
+            f64::INFINITY,
+            f64::NEG_INFINITY,
+            f64::NEG_INFINITY,
+        ];
         let mut timetable_days: [Vec<Vec<HourRow>>; 3] = [Vec::new(), Vec::new(), Vec::new()];
         let mut histogram = vec![0u32; 24];
 
@@ -861,15 +874,11 @@ pub fn generate(
                 Some(encoded) => decode_polyline(encoded),
                 None => p.stops.iter().map(|s| (s.lat, s.lon)).collect(),
             };
-            let shape: Vec<(f64, f64)> = simplify_shape(
-                shape_latlon
-                    .iter()
-                    .map(|&(lat, lon)| (lon, lat))
-                    .collect(),
-            )
-            .into_iter()
-            .map(|(lon, lat)| (round5(lon), round5(lat)))
-            .collect();
+            let shape: Vec<(f64, f64)> =
+                simplify_shape(shape_latlon.iter().map(|&(lat, lon)| (lon, lat)).collect())
+                    .into_iter()
+                    .map(|(lon, lat)| (round5(lon), round5(lat)))
+                    .collect();
 
             for &(lon, lat) in &shape {
                 bbox[0] = bbox[0].min(lon);
@@ -930,12 +939,8 @@ pub fn generate(
             daily_departures,
             first_departure: format_time(dir0_deps_f.first().copied().unwrap_or(0.0)),
             last_departure: format_time(dir0_deps_f.last().copied().unwrap_or(0.0)),
-            peak_headway_min: compute_headway(
-                &dir0_deps_f,
-                Some(7.0 * 3600.0),
-                Some(9.0 * 3600.0),
-            )
-            .map(round1),
+            peak_headway_min: compute_headway(&dir0_deps_f, Some(7.0 * 3600.0), Some(9.0 * 3600.0))
+                .map(round1),
             avg_headway_min: compute_headway(&dir0_deps_f, None, None).map(round1),
             travel_time_min: round1(offsets0.last().copied().unwrap_or(0.0) / 60.0),
             distance_km: round1(distance_km),
@@ -966,8 +971,7 @@ pub fn generate(
                     .near(s.lat, s.lon)
                     .filter(|&gi| {
                         let g = &global_stops[gi];
-                        g.line_idx != li
-                            && fast_dist_km(s.lat, s.lon, g.lat, g.lon) <= NEAR_KM
+                        g.line_idx != li && fast_dist_km(s.lat, s.lon, g.lat, g.lon) <= NEAR_KM
                     })
                     .map(|gi| global_stops[gi].line_idx)
                     .collect();
@@ -1020,13 +1024,17 @@ pub fn generate(
                 });
             }
         }
-        shared_terminal.sort_by_cached_key(|r| {
-            (r.mode != LineMode::Tram, numeric_sort_key(&r.broj))
-        });
+        shared_terminal
+            .sort_by_cached_key(|r| (r.mode != LineMode::Tram, numeric_sort_key(&r.broj)));
 
         // Tram crossings mid-route (first stop where each tram line appears).
         let mut tram_crossings: Vec<TramCrossing> = Vec::new();
-        for stop in directions[0].stops.iter().skip(1).take(n0.saturating_sub(2)) {
+        for stop in directions[0]
+            .stops
+            .iter()
+            .skip(1)
+            .take(n0.saturating_sub(2))
+        {
             for tram in &stop.tram_interchange {
                 if !tram_crossings.iter().any(|c| &c.broj == tram) {
                     tram_crossings.push(TramCrossing {

@@ -2,6 +2,7 @@
 .next
 node_modules
 data/*
+!data/linije
 !data/district-scores.json
 !data/district-scores-rust.json
 !data/district-scores-saturday.json

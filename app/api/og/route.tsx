@@ -96,6 +96,33 @@ function findDistrict(
   return null
 }
 
+/**
+ * Crawler budget: Twitterbot aborts after ~4s, and the line card costs
+ * 3-6s to render (satori rasterizes the full hero PNG). Two layers fix it:
+ * a per-process buffer cache (warm after one hit per line, ~60MB ceiling for
+ * all 154) and CDN cache headers so the edge serves repeat crawls instantly.
+ */
+const lineCardCache = new Map<string, ArrayBuffer>()
+
+const LINE_CARD_HEADERS = {
+  "Content-Type": "image/png",
+  "Cache-Control": "public, max-age=3600, s-maxage=2592000, stale-while-revalidate=604800",
+}
+
+async function lineCardResponse(linija: string): Promise<Response | null> {
+  const cached = lineCardCache.get(linija)
+  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+  const line = loadLineData(linija)
+  if (!line) return new Response("Unknown line", { status: 404 })
+  // Hero-map card; falls back to the generic tram card when the line's
+  // hero asset is missing.
+  const heroCard = renderLineOgCard(line)
+  if (!heroCard) return null
+  const body = await heroCard.arrayBuffer()
+  lineCardCache.set(linija, body)
+  return new Response(body, { headers: LINE_CARD_HEADERS })
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const latStr = searchParams.get("lat")
@@ -103,12 +130,10 @@ export async function GET(request: Request) {
   const linija = searchParams.get("linija")
 
   if (linija) {
+    const cardResponse = await lineCardResponse(linija)
+    if (cardResponse) return cardResponse
     const line = loadLineData(linija)
     if (!line) return new Response("Unknown line", { status: 404 })
-    // Hero-map card; falls back to the generic tram card when the line's
-    // hero asset is missing.
-    const heroCard = renderLineOgCard(line)
-    if (heroCard) return heroCard
     const peak = line.stats.peakHeadwayMin
     return renderOgCard({
       headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,

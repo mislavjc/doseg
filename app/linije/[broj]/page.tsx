@@ -46,6 +46,8 @@ export async function generateMetadata({
   if (!data) return {}
   const title = `Linija ${data.broj} vozni red: ${data.terminals[0]} - ${data.terminals[1]} | Doseg`
   const description = introText(data)
+  // The v param busts X/Telegram per-URL caches when the feed rolls.
+  const ogVersion = loadLineIndex().serviceDates.radniDan
   return {
     title,
     description,
@@ -55,7 +57,11 @@ export async function generateMetadata({
       description,
       type: "article",
       images: [
-        { url: `/api/og?linija=${data.broj}`, width: 1200, height: 630 },
+        {
+          url: `/api/og?linija=${data.broj}&v=${ogVersion}`,
+          width: 1200,
+          height: 630,
+        },
       ],
     },
   }

@@ -57,3 +57,4 @@ squirrel.toml
 # runtime artifacts
 mprocs.log
 data/gtfs-rt.db*
+.cache/

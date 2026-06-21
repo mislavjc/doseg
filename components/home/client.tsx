@@ -298,7 +298,6 @@ function ClientInner() {
       <h1 className="sr-only">Doseg — karta dosega javnog prijevoza</h1>
       <nav aria-label="Navigacija" className="sr-only">
         <Link href="/linije">Sve ZET linije: vozni red i stanice</Link>
-        <Link href="/karta-tramvaja">Karta tramvajskih linija</Link>
         <Link href="/statistika">Statistika dostupnosti javnog prijevoza</Link>
         <Link href="/promjene">Promjene i izmjene ZET linija</Link>
         <Link href="/o-projektu">O projektu</Link>

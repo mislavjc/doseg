@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://doseg.hr/o-projektu", lastModified: new Date() },
     { url: "https://doseg.hr/statistika", lastModified: new Date() },
     { url: "https://doseg.hr/statistika/podaci", lastModified: new Date() },
-    { url: "https://doseg.hr/karta-tramvaja", lastModified: new Date() },
+    { url: "https://doseg.hr/promjene", lastModified: new Date() },
     { url: "https://doseg.hr/linije", lastModified: updated },
     ...lines.lines.map((l) => ({
       url: `https://doseg.hr/linije/${l.broj}`,

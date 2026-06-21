@@ -20,9 +20,11 @@ import {
   Frekvencija,
   Naslov,
   PovezaneLinije,
+  JsonLd,
   PrevNext,
   Provenijencija,
   SectionHeader,
+  breadcrumbJsonLd,
   buildFaq,
   faqJsonLd,
   frekvencijaCopy,
@@ -44,7 +46,14 @@ export async function generateMetadata({
   const { broj } = await params
   const data = loadLineData(broj)
   if (!data) return {}
-  const title = `Linija ${data.broj} vozni red: ${data.terminals[0]} - ${data.terminals[1]} | Doseg`
+  // Title keywords follow real GSC demand: trams are searched "tramvaj {N}",
+  // buses "zet {N}" — so each mode leads with its own pattern. Route endpoints
+  // live in the description/page body, not the title (keeps it under ~60 chars
+  // and prioritises the "vozni red"/"stanice" modifiers people actually type).
+  const title =
+    data.mode === "tram"
+      ? `Tramvaj ${data.broj} (ZET): vozni red i stanice | Doseg`
+      : `ZET ${data.broj} (autobus): vozni red i stanice | Doseg`
   const description = introText(data)
   // The v param busts X/Telegram per-URL caches when the feed rolls.
   const ogVersion = loadLineIndex().serviceDates.radniDan
@@ -83,10 +92,8 @@ export default async function LinijaPage({
 
   return (
     <EditorialShell>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: faqJsonLd(faq) }}
-      />
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd data={breadcrumbJsonLd(data.broj)} />
 
       <LineHero data={data} meta={loadHeroMeta(broj)} />
 

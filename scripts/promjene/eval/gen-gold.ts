@@ -8,7 +8,7 @@ import { extractNotice } from "../extract"
 try { for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2] } } catch { /* ignore */ }
 
 const bodies: Record<string, string> = JSON.parse(readFileSync("/tmp/zet-bodies.json", "utf8"))
-const cands: any[] = JSON.parse(readFileSync("data/promjene/candidates.json", "utf8")).candidates
+const cands: { id: string; date: string | null }[] = JSON.parse(readFileSync("data/promjene/candidates.json", "utf8")).candidates
 const pub = (id: string) => cands.find((c) => c.id === id)?.date ?? undefined
 const gold: Record<string, unknown> = {}
 for (const id of Object.keys(bodies)) {

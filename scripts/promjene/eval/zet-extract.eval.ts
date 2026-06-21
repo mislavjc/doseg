@@ -13,7 +13,7 @@ loadEnvLocal() // vitest/evalite don't auto-load .env.local — needed for AI_GA
 
 const DIR = join(process.cwd(), "scripts/promjene/eval")
 const bodies: Record<string, string> = JSON.parse(readFileSync(join(DIR, "bodies.json"), "utf8"))
-const cands: any[] = JSON.parse(readFileSync(join(process.cwd(), "data/promjene/candidates.json"), "utf8")).candidates
+const cands: { id: string; date: string | null }[] = JSON.parse(readFileSync(join(process.cwd(), "data/promjene/candidates.json"), "utf8")).candidates
 const pub = (id: string): string | undefined => cands.find((c) => c.id === id)?.date ?? undefined
 const gold: Record<string, Notice> = JSON.parse(readFileSync(join(DIR, "gold.json"), "utf8"))
 

@@ -1,0 +1,66 @@
+{
+  "8266": {
+    "284": {
+      "mode": "diff",
+      "change": "terminus",
+      "len_old_km": 4.9,
+      "len_new_km": 11,
+      "added": 8,
+      "removed": 0,
+      "oldTipName": "Ivanja Reka-okret.",
+      "newTipName": "Dumovec okretište",
+      "relacija": "Dumovec okretište – Sesvete"
+    }
+  },
+  "8353": {
+    "147": {
+      "mode": "new",
+      "len_km": 2.9,
+      "stops_count": 8,
+      "terminusName": "Dolec",
+      "originName": "Vrapčanska aleja"
+    }
+  },
+  "9881": {
+    "145": {
+      "mode": "removed",
+      "len_km": 3.8,
+      "stops_count": 6,
+      "terminusName": "Ratarska",
+      "originName": "Vrapčanska aleja"
+    },
+    "147": {
+      "mode": "removed",
+      "len_km": 3.1,
+      "stops_count": 8,
+      "terminusName": "Dolec",
+      "originName": "Vrapčanska aleja"
+    }
+  },
+  "9894": {
+    "207": {
+      "mode": "diff",
+      "change": "midroute",
+      "len_old_km": 7.3,
+      "len_new_km": 9.3,
+      "added": 8,
+      "removed": 0,
+      "oldTipName": "Kvat. trg",
+      "newTipName": "Kvat. trg",
+      "relacija": "Kvaternikov trg – Kvat. trg"
+    }
+  },
+  "9913": {
+    "101": {
+      "mode": "diff",
+      "change": "terminus",
+      "len_old_km": 3.7,
+      "len_new_km": 4.6,
+      "added": 3,
+      "removed": 0,
+      "oldTipName": "Pantovčak",
+      "newTipName": "Šestine",
+      "relacija": "Britanski trg – Šestine"
+    }
+  }
+}

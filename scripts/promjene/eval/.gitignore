@@ -1,0 +1,4 @@
+# Regenerable eval intermediates — gold.json/gold-review.json/bodies.json are the durable artifacts.
+bodies/
+gold-parts/
+notices.json

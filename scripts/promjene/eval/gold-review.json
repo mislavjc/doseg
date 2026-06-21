@@ -1,0 +1,1018 @@
+{
+  "435": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "217",
+        "role": "unchanged"
+      },
+      {
+        "number": "290",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2017-05-17",
+    "cleanTitle": "Autobusno stajalište Žitnjačka na linijama 217 i 290 u smjeru Velike Gorice privremeno se izmješta istočnije zbog izgradnje nadvožnjaka na Radničkoj cesti.",
+    "permanenceEvidence": "zbog izgradnje nadvožnjaka na Radničkoj cesti",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "442": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "217",
+        "role": "unchanged"
+      },
+      {
+        "number": "290",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2017-07-28",
+    "cleanTitle": "Stajalište \"Radnička - INA\" u smjeru Kvaternikovog trga privremeno je izmješteno 20 metara sjevernije od 28. srpnja do 8. rujna.",
+    "permanenceEvidence": "od petka, 28. srpnja, do petka, 8. rujna, bit će izmješteno",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "549": {
+    "permanence": "permanent",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "107",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2018-05-03",
+    "cleanTitle": "Autobusno stajalište Vrbik u smjeru Jankomira, na trasi linije 107, ponovno je uspostavljeno od 3. svibnja 2018.",
+    "permanenceEvidence": "ponovno će biti uspostavljeno",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "571": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [],
+    "effectiveDate": "2017-11-22",
+    "cleanTitle": "Tramvajsko stajalište Petrova sjever u Vlaškoj ulici privremeno je izmješteno zbog radova, od 22. do 25. studenog 2017.",
+    "permanenceEvidence": "Zbog radova u Vlaškoj ulici ... bit će izmješteno na privremenu lokaciju",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "1725": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "172",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-05-15",
+    "cleanTitle": "Zbog hitne sanacije kolnika u Ulici Pavla Lončara linija 172 od 15. do 19. svibnja 2018. prometuje djelomično izmijenjenom trasom.",
+    "permanenceEvidence": "od utorka, 15. svibnja do subote, 19. svibnja",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "1726": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "6",
+        "role": "rerouted"
+      },
+      {
+        "number": "11",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-07-23",
+    "cleanTitle": "Tramvajske linije 6 i 11 prometuju djelomično izmijenjenim trasama od 23. do 27. srpnja zbog radova u Ilici.",
+    "permanenceEvidence": "Zbog radova u Ilici, na dijelu od Ulice Republike Austrije do Frankopanske ulice, koji će se izvoditi od ponedjeljka, 23. srpnja do petka, 27. srpnja",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "1736": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "174",
+        "role": "rerouted"
+      },
+      {
+        "number": "175",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-05-25",
+    "cleanTitle": "Linije 174 i 175 voze djelomično izmijenjenim trasama od 25. do 27. svibnja zbog izgradnje kružnog toka Veliki vrh u Zaprešiću.",
+    "permanenceEvidence": "od petka 25. svibnja u 9 sati do nedjelje 27. svibnja u 18 sati prometovat će djelomično izmijenjenim trasama",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "1753": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "105",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-06-16",
+    "cleanTitle": "Linija 105 vozi izmijenjenom trasom u smjeru Kaptola zbog radova koji uvjetuju zabranu prometa Tkalčićevom ulicom, od 16. do 22. lipnja 2018.",
+    "permanenceEvidence": "od subote 16. lipnja do petka 22. lipnja",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "1762": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "107",
+        "role": "rerouted"
+      },
+      {
+        "number": "116",
+        "role": "rerouted"
+      },
+      {
+        "number": "168",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-06-23",
+    "cleanTitle": "Zbog radova privremeno su ukinuta stajališta Savska Opatovina (linije 107, 116 i 168) i Savska (linija 107) na Ljubljanskoj i Slavonskoj aveniji.",
+    "permanenceEvidence": "Zbog radova na južnom kolniku Ljubljanske avenije ... privremeno će biti ukinuto autobusno stajalište Savska Opatovina u smjeru terminala Ljubljanica",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "2811": {
+    "permanence": "temporary",
+    "category": "skraćena",
+    "lines": [
+      {
+        "number": "143",
+        "role": "shortened"
+      }
+    ],
+    "effectiveDate": "2018-08-21",
+    "cleanTitle": "Linija 143 privremeno prometuje skraćeno do stajališta Borovina zbog sanacije odvodnog kanala u Ulici Orešje, od 21. kolovoza do 2. rujna.",
+    "permanenceEvidence": "od utorka 21 . kolovoza od 9 sati, do večernjih sati nedjelje 2. rujna, prometovat će skraćeno",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "3842": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [],
+    "effectiveDate": "2018-09-28",
+    "cleanTitle": "Tramvajsko stajalište Petrova sjever bit će izvan funkcije od 28. rujna do 3. listopada 2018. zbog zamjene tramvajskih tračnica u Vlaškoj ulici.",
+    "permanenceEvidence": "bit će izvan funkcije od petka, 28. rujna, do očekivane ponovne uspostave u jutarnjim satima srijede, 3. listopada",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "4868": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "172",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-11-23",
+    "cleanTitle": "Linija 172 prometuje djelomično izmijenjenom trasom od 23. do 25. studenoga 2018. zbog zatvaranja pružnog prijelaza s Ulicom kardinala Alojzija Stepinca.",
+    "permanenceEvidence": "Zbog zatvaranja pružnog prijelaza s Ulicom kardinala Alojzija Stepinca, autobusna linija 172 ... će od petka 23. studenoga u 7 sati do nedjelje 25. studenoga u ponoć, prometovati djelomično izmijenjenom trasom",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "4869": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "105",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2018-11-24",
+    "cleanTitle": "Linija 105 prometuje izmijenjenom trasom u smjeru Kaptola od subote 24. do nedjelje 25. studenoga 2018. zbog radova koji uvjetuju zabranu prometovanja Tkalčićevom ulicom.",
+    "permanenceEvidence": "Zbog radova koji uvjetuju zabranu prometovanja Tkalčićevom ulicom ... od subote 24. studenoga u 7 sati do nedjelje 25. studenoga u 18 sati",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "4877": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "210",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2018-12-03",
+    "cleanTitle": "Linija 210 od 3. prosinca prometuje produljenom trasom do Novog Retkovca te mijenja naziv i vozni red.",
+    "permanenceEvidence": "prometuje novom, produljenom trasom te mijenja naziv, trasu i vozni red",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "5904": {
+    "permanence": "permanent",
+    "category": "vozni red",
+    "lines": [
+      {
+        "number": "161",
+        "role": "schedule-only"
+      }
+    ],
+    "effectiveDate": "2019-01-28",
+    "cleanTitle": "Od 28. siječnja radnim danom mijenjaju se polasci autobusne linije 161 sa Savskog mosta i iz Kupinečkog Kraljevca.",
+    "permanenceEvidence": "Od ponedjeljka, 28. siječnja, radnim danom mijenjaju se polasci sa Savskog mosta na autobusnoj liniji 161",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "5935": {
+    "permanence": "permanent",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "213",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2019-03-11",
+    "cleanTitle": "Na trasi linije 213 uspostavlja se novo autobusno stajalište na Branovečkoj cesti u smjeru Dubrave.",
+    "permanenceEvidence": "uspostavlja se novo autobusno stajalište",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "6970": {
+    "permanence": "permanent",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "231",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2019-04-15",
+    "cleanTitle": "Linija 231 od 15. travnja prometuje djelomično izmijenjenom trasom i novim voznim redom.",
+    "permanenceEvidence": "prometovati djelomično izmijenjenom trasom, a na snazi će biti i novi vozni red",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7091": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "109",
+        "role": "unchanged"
+      },
+      {
+        "number": "222",
+        "role": "unchanged"
+      },
+      {
+        "number": "607",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2019-09-30",
+    "cleanTitle": "Autobusno stajalište u Aveniji Dubrovnik kod raskrižja s ulicom Trnsko privremeno je izmješteno 50 metara istočnije zbog radova.",
+    "permanenceEvidence": "do završetka radova, privremeno izmješteno 50 metara istočnije",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7105": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "120",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2019-10-21",
+    "cleanTitle": "Autobusna linija 120 produžena je do terminala Prečko, dobiva novi naziv 120 (Črnomerec - Gajnice - Prečko) i novi vozni red.",
+    "permanenceEvidence": "produžena do terminala Prečko te će novi naziv linije biti 120 (Črnomerec - Gajnice - Prečko)",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7119": {
+    "permanence": "permanent",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "283",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2019-11-25",
+    "cleanTitle": "Autobusna linija 283 od 25. studenoga prometuje novom trasom od terminala Dubec preko Novog i Starog Brestja do Sesveta, uz novi naziv i novi vozni red.",
+    "permanenceEvidence": "prometovati novom trasom, od terminala Dubec preko Novog i Starog Brestja te Badelovog Brijega do Sesveta, pa će novi naziv linije biti 283 (Dubec Brestje Sesvete)",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7326": {
+    "permanence": "permanent",
+    "category": "nova",
+    "lines": [
+      {
+        "number": "150",
+        "role": "new"
+      }
+    ],
+    "effectiveDate": "2020-07-20",
+    "cleanTitle": "Od 20. srpnja 2020. ponovno je uspostavljena autobusna linija 150 (Tuškanac garaža - Gornji grad - Trg bana Josipa Jelačića).",
+    "permanenceEvidence": "ponovno je uspostavljena",
+    "disagreements": [
+      "category",
+      "cleanTitle"
+    ],
+    "needsReview": true
+  },
+  "7380": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "111",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2020-09-07",
+    "cleanTitle": "Linija 111 privremeno prometuje djelomično izmijenjenom trasom zbog radova na dijelu Ulice Svetog Benedikta, uz novi vozni red.",
+    "permanenceEvidence": "od ponedjeljka, 7. rujna u 9 sati do završetka radova koji se očekuju početkom prosinca",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7415": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "203",
+        "role": "rerouted"
+      },
+      {
+        "number": "226",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2020-10-10",
+    "cleanTitle": "Autobusne linije 203 i 226 prometuju kružnom trasom od 10. do 22. listopada.",
+    "permanenceEvidence": "od subote, 10. listopada do četvrtka, 22. listopada",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7473": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "205",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2020-12-21",
+    "cleanTitle": "Autobusno stajalište Dotrščina u Ulici Štefanovec na trasi linije 205 privremeno je izmješteno 250 metara južno zbog radova na uređenju stajališta.",
+    "permanenceEvidence": "od ponedjeljka 21. prosinca u 8 sati do četvrtka, 21. siječnja u 18 sati, zbog radova na uređenju stajališta",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7551": {
+    "permanence": "temporary",
+    "category": "skraćena",
+    "lines": [
+      {
+        "number": "163",
+        "role": "shortened"
+      }
+    ],
+    "effectiveDate": "2021-04-06",
+    "cleanTitle": "Autobusna linija 163 privremeno prometuje skraćeno do Donjeg Dragonošca zbog rekonstrukcije propusta na dijelu Trpučanske ceste.",
+    "permanenceEvidence": "do završetka radova koji se očekuje za 21 dan",
+    "disagreements": [
+      "category",
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": true
+  },
+  "7584": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "166",
+        "role": "rerouted"
+      },
+      {
+        "number": "311",
+        "role": "rerouted"
+      },
+      {
+        "number": "313",
+        "role": "rerouted"
+      },
+      {
+        "number": "315",
+        "role": "rerouted"
+      },
+      {
+        "number": "322",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2021-06-11",
+    "cleanTitle": "Linije 166, 311, 313, 315 i 322 privremeno prometuju djelomično izmijenjenim trasama zbog radova na sanaciji dijela Tratinske ulice u Lukavcu.",
+    "permanenceEvidence": "od petka, 11. lipnja do završetka radova ... prometovati djelomično izmijenjenim trasama",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7613": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "113",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2021-07-07",
+    "cleanTitle": "Autobusno stajalište Tržnica Jarun privremeno je izmješteno oko 50 metara sjeverno zbog radova na postavljanju vrelovoda u ulici Hrgovići.",
+    "permanenceEvidence": "od srijede, 7. srpnja do petka, 20. kolovoza u 20 sati ... zbog radova na postavljanju vrelovoda u ulici Hrgovići",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7705": {
+    "permanence": "temporary",
+    "category": "nova",
+    "lines": [
+      {
+        "number": "102",
+        "role": "rerouted"
+      },
+      {
+        "number": "105",
+        "role": "rerouted"
+      },
+      {
+        "number": "105A",
+        "role": "new"
+      },
+      {
+        "number": "103",
+        "role": "schedule-only"
+      }
+    ],
+    "effectiveDate": "2021-11-22",
+    "cleanTitle": "Zbog radova u ulici Tuškanac, linije 102 i 105 prometuju izmijenjenim trasama, uvodi se privremena linija 105A, a linija 103 vozi prema novom rasporedu vožnje.",
+    "permanenceEvidence": "Od ponedjeljka, 22. studenoga, u 8.30 sati, do završetka radova, 22. siječnja 2022 . godine, a koji uvjetuju zatvaranje za promet dijela ulice Tuškanac",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7741": {
+    "permanence": "temporary",
+    "category": "ukinuta",
+    "lines": [
+      {
+        "number": "105A",
+        "role": "extended"
+      },
+      {
+        "number": "105B",
+        "role": "removed"
+      },
+      {
+        "number": "105C",
+        "role": "shortened"
+      },
+      {
+        "number": "103",
+        "role": "schedule-only"
+      }
+    ],
+    "effectiveDate": "2022-02-11",
+    "cleanTitle": "Zbog radova na dijelu ulice Tuškanac, linija 105A privremeno se produljuje do Gornjeg Prekrižja, ukida se linija 105B, linija 105C skraćuje se do Ilirskog trga, a liniji 103 mijenjaju se rasporedi polazaka.",
+    "permanenceEvidence": "Zbog radova koji uvjetuju zatvaranje za promet dijela ulice Tuškanac ... do završetka radova",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "7966": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "150",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2022-11-17",
+    "cleanTitle": "Linija 150 od 17. studenoga 2022. do 16. srpnja 2023. prometuje djelomično izmijenjenom trasom u smjeru Trga bana Josipa Jelačića zbog cjelovite obnove OŠ Tituša Brezovačkog.",
+    "permanenceEvidence": "će od četvrtka, 17. studenog do 16. srpnja 2023. godine prometovati u smjeru Trga bana Jelačića djelomično izmijenjenom trasom, zbog cjelovite obnove OŠ Tituša Brezovačkog",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8023": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "160",
+        "role": "unchanged"
+      },
+      {
+        "number": "163",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": null,
+    "cleanTitle": "Autobusno stajalište Brezje na Dragonožečkoj ulici u smjeru Savskog mosta privremeno je izmješteno 100 metara prije postojećeg zbog radova; koriste ga linije 160 i 163.",
+    "permanenceEvidence": "Zbog radova koji se izvode u zoni autobusnog stajališta Brezje na Dragonožečkoj ulici u smjeru Savskog mosta, privremeno autobusno stajalište je postavljeno 100 metara prije postojećeg.",
+    "disagreements": [
+      "lines"
+    ],
+    "needsReview": false
+  },
+  "8066": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "243",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2023-04-11",
+    "cleanTitle": "Autobusna linija 243 privremeno prometuje djelomično izmijenjenom trasom zbog radova na izgradnji kružnog toka na raskrižju Remetinečke ulice, Ulice Radoslava Cimermana i Riječke ulice.",
+    "permanenceEvidence": "Od utorka 11. travnja do završetka radova na izgradnji kružnog toka",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8237": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "105",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2023-11-20",
+    "cleanTitle": "Autobusna linija 105 prometuje djelomično izmijenjenom trasom u smjeru Kaptola od 20. do 24. studenoga 2023.",
+    "permanenceEvidence": "od ponedjeljka, 20. studenoga u 9 sati do petka, 24. studenoga",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8238": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "118",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2023-11-22",
+    "cleanTitle": "Autobusno stajalište Vodovodna u smjeru Trga Mažuranića privremeno je izmješteno oko 50 metara istočnije zbog izgradnje južnog nogostupa na Magazinskoj ulici.",
+    "permanenceEvidence": "do završetka izgradnje južnog nogostupa na Magazinskoj ulici",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8266": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "284",
+        "role": "extended"
+      },
+      {
+        "number": "277",
+        "role": "schedule-only"
+      }
+    ],
+    "effectiveDate": "2024-01-08",
+    "cleanTitle": "Linija 284 u pojedinim polascima radnim danima produžena je do okretišta u Dumovcu, a novi vozni red vrijedi i za liniju 277.",
+    "permanenceEvidence": "Novi vozni red autobusne linije 284, ali i linije 277",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8353": {
+    "permanence": "permanent",
+    "category": "nova",
+    "lines": [
+      {
+        "number": "147",
+        "role": "new"
+      },
+      {
+        "number": "121",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2024-04-29",
+    "cleanTitle": "U promet je puštena nova autobusna linija 147 (Vrapčanska aleja - Dolec), a trajno se uspostavljaju stajališta Dolec, Sigetje i Grintavečka.",
+    "permanenceEvidence": "Trajno se uspostavljaju autobusna stajališta Dolec u Ulici Dolec",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "8388": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [],
+    "effectiveDate": "2024-05-31",
+    "cleanTitle": "Od 31. svibnja do 14. lipnja ulazno/izlazni peroni pojedinih linija terminala Glavni kolodvor privremeno se izmještaju na Paromlinsku ulicu ispred kućnih brojeva 7 i 13.",
+    "permanenceEvidence": "Od petka 31. svibnja u 8 sati do petka, 14. lipnja u 16 sati",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9538": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "239",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2024-11-20",
+    "cleanTitle": "Autobusno stajalište Čučerje - crkva privremeno je izmješteno na Trg Svete Marije Čučerske zbog obnove crkve.",
+    "permanenceEvidence": "bit će privremeno izmješteno od srijede, 20. studenoga do završetka obnove crkve u Čučerju",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9552": {
+    "permanence": "temporary",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "228",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2024-12-02",
+    "cleanTitle": "Linija 228 privremeno se produljuje do terminala Borongaj i mijenja naziv u 228 (Borongaj - Rebro - Borongaj) zbog uvođenja Park Ride sustava tijekom izgradnje bolnice Rebro.",
+    "permanenceEvidence": "tijekom izgradnje nove zgrade i garaže bolnice",
+    "disagreements": [
+      "category",
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": true
+  },
+  "9710": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "222",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2025-06-23",
+    "cleanTitle": "Linija 222 privremeno prometuje djelomično izmijenjenom trasom u smjeru Remetinca zbog sanacije petlje na Slavonskoj aveniji kod Avenije Marina Držića.",
+    "permanenceEvidence": "do završetka radova",
+    "disagreements": [
+      "effectiveDate",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9731": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "268",
+        "role": "rerouted"
+      },
+      {
+        "number": "290",
+        "role": "rerouted"
+      },
+      {
+        "number": "310",
+        "role": "rerouted"
+      },
+      {
+        "number": "313",
+        "role": "rerouted"
+      },
+      {
+        "number": "315",
+        "role": "rerouted"
+      },
+      {
+        "number": "330",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2025-07-14",
+    "cleanTitle": "Linije 268, 290, 310, 313, 315 i 330 prometuju djelomično izmijenjenom trasom u smjeru Velike Gorice zbog radova u Ulici Matice hrvatske.",
+    "permanenceEvidence": "do završetka radova u Ulici Matice hrvatske u Velikoj Gorici",
+    "disagreements": [
+      "effectiveDate",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9732": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "295",
+        "role": "rerouted"
+      },
+      {
+        "number": "307",
+        "role": "rerouted"
+      },
+      {
+        "number": "308",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2025-09-08",
+    "cleanTitle": "Linije 295, 307 i 308 prometuju izmijenjenim trasama zbog rekonstrukcije Sarajevske ceste od Ukrajinske ulice do kružnog toka Zapruđe.",
+    "permanenceEvidence": "Od ponedjeljka, 8. rujna do završetka rekonstrukcije Sarajevske ceste",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9795": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "278",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2025-09-08",
+    "cleanTitle": "Linija 278 produljuje se Kozarićevom i Mostarskom ulicom u smjeru Sesveta, a na produljenom dijelu trase uspostavlja se novo stajalište u Popovečkoj ulici.",
+    "permanenceEvidence": "se od ponedjeljka, 8. rujna, produljuje Kozarićevom i Mostarskom ulicom u smjeru Sesveta",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9804": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "182",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2025-09-16",
+    "cleanTitle": "Linija 182 prometuje djelomično izmijenjenom trasom od 16. do 22. rujna zbog Europskog tjedna mobilnosti u Zaprešiću.",
+    "permanenceEvidence": "Zbog održavanja Europskog tjedna mobilnosti u Zaprešiću ... će od utorka, 16. rujna do ponedjeljka, 22. rujna prometovati djelomično izmijenjenom trasom",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9818": {
+    "permanence": "temporary",
+    "category": "trasa",
+    "lines": [
+      {
+        "number": "269",
+        "role": "rerouted"
+      }
+    ],
+    "effectiveDate": "2025-09-23",
+    "cleanTitle": "Linija 269 prometuje izmijenjenom trasom u smjeru Ivera od 23. do 30. rujna.",
+    "permanenceEvidence": "Od utorka, 23. rujna u 8 sati do utorka, 30. rujna u 6 sati",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9894": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "207",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2026-01-12",
+    "cleanTitle": "Autobusna linija 207 od 12. siječnja prometuje produljenom trasom s novim stajalištima Lašćinski Borovec, Vodosprema Lašćina i Lipovac I te novim voznim redom.",
+    "permanenceEvidence": "prometovat će produljenom trasom ... U primjeni će biti novi vozni red",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9912": {
+    "permanence": "temporary",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "6",
+        "role": "extended"
+      },
+      {
+        "number": "8",
+        "role": "extended"
+      },
+      {
+        "number": "14",
+        "role": "shortened"
+      }
+    ],
+    "effectiveDate": "2026-02-16",
+    "cleanTitle": "Zbog radova na okretištu Zapruđe tramvajske linije 6 i 8 privremeno produljuju trase, a linija 14 prometuje skraćenom trasom.",
+    "permanenceEvidence": "Zbog radova na okretištu Zapruđe",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9913": {
+    "permanence": "permanent",
+    "category": "produljena",
+    "lines": [
+      {
+        "number": "101",
+        "role": "extended"
+      }
+    ],
+    "effectiveDate": "2026-02-16",
+    "cleanTitle": "Linija 101 produljuje se do kružnog raskrižja u Šestinama i mijenja naziv u 101 (Britanski trg - Šestine) od 16. veljače.",
+    "permanenceEvidence": "Linija 101 produljuje se do kružnog raskrižja u Šestinama te mijenja naziv u 101 (Britanski trg - Šestine)",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9915": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "160",
+        "role": "unchanged"
+      },
+      {
+        "number": "163",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2026-02-16",
+    "cleanTitle": "Stajališta Društveni dom na Dragonožečkoj cesti privremeno su izmještena zbog radova u zoni raskrižja Obreške i Dragonožečke ceste, a koriste ih linije 160 i 163.",
+    "permanenceEvidence": "do završetka radova u zoni raskrižja Obreške i Dragonožečke ceste, obostrana autobusna stajališta Društveni dom na Dragonožečkoj cesti bit će privremeno izmještena",
+    "disagreements": [
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9916": {
+    "permanence": "temporary",
+    "category": "stajalište",
+    "lines": [
+      {
+        "number": "102",
+        "role": "unchanged"
+      },
+      {
+        "number": "105",
+        "role": "unchanged"
+      }
+    ],
+    "effectiveDate": "2026-02-17",
+    "cleanTitle": "Obostrano autobusno stajalište Tuškanac privremeno je izmješteno 17. veljače od 8 do 14.30 sati zbog radova u zoni stajališta.",
+    "permanenceEvidence": "od 8 do 14.30 sati zbog radova u zoni stajališta",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  },
+  "9945": {
+    "permanence": "temporary",
+    "category": "skraćena",
+    "lines": [
+      {
+        "number": "224",
+        "role": "shortened"
+      }
+    ],
+    "effectiveDate": "2026-03-30",
+    "cleanTitle": "Autobusna linija 224 privremeno prometuje skraćenom trasom do Novoselečkog trga zbog radova u Ulici Novoselečki put.",
+    "permanenceEvidence": "do završetka radova u Ulici Novoselečki put",
+    "disagreements": [],
+    "needsReview": false
+  },
+  "9973": {
+    "permanence": "temporary",
+    "category": "nova",
+    "lines": [
+      {
+        "number": "262",
+        "role": "shortened"
+      },
+      {
+        "number": "262A",
+        "role": "new"
+      }
+    ],
+    "effectiveDate": "2026-04-27",
+    "cleanTitle": "Zbog sanacije klizišta na Zagrebačkoj ulici u Planini Donjoj linija 262 privremeno prometuje skraćenom trasom do stajališta Kučilovina 38, a privremeno se uvodi linija 262A (Kašina - Planina Donja - staro okretište).",
+    "permanenceEvidence": "od ponedjeljka 27. travnja u 9 sati do petka, 29. svibnja",
+    "disagreements": [
+      "lines",
+      "cleanTitle"
+    ],
+    "needsReview": false
+  }
+}

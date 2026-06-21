@@ -1,0 +1,86 @@
+{
+  "_doc": "Announcement-driven changelog of ZET network changes. ZET's official notice is the source of truth for WHAT changed and WHY (title/summary/source); GTFS only draws the before/after map (geom -> data/promjene/geom/diff-<line>.json + index.json). Curated + verified; the backfill scraper appends candidates here. Order: newest effective date first.",
+  "generatedFrom": {
+    "oldFeed": {
+      "version": "000368",
+      "start": "2025-04-07"
+    },
+    "newFeed": {
+      "version": "000389",
+      "start": "2026-06-11"
+    }
+  },
+  "entries": [
+    {
+      "id": "produljenje-101-sestine",
+      "lines": [
+        "101"
+      ],
+      "mode": "Autobus",
+      "kind": "produljena",
+      "date": "2026-02-16",
+      "permanent": true,
+      "title": "Autobus 101 produljen do Šestina.",
+      "summary": "ZET je liniju 101 s Britanskog trga produljio uz Pantovčak sve do Šestina, s novim stajalištima Šestinski vrh, Šestinski vijenac i Šestine-centar. Ranije je okretala na Pantovčaku. Istom je odlukom produljena i linija 138.",
+      "source": {
+        "publisher": "ZET",
+        "label": "Službena obavijest ZET-a",
+        "title": "Produljene trase autobusnih linija 101 i 138",
+        "url": "https://web.archive.org/web/20260217162327/https://www.zet.hr/aktualnosti/izmjene-u-prometu/produzenje-trase-autobusne-linije-101/9913",
+        "published": "2026-02-12"
+      },
+      "maps": [
+        "101"
+      ]
+    },
+    {
+      "id": "ukidanje-145-147",
+      "noticeId": "9881",
+      "lines": [
+        "145",
+        "147"
+      ],
+      "mode": "Autobus",
+      "kind": "ukinute",
+      "date": "2025-12-08",
+      "permanent": true,
+      "title": "Ukinute linije 145 i 147.",
+      "summary": "Zbog vrlo male prijevozne potražnje ZET je ukinuo linije 145 (Vrapčanska aleja – Oranice) i 147 (Vrapčanska aleja – Dolec). Njihovu je prometnu funkciju preuzela pojačana linija 143 od terminala Vrapčanska aleja do Orešja.",
+      "source": {
+        "publisher": "ZET",
+        "label": "ZET, izmjene u prometu (arhiva)",
+        "title": "Ukidanje linija 145 i 147 te dodatni polasci na liniji 143",
+        "url": "https://web.archive.org/web/20251224012746/https://www.zet.hr/aktualnosti/izmjene-u-prometu/31",
+        "published": "2025-12-05"
+      },
+      "successor": {
+        "line": "143"
+      },
+      "maps": [
+        "145",
+        "147"
+      ]
+    },
+    {
+      "id": "produljenje-207",
+      "lines": [
+        "207"
+      ],
+      "mode": "Autobus",
+      "kind": "produljena",
+      "date": "2026-01-17",
+      "permanent": true,
+      "title": "Kružna linija 207 produljena.",
+      "summary": "Kružnoj liniji 207 s Kvaternikova trga produljena je trasa s osam novih stajališta i uveden je novi vozni red. Polazište i odredište ostaju na Kvaternikovu trgu.",
+      "source": {
+        "publisher": "ZET",
+        "label": "Službena obavijest ZET-a",
+        "title": "Produljena trasa i novi vozni red linije 207",
+        "url": "https://web.archive.org/web/20260117153255/https://www.zet.hr/aktualnosti/izmjene-u-prometu/produljena-trasa-i-novi-vozni-red-linije-207/9894"
+      },
+      "maps": [
+        "207"
+      ]
+    }
+  ]
+}

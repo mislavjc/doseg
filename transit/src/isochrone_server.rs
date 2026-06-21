@@ -98,6 +98,16 @@ struct AppState {
     bajs_status_store: BajsStatusStore,
     /// BAJS fleet tracking state (shared with background poll task)
     bajs_fleet: Arc<BajsFleetState>,
+    /// GTFS service date the graph was built for (YYYY-MM-DD). Equals today
+    /// unless the feed lapsed and we fell back to an earlier service day.
+    feed_service_date: String,
+    /// True when the graph was built for a day other than today because today
+    /// had no scheduled service — i.e. the feed is stale right now.
+    feed_fallback: bool,
+    /// Days until the loaded feed's last service date (negative = already
+    /// expired). None if OTP didn't report a service range. Surfaced on
+    /// /health so monitoring can alert before the feed runs dry.
+    feed_runway_days: Option<i64>,
 }
 
 /// Shared BAJS station status store.
@@ -1570,16 +1580,18 @@ async fn handle_isochrone(
 
 async fn handle_health(State(state): State<Arc<AppState>>) -> Response {
     let health = gtfs_rt::get_rt_health(&state.rt_store, &state.rt_last_refresh);
-    let body = match health.stale_sec {
-        Some(sec) => format!(
-            r#"{{"status":"ok","gtfsRt":{{"tripCount":{},"staleSec":{}}}}}"#,
-            health.trip_count, sec
-        ),
-        None => format!(
-            r#"{{"status":"ok","gtfsRt":{{"tripCount":{},"staleSec":null}}}}"#,
-            health.trip_count
-        ),
+    let stale = match health.stale_sec {
+        Some(sec) => sec.to_string(),
+        None => "null".to_string(),
     };
+    let runway = match state.feed_runway_days {
+        Some(d) => d.to_string(),
+        None => "null".to_string(),
+    };
+    let body = format!(
+        r#"{{"status":"ok","gtfsRt":{{"tripCount":{},"staleSec":{}}},"feed":{{"serviceDate":"{}","fallback":{},"runwayDays":{}}}}}"#,
+        health.trip_count, stale, state.feed_service_date, state.feed_fallback, runway
+    );
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
@@ -2710,6 +2722,25 @@ async fn handle_occupancy(
         .into_response()
 }
 
+/// Last service date of the loaded feed, as a Unix epoch (seconds), from OTP's
+/// `serviceTimeRange`. Used to compute how many days of schedule remain before
+/// isochrones would go walk-only. Returns None on any error — runway is a
+/// best-effort signal, never a startup blocker.
+fn fetch_feed_end_epoch(otp_url: &str) -> Option<i64> {
+    let body = serde_json::json!({ "query": "{ serviceTimeRange { end } }" });
+    let resp: serde_json::Value = ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+        .header("Content-Type", "application/json")
+        .send_json(&body)
+        .ok()?
+        .body_mut()
+        .read_json()
+        .ok()?;
+    resp.get("data")?
+        .get("serviceTimeRange")?
+        .get("end")?
+        .as_i64()
+}
+
 #[tokio::main]
 async fn main() {
     let otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".to_string());
@@ -2719,20 +2750,68 @@ async fn main() {
         .parse()
         .unwrap_or(3001);
 
-    // Compute today's date (CET/CEST) as YYYY-MM-DD for OTP service-day filtering
-    let today = {
+    // Service day (CET/CEST) for OTP departure filtering. Normally today, but
+    // if the loaded GTFS feed has lapsed — today is past its last service date,
+    // or the GTFS refresh lagged — OTP returns zero departures and every
+    // isochrone silently collapses to a walk-only blob (the reach area reads
+    // "wildly less than it should be"). Guard against that by stepping back one
+    // week at a time (same weekday → same service level) until we hit a day
+    // with real scheduled service.
+    let today_days = {
         let now = unix_now();
-        let secs = (now + zagreb_offset(now)) as u64;
-        let days = secs / 86400;
-        let (y, m, d) = days_to_ymd(days);
-        format!("{:04}-{:02}-{:02}", y, m, d)
+        ((now + zagreb_offset(now)) as u64) / 86400
     };
-    println!(
-        "Loading transit graph from OTP at {} for {}...",
-        otp_url, today
-    );
     let t0 = Instant::now();
-    let mut transit_graph = otp::fetch_and_build_graph(&otp_url, Some(&today));
+    let mut transit_graph;
+    let mut svc_days = today_days;
+    loop {
+        let (y, m, d) = days_to_ymd(svc_days);
+        let date = format!("{:04}-{:02}-{:02}", y, m, d);
+        println!(
+            "Loading transit graph from OTP at {} for {}...",
+            otp_url, date
+        );
+        transit_graph = otp::fetch_and_build_graph(&otp_url, Some(&date));
+        let departures: usize = transit_graph
+            .patterns
+            .iter()
+            .map(|p| p.departures.len())
+            .sum();
+        if departures > 0 {
+            if svc_days != today_days {
+                println!(
+                    "  today has no scheduled service — fell back to {} ({} departures). Refresh the GTFS feed.",
+                    date, departures
+                );
+            }
+            break;
+        }
+        // Cap the walk-back so a genuinely empty feed fails loudly instead of
+        // hammering OTP forever.
+        if today_days - svc_days >= 7 * 8 {
+            eprintln!(
+                "Warning: no scheduled service found within 8 weeks before today — transit reach will be empty (stale/missing GTFS feed?)"
+            );
+            break;
+        }
+        svc_days -= 7;
+    }
+    // Freshness signals for /health: the date actually used, whether it's a
+    // fallback, and how many days of schedule the feed still has.
+    let (sy, sm, sd) = days_to_ymd(svc_days);
+    let feed_service_date = format!("{:04}-{:02}-{:02}", sy, sm, sd);
+    let feed_fallback = svc_days != today_days;
+    let feed_runway_days = fetch_feed_end_epoch(&otp_url).map(|end| (end - unix_now()) / 86400);
+    if let Some(days) = feed_runway_days {
+        if days < 14 {
+            eprintln!(
+                "Warning: GTFS feed has only {} day(s) of schedule left — refresh it before isochrones go walk-only",
+                days
+            );
+        } else {
+            println!("GTFS feed runway: {} days", days);
+        }
+    }
     transit_graph.bajs_stations = otp::fetch_bajs_stations();
     transit_graph.build_stop_grid();
     println!(
@@ -2914,6 +2993,9 @@ async fn main() {
         stop_key_to_idx,
         bajs_status_store,
         bajs_fleet,
+        feed_service_date,
+        feed_fallback,
+        feed_runway_days,
     });
 
     let app = Router::new()

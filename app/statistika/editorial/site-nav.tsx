@@ -14,7 +14,6 @@ export const NAV_LINKS = [
   { label: "statistika", href: "/statistika" },
   { label: "linije", href: "/linije" },
   { label: "promjene", href: "/promjene" },
-  { label: "tramvaji", href: "/karta-tramvaja" },
   { label: "o projektu", href: "/o-projektu" },
 ] as const
 

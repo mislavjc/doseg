@@ -31,6 +31,55 @@ jobs:
             "https://zet.hr/gtfs-scheduled/latest"
           echo "ZET: $(du -h data/gtfs/zet.zip | cut -f1)"
 
+      # Gate the update on the feed actually being usable. ZET publishes a
+      # rolling window; refuse to ship one that's already expired or empty, and
+      # warn when runway is short. This is what would have flagged the 06-15
+      # feed running dry instead of it silently turning every isochrone
+      # walk-only.
+      - name: Validate ZET feed
+        id: validate
+        run: |
+          python3 - <<'PY'
+          import zipfile, csv, io, datetime, os, sys
+          z = zipfile.ZipFile("data/gtfs/zet.zip")
+          def rows(name):
+              with z.open(name) as f:
+                  yield from csv.DictReader(io.TextIOWrapper(f, "utf-8-sig"))
+          DAYS = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"]
+          last = 0
+          try:
+              for r in rows("calendar_dates.txt"):
+                  if (r.get("exception_type") or "").strip() == "1":
+                      last = max(last, int(r["date"]))
+          except KeyError:
+              pass
+          try:
+              for r in rows("calendar.txt"):
+                  if any((r.get(d) or "0").strip() == "1" for d in DAYS):
+                      last = max(last, int(r["end_date"]))
+          except KeyError:
+              pass
+          trips = sum(1 for _ in rows("trips.txt"))
+          today = datetime.date.today()
+          ok = "true"
+          if last == 0:
+              print("::error::could not determine feed service window")
+              ok = "false"; runway = -999; ld = "unknown"
+          else:
+              ld = datetime.datetime.strptime(str(last), "%Y%m%d").date()
+              runway = (ld - today).days
+              print(f"last service date: {ld}  runway: {runway} days  trips: {trips}")
+              if trips == 0:
+                  print("::error::feed has zero trips"); ok = "false"
+              if runway < 0:
+                  print(f"::error::feed already expired ({runway}d) — refusing to ship"); ok = "false"
+              elif runway < 14:
+                  print(f"::warning::feed has only {runway} days of runway")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as g:
+              g.write(f"ok={ok}\nrunway={runway}\nlast_date={ld}\ntrips={trips}\n")
+          sys.exit(0 if ok == "true" else 1)
+          PY
+
       - name: Download HZPP GTFS
         run: |
           curl -fSL --retry 3 --retry-delay 5 \
@@ -59,25 +108,41 @@ jobs:
           echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request
+        id: cpr
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           title: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
           commit-message: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
           body: |
-            Automated weekly GTFS data update.
+            Automated weekly GTFS data update — **record only**. The feed zips
+            are gitignored (`data/gtfs/*.zip`), so this PR just bumps
+            `checksums.sha256` to log that the feed changed.
+
+            **ZET feed window:** last service ${{ steps.validate.outputs.last_date }} (${{ steps.validate.outputs.runway }} days runway), ${{ steps.validate.outputs.trips }} trips.
 
             **Downloads:**
             - ZET: https://zet.hr/gtfs-scheduled/latest
             - HZPP: https://www.hzpp.hr/GTFS_files.zip (filtered to Zagreb area)
 
-            The OTP graph and walk graph are **not** rebuilt by this workflow.
-            After merging, re-run `scripts/setup-data.sh` on the server (skipping the download steps)
-            or rebuild via `docker compose run --rm otp --build --save`.
+            The actual refresh happens on the server in the next step of this
+            workflow (`scripts/refresh-gtfs.sh --download`), which re-downloads
+            the feed, rebuilds the OTP graph, and restarts the isochrone server.
           branch: update-gtfs-data
           delete-branch: true
           add-paths: |
-            data/gtfs/zet.zip
-            data/gtfs/hzpp.zip
-            data/gtfs/hzpp-zagreb.zip
             data/gtfs/checksums.sha256
+
+      # Deliver the feed where it actually lives: on the server. The zips are
+      # gitignored, so merging a PR can't ship them — the server must re-download
+      # and rebuild OTP. refresh-gtfs.sh validates, rebuilds, health-checks, and
+      # rolls back on failure. This is the step whose absence let the feed rot.
+      - name: Refresh feed on server
+        if: steps.diff.outputs.changed == 'true' && steps.validate.outputs.ok == 'true'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 15m
+          script: bash /opt/doseg/scripts/refresh-gtfs.sh --download

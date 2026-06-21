@@ -41,11 +41,42 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          set -uo pipefail
           npm install -g wrangler@latest
           DATE=$(date -u +%Y-%m-%d)
-          wrangler r2 object put "doseg-backups/gtfs-rt-${DATE}.db.zst" \
-            --file "/tmp/gtfs-rt-${DATE}.db.zst" --remote
-          wrangler r2 object put "doseg-data-eu/gtfs/zet.zip" \
-            --file "/tmp/zet.zip" --remote
-          wrangler r2 object put "doseg-data-eu/walk-graph.bin" \
-            --file "/tmp/walk-graph.bin" --remote
+          fail=0
+
+          # Dev-data clone FIRST and each upload independent. These are small and
+          # the most important to keep fresh — data.doseg.hr / setup-dev.sh pull
+          # the GTFS feed from here. Previously the oversized rt-db upload ran
+          # first under `set -e` and aborted the job, silently freezing the R2
+          # GTFS clone. Never let one upload block the others again.
+          echo "::group::zet.zip -> doseg-data-eu/gtfs/zet.zip"
+          wrangler r2 object put "doseg-data-eu/gtfs/zet.zip" --file "/tmp/zet.zip" --remote \
+            || { echo "::error::zet.zip upload failed"; fail=1; }
+          echo "::endgroup::"
+
+          echo "::group::walk-graph.bin -> doseg-data-eu/walk-graph.bin"
+          wrangler r2 object put "doseg-data-eu/walk-graph.bin" --file "/tmp/walk-graph.bin" --remote \
+            || { echo "::error::walk-graph.bin upload failed"; fail=1; }
+          echo "::endgroup::"
+
+          # rt-db backup LAST: it outgrew wrangler's 300 MiB single-PUT cap
+          # (~366 MiB compressed) and the CLI has no multipart. Rather than add
+          # S3 credentials, split into <300 MiB chunks and put each with the same
+          # token. Restore = get every gtfs-rt-DATE.db.zst.part-* and `cat` them
+          # back in order, then `zstd -d`.
+          BK="/tmp/gtfs-rt-${DATE}.db.zst"
+          echo "::group::${BK} -> doseg-backups (split, 250 MiB chunks)"
+          # Remove any stale chunks from earlier runs in this job, then split.
+          rm -f "${BK}.part-"*
+          split -b 250m -d -a 2 "$BK" "${BK}.part-"
+          for part in "${BK}.part-"*; do
+            key="doseg-backups/$(basename "$part")"
+            echo "putting $key ($(du -h "$part" | cut -f1))"
+            wrangler r2 object put "$key" --file "$part" --remote \
+              || { echo "::error::rt-db chunk $key upload failed"; fail=1; }
+          done
+          echo "::endgroup::"
+
+          exit $fail

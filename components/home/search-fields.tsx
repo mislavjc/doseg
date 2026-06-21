@@ -3,8 +3,8 @@
 import { useCallback, useRef, useState } from "react"
 import {
   IconArrowBottomTop,
+  IconCrossLarge,
   IconLocation,
-  IconX,
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { GEOCODE_KIND_META } from "@/lib/poi"
@@ -117,7 +117,7 @@ function Dropdown({
     <DropdownPanel className="origin-top top-full right-0 left-0 mt-1.5 pb-1">
       {onRemoveOrigin && (
         <DropdownRow
-          icon={<IconX size={15} className="text-poi-hospital" />}
+          icon={<IconCrossLarge size={15} className="text-poi-hospital" />}
           title="Ukloni polazište"
           tone="red"
           divider
@@ -293,7 +293,7 @@ function SearchRow({
           onClick={onClear}
           className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
         >
-          <IconX size={15} />
+          <IconCrossLarge size={15} />
         </button>
       ) : (
         trailing
@@ -317,7 +317,7 @@ function ClearValueButton({
       onClick={onClick}
       className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
     >
-      <IconX size={15} />
+      <IconCrossLarge size={15} />
     </button>
   )
 }

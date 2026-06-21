@@ -9,15 +9,16 @@ import { cn } from "@/lib/utils"
  * disclosure (native <details>, no client JS). Matches Paper node 1O6-0.
  */
 
-const LINKS = [
+export const NAV_LINKS = [
   { label: "karta", href: "/" },
   { label: "statistika", href: "/statistika" },
   { label: "linije", href: "/linije" },
+  { label: "promjene", href: "/promjene" },
   { label: "tramvaji", href: "/karta-tramvaja" },
   { label: "o projektu", href: "/o-projektu" },
 ] as const
 
-function NavLink({
+export function NavLink({
   label,
   href,
   active,
@@ -33,7 +34,7 @@ function NavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "font-mono text-label transition-colors duration-150",
+        "shrink-0 whitespace-nowrap font-mono text-label transition-colors duration-150",
         active ? "text-ink" : "text-ink-muted hover:text-ink",
         className
       )}
@@ -55,15 +56,26 @@ const Bracket = ({ char, className }: { char: string; className: string }) => (
   </span>
 )
 
-export function SiteNav({ active }: { active?: string }) {
+export function SiteNav({
+  active,
+  className,
+}: {
+  active?: string
+  className?: string
+}) {
   return (
-    <div className="relative w-[640px] max-w-[calc(100%-1rem)] bg-white px-[18px] py-1.5">
+    <div
+      className={cn(
+        "relative flex w-[640px] max-w-[calc(100%-1rem)] items-center bg-white px-[18px] py-1.5",
+        className
+      )}
+    >
       <Bracket char="⌜" className="left-1.5 top-[3px]" />
       <Bracket char="⌝" className="right-1.5 top-[3px]" />
       <Bracket char="⌞" className="bottom-[1px] left-1.5" />
       <Bracket char="⌟" className="bottom-[1px] right-1.5" />
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex w-full items-center justify-between gap-3">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/doseg-mark.png"
@@ -81,7 +93,7 @@ export function SiteNav({ active }: { active?: string }) {
 
         {/* Desktop: inline links */}
         <nav className="hidden items-center gap-5 sm:flex">
-          {LINKS.map((l) => (
+          {NAV_LINKS.map((l) => (
             <NavLink
               key={l.href}
               label={l.label}
@@ -97,7 +109,7 @@ export function SiteNav({ active }: { active?: string }) {
             izbornik
           </summary>
           <nav className="absolute right-0 top-full z-20 mt-2 flex min-w-32 flex-col gap-2.5 bg-white px-3.5 py-3 shadow-soft ring-1 ring-hairline-strong">
-            {LINKS.map((l) => (
+            {NAV_LINKS.map((l) => (
               <NavLink
                 key={l.href}
                 label={l.label}

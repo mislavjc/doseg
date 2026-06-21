@@ -447,6 +447,18 @@
   border-bottom-color: rgba(255, 255, 255, 0.95) !important;
 }
 
+/* Reach map dot popup (map redesign) — sharp, token-driven */
+.reach-popup .maplibregl-popup-content {
+  background: var(--ground);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 0;
+  padding: 0;
+  box-shadow: var(--shadow-dropdown);
+}
+.reach-popup .maplibregl-popup-tip {
+  display: none;
+}
+
 /* ── Skeleton shimmer ── */
 .skeleton-block {
   background: rgba(0, 0, 0, 0.05);

@@ -1,12 +1,16 @@
 "use client"
 
+import { IconLocation } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+
 import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
 import type { Itinerary, Leg } from "@/lib/otp"
 import { POI_CATEGORIES } from "@/lib/poi"
 import {
+  deShout,
   formatClock,
   transfersLabel,
   type DistrictContext,
+  type PanelState,
 } from "./reach-state"
 import {
   BikeIcon,
@@ -31,6 +35,41 @@ export type ReachStats = {
   pctCity: number | null
   districtsInReach: number | null
   totalDistricts: number | null
+}
+
+/** Everything the panel content needs — shared by the desktop Sidebar and the
+ * mobile MobileSheet/SheetBody so the prop shape lives in one place. */
+export type PanelContentProps = {
+  panel: PanelState
+  minutes: number
+  onMinutesChange: (m: number) => void
+  stats: ReachStats | null
+  poiCounts: Record<string, number> | null
+  poiLayers: Record<string, boolean>
+  onTogglePoi: (key: string) => void
+  districtCtx: DistrictContext | null
+  departedAt: Date | null
+  onBackToReach: () => void
+  onRetry: () => void
+  onUseMyLocation: () => void
+}
+
+/** Empty-state shortcut: set the origin from the browser's geolocation —
+ * surfaces the "Moja lokacija" action at the moment of intent (spec: never
+ * auto-prompt). */
+export function GeoButton({ onUse }: { onUse: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onUse}
+      className="flex shrink-0 items-center gap-2.5 self-start border border-hairline-strong px-3.5 py-[11px] transition-colors duration-150 ease-out hover:bg-row-tint active:scale-[0.99]"
+    >
+      <IconLocation size={16} className="shrink-0 text-zg-blue" />
+      <span className="font-heros text-[16px] leading-5 text-zg-blue">
+        Koristi moju lokaciju
+      </span>
+    </button>
+  )
 }
 
 /* ── loading (spec §3 — skeleton shaped like the readout) ────────────── */
@@ -99,11 +138,12 @@ export function ReachReadout({
   )
 }
 
-// Server caps the isochrone at 30 min for now — 45 ships later.
+// Server caps the isochrone at 30 min for now — 45 ships later. The inline
+// "uskoro" note reads on touch too (title tooltips never show there).
 const MINUTE_OPTIONS = [
   { value: 15, label: "15" },
   { value: 30, label: "30" },
-  { value: 45, label: "45", disabled: true, title: "uskoro" },
+  { value: 45, label: "45", disabled: true, note: "uskoro" },
 ]
 
 export function MinutesRow({
@@ -124,27 +164,51 @@ export function MinutesRow({
   )
 }
 
+export type PoiLayerState = Record<string, boolean>
+
+/** Counts of what's in reach, doubling as map-layer toggles — clicking a row
+ * shows/hides that category's dots (the dot dims when the layer is off). */
 export function PoiList({
   poiCounts,
+  active,
+  onToggle,
 }: {
   poiCounts: Record<string, number> | null
+  active: PoiLayerState
+  onToggle: (key: string) => void
 }) {
   return (
     <div className="flex flex-col gap-[11px]">
-      <MonoLabel>u dosegu</MonoLabel>
-      {POI_CATEGORIES.map((row) => (
-        <div key={row.key} className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <PoiDot colorClass={row.colorClass} />
-            <span className="font-heros text-[16px] leading-5 text-ink-2">
-              {row.label}
+      <div className="flex items-center justify-between">
+        <MonoLabel>u dosegu</MonoLabel>
+        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+          klik za kartu
+        </span>
+      </div>
+      {POI_CATEGORIES.map((row) => {
+        const on = active[row.key]
+        return (
+          <button
+            key={row.key}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onToggle(row.key)}
+            className="-mx-1.5 flex items-center justify-between rounded-none px-1.5 py-0.5 text-left transition-colors duration-150 hover:bg-row-tint"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className={on ? "" : "opacity-30"}>
+                <PoiDot colorClass={row.colorClass} />
+              </span>
+              <span className="font-heros text-[16px] leading-5 text-ink-2">
+                {row.label}
+              </span>
             </span>
-          </div>
-          <span className="font-heros text-[16px] leading-5 text-ink">
-            {poiCounts ? (poiCounts[row.key] ?? 0) : "…"}
-          </span>
-        </div>
-      ))}
+            <span className="font-heros text-[16px] leading-5 text-ink">
+              {poiCounts ? (poiCounts[row.key] ?? 0) : "…"}
+            </span>
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -154,31 +218,27 @@ export function ReachContent({
   onMinutesChange,
   stats,
   poiCounts,
+  poiLayers,
+  onTogglePoi,
 }: {
   minutes: number
   onMinutesChange: (m: number) => void
   stats: ReachStats | null
   poiCounts: Record<string, number> | null
+  poiLayers: PoiLayerState
+  onTogglePoi: (key: string) => void
 }) {
   return (
     <>
       <ReachReadout minutes={minutes} stats={stats} />
       <ReachRamp rightLabel={`${minutes} min daleko`} />
       <MinutesRow minutes={minutes} onChange={onMinutesChange} />
-      <PoiList poiCounts={poiCounts} />
+      <PoiList poiCounts={poiCounts} active={poiLayers} onToggle={onTogglePoi} />
     </>
   )
 }
 
 /* ── route blocks ────────────────────────────────────────────────────── */
-
-/** BAJS station names arrive ALL-CAPS — title-case them for display. */
-function deShout(name: string): string {
-  if (name !== name.toUpperCase()) return name
-  return name
-    .toLowerCase()
-    .replace(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
-}
 
 function legTitle(leg: Leg): string {
   const mode = leg.mode.toUpperCase()
@@ -380,36 +440,57 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
     <div className="mt-auto flex flex-col gap-[11px] border-t border-hairline pt-4">
       <MonoLabel>tvoj kvart na ljestvici</MonoLabel>
       {district ? (
-        <div className="flex items-center justify-between">
+        <a
+          href="/statistika"
+          className="group -mx-1.5 flex items-center justify-between px-1.5 py-0.5 transition-colors duration-150 hover:bg-row-tint"
+        >
           <span className="font-heros text-[16px] leading-5 text-ink">
             {district.name}
           </span>
           <span className="font-mono text-label text-zg-blue">
-            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}
+            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
           </span>
-        </div>
+        </a>
       ) : (
         <p className="font-heros text-[16px] leading-5 text-ink-faint">
-          Klikni kvart na karti
+          Klikni kartu za svoj kvart
         </p>
       )}
       <RankRamp score={district?.score} />
-      <BlueLink href="/statistika">Cijela statistika →</BlueLink>
+      {district && (
+        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+          ocjena dosega · 0–100
+        </span>
+      )}
+      <div className="flex items-center justify-between">
+        <BlueLink href="/o-projektu">O projektu</BlueLink>
+        <BlueLink href="/statistika">Cijela statistika →</BlueLink>
+      </div>
     </div>
   )
 }
 
-/** Compact one-row variant for the mobile sheet (M · doseg otvoreno). */
+/** Compact one-row variant for the mobile sheet (M · doseg otvoreno). The
+ * kvart links to the full ranking; site nav lives in SheetNav below. */
 export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
   const district = ctx?.district ?? null
   return (
-    <div className="flex items-center justify-between border-t border-hairline pt-3.5">
-      <span className="font-heros text-[16px] leading-5 text-ink">
-        {district
-          ? `${district.name} · #${district.rank} od ${ctx?.totalDistricts ?? 17}`
-          : "Tvoj kvart na ljestvici"}
-      </span>
-      <BlueLink href="/statistika">Statistika →</BlueLink>
+    <div className="flex items-center justify-between gap-3 border-t border-hairline pt-3.5">
+      {district ? (
+        <a href="/statistika" className="flex flex-col">
+          <span className="font-heros text-[16px] leading-5 text-ink">
+            {district.name}
+          </span>
+          <span className="font-mono text-[11px] leading-[14px] text-zg-blue">
+            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
+          </span>
+        </a>
+      ) : (
+        <span className="font-heros text-[16px] leading-5 text-ink">
+          Tvoj kvart na ljestvici
+        </span>
+      )}
+      <BlueLink href="/statistika">Cijela statistika →</BlueLink>
     </div>
   )
 }

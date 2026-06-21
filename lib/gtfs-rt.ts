@@ -32,25 +32,6 @@ interface VehiclePosition {
 }
 
 // ---------------------------------------------------------------------------
-// Alert types
-// ---------------------------------------------------------------------------
-
-interface AlertActivePeriod {
-  start: number | null // unix seconds
-  end: number | null
-}
-
-interface Alert {
-  activePeriods: AlertActivePeriod[]
-  affectedRouteIds: string[]
-  affectedStopIds: string[]
-  cause: string
-  effect: string
-  headerText: string | null
-  descriptionText: string | null
-}
-
-// ---------------------------------------------------------------------------
 // Enum reverse-lookups
 // ---------------------------------------------------------------------------
 
@@ -76,61 +57,12 @@ const OccupancyStatusName: Record<number, string> = {
   [OccupancyStatus.NOT_BOARDABLE]: "NOT_BOARDABLE",
 }
 
-const AlertCause = GtfsRealtimeBindings.transit_realtime.Alert.Cause
-const AlertCauseName: Record<number, string> = {
-  [AlertCause.UNKNOWN_CAUSE]: "UNKNOWN_CAUSE",
-  [AlertCause.OTHER_CAUSE]: "OTHER_CAUSE",
-  [AlertCause.TECHNICAL_PROBLEM]: "TECHNICAL_PROBLEM",
-  [AlertCause.STRIKE]: "STRIKE",
-  [AlertCause.DEMONSTRATION]: "DEMONSTRATION",
-  [AlertCause.ACCIDENT]: "ACCIDENT",
-  [AlertCause.HOLIDAY]: "HOLIDAY",
-  [AlertCause.WEATHER]: "WEATHER",
-  [AlertCause.MAINTENANCE]: "MAINTENANCE",
-  [AlertCause.CONSTRUCTION]: "CONSTRUCTION",
-  [AlertCause.POLICE_ACTIVITY]: "POLICE_ACTIVITY",
-  [AlertCause.MEDICAL_EMERGENCY]: "MEDICAL_EMERGENCY",
-}
-
-const AlertEffect = GtfsRealtimeBindings.transit_realtime.Alert.Effect
-const AlertEffectName: Record<number, string> = {
-  [AlertEffect.NO_SERVICE]: "NO_SERVICE",
-  [AlertEffect.REDUCED_SERVICE]: "REDUCED_SERVICE",
-  [AlertEffect.SIGNIFICANT_DELAYS]: "SIGNIFICANT_DELAYS",
-  [AlertEffect.DETOUR]: "DETOUR",
-  [AlertEffect.ADDITIONAL_SERVICE]: "ADDITIONAL_SERVICE",
-  [AlertEffect.MODIFIED_SERVICE]: "MODIFIED_SERVICE",
-  [AlertEffect.OTHER_EFFECT]: "OTHER_EFFECT",
-  [AlertEffect.UNKNOWN_EFFECT]: "UNKNOWN_EFFECT",
-  [AlertEffect.STOP_MOVED]: "STOP_MOVED",
-  [AlertEffect.NO_EFFECT]: "NO_EFFECT",
-  [AlertEffect.ACCESSIBILITY_ISSUE]: "ACCESSIBILITY_ISSUE",
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Pick the first translation text from a TranslatedString, or null. */
-function translatedText(
-  ts: { translation?: { text: string }[] | null } | null | undefined
-): string | null {
-  return ts?.translation?.[0]?.text ?? null
-}
-
-/** Coerce a protobuf number|Long to a JS number, or null. */
-function toNum(v: number | { toNumber(): number } | null | undefined): number | null {
-  if (v == null) return null
-  return typeof v === "number" ? v : v.toNumber()
-}
-
 // ---------------------------------------------------------------------------
 // Cache state
 // ---------------------------------------------------------------------------
 
 let cachedTrips: Map<string, TripRT> = new Map()
 let cachedVehicles: VehiclePosition[] = []
-let cachedAlerts: Alert[] = []
 let cacheTime = 0
 let refreshPromise: Promise<void> | null = null
 
@@ -172,35 +104,6 @@ function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
   })
 }
 
-function parseAlert(entity: FeedEntity, alerts: Alert[]) {
-  const al = entity.alert
-  if (!al) return
-
-  const activePeriods: AlertActivePeriod[] = (al.activePeriod ?? []).map(
-    (p) => ({ start: toNum(p.start), end: toNum(p.end) })
-  )
-
-  const affectedRouteIds: string[] = []
-  const affectedStopIds: string[] = []
-  for (const ie of al.informedEntity ?? []) {
-    if (ie.routeId) affectedRouteIds.push(ie.routeId)
-    if (ie.stopId) affectedStopIds.push(ie.stopId)
-  }
-
-  const causeNum = al.cause ?? AlertCause.UNKNOWN_CAUSE
-  const effectNum = al.effect ?? AlertEffect.UNKNOWN_EFFECT
-
-  alerts.push({
-    activePeriods,
-    affectedRouteIds,
-    affectedStopIds,
-    cause: AlertCauseName[causeNum] ?? "UNKNOWN_CAUSE",
-    effect: AlertEffectName[effectNum] ?? "UNKNOWN_EFFECT",
-    headerText: translatedText(al.headerText),
-    descriptionText: translatedText(al.descriptionText),
-  })
-}
-
 async function refresh(): Promise<void> {
   try {
     const res = await fetch(ZET_RT_URL)
@@ -213,17 +116,14 @@ async function refresh(): Promise<void> {
 
     const rt = new Map<string, TripRT>()
     const vehicles: VehiclePosition[] = []
-    const alerts: Alert[] = []
 
     for (const entity of feed.entity) {
       parseTripUpdate(entity, rt)
       parseVehiclePosition(entity, vehicles)
-      parseAlert(entity, alerts)
     }
 
     cachedTrips = rt
     cachedVehicles = vehicles
-    cachedAlerts = alerts
     cacheTime = Date.now()
   } catch {
     // Keep serving stale cache on failure
@@ -249,12 +149,6 @@ export function getRealtimeData(): Map<string, TripRT> {
 export function getVehiclePositions(): VehiclePosition[] {
   ensureFresh()
   return cachedVehicles
-}
-
-/** Returns cached service alerts; triggers background refresh when stale. */
-export function getAlerts(): Alert[] {
-  ensureFresh()
-  return cachedAlerts
 }
 
 /**

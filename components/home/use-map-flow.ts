@@ -11,12 +11,13 @@ import {
 } from "@/lib/otp"
 import { decodePolyline } from "@/lib/polyline"
 import {
-  countPoisInReach,
   outerBand,
   outerRingsForApi,
+  pointInReach,
   reachAreaKm2,
   type DistrictContext,
   type LatLon,
+  type MapPoi,
   type PanelState,
   type Poi,
   type WalkAreaFeatureLike,
@@ -27,6 +28,13 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 function pointKey(p: LatLon): string {
   return `${p.lat.toFixed(6)},${p.lon.toFixed(6)}`
+}
+
+/** URL coordinates are rounded to 5 decimals — compare at that precision. */
+function samePoint(a: LatLon, b: LatLon): boolean {
+  return (
+    a.lat.toFixed(5) === b.lat.toFixed(5) && a.lon.toFixed(5) === b.lon.toFixed(5)
+  )
 }
 
 async function reverseName(p: LatLon): Promise<string | null> {
@@ -93,11 +101,24 @@ function useReachDerived(
     }
   }, [panel])
 
-  const poiCounts = useMemo(
-    () =>
-      band && Array.isArray(pois) ? countPoisInReach(pois, band) : null,
-    [band, pois]
-  )
+  // POIs annotated against the reach — the map dims what's out of range,
+  // and the sidebar counts derive from the same single point-in-polygon pass.
+  const mapPois = useMemo<MapPoi[] | null>(() => {
+    if (!Array.isArray(pois)) return null
+    return pois.map((p) => ({
+      ...p,
+      inReach: band ? pointInReach(p, band) : null,
+    }))
+  }, [pois, band])
+
+  const poiCounts = useMemo(() => {
+    if (!band || !mapPois) return null
+    const counts: Record<string, number> = {}
+    for (const p of mapPois) {
+      if (p.inReach) counts[p.category] = (counts[p.category] ?? 0) + 1
+    }
+    return counts
+  }, [band, mapPois])
 
   const stats = useMemo<ReachStats | null>(() => {
     if (!band) return null
@@ -118,7 +139,7 @@ function useReachDerived(
     routeFC,
     poiCounts,
     stats,
-    pois: Array.isArray(pois) ? pois : null,
+    pois: mapPois,
     bajs: bajs?.type === "FeatureCollection" ? bajs : null,
   }
 }
@@ -152,16 +173,21 @@ function useDistrictContext(
 
 export type FlowInitial = {
   origin?: LatLon
+  dest?: LatLon
   time?: string | null
   bajs?: boolean
+  minutes?: number
 }
 
 /** The panel state machine + fetch orchestration (spec §3). */
 export function useMapFlow(initial?: FlowInitial) {
-  const [panel, setPanel] = useState<PanelState>(() =>
-    initial?.origin ? { mode: "loading", origin: initial.origin } : { mode: "empty" }
-  )
-  const [minutes, setMinutes] = useState(30)
+  const [panel, setPanel] = useState<PanelState>(() => {
+    if (initial?.origin && initial.dest)
+      return { mode: "route-loading", origin: initial.origin, dest: initial.dest }
+    if (initial?.origin) return { mode: "loading", origin: initial.origin }
+    return { mode: "empty" }
+  })
+  const [minutes, setMinutes] = useState(initial?.minutes ?? 30)
   const [iso, setIso] = useState<IsochroneResponse | null>(null)
   const [originName, setOriginName] = useState<string | null>(null)
   const [destName, setDestName] = useState<string | null>(null)
@@ -215,13 +241,17 @@ export function useMapFlow(initial?: FlowInitial) {
     setDepartTime,
   })
 
-  // URL-restored origin: fetch its reach + name (async work only — the
-  // panel was already initialized to "loading" above).
+  // URL-restored origin (+ optional dest): fetch reach/route + names (async
+  // work only — the panel was already initialized above).
   const bootRef = useRef(false)
   useEffect(() => {
     if (bootRef.current || !initial?.origin) return
     bootRef.current = true
     const p = initial.origin
+    if (initial.dest) {
+      actions.beginRoute(p, initial.dest)
+      return
+    }
     const seq = ++seqRef.current
     const key = pointKey(p)
     originKeyRef.current = key
@@ -470,12 +500,104 @@ function useSettingsActions(deps: FlowDeps, refetch: () => void) {
   return { setDepartureTime, setBajsRouting }
 }
 
+/** ⇅ in route mode — swap origin/dest and re-run reach + route. */
+function useSwapAction(
+  deps: FlowDeps,
+  loadIsochrone: (p: LatLon, seq: number) => Promise<boolean>,
+  startRoute: (from: LatLon, to: LatLon, seq: number, knownName?: string) => void
+) {
+  const { panel, originName, destName, seqRef, originKeyRef, setPanel, setOriginName, setDestName } = deps
+  return useCallback(() => {
+    if (panel.mode !== "route" && panel.mode !== "route-loading") return
+    const from = panel.dest
+    const to = panel.origin
+    const seq = ++seqRef.current
+    setPanel({ mode: "route-loading", origin: from, dest: to })
+    setOriginName(destName)
+    setDestName(originName)
+    const fromKey = pointKey(from)
+    originKeyRef.current = fromKey
+    if (!destName) {
+      // The swapped-in origin never got a name (race) — backfill it.
+      reverseName(from).then((name) => {
+        if (originKeyRef.current === fromKey) setOriginName(name)
+      })
+    }
+    loadIsochrone(from, seq)
+    startRoute(from, to, seq, originName ?? undefined)
+  }, [panel, originName, destName, seqRef, originKeyRef, setPanel, setOriginName, setDestName, loadIsochrone, startRoute])
+}
+
+/** Start a route from a clean slate (origin + dest both new): reset names,
+ * fetch the origin's reach + name, and route. Shared by the URL boot and a
+ * back/forward restore that lands on a brand-new origin+dest pair. */
+function useBeginRoute(
+  deps: FlowDeps,
+  loadIsochrone: (p: LatLon, seq: number) => Promise<boolean>,
+  startRoute: (from: LatLon, to: LatLon, seq: number, knownName?: string) => void
+) {
+  const { seqRef, originKeyRef, setPanel, setOriginName, setDestName } = deps
+  return useCallback(
+    (from: LatLon, to: LatLon) => {
+      const seq = ++seqRef.current
+      setPanel({ mode: "route-loading", origin: from, dest: to })
+      setOriginName(null)
+      setDestName(null)
+      const key = pointKey(from)
+      originKeyRef.current = key
+      reverseName(from).then((name) => {
+        if (originKeyRef.current === key) setOriginName(name)
+      })
+      loadIsochrone(from, seq)
+      startRoute(from, to, seq)
+    },
+    [seqRef, originKeyRef, setPanel, setOriginName, setDestName, loadIsochrone, startRoute]
+  )
+}
+
+/** Browser back/forward: settle the flow onto the origin/dest a history
+ * entry describes. Unchanged points keep their state (no refetch); only
+ * the parts that differ re-run. */
+function useHistoryRestore(
+  deps: FlowDeps,
+  actions: {
+    reset: () => void
+    startOrigin: (p: LatLon, knownName?: string) => void
+    startDest: (p: LatLon, label?: string) => void
+    handleBackToReach: () => void
+    beginRoute: (from: LatLon, to: LatLon) => void
+  }
+) {
+  const { panel, origin, dest } = deps
+  const { reset, startOrigin, startDest, handleBackToReach, beginRoute } = actions
+  return useCallback(
+    (o: LatLon | null, d: LatLon | null) => {
+      if (!o) {
+        if (panel.mode !== "empty") reset()
+        return
+      }
+      const sameOrigin = origin != null && samePoint(origin, o)
+      if (!d) {
+        if (!sameOrigin) {
+          startOrigin(o)
+        } else if (panel.mode === "route" || panel.mode === "route-loading") {
+          handleBackToReach()
+        }
+        return
+      }
+      const sameDest = dest != null && samePoint(dest, d)
+      if (sameOrigin && sameDest) return
+      if (sameOrigin) startDest(d)
+      else beginRoute(o, d) // brand-new origin + dest
+    },
+    [panel.mode, origin, dest, reset, startOrigin, startDest, handleBackToReach, beginRoute]
+  )
+}
+
 function useFlowActions(deps: FlowDeps) {
   const {
     panel,
     origin,
-    originName,
-    destName,
     seqRef,
     originKeyRef,
     destKeyRef,
@@ -535,32 +657,26 @@ function useFlowActions(deps: FlowDeps) {
     setDestName(null)
   }, [origin, routeAbortRef, seqRef, setPanel, setDestName])
 
-  const handleSwap = useCallback(() => {
-    if (panel.mode !== "route" && panel.mode !== "route-loading") return
-    const from = panel.dest
-    const to = panel.origin
-    const seq = ++seqRef.current
-    setPanel({ mode: "route-loading", origin: from, dest: to })
-    setOriginName(destName)
-    setDestName(originName)
-    const fromKey = pointKey(from)
-    originKeyRef.current = fromKey
-    if (!destName) {
-      // The swapped-in origin never got a name (race) — backfill it.
-      reverseName(from).then((name) => {
-        if (originKeyRef.current === fromKey) setOriginName(name)
-      })
-    }
-    loadIsochrone(from, seq)
-    startRoute(from, to, seq, originName ?? undefined)
-  }, [panel, originName, destName, seqRef, originKeyRef, setPanel, setOriginName, setDestName, loadIsochrone, startRoute])
+  const handleSwap = useSwapAction(deps, loadIsochrone, startRoute)
+  const beginRoute = useBeginRoute(deps, loadIsochrone, startRoute)
+
+  const applyHistoryState = useHistoryRestore(deps, {
+    reset,
+    startOrigin,
+    startDest,
+    handleBackToReach,
+    beginRoute,
+  })
 
   return {
     handleMapClick,
     handleBackToReach,
     handleSwap,
+    applyHistoryState,
+    beginRoute,
     startOrigin,
     startDest,
+    startRoute,
     setDepartureTime,
     setBajsRouting,
     loadIsochrone,

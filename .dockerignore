@@ -10,6 +10,7 @@ data/*
 !data/travel-matrix.json
 !data/route-stats.json
 !data/network-stats.json
+!data/poi-photos.json
 .DS_Store
 *.pem
 .env*.local

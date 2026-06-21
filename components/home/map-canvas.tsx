@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react"
 import maplibregl from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
+import {
+  IconMinusMedium,
+  IconPlusMedium,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import {
   applyBasemapBackgroundTint,
@@ -10,9 +14,10 @@ import {
   getMapStyleUrl,
 } from "@/lib/map-styles"
 import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
+import { GEOCODE_KIND_META } from "@/lib/poi"
 import { reachColorStops } from "@/lib/reach-ramp"
 import type { LayersState } from "./layers-panel"
-import type { LatLon, Poi } from "./reach-state"
+import { deShout, type LatLon, type MapPoi } from "./reach-state"
 import { MapTile, MapTileButton } from "./ui"
 
 /**
@@ -25,6 +30,9 @@ const ZAGREB: [number, number] = [15.9819, 45.815]
 
 /** Keep in sync with Tailwind's `md:` (sidebar vs bottom-sheet layouts). */
 const MD_BREAKPOINT_PX = 768
+
+/** Interactive dot layers — clicking these picks a POI, not a map point. */
+const DOT_LAYERS = ["poi-dots", "bajs-dots"]
 
 const EMPTY_FC: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
@@ -181,6 +189,15 @@ function addRouteLayers(map: maplibregl.Map) {
   })
 }
 
+// POIs outside the current reach fade back — counts in the sidebar refer to
+// what's inside the band, the map should agree at a glance.
+const IN_REACH_OPACITY: maplibregl.ExpressionSpecification = [
+  "case",
+  ["==", ["get", "inReach"], false],
+  0.25,
+  1,
+]
+
 function addPoiBajsLayers(map: maplibregl.Map) {
   map.addSource("poi", { type: "geojson", data: EMPTY_FC })
   map.addLayer({
@@ -210,8 +227,10 @@ function addPoiBajsLayers(map: maplibregl.Map) {
         POI_COLORS.park,
         "#9aa0a6",
       ],
+      "circle-opacity": IN_REACH_OPACITY,
       "circle-stroke-width": 2,
       "circle-stroke-color": "#ffffff",
+      "circle-stroke-opacity": IN_REACH_OPACITY,
     },
   })
   map.addSource("bajs", { type: "geojson", data: EMPTY_FC })
@@ -310,6 +329,14 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
       setReady(true)
     })
     map.on("click", (e) => {
+      // Dot clicks open the POI popup (usePoiInteractions) — don't also
+      // treat them as a bare map click that would silently start a route.
+      const dotLayers = DOT_LAYERS.filter((l) => map.getLayer(l))
+      if (
+        dotLayers.length &&
+        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length
+      )
+        return
       onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
     })
     return () => {
@@ -348,15 +375,14 @@ function useLayerSync(
   mapRef: React.RefObject<maplibregl.Map | null>,
   ready: boolean,
   layers: LayersState,
-  pois: Poi[] | null,
+  pois: MapPoi[] | null,
   bajs: GeoJSON.FeatureCollection | null
 ) {
+  // Rebuild + upload the source only when the POI data itself changes —
+  // not on a category toggle (which just re-filters the same features).
   useEffect(() => {
     const map = mapRef.current
     if (!map || !ready) return
-    const enabled = (
-      Object.keys(layers.poi) as (keyof LayersState["poi"])[]
-    ).filter((k) => layers.poi[k])
     const src = map.getSource("poi") as maplibregl.GeoJSONSource | undefined
     src?.setData(
       pois
@@ -364,7 +390,15 @@ function useLayerSync(
             type: "FeatureCollection",
             features: pois.map((p) => ({
               type: "Feature" as const,
-              properties: { category: p.category, name: p.name },
+              // Flat props only — GeoJSON feature state can't hold objects.
+              properties: {
+                category: p.category,
+                name: p.name,
+                inReach: p.inReach,
+                photoThumb: p.photo?.thumb ?? null,
+                photoPage: p.photo?.page ?? null,
+                photoCredit: p.photo?.credit ?? null,
+              },
               geometry: {
                 type: "Point" as const,
                 coordinates: [p.lon, p.lat],
@@ -373,13 +407,22 @@ function useLayerSync(
           }
         : EMPTY_FC
     )
+  }, [mapRef, ready, pois])
+
+  // Category toggles are two cheap GL calls — no data rebuild.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    const enabled = (
+      Object.keys(layers.poi) as (keyof LayersState["poi"])[]
+    ).filter((k) => layers.poi[k])
     map.setFilter("poi-dots", ["in", ["get", "category"], ["literal", enabled]])
     map.setLayoutProperty(
       "poi-dots",
       "visibility",
       enabled.length > 0 ? "visible" : "none"
     )
-  }, [mapRef, ready, layers.poi, pois])
+  }, [mapRef, ready, layers.poi])
 
   useEffect(() => {
     const map = mapRef.current
@@ -392,6 +435,225 @@ function useLayerSync(
       layers.bajs ? "visible" : "none"
     )
   }, [mapRef, ready, layers.bajs, bajs])
+}
+
+type DotPhoto = { thumb: string; page: string; credit: string }
+type DotInfo = { name: string | null; sub: string; photo: DotPhoto | null }
+
+/** Title + context line (+ photo) for a clicked/hovered dot. */
+function describeDot(f: maplibregl.MapGeoJSONFeature): DotInfo {
+  const p = f.properties as Record<string, unknown>
+  const photo = p.photoThumb
+    ? {
+        thumb: String(p.photoThumb),
+        page: String(p.photoPage ?? ""),
+        credit: String(p.photoCredit ?? ""),
+      }
+    : null
+  if (f.layer.id === "bajs-dots") {
+    return {
+      name: p.name ? deShout(String(p.name)) : null,
+      sub: `bajs stanica · ${p.bikesAvailable ?? "?"} bic.`,
+      photo,
+    }
+  }
+  const meta = GEOCODE_KIND_META[String(p.category)]
+  return {
+    name: p.name ? String(p.name) : null,
+    sub: (meta?.label ?? "") + (p.inReach === false ? " · izvan dosega" : ""),
+    photo,
+  }
+}
+
+type PopupOpts = {
+  /** Show the Commons photo + credit (click popup only — not hover). */
+  withPhoto?: boolean
+  action?: { label: string; onClick: () => void }
+}
+
+/** Popup content — name + context, plus optional photo/credit/action.
+ * textContent throughout (never innerHTML: OSM + Commons strings). */
+function dotPopupEl(
+  info: DotInfo,
+  fallbackTitle: string,
+  opts: PopupOpts = {}
+): HTMLDivElement {
+  const root = document.createElement("div")
+  root.className = "flex flex-col"
+  const photo = opts.withPhoto ? info.photo : null
+  if (photo) {
+    root.style.width = "232px"
+    const img = document.createElement("img")
+    img.src = photo.thumb
+    img.alt = info.name ?? ""
+    img.loading = "lazy"
+    img.className = "block h-[120px] w-full bg-surface object-cover"
+    root.appendChild(img)
+  }
+
+  const body = document.createElement("div")
+  body.className = "flex flex-col px-3.5 py-3"
+  const title = document.createElement("span")
+  title.className = "font-heros text-[16px] leading-5 text-ink"
+  title.textContent = info.name ?? fallbackTitle
+  body.appendChild(title)
+  if (info.sub) {
+    const sub = document.createElement("span")
+    sub.className = "mt-0.5 font-mono text-label text-ink-faint"
+    sub.textContent = info.sub
+    body.appendChild(sub)
+  }
+  if (opts.action) {
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.className =
+      "mt-2.5 border border-hairline-strong px-3 py-2 text-left font-mono text-label text-zg-blue transition-colors duration-150 hover:bg-row-tint"
+    btn.textContent = opts.action.label
+    btn.addEventListener("click", opts.action.onClick)
+    body.appendChild(btn)
+  }
+  if (photo && photo.credit) {
+    const credit = document.createElement("a")
+    credit.href = photo.page
+    credit.target = "_blank"
+    credit.rel = "noopener noreferrer"
+    credit.title = photo.credit
+    credit.className =
+      "mt-2 block max-w-full truncate font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink-muted"
+    credit.textContent = `© ${photo.credit}`
+    body.appendChild(credit)
+  }
+
+  root.appendChild(body)
+  return root
+}
+
+/**
+ * Dot affordances (POI + BAJS): pointer cursor, hover tooltip, and a click
+ * popup with an explicit routing action — a dot click answers "what is
+ * this?" instead of silently starting a route.
+ */
+const POPUP_OPTS = {
+  closeButton: false,
+  className: "reach-popup",
+  offset: 12,
+  maxWidth: "260px",
+} as const
+
+/** Resolve the hovered/clicked dot feature + its geo coords. */
+function dotFeatureAt(e: maplibregl.MapLayerMouseEvent) {
+  const f = e.features?.[0]
+  if (!f) return null
+  const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
+  return { f, coords }
+}
+
+/**
+ * Wire hover + click popups onto the dot layers; returns a teardown.
+ * Hover shows the full card minus the button (photo + name + category +
+ * credit); the button is click-only so the cursor never has to travel off
+ * the dot to reach it. A dwell guard defers the photo load, so a fast
+ * mouse-sweep across the dense dot field doesn't fire dozens of requests.
+ */
+function bindDotPopups(
+  map: maplibregl.Map,
+  originRef: React.RefObject<LatLon | null>,
+  pickRef: React.RefObject<(p: LatLon, name?: string) => void>
+): () => void {
+  const hover = new maplibregl.Popup(POPUP_OPTS)
+  const action = new maplibregl.Popup(POPUP_OPTS)
+  const canvas = map.getCanvas()
+  let dwellTimer: ReturnType<typeof setTimeout> | null = null
+  let hoverKey: string | null = null
+  const clearDwell = () => {
+    if (dwellTimer) clearTimeout(dwellTimer)
+    dwellTimer = null
+  }
+
+  const onMove = (e: maplibregl.MapLayerMouseEvent) => {
+    canvas.style.cursor = "pointer"
+    if (action.isOpen()) return
+    const hit = dotFeatureAt(e)
+    if (!hit) return
+    const key = hit.coords.join(",")
+    if (key === hoverKey) return // already shown/pending for this dot
+    hoverKey = key
+    clearDwell()
+    const info = describeDot(hit.f)
+    const show = () =>
+      hover
+        .setLngLat(hit.coords)
+        .setDOMContent(dotPopupEl(info, "bez imena", { withPhoto: true }))
+        .addTo(map)
+    // Instant for plain dots; brief dwell only when a photo would load.
+    if (info.photo) dwellTimer = setTimeout(show, 150)
+    else show()
+  }
+  const onLeave = () => {
+    canvas.style.cursor = ""
+    clearDwell()
+    hoverKey = null
+    hover.remove()
+  }
+  const onClick = (e: maplibregl.MapLayerMouseEvent) => {
+    const hit = dotFeatureAt(e)
+    if (!hit) return
+    clearDwell()
+    hoverKey = null
+    hover.remove()
+    const info = describeDot(hit.f)
+    const el = dotPopupEl(info, "bez imena", {
+      withPhoto: true,
+      action: {
+        label: originRef.current ? "Postavi kao odredište" : "Kreni odavde",
+        onClick: () => {
+          action.remove()
+          pickRef.current?.(
+            { lat: hit.coords[1], lon: hit.coords[0] },
+            info.name ?? undefined
+          )
+        },
+      },
+    })
+    action.setLngLat(hit.coords).setDOMContent(el).addTo(map)
+  }
+
+  for (const id of DOT_LAYERS) {
+    map.on("mousemove", id, onMove)
+    map.on("mouseleave", id, onLeave)
+    map.on("click", id, onClick)
+  }
+  return () => {
+    clearDwell()
+    hover.remove()
+    action.remove()
+    canvas.style.cursor = ""
+    for (const id of DOT_LAYERS) {
+      map.off("mousemove", id, onMove)
+      map.off("mouseleave", id, onLeave)
+      map.off("click", id, onClick)
+    }
+  }
+}
+
+function usePoiInteractions(
+  mapRef: React.RefObject<maplibregl.Map | null>,
+  ready: boolean,
+  origin: LatLon | null,
+  onPoiPick: (p: LatLon, name?: string) => void
+) {
+  const originRef = useRef(origin)
+  const pickRef = useRef(onPoiPick)
+  useEffect(() => {
+    originRef.current = origin
+    pickRef.current = onPoiPick
+  }, [origin, onPoiPick])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    return bindDotPopups(map, originRef, pickRef)
+  }, [mapRef, ready])
 }
 
 /** Sidebar-aware on desktop, sheet-aware on mobile (spec §9). */
@@ -478,16 +740,16 @@ function ZoomControl({
       <MapTileButton
         label="Približi kartu"
         onClick={() => mapRef.current?.zoomIn()}
-        className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2"
+        className="size-[34px] border-b border-hairline text-ink-2"
       >
-        +
+        <IconPlusMedium size={18} />
       </MapTileButton>
       <MapTileButton
         label="Udalji kartu"
         onClick={() => mapRef.current?.zoomOut()}
-        className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2"
+        className="size-[34px] text-ink-2"
       >
-        −
+        <IconMinusMedium size={18} />
       </MapTileButton>
     </MapTile>
   )
@@ -502,21 +764,24 @@ export function MapCanvas({
   pois,
   bajs,
   onMapClick,
+  onPoiPick,
 }: {
   walkArea: GeoJSON.FeatureCollection | null
   route: GeoJSON.FeatureCollection | null
   origin: LatLon | null
   dest: LatLon | null
   layers: LayersState
-  pois: Poi[] | null
+  pois: MapPoi[] | null
   bajs: GeoJSON.FeatureCollection | null
   onMapClick: (p: LatLon) => void
+  onPoiPick: (p: LatLon, name?: string) => void
 }) {
   const { containerRef, mapRef, ready } = useMapInstance(onMapClick)
   useMarker(mapRef, origin, makeOriginMarker)
   useMarker(mapRef, dest, makeDestMarker)
   useDataSync(mapRef, ready, walkArea, route, layers.doseg)
   useLayerSync(mapRef, ready, layers, pois, bajs)
+  usePoiInteractions(mapRef, ready, origin, onPoiPick)
 
   return (
     <>

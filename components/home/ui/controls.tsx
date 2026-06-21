@@ -8,12 +8,19 @@ export function Segmented<T extends string | number>({
   value,
   onChange,
 }: {
-  options: { value: T; label: string; disabled?: boolean; title?: string }[]
+  options: {
+    value: T
+    label: string
+    disabled?: boolean
+    title?: string
+    /** Small caption under the label — e.g. "uskoro" on a disabled option. */
+    note?: string
+  }[]
   value: T
   onChange: (v: T) => void
 }) {
   return (
-    <div className="flex grow border border-hairline-strong">
+    <div className="flex grow items-stretch border border-hairline-strong">
       {options.map((opt, i) => {
         const selected = opt.value === value
         return (
@@ -23,7 +30,7 @@ export function Segmented<T extends string | number>({
             disabled={opt.disabled}
             onClick={() => onChange(opt.value)}
             title={opt.title}
-            className={`grow basis-0 py-2 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
+            className={`flex grow basis-0 flex-col items-center justify-center gap-px py-2 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
               i > 0 ? "border-l border-hairline-strong" : ""
             } ${
               selected
@@ -34,6 +41,11 @@ export function Segmented<T extends string | number>({
             }`}
           >
             {opt.label}
+            {opt.note && (
+              <span className="text-[11px] leading-none tracking-[0.04em] text-ink-faint">
+                {opt.note}
+              </span>
+            )}
           </button>
         )
       })}

@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { IconLayersThree } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
+import { useCloseOnEscape } from "@/hooks/use-close-on-escape"
 import { POI_CATEGORIES, type MapPoiCategory } from "@/lib/poi"
 import {
   CheckSquare,
@@ -198,6 +200,7 @@ export function LayersControl({
 }) {
   const [open, setOpen] = useState(false)
   const n = activeCount(layers)
+  useCloseOnEscape(open, () => setOpen(false))
 
   return (
     <div className="relative">
@@ -209,21 +212,10 @@ export function LayersControl({
             variant === "icon" ? "size-11" : "gap-2 px-[13px] py-[9px]"
           }
         >
-          <span
-            aria-hidden
-            className={`flex flex-col ${
-              variant === "icon" ? "gap-[3px]" : "gap-0.5"
-            }`}
-          >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className={`bg-ink-muted ${
-                  variant === "icon" ? "h-[2.5px] w-[18px]" : "h-0.5 w-[13px]"
-                }`}
-              />
-            ))}
-          </span>
+          <IconLayersThree
+            size={variant === "icon" ? 20 : 16}
+            className="shrink-0 text-ink-muted"
+          />
           {variant === "label" && (
             <span className="font-heros text-[15px] leading-[18px] text-ink-2">
               Slojevi{n > 0 ? ` · ${n}` : ""}

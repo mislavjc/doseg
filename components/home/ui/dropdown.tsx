@@ -52,6 +52,7 @@ export function DropdownRow({
   sub,
   tone = "ink",
   divider = false,
+  active = false,
   onPick,
 }: {
   icon: React.ReactNode
@@ -59,6 +60,8 @@ export function DropdownRow({
   sub?: string | null
   tone?: "ink" | "ink-2" | "blue" | "red"
   divider?: boolean
+  /** Keyboard highlight (arrow keys) — same tint as hover. */
+  active?: boolean
   onPick: () => void
 }) {
   const toneClass =
@@ -75,8 +78,8 @@ export function DropdownRow({
       onPointerDown={(e) => e.preventDefault()}
       onClick={onPick}
       className={`flex w-full items-center gap-3 px-4 text-left transition-colors duration-150 hover:bg-row-tint ${
-        divider ? "border-b border-hairline py-[13px]" : "py-[9px]"
-      }`}
+        active ? "bg-row-tint" : ""
+      } ${divider ? "border-b border-hairline py-[13px]" : "py-[9px]"}`}
     >
       <span className="flex w-[18px] shrink-0 items-center justify-center">
         {icon}

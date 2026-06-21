@@ -1,13 +1,18 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
+import {
+  IconArrowBottomTop,
+  IconLocation,
+  IconX,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { GEOCODE_KIND_META } from "@/lib/poi"
 import {
   useAddressSearch,
   type GeocodeSuggestion,
 } from "@/lib/use-address-search"
-import type { LatLon } from "./reach-state"
+import { requestMyLocation, type LatLon } from "./reach-state"
 import {
   DestSquare,
   DropdownPanel,
@@ -58,13 +63,28 @@ function splitName(name: string): { title: string; sub: string | null } {
 }
 
 function MyLocationIcon() {
+  return <IconLocation size={17} className="text-zg-blue" />
+}
+
+function ResultRow({
+  s,
+  active,
+  onPick,
+}: {
+  s: GeocodeSuggestion
+  active: boolean
+  onPick: (p: LatLon, label: string) => void
+}) {
+  const { title, sub } = splitName(s.display_name)
+  const meta = GEOCODE_KIND_META[s.kind ?? "place"]
   return (
-    <span
-      aria-hidden
-      className="flex size-[18px] items-center justify-center rounded-full border-2 border-zg-blue"
-    >
-      <span className="size-[5px] rounded-full bg-zg-blue" />
-    </span>
+    <DropdownRow
+      icon={<span className={`size-[9px] rounded-full ${meta.dotClass}`} />}
+      title={title}
+      sub={sub ? `${sub.split(",")[0]} · ${meta.label}` : meta.label}
+      active={active}
+      onPick={() => onPick({ lat: s.lat, lon: s.lon }, s.display_name)}
+    />
   )
 }
 
@@ -74,6 +94,7 @@ function Dropdown({
   query,
   loading,
   showMyLocation,
+  activeIndex,
   onRemoveOrigin,
   onPick,
   onMyLocation,
@@ -83,22 +104,24 @@ function Dropdown({
   query: string
   loading: boolean
   showMyLocation: boolean
+  /** Keyboard highlight — indices follow dropdownItems() order. */
+  activeIndex: number
   onRemoveOrigin: (() => void) | null
   onPick: (p: LatLon, label: string) => void
   onMyLocation: () => void
 }) {
+  // Row indices must mirror dropdownItems() — keep the two in sync.
+  let idx = -1
+  const next = () => ++idx
   return (
     <DropdownPanel className="origin-top top-full right-0 left-0 mt-1.5 pb-1">
       {onRemoveOrigin && (
         <DropdownRow
-          icon={
-            <span className="font-mono text-[14px] leading-4 text-poi-hospital">
-              ×
-            </span>
-          }
+          icon={<IconX size={15} className="text-poi-hospital" />}
           title="Ukloni polazište"
           tone="red"
           divider
+          active={next() === activeIndex}
           onPick={onRemoveOrigin}
         />
       )}
@@ -108,6 +131,7 @@ function Dropdown({
           title="Moja lokacija"
           tone="blue"
           divider
+          active={next() === activeIndex}
           onPick={onMyLocation}
         />
       )}
@@ -117,25 +141,14 @@ function Dropdown({
       {results.length > 0 && (
         <>
           <DropdownSection label="rezultati" />
-          {results.slice(0, 5).map((s) => {
-            const { title, sub } = splitName(s.display_name)
-            const meta = GEOCODE_KIND_META[s.kind ?? "place"]
-            return (
-              <DropdownRow
-                key={`${s.lat}${s.lon}`}
-                icon={
-                  <span className={`size-[9px] rounded-full ${meta.dotClass}`} />
-                }
-                title={title}
-                sub={
-                  sub ? `${sub.split(",")[0]} · ${meta.label}` : meta.label
-                }
-                onPick={() =>
-                  onPick({ lat: s.lat, lon: s.lon }, s.display_name)
-                }
-              />
-            )
-          })}
+          {results.slice(0, 5).map((s) => (
+            <ResultRow
+              key={`${s.lat}${s.lon}`}
+              s={s}
+              active={next() === activeIndex}
+              onPick={onPick}
+            />
+          ))}
         </>
       )}
       {recents.length > 0 && (
@@ -149,6 +162,7 @@ function Dropdown({
               }
               title={splitName(r.label).title}
               tone="ink-2"
+              active={next() === activeIndex}
               onPick={() => onPick({ lat: r.lat, lon: r.lon }, r.label)}
             />
           ))}
@@ -156,6 +170,71 @@ function Dropdown({
       )}
     </DropdownPanel>
   )
+}
+
+/** Flat action list in dropdown render order — drives arrow keys + Enter. */
+function dropdownItems(args: {
+  results: GeocodeSuggestion[]
+  recents: Recent[]
+  showMyLocation: boolean
+  onRemoveOrigin: (() => void) | null
+  onPick: (p: LatLon, label: string) => void
+  onMyLocation: () => void
+}): { run: () => void; isResult: boolean }[] {
+  const items: { run: () => void; isResult: boolean }[] = []
+  if (args.onRemoveOrigin) {
+    const run = args.onRemoveOrigin
+    items.push({ run, isResult: false })
+  }
+  if (args.showMyLocation)
+    items.push({ run: args.onMyLocation, isResult: false })
+  for (const s of args.results.slice(0, 5)) {
+    items.push({
+      run: () => args.onPick({ lat: s.lat, lon: s.lon }, s.display_name),
+      isResult: true,
+    })
+  }
+  for (const r of args.recents) {
+    items.push({
+      run: () => args.onPick({ lat: r.lat, lon: r.lon }, r.label),
+      isResult: false,
+    })
+  }
+  return items
+}
+
+/** Arrow keys move the highlight, Enter picks (bare Enter = first result).
+ * The single dropdownItems() list is the one source of order + count. */
+function useDropdownKeyboard(args: {
+  open: boolean
+  highlight: number
+  setHighlight: (h: number) => void
+  itemArgs: Parameters<typeof dropdownItems>[0]
+}) {
+  const { open, highlight, setHighlight, itemArgs } = args
+  // Only the count is needed per render (to clamp the highlight); the closure
+  // list is built on demand inside the keydown handler, and only while open.
+  const items = open ? dropdownItems(itemArgs) : []
+  // Results can shrink under the highlight — treat out-of-range as none.
+  const activeIndex = highlight < items.length ? highlight : -1
+
+  const onKeyNav = (e: React.KeyboardEvent) => {
+    if (!open || items.length === 0) return
+    if (e.key === "ArrowDown") {
+      e.preventDefault()
+      setHighlight((activeIndex + 1) % items.length)
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault()
+      setHighlight((activeIndex - 1 + items.length) % items.length)
+    } else if (e.key === "Enter") {
+      e.preventDefault()
+      const item =
+        activeIndex >= 0 ? items[activeIndex] : items.find((i) => i.isResult)
+      item?.run()
+    }
+  }
+
+  return { activeIndex, onKeyNav }
 }
 
 type RowKind = "origin" | "dest"
@@ -169,6 +248,7 @@ function SearchRow({
   onChange,
   onFocus,
   onBlur,
+  onKeyNav,
   onClear,
   showClear,
   trailing,
@@ -181,6 +261,7 @@ function SearchRow({
   onChange: (v: string) => void
   onFocus: () => void
   onBlur: () => void
+  onKeyNav: (e: React.KeyboardEvent) => void
   onClear: () => void
   showClear: boolean
   trailing?: React.ReactNode
@@ -197,9 +278,11 @@ function SearchRow({
         onBlur={onBlur}
         onKeyDown={(e) => {
           if (e.key === "Escape") inputRef.current?.blur()
+          else onKeyNav(e)
         }}
         placeholder={placeholder}
         aria-label={kind === "origin" ? "Polazište" : "Odredište"}
+        title={value || undefined}
         className="w-full bg-transparent font-heros text-[16px] leading-5 text-ink outline-none placeholder:text-ink-faint"
       />
       {showClear ? (
@@ -208,14 +291,34 @@ function SearchRow({
           aria-label="Očisti unos"
           onPointerDown={(e) => e.preventDefault()}
           onClick={onClear}
-          className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-[14px] leading-none text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
+          className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
         >
-          ✕
+          <IconX size={15} />
         </button>
       ) : (
         trailing
       )}
     </label>
+  )
+}
+
+/** Resting-state ✕ on a filled row — one click clears the value. */
+function ClearValueButton({
+  label,
+  onClick,
+}: {
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
+    >
+      <IconX size={15} />
+    </button>
   )
 }
 
@@ -227,6 +330,7 @@ function useRowWiring(args: {
 }) {
   const { query, setQuery, results, loading, clear } = useAddressSearch()
   const [activeRow, setActiveRow] = useState<RowKind | null>(null)
+  const [highlight, setHighlight] = useState(-1)
   const { recents, add: addRecent } = useRecents()
   const originRef = useRef<HTMLInputElement>(null)
   const destRef = useRef<HTMLInputElement>(null)
@@ -250,14 +354,19 @@ function useRowWiring(args: {
       activeRow === kind
         ? query
         : ((kind === "origin" ? args.originName : args.destName) ?? ""),
-    onChange: (v: string) => setQuery(v),
+    onChange: (v: string) => {
+      setQuery(v)
+      setHighlight(-1)
+    },
     onFocus: () => {
       setActiveRow(kind)
+      setHighlight(-1)
       clear()
     },
     onBlur: () => setActiveRow(null),
     onClear: () => {
       clear()
+      setHighlight(-1)
       ;(kind === "origin" ? originRef : destRef).current?.focus()
     },
     showClear: activeRow === kind && query.length > 0,
@@ -272,6 +381,8 @@ function useRowWiring(args: {
     loading,
     pick,
     rowProps,
+    highlight,
+    setHighlight,
     open: activeRow !== null,
   }
 }
@@ -282,28 +393,17 @@ function SwapButton({ onSwap }: { onSwap: () => void }) {
       type="button"
       onClick={onSwap}
       aria-label="Zamijeni polazište i odredište"
-      className="absolute top-1/2 right-[9px] flex size-[30px] -translate-y-1/2 items-center justify-center border border-hairline-strong bg-ground font-mono text-[14px] leading-[18px] text-ink-faint transition-transform duration-150 ease-out hover:text-ink-muted active:scale-[0.97]"
+      className="absolute top-1/2 right-[46px] flex size-[30px] -translate-y-1/2 items-center justify-center border border-hairline-strong bg-ground text-ink-faint transition-transform duration-150 ease-out hover:text-ink-muted active:scale-[0.97]"
     >
-      ⇅
+      <IconArrowBottomTop size={14} />
     </button>
   )
 }
 
-/** Resting-state origin action — focuses the row (opens the dropdown). */
-function ChangeOriginAction({ onActivate }: { onActivate: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onActivate}
-      className="shrink-0 font-mono text-[11px] leading-[14px] tracking-[0.04em] text-zg-blue transition-colors duration-150 hover:text-navy"
-    >
-      promijeni
-    </button>
-  )
-}
 
 export type SearchFieldsProps = {
   hasOrigin: boolean
+  hasDest: boolean
   originName: string | null
   destName: string | null
   showSwap: boolean
@@ -311,10 +411,12 @@ export type SearchFieldsProps = {
   onSelectDest: (p: LatLon, label?: string) => void
   onSwap: () => void
   onClearOrigin: () => void
+  onClearDest: () => void
 }
 
 export function SearchFields({
   hasOrigin,
+  hasDest,
   originName,
   destName,
   showSwap,
@@ -322,6 +424,7 @@ export function SearchFields({
   onSelectDest,
   onSwap,
   onClearOrigin,
+  onClearDest,
 }: SearchFieldsProps) {
   const {
     activeRow,
@@ -332,46 +435,50 @@ export function SearchFields({
     loading,
     pick,
     rowProps,
+    highlight,
+    setHighlight,
     open,
   } = useRowWiring({ originName, destName, onSelectOrigin, onSelectDest })
 
+  const onMyLocation = () => {
+    originRef.current?.blur()
+    requestMyLocation(onSelectOrigin)
+  }
+
+  const itemArgs = {
+    results,
+    recents,
+    showMyLocation: activeRow === "origin",
+    onRemoveOrigin:
+      activeRow === "origin" && hasOrigin ? onClearOrigin : null,
+    onPick: (p: LatLon, label: string) =>
+      activeRow && pick(activeRow, p, label),
+    onMyLocation,
+  }
+  const { activeIndex, onKeyNav } = useDropdownKeyboard({
+    open,
+    highlight,
+    setHighlight,
+    itemArgs,
+  })
+
   return (
     <div className="relative">
-      <div
-        className={
-          activeRow !== null
-            ? "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
-            : "border border-hairline-strong"
-        }
-      >
-        <SearchRow
-          {...rowProps("origin")}
-          icon={<OriginRing active={hasOrigin || activeRow === "origin"} />}
-          placeholder={
-            hasOrigin
-              ? (originName ?? "Novo polazište…")
-              : "Pretraži ili klikni kartu"
-          }
-          trailing={
-            hasOrigin && activeRow === null && !showSwap ? (
-              <ChangeOriginAction
-                onActivate={() => originRef.current?.focus()}
-              />
-            ) : undefined
-          }
-        />
-        {hasOrigin && (
-          <>
-            <div className="ml-10 h-px bg-hairline" />
-            <SearchRow
-              {...rowProps("dest")}
-              icon={<DestSquare active={destName != null} />}
-              placeholder="Odredište — traži ili klikni kartu"
-            />
-          </>
-        )}
-        {showSwap && activeRow === null && <SwapButton onSwap={onSwap} />}
-      </div>
+      <FieldRows
+        props={{
+          hasOrigin,
+          hasDest,
+          originName,
+          destName,
+          showSwap,
+          onSwap,
+          onClearOrigin,
+          onClearDest,
+        }}
+        activeRow={activeRow}
+        rowProps={rowProps}
+        onKeyNav={onKeyNav}
+      />
       {open && (
         <Dropdown
           results={results}
@@ -379,23 +486,91 @@ export function SearchFields({
           query={query}
           loading={loading}
           showMyLocation={activeRow === "origin"}
+          activeIndex={activeIndex}
           onRemoveOrigin={
             activeRow === "origin" && hasOrigin ? onClearOrigin : null
           }
           onPick={(p, label) => activeRow && pick(activeRow, p, label)}
-          onMyLocation={() => {
-            originRef.current?.blur()
-            navigator.geolocation?.getCurrentPosition(
-              (pos) =>
-                onSelectOrigin({
-                  lat: pos.coords.latitude,
-                  lon: pos.coords.longitude,
-                }),
-              () => {}
-            )
-          }}
+          onMyLocation={onMyLocation}
         />
       )}
+    </div>
+  )
+}
+
+/** The bordered two-row field stack (origin + optional destination). */
+function FieldRows({
+  props,
+  activeRow,
+  rowProps,
+  onKeyNav,
+}: {
+  props: Pick<
+    SearchFieldsProps,
+    | "hasOrigin"
+    | "hasDest"
+    | "originName"
+    | "destName"
+    | "showSwap"
+    | "onSwap"
+    | "onClearOrigin"
+    | "onClearDest"
+  >
+  activeRow: RowKind | null
+  rowProps: (kind: RowKind) => Omit<
+    React.ComponentProps<typeof SearchRow>,
+    "icon" | "placeholder" | "trailing" | "onKeyNav"
+  >
+  onKeyNav: (e: React.KeyboardEvent) => void
+}) {
+  const { hasOrigin, hasDest, originName, destName, showSwap } = props
+  const resting = activeRow === null
+  return (
+    <div
+      className={
+        !resting
+          ? "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
+          : "border border-hairline-strong"
+      }
+    >
+      <SearchRow
+        {...rowProps("origin")}
+        onKeyNav={onKeyNav}
+        icon={<OriginRing active={hasOrigin || activeRow === "origin"} />}
+        placeholder={
+          hasOrigin
+            ? (originName ?? "Novo polazište…")
+            : "Pretraži ili klikni kartu"
+        }
+        trailing={
+          hasOrigin && resting ? (
+            <ClearValueButton
+              label="Ukloni polazište"
+              onClick={props.onClearOrigin}
+            />
+          ) : undefined
+        }
+      />
+      {hasOrigin && (
+        <>
+          <div className="ml-10 h-px bg-hairline" />
+          <SearchRow
+            {...rowProps("dest")}
+            onKeyNav={onKeyNav}
+            icon={<DestSquare active={destName != null} />}
+            placeholder="Odredište — traži ili klikni kartu"
+            trailing={
+              hasDest && resting ? (
+                <ClearValueButton
+                  label="Ukloni odredište"
+                  onClick={props.onClearDest}
+                />
+              ) : undefined
+            }
+          />
+        </>
+      )}
+      {showSwap && resting && <SwapButton onSwap={props.onSwap} />}
     </div>
   )
 }

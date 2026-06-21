@@ -49,12 +49,33 @@ export async function GET(req: NextRequest) {
   })
 }
 
+/** First comma segment, lowercased + diacritics stripped — the "same place"
+ * key so "Trg bana Josipa Jelačića" variants collapse to one. */
+function titleKey(name: string): string {
+  return name
+    .split(",")[0]
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+}
+
 function dedup(results: Result[]): Result[] {
   const out: Result[] = []
   for (const r of results) {
-    if (!out.some((o) => Math.abs(o.lat - r.lat) < 0.0005 && Math.abs(o.lon - r.lon) < 0.0005)) {
-      out.push(r)
-    }
+    // Keep genuinely distinct house numbers; collapse same-named results that
+    // carry no number (a bare street/place repeated as ulica/mjesto/adresa).
+    const numbered = r.kind === "address" && /\d/.test(r.display_name)
+    const key = numbered ? null : titleKey(r.display_name)
+    const dup = out.some(
+      (o) =>
+        (Math.abs(o.lat - r.lat) < 0.0005 && Math.abs(o.lon - r.lon) < 0.0005) ||
+        // Same unnumbered name → one result. Within the Zagreb bbox a repeated
+        // street/place name is the same thing (the geocoder returns it as
+        // ulica / mjesto / adresa, and long streets as several segments).
+        (key != null && titleKey(o.display_name) === key)
+    )
+    if (!dup) out.push(r)
   }
   return out
 }

@@ -1,5 +1,5 @@
 import type { Itinerary } from "@/lib/otp"
-import type { POICategory } from "@/lib/overpass"
+import type { PoiPhoto, POICategory } from "@/lib/overpass"
 import {
   multiPolygonAreaKm2,
   pointInMultiPolygon,
@@ -7,6 +7,15 @@ import {
 } from "@/lib/geo"
 
 export type LatLon = { lat: number; lon: number }
+
+/** Browser geolocation → callback with the point. No-op on denial/absence
+ * (we never auto-prompt; this only fires from an explicit user action). */
+export function requestMyLocation(onLocate: (p: LatLon) => void): void {
+  navigator.geolocation?.getCurrentPosition(
+    (pos) => onLocate({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+    () => {}
+  )
+}
 
 /** Panel state machine — docs/map-redesign-spec.md §3. */
 export type PanelState =
@@ -23,7 +32,11 @@ export type Poi = {
   lat: number
   lon: number
   category: POICategory
+  photo?: PoiPhoto
 }
+
+/** POI annotated against the current reach band (null = no origin yet). */
+export type MapPoi = Poi & { inReach: boolean | null }
 
 export type WalkAreaFeatureLike = {
   properties: { time: number }
@@ -47,19 +60,6 @@ export function reachAreaKm2(band: WalkAreaFeatureLike): number {
   return multiPolygonAreaKm2(band.geometry.coordinates)
 }
 
-export function countPoisInReach(
-  pois: Poi[],
-  band: WalkAreaFeatureLike
-): Record<string, number> {
-  const counts: Record<string, number> = {}
-  for (const poi of pois) {
-    if (pointInMultiPolygon(poi.lon, poi.lat, band.geometry.coordinates)) {
-      counts[poi.category] = (counts[poi.category] ?? 0) + 1
-    }
-  }
-  return counts
-}
-
 export function pointInReach(p: LatLon, band: WalkAreaFeatureLike): boolean {
   return pointInMultiPolygon(p.lon, p.lat, band.geometry.coordinates)
 }
@@ -80,6 +80,15 @@ export type DistrictContext = {
   totalDistricts: number
   districtsInReach: number
   cityAreaKm2: number
+}
+
+/** Title-case an ALL-CAPS name (BAJS stations arrive shouting) — leaves
+ * mixed-case names untouched. Shared by leg titles and dot popups. */
+export function deShout(name: string): string {
+  if (name !== name.toUpperCase()) return name
+  return name
+    .toLowerCase()
+    .replace(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
 }
 
 /** "1 presjedanje" / "2 presjedanja" / "bez presjedanja". */

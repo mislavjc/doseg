@@ -22,12 +22,14 @@ function isNearby(lat: number, lon: number) {
   )
 }
 
+/** A clicked point is a location, not a venue — prefer the street (+number)
+ * over a nearby POI name ("Blagajna HNB"), falling back to the name only
+ * when there's no street. */
 function photonLabel(p: PhotonFeature["properties"]): string {
   const parts: string[] = []
-  if (p.name) parts.push(p.name)
-  if (p.street && p.street !== p.name) parts.push(p.street)
-  if (p.housenumber && parts.length > 0) parts[parts.length - 1] += ` ${p.housenumber}`
-  if (p.city) parts.push(p.city)
+  if (p.street) parts.push(p.housenumber ? `${p.street} ${p.housenumber}` : p.street)
+  else if (p.name) parts.push(p.name)
+  if (p.city && parts[0] !== p.city) parts.push(p.city)
   return parts.join(", ")
 }
 
@@ -84,20 +86,39 @@ async function reverseNominatim(lat: number, lon: number): Promise<string | null
     format: "jsonv2",
     "accept-language": "hr",
     zoom: "18",
+    addressdetails: "1",
   })
   const res = await fetch(`${NOMINATIM_REVERSE}?${params}`, {
     headers: { "User-Agent": "Doseg/1.0 (https://doseg.hr)" },
     next: { revalidate: 300 },
   })
   if (!res.ok) return null
-  const item: { display_name?: string; lat?: string; lon?: string } =
-    await res.json()
-  if (!item.display_name) return null
+  const item: {
+    display_name?: string
+    lat?: string
+    lon?: string
+    address?: {
+      road?: string
+      house_number?: string
+      city?: string
+      town?: string
+      village?: string
+      suburb?: string
+    }
+  } = await res.json()
   if (item.lat && item.lon) {
     const la = parseFloat(item.lat)
     const lo = parseFloat(item.lon)
     if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo))
       return null
   }
-  return item.display_name
+  // Prefer the structured street (+number) over the full POI-led display_name.
+  const a = item.address
+  if (a?.road) {
+    const parts = [a.house_number ? `${a.road} ${a.house_number}` : a.road]
+    const area = a.city ?? a.town ?? a.village ?? a.suburb
+    if (area) parts.push(area)
+    return parts.join(", ")
+  }
+  return item.display_name ?? null
 }

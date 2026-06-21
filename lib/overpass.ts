@@ -4,8 +4,8 @@ import { join } from "node:path"
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter"
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
-/** Zagreb bounding box */
-const ZAGREB_BBOX = { south: 45.72, west: 15.82, north: 45.9, east: 16.14 }
+/** Zagreb bounding box — shared with scripts/build-poi-photos.ts. */
+export const ZAGREB_BBOX = { south: 45.72, west: 15.82, north: 45.9, east: 16.14 }
 
 export type POICategory =
   | "hospital"
@@ -14,15 +14,26 @@ export type POICategory =
   | "supermarket"
   | "pharmacy"
 
+/** Wikimedia Commons photo for a POI (scripts/build-poi-photos.ts). */
+export type PoiPhoto = {
+  /** Displayable thumbnail (Commons Special:FilePath, width-capped). */
+  thumb: string
+  /** Commons file page — attribution link. */
+  page: string
+  /** "Author · License", already plain text. */
+  credit: string
+}
+
 type POI = {
   id: number
   name: string
   lat: number
   lon: number
   category: POICategory
+  photo?: PoiPhoto
 }
 
-const OSM_TAGS: Record<POICategory, string> = {
+export const OSM_TAGS: Record<POICategory, string> = {
   hospital: '["amenity"="hospital"]',
   school: '["amenity"="school"]',
   park: '["leisure"="park"]',
@@ -178,6 +189,36 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
   throw lastError ?? new Error("Overpass API request failed")
 }
 
+/**
+ * Commons photos for notable POIs (data/poi-photos.json, keyed by OSM id) —
+ * generated offline by scripts/build-poi-photos.ts. Loaded once; absence is
+ * fine, the popup just shows no photo.
+ */
+// Loaded from data/poi-photos.json on first use; reset on module reload.
+let photoMap: Record<string, PoiPhoto> | null = null
+
+function loadPhotoMap(): Record<string, PoiPhoto> {
+  if (photoMap) return photoMap
+  try {
+    const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
+    photoMap = JSON.parse(
+      readFileSync(join(dataDir, "poi-photos.json"), "utf-8")
+    ) as Record<string, PoiPhoto>
+  } catch {
+    photoMap = {}
+  }
+  return photoMap
+}
+
+function withPhotos(pois: POI[]): POI[] {
+  const photos = loadPhotoMap()
+  if (Object.keys(photos).length === 0) return pois
+  return pois.map((p) => {
+    const photo = photos[String(p.id)]
+    return photo ? { ...p, photo } : p
+  })
+}
+
 export async function fetchPOIs(
   categories: POICategory[]
 ): Promise<POI[]> {
@@ -185,6 +226,7 @@ export async function fetchPOIs(
 
   if (!pendingFetch) {
     pendingFetch = loadPOIs(categories)
+      .then(withPhotos)
       .then((pois) => {
         cachedPOIs = pois
         cacheExpiresAt = Date.now() + CACHE_TTL_MS

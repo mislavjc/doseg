@@ -3,10 +3,12 @@
 import { useState } from "react"
 import { Drawer } from "vaul"
 
+import { NAV_LINKS, NavLink } from "@/app/statistika/editorial/site-nav"
 import { legLineColors } from "@/lib/mode-colors"
 import type { Itinerary } from "@/lib/otp"
 import {
   ErrorContent,
+  GeoButton,
   isRouteTooFar,
   JourneyStrip,
   LegList,
@@ -18,9 +20,8 @@ import {
   RouteSkeleton,
   RouteSummary,
   RouteTooFar,
-  type ReachStats,
+  type PanelContentProps,
 } from "./panel-content"
-import type { DistrictContext, PanelState } from "./reach-state"
 import { BlueAction, Eyebrow, ReachRamp } from "./ui"
 
 /**
@@ -44,7 +45,19 @@ function legsOverflowAtHalf(itinerary: Itinerary): boolean {
   return itinerary.legs.length * legRow > SNAP_HALF * vh - chromeAboveLegs
 }
 
-function EmptyPeek() {
+/** Site nav for the phone — lives at the bottom of the (expanded) sheet
+ * instead of a top bar, so the map keeps its space. */
+function SheetNav() {
+  return (
+    <nav className="mt-3.5 flex flex-wrap gap-x-[18px] gap-y-2.5 border-t border-hairline pt-4">
+      {NAV_LINKS.filter((l) => l.label !== "karta").map((l) => (
+        <NavLink key={l.href} label={l.label} href={l.href} active={false} />
+      ))}
+    </nav>
+  )
+}
+
+function EmptyPeek({ onUseMyLocation }: { onUseMyLocation: () => void }) {
   return (
     <>
       <Eyebrow>doseg · zagreb</Eyebrow>
@@ -57,6 +70,7 @@ function EmptyPeek() {
         </p>
       </div>
       <ReachRamp rightLabel="30 min daleko" />
+      <GeoButton onUse={onUseMyLocation} />
     </>
   )
 }
@@ -115,25 +129,16 @@ function SheetBody({
   onMinutesChange,
   stats,
   poiCounts,
+  poiLayers,
+  onTogglePoi,
   districtCtx,
   departedAt,
   onBackToReach,
   onRetry,
+  onUseMyLocation,
   peek,
   full,
-}: {
-  panel: PanelState
-  minutes: number
-  onMinutesChange: (m: number) => void
-  stats: ReachStats | null
-  poiCounts: Record<string, number> | null
-  districtCtx: DistrictContext | null
-  departedAt: Date | null
-  onBackToReach: () => void
-  onRetry: () => void
-  peek: boolean
-  full: boolean
-}) {
+}: PanelContentProps & { peek: boolean; full: boolean }) {
   const mode = panel.mode
   return (
     <div
@@ -143,7 +148,7 @@ function SheetBody({
     >
       {/* keyed by mode → enter cross-fade on state change (spec §10) */}
       <div key={mode} className="panel-swap flex min-h-0 flex-col gap-[14px]">
-        {mode === "empty" && <EmptyPeek />}
+        {mode === "empty" && <EmptyPeek onUseMyLocation={onUseMyLocation} />}
         {mode === "loading" && <LoadingContent />}
         {mode === "error" && <ErrorContent onRetry={onRetry} />}
         {mode === "reach" && (
@@ -151,7 +156,11 @@ function SheetBody({
             <ReachReadout minutes={minutes} stats={stats} />
             <ReachRamp rightLabel={`${minutes} min daleko`} />
             <MinutesRow minutes={minutes} onChange={onMinutesChange} />
-            <PoiList poiCounts={poiCounts} />
+            <PoiList
+              poiCounts={poiCounts}
+              active={poiLayers}
+              onToggle={onTogglePoi}
+            />
             <LjestvicaRow ctx={districtCtx} />
           </>
         )}
@@ -166,31 +175,13 @@ function SheetBody({
           />
         )}
       </div>
+      <SheetNav />
     </div>
   )
 }
 
-export function MobileSheet({
-  panel,
-  minutes,
-  onMinutesChange,
-  stats,
-  poiCounts,
-  districtCtx,
-  departedAt,
-  onBackToReach,
-  onRetry,
-}: {
-  panel: PanelState
-  minutes: number
-  onMinutesChange: (m: number) => void
-  stats: ReachStats | null
-  poiCounts: Record<string, number> | null
-  districtCtx: DistrictContext | null
-  departedAt: Date | null
-  onBackToReach: () => void
-  onRetry: () => void
-}) {
+export function MobileSheet(props: PanelContentProps) {
+  const { panel } = props
   const [snaps] = useState<(number | string)[]>(() => [
     SNAP_PEEK,
     SNAP_HALF,
@@ -225,7 +216,7 @@ export function MobileSheet({
           aria-describedby={undefined}
           className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex h-full flex-col outline-none md:hidden"
         >
-          <div className="pointer-events-auto mt-auto flex h-full flex-col rounded-t-[18px] bg-ground shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
+          <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
             <Drawer.Title className="sr-only">Doseg</Drawer.Title>
             <button
               type="button"
@@ -233,23 +224,11 @@ export function MobileSheet({
               onClick={() =>
                 setSnap(snap === SNAP_PEEK ? SNAP_HALF : SNAP_PEEK)
               }
-              className="flex w-full shrink-0 justify-center pt-3 pb-2"
+              className="flex w-full shrink-0 items-center justify-center pt-3.5 pb-3"
             >
-              <span className="h-1 w-[38px] rounded-[2px] bg-ink-faint/40" />
+              <span className="h-1 w-[38px] bg-ink-faint/40" />
             </button>
-            <SheetBody
-              panel={panel}
-              minutes={minutes}
-              onMinutesChange={onMinutesChange}
-              stats={stats}
-              poiCounts={poiCounts}
-              districtCtx={districtCtx}
-              departedAt={departedAt}
-              onBackToReach={onBackToReach}
-              onRetry={onRetry}
-              peek={peek}
-              full={full}
-            />
+            <SheetBody {...props} peek={peek} full={full} />
           </div>
         </Drawer.Content>
       </Drawer.Portal>

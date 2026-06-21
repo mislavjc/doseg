@@ -2,22 +2,24 @@
 
 import {
   ErrorContent,
+  GeoButton,
   LjestvicaBlock,
   LoadingContent,
   ReachContent,
   RouteContent,
+  type PanelContentProps,
   type ReachStats,
 } from "./panel-content"
-import { type DistrictContext, type PanelState } from "./reach-state"
 import { SearchFields, type SearchFieldsProps } from "./search-fields"
 import { ReachIllustration, RouteIllustration } from "./step-illustrations"
 import { BlueAction, Eyebrow, NumberedStep } from "./ui"
 
 export type { ReachStats }
 
-function EmptyContent() {
+function EmptyContent({ onUseMyLocation }: { onUseMyLocation: () => void }) {
   return (
     <>
+      <GeoButton onUse={onUseMyLocation} />
       <h2 className="font-heros text-head font-bold text-ink">
         Koliko grada ti je nadohvat za pola sata?
       </h2>
@@ -52,22 +54,14 @@ export function Sidebar({
   onMinutesChange,
   stats,
   poiCounts,
+  poiLayers,
+  onTogglePoi,
   districtCtx,
   departedAt,
   onBackToReach,
   onRetry,
-}: {
-  panel: PanelState
-  search: SearchFieldsProps
-  minutes: number
-  onMinutesChange: (m: number) => void
-  stats: ReachStats | null
-  poiCounts: Record<string, number> | null
-  districtCtx: DistrictContext | null
-  departedAt: Date | null
-  onBackToReach: () => void
-  onRetry: () => void
-}) {
+  onUseMyLocation,
+}: PanelContentProps & { search: SearchFieldsProps }) {
   const mode = panel.mode
   const isRoute = mode === "route" || mode === "route-loading"
 
@@ -91,7 +85,9 @@ export function Sidebar({
         ) : (
           /* header + footer stay pinned; this middle region scrolls */
           <div className="scroll-fade flex min-h-0 grow flex-col gap-[18px] overflow-y-auto">
-            {mode === "empty" && <EmptyContent />}
+            {mode === "empty" && (
+              <EmptyContent onUseMyLocation={onUseMyLocation} />
+            )}
             {mode === "loading" && <LoadingContent />}
             {mode === "error" && <ErrorContent onRetry={onRetry} />}
             {mode === "reach" && (
@@ -100,6 +96,8 @@ export function Sidebar({
                 onMinutesChange={onMinutesChange}
                 stats={stats}
                 poiCounts={poiCounts}
+                poiLayers={poiLayers}
+                onTogglePoi={onTogglePoi}
               />
             )}
           </div>

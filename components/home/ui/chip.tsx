@@ -1,25 +1,11 @@
+import { IconBike } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+
 import { isBikeMode, isWalkMode, modeColorFor } from "@/lib/mode-colors"
 
-/** Minimal bike glyph — BAJS legs in chips and the journey strip. */
+/** BAJS glyph — chip + journey strip. Wraps the shared icon set so the
+ * homepage and /promjene stay visually consistent. */
 export function BikeIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      width="15"
-      height="10"
-      viewBox="0 0 15 10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="3" cy="6.8" r="2.4" />
-      <circle cx="12" cy="6.8" r="2.4" />
-      <path d="M3 6.8 L5.6 2.6 H9.4 M5.6 2.6 L7.9 6.8 H3 M9.4 2.6 L12 6.8 M8.9 1.2 h1.8" />
-    </svg>
-  )
+  return <IconBike size={14} className={className} />
 }
 
 /**

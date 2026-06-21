@@ -1,7 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import {
+  IconChevronDownSmall,
+  IconClock,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
+import { useCloseOnEscape } from "@/hooks/use-close-on-escape"
 import { formatClock } from "./reach-state"
 import { DropdownPanel, DropdownSection, MapTile, MapTileButton } from "./ui"
 
@@ -17,28 +22,6 @@ const PRESETS = [
   { label: "večer 20", time: "20:00" },
   { label: "kasno 23", time: "23:00" },
 ] as const
-
-function ClockIcon() {
-  return (
-    <svg
-      aria-hidden
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      className="shrink-0 text-ink-muted"
-    >
-      <circle cx="7" cy="7" r="5.75" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M7 4.2 V7 H9.4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
 
 function parseTime(t: string): number | null {
   const m = t.trim().match(/^(\d{1,2})[:.]?(\d{2})$/)
@@ -213,30 +196,39 @@ function PanelBody({
 export function PolazakControl({
   departTime,
   onChange,
+  compact = false,
 }: {
   departTime: string | null
   onChange: (t: string | null) => void
+  /** Mobile trigger: clock + time only, no "polazak" eyebrow. */
+  compact?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const now = formatClock(new Date())
+  useCloseOnEscape(open, () => setOpen(false))
 
   return (
     <div className="relative">
       <MapTile>
         <MapTileButton
           onClick={() => setOpen((o) => !o)}
-          className="gap-2 px-[13px] py-[9px]"
+          label="Vrijeme polaska"
+          className={
+            compact ? "h-11 gap-2 px-[13px]" : "gap-2 px-[13px] py-[9px]"
+          }
         >
-          <ClockIcon />
+          <IconClock size={14} className="shrink-0 text-ink-muted" />
           <span className="flex items-baseline gap-2">
-            <span className="font-mono text-label text-ink-faint">polazak</span>
+            {!compact && (
+              <span className="font-mono text-label text-ink-faint">
+                polazak
+              </span>
+            )}
             <span className="font-heros text-[15px] leading-[18px] font-bold text-ink">
               {departTime ?? `Sada · ${now}`}
             </span>
           </span>
-          <span className="font-mono text-[10px] leading-none text-ink-faint">
-            ▾
-          </span>
+          <IconChevronDownSmall size={14} className="shrink-0 text-ink-faint" />
         </MapTileButton>
       </MapTile>
       {open && (

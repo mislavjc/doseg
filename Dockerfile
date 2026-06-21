@@ -1,5 +1,11 @@
 FROM oven/bun:1 AS deps
 WORKDIR /app
+# node-gyp toolchain for native deps without a prebuilt binary (e.g.
+# better-sqlite3, pulled in by the evalite dev tool). This is a throwaway
+# build stage — the toolchain never reaches the runner image.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
 COPY package.json bun.lock ./
 # patchedDependencies (vaul) — bun install needs the patch files present
 COPY patches ./patches

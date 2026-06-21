@@ -11,6 +11,7 @@ data/*
 !data/route-stats.json
 !data/network-stats.json
 !data/poi-photos.json
+!data/promjene
 .DS_Store
 *.pem
 .env*.local

@@ -300,8 +300,24 @@ export function buildFaq(data: LinePageData): FaqItem[] {
   return items
 }
 
-export function faqJsonLd(items: FaqItem[]): string {
-  return JSON.stringify({
+/**
+ * Renders structured data as a <script type="application/ld+json">. JSON.stringify
+ * alone doesn't escape "<", so a value containing "</script>" could break out of
+ * the tag — escape it to <. Route all JSON-LD through this component.
+ */
+export function JsonLd({ data }: { data: object }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
+    />
+  )
+}
+
+export function faqJsonLd(items: FaqItem[]) {
+  return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: items.map((item) => ({
@@ -309,7 +325,28 @@ export function faqJsonLd(items: FaqItem[]): string {
       name: item.q,
       acceptedAnswer: { "@type": "Answer", text: item.a },
     })),
-  })
+  }
+}
+
+/**
+ * Mirrors the visual breadcrumb in Naslov (sve linije / … / linija N) so Google
+ * can render a breadcrumb trail in the SERP instead of the bare URL.
+ */
+export function breadcrumbJsonLd(broj: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Doseg", item: "https://doseg.hr" },
+      { "@type": "ListItem", position: 2, name: "Linije", item: "https://doseg.hr/linije" },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `Linija ${broj}`,
+        item: `https://doseg.hr/linije/${broj}`,
+      },
+    ],
+  }
 }
 
 export function CestaPitanja({ items }: { items: FaqItem[] }) {

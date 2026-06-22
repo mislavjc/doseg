@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils"
  */
 
 export const NAV_LINKS = [
-  { label: "karta", href: "/" },
   { label: "statistika", href: "/statistika" },
   { label: "linije", href: "/linije" },
+  { label: "kvartovi", href: "/kvartovi" },
   { label: "promjene", href: "/promjene" },
   { label: "o projektu", href: "/o-projektu" },
 ] as const

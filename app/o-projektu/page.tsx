@@ -4,12 +4,12 @@ import { MonoLabel } from "@/components/home/ui"
 import { Hero } from "@/app/statistika/editorial/hero"
 
 export const metadata: Metadata = {
-  title: "O projektu — Doseg | Zagreb Transit Reachability",
+  title: "O projektu | Doseg",
   description:
     "Kako radi Doseg: interaktivna karta dosega javnog prijevoza u Zagrebu. Dijkstrin algoritam, ZET GTFS vozni red, GTFS-RT kašnjenja i pješačka mreža s 422K čvorova.",
   alternates: { canonical: "/o-projektu" },
   openGraph: {
-    title: "O projektu — Doseg | Zagreb Transit Reachability",
+    title: "O projektu | Doseg",
     description:
       "Kako radi Doseg: interaktivna karta dosega javnog prijevoza u Zagrebu. Dijkstrin algoritam, ZET GTFS vozni red, GTFS-RT kašnjenja i pješačka mreža s 422K čvorova.",
     type: "article",

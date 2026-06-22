@@ -295,7 +295,7 @@ function ClientInner() {
 
   return (
     <main id="main-content" className="relative h-dvh overflow-hidden">
-      <h1 className="sr-only">Doseg — karta dosega javnog prijevoza</h1>
+      <h1 className="sr-only">Doseg: karta dosega javnog prijevoza</h1>
       <nav aria-label="Navigacija" className="sr-only">
         <Link href="/linije">Sve ZET linije: vozni red i stanice</Link>
         <Link href="/statistika">Statistika dostupnosti javnog prijevoza</Link>

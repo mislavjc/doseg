@@ -15,6 +15,7 @@ import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 import { loadLineIndex } from "@/lib/line-data"
 
 import { plural } from "./copy"
+import { JsonLd } from "./sections"
 
 export const metadata: Metadata = {
   title: "Sve ZET linije na jednom mjestu: vozni redovi i stanice | Doseg",
@@ -99,8 +100,23 @@ export default function LinijeIndexPage() {
   const buses = index.lines.filter((l) => l.mode === "bus" && !l.isNight)
   const nightHeadway = nightLines[0]?.avgHeadwayMin
 
+  // Declares /linije as the machine-readable hub for the 154 line pages, so
+  // Googlebot treats them as one curated set rather than orphaned spokes.
+  const lineListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Sve ZET linije",
+    itemListElement: index.lines.map((l, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: `Linija ${l.broj}: ${l.terminals[0]} - ${l.terminals[1]}`,
+      url: `https://doseg.hr/linije/${l.broj}`,
+    })),
+  }
+
   return (
     <EditorialShell>
+      <JsonLd data={lineListJsonLd} />
       <Hero active="linije" />
 
       <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">

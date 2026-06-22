@@ -25,7 +25,7 @@ export async function generateMetadata({
   // shared map links where the card shows the clicked district.
   const ogUrl = ogQuery ? `/api/og?${ogQuery}` : "/og.jpg"
 
-  const title = "Doseg | Zagreb Transit Reachability"
+  const title = "Doseg: karta dosega javnog prijevoza u Zagrebu"
   const description =
     "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta."
 

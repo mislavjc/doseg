@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import { CestaPitanja } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadScores } from "@/app/statistika/stat-data"
@@ -8,7 +9,6 @@ import { loadKvart, loadKvartIndex } from "@/lib/kvart-data"
 
 import {
   Blizina,
-  CestaPitanja,
   Cinjenice,
   DosegLink,
   IzvanSpice,
@@ -42,7 +42,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `/kvart/${data.slug}` },
+    alternates: { canonical: `/kvartovi/${data.slug}` },
     openGraph: {
       title,
       description,

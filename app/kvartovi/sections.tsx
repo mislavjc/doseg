@@ -1,52 +1,139 @@
+import {
+  IconArrowUpRight,
+  IconMedicalCross,
+  IconPark,
+  IconSchool,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
 
-import { JsonLd } from "@/app/linije/sections"
-import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import {
-  Body,
-  Eyebrow,
-  Hook,
-  MonoLabel,
-} from "@/app/statistika/editorial/primitives"
+  Breadcrumb,
+  FactRow,
+  LineBadge,
+  SectionHeader,
+} from "@/app/statistika/editorial/blocks"
+import { faqJsonLd, type FaqItem } from "@/app/statistika/editorial/faq"
+import {
+  JsonLd,
+  breadcrumbJsonLd,
+} from "@/app/statistika/editorial/json-ld"
+import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
+import { SiteNav } from "@/app/statistika/editorial/site-nav"
+import { mercatorY } from "@/lib/geo"
+import type { LineHeroCrop } from "@/lib/line-data"
 import { scoreColor, scoreTextColor } from "@/lib/score-color"
+import { cn } from "@/lib/utils"
 import type { KvartData } from "@/lib/kvart-data"
 
 /**
  * Kvart scorecard sections. Visual language is the statistika editorial kit
- * (16/12 type, Zagreb blue, sharp corners). Reachability tints reuse the shared
+ * (16/12 type, Zagreb blue, sharp corners). Shared chrome (SectionHeader,
+ * FactRow, Breadcrumb, LineBadge, JsonLd) comes from the kit; only the kvart
+ * hero + data-specific blocks live here. Reachability tints reuse the shared
  * score ramp so the colour meaning stays identical across the site.
  */
 
-const FILL_OTHER = "#e8edf2"
+// ── Hero: dithered map cropped to the kvart, with its border ────────────────
 
-// ── Hero: Zagreb silhouette, this kvart highlighted ─────────────────────────
+function kvartProjector(crop: LineHeroCrop, viewW: number, viewH: number) {
+  const yTop = mercatorY(crop.north)
+  const yBottom = mercatorY(crop.south)
+  return (lon: number, lat: number): [number, number] => [
+    ((lon - crop.west) / (crop.east - crop.west)) * viewW,
+    ((mercatorY(lat) - yTop) / (yBottom - yTop)) * viewH,
+  ]
+}
+
+function KvartHeroVariant({
+  data,
+  crop,
+  src,
+  className,
+}: {
+  data: KvartData
+  crop: LineHeroCrop
+  src: string
+  className?: string
+}) {
+  const viewW = crop.width / 2
+  const viewH = crop.height / 2
+  const project = kvartProjector(crop, viewW, viewH)
+  const pts = data.boundary.map(([lon, lat]) => project(lon, lat))
+  const path = pts.length
+    ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
+    : ""
+  const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
+  const cy = pts.reduce((s, p) => s + p[1], 0) / (pts.length || 1)
+  const lw = data.name.length * 8.9 + 20
+  const lh = 28
+  const lx = Math.min(Math.max(cx - lw / 2, 8), viewW - lw - 8)
+  const ly = Math.min(Math.max(cy - lh / 2, 84), viewH - lh - 8)
+  return (
+    <div
+      className={cn("relative w-full overflow-clip", className)}
+      style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/hero-cloud.png"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
+      />
+      {path && (
+        <svg
+          aria-hidden
+          viewBox={`0 0 ${viewW} ${viewH}`}
+          preserveAspectRatio="xMidYMid slice"
+          className="absolute inset-0 h-full w-full"
+        >
+          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="#fff" strokeWidth={6} strokeLinejoin="round" />
+          <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
+          <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
+          <text
+            x={lx + lw / 2}
+            y={ly + lh / 2 + 5.5}
+            textAnchor="middle"
+            fontSize={16}
+            fontWeight={700}
+            fontFamily="var(--font-heros), system-ui, sans-serif"
+            fill="#fff"
+          >
+            {data.name}
+          </text>
+        </svg>
+      )}
+    </div>
+  )
+}
 
 export function KvartHero({ data }: { data: KvartData }) {
   return (
-    <div className="relative bg-surface">
-      <div className="absolute inset-x-0 top-0 z-10 flex justify-center px-8 pt-5">
-        <SiteNav active="statistika" className="w-[640px] max-w-full" />
+    <header className="relative bg-white">
+      {data.hero ? (
+        <>
+          <KvartHeroVariant
+            data={data}
+            crop={data.hero.desktop}
+            src={`/kvart/hero-${data.slug}.png`}
+            className="hidden sm:block"
+          />
+          <KvartHeroVariant
+            data={data}
+            crop={data.hero.mobile}
+            src={`/kvart/hero-${data.slug}-m.png`}
+            className="sm:hidden"
+          />
+        </>
+      ) : (
+        <div className="h-[180px]" />
+      )}
+      <div className="absolute inset-x-0 top-[18px] z-10 flex w-full justify-center px-4 sm:px-16">
+        <SiteNav active="kvartovi" />
       </div>
-      <div className="mx-auto max-w-[940px] px-6 pt-24 pb-10">
-        <svg
-          viewBox="0 0 960 620"
-          className="block h-auto w-full"
-          role="img"
-          aria-label={`Položaj kvarta ${data.name} u Zagrebu`}
-        >
-          {data.shapes.map((s) => (
-            <path
-              key={s.name}
-              d={s.d}
-              fill={s.isSelf ? scoreColor(data.score) : FILL_OTHER}
-              stroke="#ffffff"
-              strokeWidth={1.5}
-              strokeLinejoin="round"
-            />
-          ))}
-        </svg>
-      </div>
-    </div>
+    </header>
   )
 }
 
@@ -55,13 +142,12 @@ export function KvartHero({ data }: { data: KvartData }) {
 export function Naslov({ data }: { data: KvartData }) {
   return (
     <>
-      <p className="font-mono text-label text-ink-faint">
-        <Link href="/statistika" className="text-zg-blue transition-colors hover:text-navy">
-          statistika
-        </Link>
-        {" / kvartovi / "}
-        {data.name}
-      </p>
+      <Breadcrumb
+        trail={[
+          { label: "svi kvartovi", href: "/kvartovi" },
+          { label: data.name },
+        ]}
+      />
       <Hook as="h1" className="mt-4">
         {data.name}.
       </Hook>
@@ -78,15 +164,15 @@ export function Naslov({ data }: { data: KvartData }) {
 export function Scorecard({ data }: { data: KvartData }) {
   return (
     <>
-      <Eyebrow className="text-zg-blue">povezanost · indeks dosega</Eyebrow>
-      <Hook className="mt-2">
-        {data.rank}. od {data.total} kvartova.
-      </Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader
+        accent
+        eyebrow="povezanost · indeks dosega"
+        hook={`${data.rank}. od ${data.total} kvartova.`}
+      >
         Indeks mjeri koliko grada dosegneš iz prosječne točke kvarta za 30
         minuta. Najbolji kvart dosegne višestruko više od najgoreg.
-      </Body>
-      <div className="mt-6 flex flex-col gap-[18px]">
+      </SectionHeader>
+      <div className="flex flex-col gap-[18px]">
         {data.bars.map((b) => {
           const self = b.kind === "self"
           const fill = self ? "#0e51c9" : b.kind === "city" ? "#c9cdd3" : "#a9c2ec"
@@ -124,15 +210,17 @@ export function Matrica({ data }: { data: KvartData }) {
   }
   return (
     <>
-      <Eyebrow className="text-zg-blue">matrica putovanja</Eyebrow>
-      <Hook className="mt-2">Koliko grada ti je nadohvat?</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader
+        accent
+        eyebrow="matrica putovanja"
+        hook="Koliko grada ti je nadohvat?"
+      >
         Vrijeme javnim prijevozom do svakog drugog kvarta u jutarnjoj špici.{" "}
         <strong className="font-bold text-ink">
           {data.within30} od {data.total - 1} kvartova unutar 30 min.
         </strong>
-      </Body>
-      <div className="mt-5">
+      </SectionHeader>
+      <div>
         <div className="flex items-center justify-between px-3 pb-1.5">
           <MonoLabel className="text-[11px]">do kvarta</MonoLabel>
           <MonoLabel className="text-[11px]">min</MonoLabel>
@@ -144,7 +232,7 @@ export function Matrica({ data }: { data: KvartData }) {
         {rows.map((r, i) => (
           <Link
             key={r.slug}
-            href={`/kvart/${r.slug}`}
+            href={`/kvartovi/${r.slug}`}
             className="flex items-center gap-3 px-3 py-1.5"
             style={tint(r.min)}
           >
@@ -178,12 +266,10 @@ export function IzvanSpice({ data }: { data: KvartData }) {
   if (data.weekendRetentionPct != null) bars.push(["vikend", data.weekendRetentionPct])
   return (
     <>
-      <Eyebrow>izvan špice</Eyebrow>
-      <Hook className="mt-2">Vrijedi li i navečer i vikendom?</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="izvan špice" hook="Vrijedi li i navečer i vikendom?">
         Ocjena gore mjeri jutarnju špicu. Ovako kvart vozi ostatak vremena.
-      </Body>
-      <div className="mt-5 flex flex-col gap-3">
+      </SectionHeader>
+      <div className="flex flex-col gap-3">
         <MonoLabel className="text-[12px]">doseg u odnosu na špicu</MonoLabel>
         {bars.map(([label, pct]) => (
           <div key={label} className="flex items-center gap-3.5">
@@ -208,60 +294,34 @@ export function IzvanSpice({ data }: { data: KvartData }) {
 
 // ── Činjenice ────────────────────────────────────────────────────────────────
 
-function FactRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline gap-3 border-b border-hairline py-[9px] last:border-b-0">
-      <span className="shrink-0 font-heros text-body text-ink-muted">{label}</span>
-      <span className="h-[13px] min-w-0 flex-1 border-b border-dotted border-hairline-strong" />
-      <span className="shrink-0 font-mono text-body text-ink">{value}</span>
-    </div>
-  )
-}
-
 export function Cinjenice({ data }: { data: KvartData }) {
   return (
     <div className="flex flex-col">
-      <FactRow label="tramvajske / autobusne linije" value={`${data.tramCount} / ${data.busCount}`} />
-      <FactRow label="stanica u kvartu" value={String(data.stops)} />
-      <FactRow label="prometna pustinja (>500 m od stanice)" value={`${data.desertPct}%`} />
-      <FactRow label="javni bicikli (BAJS)" value={`${data.bajs.stations} stanica`} />
+      <FactRow divided label="tramvajske / autobusne linije" value={`${data.tramCount} / ${data.busCount}`} />
+      <FactRow divided label="stanica u kvartu" value={String(data.stops)} />
+      <FactRow divided label="prometna pustinja (>500 m od stanice)" value={`${data.desertPct}%`} />
+      <FactRow divided label="javni bicikli (BAJS)" value={`${data.bajs.stations} stanica`} />
     </div>
   )
 }
 
 // ── Linije kroz kvart ────────────────────────────────────────────────────────
 
-function LineChip({ line }: { line: KvartData["lines"][number] }) {
-  const tram = line.mode === "tram"
-  return (
-    <Link
-      href={`/linije/${line.broj}`}
-      className={`flex h-6 w-[34px] shrink-0 items-center justify-center font-mono text-label ${
-        tram
-          ? "bg-zg-blue text-white"
-          : "border border-zg-blue bg-white text-zg-blue"
-      }`}
-      title={`${tram ? "tramvaj" : "autobus"} ${line.broj}`}
-    >
-      {line.broj}
-    </Link>
-  )
-}
-
 export function Linije({ data }: { data: KvartData }) {
   return (
     <>
-      <Eyebrow>linije kroz kvart</Eyebrow>
-      <Hook className="mt-2">
-        {data.lines.length} {data.lines.length === 1 ? "linija" : "linija"}.
-      </Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="linije kroz kvart" hook={`${data.lines.length} linija.`}>
         {data.tramCount} tramvajskih i {data.busCount} autobusnih. Svaka vodi na
         svoju stranicu s voznim redom.
-      </Body>
-      <div className="mt-[18px] flex flex-wrap gap-1.5">
+      </SectionHeader>
+      <div className="flex flex-wrap gap-1.5">
         {data.lines.map((l) => (
-          <LineChip key={`${l.mode}-${l.broj}`} line={l} />
+          <LineBadge
+            key={`${l.mode}-${l.broj}`}
+            broj={l.broj}
+            mode={l.mode}
+            href={`/linije/${l.broj}`}
+          />
         ))}
       </div>
       <MonoLabel className="mt-2.5 block text-[12px]">
@@ -279,12 +339,10 @@ export function OvisiOAdresi({ data }: { data: KvartData }) {
   const pct = (v: number) => `${(v / axis) * 100}%`
   return (
     <>
-      <Eyebrow>ovisi o adresi</Eyebrow>
-      <Hook className="mt-2">Nije svuda jednako.</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="ovisi o adresi" hook="Nije svuda jednako.">
         Kvart nije ujednačen: uz prugu dosegneš puno, na rubu znatno manje.
-      </Body>
-      <MonoLabel className="mt-[18px] block text-[12px]">
+      </SectionHeader>
+      <MonoLabel className="block text-[12px]">
         dostupnih dijelova grada (mrežnih ćelija) za 30 min, ovisno o adresi
       </MonoLabel>
       <div className="relative mt-1.5 h-16 w-full">
@@ -320,20 +378,16 @@ export function DosegLink({ data }: { data: KvartData }) {
   const { lat, lon } = data.bestPoint
   return (
     <>
-      <Eyebrow>doseg odavde</Eyebrow>
-      <Hook className="mt-2">Vidi što stigneš za 30 minuta.</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="doseg odavde" hook="Vidi što stigneš za 30 minuta.">
         Interaktivna karta dosega iz najpovezanije točke kvarta: dokle stigneš
         tramvajem, busom i pješice u 15, 30 ili 45 minuta.
-      </Body>
+      </SectionHeader>
       <Link
         href={`/?lat=${lat}&lon=${lon}`}
-        className="mt-4 inline-flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
+        className="inline-flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
       >
         otvori kartu dosega odavde
-        <svg width={11} height={11} viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <IconArrowUpRight size={14} className="shrink-0" />
       </Link>
     </>
   )
@@ -347,39 +401,25 @@ const POI_LABEL: Record<KvartData["poi"][number]["key"], string> = {
   park: "Parkovi",
 }
 
+// Central icons (square-outlined-radius-0-stroke-2) match the locked icon system.
+const POI_ICON: Record<KvartData["poi"][number]["key"], typeof IconPark> = {
+  hospital: IconMedicalCross,
+  school: IconSchool,
+  park: IconPark,
+}
+
 function PoiIcon({ k }: { k: KvartData["poi"][number]["key"] }) {
-  const c = "#0e51c9"
-  if (k === "hospital")
-    return (
-      <svg width={22} height={22} viewBox="0 0 22 22" fill="none" aria-hidden className="shrink-0">
-        <rect x="2" y="2" width="18" height="18" stroke={c} strokeWidth={2} />
-        <path d="M11 6v10M6 11h10" stroke={c} strokeWidth={2} />
-      </svg>
-    )
-  if (k === "school")
-    return (
-      <svg width={22} height={22} viewBox="0 0 22 22" fill="none" aria-hidden className="shrink-0">
-        <path d="M2 8l9-4 9 4-9 4z" stroke={c} strokeWidth={2} strokeLinejoin="round" />
-        <path d="M17 10v5" stroke={c} strokeWidth={2} />
-      </svg>
-    )
-  return (
-    <svg width={22} height={22} viewBox="0 0 22 22" fill="none" aria-hidden className="shrink-0">
-      <path d="M11 20v-7" stroke={c} strokeWidth={2} />
-      <path d="M11 3l6 11H5z" stroke={c} strokeWidth={2} strokeLinejoin="round" />
-    </svg>
-  )
+  const Icon = POI_ICON[k]
+  return <Icon size={22} className="shrink-0 text-zg-blue" />
 }
 
 export function Blizina({ data }: { data: KvartData }) {
   return (
     <>
-      <Eyebrow>blizina</Eyebrow>
-      <Hook className="mt-2">Što je u kvartu?</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="blizina" hook="Što je u kvartu?">
         Bolnice, škole i parkovi unutar granica kvarta.
-      </Body>
-      <div className="mt-2 flex flex-col">
+      </SectionHeader>
+      <div className="flex flex-col">
         {data.poi.map((c) => (
           <div
             key={c.key}
@@ -409,12 +449,10 @@ export function Promjene({ data }: { data: KvartData }) {
   if (data.promjene.length === 0) return null
   return (
     <>
-      <Eyebrow>promjene na linijama</Eyebrow>
-      <Hook className="mt-2">Nedavne izmjene mreže.</Hook>
-      <Body className="mt-2 max-w-[520px]">
+      <SectionHeader eyebrow="promjene na linijama" hook="Nedavne izmjene mreže.">
         Trajne promjene na linijama koje voze kroz kvart.
-      </Body>
-      <div className="mt-4 flex flex-col">
+      </SectionHeader>
+      <div className="flex flex-col">
         {data.promjene.map((p) => (
           <div key={p.id} className="flex flex-col gap-1.5 border-t border-hairline py-3.5">
             <div className="flex items-center gap-3">
@@ -428,9 +466,10 @@ export function Promjene({ data }: { data: KvartData }) {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-label text-zg-blue"
+              className="inline-flex items-center gap-1 font-mono text-label text-zg-blue"
             >
-              Službena obavijest ZET-a →
+              Službena obavijest ZET-a
+              <IconArrowUpRight size={14} className="shrink-0" />
             </a>
           </div>
         ))}
@@ -441,7 +480,7 @@ export function Promjene({ data }: { data: KvartData }) {
 
 // ── FAQ + JSON-LD ────────────────────────────────────────────────────────────
 
-export function buildFaq(data: KvartData): { q: string; a: string }[] {
+export function buildFaq(data: KvartData): FaqItem[] {
   const top = data.commute[0]
   return [
     {
@@ -463,38 +502,11 @@ export function buildFaq(data: KvartData): { q: string; a: string }[] {
   ]
 }
 
-export function CestaPitanja({ items }: { items: { q: string; a: string }[] }) {
-  return (
-    <>
-      <Eyebrow>česta pitanja</Eyebrow>
-      <Hook className="mt-2 pb-2">Što ljudi pitaju.</Hook>
-      <dl>
-        {items.map((it) => (
-          <div key={it.q} className="border-t border-hairline py-4">
-            <dt className="font-heros text-head font-bold text-ink">{it.q}</dt>
-            <dd className="mt-1.5 font-heros text-body text-ink-2">{it.a}</dd>
-          </div>
-        ))}
-      </dl>
-    </>
-  )
-}
-
-export function KvartJsonLd({ data, faq }: { data: KvartData; faq: { q: string; a: string }[] }) {
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Doseg", item: "https://doseg.hr" },
-      { "@type": "ListItem", position: 2, name: "Statistika", item: "https://doseg.hr/statistika" },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: data.name,
-        item: `https://doseg.hr/kvart/${data.slug}`,
-      },
-    ],
-  }
+export function KvartJsonLd({ data, faq }: { data: KvartData; faq: FaqItem[] }) {
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Kvartovi", path: "/kvartovi" },
+    { name: data.name, path: `/kvartovi/${data.slug}` },
+  ])
   const place = {
     "@context": "https://schema.org",
     "@type": "Place",
@@ -502,15 +514,7 @@ export function KvartJsonLd({ data, faq }: { data: KvartData; faq: { q: string; 
     address: { "@type": "PostalAddress", addressLocality: "Zagreb", addressCountry: "HR" },
     geo: { "@type": "GeoCoordinates", latitude: data.bestPoint.lat, longitude: data.bestPoint.lon },
   }
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map((it) => ({
-      "@type": "Question",
-      name: it.q,
-      acceptedAnswer: { "@type": "Answer", text: it.a },
-    })),
-  }
+  const faqLd = faqJsonLd(faq)
   return (
     <>
       <JsonLd data={breadcrumb} />

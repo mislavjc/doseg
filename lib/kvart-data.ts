@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { cache } from "react"
+
 import {
   loadSaturdayScores,
   loadScores,
@@ -10,7 +12,8 @@ import {
 import { getDataDir } from "@/lib/data-dir"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 import { fastDistKm, pointInRing, type Ring } from "@/lib/geo"
-import { loadLineIndex } from "@/lib/line-data"
+import { kvartSlug } from "@/lib/kvart-slug"
+import { loadLineIndex, type LineHeroMeta } from "@/lib/line-data"
 
 /**
  * Assembles the per-kvart (district) scorecard view model from data that is
@@ -21,15 +24,24 @@ import { loadLineIndex } from "@/lib/line-data"
  * left out of v1 rather than faked.
  */
 
-const DIA: Record<string, string> = { č: "c", ć: "c", š: "s", ž: "z", đ: "d" }
+export { kvartSlug }
 
-/** "Trešnjevka - sjever" → "tresnjevka-sjever" (template-safe, diacritic-free). */
-export function kvartSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[čćšžđ]/g, (c) => DIA[c] ?? c)
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+/**
+ * Read + parse JSON once per build process — SSG renders all 17 kvart pages in
+ * the same process, so without this districts.geojson alone is parsed 17×.
+ * Mirrors lib/line-data's jsonCache.
+ */
+const jsonCache = new Map<string, unknown>()
+function readJson<T>(path: string): T | null {
+  const cached = jsonCache.get(path)
+  if (cached !== undefined && process.env.NODE_ENV === "production") return cached as T
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf-8")) as T
+    jsonCache.set(path, parsed)
+    return parsed
+  } catch {
+    return null
+  }
 }
 
 export interface KvartIndexEntry {
@@ -107,7 +119,8 @@ export interface KvartData {
   promjene: KvartPromjena[]
   bars: ScoreBar[]
   cityAvgScore: number
-  shapes: { name: string; d: string; isSelf: boolean }[]
+  boundary: [number, number][]
+  hero: LineHeroMeta | null
 }
 
 // ── raw file loaders (kept local; all paths are committed) ───────────────────
@@ -117,14 +130,9 @@ interface GeoFeature {
   geometry: { type: string; coordinates: Ring[] }
 }
 function loadGeo(): GeoFeature[] {
-  try {
-    const j = JSON.parse(
-      readFileSync(join(process.cwd(), "data/districts.geojson"), "utf-8")
-    ) as { features: GeoFeature[] }
-    return j.features
-  } catch {
-    return []
-  }
+  return readJson<{ features: GeoFeature[] }>(
+    join(process.cwd(), "data/districts.geojson")
+  )?.features ?? []
 }
 
 interface Poi {
@@ -134,14 +142,7 @@ interface Poi {
   category: string
 }
 function loadPois(): Poi[] {
-  try {
-    const j = JSON.parse(
-      readFileSync(join(getDataDir(), "poi-snapshot.json"), "utf-8")
-    ) as { pois: Poi[] }
-    return j.pois
-  } catch {
-    return []
-  }
+  return readJson<{ pois: Poi[] }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
 }
 
 interface PromjenaEntry {
@@ -153,33 +154,20 @@ interface PromjenaEntry {
   source: { url: string }
 }
 function loadPromjene(): PromjenaEntry[] {
-  try {
-    const j = JSON.parse(
-      readFileSync(join(getDataDir(), "promjene", "entries.json"), "utf-8")
-    ) as { entries: PromjenaEntry[] }
-    return j.entries
-  } catch {
-    return []
-  }
+  return (
+    readJson<{ entries: PromjenaEntry[] }>(
+      join(getDataDir(), "promjene", "entries.json")
+    )?.entries ?? []
+  )
 }
 
-/** Parse the 17 `path.district` shapes (name + d) out of the static SVG. */
-function loadShapes(): { name: string; d: string }[] {
-  try {
-    const svg = readFileSync(
-      join(process.cwd(), "public", "district-map.svg"),
-      "utf-8"
-    )
-    const re =
-      /<path[^>]*class="district"[^>]*\bd="([^"]+)"[^>]*>\s*<title>([^<\n]*)/g
-    const out: { name: string; d: string }[] = []
-    for (let m: RegExpExecArray | null; (m = re.exec(svg)); ) {
-      out.push({ d: m[1], name: m[2].trim() })
-    }
-    return out
-  } catch {
-    return []
-  }
+/** Per-kvart baked dither hero crops (data/kvart/hero-meta.json from the bake). */
+function loadHeroMeta(slug: string): LineHeroMeta | null {
+  return (
+    readJson<Record<string, LineHeroMeta>>(
+      join(getDataDir(), "kvart", "hero-meta.json")
+    )?.[slug] ?? null
+  )
 }
 
 const NEARBY_KM = 4 // only consider POIs within 4 km of the kvart for "nearest"
@@ -290,7 +278,7 @@ function buildPromjene(d: DistrictScore): KvartPromjena[] {
     .sort((a, b) => b.date.localeCompare(a.date))
 }
 
-export function loadKvart(slug: string): KvartData | null {
+function loadKvartImpl(slug: string): KvartData | null {
   if (!/^[a-z0-9-]+$/.test(slug)) return null
   const scores = loadScores()
   if (!scores) return null
@@ -324,8 +312,6 @@ export function loadKvart(slug: string): KvartData | null {
   })
 
   const promjene = buildPromjene(d)
-
-  const shapes = loadShapes().map((s) => ({ ...s, isSelf: s.name === d.name }))
 
   return {
     name: d.name,
@@ -366,6 +352,54 @@ export function loadKvart(slug: string): KvartData | null {
     promjene,
     bars,
     cityAvgScore,
-    shapes,
+    boundary: geo?.geometry.coordinates[0] ?? [],
+    hero: loadHeroMeta(slug),
+  }
+}
+
+/** Cached so generateMetadata + the page render don't both run the assembly. */
+export const loadKvart = cache(loadKvartImpl)
+
+export interface KvartBoardRow {
+  slug: string
+  name: string
+  rank: number
+  score: number
+  lineCount: number
+  desertPct: number
+}
+
+export interface KvartBoard {
+  rows: KvartBoardRow[]
+  cityAvgScore: number
+  cityDesertPct: number
+  best: KvartBoardRow
+  worst: KvartBoardRow
+  generatedAt: string
+}
+
+/** All kvarts ranked best→worst by connectivity, for the /kvartovi hub board. */
+export function loadKvartBoard(): KvartBoard | null {
+  const s = loadScores()
+  if (!s) return null
+  const rows: KvartBoardRow[] = [...s.districts]
+    .sort((a, b) => a.rank - b.rank)
+    .map((d) => ({
+      slug: kvartSlug(d.name),
+      name: d.name,
+      rank: d.rank,
+      score: d.score,
+      lineCount: (d.tramLines?.length ?? 0) + (d.busLines?.length ?? 0),
+      desertPct: d.desertPct,
+    }))
+  return {
+    rows,
+    cityAvgScore: Math.round(
+      s.districts.reduce((x, d) => x + d.score, 0) / s.districts.length
+    ),
+    cityDesertPct: s.cityDesertPct,
+    best: rows[0],
+    worst: rows[rows.length - 1],
+    generatedAt: s.generatedAt,
   }
 }

@@ -50,7 +50,7 @@ function legsOverflowAtHalf(itinerary: Itinerary): boolean {
 function SheetNav() {
   return (
     <nav className="mt-3.5 flex flex-wrap gap-x-[18px] gap-y-2.5 border-t border-hairline pt-4">
-      {NAV_LINKS.filter((l) => l.label !== "karta").map((l) => (
+      {NAV_LINKS.map((l) => (
         <NavLink key={l.href} label={l.label} href={l.href} active={false} />
       ))}
     </nav>

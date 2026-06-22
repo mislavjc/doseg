@@ -194,10 +194,7 @@ function MapChrome({
           height-matched to the polazak/slojevi tiles (h-[38px]). Fixed width
           with breathing room so the links never spill past the bar. */}
       <div className="absolute top-6 left-[404px] z-20 hidden md:block">
-        <SiteNav
-          active="karta"
-          className="h-[38px] w-[636px] max-w-none py-0 shadow-map"
-        />
+        <SiteNav className="h-[38px] w-[636px] max-w-none py-0 shadow-map" />
       </div>
 
       {/* Desktop: top-right control group */}

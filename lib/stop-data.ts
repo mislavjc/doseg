@@ -1,7 +1,9 @@
 import { join } from "node:path"
 
 import { getDataDir } from "@/lib/data-dir"
+import { fastDistKm } from "@/lib/geo"
 import type { LineHeroMeta } from "@/lib/line-data"
+import type { StopIndexEntry } from "@/lib/generated/StopIndexEntry"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import type { StopPagesIndex } from "@/lib/generated/StopPagesIndex"
 import { readJsonCached } from "@/lib/page-data"
@@ -40,35 +42,58 @@ export function loadStopHeroMeta(slug: string): LineHeroMeta | null {
 }
 
 /**
- * Stop name → page slug, but only for names that are UNAMBIGUOUS in the index.
- * ~7% of stop names repeat across kvartovi (e.g. "Borovje", "Arena centar");
- * disambiguating those needs coordinates the lightweight index doesn't carry, so
- * a duplicated name maps to nothing rather than guessing the wrong page.
- * Prod-memoized (build-time-static). Returns an empty Map if the index is absent
- * (so callers like the line pages degrade to plain text, never throw).
+ * Stop name → the index entries with that name. ~7% of names repeat across
+ * kvartovi (e.g. "Borovje", "Arena centar"); the entries carry lat/lon so a
+ * caller with coordinates can pick the right page. Prod-memoized
+ * (build-time-static); empty Map if the index is absent (callers degrade to
+ * plain text, never throw).
  */
-let nameToSlug: Map<string, string | null> | null = null
-function stopSlugIndex(): Map<string, string | null> {
-  if (nameToSlug && process.env.NODE_ENV === "production") return nameToSlug
-  const m = new Map<string, string | null>()
+let byName: Map<string, StopIndexEntry[]> | null = null
+function stopsByName(): Map<string, StopIndexEntry[]> {
+  if (byName && process.env.NODE_ENV === "production") return byName
+  const m = new Map<string, StopIndexEntry[]>()
   try {
     for (const s of loadStopIndex().stops) {
-      m.set(s.name, m.has(s.name) ? null : s.slug) // 2nd occurrence → ambiguous
+      const arr = m.get(s.name)
+      if (arr) arr.push(s)
+      else m.set(s.name, [s])
     }
   } catch {
     // index not present (e.g. stanice data not deployed) — no links, no throw.
   }
-  nameToSlug = m
+  byName = m
   return m
 }
 
-/** Resolve the given stop names to their page slugs (unambiguous matches only). */
-export function resolveStopSlugs(names: Iterable<string>): Record<string, string> {
-  const idx = stopSlugIndex()
+/**
+ * Resolve stops (with coords) to their page slugs. Unique names map directly;
+ * duplicate names pick the nearest index cluster by coordinate. Falls back to
+ * skipping ambiguous names if the index lacks coords (pre-regen data).
+ */
+export function resolveStopSlugs(
+  stops: Iterable<{ name: string; lat: number; lon: number }>
+): Record<string, string> {
+  const idx = stopsByName()
   const out: Record<string, string> = {}
-  for (const name of names) {
-    const slug = idx.get(name)
-    if (slug) out[name] = slug
+  for (const stop of stops) {
+    const cands = idx.get(stop.name)
+    if (!cands || cands.length === 0) continue
+    if (cands.length === 1) {
+      out[stop.name] = cands[0].slug
+      continue
+    }
+    // Duplicate name → nearest by coords (needs coords on both sides).
+    if (!Number.isFinite(stop.lat) || cands.some((c) => !Number.isFinite(c.lat))) continue
+    let best = cands[0]
+    let bestKm = fastDistKm(stop.lat, stop.lon, best.lat, best.lon)
+    for (const c of cands.slice(1)) {
+      const km = fastDistKm(stop.lat, stop.lon, c.lat, c.lon)
+      if (km < bestKm) {
+        bestKm = km
+        best = c
+      }
+    }
+    out[stop.name] = best.slug
   }
   return out
 }

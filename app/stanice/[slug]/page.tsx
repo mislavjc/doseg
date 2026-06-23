@@ -37,11 +37,18 @@ export async function generateMetadata({
   if (!data) return {}
   const title = stopTitle(data)
   const description = introText(data)
+  // The v param busts X/Telegram per-URL caches when the feed rolls.
+  const ogVersion = loadStopIndex().serviceDates.radniDan
   return {
     title,
     description,
     alternates: { canonical: `/stanice/${data.slug}` },
-    openGraph: { title, description, type: "article" },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: [{ url: `/api/og?stanica=${data.slug}&v=${ogVersion}`, width: 1200, height: 630 }],
+    },
   }
 }
 

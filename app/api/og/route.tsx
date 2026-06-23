@@ -2,9 +2,11 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { loadLineData } from "@/lib/line-data"
+import { loadStopData, loadStopHeroMeta } from "@/lib/stop-data"
 
 import { renderOgCard } from "./card"
 import { renderLineOgCard } from "./line-card"
+import { renderStopOgCard } from "./stop-card"
 
 export const runtime = "nodejs"
 
@@ -123,11 +125,28 @@ async function lineCardResponse(linija: string): Promise<Response | null> {
   return new Response(body, { headers: LINE_CARD_HEADERS })
 }
 
+const stopCardCache = new Map<string, ArrayBuffer>()
+
+async function stopCardResponse(stanica: string): Promise<Response | null> {
+  const cached = stopCardCache.get(stanica)
+  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+  const stop = loadStopData(stanica)
+  if (!stop) return new Response("Unknown stop", { status: 404 })
+  // Hero-map card; null when the stop has no baked hero (long-tail stops) so
+  // the caller can fall back to the generic card.
+  const heroCard = renderStopOgCard(stop, loadStopHeroMeta(stanica))
+  if (!heroCard) return null
+  const body = await heroCard.arrayBuffer()
+  stopCardCache.set(stanica, body)
+  return new Response(body, { headers: LINE_CARD_HEADERS })
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const latStr = searchParams.get("lat")
   const lonStr = searchParams.get("lon")
   const linija = searchParams.get("linija")
+  const stanica = searchParams.get("stanica")
 
   if (linija) {
     const cardResponse = await lineCardResponse(linija)
@@ -140,6 +159,18 @@ export async function GET(request: Request) {
       sub: peak
         ? `vozni red · u špici svakih ${Math.round(peak)} min`
         : "vozni red i stanice",
+    })
+  }
+
+  if (stanica) {
+    const cardResponse = await stopCardResponse(stanica)
+    if (cardResponse) return cardResponse
+    const stop = loadStopData(stanica)
+    if (!stop) return new Response("Unknown stop", { status: 404 })
+    // No baked hero — generic text card.
+    return renderOgCard({
+      headline: `Stanica ${stop.name}`,
+      sub: `${stop.lineCount} ${stop.lineCount === 1 ? "linija" : "linije"} · doseg javnim prijevozom`,
     })
   }
 

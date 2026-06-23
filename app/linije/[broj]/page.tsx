@@ -87,10 +87,8 @@ export default async function LinijaPage({
   const days = serviceDays(data)
   const faq = buildFaq(data)
   const frek = frekvencijaCopy(data)
-  // Link each stop to its own page (only names unique in the stop index).
-  const stopSlugs = resolveStopSlugs(
-    data.directions.flatMap((d) => d.stops.map((s) => s.name))
-  )
+  // Link each stop to its own page; duplicate names resolve by nearest coords.
+  const stopSlugs = resolveStopSlugs(data.directions.flatMap((d) => d.stops))
 
   return (
     <EditorialShell>

@@ -1,0 +1,89 @@
+{
+  "slug": "strpet-okretiste",
+  "name": "Štrpet-okretište",
+  "kvart": "Brezovica",
+  "lat": 45.66681,
+  "lon": 15.85706,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:30",
+  "lastDeparture": "0:37",
+  "peakIntervalMin": [
+    7,
+    39
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Štrpet",
+      "slug": "strpet"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.855,
+      45.66537,
+      15.85913,
+      45.66825
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85706,
+            45.66681
+          ],
+          [
+            15.85979,
+            45.66402
+          ],
+          [
+            15.87112,
+            45.65648
+          ],
+          [
+            15.8714,
+            45.6602
+          ],
+          [
+            15.87116,
+            45.66445
+          ],
+          [
+            15.87311,
+            45.6722
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "strpet",
+  "nextSlug": "stubicka-16"
+}

@@ -1,0 +1,190 @@
+{
+  "slug": "m-polje-istocni-ulaz",
+  "name": "M.Polje istočni ulaz",
+  "kvart": "Sesvete",
+  "lat": 45.85775,
+  "lon": 16.12541,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "267"
+  ],
+  "firstDeparture": "6:57",
+  "lastDeparture": "18:06",
+  "peakIntervalMin": [
+    32,
+    78
+  ],
+  "lines": [
+    {
+      "broj": "267",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Markovo polje",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 55.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Markovo P.mrtvačnica",
+      "slug": "markovo-p-mrtvacnica"
+    },
+    {
+      "name": "M.Polje-okretište",
+      "slug": "m-polje-okretiste"
+    },
+    {
+      "name": "M.Polje parkiralište",
+      "slug": "m-polje-parkiraliste"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.12334,
+      45.85631,
+      16.12748,
+      45.8592
+    ],
+    "lines": [
+      {
+        "broj": "267",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11056,
+            45.8484
+          ],
+          [
+            16.11056,
+            45.84841
+          ],
+          [
+            16.11094,
+            45.84951
+          ],
+          [
+            16.1111,
+            45.84982
+          ],
+          [
+            16.11126,
+            45.85046
+          ],
+          [
+            16.1116,
+            45.85152
+          ],
+          [
+            16.1116,
+            45.85152
+          ],
+          [
+            16.11188,
+            45.85194
+          ],
+          [
+            16.11218,
+            45.85269
+          ],
+          [
+            16.11247,
+            45.85357
+          ],
+          [
+            16.11269,
+            45.85485
+          ],
+          [
+            16.11269,
+            45.85485
+          ],
+          [
+            16.11388,
+            45.85957
+          ],
+          [
+            16.11447,
+            45.86137
+          ],
+          [
+            16.1149,
+            45.86226
+          ],
+          [
+            16.11525,
+            45.8622
+          ],
+          [
+            16.11554,
+            45.86176
+          ],
+          [
+            16.11554,
+            45.86176
+          ],
+          [
+            16.11627,
+            45.86062
+          ],
+          [
+            16.11674,
+            45.85987
+          ],
+          [
+            16.11782,
+            45.8592
+          ],
+          [
+            16.11934,
+            45.85849
+          ],
+          [
+            16.12012,
+            45.85839
+          ],
+          [
+            16.12012,
+            45.85839
+          ],
+          [
+            16.12012,
+            45.85838
+          ],
+          [
+            16.12257,
+            45.85809
+          ],
+          [
+            16.12497,
+            45.85776
+          ],
+          [
+            16.12498,
+            45.85776
+          ],
+          [
+            16.12797,
+            45.8573
+          ],
+          [
+            16.12898,
+            45.86051
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 4,
+    "stations30": 25,
+    "stations45": 48
+  },
+  "prevSlug": "luzan-zeleni-vijenac",
+  "nextSlug": "m-polje-okretiste"
+}

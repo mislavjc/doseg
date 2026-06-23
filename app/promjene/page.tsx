@@ -2,8 +2,9 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
 import { IconFlag1, IconCircleBanSign } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Hero } from "@/app/statistika/editorial/hero"
-import { FooterMapBand } from "@/app/statistika/editorial/footer"
+import { Footer } from "@/app/statistika/editorial/footer"
 import { Timeline } from "./timeline"
 import {
   INK, MUTE, FAINT, OLD, BLUE, HAIR, KEPT, HEROS, MONO,
@@ -110,6 +111,7 @@ export default function Page() {
   const cand = read<Candidates>("candidates.json")
   const model = buildModel(data, cand)
   const { total, line, stop, maps } = model.counts
+  const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
 
   const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria-hidden><circle cx={7} cy={7} r={fill === "#fff" ? 4 : 4.5} fill={fill} stroke={stroke} strokeWidth={fill === "#fff" ? 2 : 1.5} /></svg>
   const legendItems: [React.ReactNode, string][] = [
@@ -121,7 +123,7 @@ export default function Page() {
   // Rendered by <Timeline> right above the first before/after map (not parked at
   // the top, screens away from any map).
   const legend = (
-    <div style={{ width: "100%", maxWidth: 620, marginTop: 4, border: `1px solid ${HAIR}`, boxSizing: "border-box", padding: "15px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ width: "100%", maxWidth: 556, marginTop: 4, border: `1px solid ${HAIR}`, boxSizing: "border-box", padding: "15px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
       <span style={{ fontFamily: MONO, fontSize: 12, color: FAINT }}>kako čitati kartu</span>
       <div className="pr-legend-grid" style={{ display: "grid", gridTemplateColumns: "max-content max-content", justifyContent: "start", columnGap: 40, rowGap: 11 }}>
         {legendItems.map(([icon, label], i) => (
@@ -158,7 +160,8 @@ export default function Page() {
       <Hero active="promjene" mapPosition="center 40%" />
 
       <main id="main-content" tabIndex={-1} style={{ background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: 88, paddingInline: 16, boxSizing: "border-box", overflowX: "hidden", maxWidth: "100vw" }}>
-        <div className="pr-intro" style={{ width: "100%", maxWidth: 620, display: "flex", flexDirection: "column", gap: 16, paddingTop: 64 }}>
+        <div className="pr-intro" style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", gap: 16, paddingTop: 64 }}>
+          <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "promjene" }]} />
           <span style={{ fontFamily: MONO, fontSize: 12, color: BLUE }}>promjene u mreži</span>
           <h1 style={{ margin: 0, fontFamily: HEROS, fontWeight: 700, fontSize: 16, lineHeight: "22px", color: INK }}>Što se promijenilo u ZET-u.</h1>
           <p style={{ margin: 0, fontFamily: HEROS, fontSize: 16, lineHeight: "24px", color: MUTE, maxWidth: 560 }}>
@@ -168,7 +171,7 @@ export default function Page() {
 
         <Timeline model={model} legend={legend} />
 
-        <div style={{ width: "100%", maxWidth: 620, paddingTop: 72 }}>
+        <div style={{ width: "100%", maxWidth: 556, paddingTop: 72 }}>
           <div style={{ height: 1, background: HAIR }} />
           <span style={{ display: "block", paddingTop: 16, fontFamily: MONO, fontSize: 12, lineHeight: "18px", color: FAINT }}>
             Popis čine trajne izmjene mreže iz ZET-ovih službenih obavijesti (privremene obilaznice zbog radova i događanja izostavljene). Datumi označeni s ~ približni su, prema prvom arhiviranom zapisu obavijesti, i ne moraju biti točan dan stupanja na snagu. Istaknute promjene imaju kartu prije i poslije iscrtanu iz arhiviranih ZET-ovih GTFS voznih redova oko datuma svake promjene.
@@ -176,7 +179,7 @@ export default function Page() {
         </div>
       </main>
 
-      <FooterMapBand />
+      <Footer updated={updated} />
     </>
   )
 }

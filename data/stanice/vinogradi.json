@@ -1,0 +1,101 @@
+{
+  "slug": "vinogradi",
+  "name": "Vinogradi",
+  "kvart": "Črnomerec",
+  "lat": 45.8253,
+  "lon": 15.94709,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "149"
+  ],
+  "firstDeparture": "4:29",
+  "lastDeparture": "0:38",
+  "peakIntervalMin": [
+    11,
+    19
+  ],
+  "lines": [
+    {
+      "broj": "149",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Vrhovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Vrhovec 62",
+      "slug": "vrhovec-62"
+    },
+    {
+      "name": "Vrhovec 196",
+      "slug": "vrhovec-196"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.94502,
+      45.82386,
+      15.94916,
+      45.82675
+    ],
+    "lines": [
+      {
+        "broj": "149",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94534,
+            45.81526
+          ],
+          [
+            15.94911,
+            45.81366
+          ],
+          [
+            15.94798,
+            45.81758
+          ],
+          [
+            15.9476,
+            45.82072
+          ],
+          [
+            15.94716,
+            45.82544
+          ],
+          [
+            15.94858,
+            45.83118
+          ],
+          [
+            15.94939,
+            45.83347
+          ],
+          [
+            15.95143,
+            45.83639
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 20,
+    "stations30": 105,
+    "stations45": 344
+  },
+  "prevSlug": "vinogorska-49",
+  "nextSlug": "vinogradi-24-b"
+}

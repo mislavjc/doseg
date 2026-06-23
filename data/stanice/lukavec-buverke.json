@@ -1,0 +1,259 @@
+{
+  "slug": "lukavec-buverke",
+  "name": "Lukavec-Buverke",
+  "kvart": null,
+  "lat": 45.69758,
+  "lon": 15.98479,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 3,
+  "tramLines": [],
+  "busLines": [
+    "166",
+    "311",
+    "313"
+  ],
+  "firstDeparture": "4:38",
+  "lastDeparture": "23:58",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "166",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 126.7
+    },
+    {
+      "broj": "311",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 174.2
+    },
+    {
+      "broj": "313",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "V. Gorica",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 305.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Lukavec-Dolens. d.d.",
+      "slug": "lukavec-dolens-d-d"
+    },
+    {
+      "name": "Markuševec",
+      "slug": "markusevec"
+    },
+    {
+      "name": "Peršinovec",
+      "slug": "persinovec"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.98272,
+      45.69614,
+      15.98685,
+      45.69902
+    ],
+    "lines": [
+      {
+        "broj": "166",
+        "mode": "bus",
+        "shape": [
+          [
+            15.98499,
+            45.69789
+          ],
+          [
+            15.98924,
+            45.70466
+          ],
+          [
+            15.99274,
+            45.70725
+          ]
+        ]
+      },
+      {
+        "broj": "311",
+        "mode": "bus",
+        "shape": [
+          [
+            15.97975,
+            45.68435
+          ],
+          [
+            15.98058,
+            45.68777
+          ],
+          [
+            15.98094,
+            45.6892
+          ],
+          [
+            15.98498,
+            45.69789
+          ],
+          [
+            15.98498,
+            45.69789
+          ],
+          [
+            15.98559,
+            45.69935
+          ],
+          [
+            15.98636,
+            45.70084
+          ],
+          [
+            15.98729,
+            45.70251
+          ],
+          [
+            15.98782,
+            45.70394
+          ],
+          [
+            15.98815,
+            45.70426
+          ],
+          [
+            15.98924,
+            45.70466
+          ],
+          [
+            15.98924,
+            45.70466
+          ],
+          [
+            15.98978,
+            45.70495
+          ],
+          [
+            15.99052,
+            45.7056
+          ],
+          [
+            15.99274,
+            45.70725
+          ],
+          [
+            15.99274,
+            45.70725
+          ],
+          [
+            15.99436,
+            45.70841
+          ],
+          [
+            15.99529,
+            45.70913
+          ]
+        ]
+      },
+      {
+        "broj": "313",
+        "mode": "bus",
+        "shape": [
+          [
+            15.97975,
+            45.68435
+          ],
+          [
+            15.98058,
+            45.68777
+          ],
+          [
+            15.98094,
+            45.6892
+          ],
+          [
+            15.98498,
+            45.69789
+          ],
+          [
+            15.98498,
+            45.69789
+          ],
+          [
+            15.98559,
+            45.69935
+          ],
+          [
+            15.98636,
+            45.70084
+          ],
+          [
+            15.98729,
+            45.70251
+          ],
+          [
+            15.98782,
+            45.70394
+          ],
+          [
+            15.98815,
+            45.70426
+          ],
+          [
+            15.98924,
+            45.70466
+          ],
+          [
+            15.98924,
+            45.70466
+          ],
+          [
+            15.98978,
+            45.70495
+          ],
+          [
+            15.99052,
+            45.7056
+          ],
+          [
+            15.99274,
+            45.70725
+          ],
+          [
+            15.99274,
+            45.70725
+          ],
+          [
+            15.99436,
+            45.70841
+          ],
+          [
+            15.99529,
+            45.70913
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 3,
+    "stations45": 10
+  },
+  "prevSlug": "lukav-skolska-luzec",
+  "nextSlug": "lukavec-dolens-d-d"
+}

@@ -1,0 +1,79 @@
+{
+  "slug": "turopolj-markulini",
+  "name": "Turopolj.-Markulini",
+  "kvart": "Brezovica",
+  "lat": 45.65997,
+  "lon": 15.9567,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "166"
+  ],
+  "firstDeparture": "4:52",
+  "lastDeparture": "23:52",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "166",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 126.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Markuševec",
+      "slug": "markusevec"
+    },
+    {
+      "name": "Dragonožec-kapela",
+      "slug": "dragonozec-kapela"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.95464,
+      45.65853,
+      15.95876,
+      45.66141
+    ],
+    "lines": [
+      {
+        "broj": "166",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94272,
+            45.66271
+          ],
+          [
+            15.94863,
+            45.66092
+          ],
+          [
+            15.95644,
+            45.65995
+          ],
+          [
+            15.96496,
+            45.65891
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "tumbri",
+  "nextSlug": "turopoljska"
+}

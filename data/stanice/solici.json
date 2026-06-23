@@ -1,0 +1,127 @@
+{
+  "slug": "solici",
+  "name": "Šolići",
+  "kvart": "Brezovica",
+  "lat": 45.69761,
+  "lon": 15.8914,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:39",
+  "lastDeparture": "0:27",
+  "peakIntervalMin": [
+    10,
+    23
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Grančarska 22",
+      "slug": "grancarska-22"
+    },
+    {
+      "name": "Hladnjača",
+      "slug": "hladnjaca"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.88934,
+      45.69617,
+      15.89346,
+      45.69905
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 11,
+    "stations45": 39
+  },
+  "prevSlug": "sokolska",
+  "nextSlug": "sopnicka-37"
+}

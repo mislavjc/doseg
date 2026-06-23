@@ -1,0 +1,97 @@
+{
+  "slug": "vrhovec-62",
+  "name": "Vrhovec 62",
+  "kvart": "Črnomerec",
+  "lat": 45.82073,
+  "lon": 15.9476,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "149"
+  ],
+  "firstDeparture": "4:27",
+  "lastDeparture": "0:40",
+  "peakIntervalMin": [
+    7,
+    23
+  ],
+  "lines": [
+    {
+      "broj": "149",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Vrhovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zatišje",
+      "slug": "zatisje"
+    },
+    {
+      "name": "Vinogradi",
+      "slug": "vinogradi"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.94554,
+      45.81929,
+      15.94967,
+      45.82217
+    ],
+    "lines": [
+      {
+        "broj": "149",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94534,
+            45.81526
+          ],
+          [
+            15.94911,
+            45.81366
+          ],
+          [
+            15.94798,
+            45.81758
+          ],
+          [
+            15.9476,
+            45.82072
+          ],
+          [
+            15.94716,
+            45.82544
+          ],
+          [
+            15.94858,
+            45.83118
+          ],
+          [
+            15.94939,
+            45.83347
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 20,
+    "stations30": 107,
+    "stations45": 344
+  },
+  "prevSlug": "vrhovec-233",
+  "nextSlug": "vucak-podsused-vrapce"
+}

@@ -1,0 +1,132 @@
+{
+  "slug": "hudobicka-1",
+  "name": "Hudobička 1",
+  "kvart": "Brezovica",
+  "lat": 45.71095,
+  "lon": 15.89687,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:42",
+  "lastDeparture": "0:24",
+  "peakIntervalMin": [
+    7,
+    24
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Pekarska",
+      "slug": "pekarska"
+    },
+    {
+      "name": "Hudobička 36",
+      "slug": "hudobicka-36"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.89481,
+      45.7095,
+      15.89893,
+      45.71239
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 8,
+    "stations30": 30,
+    "stations45": 84
+  },
+  "prevSlug": "hrvatskog-sokola-tresnjevka-jug-2",
+  "nextSlug": "hudobicka-36"
+}

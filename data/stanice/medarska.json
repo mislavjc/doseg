@@ -1,0 +1,97 @@
+{
+  "slug": "medarska",
+  "name": "Medarska",
+  "kvart": "Trešnjevka - sjever",
+  "lat": 45.80421,
+  "lon": 15.92048,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "134"
+  ],
+  "firstDeparture": "4:43",
+  "lastDeparture": "23:36",
+  "peakIntervalMin": [
+    9,
+    14
+  ],
+  "lines": [
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Prečko",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 21.3,
+      "peakRangeMin": [
+        20,
+        21
+      ],
+      "allDayHeadwayMin": 21.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sokolska",
+      "slug": "sokolska"
+    },
+    {
+      "name": "Čepelovački put",
+      "slug": "cepelovacki-put"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.91841,
+      45.80277,
+      15.92255,
+      45.80565
+    ],
+    "lines": [
+      {
+        "broj": "134",
+        "mode": "bus",
+        "shape": [
+          [
+            15.93164,
+            45.81263
+          ],
+          [
+            15.92759,
+            45.80909
+          ],
+          [
+            15.92361,
+            45.80623
+          ],
+          [
+            15.92026,
+            45.80413
+          ],
+          [
+            15.91675,
+            45.80194
+          ],
+          [
+            15.91316,
+            45.7998
+          ],
+          [
+            15.90809,
+            45.79555
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 20,
+    "stations30": 80,
+    "stations45": 274
+  },
+  "prevSlug": "mazuraniceva",
+  "nextSlug": "medasni-klanac"
+}

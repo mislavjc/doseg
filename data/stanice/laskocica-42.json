@@ -1,0 +1,91 @@
+{
+  "slug": "laskocica-42",
+  "name": "Laskočica 42",
+  "kvart": "Novi Zagreb - zapad",
+  "lat": 45.73189,
+  "lon": 15.98222,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "229"
+  ],
+  "firstDeparture": "4:58",
+  "lastDeparture": "23:18",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "229",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 85.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 84.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Laskočica 2",
+      "slug": "laskocica-2"
+    },
+    {
+      "name": "Odra-Malomlačka",
+      "slug": "odra-malomlacka"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.98016,
+      45.73045,
+      15.98429,
+      45.73333
+    ],
+    "lines": [
+      {
+        "broj": "229",
+        "mode": "bus",
+        "shape": [
+          [
+            15.98063,
+            45.7267
+          ],
+          [
+            15.97691,
+            45.72944
+          ],
+          [
+            15.97711,
+            45.73365
+          ],
+          [
+            15.98222,
+            45.73189
+          ],
+          [
+            15.986,
+            45.72999
+          ],
+          [
+            15.99334,
+            45.72977
+          ],
+          [
+            15.99684,
+            45.73563
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 6,
+    "stations30": 14,
+    "stations45": 14
+  },
+  "prevSlug": "laskocica-2",
+  "nextSlug": "lastovska"
+}

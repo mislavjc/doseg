@@ -1,0 +1,8613 @@
+{
+  "generatedAt": "2026-06-22T09:34:11.000Z",
+  "serviceDates": {
+    "radniDan": "2026-06-09",
+    "subota": "2026-06-13",
+    "nedjelja": "2026-06-07"
+  },
+  "stops": [
+    {
+      "slug": "144-brigade-lj-posav",
+      "name": "144 brigade-Lj.Posav",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "abramoviceva",
+      "name": "Abramovićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "adamovec-centar",
+      "name": "Adamovec-centar",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "adamovec-sostarici",
+      "name": "Adamovec-Šoštarići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "agrokoka",
+      "name": "AGROKOKA",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "aleja-javora-donja-dubrava",
+      "name": "Aleja Javora",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "aleja-javora-gornja-dubrava",
+      "name": "Aleja javora",
+      "kvart": "Gornja Dubrava",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "aleja-mira",
+      "name": "Aleja mira",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "aleja-tisine",
+      "name": "Aleja tišine",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "anke-krizmanic",
+      "name": "Anke Krizmanić",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ante-starcevica-45-a",
+      "name": "Ante Starčevića 45 A",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "antolkovici",
+      "name": "Antolkovići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "antuna-soljana",
+      "name": "Antuna Šoljana",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "arbanasova-44",
+      "name": "Arbanasova 44",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "arena-centar-novi-zagreb-zapad",
+      "name": "Arena centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "arena-centar-novi-zagreb-zapad-2",
+      "name": "Arena centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "arena-zagreb",
+      "name": "Arena Zagreb",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "aspergeri",
+      "name": "Ašpergeri",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "augusta-piazze",
+      "name": "Augusta Piazze",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "autobusni-kol",
+      "name": "Autobusni kol.",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "avenija-g-suska-mup",
+      "name": "Avenija G.Šuška-MUP",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bacun",
+      "name": "Bačun",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "badaliceva",
+      "name": "Badalićeva",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "bahlenova",
+      "name": "Bahlenova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bana-josipa-jelacica",
+      "name": "Bana Josipa Jelačića",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "barutanski-jarak-48",
+      "name": "Barutanski jarak 48",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "barutanski-jarak-96",
+      "name": "Barutanski jarak 96",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bascanske-ploce",
+      "name": "Bašćanske ploče",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "bastaliceva-ii",
+      "name": "Bastalićeva II.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bastijanova-tresnjevka-sjever",
+      "name": "Baštijanova",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bastijanova-tresnjevka-sjever-2",
+      "name": "Baštijanova",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "beciceve-stube",
+      "name": "Becićeve stube",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bedekoviceva",
+      "name": "Bedekovićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "belostenceva",
+      "name": "Belostenčeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "belovar",
+      "name": "Belovar",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "bencekovici",
+      "name": "Bencekovići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bengezi",
+      "name": "Bengezi",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bestaki",
+      "name": "Beštaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bidrovec-brana",
+      "name": "Bidrovec-brana",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bidrovecka-36",
+      "name": "Bidrovečka 36",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bijenicka",
+      "name": "Bijenička",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "bijenicka-134",
+      "name": "Bijenička 134",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bijenicka-bocaliste",
+      "name": "Bijenička-bočalište",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bijenik-crkva",
+      "name": "Bijenik - crkva",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bikceviceva-staza",
+      "name": "Bikčevićeva staza",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bistricka-o-s",
+      "name": "Bistrička - O.Š.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "bistricka-zagrebacka",
+      "name": "Bistrička-Zagrebačka",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 20
+    },
+    {
+      "slug": "bizek",
+      "name": "Bizek",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bizek-i",
+      "name": "Bizek I",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bizek-iii",
+      "name": "Bizek III",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "blage-zadre",
+      "name": "Blage Zadre",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "blagusa-12",
+      "name": "Blaguša 12",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "blagusa-centar",
+      "name": "Blaguša - centar",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "blagusa-kapela",
+      "name": "Blaguša-kapela",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "blaza-jurisica",
+      "name": "Blaža Jurišića",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "blaza-trogiranina",
+      "name": "Blaža Trogiranina",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bliznec",
+      "name": "Bliznec",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "blizno",
+      "name": "Blizno",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bocarski-dom",
+      "name": "Boćarski dom",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bol-jankomir",
+      "name": "Bol. Jankomir",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "boln-jordanovac",
+      "name": "Boln. Jordanovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bolnica-goljak",
+      "name": "Bolnica Goljak",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bolnica-rebro",
+      "name": "Bolnica Rebro",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bolnica-srebrnjak",
+      "name": "Bolnica Srebrnjak",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bolnica-sveti-duh",
+      "name": "Bolnica Sveti Duh",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bolnica-vrapce",
+      "name": "Bolnica Vrapče",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "bolnica-vuk-vrhovac",
+      "name": "Bolnica Vuk Vrhovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bolnicka-gospodska",
+      "name": "Bolnička-Gospodska",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "bolsiceva",
+      "name": "Bolšićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "borcec",
+      "name": "Borčec",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "borongaj",
+      "name": "Borongaj",
+      "kvart": "Maksimir",
+      "mode": "both",
+      "lineCount": 7
+    },
+    {
+      "slug": "borongaj-jug",
+      "name": "Borongaj - jug",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "borongajska-kampus",
+      "name": "Borongajska Kampus",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "borovina",
+      "name": "Borovina",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "borovje-pescenica-zitnjak",
+      "name": "Borovje",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "borovje-trnje",
+      "name": "Borovje",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "bosanska",
+      "name": "Bosanska",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "botanicki-vrt",
+      "name": "Botanički vrt",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "botinec",
+      "name": "Botinec",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "botinka",
+      "name": "Botinka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bozidara-magovca",
+      "name": "Božidara Magovca",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bozidara-magovca-111",
+      "name": "Božidara Magovca 111",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "branim-culinecka",
+      "name": "Branim-Čulinečka",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "branim-skrnjugova",
+      "name": "Branim.-Škrnjugova",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "branim-trznica",
+      "name": "Branim. tržnica",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "branim-zagrebacka",
+      "name": "Branim.-Zagrebačka",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "branimir-centar",
+      "name": "Branimir centar",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 9
+    },
+    {
+      "slug": "branimirova-a-javora",
+      "name": "Branimirova-A.Javora",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "branovec",
+      "name": "Branovec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "branovecina-151",
+      "name": "Branovečina 151",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "branovecka",
+      "name": "Branovečka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "branovecka-143",
+      "name": "Branovečka 143",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brestovecka",
+      "name": "Brestovečka",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "brestovecka-100",
+      "name": "Brestovečka 100",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brestovecka-128",
+      "name": "Brestovečka 128",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brestovecka-d-dom",
+      "name": "Brestovečka-d. dom",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "brez-pod-kestenima",
+      "name": "Brez.- pod kestenima",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "brezaki",
+      "name": "Brezaki",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brezje",
+      "name": "Brezje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "brezovica-skola",
+      "name": "Brezovica škola",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brezovicka-28",
+      "name": "Brezovička 28",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "brezovicka-80",
+      "name": "Brezovička 80",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "brezovicka-ambulanta",
+      "name": "Brezovička-ambulanta",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "brezovicka-ekonomija",
+      "name": "Brezovička-ekonomija",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "britanski-trg",
+      "name": "Britanski trg",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "both",
+      "lineCount": 9
+    },
+    {
+      "slug": "brod-kunticeva",
+      "name": "Brod-Kuntićeva",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budeki-kapelica",
+      "name": "Budeki-kapelica",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budenec-stancira-sesvete",
+      "name": "Budenec-Stančira",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budenec-stancira-sesvete-2",
+      "name": "Budenec-Stančira",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budenecka-14-sesvete",
+      "name": "Budenečka 14",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budenecka-14-sesvete-2",
+      "name": "Budenečka 14",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "budenecka-34",
+      "name": "Budenečka 34",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "buhini",
+      "name": "Buhini",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukoscak",
+      "name": "Bukoščak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovac-115",
+      "name": "Bukovac 115",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovac-vodovod",
+      "name": "Bukovac - VODOVOD",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovacka-160",
+      "name": "Bukovačka 160",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovacka-23",
+      "name": "Bukovačka 23",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "bukovacka-276",
+      "name": "Bukovačka 276",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovacka-68",
+      "name": "Bukovačka 68",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovacka-8",
+      "name": "Bukovačka 8",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "bukovacka-jurja-ves",
+      "name": "Bukovačka-Jurja Ves",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bukovje-mihanoviceva",
+      "name": "Bukovje-Mihanovićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "bundek",
+      "name": "Bundek",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 10
+    },
+    {
+      "slug": "bunticeva",
+      "name": "Buntićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "buzin-novi-zagreb-istok",
+      "name": "Buzin",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "buzin-novi-zagreb-istok-2",
+      "name": "Buzin",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "cakovica",
+      "name": "Čakovica",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "caviceva-gospica",
+      "name": "Čavićeva-Gospića",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "caviceva-pescenica-zitnjak",
+      "name": "Čavićeva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "caviceva-pescenica-zitnjak-2",
+      "name": "Čavićeva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "cavoglavska",
+      "name": "Čavoglavska",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cehi-buliceva",
+      "name": "Čehi - Bulićeva",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cehi-drustveni-dom",
+      "name": "Čehi - društveni dom",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cehi-nadvoznjak",
+      "name": "Čehi-nadvožnjak",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "celici",
+      "name": "Celići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cepelovacki-put",
+      "name": "Čepelovački put",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cepini",
+      "name": "Čepini",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cergari",
+      "name": "Čergari",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cerje",
+      "name": "Cerje",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cerovski-selo",
+      "name": "Cerovski - selo",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cerovski-skola",
+      "name": "Cerovski - škola",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cickovina",
+      "name": "Čičkovina",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ciglanska",
+      "name": "Ciglanska",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cileanska",
+      "name": "Čileanska",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "cileanska-peruanska",
+      "name": "Čileanska-Peruanska",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cimermanova",
+      "name": "Cimermanova",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cmrok",
+      "name": "Cmrok",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "co-prekrizje",
+      "name": "CO Prekrižje",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "corova",
+      "name": "Čorova",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cret",
+      "name": "Čret",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cret-27",
+      "name": "Čret 27",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cret-melinisce",
+      "name": "Čret-Melinišće",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "crkva",
+      "name": "Crkva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "crkva-s-mati-slobode",
+      "name": "Crkva S.Mati Slobode",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "crnko-put-za-strmec",
+      "name": "Črnko. put za Strmec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "crnkovec",
+      "name": "Črnkovec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "crnkovec-centar",
+      "name": "Črnkovec, centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "crnkovecka-pescenica-zitnjak",
+      "name": "Črnkovečka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "crnkovecka-pescenica-zitnjak-2",
+      "name": "Črnkovečka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "crnomerec",
+      "name": "Črnomerec",
+      "kvart": "Črnomerec",
+      "mode": "both",
+      "lineCount": 27
+    },
+    {
+      "slug": "cucerje",
+      "name": "Čučerje",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cucerje-crkva",
+      "name": "Čučerje-crkva",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "cugovec",
+      "name": "Čugovec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cukovici",
+      "name": "Čukovići",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "culinecka",
+      "name": "Čulinečka",
+      "kvart": "Donja Dubrava",
+      "mode": "both",
+      "lineCount": 7
+    },
+    {
+      "slug": "culinecka-119",
+      "name": "Čulinečka 119",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "cvjetna-cesta",
+      "name": "Cvjetna cesta",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "cvjetna-ulica",
+      "name": "Cvjetna ulica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "d-bistra-centar",
+      "name": "D. Bistra-centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dacka-nova",
+      "name": "Đačka - Nova",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dankovecka",
+      "name": "Dankovečka",
+      "kvart": "Gornja Dubrava",
+      "mode": "both",
+      "lineCount": 10
+    },
+    {
+      "slug": "davor",
+      "name": "Davor",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "delec",
+      "name": "Delec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "demerje-skola",
+      "name": "Demerje - škola",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "demerska-3",
+      "name": "Demerska 3",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "derdici",
+      "name": "Derdići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "desinicka",
+      "name": "Desinička",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "desprimska",
+      "name": "Desprimska",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "desprimska-34",
+      "name": "Desprimska 34",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "devciceva",
+      "name": "Devčićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dioki",
+      "name": "DIOKI",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "divoselska",
+      "name": "Divoselska",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "djecji-dom-nazorova",
+      "name": "Dječji dom Nazorova",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "djecji-vrtic",
+      "name": "Dječji vrtić",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dobrodol-simunc",
+      "name": "Dobrodol-Šimunč.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dobrodolska",
+      "name": "Dobrodolska",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dolenica",
+      "name": "Dolenica",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dom-ksaver",
+      "name": "Dom Ksaver",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dom-sportova",
+      "name": "Dom športova",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dom-svetog-josipa",
+      "name": "Dom  Svetog Josipa",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dom-zdravlja",
+      "name": "Dom zdravlja",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dominika-mandica",
+      "name": "Dominika Mandića",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "domoviceva",
+      "name": "Domovićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "donje-prekrizje",
+      "name": "Donje Prekrižje",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "donje-svetice",
+      "name": "Donje Svetice",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "donji-borcec",
+      "name": "Donji Borčec",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "donji-trpuci",
+      "name": "Donji Trpuci",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "donjostupnicka",
+      "name": "Donjostupnička",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dore-pejacevic",
+      "name": "Dore Pejačević",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dotrscina",
+      "name": "Dotršćina",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dotrscinska",
+      "name": "Dotršćinska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dragonozec-kapela",
+      "name": "Dragonožec-kapela",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dragonozec-skola",
+      "name": "Dragonožec-škola",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "dragutina-golika-tresnjevka-jug",
+      "name": "Dragutina Golika",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "dragutina-golika-tresnjevka-jug-2",
+      "name": "Dragutina Golika",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "draskoviceva",
+      "name": "Draškovićeva",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 7
+    },
+    {
+      "slug": "drencec",
+      "name": "Drenčec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dreznik",
+      "name": "Drežnik",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "drustveni-dom",
+      "name": "Društveni dom",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "drziceva",
+      "name": "Držićeva",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 9
+    },
+    {
+      "slug": "drziceva-petlja",
+      "name": "Držićeva-petlja",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "dubec",
+      "name": "Dubec",
+      "kvart": "Gornja Dubrava",
+      "mode": "both",
+      "lineCount": 23
+    },
+    {
+      "slug": "dubecka-89",
+      "name": "Dubečka 89",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dubecka-94",
+      "name": "Dubečka 94",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dubje",
+      "name": "Dubje",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dubranec-centar",
+      "name": "Dubranec, centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dubranec-put-za-gust",
+      "name": "Dubranec,put za Gust",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dubranec-spomenik",
+      "name": "Dubranec, spomenik",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dubranec-vikend-nas",
+      "name": "Dubranec,vikend nas.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dubrava",
+      "name": "Dubrava",
+      "kvart": "Gornja Dubrava",
+      "mode": "both",
+      "lineCount": 15
+    },
+    {
+      "slug": "dubravica",
+      "name": "Dubravica",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 7
+    },
+    {
+      "slug": "dudovec",
+      "name": "Dudovec",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "dumovec",
+      "name": "Dumovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "dumovec-okretiste",
+      "name": "Dumovec okretište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "durakov-breg",
+      "name": "Đurakov breg",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "durdekovec",
+      "name": "Đurđekovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dvd-precko",
+      "name": "DVD Prečko",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "dvorac-luznica",
+      "name": "Dvorac Lužnica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "elka",
+      "name": "Elka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "both",
+      "lineCount": 11
+    },
+    {
+      "slug": "fakultetsko-dobro",
+      "name": "Fakultetsko dobro",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "fallerovo-tresnjevka-jug",
+      "name": "Fallerovo",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "fallerovo-tresnjevka-jug-2",
+      "name": "Fallerovo",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "fancevljev-prilaz",
+      "name": "Fancevljev prilaz",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "farkasicka",
+      "name": "Farkašička",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ferde-kocha",
+      "name": "Ferde Kocha",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ferenscica",
+      "name": "Ferenščica",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "ferki",
+      "name": "Ferki",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "filipcici",
+      "name": "Filipčići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "folnegovicevo",
+      "name": "Folnegovićevo",
+      "kvart": "Trnje",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "franje-malnara",
+      "name": "Franje Malnara",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "frankopanska",
+      "name": "Frankopanska",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 10
+    },
+    {
+      "slug": "fraterscica",
+      "name": "Fraterščica",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "frljur-blaguska",
+      "name": "Frljur-Blaguška",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "furdini",
+      "name": "Furdini",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "g-bistra-okretiste",
+      "name": "G.Bistra-okretište",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "g-trpuci-okretiste",
+      "name": "G.Trpuci,okretište",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gajani",
+      "name": "Gajani",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gajci-lovre-sedinica",
+      "name": "Gajci-Lovre Sedinića",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gajnice",
+      "name": "Gajnice",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 7
+    },
+    {
+      "slug": "gajnicki-vidikovac",
+      "name": "Gajnički vidikovac",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "galijska",
+      "name": "Galijska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "galzenica",
+      "name": "Galženica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "garaza-tuskanac",
+      "name": "Garaža Tuškanac",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gata",
+      "name": "Gata",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "getaldiceva-gospica",
+      "name": "Getaldićeva-Gospića",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "getaldiceva-pescenica-zitnjak",
+      "name": "Getaldićeva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "getaldiceva-pescenica-zitnjak-2",
+      "name": "Getaldićeva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "gimn-l-vranjanin",
+      "name": "Gimn.L.Vranjanin",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "glavna",
+      "name": "Glavna",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "glavni-kolodvor",
+      "name": "Glavni kolodvor",
+      "kvart": "Trnje",
+      "mode": "both",
+      "lineCount": 24
+    },
+    {
+      "slug": "glavnica-donja-okr",
+      "name": "Glavnica Donja okr.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "glavnicica",
+      "name": "Glavničica",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goli-breg",
+      "name": "Goli Breg",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goli-breg-groblje",
+      "name": "Goli Breg - groblje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "golis",
+      "name": "Goliš",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "goljacki-put",
+      "name": "Goljački put",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goljak",
+      "name": "Goljak",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "golobreska",
+      "name": "Golobreška",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "golobreska-1-odvojak",
+      "name": "Golobreška-1.odvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gor-prekvrsje-p-i-t",
+      "name": "Gor Prekvršje P.i T.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goranec",
+      "name": "Goranec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goranska",
+      "name": "Goranska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gorenci",
+      "name": "Gorenci",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "goricanka",
+      "name": "Goričanka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "gorice-45",
+      "name": "Gorice 45",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gorice-69",
+      "name": "Gorice 69",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gorice-korito",
+      "name": "Gorice - Korito",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornja-kustosija",
+      "name": "Gornja Kustošija",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornje-padine",
+      "name": "Gornje Padine",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornje-prekrizje",
+      "name": "Gornje Prekrižje",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornje-vrapce",
+      "name": "Gornje Vrapče",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornji-bukovac-kosa",
+      "name": "Gornji Bukovac-Kosa",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornji-bukovac-maksimir",
+      "name": "Gornji Bukovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornji-bukovac-maksimir-2",
+      "name": "Gornji Bukovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornji-stenjevec",
+      "name": "Gornji Stenjevec",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornji-vugrovec-58",
+      "name": "Gornji Vugrovec 58",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornjodemerska",
+      "name": "Gornjodemerska",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornjodr-stari-dom",
+      "name": "Gornjodr.-Stari dom",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornjodrag-spomenik",
+      "name": "Gornjodrag.-spomenik",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gornjostupnicka",
+      "name": "Gornjostupnička",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "gospodska",
+      "name": "Gospodska",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "gospodska-108",
+      "name": "Gospodska 108",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gospodska-59a",
+      "name": "Gospodska 59a",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gospodska-92",
+      "name": "Gospodska 92",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "graberje",
+      "name": "Graberje",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "graberje-okretiste",
+      "name": "Graberje-okretište",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grac-mihaljevac",
+      "name": "Grač. Mihaljevac",
+      "kvart": "Podsljeme",
+      "mode": "tram",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracani",
+      "name": "Gračani",
+      "kvart": "Podsljeme",
+      "mode": "tram",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracanska-10",
+      "name": "Gračanska 10",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracanska-48",
+      "name": "Gračanska 48",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracanska-60",
+      "name": "Gračanska 60",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracanske-stube",
+      "name": "Gračanske stube",
+      "kvart": "Podsljeme",
+      "mode": "tram",
+      "lineCount": 1
+    },
+    {
+      "slug": "gracansko-dolje",
+      "name": "Gračansko dolje",
+      "kvart": "Podsljeme",
+      "mode": "both",
+      "lineCount": 4
+    },
+    {
+      "slug": "grad-mladih",
+      "name": "Grad mladih",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradek",
+      "name": "Gradek",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradevinska-skola",
+      "name": "Građevinska škola",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "gradici-drustveni-d",
+      "name": "Gradići društveni d.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradici-k-tomis-46",
+      "name": "Gradići,K.Tomis. 46",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradici-k-tomis-57",
+      "name": "Gradići,K.Tomis. 57",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradici-k-tomis-85",
+      "name": "Gradići, K.Tomis. 85",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradici-novo-naselje",
+      "name": "Gradići novo naselje",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradicka-4",
+      "name": "Gradićka 4",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradicka-5",
+      "name": "Gradićka 5",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gradska-malomlacka",
+      "name": "Gradska-Malomlačka",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grahovec",
+      "name": "Grahovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grana",
+      "name": "Grana",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "grancarska-22",
+      "name": "Grančarska 22",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "granesina-groblje",
+      "name": "Granešina-groblje",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "granesina-skola",
+      "name": "Granešina-škola",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grebenscica",
+      "name": "Grebenščica",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grgati-8",
+      "name": "Grgati 8",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "grizanska",
+      "name": "Grižanska",
+      "kvart": "Gornja Dubrava",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "grskoviceva",
+      "name": "Grškovićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "gumerec",
+      "name": "Gumerec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "gupceva-zvijezda",
+      "name": "Gupčeva zvijezda",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "gustava-krkleca",
+      "name": "Gustava Krkleca",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "habdeliceva",
+      "name": "Habdelićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hammova",
+      "name": "Hammova",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hanamanova",
+      "name": "Hanamanova",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "harabajsi",
+      "name": "Harabajsi",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "harambasiceva",
+      "name": "Harambašićeva",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "hatzeova",
+      "name": "Hatzeova",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "havidic-selo",
+      "name": "Havidić Selo",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hbz-centar-skola",
+      "name": "HBZ-Centar-škola",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "heinzelova",
+      "name": "Heinzelova",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "both",
+      "lineCount": 9
+    },
+    {
+      "slug": "heinzelova-mup",
+      "name": "Heinzelova - MUP",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "heinzelova-sjever",
+      "name": "Heinzelova-sjever",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "hercegov-gaj",
+      "name": "Hercegov gaj",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hercegovacka-21",
+      "name": "Hercegovačka 21",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hipodrom",
+      "name": "Hipodrom",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hladnjaca",
+      "name": "Hladnjača",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hnk2",
+      "name": "HNK2",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "both",
+      "lineCount": 2
+    },
+    {
+      "slug": "hondlova",
+      "name": "Hondlova",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "horvati",
+      "name": "Horvati",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "horvati-hercegi",
+      "name": "Horvati-Hercegi",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvati-i",
+      "name": "Horvati I",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvatnica",
+      "name": "Horvatnica",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvatovac-40",
+      "name": "Horvatovac 40",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvatovac-pmf",
+      "name": "Horvatovac - PMF",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvatovac-trgovina",
+      "name": "Horvatovac-trgovina",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "horvatovac-zelenjak",
+      "name": "Horvatovac-Zelenjak",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hrasce-centar",
+      "name": "Hrašće-centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "hrasce-mljekara",
+      "name": "Hrašće, mljekara",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hrasce-turopolj",
+      "name": "Hrašće Turopolj.",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hrastovicka",
+      "name": "Hrastovička",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hrelicka",
+      "name": "Hrelićka",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hrgovici",
+      "name": "Hrgovići",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "hribarov-prilaz",
+      "name": "Hribarov prilaz",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hruscica",
+      "name": "Hrušćica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hrusevecka",
+      "name": "Hruševečka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hrvatski-leskovac",
+      "name": "Hrvatski Leskovac",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hrvatskog-sokola-tresnjevka-jug",
+      "name": "Hrvatskog sokola",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "hrvatskog-sokola-tresnjevka-jug-2",
+      "name": "Hrvatskog sokola",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "hudobicka-1",
+      "name": "Hudobička 1",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hudobicka-36",
+      "name": "Hudobička 36",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "hudobicka-i-odvojak",
+      "name": "Hudobička I.odvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hudobicka-iv-odvojak",
+      "name": "Hudobička IV.odvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "hunjka",
+      "name": "Hunjka",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "i-brlic-mazuranic",
+      "name": "I.Brlić Mažuranić",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "i-gardijske-brigade",
+      "name": "I. gardijske brigade",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "i-stefanov-zavoj",
+      "name": "I.Štefanov.zavoj",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "ii-kraljevec",
+      "name": "II. Kraljevec",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ilirski-trg",
+      "name": "Ilirski trg",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "inker",
+      "name": "Inker",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "inst-r-boskovic",
+      "name": "Inst. R.Bošković",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "institut-za-bilje",
+      "name": "Institut za bilje",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "islandska",
+      "name": "Islandska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 7
+    },
+    {
+      "slug": "ivana-grande-6",
+      "name": "Ivana Granđe 6",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ivana-pavla-ii",
+      "name": "Ivana Pavla II",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ivana-sturlica-15",
+      "name": "Ivana Šturlića 15",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ivanec-centar",
+      "name": "Ivanec-centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ivanecka",
+      "name": "Ivanečka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ivanicgradska",
+      "name": "Ivanićgradska",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "ivanja-reka-okret",
+      "name": "Ivanja Reka-okret.",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "ivanjorecka-posta",
+      "name": "Ivanjorečka-pošta",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ivankoviceva",
+      "name": "Ivankovićeva",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ivanoviceva-ulica",
+      "name": "Ivanovićeva ulica",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ive-dulcica",
+      "name": "Ive Dulčića",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "iver",
+      "name": "Iver",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ivice-lovincica",
+      "name": "Ivice Lovinčića",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jablanovac",
+      "name": "Jablanovac",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jackovina-105",
+      "name": "Jačkovina 105",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jackovina-46",
+      "name": "Jačkovina 46",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jackovina-53",
+      "name": "Jačkovina 53",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jagiceva",
+      "name": "Jagićeva",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 1
+    },
+    {
+      "slug": "jakusevec-centar",
+      "name": "Jakuševec, centar",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "jakusevec-groblje",
+      "name": "Jakuševec, groblje",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jakusevec-skola",
+      "name": "Jakuševec, škola",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "jalsevec",
+      "name": "Jalševec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jalsina",
+      "name": "Jalšina",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jandriceva",
+      "name": "Jandrićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "both",
+      "lineCount": 4
+    },
+    {
+      "slug": "jankomir",
+      "name": "Jankomir",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jarek",
+      "name": "Jarek",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "jarun",
+      "name": "Jarun",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jarun-zapad",
+      "name": "Jarun-zapad",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "jaruscica",
+      "name": "Jaruščica",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jazbina-120",
+      "name": "Jazbina 120",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jazbina-159",
+      "name": "Jazbina 159",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jazbina-166",
+      "name": "Jazbina 166",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jazbina-48",
+      "name": "Jazbina 48",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jazbina-71",
+      "name": "Jazbina 71",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jelencica",
+      "name": "Jelenčica",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jelenovac-38d",
+      "name": "Jelenovac 38D",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jelenovac-8",
+      "name": "Jelenovac 8",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jelenovac-sercerova",
+      "name": "Jelenovac-Šercerova",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jelkovec-trznica",
+      "name": "Jelkovec-tržnica",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "jelkovec-vrtic",
+      "name": "Jelkovec-vrtić",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "jelkovecka",
+      "name": "Jelkovečka",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jerebic",
+      "name": "Jerebić",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jesenovec-balsiceva",
+      "name": "Jesenovec-Balšićeva",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jesenovec-okretiste",
+      "name": "Jesenovec-okretište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jesenovecka-29",
+      "name": "Jesenovečka 29",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jezdovec-nadvoznjak",
+      "name": "Ježdovec-nadvožnjak",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jezdovec-vojarna",
+      "name": "Ježdovec-vojarna",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jezdovecka",
+      "name": "Ježdovečka",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "jezdovecka-110",
+      "name": "Ježdovečka 110",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jezdovecka-16",
+      "name": "Ježdovečka 16",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jezdovecka-69-a",
+      "name": "Ježdovečka 69 A",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jordanovac-maksimir",
+      "name": "Jordanovac",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "jordanovac-maksimir-2",
+      "name": "Jordanovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "josipa-loncara",
+      "name": "Josipa Lončara",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "josipa-sabana",
+      "name": "Josipa Šabana",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "josipa-stadlera",
+      "name": "Josipa Stadlera",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jurjevska-64",
+      "name": "Jurjevska 64",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "jurjevska-77",
+      "name": "Jurjevska 77",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "juzna-obala-4",
+      "name": "Južna obala 4",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "k-brijegi-iiiodvojak",
+      "name": "K.Brijegi-IIIodvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "k-brijegi-vi-odvojak",
+      "name": "K.Brijegi-VI odvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "k-brijegi-vodosprema",
+      "name": "K.Brijegi-Vodosprema",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "k-hrusevec-okret",
+      "name": "K.Hruševec-okret.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "k-hrusevec-skola",
+      "name": "K.Hruševec-škola",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kalamiri",
+      "name": "Kalamiri",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kamenarski-breg",
+      "name": "Kamenarski breg",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kamenita-vrata",
+      "name": "Kamenita vrata",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kameniti-stol",
+      "name": "Kameniti stol",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kameniti-stol-14",
+      "name": "Kameniti stol 14",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kamenolom-podsused-vrapce",
+      "name": "Kamenolom",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kamenolom-sesvete",
+      "name": "Kamenolom",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kamescica",
+      "name": "Kameščica",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kampus-fakultet",
+      "name": "Kampus fakultet",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kampus-restoran",
+      "name": "Kampus - restoran",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kanalski-put",
+      "name": "Kanalski put",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kancelak",
+      "name": "Kancelak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kanfanarska",
+      "name": "Kanfanarska",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kaptol",
+      "name": "Kaptol",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "kaptol-centar",
+      "name": "KAPTOL CENTAR",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kapucinska",
+      "name": "Kapucinska",
+      "kvart": "Gornja Dubrava",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "karaznik",
+      "name": "Karažnik",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "karlovacka-157",
+      "name": "Karlovačka 157",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "karlovacka-18",
+      "name": "Karlovačka 18",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "karlovacka-97",
+      "name": "Karlovačka 97",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "kasina-110",
+      "name": "Kašina 110",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasina-128",
+      "name": "Kašina 128",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasina-179",
+      "name": "Kašina 179",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasina-centar",
+      "name": "Kašina - centar",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasina-okretiste",
+      "name": "Kašina-okretište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasinci",
+      "name": "Kašinci",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kasinska-rasadnik",
+      "name": "Kašinska-rasadnik",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "kasinska-sopnica",
+      "name": "Kašinska Sopnica",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "katarinin-trg",
+      "name": "Katarinin trg",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kauzlaricev-prilaz",
+      "name": "Kauzlarićev prilaz",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "kazaliste-tresnja",
+      "name": "Kazalište Trešnja",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kb-dubrava",
+      "name": "KB Dubrava",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kestenovac-drage",
+      "name": "Kestenovac-Drage",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "king-cross",
+      "name": "KING CROSS",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "klake",
+      "name": "Klake",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "klanjec",
+      "name": "Klanjec",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "klin",
+      "name": "Klin",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "klin-koledinecka",
+      "name": "Klin-Koledinečka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "knezija",
+      "name": "Knežija",
+      "kvart": "Trešnjevka - jug",
+      "mode": "both",
+      "lineCount": 4
+    },
+    {
+      "slug": "kobiljak-69",
+      "name": "Kobiljak 69",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kobiljak-96",
+      "name": "Kobiljak 96",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kobiljak-trgovina",
+      "name": "Kobiljak-trgovina",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kockica",
+      "name": "Kockica",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kod-benzinske",
+      "name": "Kod benzinske",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kod-cohe",
+      "name": "Kod Cohe",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kod-ilenica",
+      "name": "Kod Ileniča",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kod-skalica",
+      "name": "Kod Škalića",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kodrmanova",
+      "name": "Kodrmanova",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kolakova-grizanska",
+      "name": "Kolakova-Grižanska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kolareva",
+      "name": "Kolareva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "koledinecka",
+      "name": "Koledinečka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "koledinecka-skola",
+      "name": "Koledinečka-škola",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "koledovcina",
+      "name": "Koledovčina",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "kolodvorska",
+      "name": "Kolodvorska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "komari",
+      "name": "Komari",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "koncar",
+      "name": "Končar",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "konzum",
+      "name": "Konzum",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosirnikova",
+      "name": "Kosirnikova",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosirnikova-12",
+      "name": "Kosirnikova 12",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosirnikova-9",
+      "name": "Kosirnikova 9",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosirnikova-jelenov",
+      "name": "Kosirnikova-Jelenov.",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosirnikova-src-jel",
+      "name": "Kosirnikova-SRC Jel",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kosnica",
+      "name": "Kosnica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kosnica-izbjeg-nas",
+      "name": "Kosnica-izbjeg. nas.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kosnica-nadvoznjak",
+      "name": "Kosnica, nadvožnjak",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kosnica-petina",
+      "name": "Kosnica, Petina",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kostanjevec",
+      "name": "Kostanjevec",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kotoripska",
+      "name": "Kotoripska",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kovaceviceva",
+      "name": "Kovačevićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kovinska-stenjevec",
+      "name": "Kovinska",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kovinska-stenjevec-2",
+      "name": "Kovinska",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kozari-bok",
+      "name": "Kozari Bok",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 8
+    },
+    {
+      "slug": "kozari-put-1-odv-5",
+      "name": "Kozari put 1-odv.5",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kozari-putevi",
+      "name": "Kozari Putevi",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kozincev-put",
+      "name": "Kožinčev put",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "kozjak",
+      "name": "Kozjak",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kral-brijegi-starjak",
+      "name": "Kral.Brijegi-Starjak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kralj-brijegi-lojeni",
+      "name": "Kralj.Brijegi-Lojeni",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kraljevec",
+      "name": "Kraljevec",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kraljevecka-cesta",
+      "name": "Kraljevečka cesta",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kraljevecki-novaki",
+      "name": "Kraljevečki Novaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kralji-brezovica",
+      "name": "Kralji",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kralji-sesvete",
+      "name": "Kralji",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kraljicin-zdenac",
+      "name": "Kraljičin zdenac",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "krematorij",
+      "name": "Krematorij",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "kruge-trnje",
+      "name": "Kruge",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "kruge-trnje-2",
+      "name": "Kruge",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kruzna-ulica",
+      "name": "Kružna ulica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "krvaric",
+      "name": "Krvarić",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kucilovina-16",
+      "name": "Kučilovina 16",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kucilovina-38",
+      "name": "Kučilovina 38",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kudekov-put",
+      "name": "Kudekov put",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kulturni-centar",
+      "name": "Kulturni centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kuniscak",
+      "name": "Kuniščak",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "kup-kraljevec-skola",
+      "name": "Kup.Kraljevec-škola",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kupljenovo-centar",
+      "name": "Kupljenovo-centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kupljenska",
+      "name": "Kupljenska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kusevacka",
+      "name": "Kuševačka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kustosijanska",
+      "name": "Kustošijanska",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 12
+    },
+    {
+      "slug": "kustosijski-venec",
+      "name": "Kustošijski venec",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "kvaternikov-trg",
+      "name": "Kvaternikov trg",
+      "kvart": "Maksimir",
+      "mode": "both",
+      "lineCount": 17
+    },
+    {
+      "slug": "labudovac",
+      "name": "Labudovac",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "laktec",
+      "name": "Laktec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "laniste",
+      "name": "Lanište",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lascinski-borovec",
+      "name": "Lašćinski Borovec",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "laskocica-2",
+      "name": "Laskočica 2",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "laskocica-42",
+      "name": "Laskočica 42",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lastovska",
+      "name": "Lastovska",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lastovska-skola",
+      "name": "Lastovska-škola",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lekneno-i",
+      "name": "Lekneno I",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lekneno-ii",
+      "name": "Lekneno II",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lepusici",
+      "name": "Lepušići",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "lesce",
+      "name": "Lešće",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "leskovec-primorska",
+      "name": "Leskovec - Primorska",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "letnicka",
+      "name": "Letnička",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "letnicka-skola",
+      "name": "Letnička - škola",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lipnica",
+      "name": "Lipnica",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lipovac-i",
+      "name": "Lipovac I.",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lisinski",
+      "name": "Lisinski",
+      "kvart": "Trnje",
+      "mode": "both",
+      "lineCount": 19
+    },
+    {
+      "slug": "livadarski-put",
+      "name": "Livadarski put",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lj-posav-rimski-put",
+      "name": "Lj.Posav.-Rimski put",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lj-posavsk-kelekova-sesvete",
+      "name": "Lj.Posavsk.-Kelekova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lj-posavsk-kelekova-sesvete-2",
+      "name": "Lj.Posavsk.-Kelekova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ljubijska-gornja-dubrava",
+      "name": "Ljubijska",
+      "kvart": "Gornja Dubrava",
+      "mode": "both",
+      "lineCount": 4
+    },
+    {
+      "slug": "ljubijska-gornja-dubrava-2",
+      "name": "Ljubijska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ljubijska-hrv-prolj",
+      "name": "Ljubijska-Hrv.Prolj.",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ljubljanica",
+      "name": "Ljubljanica",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "both",
+      "lineCount": 8
+    },
+    {
+      "slug": "ljudevita-posavskog",
+      "name": "Ljudevita Posavskog",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "lomnica-deveric-4",
+      "name": "Lomnica, Deverić. 4",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lomnica-dom-zdravlja",
+      "name": "Lomnica-dom zdravlja",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lomnica-odranska-6",
+      "name": "Lomnica - Odranska 6",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lomnica-sljuncara",
+      "name": "Lomnica, šljunčara",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lomnica-step-6-okret",
+      "name": "Lomnica,Step.6 okret",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lomnica-stepanska-72",
+      "name": "Lomnica,Stepanska 72",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lozaki",
+      "name": "Lozaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lubenjaki",
+      "name": "Lubenjaki",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lucko",
+      "name": "Lučko",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lucko-centar-novi-zagreb-zapad",
+      "name": "Lučko-centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lucko-centar-novi-zagreb-zapad-2",
+      "name": "Lučko-centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lucmanova",
+      "name": "Lucmanova",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "lukav-put-za-dubra",
+      "name": "Lukav.-put za Dubra.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lukav-skolska-luzec",
+      "name": "Lukav.-Školska-Lužec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "lukavec-buverke",
+      "name": "Lukavec-Buverke",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "lukavec-dolens-d-d",
+      "name": "Lukavec-Dolens. d.d.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "lukavec-kanal",
+      "name": "Lukavec - Kanal",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "lukoranska-novi-zagreb-zapad",
+      "name": "Lukoranska",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "lukoranska-novi-zagreb-zapad-2",
+      "name": "Lukoranska",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "luksic",
+      "name": "Lukšić",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "luksic-okretiste",
+      "name": "Lukšić-okretište",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "luzan",
+      "name": "Lužan",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "luzan-zeleni-vijenac",
+      "name": "Lužan-Zeleni vijenac",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "m-polje-istocni-ulaz",
+      "name": "M.Polje istočni ulaz",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "m-polje-okretiste",
+      "name": "M.Polje-okretište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "m-polje-parkiraliste",
+      "name": "M.Polje parkiralište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "m-trnava-v-rocica",
+      "name": "M.Trnava-V.Ročića",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "maksimirska-naselja",
+      "name": "Maksimirska naselja",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "malekova",
+      "name": "Malekova",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "malomlacka-30",
+      "name": "Malomlačka 30",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "malomlacka-igralisna",
+      "name": "Malomlačka-Igrališna",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mandalicina",
+      "name": "Mandaličina",
+      "kvart": "Črnomerec",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "manterovcak",
+      "name": "Manterovčak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "manterovcak-46",
+      "name": "Manterovčak 46",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "manterovcak-66",
+      "name": "Manterovčak 66",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "manterovcak-78",
+      "name": "Manterovčak 78",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "margalici",
+      "name": "Margalići",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "marice-baric",
+      "name": "Marice Barić",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "marijane-radev",
+      "name": "Marijane Radev",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "marina-tartaglie",
+      "name": "Marina Tartaglie",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mark-polje-raskrizje",
+      "name": "Mark.polje-raskrižje",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "markov-trg",
+      "name": "Markov trg",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markovici",
+      "name": "Markovići",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markovo-p-mrtvacnica",
+      "name": "Markovo P.mrtvačnica",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusev-popovec-62",
+      "name": "Markušev. Popovec 62",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusev-trnava-56",
+      "name": "Markušev. Trnava 56",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusev-trnava-84",
+      "name": "Markušev. Trnava  84",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusevec",
+      "name": "Markuševec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusevecka-106",
+      "name": "Markuševečka 106",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusevecka-140",
+      "name": "Markuševečka 140",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusevecka-18",
+      "name": "Markuševečka 18",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "markusevecka-trnava",
+      "name": "Markuševečka Trnava",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "marohniceva",
+      "name": "Marohnićeva",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "masiceva",
+      "name": "Mašićeva",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "mate-lovraka",
+      "name": "Mate Lovraka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "maticki",
+      "name": "Matički",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "matije-divkovica",
+      "name": "Matije Divkovića",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "matije-gupca",
+      "name": "Matije Gupca",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "matije-vlacica",
+      "name": "Matije Vlačića",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mavracici",
+      "name": "Mavračići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mazuraniceva",
+      "name": "Mažuranićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "medarska",
+      "name": "Medarska",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "medasni-klanac",
+      "name": "Međašni klanac",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "medpotoki",
+      "name": "Medpotoki",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "medpotoki-30",
+      "name": "Medpotoki 30",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "medvescak",
+      "name": "Medveščak",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "meglajci",
+      "name": "Meglajci",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "melinisce",
+      "name": "Melinišće",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mercatone",
+      "name": "MERCATONE",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mesekov-put",
+      "name": "Mesekov put",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "micani",
+      "name": "Micani",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "micevec-centar",
+      "name": "Mičevec, centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "micevec-nadvoznjak",
+      "name": "Mičevec, nadvožnjak",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mihaljevac",
+      "name": "Mihaljevac",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "both",
+      "lineCount": 8
+    },
+    {
+      "slug": "mihovci",
+      "name": "Mihovci",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mije-haleusa",
+      "name": "Mije Haleuša",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "mikulici",
+      "name": "Mikulići",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "milace",
+      "name": "Milače",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "milekanska-orsagi",
+      "name": "Milekanska-Orsagi",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "millerova",
+      "name": "Millerova",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "miramarska",
+      "name": "Miramarska",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "mirogoj",
+      "name": "Mirogoj",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "mirogoj-arkade",
+      "name": "Mirogoj-Arkade",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "mirosevec",
+      "name": "Miroševec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mirosevecina",
+      "name": "Miroševečina",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mirosevecka-137",
+      "name": "Miroševečka 137",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mirosevecka-190",
+      "name": "Miroševečka 190",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mirosevecka-218",
+      "name": "Miroševečka 218",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "miroslava-vaupotica",
+      "name": "Miroslava Vaupotića",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "misevecka",
+      "name": "Miševečka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mladena-halape",
+      "name": "Mladena Halape",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mlinarska",
+      "name": "Mlinarska",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mlinovi",
+      "name": "Mlinovi",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mlinovi-gornji",
+      "name": "Mlinovi gornji",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mo-n-brestje",
+      "name": "MO N.Brestje",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mokricka",
+      "name": "Mokrička",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "mokroviceva",
+      "name": "Mokrovićeva",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "moravce-benkova",
+      "name": "Moravče-Benkova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "most-mladosti",
+      "name": "Most mladosti",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "mrksina",
+      "name": "Mrkšina",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mrksina-65-crkva",
+      "name": "Mrkšina 65-crkva",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mrksina-67c",
+      "name": "Mrkšina 67C",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mrksina-raskrizje",
+      "name": "Mrkšina-raskrižje",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mudifaji-gornja-dubrava",
+      "name": "Mudifaji",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "mudifaji-sesvete",
+      "name": "Mudifaji",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "munja",
+      "name": "Munja",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "mup",
+      "name": "MUP",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 12
+    },
+    {
+      "slug": "muzej-grada-zagreba",
+      "name": "Muzej grada Zagreba",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "muzej-suv-umjetnosti",
+      "name": "Muzej suv.umjetnosti",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "both",
+      "lineCount": 16
+    },
+    {
+      "slug": "n-s-knjiznica",
+      "name": "N.S.knjižnica",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 14
+    },
+    {
+      "slug": "nabrezje",
+      "name": "Nabrežje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "nadlug",
+      "name": "Nadlug",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "naletiliceva",
+      "name": "Naletilićeva",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 13
+    },
+    {
+      "slug": "naletiliceva-104",
+      "name": "Naletilićeva 104",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "naletiliceva-122",
+      "name": "Naletilićeva 122",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "naletiliceva-43",
+      "name": "Naletilićeva 43",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "naletiliceva-54",
+      "name": "Naletilićeva 54",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "naletiliceva-88",
+      "name": "Naletilićeva 88",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "nehajska",
+      "name": "Nehajska",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "nikole-gucetica",
+      "name": "Nikole Gučetića",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "ninska",
+      "name": "Ninska",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 18
+    },
+    {
+      "slug": "nova-cesta",
+      "name": "Nova cesta",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "nova-kosnica-66",
+      "name": "Nova Kosnica 66",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "nova-ves",
+      "name": "Nova ves",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novaki-gornja-dubrava",
+      "name": "Novaki",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novaki-gornja-dubrava-2",
+      "name": "Novaki",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novaki-selska",
+      "name": "Novaki - Selska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novaki-selska-2",
+      "name": "Novaki - Selska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novoselci",
+      "name": "Novoselci",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novoselec",
+      "name": "Novoselec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novoselecki-put",
+      "name": "Novoselečki put",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novoselecki-put-81",
+      "name": "Novoselečki put 81",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "novoselecki-put-83",
+      "name": "Novoselečki put 83",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oboj-28",
+      "name": "Oboj 28",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oboj-jurja-ves",
+      "name": "Oboj-Jurja Ves",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oboj-kosa",
+      "name": "Oboj - Kosa",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oborovo-brezinska",
+      "name": "Oborovo-Brezinska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "obrez",
+      "name": "Obrež",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "obrez-skola",
+      "name": "Obrež - škola",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "odra-malomlacka",
+      "name": "Odra-Malomlačka",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "odra-nadvoznjak",
+      "name": "Odra-nadvožnjak",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "odra-novi-zagreb-istok",
+      "name": "Odra",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "odra-novi-zagreb-istok-2",
+      "name": "Odra",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "odra-svetog-izidora",
+      "name": "Odra-Svetog Izidora",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "odranska-dacka",
+      "name": "Odranska - Đačka",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "odranski-obrez",
+      "name": "Odranski Obrež",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "odvojak-reber",
+      "name": "Odvojak Reber",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "okt-miletica-stenjevec",
+      "name": "Okt. Miletića",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "okt-miletica-stenjevec-2",
+      "name": "Okt. Miletića",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "olipska",
+      "name": "Olipska",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "oporovec",
+      "name": "Oporovec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "orahovac",
+      "name": "Orahovac",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oresje-2-a",
+      "name": "Orešje 2 a",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oresje-3",
+      "name": "Orešje 3",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oresje-47c",
+      "name": "Orešje 47c",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "oreskoviceva-novi-zagreb-istok",
+      "name": "Oreškovićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "oreskoviceva-novi-zagreb-istok-2",
+      "name": "Oreškovićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "os-pantovcak",
+      "name": "OŠ Pantovčak",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "osjecka",
+      "name": "Osječka",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "otok",
+      "name": "Otok",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "otok-neziceva",
+      "name": "Otok, Nežićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "p-d-graficar",
+      "name": "P.D.Grafičar",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "p-d-runolist",
+      "name": "P.D. Runolist",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pakracka",
+      "name": "Pakračka",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "palcici-odvojak",
+      "name": "Palčići-odvojak",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "paljetkova",
+      "name": "Paljetkova",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pandaki",
+      "name": "Pandaki",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pantovcak",
+      "name": "Pantovčak",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pantovcak-156",
+      "name": "Pantovčak 156",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pantovcak-178b",
+      "name": "Pantovčak 178b",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pantovcak-180",
+      "name": "Pantovčak 180",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pantovcak-241",
+      "name": "Pantovčak 241",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pantovcak-82",
+      "name": "Pantovčak 82",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "park-101-brigade",
+      "name": "Park 101.Brigade",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "park-maksimir",
+      "name": "Park Maksimir",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "park-zelengaj",
+      "name": "Park Zelengaj",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "paruzevinska-cesta",
+      "name": "Paruževinska cesta",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "paunovac",
+      "name": "Paunovac",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pavlici",
+      "name": "Pavlići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pavlinoviceva",
+      "name": "Pavlinovićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pekarska",
+      "name": "Pekarska",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "perjavica",
+      "name": "Perjavica",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "persinci",
+      "name": "Peršinci",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "persinovec",
+      "name": "Peršinovec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "persinovec-68",
+      "name": "Peršinovec 68",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "persinovec-72",
+      "name": "Peršinovec 72",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pesteri",
+      "name": "Pesteri",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petina",
+      "name": "Petina",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petlja-izlaz-novi-zagreb-zapad",
+      "name": "Petlja - izlaz",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "petlja-izlaz-novi-zagreb-zapad-2",
+      "name": "Petlja - izlaz",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "petlja-ulaz",
+      "name": "Petlja - ulaz",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "petraciceva",
+      "name": "Petračićeva",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrova-116",
+      "name": "Petrova 116",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrova-47",
+      "name": "Petrova 47",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrova-donji-grad",
+      "name": "Petrova",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "petrova-maksimir",
+      "name": "Petrova",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrovaradinska",
+      "name": "Petrovaradinska",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "petrovina-6",
+      "name": "Petrovina 6",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrovina-drust-dom",
+      "name": "Petrovina,društ. dom",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrusevec",
+      "name": "Petruševec",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "petrusevec-i-odv-v",
+      "name": "Petruševec I odv. V",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "petrusevecko-naselje",
+      "name": "Petruševečko naselje",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pilati",
+      "name": "Pilati",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pintariceva",
+      "name": "Pintarićeva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pipici",
+      "name": "Pipići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pirinova",
+      "name": "Pirinova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "planina-donja",
+      "name": "Planina Donja",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "planina-donja-19",
+      "name": "Planina Donja 19",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "planina-gornja",
+      "name": "Planina Gornja",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "planinarska-16",
+      "name": "Planinarska 16",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "planinska-20",
+      "name": "Planinska 20",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pliva",
+      "name": "Pliva",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "podbrezje",
+      "name": "Podbrežje",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "podbrezje-okretiste",
+      "name": "Podbrežje okretište",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "podbreznica",
+      "name": "Podbrežnica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "podfuscak",
+      "name": "Podfuščak",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "podsused",
+      "name": "Podsused",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "podsused-centar",
+      "name": "Podsused-centar",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "podsused-most",
+      "name": "Podsused - most",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "podsusedsko-dolje",
+      "name": "Podsusedsko Dolje",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pojatno-centar",
+      "name": "Pojatno-centar",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pokupska",
+      "name": "Pokupska",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "polj-kod-skole",
+      "name": "Polj.-kod škole",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "poljaki-sesvete",
+      "name": "Poljaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "poljaki-sesvete-2",
+      "name": "Poljaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "poljanica-zeleni-br",
+      "name": "Poljanica-Zeleni br.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "poljanice-iv",
+      "name": "Poljanice IV",
+      "kvart": "Gornja Dubrava",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "popovec-gostiona",
+      "name": "Popovec-gostiona",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "popovecka-51",
+      "name": "Popovečka 51",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "popovecka-leskovec",
+      "name": "Popovečka -Leskovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "potocani",
+      "name": "Potočani",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "potocko",
+      "name": "Potočko",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pr-b-filipovica",
+      "name": "Pr. b. Filipovića",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "prajzov-brijeg",
+      "name": "Prajzov brijeg",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "precko",
+      "name": "Prečko",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "precko-terminal",
+      "name": "Prečko-terminal",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "predsjednicki-dvori",
+      "name": "Predsjednički dvori",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prekvrsje-skola",
+      "name": "Prekvršje-škola",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prepustovec-izletist",
+      "name": "Prepuštovec-izletišt",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prepustovec-vurnovec",
+      "name": "Prepuštovec-Vurnovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prevendari",
+      "name": "Prevendari",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prevende",
+      "name": "Prevende",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pri-kolaru",
+      "name": "Pri Kolaru",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pri-mlinu",
+      "name": "Pri mlinu",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pri-saicu",
+      "name": "Pri Saiću",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pri-skoli",
+      "name": "Pri školi",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pri-spoljaru",
+      "name": "Pri Špoljaru",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prigornica",
+      "name": "Prigornica",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "prigornica-sjever",
+      "name": "Prigornica-sjever",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prilesje",
+      "name": "Prilesje",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "prilesje-suma",
+      "name": "Prilesje - ŠUMA",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prisavlje-tresnjevka-jug",
+      "name": "Prisavlje",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "prisavlje-trnje",
+      "name": "Prisavlje",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prsaki-ambulanta",
+      "name": "Pršaki-ambulanta",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "prvonozina",
+      "name": "Prvonožina",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "pucki",
+      "name": "Pučki",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "puntijarka",
+      "name": "Puntijarka",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "puskariceva-skola",
+      "name": "Puškarićeva-škola",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "pusticki",
+      "name": "Pustički",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-aspergere",
+      "name": "Put za Ašpergere",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-bedice",
+      "name": "Put za Bediće",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-cerje",
+      "name": "Put za Cerje",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-franje",
+      "name": "Put za Franje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-g-lomnicu",
+      "name": "Put za G. Lomnicu",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "put-za-kasinu",
+      "name": "Put za Kašinu",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-kerestinec",
+      "name": "Put za Kerestinec",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-leskovac",
+      "name": "Put za Leskovac",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "put-za-medvedgrad",
+      "name": "Put za Medvedgrad",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "put-za-moravce",
+      "name": "Put za Moravče",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "put-za-tumbre",
+      "name": "Put za Tumbre",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "r-terminali-jankomir-stenjevec",
+      "name": "R.Terminali Jankomir",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "r-terminali-jankomir-stenjevec-2",
+      "name": "R.Terminali Jankomir",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "radic-setaliste",
+      "name": "Radić. šetalište",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "radnicka-173",
+      "name": "Radnička 173",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "radnicka-182",
+      "name": "Radnička 182",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "radnicka-218",
+      "name": "Radnička 218",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "radnicka-ina",
+      "name": "Radnička - INA",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "radnicka-pescenica-zitnjak",
+      "name": "Radnička",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 8
+    },
+    {
+      "slug": "radnicka-pescenica-zitnjak-2",
+      "name": "Radnička",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "radnicka-trnje",
+      "name": "Radnička",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "radnicka-trnje-2",
+      "name": "Radnička",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "rakusina",
+      "name": "Rakušina",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "ranci",
+      "name": "Ranci",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ratarska",
+      "name": "Ratarska",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ravnice-maksimir",
+      "name": "Ravnice",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "ravnice-maksimir-2",
+      "name": "Ravnice",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "reber-habeki",
+      "name": "Reber, Habeki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "rebro-5",
+      "name": "Rebro 5",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "reljkoviceva",
+      "name": "Reljkovićeva",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "remete-128",
+      "name": "Remete 128",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "remete-76",
+      "name": "Remete 76",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "remete-8",
+      "name": "Remete 8",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "remete-maksimir",
+      "name": "Remete",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "remete-maksimir-2",
+      "name": "Remete",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "remetinec",
+      "name": "Remetinec",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "remetinecka-15",
+      "name": "Remetinečka 15",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "remetinecka-os-skola",
+      "name": "Remetinečka os.škola",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 14
+    },
+    {
+      "slug": "remetinecki-gaj",
+      "name": "Remetinečki gaj",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "remetineckih-zrtava",
+      "name": "Remetinečkih žrtava",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "remetska-19",
+      "name": "Remetska 19",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "resnicki-gaj",
+      "name": "Resnički gaj",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "resnicki-put",
+      "name": "Resnički put",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "resnik-104",
+      "name": "Resnik 104",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "resnik-i-crkva",
+      "name": "Resnik I - crkva",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "resnik-i-kbr-47",
+      "name": "Resnik I,kbr.47",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "resnik-iii-pescenica-zitnjak",
+      "name": "Resnik III",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "resnik-iii-pescenica-zitnjak-2",
+      "name": "Resnik III",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "resnik-silos",
+      "name": "Resnik silos",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rim",
+      "name": "Rim",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rim-14a",
+      "name": "Rim 14a",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rim-60",
+      "name": "Rim 60",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rim-put-dj-igraliste",
+      "name": "Rim.put-dj.igralište",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "rimski-put-bazen-sesvete",
+      "name": "Rimski put-bazen",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "rimski-put-bazen-sesvete-2",
+      "name": "Rimski put-bazen",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rockefellerova",
+      "name": "Rockefellerova",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "roginina",
+      "name": "Roginina",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 12
+    },
+    {
+      "slug": "rosandiceva",
+      "name": "Rosandićeva",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "rozici",
+      "name": "Rožići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rt-jankomir",
+      "name": "RT Jankomir",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rterminali-zitnjak",
+      "name": "RTerminali Žitnjak",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "rudeska",
+      "name": "Rudeška",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "rudolfa-kolaka",
+      "name": "Rudolfa Kolaka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "ruscenica",
+      "name": "Ruščenica",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "rusiscak",
+      "name": "Rušiščak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "s-bukevski-okret",
+      "name": "S. Bukevski, okret.",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "safrani",
+      "name": "Šafrani",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sajam-jakusevec",
+      "name": "Sajam Jakuševec",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "samoborska",
+      "name": "Samoborska",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "sarajev-jakusevecka",
+      "name": "Sarajev.-Jakuševečka",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "sarajevsk-ukrajinska",
+      "name": "Sarajevsk-Ukrajinska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sarajevsk-vatikanska",
+      "name": "Sarajevsk-Vatikanska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sarajevska-hrelic",
+      "name": "Sarajevska - Hrelić",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sasi-okretiste",
+      "name": "Sasi, okretište",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sasinovec",
+      "name": "Šašinovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sasinovec-vatr-dom",
+      "name": "Šašinovec-vatr. dom",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "savica-i",
+      "name": "Savica I.",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "savisce",
+      "name": "Savišće",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "savska",
+      "name": "Savska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "savska-metro",
+      "name": "Savska - Metro",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "savska-opatovina",
+      "name": "Savska Opatovina",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "savski-gaj",
+      "name": "Savski gaj",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "both",
+      "lineCount": 6
+    },
+    {
+      "slug": "savski-gaj-rotor",
+      "name": "Savski gaj-rotor",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "savski-gaj-xii",
+      "name": "Savski gaj XII.",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 14
+    },
+    {
+      "slug": "savski-most",
+      "name": "Savski most",
+      "kvart": "Trešnjevka - jug",
+      "mode": "both",
+      "lineCount": 17
+    },
+    {
+      "slug": "savudrijska",
+      "name": "Savudrijska",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "scitarjevo-i",
+      "name": "Ščitarjevo I",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "scitarjevo-ii",
+      "name": "Ščitarjevo II",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "scitarjevo-iii",
+      "name": "Ščitarjevo III",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sel-pudak-kate-okr",
+      "name": "Sel.-Puđak Kate okr.",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "selisce",
+      "name": "Selišće",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "seljacke-bune",
+      "name": "Seljačke bune",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "selnica",
+      "name": "Selnica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "selnica-put-za-bapce",
+      "name": "Selnica-put za Bapče",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "selska",
+      "name": "Selska",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "senscak-i-odvojak",
+      "name": "Senščak I. odvojak",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "senscak-ii-odvojak",
+      "name": "Senščak II. odvojak",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sercerova-31",
+      "name": "Šercerova 31",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sercerova-84",
+      "name": "Šercerova 84",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sercerova-ser-precac",
+      "name": "Šercerova-Šer.prečac",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "servisna-ina",
+      "name": "Servisna - INA",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "sestin-dol-odvojak",
+      "name": "Šestin. dol odvojak",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sestine-centar",
+      "name": "Šestine-centar",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sestinski-dol",
+      "name": "Šestinski dol",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sestinski-dol-58",
+      "name": "Šestinski dol 58",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sestinski-lagvic",
+      "name": "Šestinski lagvić",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sestinski-vijenac",
+      "name": "Šestinski vijenac",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sestinski-vrh",
+      "name": "Šestinski vrh",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sesvete-izlaz",
+      "name": "Sesvete-izlaz",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 18
+    },
+    {
+      "slug": "sesvete-ukrcaj",
+      "name": "Sesvete-ukrcaj",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 12
+    },
+    {
+      "slug": "sesvetska-sela",
+      "name": "Sesvetska Sela",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sesvetski-kraljevec",
+      "name": "Sesvetski Kraljevec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sheraton",
+      "name": "Sheraton",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "sibice-dom",
+      "name": "Šibice - dom",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sijavrh-sesvete",
+      "name": "Šijavrh",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sijavrh-sesvete-2",
+      "name": "Šijavrh",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "siletici",
+      "name": "Šiletići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "simuncevec-drus-dom",
+      "name": "Šimunčevec-druš. dom",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sinbuk",
+      "name": "Sinbuk",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "siprunec",
+      "name": "Šiprunec",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sirkovina",
+      "name": "Sirkovina",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sisacka-nadv-sjever",
+      "name": "Sisačka-nadv.-sjever",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sisiceva",
+      "name": "Šišićeva",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sjeverna",
+      "name": "Sjeverna",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skabrnjska",
+      "name": "Škabrnjska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skanici",
+      "name": "Škanići",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skocilovici",
+      "name": "Skočilovići",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skola-kasina",
+      "name": "Škola Kašina",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skola-vugrovec",
+      "name": "Škola Vugrovec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skolska",
+      "name": "Školska",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "skradnicka",
+      "name": "Skradnička",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "slanovecka-cesta",
+      "name": "Slanovečka cesta",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "slanovecka-skola",
+      "name": "Slanovečka-škola",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "slavenskog-stenjevec",
+      "name": "Slavenskog",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "slavenskog-tresnjevka-jug",
+      "name": "Slavenskog",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "slavenskoga-jug",
+      "name": "Slavenskoga-jug",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "slavon-lj-posavskog",
+      "name": "Slavon.-Lj.Posavskog",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "slavonska-culinecka-pescenica-zitnjak",
+      "name": "Slavonska-Čulinečka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "slavonska-culinecka-pescenica-zitnjak-2",
+      "name": "Slavonska-Čulinečka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sljemenska",
+      "name": "Sljemenska",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "slobostina",
+      "name": "Sloboština",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "slovenska",
+      "name": "Slovenska",
+      "kvart": "Črnomerec",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "snjezna-kraljica",
+      "name": "Snježna kraljica",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "snjeznicke-stube",
+      "name": "Snježničke stube",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "soblinec",
+      "name": "Soblinec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "soblinec-rask-skola",
+      "name": "Soblinec-rask.-škola",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "sobolski-put",
+      "name": "Sobolski put",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "sokolska",
+      "name": "Sokolska",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "solici",
+      "name": "Šolići",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sopnicka-37",
+      "name": "Sopnička 37",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sopnicka-kod-10d",
+      "name": "Sopnička-kod 10D",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sopnicka-skola",
+      "name": "Sopnička - škola",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sopot",
+      "name": "Sopot",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "both",
+      "lineCount": 9
+    },
+    {
+      "slug": "sostarici",
+      "name": "Šoštarići",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "spansko",
+      "name": "Špansko",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sportski-centar-novi-zagreb-zapad",
+      "name": "Sportski centar",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sportski-centar-trnje",
+      "name": "Sportski centar",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "srebrnjak",
+      "name": "Srebrnjak",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "srebrnjak-10",
+      "name": "Srebrnjak 10",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "srebrnjak-131",
+      "name": "Srebrnjak 131",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "srebrnjak-132",
+      "name": "Srebrnjak 132",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sredisce",
+      "name": "Središće",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "both",
+      "lineCount": 9
+    },
+    {
+      "slug": "srednjaci",
+      "name": "Srednjaci",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "sruki",
+      "name": "Sruki",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "st-dom-s-radic",
+      "name": "St. dom S. Radić",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "st-dom-stjepan-radic",
+      "name": "St.dom Stjepan Radić",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 11
+    },
+    {
+      "slug": "stadion",
+      "name": "Stadion",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "stara-oporovecka",
+      "name": "Stara Oporovečka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "stare-gajnice",
+      "name": "Stare Gajnice",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "stari-savski-most",
+      "name": "Stari Savski most",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stari-terminal",
+      "name": "Stari terminal",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "staro-okretiste-brezovica",
+      "name": "Staro okretište",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "staro-okretiste-brezovica-2",
+      "name": "Staro okretište",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stefanov-stud-kamp",
+      "name": "Štefanov.-Stud.kamp.",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "stefanovec-114",
+      "name": "Štefanovec 114",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stefanovec-37",
+      "name": "Štefanovec 37",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stefanovec-70",
+      "name": "Štefanovec 70",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stenjevec",
+      "name": "Stenjevec",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "stenjevecka",
+      "name": "Stenjevečka",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strma-cesta",
+      "name": "Strma cesta",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strmec-bukevski",
+      "name": "Strmec Bukevski",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strmec-centar",
+      "name": "Strmec-centar",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strmec-regelji",
+      "name": "Strmec-Regelji",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strojarska",
+      "name": "Strojarska",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "strpet",
+      "name": "Štrpet",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "strpet-okretiste",
+      "name": "Štrpet-okretište",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stubicka-16",
+      "name": "Stubička 16",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "stubicka-i-odvojak",
+      "name": "Stubička I.odvojak",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "studeni-ii",
+      "name": "Studeni II.",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "studentski-centar",
+      "name": "Studentski centar",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 7
+    },
+    {
+      "slug": "studentski-grad",
+      "name": "Studentski grad",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stuglenica",
+      "name": "Štuglenica",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stupnicki-obrez",
+      "name": "Stupnički Obrež",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stupnik-crkva",
+      "name": "Stupnik-crkva",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "stupnik-skola",
+      "name": "Stupnik-škola",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "subiceva",
+      "name": "Šubićeva",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 7
+    },
+    {
+      "slug": "sulekova",
+      "name": "Šulekova",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "suma-grmoscica",
+      "name": "Šuma Grmoščica",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sumarske-jaslice",
+      "name": "Šumarske jaslice",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sunekova-12",
+      "name": "Sunekova 12",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "sunekova-172",
+      "name": "Sunekova 172",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sutinska-vrela",
+      "name": "Sutinska vrela",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "sv-ivana-d-grubera",
+      "name": "Sv. Ivana-D.Grubera",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sv-leopolda-mandica",
+      "name": "Sv. Leopolda Mandića",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "svarcanska",
+      "name": "Švarčanska",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sveti-duh",
+      "name": "Sveti Duh",
+      "kvart": "Črnomerec",
+      "mode": "both",
+      "lineCount": 7
+    },
+    {
+      "slug": "svetice-maksimir",
+      "name": "Svetice",
+      "kvart": "Maksimir",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "svetice-maksimir-2",
+      "name": "Svetice",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "svetosimunska",
+      "name": "Svetošimunska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "svetosimunska-trgov",
+      "name": "Svetošimunska-trgov.",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "sveucilisna-al",
+      "name": "Sveučilišna al.",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "svilkovici-stenjevec",
+      "name": "Svilkovići",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "svilkovici-tresnjevka-jug",
+      "name": "Svilkovići",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "talani",
+      "name": "Talani",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "talovceva",
+      "name": "Talovčeva",
+      "kvart": "Črnomerec",
+      "mode": "tram",
+      "lineCount": 2
+    },
+    {
+      "slug": "tehnicki-muzej",
+      "name": "Tehnički muzej",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "tekstilno-teh-f",
+      "name": "Tekstilno-teh. f.",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "terminal",
+      "name": "Terminal",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "tisinska",
+      "name": "Tišinska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "tisinska-ul-iii-odv",
+      "name": "Tišinska ul. III odv",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "tomislavov-dom",
+      "name": "Tomislavov dom",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "tomislavova",
+      "name": "Tomislavova",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "tr-savica-trnje",
+      "name": "Tr. Savica",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "tr-savica-trnje-2",
+      "name": "Tr. Savica",
+      "kvart": "Trnje",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "trafostanica",
+      "name": "Trafostanica",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trakoscanska-selcina",
+      "name": "Trakoščanska-Selčina",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "traumatologija",
+      "name": "Traumatologija",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "trdice-52",
+      "name": "Trdice 52",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trdice-56",
+      "name": "Trdice 56",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trescak",
+      "name": "Treščak",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "tresnjevacki-trg",
+      "name": "Trešnjevački trg",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "trg-bana-j-jelacica",
+      "name": "Trg bana J. Jelačića",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "both",
+      "lineCount": 11
+    },
+    {
+      "slug": "trg-dr-f-tudmana",
+      "name": "Trg dr. F. Tuđmana",
+      "kvart": "Črnomerec",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "trg-dr-tudmana",
+      "name": "Trg Dr. Tuđmana",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trg-hr-velikana",
+      "name": "Trg hr. velikana",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "trg-lovre-matacica",
+      "name": "Trg Lovre Matačića",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trg-mazuranica",
+      "name": "Trg Mažuranića",
+      "kvart": "Donji grad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trg-p-kresimira",
+      "name": "Trg P. Krešimira",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 2
+    },
+    {
+      "slug": "trg-rep-hrvatske",
+      "name": "Trg Rep. Hrvatske",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 6
+    },
+    {
+      "slug": "trg-s-severa",
+      "name": "Trg S. Severa",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trg-svetog-simuna",
+      "name": "Trg Svetog Šimuna",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trg-volovcica",
+      "name": "Trg Volovčica",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trg-zrt-fasizma",
+      "name": "Trg žrt. fašizma",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "trnava",
+      "name": "Trnava",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "trnava-i-trgovina",
+      "name": "Trnava I-trgovina",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trnovcica-117",
+      "name": "Trnovčica 117",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trnsko",
+      "name": "Trnsko",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "both",
+      "lineCount": 6
+    },
+    {
+      "slug": "trpucev-breg",
+      "name": "Trpučev breg",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trsje",
+      "name": "Trsje",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "trstenik",
+      "name": "Trstenik",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trznica-jarun",
+      "name": "Tržnica Jarun",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "trznica-kvatric-donji-grad",
+      "name": "Tržnica Kvatrić",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "trznica-kvatric-donji-grad-2",
+      "name": "Tržnica Kvatrić",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "trznica-spansko",
+      "name": "Tržnica Špansko",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "tumbri",
+      "name": "Tumbri",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "turopolj-markulini",
+      "name": "Turopolj.-Markulini",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "turopoljska",
+      "name": "Turopoljska",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "tuskanac",
+      "name": "Tuškanac",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "tuskanova",
+      "name": "Tuškanova",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "ucit-fakultet",
+      "name": "Učit. fakultet",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "tram",
+      "lineCount": 5
+    },
+    {
+      "slug": "ujeviceva",
+      "name": "Ujevićeva",
+      "kvart": "Trešnjevka - jug",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ukrajinska",
+      "name": "Ukrajinska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ul-kaktusa-34",
+      "name": "Ul. Kaktusa 34",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ul-kaktusa-47",
+      "name": "Ul. Kaktusa 47",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ulica-badema",
+      "name": "Ulica Badema",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "ulica-breza",
+      "name": "Ulica Breza",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "ulica-crnomerec-46",
+      "name": "Ulica Črnomerec 46",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ulica-grada-chicaga",
+      "name": "Ulica grada Chicaga",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "ulica-kaktusa",
+      "name": "Ulica Kaktusa",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "ulica-platana",
+      "name": "Ulica Platana",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "ulica-rudolfa-fizira",
+      "name": "Ulica Rudolfa Fizira",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "utrina",
+      "name": "Utrina",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "valturska",
+      "name": "Valturska",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "varazdinska-selcina",
+      "name": "Varaždinska-Selčina",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 7
+    },
+    {
+      "slug": "varoska",
+      "name": "Varoška",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vatikanska",
+      "name": "Vatikanska",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "vatikanska-sv-mateja",
+      "name": "Vatikanska-Sv.Mateja",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vatrogasni-dom",
+      "name": "Vatrogasni dom",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "velesajam",
+      "name": "Velesajam",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "velika-gorica",
+      "name": "Velika Gorica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "velika-kosnica",
+      "name": "Velika Kosnica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "velika-mlaka",
+      "name": "Velika Mlaka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "veliki-dol-30",
+      "name": "Veliki dol 30",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "veliki-vrh",
+      "name": "Veliki Vrh",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "veliko-polje",
+      "name": "Veliko Polje",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "veslacka",
+      "name": "Veslačka",
+      "kvart": "Trešnjevka - jug",
+      "mode": "both",
+      "lineCount": 6
+    },
+    {
+      "slug": "veterinarski-f",
+      "name": "Veterinarski f.",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "vg-groblje",
+      "name": "VG - groblje",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "vicebani-mataki",
+      "name": "Vicebani-Mataki",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vida-rocica-117",
+      "name": "Vida Ročića 117",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vidovcica",
+      "name": "Vidovčica",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vidovcica-i",
+      "name": "Vidovčica I.",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vidovec-skola",
+      "name": "Vidovec - škola",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vidovec-trgovina",
+      "name": "Vidovec-trgovina",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "viii-jazbinski-odv",
+      "name": "VIII. Jazbinski odv.",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vijenac",
+      "name": "Vijenac",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vikend-naselje-brezovica",
+      "name": "Vikend naselje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vikend-naselje-brezovica-2",
+      "name": "Vikend naselje",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "viktora-vide",
+      "name": "Viktora Vide",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vile-velebita",
+      "name": "Vile Velebita",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "vinec",
+      "name": "Vinec",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogorska-49",
+      "name": "Vinogorska 49",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradi",
+      "name": "Vinogradi",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradi-24-b",
+      "name": "Vinogradi 24 b",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradi-27",
+      "name": "Vinogradi 27",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradi-okretiste",
+      "name": "Vinogradi-okretište",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradska-3",
+      "name": "Vinogradska 3",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vinogradska-75",
+      "name": "Vinogradska 75",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vinogradska-88-a",
+      "name": "Vinogradska 88 a",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vjesnik",
+      "name": "Vjesnik",
+      "kvart": "Trnje",
+      "mode": "both",
+      "lineCount": 6
+    },
+    {
+      "slug": "vladimira-nazora",
+      "name": "Vladimira Nazora",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vocarska-47",
+      "name": "Voćarska 47",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vocarska-baboniceva",
+      "name": "Voćarska-Babonićeva",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vocarska-drustveni-d",
+      "name": "Voćarska-društveni d",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vocarska-sjemeniste",
+      "name": "Voćarska-sjemenište",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vodnikova",
+      "name": "Vodnikova",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 10
+    },
+    {
+      "slug": "vodosprema-lascina",
+      "name": "Vodosprema Lašćina",
+      "kvart": "Maksimir",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "vodovodna",
+      "name": "Vodovodna",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vojnoviceva",
+      "name": "Vojnovićeva",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "voltino",
+      "name": "Voltino",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "voncinina",
+      "name": "Vončinina",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "vrapcanska",
+      "name": "Vrapčanska",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 14
+    },
+    {
+      "slug": "vrapcanska-269",
+      "name": "Vrapčanska 269",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vrapcanska-aleja",
+      "name": "Vrapčanska aleja",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 13
+    },
+    {
+      "slug": "vrapce-zelj-stanica",
+      "name": "Vrapče-želj.stanica",
+      "kvart": "Stenjevec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vrbani",
+      "name": "Vrbani",
+      "kvart": "Trešnjevka - jug",
+      "mode": "tram",
+      "lineCount": 3
+    },
+    {
+      "slug": "vrbik",
+      "name": "Vrbik",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "vrhovec",
+      "name": "Vrhovec",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vrhovec-196",
+      "name": "Vrhovec 196",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vrhovec-233",
+      "name": "Vrhovec 233",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vrhovec-62",
+      "name": "Vrhovec 62",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vucak-podsused-vrapce",
+      "name": "Vučak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vucak-podsused-vrapce-2",
+      "name": "Vučak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "vugrovec-d-groblje",
+      "name": "Vugrovec D.-groblje",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vugrovec-kod-crkve",
+      "name": "Vugrovec kod crkve",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vugrovecka",
+      "name": "Vugrovečka",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 6
+    },
+    {
+      "slug": "vugrovecka-21",
+      "name": "Vugrovečka 21",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "vugrovecka-42",
+      "name": "Vugrovečka 42",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "vugrovecka-70",
+      "name": "Vugrovečka 70",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "vugrovecka-73",
+      "name": "Vugrovečka 73",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "vugrovecka-grljakova",
+      "name": "Vugrovečka-Grljakova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vugrovecka-vukasi",
+      "name": "Vugrovečka-Vukasi",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vukasi",
+      "name": "Vukasi",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vukomerec-okretiste",
+      "name": "Vukomerec-okretište",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vukomerecka-40",
+      "name": "Vukomerečka 40",
+      "kvart": "Donja Dubrava",
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "vukomeric-i",
+      "name": "Vukomerić I",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vukomeric-okretiste",
+      "name": "Vukomerić, okretište",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "vurnovec-b-b-kusova",
+      "name": "Vurnovec-B.B.-Kusova",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zadvorska-4",
+      "name": "Zadvorska 4",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zadvorska-54",
+      "name": "Zadvorska 54",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zadvorska-58b",
+      "name": "Zadvorska 58B",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zagorska",
+      "name": "Zagorska",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zagrebacka",
+      "name": "Zagrebačka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 3
+    },
+    {
+      "slug": "zagrebacka-103",
+      "name": "Zagrebačka 103",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "zagrebacka-42",
+      "name": "Zagrebačka 42",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "zagrebacka-94",
+      "name": "Zagrebačka 94",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "zagrebacka-tresnjevka-sjever",
+      "name": "Zagrebačka",
+      "kvart": "Trešnjevka - sjever",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "zagrepcanka",
+      "name": "Zagrepčanka",
+      "kvart": "Trnje",
+      "mode": "tram",
+      "lineCount": 8
+    },
+    {
+      "slug": "zamenhofova",
+      "name": "Zamenhofova",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zapadni-kolodvor",
+      "name": "Zapadni kolodvor",
+      "kvart": "Črnomerec",
+      "mode": "both",
+      "lineCount": 2
+    },
+    {
+      "slug": "zapci",
+      "name": "Žapci",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zaprude-novi-zagreb-istok",
+      "name": "Zapruđe",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "both",
+      "lineCount": 8
+    },
+    {
+      "slug": "zaprude-novi-zagreb-istok-2",
+      "name": "Zapruđe",
+      "kvart": "Novi Zagreb - istok",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zarka-dolinara",
+      "name": "Žarka Dolinara",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zastavn-nadvoznjak",
+      "name": "Zastavn.-nadvožnjak",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zastavnice-1",
+      "name": "Zastavnice 1",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zatisje",
+      "name": "Zatišje",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zavrsje",
+      "name": "Završje",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zavrsje-iii-odvojak",
+      "name": "Završje III. odvojak",
+      "kvart": "Črnomerec",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zdenacka",
+      "name": "Zdenačka",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zdravs-veleuciliste",
+      "name": "Zdravs. veleučilište",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelena-mag-rusiscak",
+      "name": "Zelena mag.-Rušiščak",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelena-trznica",
+      "name": "Zelena tržnica",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 8
+    },
+    {
+      "slug": "zelencica",
+      "name": "Zelenčica",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelengaj",
+      "name": "Zelengaj",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelengaj-53",
+      "name": "Zelengaj 53",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelengaj-65",
+      "name": "Zelengaj 65",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelengaj-bolnica",
+      "name": "Zelengaj,bolnica",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zelengaj-gornji-grad-medvescak",
+      "name": "Zelengaj",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zeljeznicka-stanica",
+      "name": "Željeznička stanica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zeljeznicka-stanica-2",
+      "name": "Željeznička stanica",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zeljeznicka-stanica-brezovica",
+      "name": "Željeznička stanica",
+      "kvart": "Brezovica",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zenki",
+      "name": "Zenki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zensko-sedlo",
+      "name": "Žensko sedlo",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zerjavinec",
+      "name": "Žerjavinec",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "zet-garaza-pod",
+      "name": "ZET-garaža Pod.",
+      "kvart": "Podsused - Vrapče",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zg-velesajam",
+      "name": "ZG Velesajam",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zidaki",
+      "name": "Židaki",
+      "kvart": "Sesvete",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zigulici",
+      "name": "Žigulići",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zitnjacka",
+      "name": "Žitnjačka",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 2
+    },
+    {
+      "slug": "zitnjak",
+      "name": "Žitnjak",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "both",
+      "lineCount": 5
+    },
+    {
+      "slug": "zitnjak-okretiste",
+      "name": "Žitnjak - okretište",
+      "kvart": "Peščenica - Žitnjak",
+      "mode": "bus",
+      "lineCount": 5
+    },
+    {
+      "slug": "zlatareva-zlata",
+      "name": "Zlatareva zlata",
+      "kvart": "Novi Zagreb - zapad",
+      "mode": "bus",
+      "lineCount": 4
+    },
+    {
+      "slug": "znikina",
+      "name": "Znikina",
+      "kvart": "Gornji grad - Medveščak",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zracna-luka",
+      "name": "Zračna luka",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zrak-tehnicka-skola",
+      "name": "Zrak. tehnička škola",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zrinjevac",
+      "name": "Zrinjevac",
+      "kvart": "Donji grad",
+      "mode": "tram",
+      "lineCount": 4
+    },
+    {
+      "slug": "zukciceva-19",
+      "name": "Žukčićeva 19",
+      "kvart": "Gornja Dubrava",
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zuzic-brdo",
+      "name": "Žužić Brdo",
+      "kvart": null,
+      "mode": "bus",
+      "lineCount": 1
+    },
+    {
+      "slug": "zvecaj",
+      "name": "Zvečaj",
+      "kvart": "Podsljeme",
+      "mode": "bus",
+      "lineCount": 1
+    }
+  ]
+}

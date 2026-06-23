@@ -1,0 +1,119 @@
+{
+  "slug": "brezovicka-80",
+  "name": "Brezovička 80",
+  "kvart": "Novi Zagreb - zapad",
+  "lat": 45.75275,
+  "lon": 15.9266,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:52",
+  "lastDeparture": "0:27",
+  "peakIntervalMin": [
+    11,
+    22
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Bašćanske ploče",
+      "slug": "bascanske-ploce"
+    },
+    {
+      "name": "Brezovička-ekonomija",
+      "slug": "brezovicka-ekonomija"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.92454,
+      45.75131,
+      15.92867,
+      45.75419
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ],
+          [
+            15.93264,
+            45.75747
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ],
+          [
+            15.93264,
+            45.75747
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 20,
+    "stations45": 77
+  },
+  "prevSlug": "brezovicka-28",
+  "nextSlug": "brezovicka-ambulanta"
+}

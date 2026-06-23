@@ -1,0 +1,110 @@
+{
+  "slug": "domoviceva",
+  "name": "Domovićeva",
+  "kvart": null,
+  "lat": 45.75724,
+  "lon": 15.85182,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "164"
+  ],
+  "firstDeparture": "4:47",
+  "lastDeparture": "0:22",
+  "peakIntervalMin": [
+    13,
+    31
+  ],
+  "lines": [
+    {
+      "broj": "164",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 56.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Gradek",
+      "slug": "gradek"
+    },
+    {
+      "name": "Gornjostupnička",
+      "slug": "gornjostupnicka"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.84975,
+      45.7558,
+      15.85389,
+      45.75868
+    ],
+    "lines": [
+      {
+        "broj": "164",
+        "mode": "bus",
+        "shape": [
+          [
+            15.83414,
+            45.75564
+          ],
+          [
+            15.83794,
+            45.75574
+          ],
+          [
+            15.83793,
+            45.75574
+          ],
+          [
+            15.83794,
+            45.75574
+          ],
+          [
+            15.84601,
+            45.7565
+          ],
+          [
+            15.85253,
+            45.75732
+          ],
+          [
+            15.85253,
+            45.75732
+          ],
+          [
+            15.86117,
+            45.75841
+          ],
+          [
+            15.86186,
+            45.75848
+          ],
+          [
+            15.86187,
+            45.75848
+          ],
+          [
+            15.86324,
+            45.75867
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 4,
+    "stations30": 18,
+    "stations45": 59
+  },
+  "prevSlug": "dominika-mandica",
+  "nextSlug": "donje-prekrizje"
+}

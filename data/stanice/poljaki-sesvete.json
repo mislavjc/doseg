@@ -1,0 +1,87 @@
+{
+  "slug": "poljaki-sesvete",
+  "name": "Poljaki",
+  "kvart": "Sesvete",
+  "lat": 45.89053,
+  "lon": 16.112,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "262"
+  ],
+  "firstDeparture": "5:39",
+  "lastDeparture": "22:54",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "262",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Planina Donja",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 35.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 45.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Brod-Kuntićeva",
+      "slug": "brod-kunticeva"
+    },
+    {
+      "name": "Prekvršje-škola",
+      "slug": "prekvrsje-skola"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.10992,
+      45.88909,
+      16.11407,
+      45.89197
+    ],
+    "lines": [
+      {
+        "broj": "262",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11521,
+            45.87804
+          ],
+          [
+            16.11544,
+            45.88496
+          ],
+          [
+            16.11443,
+            45.89051
+          ],
+          [
+            16.11199,
+            45.89053
+          ],
+          [
+            16.11136,
+            45.89914
+          ],
+          [
+            16.11005,
+            45.90397
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 9,
+    "stations45": 32
+  },
+  "prevSlug": "polj-kod-skole",
+  "nextSlug": "poljaki-sesvete-2"
+}

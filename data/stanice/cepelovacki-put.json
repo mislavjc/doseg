@@ -1,0 +1,97 @@
+{
+  "slug": "cepelovacki-put",
+  "name": "Čepelovački put",
+  "kvart": "Trešnjevka - sjever",
+  "lat": 45.80217,
+  "lon": 15.91722,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "134"
+  ],
+  "firstDeparture": "4:42",
+  "lastDeparture": "23:38",
+  "peakIntervalMin": [
+    9,
+    16
+  ],
+  "lines": [
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Prečko",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 21.3,
+      "peakRangeMin": [
+        20,
+        21
+      ],
+      "allDayHeadwayMin": 21.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Medarska",
+      "slug": "medarska"
+    },
+    {
+      "name": "Ratarska",
+      "slug": "ratarska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.91516,
+      45.80073,
+      15.91929,
+      45.80362
+    ],
+    "lines": [
+      {
+        "broj": "134",
+        "mode": "bus",
+        "shape": [
+          [
+            15.92759,
+            45.80909
+          ],
+          [
+            15.92361,
+            45.80623
+          ],
+          [
+            15.92026,
+            45.80413
+          ],
+          [
+            15.91675,
+            45.80194
+          ],
+          [
+            15.91316,
+            45.7998
+          ],
+          [
+            15.90809,
+            45.79555
+          ],
+          [
+            15.90566,
+            45.79154
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 19,
+    "stations30": 80,
+    "stations45": 274
+  },
+  "prevSlug": "celici",
+  "nextSlug": "cepini"
+}

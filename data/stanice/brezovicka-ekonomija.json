@@ -1,0 +1,119 @@
+{
+  "slug": "brezovicka-ekonomija",
+  "name": "Brezovička-ekonomija",
+  "kvart": "Brezovica",
+  "lat": 45.74569,
+  "lon": 15.91907,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:51",
+  "lastDeparture": "0:26",
+  "peakIntervalMin": [
+    7,
+    18
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Brezovička 80",
+      "slug": "brezovicka-80"
+    },
+    {
+      "name": "AGROKOKA",
+      "slug": "agrokoka"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.917,
+      45.74425,
+      15.92113,
+      45.74713
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 10,
+    "stations45": 39
+  },
+  "prevSlug": "brezovicka-ambulanta",
+  "nextSlug": "britanski-trg"
+}

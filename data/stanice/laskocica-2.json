@@ -1,0 +1,91 @@
+{
+  "slug": "laskocica-2",
+  "name": "Laskočica 2",
+  "kvart": "Novi Zagreb - zapad",
+  "lat": 45.73365,
+  "lon": 15.97712,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "229"
+  ],
+  "firstDeparture": "4:57",
+  "lastDeparture": "23:17",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "229",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 85.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 84.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Malomlačka-Igrališna",
+      "slug": "malomlacka-igralisna"
+    },
+    {
+      "name": "Laskočica 42",
+      "slug": "laskocica-42"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.97505,
+      45.73221,
+      15.97918,
+      45.73509
+    ],
+    "lines": [
+      {
+        "broj": "229",
+        "mode": "bus",
+        "shape": [
+          [
+            15.98063,
+            45.7267
+          ],
+          [
+            15.97691,
+            45.72944
+          ],
+          [
+            15.97711,
+            45.73365
+          ],
+          [
+            15.98222,
+            45.73189
+          ],
+          [
+            15.986,
+            45.72999
+          ],
+          [
+            15.99334,
+            45.72977
+          ],
+          [
+            15.99684,
+            45.73563
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 6,
+    "stations30": 15,
+    "stations45": 30
+  },
+  "prevSlug": "lascinski-borovec",
+  "nextSlug": "laskocica-42"
+}

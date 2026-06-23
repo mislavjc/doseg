@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
 import localFont from "next/font/local"
 
+import { JsonLd } from "@/app/statistika/editorial/json-ld"
 import { PlausibleProvider } from "@/components/plausible-provider"
 import { Agentation } from "@/components/agentation"
 import SwrProvider from "@/lib/swr-config"
@@ -83,10 +84,7 @@ export default function RootLayout({
       className={`antialiased ${inter.variable} ${geistMono.variable} ${heros.variable} font-sans`}
     >
       <body>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        <JsonLd data={websiteJsonLd} />
         <PlausibleProvider />
         <a
           href="#main-content"

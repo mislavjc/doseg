@@ -1,0 +1,97 @@
+{
+  "slug": "leskovec-primorska",
+  "name": "Leskovec - Primorska",
+  "kvart": "Sesvete",
+  "lat": 45.82934,
+  "lon": 16.14214,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "278"
+  ],
+  "firstDeparture": "5:31",
+  "lastDeparture": "20:51",
+  "peakIntervalMin": [
+    15,
+    35
+  ],
+  "lines": [
+    {
+      "broj": "278",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        15,
+        35
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Letnička - škola",
+      "slug": "letnicka-skola"
+    },
+    {
+      "name": "Popovečka 51",
+      "slug": "popovecka-51"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.14007,
+      45.82789,
+      16.14421,
+      45.83078
+    ],
+    "lines": [
+      {
+        "broj": "278",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13597,
+            45.83059
+          ],
+          [
+            16.14214,
+            45.82933
+          ],
+          [
+            16.14608,
+            45.83254
+          ],
+          [
+            16.14491,
+            45.82856
+          ],
+          [
+            16.14341,
+            45.8257
+          ],
+          [
+            16.12984,
+            45.82381
+          ],
+          [
+            16.12471,
+            45.82398
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 5,
+    "stations30": 29,
+    "stations45": 99
+  },
+  "prevSlug": "lesce",
+  "nextSlug": "letnicka"
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "aspergeri",
+  "name": "Ašpergeri",
+  "kvart": "Brezovica",
+  "lat": 45.69083,
+  "lon": 15.83016,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "4:35",
+  "lastDeparture": "23:40",
+  "peakIntervalMin": [
+    26,
+    65
+  ],
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Put za Ašpergere",
+      "slug": "put-za-aspergere"
+    },
+    {
+      "name": "Pavlići",
+      "slug": "pavlici"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.8281,
+      45.68939,
+      15.83223,
+      45.69227
+    ],
+    "lines": []
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "arena-zagreb",
+  "nextSlug": "augusta-piazze"
+}

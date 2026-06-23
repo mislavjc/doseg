@@ -1,0 +1,127 @@
+{
+  "slug": "hladnjaca",
+  "name": "Hladnjača",
+  "kvart": "Brezovica",
+  "lat": 45.69121,
+  "lon": 15.88499,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:38",
+  "lastDeparture": "0:28",
+  "peakIntervalMin": [
+    11,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Šolići",
+      "slug": "solici"
+    },
+    {
+      "name": "Kraljevečka cesta",
+      "slug": "kraljevecka-cesta"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.88293,
+      45.68977,
+      15.88706,
+      45.69265
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.87619,
+            45.6796
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.87336,
+            45.6845
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "hipodrom",
+  "nextSlug": "hnk2"
+}

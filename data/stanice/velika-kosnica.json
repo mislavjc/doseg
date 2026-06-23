@@ -1,0 +1,133 @@
+{
+  "slug": "velika-kosnica",
+  "name": "Velika Kosnica",
+  "kvart": null,
+  "lat": 45.76751,
+  "lon": 16.0772,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "290"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "0:42",
+  "peakIntervalMin": [
+    14,
+    21
+  ],
+  "lines": [
+    {
+      "broj": "290",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Kvat. trg",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 35.0,
+      "peakRangeMin": [
+        35,
+        35
+      ],
+      "allDayHeadwayMin": 34.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Petruševec",
+      "slug": "petrusevec"
+    },
+    {
+      "name": "Zračna luka",
+      "slug": "zracna-luka"
+    },
+    {
+      "name": "Petina",
+      "slug": "petina"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.07513,
+      45.76607,
+      16.07926,
+      45.76895
+    ],
+    "lines": [
+      {
+        "broj": "290",
+        "mode": "bus",
+        "shape": [
+          [
+            16.09447,
+            45.76159
+          ],
+          [
+            16.09067,
+            45.76388
+          ],
+          [
+            16.08791,
+            45.76556
+          ],
+          [
+            16.08596,
+            45.76643
+          ],
+          [
+            16.08354,
+            45.76718
+          ],
+          [
+            16.08093,
+            45.76752
+          ],
+          [
+            16.07713,
+            45.76752
+          ],
+          [
+            16.0761,
+            45.76759
+          ],
+          [
+            16.07612,
+            45.76768
+          ],
+          [
+            16.07612,
+            45.76768
+          ],
+          [
+            16.07564,
+            45.76767
+          ],
+          [
+            16.07412,
+            45.76807
+          ],
+          [
+            16.0723,
+            45.76907
+          ],
+          [
+            16.06818,
+            45.77153
+          ],
+          [
+            16.06469,
+            45.77357
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 3,
+    "stations30": 7,
+    "stations45": 42
+  },
+  "prevSlug": "velika-gorica",
+  "nextSlug": "velika-mlaka"
+}

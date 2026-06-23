@@ -1,0 +1,126 @@
+{
+  "slug": "strmec-bukevski",
+  "name": "Strmec Bukevski",
+  "kvart": null,
+  "lat": 45.75033,
+  "lon": 16.15654,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "307"
+  ],
+  "firstDeparture": "4:21",
+  "lastDeparture": "23:51",
+  "peakIntervalMin": [
+    27,
+    73
+  ],
+  "lines": [
+    {
+      "broj": "307",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Zapruđe",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 100.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 106.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Lekneno II",
+      "slug": "lekneno-ii"
+    },
+    {
+      "name": "S. Bukevski, okret.",
+      "slug": "s-bukevski-okret"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.15447,
+      45.74889,
+      16.1586,
+      45.75177
+    ],
+    "lines": [
+      {
+        "broj": "307",
+        "mode": "bus",
+        "shape": [
+          [
+            16.16294,
+            45.74514
+          ],
+          [
+            16.16139,
+            45.74634
+          ],
+          [
+            16.15646,
+            45.75036
+          ],
+          [
+            16.15645,
+            45.75036
+          ],
+          [
+            16.15645,
+            45.75037
+          ],
+          [
+            16.15312,
+            45.74968
+          ],
+          [
+            16.14989,
+            45.74842
+          ],
+          [
+            16.14762,
+            45.7477
+          ],
+          [
+            16.14272,
+            45.74641
+          ],
+          [
+            16.14185,
+            45.74638
+          ],
+          [
+            16.14097,
+            45.74685
+          ],
+          [
+            16.13963,
+            45.74736
+          ],
+          [
+            16.13837,
+            45.74799
+          ],
+          [
+            16.13837,
+            45.74799
+          ],
+          [
+            16.13666,
+            45.74868
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
+  },
+  "prevSlug": "strma-cesta",
+  "nextSlug": "strmec-centar"
+}

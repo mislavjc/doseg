@@ -1,0 +1,307 @@
+{
+  "slug": "odra-novi-zagreb-istok-2",
+  "name": "Odra",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.7443,
+  "lon": 15.998,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 4,
+  "tramLines": [],
+  "busLines": [
+    "166",
+    "229",
+    "241",
+    "268"
+  ],
+  "firstDeparture": "1:14",
+  "lastDeparture": "0:49",
+  "peakIntervalMin": [
+    9,
+    11
+  ],
+  "lines": [
+    {
+      "broj": "166",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 126.7
+    },
+    {
+      "broj": "229",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 84.6
+    },
+    {
+      "broj": "241",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 68.2
+    },
+    {
+      "broj": "268",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 10.7,
+      "peakRangeMin": [
+        10,
+        11
+      ],
+      "allDayHeadwayMin": 14.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Odra-nadvožnjak",
+      "slug": "odra-nadvoznjak"
+    },
+    {
+      "name": "Buzin",
+      "slug": "buzin-novi-zagreb-istok"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.99593,
+      45.74286,
+      16.00006,
+      45.74574
+    ],
+    "lines": [
+      {
+        "broj": "166",
+        "mode": "bus",
+        "shape": [
+          [
+            16.00425,
+            45.7309
+          ],
+          [
+            15.99693,
+            45.73108
+          ],
+          [
+            15.99684,
+            45.73563
+          ],
+          [
+            16.00426,
+            45.73983
+          ],
+          [
+            15.99799,
+            45.7443
+          ],
+          [
+            15.99181,
+            45.74871
+          ]
+        ]
+      },
+      {
+        "broj": "229",
+        "mode": "bus",
+        "shape": [
+          [
+            15.99684,
+            45.73563
+          ],
+          [
+            16.00426,
+            45.73983
+          ],
+          [
+            15.99799,
+            45.7443
+          ],
+          [
+            15.99181,
+            45.74871
+          ]
+        ]
+      },
+      {
+        "broj": "241",
+        "mode": "bus",
+        "shape": [
+          [
+            16.0109,
+            45.73605
+          ],
+          [
+            16.00426,
+            45.73983
+          ],
+          [
+            15.99799,
+            45.7443
+          ],
+          [
+            15.99181,
+            45.74871
+          ]
+        ]
+      },
+      {
+        "broj": "268",
+        "mode": "bus",
+        "shape": [
+          [
+            16.01181,
+            45.73454
+          ],
+          [
+            16.01118,
+            45.73487
+          ],
+          [
+            16.01103,
+            45.73496
+          ],
+          [
+            16.01087,
+            45.73505
+          ],
+          [
+            16.01061,
+            45.73524
+          ],
+          [
+            16.01048,
+            45.73538
+          ],
+          [
+            16.01048,
+            45.73539
+          ],
+          [
+            16.01027,
+            45.73541
+          ],
+          [
+            16.01008,
+            45.73554
+          ],
+          [
+            16.00789,
+            45.73709
+          ],
+          [
+            16.00427,
+            45.73973
+          ],
+          [
+            16.00426,
+            45.73983
+          ],
+          [
+            16.00426,
+            45.73983
+          ],
+          [
+            16.00406,
+            45.73986
+          ],
+          [
+            15.99801,
+            45.74421
+          ],
+          [
+            15.99799,
+            45.7443
+          ],
+          [
+            15.99799,
+            45.7443
+          ],
+          [
+            15.99783,
+            45.74435
+          ],
+          [
+            15.99185,
+            45.74863
+          ],
+          [
+            15.99181,
+            45.74871
+          ],
+          [
+            15.99181,
+            45.74871
+          ],
+          [
+            15.99164,
+            45.74877
+          ],
+          [
+            15.99036,
+            45.74969
+          ],
+          [
+            15.98969,
+            45.7502
+          ],
+          [
+            15.9893,
+            45.75061
+          ],
+          [
+            15.98914,
+            45.75087
+          ],
+          [
+            15.989,
+            45.75126
+          ],
+          [
+            15.98895,
+            45.75152
+          ],
+          [
+            15.98898,
+            45.75205
+          ],
+          [
+            15.98932,
+            45.75387
+          ],
+          [
+            15.98952,
+            45.75512
+          ],
+          [
+            15.98986,
+            45.75735
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 4,
+    "stations30": 36,
+    "stations45": 170
+  },
+  "prevSlug": "odra-novi-zagreb-istok",
+  "nextSlug": "odra-svetog-izidora"
+}

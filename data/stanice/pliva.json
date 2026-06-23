@@ -1,0 +1,134 @@
+{
+  "slug": "pliva",
+  "name": "Pliva",
+  "kvart": "Črnomerec",
+  "lat": 45.81263,
+  "lon": 15.93164,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "117",
+    "134"
+  ],
+  "firstDeparture": "4:32",
+  "lastDeparture": "23:42",
+  "peakIntervalMin": [
+    10,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "117",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Jarun",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        51,
+        54
+      ],
+      "allDayHeadwayMin": 50.0
+    },
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Prečko",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 21.3,
+      "peakRangeMin": [
+        20,
+        21
+      ],
+      "allDayHeadwayMin": 21.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Črnomerec",
+      "slug": "crnomerec"
+    },
+    {
+      "name": "Tomislavova",
+      "slug": "tomislavova"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.92957,
+      45.81119,
+      15.9337,
+      45.81407
+    ],
+    "lines": [
+      {
+        "broj": "117",
+        "mode": "bus",
+        "shape": [
+          [
+            15.93333,
+            45.81606
+          ],
+          [
+            15.93164,
+            45.81263
+          ],
+          [
+            15.92993,
+            45.80875
+          ],
+          [
+            15.93003,
+            45.80554
+          ],
+          [
+            15.93017,
+            45.80201
+          ],
+          [
+            15.93031,
+            45.79852
+          ]
+        ]
+      },
+      {
+        "broj": "134",
+        "mode": "bus",
+        "shape": [
+          [
+            15.93333,
+            45.81606
+          ],
+          [
+            15.93164,
+            45.81263
+          ],
+          [
+            15.92759,
+            45.80909
+          ],
+          [
+            15.92361,
+            45.80623
+          ],
+          [
+            15.92026,
+            45.80413
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 21,
+    "stations30": 185,
+    "stations45": 396
+  },
+  "prevSlug": "planinska-20",
+  "nextSlug": "podbrezje"
+}

@@ -1,0 +1,135 @@
+{
+  "slug": "brez-pod-kestenima",
+  "name": "Brez.- pod kestenima",
+  "kvart": "Brezovica",
+  "lat": 45.73302,
+  "lon": 15.91177,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:48",
+  "lastDeparture": "0:23",
+  "peakIntervalMin": [
+    5,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "AGROKOKA",
+      "slug": "agrokoka"
+    },
+    {
+      "name": "Golobreška",
+      "slug": "golobreska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.9097,
+      45.73158,
+      15.91383,
+      45.73446
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 10,
+    "stations45": 40
+  },
+  "prevSlug": "brestovecka-d-dom",
+  "nextSlug": "brezaki"
+}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { JsonLd } from "@/app/statistika/editorial/json-ld"
 import { PodaciDashboard } from "../podaci-dashboard"
 
 export const metadata: Metadata = {
@@ -29,10 +30,7 @@ const datasetJsonLd = {
 export default function PodaciPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }}
-      />
+      <JsonLd data={datasetJsonLd} />
       <PodaciDashboard />
     </>
   )

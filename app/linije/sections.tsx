@@ -1,10 +1,16 @@
+import { IconArrowUpRight } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
 
 import {
+  Breadcrumb,
+  FactRow,
+  PillLink,
+  PrevNext as KitPrevNext,
+  SectionHeader,
+} from "@/app/statistika/editorial/blocks"
+import {
   Body,
-  BodyMuted,
   Eyebrow,
-  Hook,
   PageTitle,
 } from "@/app/statistika/editorial/primitives"
 import type { LinePageData } from "@/lib/generated/LinePageData"
@@ -25,29 +31,13 @@ import {
 /**
  * Server sections of the /linije/[broj] page (Paper "Linija 109 — pSEO V1").
  * All copy is templated from line data — terminal names stay nominative.
+ * Shared chrome (SectionHeader, FactRow, Breadcrumb, chips, JsonLd) comes from
+ * the editorial kit; only line-specific copy + layout lives here.
  */
 
-// ── Section header (eyebrow + hook + lede) ─────────────────────────────────
-
-export function SectionHeader({
-  eyebrow,
-  hook,
-  children,
-}: {
-  eyebrow: string
-  hook: string
-  children?: React.ReactNode
-}) {
-  return (
-    <header className="pb-8">
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <Hook className="mt-4">{hook}</Hook>
-      {children && (
-        <Body className="mt-3 max-w-[520px] text-ink-muted">{children}</Body>
-      )}
-    </header>
-  )
-}
+// FAQ rendering + JSON-LD live in the shared kit; re-exported so the line page
+// can keep importing them from one place.
+import type { FaqItem } from "@/app/statistika/editorial/faq"
 
 // ── Naslov (breadcrumb + title + lede) ──────────────────────────────────────
 
@@ -55,14 +45,13 @@ export function Naslov({ data }: { data: LinePageData }) {
   const modeAdj = MODE_ADJ[data.mode]
   return (
     <>
-      <p className="font-mono text-label text-ink-faint">
-        <Link href="/linije" className="transition-colors hover:text-ink">
-          sve linije
-        </Link>
-        {" / "}
-        {modeAdj}
-        {" / "}linija {data.broj} · vozni red
-      </p>
+      <Breadcrumb
+        trail={[
+          { label: "sve linije", href: "/linije" },
+          { label: modeAdj },
+          { label: `linija ${data.broj} · vozni red` },
+        ]}
+      />
       <PageTitle className="mt-4">
         Linija {data.broj}: {data.terminals[0]} - {data.terminals[1]}.
       </PageTitle>
@@ -77,20 +66,6 @@ export function Naslov({ data }: { data: LinePageData }) {
 }
 
 // ── Činjenice ───────────────────────────────────────────────────────────────
-
-function FactRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline gap-3 py-[9px]">
-      <span className="shrink-0 font-heros text-[16px] leading-[22px] text-ink-muted">
-        {label}
-      </span>
-      <span className="h-[13px] min-w-0 flex-1 border-b border-dotted border-hairline-strong" />
-      <span className="shrink-0 font-mono text-[16px] leading-[22px] text-ink">
-        {value}
-      </span>
-    </div>
-  )
-}
 
 function FactGroup({ label, first = false }: { label: string; first?: boolean }) {
   return (
@@ -181,38 +156,33 @@ export function frekvencijaCopy(data: LinePageData): {
 export function DosegLinije({ data }: { data: LinePageData }) {
   const reach = data.reach
   const stops = data.directions[0].stops.length
-  const mapHref = reach
-    ? `/?lat=${reach.lat}&lon=${reach.lon}`
-    : "/"
+  const mapHref = reach ? `/?lat=${reach.lat}&lon=${reach.lon}` : "/"
   return (
     <div>
-      <Eyebrow>doseg linije</Eyebrow>
-      <Hook className="mt-4">
-        {reach
-          ? `${Math.round(reach.areaKm2)} km² grada u pola sata.`
-          : "Dokle stigneš u pola sata?"}
-      </Hook>
-      <Body className="mt-3 max-w-[520px] text-ink-muted">
+      <SectionHeader
+        eyebrow="doseg linije"
+        hook={
+          reach
+            ? `${Math.round(reach.areaKm2)} km² grada u pola sata.`
+            : "Dokle stigneš u pola sata?"
+        }
+      >
         {reach
           ? `Sa stanice ${reach.stopName}, na sredini trase, 30 minuta javnim prijevozom pokriva ${Math.round(reach.areaKm2)} km² grada. Provjeri dokle stigneš sa svake od ${stops} ${plural(stops, "stanice", "stanice", "stanica")} linije ${data.broj}.`
           : `Provjeri dokle stigneš za 30 minuta javnim prijevozom sa svake od ${stops} ${plural(stops, "stanice", "stanice", "stanica")} linije ${data.broj}.`}
-      </Body>
+      </SectionHeader>
       <Link
         href={mapHref}
-        className="mt-4 inline-block font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+        className="inline-flex items-center gap-1.5 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
       >
-        otvori liniju {data.broj} na karti →
+        otvori liniju {data.broj} na karti
+        <IconArrowUpRight size={16} className="shrink-0" />
       </Link>
     </div>
   )
 }
 
-// ── Česta pitanja ───────────────────────────────────────────────────────────
-
-export interface FaqItem {
-  q: string
-  a: string
-}
+// ── Česta pitanja: FAQ copy builder (rendering = shared CestaPitanja) ────────
 
 export function buildFaq(data: LinePageData): FaqItem[] {
   const items: FaqItem[] = []
@@ -300,75 +270,6 @@ export function buildFaq(data: LinePageData): FaqItem[] {
   return items
 }
 
-/**
- * Renders structured data as a <script type="application/ld+json">. JSON.stringify
- * alone doesn't escape "<", so a value containing "</script>" could break out of
- * the tag — escape it to <. Route all JSON-LD through this component.
- */
-export function JsonLd({ data }: { data: object }) {
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
-      }}
-    />
-  )
-}
-
-export function faqJsonLd(items: FaqItem[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  }
-}
-
-/**
- * Mirrors the visual breadcrumb in Naslov (sve linije / … / linija N) so Google
- * can render a breadcrumb trail in the SERP instead of the bare URL.
- */
-export function breadcrumbJsonLd(broj: string) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Doseg", item: "https://doseg.hr" },
-      { "@type": "ListItem", position: 2, name: "Linije", item: "https://doseg.hr/linije" },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: `Linija ${broj}`,
-        item: `https://doseg.hr/linije/${broj}`,
-      },
-    ],
-  }
-}
-
-export function CestaPitanja({ items }: { items: FaqItem[] }) {
-  return (
-    <div>
-      <Eyebrow className="pb-2">česta pitanja</Eyebrow>
-      <dl className="flex flex-col gap-7 pt-4">
-        {items.map((item) => (
-          <div key={item.q}>
-            <dt>
-              <Hook as="h3">{item.q}</Hook>
-            </dt>
-            <dd className="mt-2 max-w-[520px]">
-              <BodyMuted>{item.a}</BodyMuted>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  )
-}
-
 // ── Povezane linije ─────────────────────────────────────────────────────────
 
 export function PovezaneLinije({ data }: { data: LinePageData }) {
@@ -376,8 +277,7 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
   const related = data.related.sharedTerminal.filter(
     (r) => r.isNight === data.isNight
   )
-  const byTerminal = (t: string) =>
-    related.filter((r) => r.terminal === t)
+  const byTerminal = (t: string) => related.filter((r) => r.terminal === t)
   const describe = (t: string) => {
     const lines = byTerminal(t)
     if (lines.length === 0) return null
@@ -417,20 +317,11 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
       )}
       <div className="mt-5 flex flex-wrap gap-2.5">
         {chips.map((r) => (
-          <Link
-            key={r.broj}
-            href={`/linije/${r.broj}`}
-            className="border border-zg-blue px-3.5 py-1.5 font-mono text-[16px] leading-5 text-zg-blue transition-colors hover:bg-zg-blue hover:text-white"
-          >
+          <PillLink key={r.broj} href={`/linije/${r.broj}`}>
             {r.mode === "tram" ? "tram" : "bus"} {r.broj}
-          </Link>
+          </PillLink>
         ))}
-        <Link
-          href="/linije"
-          className="border border-zg-blue px-3.5 py-1.5 font-mono text-[16px] leading-5 text-zg-blue transition-colors hover:bg-zg-blue hover:text-white"
-        >
-          sve linije
-        </Link>
+        <PillLink href="/linije">sve linije</PillLink>
       </div>
     </div>
   )
@@ -440,44 +331,25 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
 
 export function PrevNext({ data }: { data: LinePageData }) {
   return (
-    <nav className="flex items-start justify-between">
-      {data.prevBroj ? (
-        <Link href={`/linije/${data.prevBroj}`} className="group flex flex-col gap-0.5">
-          <span className="font-mono text-label text-ink-faint">
-            prethodna linija
-          </span>
-          <span className="font-mono text-[16px] leading-6 text-zg-blue transition-colors group-hover:text-navy">
-            ← {data.prevBroj}
-          </span>
-        </Link>
-      ) : (
-        <span />
-      )}
-      {data.nextBroj && (
-        <Link
-          href={`/linije/${data.nextBroj}`}
-          className="group flex flex-col items-end gap-0.5"
-        >
-          <span className="font-mono text-label text-ink-faint">
-            sljedeća linija
-          </span>
-          <span className="font-mono text-[16px] leading-6 text-zg-blue transition-colors group-hover:text-navy">
-            {data.nextBroj} →
-          </span>
-        </Link>
-      )}
-    </nav>
+    <KitPrevNext
+      prev={
+        data.prevBroj
+          ? {
+              href: `/linije/${data.prevBroj}`,
+              label: "prethodna linija",
+              value: data.prevBroj,
+            }
+          : null
+      }
+      next={
+        data.nextBroj
+          ? {
+              href: `/linije/${data.nextBroj}`,
+              label: "sljedeća linija",
+              value: data.nextBroj,
+            }
+          : null
+      }
+    />
   )
 }
-
-// ── Provenijencija ──────────────────────────────────────────────────────────
-
-export function Provenijencija({ date }: { date: string }) {
-  return (
-    <p className="font-mono text-label text-ink-faint">
-      vozni red iz službenog zet gtfs feeda · osvježava se automatski ·
-      vrijedi za {date}
-    </p>
-  )
-}
-

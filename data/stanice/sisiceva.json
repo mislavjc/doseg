@@ -1,0 +1,77 @@
+{
+  "slug": "sisiceva",
+  "name": "Šišićeva",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.77696,
+  "lon": 16.00104,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "5:06",
+  "lastDeparture": "23:16",
+  "peakIntervalMin": [
+    24,
+    31
+  ],
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Jakuševec, centar",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 27.5,
+      "peakRangeMin": [
+        24,
+        31
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Božidara Magovca 111",
+      "slug": "bozidara-magovca-111"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.99897,
+      45.77552,
+      16.00311,
+      45.7784
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.00238,
+            45.76521
+          ],
+          [
+            16.00111,
+            45.76937
+          ],
+          [
+            16.00104,
+            45.77696
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 27,
+    "stations30": 134,
+    "stations45": 376
+  },
+  "prevSlug": "sisacka-nadv-sjever",
+  "nextSlug": "sjeverna"
+}

@@ -1,0 +1,118 @@
+{
+  "slug": "blagusa-centar",
+  "name": "Blaguša - centar",
+  "kvart": "Sesvete",
+  "lat": 45.92966,
+  "lon": 16.13035,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "270"
+  ],
+  "firstDeparture": "4:30",
+  "lastDeparture": "23:35",
+  "peakIntervalMin": [
+    10,
+    33
+  ],
+  "lines": [
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 44.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Blaguša-kapela",
+      "slug": "blagusa-kapela"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.12828,
+      45.92822,
+      16.13242,
+      45.9311
+    ],
+    "lines": [
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13034,
+            45.92962
+          ],
+          [
+            16.13067,
+            45.92832
+          ],
+          [
+            16.13124,
+            45.92739
+          ],
+          [
+            16.13104,
+            45.92459
+          ],
+          [
+            16.13109,
+            45.92414
+          ],
+          [
+            16.13109,
+            45.92414
+          ],
+          [
+            16.13161,
+            45.92222
+          ],
+          [
+            16.13156,
+            45.9214
+          ],
+          [
+            16.13173,
+            45.92022
+          ],
+          [
+            16.13187,
+            45.91969
+          ],
+          [
+            16.13195,
+            45.91838
+          ],
+          [
+            16.13216,
+            45.91674
+          ],
+          [
+            16.13228,
+            45.91632
+          ],
+          [
+            16.13282,
+            45.91553
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "blagusa-12",
+  "nextSlug": "blagusa-kapela"
+}

@@ -29,9 +29,9 @@ type Polyline = String;
 )]
 pub struct GetLinePatterns;
 
-const DAY_RADNI: usize = 0;
-const DAY_SUBOTA: usize = 1;
-const DAY_NEDJELJA: usize = 2;
+pub(crate) const DAY_RADNI: usize = 0;
+pub(crate) const DAY_SUBOTA: usize = 1;
+pub(crate) const DAY_NEDJELJA: usize = 2;
 
 /// Interchange radius — stops this close count as the same boarding place.
 const NEAR_KM: f64 = 0.15;
@@ -56,7 +56,7 @@ pub enum LineMode {
 }
 
 impl LineMode {
-    fn from_otp(mode: &str) -> Self {
+    pub(crate) fn from_otp(mode: &str) -> Self {
         if mode == "TRAM" {
             LineMode::Tram
         } else {
@@ -224,21 +224,21 @@ pub struct LinePagesIndex {
 // OTP fetch + merge
 // ---------------------------------------------------------------------------
 
-struct MergedStop {
-    name: String,
-    lat: f64,
-    lon: f64,
+pub(crate) struct MergedStop {
+    pub(crate) name: String,
+    pub(crate) lat: f64,
+    pub(crate) lon: f64,
 }
 
-struct MergedPattern {
-    mode: String, // "TRAM" | "BUS" (uppercase, from OTP)
-    broj: String,
-    direction: usize, // 0 or 1 (missing directionId → 0)
-    headsign: Option<String>,
-    stops: Vec<MergedStop>,
-    geometry: Option<String>,
+pub(crate) struct MergedPattern {
+    pub(crate) mode: String, // "TRAM" | "BUS" (uppercase, from OTP)
+    pub(crate) broj: String,
+    pub(crate) direction: usize, // 0 or 1 (missing directionId → 0)
+    pub(crate) headsign: Option<String>,
+    pub(crate) stops: Vec<MergedStop>,
+    pub(crate) geometry: Option<String>,
     /// Per day type: per trip, scheduledDeparture seconds parallel to stops
-    trips: [Vec<Vec<Option<i64>>>; 3],
+    pub(crate) trips: [Vec<Vec<Option<i64>>>; 3],
 }
 
 fn fetch_patterns(otp_url: &str, date: &str) -> Vec<get_line_patterns::GetLinePatternsPatterns> {
@@ -273,14 +273,14 @@ fn total_trips(patterns: &[get_line_patterns::GetLinePatternsPatterns]) -> usize
 
 /// Day-type kinds for representative-date picking.
 #[derive(Clone, Copy)]
-enum DayKind {
+pub(crate) enum DayKind {
     Weekday,
     Saturday,
     Sunday,
 }
 
 /// Feed validity window in epoch days, from OTP's serviceTimeRange.
-fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
+pub(crate) fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
     let mut resp = ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
         .header("Content-Type", "application/json")
         .send_json(serde_json::json!({"query": "{ serviceTimeRange { start end } }"}))
@@ -298,7 +298,7 @@ fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
     (start / 86400, end / 86400)
 }
 
-fn epoch_days_today() -> i64 {
+pub(crate) fn epoch_days_today() -> i64 {
     (std::time::SystemTime::now()
         .duration_since(std::time::SystemTime::UNIX_EPOCH)
         .unwrap()
@@ -306,7 +306,7 @@ fn epoch_days_today() -> i64 {
         / 86400) as i64
 }
 
-fn format_epoch_days(days: i64) -> String {
+pub(crate) fn format_epoch_days(days: i64) -> String {
     let (y, m, d) = crate::days_to_ymd(days);
     format!("{:04}-{:02}-{:02}", y, m, d)
 }
@@ -334,7 +334,7 @@ fn candidate_dates(kind: DayKind, today: i64, last_day: i64) -> Vec<String> {
 /// Fetch a day type from candidate dates inside the feed window. Probes until a
 /// date with service is found, then one more candidate and keeps the busier
 /// one (a public holiday on the first pick would undercount).
-fn pick_date_and_fetch(
+pub(crate) fn pick_date_and_fetch(
     otp_url: &str,
     kind: DayKind,
     label: &str,
@@ -371,7 +371,7 @@ fn pick_date_and_fetch(
 }
 
 /// Merge the three per-date fetches into one pattern map keyed by OTP code.
-fn merge_patterns(
+pub(crate) fn merge_patterns(
     fetches: [Vec<get_line_patterns::GetLinePatternsPatterns>; 3],
 ) -> indexmap::IndexMap<String, MergedPattern> {
     let mut merged: indexmap::IndexMap<String, MergedPattern> = indexmap::IndexMap::new();
@@ -506,7 +506,7 @@ fn simplify_shape(points: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
     }
 }
 
-fn round5(v: f64) -> f64 {
+pub(crate) fn round5(v: f64) -> f64 {
     (v * 1e5).round() / 1e5
 }
 
@@ -579,16 +579,18 @@ impl StopGrid {
 // Per-line assembly
 // ---------------------------------------------------------------------------
 
-struct LineBuild {
-    broj: String,
-    mode: String,
-    is_night: bool,
+pub(crate) struct LineBuild {
+    pub(crate) broj: String,
+    pub(crate) mode: String,
+    pub(crate) is_night: bool,
     /// Dominant pattern (index into merged values) per direction, direction 0 first.
-    dominant: Vec<usize>,
+    pub(crate) dominant: Vec<usize>,
+    /// Every pattern of this line (all variants, both directions).
+    pub(crate) pattern_idxs: Vec<usize>,
 }
 
 /// Night line = departures concentrated between 23:00 and 04:00.
-fn line_is_night(patterns: &[&MergedPattern], pattern_idxs: &[usize]) -> bool {
+pub(crate) fn line_is_night(patterns: &[&MergedPattern], pattern_idxs: &[usize]) -> bool {
     let mut night = 0u32;
     let mut day = 0u32;
     for &pi in pattern_idxs {
@@ -608,8 +610,89 @@ fn line_is_night(patterns: &[&MergedPattern], pattern_idxs: &[usize]) -> bool {
     night > day
 }
 
+/// Fetch the three representative service dates and merge them into one pattern
+/// map. The date probe is clamped INTO the feed window (keeping a ≥7-day tail) so
+/// a lapsed feed degrades to its last valid week instead of returning nothing.
+pub(crate) fn fetch_and_merge(
+    otp_url: &str,
+) -> (ServiceDates, indexmap::IndexMap<String, MergedPattern>) {
+    let (first_day, last_day) = fetch_service_range_days(otp_url);
+    let today = epoch_days_today()
+        .min(last_day.saturating_sub(7))
+        .max(first_day);
+    eprintln!(
+        "  feed window: {} – {} (probing from {})",
+        format_epoch_days(first_day),
+        format_epoch_days(last_day),
+        format_epoch_days(today),
+    );
+    let (date_radni, p_radni) =
+        pick_date_and_fetch(otp_url, DayKind::Weekday, "radni dan", today, last_day);
+    let (date_sub, p_sub) =
+        pick_date_and_fetch(otp_url, DayKind::Saturday, "subota", today, last_day);
+    let (date_ned, p_ned) =
+        pick_date_and_fetch(otp_url, DayKind::Sunday, "nedjelja", today, last_day);
+    let merged = merge_patterns([p_radni, p_sub, p_ned]);
+    eprintln!("  {} tram/bus patterns merged", merged.len());
+    (
+        ServiceDates {
+            radni_dan: date_radni,
+            subota: date_sub,
+            nedjelja: date_ned,
+        },
+        merged,
+    )
+}
+
+/// Group patterns by line and pick the dominant (busiest) pattern per direction,
+/// numerically sorted. Shared by the line- and stop-page generators so both agree
+/// on each line's canonical directions and night classification.
+pub(crate) fn dominant_lines(patterns: &[&MergedPattern]) -> Vec<LineBuild> {
+    let mut by_line: indexmap::IndexMap<(String, String), Vec<usize>> = indexmap::IndexMap::new();
+    for (pi, p) in patterns.iter().enumerate() {
+        by_line
+            .entry((p.mode.clone(), p.broj.clone()))
+            .or_default()
+            .push(pi);
+    }
+
+    let mut lines: Vec<LineBuild> = Vec::new();
+    for ((mode, broj), pattern_idxs) in &by_line {
+        let mut dominant: Vec<usize> = Vec::new();
+        for direction in 0..2 {
+            let best = pattern_idxs
+                .iter()
+                .copied()
+                .filter(|&pi| patterns[pi].direction == direction)
+                .max_by_key(|&pi| {
+                    let p = patterns[pi];
+                    (
+                        p.trips[DAY_RADNI].len(),
+                        p.trips.iter().map(|t| t.len()).sum::<usize>(),
+                        p.stops.len(),
+                    )
+                });
+            if let Some(pi) = best {
+                dominant.push(pi);
+            }
+        }
+        if dominant.is_empty() {
+            continue;
+        }
+        lines.push(LineBuild {
+            broj: broj.clone(),
+            mode: mode.clone(),
+            is_night: line_is_night(patterns, pattern_idxs),
+            dominant,
+            pattern_idxs: pattern_idxs.clone(),
+        });
+    }
+    lines.sort_by_cached_key(|l| numeric_sort_key(&l.broj));
+    lines
+}
+
 /// Median cumulative stoptime offsets (seconds) from the terminal, per stop.
-fn stop_offsets_sec(pattern: &MergedPattern) -> Vec<f64> {
+pub(crate) fn stop_offsets_sec(pattern: &MergedPattern) -> Vec<f64> {
     let n = pattern.stops.len();
     let mut offsets = vec![0.0f64; n];
     // Prefer weekday trips; fall back to whichever day has service.
@@ -641,7 +724,7 @@ fn stop_offsets_sec(pattern: &MergedPattern) -> Vec<f64> {
 
 /// Terminal departures (seconds) for one (route, direction, day type), pooling
 /// every pattern variant that departs from the dominant terminal cluster.
-fn direction_departures(
+pub(crate) fn direction_departures(
     patterns: &[&MergedPattern],
     dominant_first: (f64, f64),
     direction: usize,
@@ -681,7 +764,7 @@ fn hour_rows(departures: &[i64]) -> Vec<HourRow> {
     rows
 }
 
-fn numeric_sort_key(broj: &str) -> (u32, String) {
+pub(crate) fn numeric_sort_key(broj: &str) -> (u32, String) {
     (broj.parse::<u32>().unwrap_or(u32::MAX), broj.to_string())
 }
 
@@ -728,64 +811,10 @@ pub fn generate(
     data_dir: &Path,
 ) {
     eprintln!("Fetching line patterns from OTP ({})...", otp_url);
-    let (first_day, last_day) = fetch_service_range_days(otp_url);
-    let today = epoch_days_today().max(first_day);
-    eprintln!(
-        "  feed window: {} – {}",
-        format_epoch_days(first_day),
-        format_epoch_days(last_day)
-    );
-    let (date_radni, p_radni) =
-        pick_date_and_fetch(otp_url, DayKind::Weekday, "radni dan", today, last_day);
-    let (date_sub, p_sub) =
-        pick_date_and_fetch(otp_url, DayKind::Saturday, "subota", today, last_day);
-    let (date_ned, p_ned) =
-        pick_date_and_fetch(otp_url, DayKind::Sunday, "nedjelja", today, last_day);
-
-    let merged = merge_patterns([p_radni, p_sub, p_ned]);
+    let (service_dates, merged) = fetch_and_merge(otp_url);
     let patterns: Vec<&MergedPattern> = merged.values().collect();
-    eprintln!("  {} tram/bus patterns merged", patterns.len());
 
-    // Group pattern indices by line, pick the dominant pattern per direction.
-    let mut by_line: indexmap::IndexMap<(String, String), Vec<usize>> = indexmap::IndexMap::new();
-    for (pi, p) in patterns.iter().enumerate() {
-        by_line
-            .entry((p.mode.clone(), p.broj.clone()))
-            .or_default()
-            .push(pi);
-    }
-
-    let mut lines: Vec<LineBuild> = Vec::new();
-    for ((mode, broj), pattern_idxs) in &by_line {
-        let mut dominant: Vec<usize> = Vec::new();
-        for direction in 0..2 {
-            let best = pattern_idxs
-                .iter()
-                .copied()
-                .filter(|&pi| patterns[pi].direction == direction)
-                .max_by_key(|&pi| {
-                    let p = patterns[pi];
-                    (
-                        p.trips[DAY_RADNI].len(),
-                        p.trips.iter().map(|t| t.len()).sum::<usize>(),
-                        p.stops.len(),
-                    )
-                });
-            if let Some(pi) = best {
-                dominant.push(pi);
-            }
-        }
-        if dominant.is_empty() {
-            continue;
-        }
-        lines.push(LineBuild {
-            broj: broj.clone(),
-            mode: mode.clone(),
-            is_night: line_is_night(&patterns, pattern_idxs),
-            dominant,
-        });
-    }
-    lines.sort_by_cached_key(|l| numeric_sort_key(&l.broj));
+    let lines = dominant_lines(&patterns);
     eprintln!("  {} lines", lines.len());
 
     // Global stop index across dominant patterns (for interchange/via/related).
@@ -818,10 +847,8 @@ pub fn generate(
         let prev_broj = li.checked_sub(1).map(|i| lines[i].broj.clone());
         let next_broj = lines.get(li + 1).map(|l| l.broj.clone());
 
-        let line_patterns: Vec<&MergedPattern> = by_line[&(line.mode.clone(), line.broj.clone())]
-            .iter()
-            .map(|&pi| patterns[pi])
-            .collect();
+        let line_patterns: Vec<&MergedPattern> =
+            line.pattern_idxs.iter().map(|&pi| patterns[pi]).collect();
 
         // Directions from dominant patterns
         let mut directions: Vec<LineDirection> = Vec::new();
@@ -1123,11 +1150,7 @@ pub fn generate(
     if line_filter.is_none() {
         let index = LinePagesIndex {
             generated_at: crate::chrono_now_iso(),
-            service_dates: ServiceDates {
-                radni_dan: date_radni,
-                subota: date_sub,
-                nedjelja: date_ned,
-            },
+            service_dates,
             lines: index_entries,
         };
         let json = serde_json::to_string_pretty(&index).expect("JSON serialization failed");

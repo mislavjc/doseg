@@ -1,0 +1,109 @@
+{
+  "slug": "sajam-jakusevec",
+  "name": "Sajam Jakuševec",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.77273,
+  "lon": 16.01841,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "4:55",
+  "lastDeparture": "23:05",
+  "peakIntervalMin": [
+    23,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Šišićeva",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        23,
+        30
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zapruđe",
+      "slug": "zaprude-novi-zagreb-istok"
+    },
+    {
+      "name": "Tišinska",
+      "slug": "tisinska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.01634,
+      45.77129,
+      16.02047,
+      45.77417
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.00317,
+            45.78169
+          ],
+          [
+            16.01841,
+            45.77273
+          ],
+          [
+            16.02179,
+            45.76936
+          ],
+          [
+            16.01782,
+            45.76358
+          ],
+          [
+            16.01538,
+            45.7605
+          ],
+          [
+            16.01085,
+            45.76087
+          ],
+          [
+            16.00888,
+            45.76086
+          ],
+          [
+            16.00238,
+            45.76521
+          ],
+          [
+            16.00111,
+            45.76937
+          ],
+          [
+            16.00104,
+            45.77696
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 5,
+    "stations30": 31,
+    "stations45": 131
+  },
+  "prevSlug": "safrani",
+  "nextSlug": "samoborska"
+}

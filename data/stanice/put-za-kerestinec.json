@@ -1,0 +1,118 @@
+{
+  "slug": "put-za-kerestinec",
+  "name": "Put za Kerestinec",
+  "kvart": null,
+  "lat": 45.75114,
+  "lon": 15.80855,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "164"
+  ],
+  "firstDeparture": "4:43",
+  "lastDeparture": "0:18",
+  "peakIntervalMin": [
+    12,
+    28
+  ],
+  "lines": [
+    {
+      "broj": "164",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 56.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Gornjostupnička",
+      "slug": "gornjostupnicka"
+    },
+    {
+      "name": "Horvati I",
+      "slug": "horvati-i"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.80649,
+      45.7497,
+      15.81062,
+      45.75258
+    ],
+    "lines": [
+      {
+        "broj": "164",
+        "mode": "bus",
+        "shape": [
+          [
+            15.79837,
+            45.73895
+          ],
+          [
+            15.7996,
+            45.73996
+          ],
+          [
+            15.80139,
+            45.7422
+          ],
+          [
+            15.80584,
+            45.74788
+          ],
+          [
+            15.8088,
+            45.75136
+          ],
+          [
+            15.8088,
+            45.75137
+          ],
+          [
+            15.80954,
+            45.75228
+          ],
+          [
+            15.81015,
+            45.75262
+          ],
+          [
+            15.81129,
+            45.75289
+          ],
+          [
+            15.81477,
+            45.75361
+          ],
+          [
+            15.81764,
+            45.75398
+          ],
+          [
+            15.82351,
+            45.75485
+          ],
+          [
+            15.82723,
+            45.75527
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 9,
+    "stations45": 30
+  },
+  "prevSlug": "put-za-kasinu",
+  "nextSlug": "put-za-leskovac"
+}

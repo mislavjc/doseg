@@ -1,0 +1,132 @@
+{
+  "slug": "grancarska-22",
+  "name": "Grančarska 22",
+  "kvart": "Brezovica",
+  "lat": 45.70401,
+  "lon": 15.89372,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:40",
+  "lastDeparture": "0:25",
+  "peakIntervalMin": [
+    7,
+    24
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Hudobička 36",
+      "slug": "hudobicka-36"
+    },
+    {
+      "name": "Šolići",
+      "slug": "solici"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.89166,
+      45.70257,
+      15.89579,
+      45.70545
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.88523,
+            45.69147
+          ],
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 10,
+    "stations45": 39
+  },
+  "prevSlug": "grana",
+  "nextSlug": "granesina-groblje"
+}

@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { cache } from "react"
@@ -14,6 +13,7 @@ import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 import { fastDistKm, pointInRing, type Ring } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
 import { loadLineIndex, type LineHeroMeta } from "@/lib/line-data"
+import { readJsonCached } from "@/lib/page-data"
 
 /**
  * Assembles the per-kvart (district) scorecard view model from data that is
@@ -25,24 +25,6 @@ import { loadLineIndex, type LineHeroMeta } from "@/lib/line-data"
  */
 
 export { kvartSlug }
-
-/**
- * Read + parse JSON once per build process — SSG renders all 17 kvart pages in
- * the same process, so without this districts.geojson alone is parsed 17×.
- * Mirrors lib/line-data's jsonCache.
- */
-const jsonCache = new Map<string, unknown>()
-function readJson<T>(path: string): T | null {
-  const cached = jsonCache.get(path)
-  if (cached !== undefined && process.env.NODE_ENV === "production") return cached as T
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf-8")) as T
-    jsonCache.set(path, parsed)
-    return parsed
-  } catch {
-    return null
-  }
-}
 
 export interface KvartIndexEntry {
   slug: string
@@ -130,7 +112,7 @@ interface GeoFeature {
   geometry: { type: string; coordinates: Ring[] }
 }
 function loadGeo(): GeoFeature[] {
-  return readJson<{ features: GeoFeature[] }>(
+  return readJsonCached<{ features: GeoFeature[] }>(
     join(process.cwd(), "data/districts.geojson")
   )?.features ?? []
 }
@@ -142,7 +124,7 @@ interface Poi {
   category: string
 }
 function loadPois(): Poi[] {
-  return readJson<{ pois: Poi[] }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
+  return readJsonCached<{ pois: Poi[] }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
 }
 
 interface PromjenaEntry {
@@ -155,7 +137,7 @@ interface PromjenaEntry {
 }
 function loadPromjene(): PromjenaEntry[] {
   return (
-    readJson<{ entries: PromjenaEntry[] }>(
+    readJsonCached<{ entries: PromjenaEntry[] }>(
       join(getDataDir(), "promjene", "entries.json")
     )?.entries ?? []
   )
@@ -164,7 +146,7 @@ function loadPromjene(): PromjenaEntry[] {
 /** Per-kvart baked dither hero crops (data/kvart/hero-meta.json from the bake). */
 function loadHeroMeta(slug: string): LineHeroMeta | null {
   return (
-    readJson<Record<string, LineHeroMeta>>(
+    readJsonCached<Record<string, LineHeroMeta>>(
       join(getDataDir(), "kvart", "hero-meta.json")
     )?.[slug] ?? null
   )

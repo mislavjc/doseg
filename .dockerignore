@@ -15,6 +15,7 @@ data/*
 !data/districts.geojson
 !data/promjene
 !data/kvart
+!data/stanice
 .DS_Store
 *.pem
 .env*.local

@@ -26,7 +26,7 @@ const NewTab = () => <span className="sr-only"> (otvara se u novoj kartici)</spa
 const Sep = () => <span style={{ fontFamily: MONO, fontSize: 12, color: "#9AA1A9" }}>·</span>
 
 // Shared scaffolding for the compact NoticeRow / ObituaryRow (StopRow differs).
-const ROW_BASE: CSSProperties = { width: "100%", maxWidth: 620, boxSizing: "border-box", display: "flex", gap: 16, alignItems: "baseline", paddingBlock: 14, borderTop: `1px solid ${HAIR}` }
+const ROW_BASE: CSSProperties = { width: "100%", maxWidth: 556, boxSizing: "border-box", display: "flex", gap: 16, alignItems: "baseline", paddingBlock: 14, borderTop: `1px solid ${HAIR}` }
 const ROW_META: CSSProperties = { flexShrink: 0, display: "flex", gap: 16, alignItems: "baseline" }
 
 function SourceLink({ source }: { source: Source }) {
@@ -91,7 +91,7 @@ function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
   // distance, so mark the length as an estimate rather than stating it as fact.
   if (approx) rows[0][0] += " (procjena)"
   return (
-    <div style={{ width: "100%", maxWidth: 620, display: "flex", flexDirection: "column", paddingTop: 24 }}>
+    <div style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", paddingTop: 24 }}>
       {rows.map(([label, a, b], i) => (
         <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 12, paddingBlock: 9 }}>
           <span style={{ flexShrink: 0, fontFamily: HEROS, fontSize: 16, lineHeight: "22px", color: MUTE }}>{label}</span>
@@ -108,7 +108,7 @@ function LineMap({ geom, stat, label, title }: { geom: Geom; stat: Stat; label?:
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
       {label && (
-        <div style={{ width: "100%", maxWidth: 620, paddingTop: 30 }}>
+        <div style={{ width: "100%", maxWidth: 556, paddingTop: 30 }}>
           <span style={{ fontFamily: MONO, fontSize: 12, color: stat.mode === "removed" ? OLD : BLUE }}>{label}</span>
         </div>
       )}
@@ -116,7 +116,7 @@ function LineMap({ geom, stat, label, title }: { geom: Geom; stat: Stat; label?:
         <LazyDiffMap oldShape={geom.old.shape} newShape={geom.new.shape} shared={geom.shared} newTip={geom.newTip} oldTip={geom.oldTip} allStops={geom.newStops} added={geom.addedStops} removed={geom.removedStops} mode={geom.mode} change={geom.change} stopConnected={geom.stopConnected} label={aria} />
       </div>
       {geom.stopConnected && (
-        <div style={{ width: "100%", maxWidth: 620, paddingTop: 10 }}>
+        <div style={{ width: "100%", maxWidth: 556, paddingTop: 10 }}>
           <span style={{ fontFamily: MONO, fontSize: 12, color: FAINT }}>trasa spojena kroz stajališta · približan prikaz, ne i stvarna trasa</span>
         </div>
       )}
@@ -131,7 +131,7 @@ function FeaturedCard({ f, legend }: { f: FeaturedItem; legend?: ReactNode }) {
   const { removed } = f
   return (
     <section style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", paddingTop: 72 }}>
-      <div style={{ width: "100%", maxWidth: 620, display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", gap: 14 }}>
         <span style={{ fontFamily: MONO, fontSize: 12, color: removed ? OLD : BLUE }}>{dateLabel(f.date, f.approxDate)} · {f.mode.toLowerCase()} {f.lines.join(", ")}</span>
         <h3 style={{ margin: 0, display: "flex", gap: 8, alignItems: "baseline", fontFamily: HEROS, fontWeight: 700, fontSize: 16, lineHeight: "22px", color: removed ? OLD : INK }}>
           {removed && <IconCircleBanSign size={18} color={OLD} style={{ flexShrink: 0, position: "relative", top: 3 }} />}
@@ -229,7 +229,7 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
   const headBase: CSSProperties = { width: "100%", boxSizing: "border-box", display: "flex", gap: 8, alignItems: "center", paddingBlock: 14, borderTop: `1px solid ${HAIR}`, color: MUTE }
   const label = <span style={{ fontFamily: MONO, fontSize: 12, color: MUTE }}>izmještena stajališta ({items.length})</span>
   return (
-    <div style={{ width: "100%", maxWidth: 620 }}>
+    <div style={{ width: "100%", maxWidth: 556 }}>
       {forceOpen ? (
         // Force-open (search active or 'stajališta' segment): a static label, not a
         // dead button with a clickable chevron that can't change state.
@@ -256,7 +256,7 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
 function YearHeader({ year, tally }: { year: string; tally: { category: string; count: number }[] }) {
   const tokens = [...tally].sort((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
   return (
-    <div style={{ width: "100%", maxWidth: 620, paddingTop: 56, paddingBottom: 10, display: "flex", flexDirection: "column", gap: 8 }}>
+    <div style={{ width: "100%", maxWidth: 556, paddingTop: 56, paddingBottom: 10, display: "flex", flexDirection: "column", gap: 8 }}>
       <h2 style={{ margin: 0, fontFamily: MONO, fontWeight: 400, fontSize: 16, color: INK }}>{year}.</h2>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8 }}>
         {tokens.map((t, i) => {
@@ -284,7 +284,7 @@ type Seg = (typeof SEGMENTS)[number]["id"]
 function Finder({ q, setQ, seg, setSeg, counts, resultLabel }: { q: string; setQ: (v: string) => void; seg: Seg; setSeg: (v: Seg) => void; counts: { total: number; line: number; stop: number }; resultLabel: string }) {
   const n: Record<Seg, number> = { sve: counts.total, linije: counts.line, stajalište: counts.stop }
   return (
-    <div style={{ width: "100%", maxWidth: 620, paddingTop: 52, display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ width: "100%", maxWidth: 556, paddingTop: 52, display: "flex", flexDirection: "column", gap: 12 }}>
       <div className="pr-search" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${HAIR}`, padding: "11px 14px", background: "#fff" }}>
         <svg width={15} height={15} viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0, color: FAINT }}>
           <circle cx={11} cy={11} r={7} stroke="currentColor" strokeWidth={2} />
@@ -369,7 +369,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
     <>
       <Finder q={q} setQ={setQ} seg={seg} setSeg={setSeg} counts={segCounts} resultLabel={resultLabel} />
       {sections.length === 0 ? (
-        <div role="status" style={{ width: "100%", maxWidth: 620, paddingTop: 56, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div role="status" style={{ width: "100%", maxWidth: 556, paddingTop: 56, display: "flex", flexDirection: "column", gap: 8 }}>
           <span style={{ fontFamily: HEROS, fontSize: 16, color: MUTE }}>Nema promjena koje odgovaraju pretrazi.</span>
           {seg === "linije" && qStop > 0 && (
             <button type="button" onClick={() => setSeg("stajalište")} style={{ alignSelf: "flex-start", border: "none", background: "none", padding: 0, cursor: "pointer", fontFamily: MONO, fontSize: 12, color: BLUE }}>

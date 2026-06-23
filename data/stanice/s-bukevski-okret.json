@@ -1,0 +1,98 @@
+{
+  "slug": "s-bukevski-okret",
+  "name": "S. Bukevski, okret.",
+  "kvart": null,
+  "lat": 45.74514,
+  "lon": 16.16296,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "307"
+  ],
+  "firstDeparture": "4:20",
+  "lastDeparture": "23:51",
+  "peakIntervalMin": [
+    28,
+    72
+  ],
+  "lines": [
+    {
+      "broj": "307",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Zapruđe",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 100.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 106.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Strmec Bukevski",
+      "slug": "strmec-bukevski"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.16089,
+      45.7437,
+      16.16502,
+      45.74658
+    ],
+    "lines": [
+      {
+        "broj": "307",
+        "mode": "bus",
+        "shape": [
+          [
+            16.16294,
+            45.74514
+          ],
+          [
+            16.16139,
+            45.74634
+          ],
+          [
+            16.15646,
+            45.75036
+          ],
+          [
+            16.15645,
+            45.75036
+          ],
+          [
+            16.15645,
+            45.75037
+          ],
+          [
+            16.15312,
+            45.74968
+          ],
+          [
+            16.14989,
+            45.74842
+          ],
+          [
+            16.14762,
+            45.7477
+          ],
+          [
+            16.14272,
+            45.74641
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
+  },
+  "prevSlug": "rusiscak",
+  "nextSlug": "safrani"
+}

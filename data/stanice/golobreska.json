@@ -1,0 +1,119 @@
+{
+  "slug": "golobreska",
+  "name": "Golobreška",
+  "kvart": "Brezovica",
+  "lat": 45.7279,
+  "lon": 15.91085,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:46",
+  "lastDeparture": "0:21",
+  "peakIntervalMin": [
+    4,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Brez.- pod kestenima",
+      "slug": "brez-pod-kestenima"
+    },
+    {
+      "name": "Brezovička-ambulanta",
+      "slug": "brezovicka-ambulanta"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.90879,
+      45.72645,
+      15.91292,
+      45.72934
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 8,
+    "stations30": 15,
+    "stations45": 45
+  },
+  "prevSlug": "goljak",
+  "nextSlug": "golobreska-1-odvojak"
+}

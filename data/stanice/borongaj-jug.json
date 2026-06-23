@@ -1,0 +1,235 @@
+{
+  "slug": "borongaj-jug",
+  "name": "Borongaj - jug",
+  "kvart": "Maksimir",
+  "lat": 45.81363,
+  "lon": 16.02067,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "231",
+    "269"
+  ],
+  "firstDeparture": "4:50",
+  "lastDeparture": "23:41",
+  "peakIntervalMin": [
+    10,
+    12
+  ],
+  "lines": [
+    {
+      "broj": "231",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.9
+    },
+    {
+      "broj": "269",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ses.Kraljev.",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 13.1,
+      "peakRangeMin": [
+        12,
+        12
+      ],
+      "allDayHeadwayMin": 16.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Borongaj",
+      "slug": "borongaj"
+    },
+    {
+      "name": "Maksimirska naselja",
+      "slug": "maksimirska-naselja"
+    },
+    {
+      "name": "I.Štefanov.zavoj",
+      "slug": "i-stefanov-zavoj"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.0186,
+      45.81219,
+      16.02273,
+      45.81507
+    ],
+    "lines": [
+      {
+        "broj": "231",
+        "mode": "bus",
+        "shape": [
+          [
+            16.01836,
+            45.8147
+          ],
+          [
+            16.01763,
+            45.81457
+          ],
+          [
+            16.01735,
+            45.81443
+          ],
+          [
+            16.01742,
+            45.81416
+          ],
+          [
+            16.01938,
+            45.81334
+          ],
+          [
+            16.02065,
+            45.81365
+          ],
+          [
+            16.02123,
+            45.81379
+          ],
+          [
+            16.02426,
+            45.81434
+          ],
+          [
+            16.02603,
+            45.81462
+          ],
+          [
+            16.02717,
+            45.81483
+          ],
+          [
+            16.02744,
+            45.81479
+          ],
+          [
+            16.02744,
+            45.81479
+          ],
+          [
+            16.02755,
+            45.81487
+          ],
+          [
+            16.02835,
+            45.81501
+          ],
+          [
+            16.03358,
+            45.81603
+          ],
+          [
+            16.03371,
+            45.816
+          ],
+          [
+            16.03372,
+            45.816
+          ],
+          [
+            16.0338,
+            45.81606
+          ],
+          [
+            16.03504,
+            45.81632
+          ],
+          [
+            16.03661,
+            45.81679
+          ],
+          [
+            16.03686,
+            45.81685
+          ],
+          [
+            16.03842,
+            45.81711
+          ],
+          [
+            16.03988,
+            45.81734
+          ]
+        ]
+      },
+      {
+        "broj": "269",
+        "mode": "bus",
+        "shape": [
+          [
+            16.01836,
+            45.8147
+          ],
+          [
+            16.01759,
+            45.81457
+          ],
+          [
+            16.01732,
+            45.81439
+          ],
+          [
+            16.0174,
+            45.81416
+          ],
+          [
+            16.01933,
+            45.81336
+          ],
+          [
+            16.02065,
+            45.81365
+          ],
+          [
+            16.02106,
+            45.81375
+          ],
+          [
+            16.02361,
+            45.81422
+          ],
+          [
+            16.03347,
+            45.81599
+          ],
+          [
+            16.03483,
+            45.81629
+          ],
+          [
+            16.03679,
+            45.81684
+          ],
+          [
+            16.03872,
+            45.81717
+          ],
+          [
+            16.04042,
+            45.81744
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 22,
+    "stations30": 186,
+    "stations45": 515
+  },
+  "prevSlug": "borongaj",
+  "nextSlug": "borongajska-kampus"
+}

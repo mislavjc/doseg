@@ -1,3 +1,4 @@
+import { Breadcrumb } from "./blocks"
 import { Body, Hook, PageTitle, Section } from "./primitives"
 import { SectionNav } from "./section-nav"
 
@@ -24,7 +25,8 @@ export function Intro({
 }) {
   return (
     <Section>
-      <PageTitle>Statistika dostupnosti zagrebačkog prijevoza</PageTitle>
+      <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "statistika" }]} />
+      <PageTitle className="mt-4">Statistika dostupnosti zagrebačkog prijevoza</PageTitle>
       <Body className="mt-4.5">
         Koliko je grada dostupno iz vašeg kvarta u {maxMinutes} minuta javnim
         prijevozom? Doseg mjeri stvarni doseg svakog od {districtCount} zagrebačkih

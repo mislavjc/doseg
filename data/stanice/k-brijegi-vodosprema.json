@@ -1,0 +1,89 @@
+{
+  "slug": "k-brijegi-vodosprema",
+  "name": "K.Brijegi-Vodosprema",
+  "kvart": "Brezovica",
+  "lat": 45.65656,
+  "lon": 15.87102,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:32",
+  "lastDeparture": "0:35",
+  "peakIntervalMin": [
+    13,
+    34
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Kral.Brijegi-Starjak",
+      "slug": "kral-brijegi-starjak"
+    },
+    {
+      "name": "Štrpet",
+      "slug": "strpet"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.86896,
+      45.65512,
+      15.87309,
+      45.658
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85706,
+            45.66681
+          ],
+          [
+            15.85979,
+            45.66402
+          ],
+          [
+            15.87112,
+            45.65648
+          ],
+          [
+            15.8714,
+            45.6602
+          ],
+          [
+            15.87116,
+            45.66445
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "k-brijegi-vi-odvojak",
+  "nextSlug": "k-hrusevec-okret"
+}

@@ -1,0 +1,110 @@
+{
+  "slug": "gradek",
+  "name": "Gradek",
+  "kvart": null,
+  "lat": 45.75855,
+  "lon": 15.86206,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "164"
+  ],
+  "firstDeparture": "4:48",
+  "lastDeparture": "0:23",
+  "peakIntervalMin": [
+    14,
+    31
+  ],
+  "lines": [
+    {
+      "broj": "164",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 56.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Ježdovečka",
+      "slug": "jezdovecka"
+    },
+    {
+      "name": "Domovićeva",
+      "slug": "domoviceva"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.86,
+      45.7571,
+      15.86413,
+      45.75999
+    ],
+    "lines": [
+      {
+        "broj": "164",
+        "mode": "bus",
+        "shape": [
+          [
+            15.84601,
+            45.7565
+          ],
+          [
+            15.85253,
+            45.75732
+          ],
+          [
+            15.85253,
+            45.75732
+          ],
+          [
+            15.86117,
+            45.75841
+          ],
+          [
+            15.86186,
+            45.75848
+          ],
+          [
+            15.86187,
+            45.75848
+          ],
+          [
+            15.86324,
+            45.75867
+          ],
+          [
+            15.87383,
+            45.76048
+          ],
+          [
+            15.87383,
+            45.76049
+          ],
+          [
+            15.87829,
+            45.76129
+          ],
+          [
+            15.88049,
+            45.7616
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 6,
+    "stations45": 27
+  },
+  "prevSlug": "grad-mladih",
+  "nextSlug": "gradevinska-skola"
+}

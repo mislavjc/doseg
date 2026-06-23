@@ -1,0 +1,93 @@
+{
+  "slug": "kup-kraljevec-skola",
+  "name": "Kup.Kraljevec-škola",
+  "kvart": "Brezovica",
+  "lat": 45.67207,
+  "lon": 15.87293,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:35",
+  "lastDeparture": "0:32",
+  "peakIntervalMin": [
+    18,
+    29
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "K.Brijegi-VI odvojak",
+      "slug": "k-brijegi-vi-odvojak"
+    },
+    {
+      "name": "Kralj.Brijegi-Lojeni",
+      "slug": "kralj-brijegi-lojeni"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.87087,
+      45.67062,
+      15.87499,
+      45.67351
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.8714,
+            45.6602
+          ],
+          [
+            15.87116,
+            45.66445
+          ],
+          [
+            15.87311,
+            45.6722
+          ],
+          [
+            15.87424,
+            45.67583
+          ],
+          [
+            15.87619,
+            45.6796
+          ],
+          [
+            15.88014,
+            45.68441
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "kuniscak",
+  "nextSlug": "kupljenovo-centar"
+}

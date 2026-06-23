@@ -1,0 +1,90 @@
+{
+  "slug": "potocko",
+  "name": "Potočko",
+  "kvart": "Brezovica",
+  "lat": 45.68762,
+  "lon": 15.8523,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "23:46",
+  "peakIntervalMin": [
+    31,
+    59
+  ],
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Harabajsi",
+      "slug": "harabajsi"
+    },
+    {
+      "name": "Matički",
+      "slug": "maticki"
+    },
+    {
+      "name": "Milače",
+      "slug": "milace"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.85024,
+      45.68618,
+      15.85437,
+      45.68906
+    ],
+    "lines": [
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.83986,
+            45.6789
+          ],
+          [
+            15.8458,
+            45.68284
+          ],
+          [
+            15.85234,
+            45.68727
+          ],
+          [
+            15.85729,
+            45.68466
+          ],
+          [
+            15.861,
+            45.68213
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "potocani",
+  "nextSlug": "pr-b-filipovica"
+}

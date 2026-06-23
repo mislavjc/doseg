@@ -1,0 +1,124 @@
+{
+  "slug": "hudobicka-36",
+  "name": "Hudobička 36",
+  "kvart": "Brezovica",
+  "lat": 45.70731,
+  "lon": 15.89366,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "0:25",
+  "peakIntervalMin": [
+    7,
+    24
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Hudobička 1",
+      "slug": "hudobicka-1"
+    },
+    {
+      "name": "Grančarska 22",
+      "slug": "grancarska-22"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.89159,
+      45.70587,
+      15.89572,
+      45.70875
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89162,
+            45.69787
+          ],
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 5,
+    "stations30": 12,
+    "stations45": 41
+  },
+  "prevSlug": "hudobicka-1",
+  "nextSlug": "hudobicka-i-odvojak"
+}

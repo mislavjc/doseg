@@ -1,0 +1,75 @@
+{
+  "slug": "pavlici",
+  "name": "Pavlići",
+  "kvart": "Brezovica",
+  "lat": 45.67491,
+  "lon": 15.82356,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "4:36",
+  "lastDeparture": "23:41",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Ašpergeri",
+      "slug": "aspergeri"
+    },
+    {
+      "name": "Gajani",
+      "slug": "gajani"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.8215,
+      45.67347,
+      15.82562,
+      45.67635
+    ],
+    "lines": [
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.82356,
+            45.67491
+          ],
+          [
+            15.82297,
+            45.67065
+          ],
+          [
+            15.83986,
+            45.6789
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "paunovac",
+  "nextSlug": "pavlinoviceva"
+}

@@ -1,0 +1,146 @@
+{
+  "slug": "grgati-8",
+  "name": "Grgati 8",
+  "kvart": "Sesvete",
+  "lat": 45.89012,
+  "lon": 16.19314,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "273"
+  ],
+  "firstDeparture": "4:36",
+  "lastDeparture": "23:36",
+  "peakIntervalMin": [
+    14,
+    28
+  ],
+  "lines": [
+    {
+      "broj": "273",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 55.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 54.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Lužan",
+      "slug": "luzan"
+    },
+    {
+      "name": "Lužan-Zeleni vijenac",
+      "slug": "luzan-zeleni-vijenac"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.19107,
+      45.88868,
+      16.19521,
+      45.89156
+    ],
+    "lines": [
+      {
+        "broj": "273",
+        "mode": "bus",
+        "shape": [
+          [
+            16.19636,
+            45.88573
+          ],
+          [
+            16.19579,
+            45.88691
+          ],
+          [
+            16.19537,
+            45.88838
+          ],
+          [
+            16.19542,
+            45.88873
+          ],
+          [
+            16.19577,
+            45.88936
+          ],
+          [
+            16.19547,
+            45.89011
+          ],
+          [
+            16.19534,
+            45.89047
+          ],
+          [
+            16.19457,
+            45.89055
+          ],
+          [
+            16.19349,
+            45.89019
+          ],
+          [
+            16.19314,
+            45.89014
+          ],
+          [
+            16.19313,
+            45.89014
+          ],
+          [
+            16.19131,
+            45.89065
+          ],
+          [
+            16.18999,
+            45.88978
+          ],
+          [
+            16.18837,
+            45.88897
+          ],
+          [
+            16.18837,
+            45.88897
+          ],
+          [
+            16.18735,
+            45.8884
+          ],
+          [
+            16.18489,
+            45.88715
+          ],
+          [
+            16.18246,
+            45.88593
+          ],
+          [
+            16.17996,
+            45.88467
+          ],
+          [
+            16.17761,
+            45.88349
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 2,
+    "stations45": 9
+  },
+  "prevSlug": "grebenscica",
+  "nextSlug": "grizanska"
+}

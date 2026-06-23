@@ -1,0 +1,93 @@
+{
+  "slug": "popovecka-leskovec",
+  "name": "Popovečka -Leskovec",
+  "kvart": "Sesvete",
+  "lat": 45.82857,
+  "lon": 16.14492,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "278"
+  ],
+  "firstDeparture": "5:33",
+  "lastDeparture": "20:53",
+  "peakIntervalMin": [
+    15,
+    35
+  ],
+  "lines": [
+    {
+      "broj": "278",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        15,
+        35
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Popovečka 51",
+      "slug": "popovecka-51"
+    },
+    {
+      "name": "Kraljevečki Novaki",
+      "slug": "kraljevecki-novaki"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.14285,
+      45.82712,
+      16.14698,
+      45.83001
+    ],
+    "lines": [
+      {
+        "broj": "278",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13597,
+            45.83059
+          ],
+          [
+            16.14214,
+            45.82933
+          ],
+          [
+            16.14608,
+            45.83254
+          ],
+          [
+            16.14491,
+            45.82856
+          ],
+          [
+            16.14341,
+            45.8257
+          ],
+          [
+            16.12984,
+            45.82381
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 6,
+    "stations30": 29,
+    "stations45": 99
+  },
+  "prevSlug": "popovecka-51",
+  "nextSlug": "potocani"
+}

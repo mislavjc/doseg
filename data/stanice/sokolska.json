@@ -1,0 +1,97 @@
+{
+  "slug": "sokolska",
+  "name": "Sokolska",
+  "kvart": "Trešnjevka - sjever",
+  "lat": 45.80597,
+  "lon": 15.92331,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "134"
+  ],
+  "firstDeparture": "4:43",
+  "lastDeparture": "23:35",
+  "peakIntervalMin": [
+    9,
+    13
+  ],
+  "lines": [
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Prečko",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 21.3,
+      "peakRangeMin": [
+        20,
+        21
+      ],
+      "allDayHeadwayMin": 21.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Tomislavova",
+      "slug": "tomislavova"
+    },
+    {
+      "name": "Medarska",
+      "slug": "medarska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.92124,
+      45.80453,
+      15.92537,
+      45.80741
+    ],
+    "lines": [
+      {
+        "broj": "134",
+        "mode": "bus",
+        "shape": [
+          [
+            15.93333,
+            45.81606
+          ],
+          [
+            15.93164,
+            45.81263
+          ],
+          [
+            15.92759,
+            45.80909
+          ],
+          [
+            15.92361,
+            45.80623
+          ],
+          [
+            15.92026,
+            45.80413
+          ],
+          [
+            15.91675,
+            45.80194
+          ],
+          [
+            15.91316,
+            45.7998
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 14,
+    "stations30": 102,
+    "stations45": 270
+  },
+  "prevSlug": "sobolski-put",
+  "nextSlug": "solici"
+}

@@ -1,0 +1,94 @@
+{
+  "slug": "pandaki",
+  "name": "Pandaki",
+  "kvart": "Brezovica",
+  "lat": 45.68216,
+  "lon": 15.86099,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "4:43",
+  "lastDeparture": "23:48",
+  "peakIntervalMin": [
+    33,
+    57
+  ],
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Tumbri",
+      "slug": "tumbri"
+    },
+    {
+      "name": "Harabajsi",
+      "slug": "harabajsi"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.85893,
+      45.68071,
+      15.86306,
+      45.6836
+    ],
+    "lines": [
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.8458,
+            45.68284
+          ],
+          [
+            15.85234,
+            45.68727
+          ],
+          [
+            15.85729,
+            45.68466
+          ],
+          [
+            15.861,
+            45.68213
+          ],
+          [
+            15.86765,
+            45.67771
+          ],
+          [
+            15.87336,
+            45.6845
+          ],
+          [
+            15.88014,
+            45.68441
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "paljetkova",
+  "nextSlug": "pantovcak"
+}

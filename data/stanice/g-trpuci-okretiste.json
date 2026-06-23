@@ -1,0 +1,142 @@
+{
+  "slug": "g-trpuci-okretiste",
+  "name": "G.Trpuci,okretište",
+  "kvart": "Brezovica",
+  "lat": 45.64979,
+  "lon": 15.90903,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "163"
+  ],
+  "firstDeparture": "4:40",
+  "lastDeparture": "23:45",
+  "peakIntervalMin": [
+    28,
+    62
+  ],
+  "lines": [
+    {
+      "broj": "163",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 81.8
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Čakovica",
+      "slug": "cakovica"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.90697,
+      45.64835,
+      15.91109,
+      45.65123
+    ],
+    "lines": [
+      {
+        "broj": "163",
+        "mode": "bus",
+        "shape": [
+          [
+            15.90915,
+            45.64975
+          ],
+          [
+            15.90961,
+            45.65
+          ],
+          [
+            15.91072,
+            45.65028
+          ],
+          [
+            15.9114,
+            45.6505
+          ],
+          [
+            15.91189,
+            45.65085
+          ],
+          [
+            15.91238,
+            45.65156
+          ],
+          [
+            15.9125,
+            45.65229
+          ],
+          [
+            15.91284,
+            45.65275
+          ],
+          [
+            15.91312,
+            45.65348
+          ],
+          [
+            15.91284,
+            45.65508
+          ],
+          [
+            15.91283,
+            45.65602
+          ],
+          [
+            15.91305,
+            45.65669
+          ],
+          [
+            15.91305,
+            45.65669
+          ],
+          [
+            15.91332,
+            45.65746
+          ],
+          [
+            15.91303,
+            45.65781
+          ],
+          [
+            15.91274,
+            45.65813
+          ],
+          [
+            15.91351,
+            45.65894
+          ],
+          [
+            15.91509,
+            45.66062
+          ],
+          [
+            15.91593,
+            45.66122
+          ],
+          [
+            15.91594,
+            45.66123
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "g-bistra-okretiste",
+  "nextSlug": "gajani"
+}

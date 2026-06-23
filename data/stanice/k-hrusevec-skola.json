@@ -1,0 +1,162 @@
+{
+  "slug": "k-hrusevec-skola",
+  "name": "K.Hruševec-škola",
+  "kvart": null,
+  "lat": 45.94512,
+  "lon": 15.79087,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "174"
+  ],
+  "firstDeparture": "4:46",
+  "lastDeparture": "22:41",
+  "peakIntervalMin": [
+    3,
+    35
+  ],
+  "lines": [
+    {
+      "broj": "174",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Zaprešić",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 70.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 67.2
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Matije Gupca",
+      "slug": "matije-gupca"
+    },
+    {
+      "name": "K.Hruševec-okret.",
+      "slug": "k-hrusevec-okret"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.78879,
+      45.94368,
+      15.79294,
+      45.94656
+    ],
+    "lines": [
+      {
+        "broj": "174",
+        "mode": "bus",
+        "shape": [
+          [
+            15.78839,
+            45.94609
+          ],
+          [
+            15.78856,
+            45.94625
+          ],
+          [
+            15.78913,
+            45.94603
+          ],
+          [
+            15.79072,
+            45.94518
+          ],
+          [
+            15.79153,
+            45.94479
+          ],
+          [
+            15.79254,
+            45.94452
+          ],
+          [
+            15.79306,
+            45.94438
+          ],
+          [
+            15.79343,
+            45.94404
+          ],
+          [
+            15.79427,
+            45.94374
+          ],
+          [
+            15.79619,
+            45.94327
+          ],
+          [
+            15.79738,
+            45.94311
+          ],
+          [
+            15.79858,
+            45.94276
+          ],
+          [
+            15.79982,
+            45.94209
+          ],
+          [
+            15.80093,
+            45.9418
+          ],
+          [
+            15.80157,
+            45.9418
+          ],
+          [
+            15.80291,
+            45.94149
+          ],
+          [
+            15.80292,
+            45.94149
+          ],
+          [
+            15.8034,
+            45.94137
+          ],
+          [
+            15.80354,
+            45.94061
+          ],
+          [
+            15.80423,
+            45.9405
+          ],
+          [
+            15.805,
+            45.94061
+          ],
+          [
+            15.80602,
+            45.9402
+          ],
+          [
+            15.80636,
+            45.93997
+          ],
+          [
+            15.80745,
+            45.93999
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "k-hrusevec-okret",
+  "nextSlug": "kalamiri"
+}

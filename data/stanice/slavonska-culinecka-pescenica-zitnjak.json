@@ -1,0 +1,105 @@
+{
+  "slug": "slavonska-culinecka-pescenica-zitnjak",
+  "name": "Slavonska-Čulinečka",
+  "kvart": "Peščenica - Žitnjak",
+  "lat": 45.80381,
+  "lon": 16.07683,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "281"
+  ],
+  "firstDeparture": "5:11",
+  "lastDeparture": "0:06",
+  "peakIntervalMin": [
+    30,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 29.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zelena tržnica",
+      "slug": "zelena-trznica"
+    },
+    {
+      "name": "Resnik III",
+      "slug": "resnik-iii-pescenica-zitnjak-2"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.07477,
+      45.80237,
+      16.0789,
+      45.80525
+    ],
+    "lines": [
+      {
+        "broj": "281",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07682,
+            45.80381
+          ],
+          [
+            16.07683,
+            45.80381
+          ],
+          [
+            16.08315,
+            45.80464
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08489,
+            45.80483
+          ],
+          [
+            16.08857,
+            45.80537
+          ],
+          [
+            16.09178,
+            45.80575
+          ],
+          [
+            16.09505,
+            45.80604
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 27,
+    "stations45": 96
+  },
+  "prevSlug": "slavon-lj-posavskog",
+  "nextSlug": "slavonska-culinecka-pescenica-zitnjak-2"
+}

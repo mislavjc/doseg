@@ -1,9 +1,13 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import { Provenijencija, SectionHeader } from "@/app/statistika/editorial/blocks"
+import { CestaPitanja, faqJsonLd } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
+import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadHeroMeta, loadLineData, loadLineIndex } from "@/lib/line-data"
+import { resolveStopSlugs } from "@/lib/stop-data"
 
 import {
   departureTerminals,
@@ -14,19 +18,13 @@ import {
 } from "../copy"
 import { LineHero } from "../line-hero"
 import {
-  CestaPitanja,
   Cinjenice,
   DosegLinije,
   Frekvencija,
   Naslov,
   PovezaneLinije,
-  JsonLd,
   PrevNext,
-  Provenijencija,
-  SectionHeader,
-  breadcrumbJsonLd,
   buildFaq,
-  faqJsonLd,
   frekvencijaCopy,
 } from "../sections"
 import { Stanice } from "../stanice"
@@ -89,11 +87,20 @@ export default async function LinijaPage({
   const days = serviceDays(data)
   const faq = buildFaq(data)
   const frek = frekvencijaCopy(data)
+  // Link each stop to its own page (only names unique in the stop index).
+  const stopSlugs = resolveStopSlugs(
+    data.directions.flatMap((d) => d.stops.map((s) => s.name))
+  )
 
   return (
     <EditorialShell>
       <JsonLd data={faqJsonLd(faq)} />
-      <JsonLd data={breadcrumbJsonLd(data.broj)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Linije", path: "/linije" },
+          { name: `Linija ${data.broj}`, path: `/linije/${data.broj}` },
+        ])}
+      />
 
       <LineHero data={data} meta={loadHeroMeta(broj)} />
 
@@ -118,6 +125,7 @@ export default async function LinijaPage({
         <Stanice
           directions={data.directions}
           terminalChips={terminalChips(data)}
+          stopSlugs={stopSlugs}
         />
       </Section>
 

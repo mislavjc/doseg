@@ -1,0 +1,73 @@
+{
+  "slug": "zaprude-novi-zagreb-istok-2",
+  "name": "Zapruđe",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.78178,
+  "lon": 16.00293,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "4:50",
+  "lastDeparture": "23:00",
+  "peakIntervalMin": [
+    23,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Šišićeva",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        23,
+        30
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sajam Jakuševec",
+      "slug": "sajam-jakusevec"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.00086,
+      45.78034,
+      16.00499,
+      45.78322
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.00317,
+            45.78169
+          ],
+          [
+            16.01841,
+            45.77273
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 21,
+    "stations30": 118,
+    "stations45": 345
+  },
+  "prevSlug": "zaprude-novi-zagreb-istok",
+  "nextSlug": "zarka-dolinara"
+}

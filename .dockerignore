@@ -11,7 +11,10 @@ data/*
 !data/route-stats.json
 !data/network-stats.json
 !data/poi-photos.json
+!data/poi-snapshot.json
+!data/districts.geojson
 !data/promjene
+!data/kvart
 .DS_Store
 *.pem
 .env*.local

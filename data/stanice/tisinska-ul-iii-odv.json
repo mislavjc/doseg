@@ -1,0 +1,101 @@
+{
+  "slug": "tisinska-ul-iii-odv",
+  "name": "Tišinska ul. III odv",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.76358,
+  "lon": 16.01782,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "4:57",
+  "lastDeparture": "23:07",
+  "peakIntervalMin": [
+    23,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Šišićeva",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        23,
+        30
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Tišinska",
+      "slug": "tisinska"
+    },
+    {
+      "name": "Jakuševec, centar",
+      "slug": "jakusevec-centar"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.01575,
+      45.76214,
+      16.01989,
+      45.76502
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.01841,
+            45.77273
+          ],
+          [
+            16.02179,
+            45.76936
+          ],
+          [
+            16.01782,
+            45.76358
+          ],
+          [
+            16.01538,
+            45.7605
+          ],
+          [
+            16.01085,
+            45.76087
+          ],
+          [
+            16.00888,
+            45.76086
+          ],
+          [
+            16.00238,
+            45.76521
+          ],
+          [
+            16.00111,
+            45.76937
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 7,
+    "stations30": 37,
+    "stations45": 145
+  },
+  "prevSlug": "tisinska",
+  "nextSlug": "tomislavov-dom"
+}

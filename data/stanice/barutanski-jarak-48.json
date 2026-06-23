@@ -1,0 +1,97 @@
+{
+  "slug": "barutanski-jarak-48",
+  "name": "Barutanski jarak 48",
+  "kvart": "Maksimir",
+  "lat": 45.82832,
+  "lon": 16.0063,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "226"
+  ],
+  "firstDeparture": "4:34",
+  "lastDeparture": "0:22",
+  "peakIntervalMin": [
+    16,
+    19
+  ],
+  "lines": [
+    {
+      "broj": "226",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Svetice",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
+      "allDayHeadwayMin": 34.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Barutanski jarak 96",
+      "slug": "barutanski-jarak-96"
+    },
+    {
+      "name": "Bukovačka 8",
+      "slug": "bukovacka-8"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.00423,
+      45.82688,
+      16.00836,
+      45.82976
+    ],
+    "lines": [
+      {
+        "broj": "226",
+        "mode": "bus",
+        "shape": [
+          [
+            15.99769,
+            45.83889
+          ],
+          [
+            16.0022,
+            45.83477
+          ],
+          [
+            16.00461,
+            45.83202
+          ],
+          [
+            16.00631,
+            45.82814
+          ],
+          [
+            16.01146,
+            45.82436
+          ],
+          [
+            16.01236,
+            45.82211
+          ],
+          [
+            16.01284,
+            45.8193
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 23,
+    "stations30": 103,
+    "stations45": 292
+  },
+  "prevSlug": "bana-josipa-jelacica",
+  "nextSlug": "barutanski-jarak-96"
+}

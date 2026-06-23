@@ -1,0 +1,93 @@
+{
+  "slug": "popovecka-51",
+  "name": "Popovečka 51",
+  "kvart": "Sesvete",
+  "lat": 45.83254,
+  "lon": 16.14609,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "278"
+  ],
+  "firstDeparture": "5:32",
+  "lastDeparture": "20:52",
+  "peakIntervalMin": [
+    15,
+    35
+  ],
+  "lines": [
+    {
+      "broj": "278",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        15,
+        35
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Leskovec - Primorska",
+      "slug": "leskovec-primorska"
+    },
+    {
+      "name": "Popovečka -Leskovec",
+      "slug": "popovecka-leskovec"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.14402,
+      45.8311,
+      16.14816,
+      45.83398
+    ],
+    "lines": [
+      {
+        "broj": "278",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13597,
+            45.83059
+          ],
+          [
+            16.14214,
+            45.82933
+          ],
+          [
+            16.14608,
+            45.83254
+          ],
+          [
+            16.14491,
+            45.82856
+          ],
+          [
+            16.14341,
+            45.8257
+          ],
+          [
+            16.12984,
+            45.82381
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 4,
+    "stations30": 29,
+    "stations45": 99
+  },
+  "prevSlug": "popovec-gostiona",
+  "nextSlug": "popovecka-leskovec"
+}

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 
@@ -22,16 +23,23 @@ function StopRow({
   isFirst,
   isLast,
   fallbackChip,
+  slug,
 }: {
   stop: LineStop
   newTrams: string[]
   isFirst: boolean
   isLast: boolean
   fallbackChip?: string
+  slug?: string
 }) {
   const terminal = isFirst || isLast
   const chip =
     newTrams.length > 0 ? `tram ${newTrams.join(" · ")}` : terminal ? fallbackChip : undefined
+
+  const nameClass = cn(
+    "min-w-0 flex-1 truncate pl-3 font-heros text-[16px] leading-5",
+    terminal ? "font-bold text-ink" : "text-ink"
+  )
 
   return (
     <li className="flex h-10 items-center">
@@ -51,14 +59,13 @@ function StopRow({
           <span className="absolute left-[11px] top-[15px] size-2.5 rounded-full border-[3px] border-zg-blue bg-white" />
         )}
       </span>
-      <span
-        className={cn(
-          "min-w-0 flex-1 truncate pl-3 font-heros text-[16px] leading-5",
-          terminal ? "font-bold text-ink" : "text-ink"
-        )}
-      >
-        {stop.name}
-      </span>
+      {slug ? (
+        <Link href={`/stanice/${slug}`} className={cn(nameClass, "transition-colors hover:text-zg-blue")}>
+          {stop.name}
+        </Link>
+      ) : (
+        <span className={nameClass}>{stop.name}</span>
+      )}
       {chip && (
         <span className="ml-2 shrink-0 border border-hairline-strong px-2.5 py-[3px] font-mono text-label text-ink-muted">
           {chip}
@@ -72,10 +79,12 @@ function DirectionColumn({
   direction,
   terminalChip,
   className,
+  stopSlugs,
 }: {
   direction: LineDirection
   terminalChip?: string
   className?: string
+  stopSlugs: Record<string, string>
 }) {
   const total = direction.stops.at(-1)?.offsetMin ?? 0
   // Chip = trams that weren't reachable at the previous stop.
@@ -102,6 +111,7 @@ function DirectionColumn({
             isFirst={i === 0}
             isLast={i === direction.stops.length - 1}
             fallbackChip={i === direction.stops.length - 1 ? terminalChip : undefined}
+            slug={stopSlugs[stop.name]}
           />
         ))}
       </ul>
@@ -112,10 +122,13 @@ function DirectionColumn({
 export function Stanice({
   directions,
   terminalChips,
+  stopSlugs = {},
 }: {
   directions: LineDirection[]
   /** Fallback chip per direction's end terminal (e.g. "bus 220 · 221"). */
   terminalChips: (string | undefined)[]
+  /** Stop name → /stanice/[slug] for names unique in the stop index. */
+  stopSlugs?: Record<string, string>
 }) {
   const [active, setActive] = useState(0)
 
@@ -139,6 +152,7 @@ export function Stanice({
             direction={d}
             terminalChip={terminalChips[i]}
             className={cn(i !== active && "hidden sm:block")}
+            stopSlugs={stopSlugs}
           />
         ))}
       </div>

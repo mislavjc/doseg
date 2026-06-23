@@ -1,0 +1,126 @@
+{
+  "slug": "dumovec-okretiste",
+  "name": "Dumovec okretište",
+  "kvart": "Sesvete",
+  "lat": 45.8047,
+  "lon": 16.15945,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "276"
+  ],
+  "firstDeparture": "4:55",
+  "lastDeparture": "23:35",
+  "peakIntervalMin": [
+    7,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "276",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dumovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 35.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 44.8
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Dumovec",
+      "slug": "dumovec"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.15739,
+      45.80326,
+      16.16152,
+      45.80614
+    ],
+    "lines": [
+      {
+        "broj": "276",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1443,
+            45.79573
+          ],
+          [
+            16.14476,
+            45.79603
+          ],
+          [
+            16.14527,
+            45.79622
+          ],
+          [
+            16.1455,
+            45.79643
+          ],
+          [
+            16.14567,
+            45.79668
+          ],
+          [
+            16.14616,
+            45.79785
+          ],
+          [
+            16.14674,
+            45.79825
+          ],
+          [
+            16.14781,
+            45.79831
+          ],
+          [
+            16.15077,
+            45.79968
+          ],
+          [
+            16.15581,
+            45.8025
+          ],
+          [
+            16.15654,
+            45.80279
+          ],
+          [
+            16.15763,
+            45.80335
+          ],
+          [
+            16.15871,
+            45.80423
+          ],
+          [
+            16.15902,
+            45.80458
+          ],
+          [
+            16.15914,
+            45.80465
+          ],
+          [
+            16.15944,
+            45.8047
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
+  },
+  "prevSlug": "dumovec",
+  "nextSlug": "durakov-breg"
+}

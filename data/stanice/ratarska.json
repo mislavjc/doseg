@@ -1,0 +1,105 @@
+{
+  "slug": "ratarska",
+  "name": "Ratarska",
+  "kvart": "Stenjevec",
+  "lat": 45.79991,
+  "lon": 15.9134,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "134"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "23:39",
+  "peakIntervalMin": [
+    7,
+    18
+  ],
+  "lines": [
+    {
+      "broj": "134",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Prečko",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 21.3,
+      "peakRangeMin": [
+        20,
+        21
+      ],
+      "allDayHeadwayMin": 21.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Čepelovački put",
+      "slug": "cepelovacki-put"
+    },
+    {
+      "name": "Zagrebačka",
+      "slug": "zagrebacka-tresnjevka-sjever"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.91133,
+      45.79847,
+      15.91547,
+      45.80135
+    ],
+    "lines": [
+      {
+        "broj": "134",
+        "mode": "bus",
+        "shape": [
+          [
+            15.92759,
+            45.80909
+          ],
+          [
+            15.92361,
+            45.80623
+          ],
+          [
+            15.92026,
+            45.80413
+          ],
+          [
+            15.91675,
+            45.80194
+          ],
+          [
+            15.91316,
+            45.7998
+          ],
+          [
+            15.90809,
+            45.79555
+          ],
+          [
+            15.90566,
+            45.79154
+          ],
+          [
+            15.90141,
+            45.7909
+          ],
+          [
+            15.8982,
+            45.79183
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 19,
+    "stations30": 89,
+    "stations45": 282
+  },
+  "prevSlug": "ranci",
+  "nextSlug": "ravnice-maksimir"
+}

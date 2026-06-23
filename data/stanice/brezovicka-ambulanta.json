@@ -1,0 +1,127 @@
+{
+  "slug": "brezovicka-ambulanta",
+  "name": "Brezovička-ambulanta",
+  "kvart": "Brezovica",
+  "lat": 45.72401,
+  "lon": 15.90741,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:45",
+  "lastDeparture": "0:21",
+  "peakIntervalMin": [
+    4,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Golobreška",
+      "slug": "golobreska"
+    },
+    {
+      "name": "Desprimska",
+      "slug": "desprimska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.90535,
+      45.72257,
+      15.90947,
+      45.72545
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ],
+          [
+            15.91091,
+            45.72809
+          ],
+          [
+            15.91204,
+            45.73324
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 16,
+    "stations30": 33,
+    "stations45": 83
+  },
+  "prevSlug": "brezovicka-80",
+  "nextSlug": "brezovicka-ekonomija"
+}

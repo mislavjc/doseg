@@ -1,0 +1,109 @@
+{
+  "slug": "remete-128",
+  "name": "Remete 128",
+  "kvart": "Maksimir",
+  "lat": 45.84644,
+  "lon": 15.99283,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "226"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "0:16",
+  "peakIntervalMin": [
+    6,
+    25
+  ],
+  "lines": [
+    {
+      "broj": "226",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Svetice",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
+      "allDayHeadwayMin": 34.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Remete",
+      "slug": "remete-maksimir"
+    },
+    {
+      "name": "Remete 76",
+      "slug": "remete-76"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.99076,
+      45.845,
+      15.9949,
+      45.84788
+    ],
+    "lines": [
+      {
+        "broj": "226",
+        "mode": "bus",
+        "shape": [
+          [
+            15.98384,
+            45.83551
+          ],
+          [
+            15.98248,
+            45.8384
+          ],
+          [
+            15.982,
+            45.84546
+          ],
+          [
+            15.98547,
+            45.8493
+          ],
+          [
+            15.98694,
+            45.8522
+          ],
+          [
+            15.99333,
+            45.85025
+          ],
+          [
+            15.99254,
+            45.84683
+          ],
+          [
+            15.99532,
+            45.84343
+          ],
+          [
+            15.99769,
+            45.83889
+          ],
+          [
+            16.0022,
+            45.83477
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 20,
+    "stations30": 73,
+    "stations45": 248
+  },
+  "prevSlug": "reljkoviceva",
+  "nextSlug": "remete-76"
+}

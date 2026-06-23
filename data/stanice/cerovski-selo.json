@@ -1,0 +1,163 @@
+{
+  "slug": "cerovski-selo",
+  "name": "Cerovski - selo",
+  "kvart": null,
+  "lat": 45.57535,
+  "lon": 15.94362,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "311"
+  ],
+  "firstDeparture": "4:21",
+  "lastDeparture": "21:46",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "311",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 174.2
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Cerovski - škola",
+      "slug": "cerovski-skola"
+    },
+    {
+      "name": "Žužić Brdo",
+      "slug": "zuzic-brdo"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.94156,
+      45.57391,
+      15.94568,
+      45.57679
+    ],
+    "lines": [
+      {
+        "broj": "311",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94547,
+            45.56711
+          ],
+          [
+            15.94594,
+            45.56783
+          ],
+          [
+            15.94633,
+            45.56806
+          ],
+          [
+            15.94744,
+            45.56982
+          ],
+          [
+            15.94688,
+            45.5705
+          ],
+          [
+            15.94681,
+            45.5715
+          ],
+          [
+            15.9466,
+            45.57198
+          ],
+          [
+            15.94626,
+            45.5725
+          ],
+          [
+            15.94484,
+            45.57312
+          ],
+          [
+            15.94404,
+            45.57361
+          ],
+          [
+            15.94379,
+            45.57426
+          ],
+          [
+            15.94363,
+            45.57536
+          ],
+          [
+            15.94363,
+            45.57537
+          ],
+          [
+            15.9436,
+            45.57637
+          ],
+          [
+            15.94335,
+            45.5789
+          ],
+          [
+            15.94341,
+            45.57953
+          ],
+          [
+            15.94406,
+            45.58007
+          ],
+          [
+            15.94524,
+            45.58078
+          ],
+          [
+            15.94665,
+            45.5814
+          ],
+          [
+            15.94852,
+            45.58201
+          ],
+          [
+            15.95227,
+            45.58287
+          ],
+          [
+            15.95338,
+            45.58316
+          ],
+          [
+            15.95389,
+            45.58413
+          ],
+          [
+            15.9545,
+            45.58489
+          ],
+          [
+            15.95652,
+            45.58573
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "cerje",
+  "nextSlug": "cerovski-skola"
+}

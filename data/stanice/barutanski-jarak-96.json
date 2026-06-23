@@ -1,0 +1,101 @@
+{
+  "slug": "barutanski-jarak-96",
+  "name": "Barutanski jarak 96",
+  "kvart": "Maksimir",
+  "lat": 45.83203,
+  "lon": 16.00465,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "226"
+  ],
+  "firstDeparture": "4:35",
+  "lastDeparture": "0:21",
+  "peakIntervalMin": [
+    14,
+    21
+  ],
+  "lines": [
+    {
+      "broj": "226",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Svetice",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
+      "allDayHeadwayMin": 34.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Rim",
+      "slug": "rim"
+    },
+    {
+      "name": "Barutanski jarak 48",
+      "slug": "barutanski-jarak-48"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.00258,
+      45.83059,
+      16.00672,
+      45.83347
+    ],
+    "lines": [
+      {
+        "broj": "226",
+        "mode": "bus",
+        "shape": [
+          [
+            15.99532,
+            45.84343
+          ],
+          [
+            15.99769,
+            45.83889
+          ],
+          [
+            16.0022,
+            45.83477
+          ],
+          [
+            16.00461,
+            45.83202
+          ],
+          [
+            16.00631,
+            45.82814
+          ],
+          [
+            16.01146,
+            45.82436
+          ],
+          [
+            16.01236,
+            45.82211
+          ],
+          [
+            16.01284,
+            45.8193
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 22,
+    "stations30": 80,
+    "stations45": 251
+  },
+  "prevSlug": "barutanski-jarak-48",
+  "nextSlug": "bascanske-ploce"
+}

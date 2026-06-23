@@ -1,8 +1,14 @@
+import {
+  IconArrowRight,
+  IconArrowUp,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import type { Metadata } from "next"
 import Link from "next/link"
 
+import { Breadcrumb, LineBadge } from "@/app/statistika/editorial/blocks"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { Hero } from "@/app/statistika/editorial/hero"
+import { JsonLd } from "@/app/statistika/editorial/json-ld"
 import {
   Body,
   EditorialShell,
@@ -15,7 +21,6 @@ import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 import { loadLineIndex } from "@/lib/line-data"
 
 import { plural } from "./copy"
-import { JsonLd } from "./sections"
 
 export const metadata: Metadata = {
   title: "Sve ZET linije na jednom mjestu: vozni redovi i stanice | Doseg",
@@ -42,9 +47,7 @@ function LineRow({ line }: { line: LineIndexEntry }) {
         href={`/linije/${line.broj}`}
         className="group flex items-center gap-3.5 border-b border-hairline py-2.5"
       >
-        <span className="flex h-6 w-[34px] shrink-0 items-center justify-center bg-zg-blue font-mono text-label text-white">
-          {line.broj}
-        </span>
+        <LineBadge broj={line.broj} />
         <span className="min-w-0 truncate font-heros text-[16px] leading-6 text-ink transition-colors group-hover:text-zg-blue">
           {line.terminals[0]} - {line.terminals[1]}
         </span>
@@ -78,8 +81,14 @@ function LineGroup({
       {rest.length > 0 && (
         <details className="group/det">
           <summary className="cursor-pointer list-none pt-4 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy [&::-webkit-details-marker]:hidden">
-            <span className="group-open/det:hidden">{moreLabel} →</span>
-            <span className="hidden group-open/det:inline">manje ↑</span>
+            <span className="inline-flex items-center gap-1 group-open/det:hidden">
+              {moreLabel}
+              <IconArrowRight size={16} className="shrink-0" />
+            </span>
+            <span className="hidden items-center gap-1 group-open/det:inline-flex">
+              manje
+              <IconArrowUp size={16} className="shrink-0" />
+            </span>
           </summary>
           <ul className="pt-2">
             {rest.map((l) => (
@@ -120,9 +129,7 @@ export default function LinijeIndexPage() {
       <Hero active="linije" />
 
       <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
-        <p className="font-mono text-label text-ink-faint">
-          doseg.hr / sve linije
-        </p>
+        <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "sve linije" }]} />
         <PageTitle className="mt-4">Sve ZET linije na jednom mjestu.</PageTitle>
         <Body className="mt-1 text-ink-muted">
           vozni red, trasa i doseg svake linije

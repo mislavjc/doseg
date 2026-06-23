@@ -1,0 +1,131 @@
+{
+  "slug": "kraljevecka-cesta",
+  "name": "Kraljevečka cesta",
+  "kvart": "Brezovica",
+  "lat": 45.68448,
+  "lon": 15.88016,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:37",
+  "lastDeparture": "0:29",
+  "peakIntervalMin": [
+    11,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Hladnjača",
+      "slug": "hladnjaca"
+    },
+    {
+      "name": "K.Brijegi-IIIodvojak",
+      "slug": "k-brijegi-iiiodvojak"
+    },
+    {
+      "name": "Put za Tumbre",
+      "slug": "put-za-tumbre"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.8781,
+      45.68304,
+      15.88222,
+      45.68592
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.87311,
+            45.6722
+          ],
+          [
+            15.87424,
+            45.67583
+          ],
+          [
+            15.87619,
+            45.6796
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.861,
+            45.68213
+          ],
+          [
+            15.86765,
+            45.67771
+          ],
+          [
+            15.87336,
+            45.6845
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "kraljevec",
+  "nextSlug": "kraljevecki-novaki"
+}

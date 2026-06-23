@@ -1,0 +1,75 @@
+{
+  "slug": "markusevec",
+  "name": "Markuševec",
+  "kvart": null,
+  "lat": 45.65891,
+  "lon": 15.9646,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "166"
+  ],
+  "firstDeparture": "4:53",
+  "lastDeparture": "23:53",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "166",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 126.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Lukavec-Buverke",
+      "slug": "lukavec-buverke"
+    },
+    {
+      "name": "Turopolj.-Markulini",
+      "slug": "turopolj-markulini"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.96254,
+      45.65747,
+      15.96667,
+      45.66035
+    ],
+    "lines": [
+      {
+        "broj": "166",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94863,
+            45.66092
+          ],
+          [
+            15.95644,
+            45.65995
+          ],
+          [
+            15.96496,
+            45.65891
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "markusev-trnava-84",
+  "nextSlug": "markusevecka-106"
+}

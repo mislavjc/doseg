@@ -1,0 +1,93 @@
+{
+  "slug": "park-101-brigade",
+  "name": "Park 101.Brigade",
+  "kvart": "Podsused - Vrapče",
+  "lat": 45.81749,
+  "lon": 15.87531,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "121"
+  ],
+  "firstDeparture": "4:20",
+  "lastDeparture": "0:37",
+  "peakIntervalMin": [
+    3,
+    12
+  ],
+  "lines": [
+    {
+      "broj": "121",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gajnice",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 15.8,
+      "peakRangeMin": [
+        15,
+        19
+      ],
+      "allDayHeadwayMin": 17.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Čileanska",
+      "slug": "cileanska"
+    },
+    {
+      "name": "Čileanska-Peruanska",
+      "slug": "cileanska-peruanska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.87324,
+      45.81605,
+      15.87737,
+      45.81893
+    ],
+    "lines": [
+      {
+        "broj": "121",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89518,
+            45.8151
+          ],
+          [
+            15.89051,
+            45.81689
+          ],
+          [
+            15.88546,
+            45.81807
+          ],
+          [
+            15.88116,
+            45.81903
+          ],
+          [
+            15.87538,
+            45.81932
+          ],
+          [
+            15.87537,
+            45.81761
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 34,
+    "stations30": 118,
+    "stations45": 251
+  },
+  "prevSlug": "pantovcak-82",
+  "nextSlug": "park-maksimir"
+}

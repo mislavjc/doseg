@@ -1,0 +1,93 @@
+{
+  "slug": "kral-brijegi-starjak",
+  "name": "Kral.Brijegi-Starjak",
+  "kvart": "Brezovica",
+  "lat": 45.66015,
+  "lon": 15.87138,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:33",
+  "lastDeparture": "0:34",
+  "peakIntervalMin": [
+    14,
+    32
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Kralj.Brijegi-Lojeni",
+      "slug": "kralj-brijegi-lojeni"
+    },
+    {
+      "name": "K.Brijegi-Vodosprema",
+      "slug": "k-brijegi-vodosprema"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.86931,
+      45.65871,
+      15.87344,
+      45.66159
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85706,
+            45.66681
+          ],
+          [
+            15.85979,
+            45.66402
+          ],
+          [
+            15.87112,
+            45.65648
+          ],
+          [
+            15.8714,
+            45.6602
+          ],
+          [
+            15.87116,
+            45.66445
+          ],
+          [
+            15.87311,
+            45.6722
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "kozjak",
+  "nextSlug": "kralj-brijegi-lojeni"
+}

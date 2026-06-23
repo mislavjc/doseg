@@ -1,0 +1,89 @@
+{
+  "slug": "k-brijegi-iiiodvojak",
+  "name": "K.Brijegi-IIIodvojak",
+  "kvart": "Brezovica",
+  "lat": 45.67935,
+  "lon": 15.87593,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:36",
+  "lastDeparture": "0:31",
+  "peakIntervalMin": [
+    20,
+    26
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Kraljevečka cesta",
+      "slug": "kraljevecka-cesta"
+    },
+    {
+      "name": "K.Brijegi-VI odvojak",
+      "slug": "k-brijegi-vi-odvojak"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.87386,
+      45.67791,
+      15.87799,
+      45.68079
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.87311,
+            45.6722
+          ],
+          [
+            15.87424,
+            45.67583
+          ],
+          [
+            15.87619,
+            45.6796
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "juzna-obala-4",
+  "nextSlug": "k-brijegi-vi-odvojak"
+}

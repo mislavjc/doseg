@@ -1,0 +1,242 @@
+{
+  "slug": "kraljevecki-novaki",
+  "name": "Kraljevečki Novaki",
+  "kvart": "Sesvete",
+  "lat": 45.82561,
+  "lon": 16.144,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "269",
+    "278"
+  ],
+  "firstDeparture": "4:36",
+  "lastDeparture": "1:11",
+  "peakIntervalMin": [
+    4,
+    6
+  ],
+  "lines": [
+    {
+      "broj": "269",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        12,
+        12
+      ],
+      "allDayHeadwayMin": 17.2
+    },
+    {
+      "broj": "278",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        15,
+        35
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sesvetska Sela",
+      "slug": "sesvetska-sela"
+    },
+    {
+      "name": "Kobiljak-trgovina",
+      "slug": "kobiljak-trgovina"
+    },
+    {
+      "name": "Popovečka -Leskovec",
+      "slug": "popovecka-leskovec"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.14193,
+      45.82417,
+      16.14607,
+      45.82706
+    ],
+    "lines": [
+      {
+        "broj": "269",
+        "mode": "bus",
+        "shape": [
+          [
+            16.16185,
+            45.82136
+          ],
+          [
+            16.15955,
+            45.82232
+          ],
+          [
+            16.15952,
+            45.82237
+          ],
+          [
+            16.15952,
+            45.82237
+          ],
+          [
+            16.15803,
+            45.82299
+          ],
+          [
+            16.15645,
+            45.82337
+          ],
+          [
+            16.15193,
+            45.82423
+          ],
+          [
+            16.1518,
+            45.82426
+          ],
+          [
+            16.15112,
+            45.82441
+          ],
+          [
+            16.15076,
+            45.82444
+          ],
+          [
+            16.14751,
+            45.825
+          ],
+          [
+            16.14653,
+            45.82519
+          ],
+          [
+            16.14373,
+            45.82563
+          ],
+          [
+            16.14341,
+            45.8257
+          ],
+          [
+            16.1434,
+            45.8257
+          ],
+          [
+            16.14215,
+            45.82572
+          ],
+          [
+            16.14104,
+            45.82551
+          ],
+          [
+            16.13988,
+            45.82513
+          ],
+          [
+            16.13855,
+            45.82479
+          ],
+          [
+            16.13639,
+            45.82451
+          ],
+          [
+            16.13494,
+            45.82409
+          ],
+          [
+            16.13359,
+            45.82375
+          ],
+          [
+            16.13133,
+            45.82374
+          ],
+          [
+            16.13007,
+            45.82374
+          ],
+          [
+            16.12984,
+            45.82381
+          ],
+          [
+            16.12983,
+            45.82381
+          ],
+          [
+            16.12856,
+            45.82377
+          ],
+          [
+            16.12574,
+            45.82388
+          ],
+          [
+            16.12472,
+            45.82398
+          ],
+          [
+            16.12471,
+            45.82398
+          ]
+        ]
+      },
+      {
+        "broj": "278",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13597,
+            45.83059
+          ],
+          [
+            16.14214,
+            45.82933
+          ],
+          [
+            16.14608,
+            45.83254
+          ],
+          [
+            16.14491,
+            45.82856
+          ],
+          [
+            16.14341,
+            45.8257
+          ],
+          [
+            16.12984,
+            45.82381
+          ],
+          [
+            16.12471,
+            45.82398
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 13,
+    "stations30": 29,
+    "stations45": 99
+  },
+  "prevSlug": "kraljevecka-cesta",
+  "nextSlug": "kralji-brezovica"
+}

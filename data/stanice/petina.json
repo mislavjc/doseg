@@ -1,0 +1,153 @@
+{
+  "slug": "petina",
+  "name": "Petina",
+  "kvart": null,
+  "lat": 45.75687,
+  "lon": 16.09955,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "290"
+  ],
+  "firstDeparture": "4:52",
+  "lastDeparture": "0:37",
+  "peakIntervalMin": [
+    35,
+    35
+  ],
+  "lines": [
+    {
+      "broj": "290",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Kvat. trg",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 35.0,
+      "peakRangeMin": [
+        35,
+        35
+      ],
+      "allDayHeadwayMin": 34.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zračna luka",
+      "slug": "zracna-luka"
+    },
+    {
+      "name": "Velika Kosnica",
+      "slug": "velika-kosnica"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.09748,
+      45.75543,
+      16.10161,
+      45.75831
+    ],
+    "lines": [
+      {
+        "broj": "290",
+        "mode": "bus",
+        "shape": [
+          [
+            16.09037,
+            45.745
+          ],
+          [
+            16.09101,
+            45.74558
+          ],
+          [
+            16.09113,
+            45.74647
+          ],
+          [
+            16.09086,
+            45.74705
+          ],
+          [
+            16.0901,
+            45.7477
+          ],
+          [
+            16.08963,
+            45.74831
+          ],
+          [
+            16.08967,
+            45.74923
+          ],
+          [
+            16.09052,
+            45.75021
+          ],
+          [
+            16.09227,
+            45.75197
+          ],
+          [
+            16.09352,
+            45.75334
+          ],
+          [
+            16.09506,
+            45.75404
+          ],
+          [
+            16.09742,
+            45.75498
+          ],
+          [
+            16.1001,
+            45.75601
+          ],
+          [
+            16.09954,
+            45.75686
+          ],
+          [
+            16.09953,
+            45.75686
+          ],
+          [
+            16.09831,
+            45.75822
+          ],
+          [
+            16.09666,
+            45.75992
+          ],
+          [
+            16.09447,
+            45.76159
+          ],
+          [
+            16.09067,
+            45.76388
+          ],
+          [
+            16.08791,
+            45.76556
+          ],
+          [
+            16.08596,
+            45.76643
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 7,
+    "stations45": 39
+  },
+  "prevSlug": "pesteri",
+  "nextSlug": "petlja-izlaz-novi-zagreb-zapad"
+}

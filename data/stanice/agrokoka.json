@@ -1,0 +1,119 @@
+{
+  "slug": "agrokoka",
+  "name": "AGROKOKA",
+  "kvart": "Brezovica",
+  "lat": 45.74306,
+  "lon": 15.91681,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:49",
+  "lastDeparture": "0:24",
+  "peakIntervalMin": [
+    5,
+    19
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 42.5,
+      "peakRangeMin": [
+        31,
+        54
+      ],
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Brezovička-ekonomija",
+      "slug": "brezovicka-ekonomija"
+    },
+    {
+      "name": "Brez.- pod kestenima",
+      "slug": "brez-pod-kestenima"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.91475,
+      45.74162,
+      15.91888,
+      45.7445
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.91204,
+            45.73324
+          ],
+          [
+            15.91688,
+            45.74308
+          ],
+          [
+            15.91913,
+            45.74571
+          ],
+          [
+            15.92665,
+            45.75277
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 10,
+    "stations45": 39
+  },
+  "prevSlug": "adamovec-sostarici",
+  "nextSlug": "aleja-javora-donja-dubrava"
+}

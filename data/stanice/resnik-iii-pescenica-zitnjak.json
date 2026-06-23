@@ -1,0 +1,137 @@
+{
+  "slug": "resnik-iii-pescenica-zitnjak",
+  "name": "Resnik III",
+  "kvart": "Peščenica - Žitnjak",
+  "lat": 45.80484,
+  "lon": 16.08489,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "281"
+  ],
+  "firstDeparture": "5:12",
+  "lastDeparture": "0:07",
+  "peakIntervalMin": [
+    30,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 29.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Slavonska-Čulinečka",
+      "slug": "slavonska-culinecka-pescenica-zitnjak"
+    },
+    {
+      "name": "Slavon.-Lj.Posavskog",
+      "slug": "slavon-lj-posavskog"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.08283,
+      45.8034,
+      16.08696,
+      45.80628
+    ],
+    "lines": [
+      {
+        "broj": "281",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07682,
+            45.80381
+          ],
+          [
+            16.07683,
+            45.80381
+          ],
+          [
+            16.08315,
+            45.80464
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08489,
+            45.80483
+          ],
+          [
+            16.08857,
+            45.80537
+          ],
+          [
+            16.09178,
+            45.80575
+          ],
+          [
+            16.09505,
+            45.80604
+          ],
+          [
+            16.09815,
+            45.8061
+          ],
+          [
+            16.10062,
+            45.80603
+          ],
+          [
+            16.10083,
+            45.80612
+          ],
+          [
+            16.10094,
+            45.80772
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10106,
+            45.80791
+          ],
+          [
+            16.10123,
+            45.80982
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 14,
+    "stations30": 56,
+    "stations45": 233
+  },
+  "prevSlug": "resnik-i-kbr-47",
+  "nextSlug": "resnik-iii-pescenica-zitnjak-2"
+}

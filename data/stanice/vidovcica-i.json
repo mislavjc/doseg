@@ -1,0 +1,93 @@
+{
+  "slug": "vidovcica-i",
+  "name": "Vidovčica I.",
+  "kvart": "Črnomerec",
+  "lat": 45.8401,
+  "lon": 15.95227,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "149"
+  ],
+  "firstDeparture": "4:32",
+  "lastDeparture": "0:36",
+  "peakIntervalMin": [
+    14,
+    16
+  ],
+  "lines": [
+    {
+      "broj": "149",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Vrhovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Vrhovec 233",
+      "slug": "vrhovec-233"
+    },
+    {
+      "name": "Vrhovec",
+      "slug": "vrhovec"
+    },
+    {
+      "name": "Vidovčica",
+      "slug": "vidovcica"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.9502,
+      45.83865,
+      15.95434,
+      45.84154
+    ],
+    "lines": [
+      {
+        "broj": "149",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94858,
+            45.83118
+          ],
+          [
+            15.94939,
+            45.83347
+          ],
+          [
+            15.95143,
+            45.83639
+          ],
+          [
+            15.95226,
+            45.83966
+          ],
+          [
+            15.95286,
+            45.84314
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 25,
+    "stations30": 146,
+    "stations45": 366
+  },
+  "prevSlug": "vidovcica",
+  "nextSlug": "vidovec-skola"
+}

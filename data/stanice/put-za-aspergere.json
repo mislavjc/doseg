@@ -1,0 +1,79 @@
+{
+  "slug": "put-za-aspergere",
+  "name": "Put za Ašpergere",
+  "kvart": "Brezovica",
+  "lat": 45.69651,
+  "lon": 15.83735,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "5:47",
+  "lastDeparture": "23:22",
+  "peakIntervalMin": null,
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ašpergeri",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 90.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 62.1
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Matički",
+      "slug": "maticki"
+    },
+    {
+      "name": "Ašpergeri",
+      "slug": "aspergeri"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.83529,
+      45.69507,
+      15.83941,
+      45.69795
+    ],
+    "lines": [
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85227,
+            45.68797
+          ],
+          [
+            15.83976,
+            45.69243
+          ],
+          [
+            15.83735,
+            45.69651
+          ],
+          [
+            15.83009,
+            45.69083
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "pusticki",
+  "nextSlug": "put-za-bedice"
+}

@@ -1,0 +1,89 @@
+{
+  "slug": "k-brijegi-vi-odvojak",
+  "name": "K.Brijegi-VI odvojak",
+  "kvart": "Brezovica",
+  "lat": 45.67545,
+  "lon": 15.87415,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:35",
+  "lastDeparture": "0:31",
+  "peakIntervalMin": [
+    19,
+    27
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "K.Brijegi-IIIodvojak",
+      "slug": "k-brijegi-iiiodvojak"
+    },
+    {
+      "name": "Kup.Kraljevec-škola",
+      "slug": "kup-kraljevec-skola"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.87209,
+      45.67401,
+      15.87622,
+      45.67689
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.87116,
+            45.66445
+          ],
+          [
+            15.87311,
+            45.6722
+          ],
+          [
+            15.87424,
+            45.67583
+          ],
+          [
+            15.87619,
+            45.6796
+          ],
+          [
+            15.88014,
+            45.68441
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "k-brijegi-iiiodvojak",
+  "nextSlug": "k-brijegi-vodosprema"
+}

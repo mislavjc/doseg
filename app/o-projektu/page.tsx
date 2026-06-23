@@ -1,7 +1,10 @@
 import type { Metadata } from "next"
 
 import { MonoLabel } from "@/components/home/ui"
+import { Breadcrumb } from "@/app/statistika/editorial/blocks"
+import { Footer } from "@/app/statistika/editorial/footer"
 import { Hero } from "@/app/statistika/editorial/hero"
+import { loadLineIndex } from "@/lib/line-data"
 
 export const metadata: Metadata = {
   title: "O projektu | Doseg",
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
 function SenderLine() {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 border-b border-hairline-strong pb-3">
-      <span className="font-mono text-label text-ink">doseg · o projektu</span>
+      <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "o projektu" }]} />
       <MonoLabel>zagreb, lipanj 2026.</MonoLabel>
     </div>
   )
@@ -48,33 +51,15 @@ function Signature() {
   )
 }
 
-function PostScriptum() {
-  return (
-    <div className="flex gap-3 pt-7">
-      <MonoLabel>p.s.</MonoLabel>
-      <div className="flex flex-col font-mono text-label">
-        <span className="text-ink-muted">
-          izvori: zet gtfs + gtfs-rt · openstreetmap · opentripplanner
-        </span>
-        <a
-          href="https://github.com/mislavjc/doseg"
-          className="w-fit text-zg-blue transition-colors duration-150 hover:text-navy"
-        >
-          kod: github.com/mislavjc/doseg ↗
-        </a>
-      </div>
-    </div>
-  )
-}
-
 export default function AboutPage() {
+  const updated = loadLineIndex().generatedAt
   return (
     <div className="min-h-svh bg-ground font-heros text-ink-2 antialiased selection:bg-zg-blue/15">
       <Hero active="o projektu" mapPosition="center 70%" />
 
       <main
         id="main-content"
-        className="mx-auto w-full max-w-[512px] px-4 pt-4 pb-24 sm:pb-32"
+        className="mx-auto w-full max-w-[620px] px-4 pt-4 pb-24 sm:px-8 sm:pb-32"
       >
         <h1 className="sr-only">O projektu</h1>
         <SenderLine />
@@ -99,8 +84,9 @@ export default function AboutPage() {
         </div>
 
         <Signature />
-        <PostScriptum />
       </main>
+
+      <Footer updated={updated} />
     </div>
   )
 }

@@ -1,7 +1,9 @@
 "use client"
 
+import { IconArrowRight } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import dynamic from "next/dynamic"
 import Image from "next/image"
+import Link from "next/link"
 import { useState } from "react"
 import { isDarkScore, scoreColor, scoreTextColor } from "@/lib/score-color"
 import { cn } from "@/lib/utils"
@@ -140,6 +142,13 @@ function RankingBoard({
           onLeave={() => setHovered(null)}
         />
       ))}
+      <Link
+        href="/kvartovi"
+        className="mt-2.5 flex items-center justify-between border-t border-hairline px-3.5 pt-2.5 font-mono text-[11px] leading-[14px] text-zg-blue transition-colors hover:text-navy"
+      >
+        <span>svaki kvart po povezanosti</span>
+        <IconArrowRight size={14} className="shrink-0" />
+      </Link>
     </div>
   )
 }

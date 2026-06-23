@@ -1,0 +1,141 @@
+{
+  "slug": "lukav-skolska-luzec",
+  "name": "Lukav.-Školska-Lužec",
+  "kvart": null,
+  "lat": 45.70003,
+  "lon": 15.99684,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "315"
+  ],
+  "firstDeparture": "4:45",
+  "lastDeparture": "23:08",
+  "peakIntervalMin": [
+    7,
+    26
+  ],
+  "lines": [
+    {
+      "broj": "315",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Lukavec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 37.5,
+      "peakRangeMin": [
+        31,
+        44
+      ],
+      "allDayHeadwayMin": 69.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Lukav.-put za Dubra.",
+      "slug": "lukav-put-za-dubra"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.99478,
+      45.69858,
+      15.99891,
+      45.70147
+    ],
+    "lines": [
+      {
+        "broj": "315",
+        "mode": "bus",
+        "shape": [
+          [
+            15.99556,
+            45.71149
+          ],
+          [
+            15.99566,
+            45.71005
+          ],
+          [
+            15.99536,
+            45.70917
+          ],
+          [
+            15.99281,
+            45.70729
+          ],
+          [
+            15.99281,
+            45.70729
+          ],
+          [
+            15.99142,
+            45.70626
+          ],
+          [
+            15.99036,
+            45.70546
+          ],
+          [
+            15.98978,
+            45.70501
+          ],
+          [
+            15.98987,
+            45.70452
+          ],
+          [
+            15.98987,
+            45.70451
+          ],
+          [
+            15.99007,
+            45.70434
+          ],
+          [
+            15.99018,
+            45.70402
+          ],
+          [
+            15.99056,
+            45.70363
+          ],
+          [
+            15.99044,
+            45.70303
+          ],
+          [
+            15.99012,
+            45.7024
+          ],
+          [
+            15.99003,
+            45.70192
+          ],
+          [
+            15.99147,
+            45.70168
+          ],
+          [
+            15.99332,
+            45.7013
+          ],
+          [
+            15.99708,
+            45.6999
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 2,
+    "stations30": 3,
+    "stations45": 10
+  },
+  "prevSlug": "lukav-put-za-dubra",
+  "nextSlug": "lukavec-buverke"
+}

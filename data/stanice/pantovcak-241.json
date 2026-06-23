@@ -1,0 +1,105 @@
+{
+  "slug": "pantovcak-241",
+  "name": "Pantovčak 241",
+  "kvart": "Gornji grad - Medveščak",
+  "lat": 45.84043,
+  "lon": 15.95929,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "101"
+  ],
+  "firstDeparture": "5:08",
+  "lastDeparture": "23:49",
+  "peakIntervalMin": [
+    11,
+    19
+  ],
+  "lines": [
+    {
+      "broj": "101",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Šestine",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 30.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Predsjednički dvori",
+      "slug": "predsjednicki-dvori"
+    },
+    {
+      "name": "Pantovčak",
+      "slug": "pantovcak"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.95722,
+      45.83899,
+      15.96136,
+      45.84187
+    ],
+    "lines": [
+      {
+        "broj": "101",
+        "mode": "bus",
+        "shape": [
+          [
+            15.96139,
+            45.82805
+          ],
+          [
+            15.96224,
+            45.832
+          ],
+          [
+            15.96251,
+            45.83525
+          ],
+          [
+            15.96156,
+            45.8378
+          ],
+          [
+            15.95935,
+            45.84042
+          ],
+          [
+            15.95813,
+            45.84556
+          ],
+          [
+            15.95519,
+            45.84692
+          ],
+          [
+            15.95351,
+            45.84899
+          ],
+          [
+            15.95021,
+            45.85197
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 10,
+    "stations30": 50,
+    "stations45": 145
+  },
+  "prevSlug": "pantovcak-180",
+  "nextSlug": "pantovcak-82"
+}

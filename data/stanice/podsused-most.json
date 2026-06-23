@@ -1,0 +1,206 @@
+{
+  "slug": "podsused-most",
+  "name": "Podsused - most",
+  "kvart": "Podsused - Vrapče",
+  "lat": 45.81518,
+  "lon": 15.83641,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "116",
+    "119"
+  ],
+  "firstDeparture": "4:05",
+  "lastDeparture": "1:50",
+  "peakIntervalMin": [
+    5,
+    12
+  ],
+  "lines": [
+    {
+      "broj": "116",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Podsus-most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 37.5,
+      "peakRangeMin": [
+        36,
+        39
+      ],
+      "allDayHeadwayMin": 37.8
+    },
+    {
+      "broj": "119",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Podsused",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "ZET-garaža Pod.",
+      "slug": "zet-garaza-pod"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.83434,
+      45.81374,
+      15.83848,
+      45.81662
+    ],
+    "lines": [
+      {
+        "broj": "116",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85602,
+            45.81327
+          ],
+          [
+            15.85068,
+            45.81426
+          ],
+          [
+            15.84987,
+            45.81445
+          ],
+          [
+            15.84986,
+            45.81445
+          ],
+          [
+            15.84824,
+            45.81453
+          ],
+          [
+            15.84567,
+            45.81468
+          ],
+          [
+            15.84514,
+            45.81472
+          ],
+          [
+            15.84495,
+            45.81477
+          ],
+          [
+            15.84494,
+            45.81477
+          ],
+          [
+            15.84425,
+            45.81479
+          ],
+          [
+            15.84224,
+            45.81493
+          ],
+          [
+            15.84085,
+            45.81498
+          ],
+          [
+            15.83868,
+            45.81497
+          ],
+          [
+            15.83688,
+            45.81497
+          ],
+          [
+            15.83668,
+            45.8152
+          ]
+        ]
+      },
+      {
+        "broj": "119",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85602,
+            45.81327
+          ],
+          [
+            15.85068,
+            45.81426
+          ],
+          [
+            15.84987,
+            45.81445
+          ],
+          [
+            15.84986,
+            45.81445
+          ],
+          [
+            15.84824,
+            45.81453
+          ],
+          [
+            15.84567,
+            45.81468
+          ],
+          [
+            15.84514,
+            45.81472
+          ],
+          [
+            15.84495,
+            45.81477
+          ],
+          [
+            15.84494,
+            45.81477
+          ],
+          [
+            15.84425,
+            45.81479
+          ],
+          [
+            15.84224,
+            45.81493
+          ],
+          [
+            15.84085,
+            45.81498
+          ],
+          [
+            15.83868,
+            45.81497
+          ],
+          [
+            15.83688,
+            45.81497
+          ],
+          [
+            15.83668,
+            45.8152
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 24,
+    "stations30": 91,
+    "stations45": 212
+  },
+  "prevSlug": "podsused-centar",
+  "nextSlug": "podsusedsko-dolje"
+}

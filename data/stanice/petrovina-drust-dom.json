@@ -1,0 +1,137 @@
+{
+  "slug": "petrovina-drust-dom",
+  "name": "Petrovina,društ. dom",
+  "kvart": null,
+  "lat": 45.6927,
+  "lon": 16.03137,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "310"
+  ],
+  "firstDeparture": "4:40",
+  "lastDeparture": "23:10",
+  "peakIntervalMin": [
+    5,
+    31
+  ],
+  "lines": [
+    {
+      "broj": "310",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        35,
+        45
+      ],
+      "allDayHeadwayMin": 55.5
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Petrovina 6",
+      "slug": "petrovina-6"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.02931,
+      45.69126,
+      16.03343,
+      45.69414
+    ],
+    "lines": [
+      {
+        "broj": "310",
+        "mode": "bus",
+        "shape": [
+          [
+            16.03136,
+            45.6927
+          ],
+          [
+            16.03195,
+            45.69312
+          ],
+          [
+            16.03256,
+            45.69393
+          ],
+          [
+            16.0334,
+            45.69469
+          ],
+          [
+            16.03617,
+            45.69646
+          ],
+          [
+            16.03617,
+            45.69646
+          ],
+          [
+            16.03705,
+            45.6974
+          ],
+          [
+            16.03722,
+            45.69867
+          ],
+          [
+            16.03719,
+            45.70076
+          ],
+          [
+            16.03719,
+            45.70076
+          ],
+          [
+            16.0371,
+            45.70262
+          ],
+          [
+            16.03677,
+            45.70354
+          ],
+          [
+            16.03686,
+            45.70417
+          ],
+          [
+            16.0378,
+            45.70458
+          ],
+          [
+            16.0378,
+            45.70458
+          ],
+          [
+            16.03808,
+            45.70492
+          ],
+          [
+            16.03857,
+            45.70517
+          ],
+          [
+            16.0393,
+            45.70518
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "petrovina-6",
+  "nextSlug": "petrusevec"
+}

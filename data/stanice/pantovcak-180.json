@@ -1,0 +1,105 @@
+{
+  "slug": "pantovcak-180",
+  "name": "Pantovčak 180",
+  "kvart": "Gornji grad - Medveščak",
+  "lat": 45.83225,
+  "lon": 15.96228,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "101"
+  ],
+  "firstDeparture": "5:21",
+  "lastDeparture": "23:51",
+  "peakIntervalMin": [
+    30,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "101",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Britan. trg",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 30.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zelengaj",
+      "slug": "zelengaj-gornji-grad-medvescak"
+    },
+    {
+      "name": "Pantovčak 156",
+      "slug": "pantovcak-156"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.96021,
+      45.8308,
+      15.96435,
+      45.83369
+    ],
+    "lines": [
+      {
+        "broj": "101",
+        "mode": "bus",
+        "shape": [
+          [
+            15.9578,
+            45.84572
+          ],
+          [
+            15.95924,
+            45.84044
+          ],
+          [
+            15.96177,
+            45.83743
+          ],
+          [
+            15.96247,
+            45.83496
+          ],
+          [
+            15.96228,
+            45.83225
+          ],
+          [
+            15.9613,
+            45.82821
+          ],
+          [
+            15.96126,
+            45.82508
+          ],
+          [
+            15.96014,
+            45.82271
+          ],
+          [
+            15.96049,
+            45.81964
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 17,
+    "stations30": 57,
+    "stations45": 149
+  },
+  "prevSlug": "pantovcak-178b",
+  "nextSlug": "pantovcak-241"
+}

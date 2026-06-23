@@ -1,0 +1,101 @@
+{
+  "slug": "pakracka",
+  "name": "Pakračka",
+  "kvart": "Trešnjevka - sjever",
+  "lat": 45.79875,
+  "lon": 15.93033,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "117"
+  ],
+  "firstDeparture": "4:38",
+  "lastDeparture": "0:08",
+  "peakIntervalMin": [
+    21,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "117",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Jarun",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        51,
+        54
+      ],
+      "allDayHeadwayMin": 50.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Baštijanova",
+      "slug": "bastijanova-tresnjevka-sjever-2"
+    },
+    {
+      "name": "Marice Barić",
+      "slug": "marice-baric"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.92826,
+      45.79731,
+      15.93239,
+      45.80019
+    ],
+    "lines": [
+      {
+        "broj": "117",
+        "mode": "bus",
+        "shape": [
+          [
+            15.93164,
+            45.81263
+          ],
+          [
+            15.92993,
+            45.80875
+          ],
+          [
+            15.93003,
+            45.80554
+          ],
+          [
+            15.93017,
+            45.80201
+          ],
+          [
+            15.93031,
+            45.79852
+          ],
+          [
+            15.92977,
+            45.79318
+          ],
+          [
+            15.93024,
+            45.78988
+          ],
+          [
+            15.92808,
+            45.78606
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 14,
+    "stations30": 92,
+    "stations45": 299
+  },
+  "prevSlug": "p-d-runolist",
+  "nextSlug": "palcici-odvojak"
+}

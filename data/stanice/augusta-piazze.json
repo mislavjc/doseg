@@ -1,0 +1,82 @@
+{
+  "slug": "augusta-piazze",
+  "name": "Augusta Piazze",
+  "kvart": "Trešnjevka - jug",
+  "lat": 45.78352,
+  "lon": 15.93187,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "117"
+  ],
+  "firstDeparture": "4:46",
+  "lastDeparture": "0:00",
+  "peakIntervalMin": [
+    4,
+    25
+  ],
+  "lines": [
+    {
+      "broj": "117",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Jarun",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Jarun",
+      "slug": "jarun"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.9298,
+      45.78208,
+      15.93394,
+      45.78496
+    ],
+    "lines": [
+      {
+        "broj": "117",
+        "mode": "bus",
+        "shape": [
+          [
+            15.92977,
+            45.79318
+          ],
+          [
+            15.93024,
+            45.78988
+          ],
+          [
+            15.92808,
+            45.78606
+          ],
+          [
+            15.92657,
+            45.78296
+          ],
+          [
+            15.93187,
+            45.78352
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 11,
+    "stations30": 92,
+    "stations45": 333
+  },
+  "prevSlug": "aspergeri",
+  "nextSlug": "autobusni-kol"
+}

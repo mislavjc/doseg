@@ -1,0 +1,97 @@
+{
+  "slug": "kralj-brijegi-lojeni",
+  "name": "Kralj.Brijegi-Lojeni",
+  "kvart": "Brezovica",
+  "lat": 45.66419,
+  "lon": 15.87101,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "161"
+  ],
+  "firstDeparture": "4:34",
+  "lastDeparture": "0:33",
+  "peakIntervalMin": [
+    15,
+    31
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        46,
+        59
+      ],
+      "allDayHeadwayMin": 37.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Kup.Kraljevec-škola",
+      "slug": "kup-kraljevec-skola"
+    },
+    {
+      "name": "Kral.Brijegi-Starjak",
+      "slug": "kral-brijegi-starjak"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.86895,
+      45.66275,
+      15.87307,
+      45.66563
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85706,
+            45.66681
+          ],
+          [
+            15.85979,
+            45.66402
+          ],
+          [
+            15.87112,
+            45.65648
+          ],
+          [
+            15.8714,
+            45.6602
+          ],
+          [
+            15.87116,
+            45.66445
+          ],
+          [
+            15.87311,
+            45.6722
+          ],
+          [
+            15.87424,
+            45.67583
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "kral-brijegi-starjak",
+  "nextSlug": "kraljevec"
+}

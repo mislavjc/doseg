@@ -1,0 +1,132 @@
+{
+  "slug": "pekarska",
+  "name": "Pekarska",
+  "kvart": "Brezovica",
+  "lat": 45.71474,
+  "lon": 15.89928,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [],
+  "busLines": [
+    "161",
+    "162"
+  ],
+  "firstDeparture": "4:43",
+  "lastDeparture": "0:23",
+  "peakIntervalMin": [
+    6,
+    24
+  ],
+  "lines": [
+    {
+      "broj": "161",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 37.9
+    },
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Desprimska",
+      "slug": "desprimska"
+    },
+    {
+      "name": "Hudobička 1",
+      "slug": "hudobicka-1"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.89721,
+      45.71329,
+      15.90134,
+      45.71618
+    ],
+    "lines": [
+      {
+        "broj": "161",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ]
+        ]
+      },
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.89367,
+            45.70419
+          ],
+          [
+            15.89392,
+            45.70758
+          ],
+          [
+            15.89707,
+            45.71116
+          ],
+          [
+            15.89939,
+            45.71497
+          ],
+          [
+            15.90333,
+            45.72174
+          ],
+          [
+            15.90774,
+            45.72416
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 9,
+    "stations30": 29,
+    "stations45": 84
+  },
+  "prevSlug": "pavlinoviceva",
+  "nextSlug": "perjavica"
+}

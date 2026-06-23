@@ -1,0 +1,161 @@
+{
+  "slug": "slavon-lj-posavskog",
+  "name": "Slavon.-Lj.Posavskog",
+  "kvart": "Donja Dubrava",
+  "lat": 45.80724,
+  "lon": 16.10024,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "281"
+  ],
+  "firstDeparture": "4:39",
+  "lastDeparture": "0:10",
+  "peakIntervalMin": [
+    6,
+    24
+  ],
+  "lines": [
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 29.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Resnik III",
+      "slug": "resnik-iii-pescenica-zitnjak"
+    },
+    {
+      "name": "Rimski put-bazen",
+      "slug": "rimski-put-bazen-sesvete"
+    },
+    {
+      "name": "Lj.Posav.-Rimski put",
+      "slug": "lj-posav-rimski-put"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.09817,
+      45.8058,
+      16.1023,
+      45.80868
+    ],
+    "lines": [
+      {
+        "broj": "281",
+        "mode": "bus",
+        "shape": [
+          [
+            16.08315,
+            45.80464
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08488,
+            45.80483
+          ],
+          [
+            16.08489,
+            45.80483
+          ],
+          [
+            16.08857,
+            45.80537
+          ],
+          [
+            16.09178,
+            45.80575
+          ],
+          [
+            16.09505,
+            45.80604
+          ],
+          [
+            16.09815,
+            45.8061
+          ],
+          [
+            16.10062,
+            45.80603
+          ],
+          [
+            16.10083,
+            45.80612
+          ],
+          [
+            16.10094,
+            45.80772
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10106,
+            45.80791
+          ],
+          [
+            16.10123,
+            45.80982
+          ],
+          [
+            16.10588,
+            45.80983
+          ],
+          [
+            16.10589,
+            45.80982
+          ],
+          [
+            16.10589,
+            45.80982
+          ],
+          [
+            16.10974,
+            45.80976
+          ],
+          [
+            16.11449,
+            45.8097
+          ],
+          [
+            16.11475,
+            45.80977
+          ],
+          [
+            16.11483,
+            45.81042
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 18,
+    "stations30": 83,
+    "stations45": 291
+  },
+  "prevSlug": "slavenskoga-jug",
+  "nextSlug": "slavonska-culinecka-pescenica-zitnjak"
+}

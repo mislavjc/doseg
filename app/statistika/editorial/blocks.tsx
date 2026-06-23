@@ -202,3 +202,15 @@ export function PrevNext({
     </nav>
   )
 }
+
+// ── Provenijencija (data-source footnote) ───────────────────────────────────
+
+/** GTFS data-provenance line shared by the line + stop pages. */
+export function Provenijencija({ date }: { date: string }) {
+  return (
+    <p className="font-mono text-label text-ink-faint">
+      vozni red iz službenog zet gtfs feeda · osvježava se automatski ·
+      vrijedi za {date}
+    </p>
+  )
+}

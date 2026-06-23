@@ -1,0 +1,105 @@
+{
+  "slug": "predsjednicki-dvori",
+  "name": "Predsjednički dvori",
+  "kvart": "Gornji grad - Medveščak",
+  "lat": 45.83762,
+  "lon": 15.96167,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "101"
+  ],
+  "firstDeparture": "5:07",
+  "lastDeparture": "23:49",
+  "peakIntervalMin": [
+    12,
+    18
+  ],
+  "lines": [
+    {
+      "broj": "101",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Šestine",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 30.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Zelengaj",
+      "slug": "zelengaj-gornji-grad-medvescak"
+    },
+    {
+      "name": "Pantovčak 241",
+      "slug": "pantovcak-241"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.9596,
+      45.83617,
+      15.96373,
+      45.83906
+    ],
+    "lines": [
+      {
+        "broj": "101",
+        "mode": "bus",
+        "shape": [
+          [
+            15.96109,
+            45.82462
+          ],
+          [
+            15.96139,
+            45.82805
+          ],
+          [
+            15.96224,
+            45.832
+          ],
+          [
+            15.96251,
+            45.83525
+          ],
+          [
+            15.96156,
+            45.8378
+          ],
+          [
+            15.95935,
+            45.84042
+          ],
+          [
+            15.95813,
+            45.84556
+          ],
+          [
+            15.95519,
+            45.84692
+          ],
+          [
+            15.95351,
+            45.84899
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 15,
+    "stations30": 50,
+    "stations45": 145
+  },
+  "prevSlug": "precko-terminal",
+  "nextSlug": "prekvrsje-skola"
+}

@@ -1,0 +1,161 @@
+{
+  "slug": "iver",
+  "name": "Iver",
+  "kvart": "Sesvete",
+  "lat": 45.81268,
+  "lon": 16.18283,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "269"
+  ],
+  "firstDeparture": "4:25",
+  "lastDeparture": "1:00",
+  "peakIntervalMin": [
+    1,
+    12
+  ],
+  "lines": [
+    {
+      "broj": "269",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        12,
+        12
+      ],
+      "allDayHeadwayMin": 17.2
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Mladena Halape",
+      "slug": "mladena-halape"
+    },
+    {
+      "name": "Put za Cerje",
+      "slug": "put-za-cerje"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.18076,
+      45.81124,
+      16.1849,
+      45.81412
+    ],
+    "lines": [
+      {
+        "broj": "269",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1828,
+            45.81268
+          ],
+          [
+            16.18213,
+            45.81276
+          ],
+          [
+            16.18282,
+            45.8134
+          ],
+          [
+            16.18308,
+            45.81368
+          ],
+          [
+            16.18345,
+            45.81427
+          ],
+          [
+            16.18358,
+            45.8146
+          ],
+          [
+            16.1809,
+            45.81507
+          ],
+          [
+            16.18017,
+            45.81528
+          ],
+          [
+            16.18016,
+            45.81528
+          ],
+          [
+            16.17996,
+            45.81528
+          ],
+          [
+            16.17893,
+            45.8155
+          ],
+          [
+            16.17495,
+            45.81639
+          ],
+          [
+            16.17478,
+            45.81651
+          ],
+          [
+            16.17478,
+            45.81651
+          ],
+          [
+            16.17421,
+            45.81655
+          ],
+          [
+            16.17245,
+            45.817
+          ],
+          [
+            16.17007,
+            45.81794
+          ],
+          [
+            16.16946,
+            45.81819
+          ],
+          [
+            16.1692,
+            45.81832
+          ],
+          [
+            16.16916,
+            45.8184
+          ],
+          [
+            16.16915,
+            45.81841
+          ],
+          [
+            16.16904,
+            45.81834
+          ],
+          [
+            16.16831,
+            45.81866
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 3,
+    "stations30": 12,
+    "stations45": 45
+  },
+  "prevSlug": "ive-dulcica",
+  "nextSlug": "ivice-lovincica"
+}

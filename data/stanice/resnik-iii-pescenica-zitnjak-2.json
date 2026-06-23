@@ -1,0 +1,165 @@
+{
+  "slug": "resnik-iii-pescenica-zitnjak-2",
+  "name": "Resnik III",
+  "kvart": "Peščenica - Žitnjak",
+  "lat": 45.8047,
+  "lon": 16.0821,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "281"
+  ],
+  "firstDeparture": "4:41",
+  "lastDeparture": "23:36",
+  "peakIntervalMin": [
+    30,
+    30
+  ],
+  "lines": [
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 29.9
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Slavon.-Lj.Posavskog",
+      "slug": "slavon-lj-posavskog"
+    },
+    {
+      "name": "Slavonska-Čulinečka",
+      "slug": "slavonska-culinecka-pescenica-zitnjak"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.08004,
+      45.80326,
+      16.08417,
+      45.80614
+    ],
+    "lines": [
+      {
+        "broj": "281",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10101,
+            45.80925
+          ],
+          [
+            16.10102,
+            45.80925
+          ],
+          [
+            16.10102,
+            45.80925
+          ],
+          [
+            16.1011,
+            45.80924
+          ],
+          [
+            16.10106,
+            45.80897
+          ],
+          [
+            16.101,
+            45.80853
+          ],
+          [
+            16.10089,
+            45.80839
+          ],
+          [
+            16.10063,
+            45.80701
+          ],
+          [
+            16.10063,
+            45.80631
+          ],
+          [
+            16.09951,
+            45.80639
+          ],
+          [
+            16.09939,
+            45.80657
+          ],
+          [
+            16.09939,
+            45.80657
+          ],
+          [
+            16.09928,
+            45.8064
+          ],
+          [
+            16.09395,
+            45.80608
+          ],
+          [
+            16.09019,
+            45.8057
+          ],
+          [
+            16.08525,
+            45.80502
+          ],
+          [
+            16.0821,
+            45.8047
+          ],
+          [
+            16.0821,
+            45.8047
+          ],
+          [
+            16.07848,
+            45.80413
+          ],
+          [
+            16.07395,
+            45.80356
+          ],
+          [
+            16.07325,
+            45.80358
+          ],
+          [
+            16.07325,
+            45.80358
+          ],
+          [
+            16.07325,
+            45.80358
+          ],
+          [
+            16.06932,
+            45.80292
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 14,
+    "stations30": 56,
+    "stations45": 233
+  },
+  "prevSlug": "resnik-iii-pescenica-zitnjak",
+  "nextSlug": "resnik-silos"
+}

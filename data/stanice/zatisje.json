@@ -1,0 +1,93 @@
+{
+  "slug": "zatisje",
+  "name": "Zatišje",
+  "kvart": "Črnomerec",
+  "lat": 45.8177,
+  "lon": 15.94784,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "149"
+  ],
+  "firstDeparture": "4:26",
+  "lastDeparture": "0:41",
+  "peakIntervalMin": [
+    5,
+    25
+  ],
+  "lines": [
+    {
+      "broj": "149",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Vrhovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 40.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Mandaličina",
+      "slug": "mandalicina"
+    },
+    {
+      "name": "Vrhovec 62",
+      "slug": "vrhovec-62"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.94577,
+      45.81626,
+      15.94991,
+      45.81914
+    ],
+    "lines": [
+      {
+        "broj": "149",
+        "mode": "bus",
+        "shape": [
+          [
+            15.94534,
+            45.81526
+          ],
+          [
+            15.94911,
+            45.81366
+          ],
+          [
+            15.94798,
+            45.81758
+          ],
+          [
+            15.9476,
+            45.82072
+          ],
+          [
+            15.94716,
+            45.82544
+          ],
+          [
+            15.94858,
+            45.83118
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 27,
+    "stations30": 135,
+    "stations45": 358
+  },
+  "prevSlug": "zastavnice-1",
+  "nextSlug": "zavrsje"
+}

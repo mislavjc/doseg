@@ -1,0 +1,146 @@
+{
+  "slug": "podbrezje-okretiste",
+  "name": "Podbrežje okretište",
+  "kvart": "Novi Zagreb - zapad",
+  "lat": 45.76726,
+  "lon": 15.97346,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "242"
+  ],
+  "firstDeparture": "4:35",
+  "lastDeparture": "23:30",
+  "peakIntervalMin": [
+    10,
+    28
+  ],
+  "lines": [
+    {
+      "broj": "242",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Gl.kolodvor",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 55.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 45.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Podbrežje",
+      "slug": "podbrezje"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.97139,
+      45.76582,
+      15.97552,
+      45.76871
+    ],
+    "lines": [
+      {
+        "broj": "242",
+        "mode": "bus",
+        "shape": [
+          [
+            15.97345,
+            45.76726
+          ],
+          [
+            15.97361,
+            45.76727
+          ],
+          [
+            15.98073,
+            45.76738
+          ],
+          [
+            15.98077,
+            45.76801
+          ],
+          [
+            15.98076,
+            45.76802
+          ],
+          [
+            15.98065,
+            45.76821
+          ],
+          [
+            15.98047,
+            45.77235
+          ],
+          [
+            15.9805,
+            45.77245
+          ],
+          [
+            15.98042,
+            45.77263
+          ],
+          [
+            15.98039,
+            45.77303
+          ],
+          [
+            15.98048,
+            45.77318
+          ],
+          [
+            15.98042,
+            45.77385
+          ],
+          [
+            15.98051,
+            45.77479
+          ],
+          [
+            15.98061,
+            45.77547
+          ],
+          [
+            15.9807,
+            45.77594
+          ],
+          [
+            15.98063,
+            45.77853
+          ],
+          [
+            15.98066,
+            45.77861
+          ],
+          [
+            15.98058,
+            45.77883
+          ],
+          [
+            15.98052,
+            45.77915
+          ],
+          [
+            15.98033,
+            45.77982
+          ],
+          [
+            15.98024,
+            45.78026
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 6,
+    "stations30": 104,
+    "stations45": 341
+  },
+  "prevSlug": "podbrezje",
+  "nextSlug": "podbreznica"
+}

@@ -1,0 +1,150 @@
+{
+  "slug": "jesenovec-okretiste",
+  "name": "Jesenovec-okretište",
+  "kvart": "Sesvete",
+  "lat": 45.91753,
+  "lon": 16.14572,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "264"
+  ],
+  "firstDeparture": "4:50",
+  "lastDeparture": "23:35",
+  "peakIntervalMin": [
+    15,
+    56
+  ],
+  "lines": [
+    {
+      "broj": "264",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 70.3
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Jesenovečka 29",
+      "slug": "jesenovecka-29"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.14365,
+      45.91609,
+      16.14779,
+      45.91897
+    ],
+    "lines": [
+      {
+        "broj": "264",
+        "mode": "bus",
+        "shape": [
+          [
+            16.14572,
+            45.91753
+          ],
+          [
+            16.147,
+            45.91736
+          ],
+          [
+            16.148,
+            45.91715
+          ],
+          [
+            16.14912,
+            45.91654
+          ],
+          [
+            16.15001,
+            45.91615
+          ],
+          [
+            16.1514,
+            45.9157
+          ],
+          [
+            16.15179,
+            45.91505
+          ],
+          [
+            16.15206,
+            45.91465
+          ],
+          [
+            16.15204,
+            45.91421
+          ],
+          [
+            16.15204,
+            45.91421
+          ],
+          [
+            16.15213,
+            45.9139
+          ],
+          [
+            16.1526,
+            45.91369
+          ],
+          [
+            16.15355,
+            45.91316
+          ],
+          [
+            16.15384,
+            45.91293
+          ],
+          [
+            16.15425,
+            45.91164
+          ],
+          [
+            16.15504,
+            45.91064
+          ],
+          [
+            16.15561,
+            45.91005
+          ],
+          [
+            16.15584,
+            45.90927
+          ],
+          [
+            16.15634,
+            45.90852
+          ],
+          [
+            16.15648,
+            45.90773
+          ],
+          [
+            16.15647,
+            45.90774
+          ],
+          [
+            16.15696,
+            45.90665
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
+  },
+  "prevSlug": "jesenovec-balsiceva",
+  "nextSlug": "jesenovecka-29"
+}

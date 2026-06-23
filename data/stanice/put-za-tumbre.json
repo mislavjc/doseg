@@ -1,0 +1,90 @@
+{
+  "slug": "put-za-tumbre",
+  "name": "Put za Tumbre",
+  "kvart": "Brezovica",
+  "lat": 45.68436,
+  "lon": 15.8733,
+  "mode": "bus",
+  "bothDirections": true,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "162"
+  ],
+  "firstDeparture": "4:44",
+  "lastDeparture": "23:49",
+  "peakIntervalMin": [
+    34,
+    56
+  ],
+  "lines": [
+    {
+      "broj": "162",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Savski most",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 63.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Kraljevečka cesta",
+      "slug": "kraljevecka-cesta"
+    },
+    {
+      "name": "Tumbri",
+      "slug": "tumbri"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      15.87124,
+      45.68292,
+      15.87537,
+      45.6858
+    ],
+    "lines": [
+      {
+        "broj": "162",
+        "mode": "bus",
+        "shape": [
+          [
+            15.85729,
+            45.68466
+          ],
+          [
+            15.861,
+            45.68213
+          ],
+          [
+            15.86765,
+            45.67771
+          ],
+          [
+            15.87336,
+            45.6845
+          ],
+          [
+            15.88014,
+            45.68441
+          ],
+          [
+            15.88523,
+            45.69147
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "put-za-moravce",
+  "nextSlug": "r-terminali-jankomir-stenjevec"
+}

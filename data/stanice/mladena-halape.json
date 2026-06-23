@@ -1,0 +1,161 @@
+{
+  "slug": "mladena-halape",
+  "name": "Mladena Halape",
+  "kvart": "Sesvete",
+  "lat": 45.81384,
+  "lon": 16.1867,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "269"
+  ],
+  "firstDeparture": "5:19",
+  "lastDeparture": "23:44",
+  "peakIntervalMin": [
+    12,
+    12
+  ],
+  "lines": [
+    {
+      "broj": "269",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ses.Kraljev.",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        12,
+        12
+      ],
+      "allDayHeadwayMin": 16.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Put za Cerje",
+      "slug": "put-za-cerje"
+    },
+    {
+      "name": "Iver",
+      "slug": "iver"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.18464,
+      45.8124,
+      16.18877,
+      45.81528
+    ],
+    "lines": [
+      {
+        "broj": "269",
+        "mode": "bus",
+        "shape": [
+          [
+            16.16846,
+            45.81858
+          ],
+          [
+            16.17015,
+            45.81788
+          ],
+          [
+            16.17042,
+            45.81772
+          ],
+          [
+            16.17042,
+            45.81772
+          ],
+          [
+            16.17185,
+            45.81724
+          ],
+          [
+            16.17287,
+            45.81687
+          ],
+          [
+            16.17624,
+            45.81608
+          ],
+          [
+            16.17624,
+            45.81608
+          ],
+          [
+            16.17625,
+            45.81608
+          ],
+          [
+            16.17909,
+            45.81547
+          ],
+          [
+            16.18189,
+            45.81489
+          ],
+          [
+            16.18189,
+            45.81488
+          ],
+          [
+            16.1819,
+            45.81488
+          ],
+          [
+            16.18455,
+            45.81442
+          ],
+          [
+            16.18615,
+            45.81407
+          ],
+          [
+            16.1867,
+            45.81384
+          ],
+          [
+            16.1867,
+            45.81384
+          ],
+          [
+            16.1864,
+            45.81374
+          ],
+          [
+            16.18619,
+            45.81336
+          ],
+          [
+            16.18575,
+            45.81239
+          ],
+          [
+            16.18566,
+            45.81228
+          ],
+          [
+            16.18534,
+            45.8123
+          ],
+          [
+            16.18283,
+            45.81267
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 3,
+    "stations30": 12,
+    "stations45": 45
+  },
+  "prevSlug": "misevecka",
+  "nextSlug": "mlinarska"
+}

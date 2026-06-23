@@ -176,6 +176,10 @@ pub struct StopIndexEntry {
     pub kvart: Option<String>,
     pub mode: StopMode,
     pub line_count: usize,
+    /// Stop coordinates — let consumers (e.g. the line→stop link loop) pick the
+    /// right page among duplicate stop names by nearest match.
+    pub lat: f64,
+    pub lon: f64,
 }
 
 #[derive(Serialize, TS)]
@@ -583,6 +587,8 @@ pub fn generate(
             kvart: data.kvart.clone(),
             mode: data.mode,
             line_count: data.line_count,
+            lat: data.lat,
+            lon: data.lon,
         });
 
         if stop_filter.is_some_and(|f| f != slug.as_str()) {

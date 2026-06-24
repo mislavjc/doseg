@@ -8,15 +8,18 @@ RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
-RUN cargo chef cook --release --recipe-path recipe.json --bin isochrone-server
+RUN cargo chef cook --release --recipe-path recipe.json --bin isochrone-server --bin transit-scorer
 COPY . .
-RUN cargo build --release --bin isochrone-server
+RUN cargo build --release --bin isochrone-server --bin transit-scorer
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y ca-certificates curl && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -u 1001 isochrone
 RUN mkdir -p /app/rt-db && chown isochrone:isochrone /app/rt-db
 COPY --from=builder /app/target/release/isochrone-server /usr/local/bin/
+# transit-scorer rides in the same image; the `scorer` compose service (tools
+# profile) overrides the entrypoint to run it for the page-data regen.
+COPY --from=builder /app/target/release/transit-scorer /usr/local/bin/
 USER isochrone
 EXPOSE 3001
 CMD ["isochrone-server"]

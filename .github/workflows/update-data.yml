@@ -107,36 +107,19 @@ jobs:
 
           echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Create pull request
-        id: cpr
-        if: steps.diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          title: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
-          commit-message: "Update GTFS feeds (${{ steps.diff.outputs.date }})"
-          body: |
-            Automated weekly GTFS data update — **record only**. The feed zips
-            are gitignored (`data/gtfs/*.zip`), so this PR just bumps
-            `checksums.sha256` to log that the feed changed.
+          # Forward the new checksum content to the server regen so it can record
+          # the audit trail (data/gtfs/checksums.sha256) in the same commit as the
+          # regenerated page data.
+          {
+            echo "CHECKSUMS<<__CHK__"
+            cat checksums.sha256
+            echo "__CHK__"
+          } >> "$GITHUB_ENV"
 
-            **ZET feed window:** last service ${{ steps.validate.outputs.last_date }} (${{ steps.validate.outputs.runway }} days runway), ${{ steps.validate.outputs.trips }} trips.
-
-            **Downloads:**
-            - ZET: https://zet.hr/gtfs-scheduled/latest
-            - HZPP: https://www.hzpp.hr/GTFS_files.zip (filtered to Zagreb area)
-
-            The actual refresh happens on the server in the next step of this
-            workflow (`scripts/refresh-gtfs.sh --download`), which re-downloads
-            the feed, rebuilds the OTP graph, and restarts the isochrone server.
-          branch: update-gtfs-data
-          delete-branch: true
-          add-paths: |
-            data/gtfs/checksums.sha256
-
-      # Deliver the feed where it actually lives: on the server. The zips are
-      # gitignored, so merging a PR can't ship them — the server must re-download
-      # and rebuild OTP. refresh-gtfs.sh validates, rebuilds, health-checks, and
-      # rolls back on failure. This is the step whose absence let the feed rot.
+      # 1. Live graph. The zips are gitignored, so merging a PR can't ship them —
+      # the server must re-download and rebuild OTP. refresh-gtfs.sh validates,
+      # rebuilds, health-checks, and rolls back on failure. Fixes the live
+      # map/isochrone immediately. This is the step whose absence let the feed rot.
       - name: Refresh feed on server
         if: steps.diff.outputs.changed == 'true' && steps.validate.outputs.ok == 'true'
         uses: appleboy/ssh-action@v1
@@ -146,3 +129,37 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           command_timeout: 15m
           script: bash /opt/doseg/scripts/refresh-gtfs.sh --download
+
+      # 2. Committed page data. The SSG line/stop pages are baked from committed
+      # JSON, so refreshing the graph alone leaves them stale. regen-data.sh
+      # regenerates data/linije + data/stanice from the freshly-rebuilt graph
+      # (schedule-only reach for determinism), runs a fail-closed validation gate,
+      # and — only on a material change — commits + pushes the update-gtfs-data
+      # branch (carrying the checksum audit trail too). GH_TOKEN is the run-scoped
+      # GITHUB_TOKEN, used purely to push the branch.
+      - name: Regenerate page data on server
+        if: steps.diff.outputs.changed == 'true' && steps.validate.outputs.ok == 'true'
+        uses: appleboy/ssh-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 45m
+          envs: GH_TOKEN,CHECKSUMS,GITHUB_REPOSITORY
+          script: bash /opt/doseg/scripts/regen-data.sh
+
+      # 3. Open the data PR for review. Merging it triggers deploy.yml, which
+      # rebuilds the SSG app with the fresh data. Left for a human click for now;
+      # flip to auto-merge once the gate thresholds are proven against a couple of
+      # real feed rolls. No-op (skips) when the server pushed nothing.
+      - name: Open page-data PR
+        if: steps.diff.outputs.changed == 'true' && steps.validate.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base main --head update-gtfs-data \
+            --title "Refresh transit data (${{ steps.diff.outputs.date }})" \
+            --body "Regenerated pSEO page data from the refreshed GTFS feed (last service ${{ steps.validate.outputs.last_date }}, ${{ steps.validate.outputs.trips }} trips). Validated by \`scripts/regen-data-gate.py\` (count floors + reach coverage). Review the diff, then merge to deploy." \
+            || echo "No new commits to PR (schedule unchanged), or a PR is already open — skipping."

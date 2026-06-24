@@ -391,7 +391,7 @@ fn fetch_reach(
     self_key: &str,
 ) -> Result<StopReach, ReachError> {
     let url = format!(
-        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=only",
+        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=only&realtime=0",
         isochrone_url, lat, lon
     );
     let mut resp = ureq::get(&url)
@@ -487,14 +487,18 @@ pub fn generate(
     let mut clusters: Vec<Cluster> = Vec::new();
     for (key, idxs) in &by_name {
         for members in cluster_group(&occs, idxs) {
-            // Representative name = modal original casing among members.
+            // Representative name = modal original casing among members. Ties on
+            // count are broken by smallest name so the pick is deterministic
+            // run-to-run; iterating `name_counts` (a HashMap) and taking a plain
+            // max picks the last in HashMap order, which varies per process and
+            // makes collision-named stops churn on every regen.
             let mut name_counts: HashMap<&str, usize> = HashMap::new();
             for &oi in &members {
                 *name_counts.entry(occs[oi].name.as_str()).or_default() += 1;
             }
             let name = name_counts
                 .into_iter()
-                .max_by_key(|&(_, c)| c)
+                .max_by_key(|&(n, c)| (c, std::cmp::Reverse(n)))
                 .map(|(n, _)| n.to_string())
                 .unwrap_or_default();
             let lat = members.iter().map(|&oi| occs[oi].lat).sum::<f64>() / members.len() as f64;
@@ -609,6 +613,23 @@ pub fn generate(
         let json = serde_json::to_string_pretty(&index).expect("JSON serialization failed");
         std::fs::write(out_dir.join("index.json"), json).expect("Cannot write index JSON");
         eprintln!("  index.json written ({} stops)", clusters.len());
+
+        // Drop pages for stops that left the feed (or were renamed → new slug)
+        // so they don't linger as stale, unlinked URLs.
+        let mut keep: std::collections::HashSet<String> = index
+            .stops
+            .iter()
+            .map(|e| format!("{}.json", e.slug))
+            .collect();
+        keep.insert("index.json".to_string());
+        keep.insert("hero-meta.json".to_string());
+        let pruned = crate::prune_orphan_json(&out_dir, &keep);
+        if pruned > 0 {
+            eprintln!(
+                "  pruned {} orphan stop page(s) no longer in the feed",
+                pruned
+            );
+        }
     } else {
         eprintln!("  (single-stop filter active — index.json not rewritten)");
     }

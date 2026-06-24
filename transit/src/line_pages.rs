@@ -779,7 +779,7 @@ enum ReachError {
 /// Fetch the 30-minute reach polygon area for a stop from the isochrone server.
 fn fetch_reach_km2(isochrone_url: &str, lat: f64, lon: f64) -> Result<f64, ReachError> {
     let url = format!(
-        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=0",
+        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=0&realtime=0",
         isochrone_url, lat, lon
     );
     let mut resp = ureq::get(&url)
@@ -1156,6 +1156,23 @@ pub fn generate(
         let json = serde_json::to_string_pretty(&index).expect("JSON serialization failed");
         std::fs::write(out_dir.join("index.json"), json).expect("Cannot write index JSON");
         eprintln!("  index.json written ({} lines)", lines.len());
+
+        // Drop pages for lines that left the feed so they don't linger as stale,
+        // unlinked URLs.
+        let mut keep: std::collections::HashSet<String> = index
+            .lines
+            .iter()
+            .map(|e| format!("{}.json", e.broj))
+            .collect();
+        keep.insert("index.json".to_string());
+        keep.insert("hero-meta.json".to_string());
+        let pruned = crate::prune_orphan_json(&out_dir, &keep);
+        if pruned > 0 {
+            eprintln!(
+                "  pruned {} orphan line page(s) no longer in the feed",
+                pruned
+            );
+        }
     } else {
         eprintln!("  (single-line filter active — index.json not rewritten)");
     }

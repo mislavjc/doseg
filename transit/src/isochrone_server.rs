@@ -1424,6 +1424,9 @@ struct IsochroneParams {
     time: Option<String>,
     bajs: Option<String>,
     routing: Option<String>,
+    /// `realtime=0` disables the live GTFS-RT overlay so the result is a pure
+    /// function of the static schedule (used by the page-data generator).
+    realtime: Option<String>,
 }
 
 // --- Handler ---
@@ -1468,8 +1471,16 @@ async fn handle_isochrone(
     let use_bajs = params.bajs.as_deref() == Some("1");
     let routing_mode = params.routing.as_deref().unwrap_or("full");
 
+    // Schedule-only mode: skip the live GTFS-RT overlay so reach is a pure
+    // function of the static feed. The page-data generator requests this so
+    // committed reach values are deterministic run-to-run (not perturbed by
+    // whatever delays happen to be live at generation time).
+    let rt_disabled = params.realtime.as_deref() == Some("0");
+
     // 1. Compute travel times
     let rt_data = state.rt_store.read().unwrap();
+    let empty_rt: HashMap<String, gtfs_rt::TripRT> = HashMap::new();
+    let rt_view = if rt_disabled { &empty_rt } else { &*rt_data };
     let result = compute_travel_times(
         &state.transit_graph,
         lat,
@@ -1477,12 +1488,12 @@ async fn handle_isochrone(
         departure_time,
         use_bajs,
         state.bajs_adjacency.as_ref(),
-        &rt_data,
+        rt_view,
         &state.walk_graph,
         &state.stop_snaps,
         &state.stop_key_to_idx,
     );
-    let has_realtime = !rt_data.is_empty();
+    let has_realtime = !rt_disabled && !rt_data.is_empty();
     drop(rt_data);
     let t_state = Instant::now();
 

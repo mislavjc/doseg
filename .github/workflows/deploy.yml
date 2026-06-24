@@ -21,6 +21,13 @@ jobs:
           command_timeout: 10m
           script: |
             set -e
+
+            # Share the pipeline lock with regen-data.sh so a deploy's
+            # `git reset --hard` can never wipe a mid-regen working tree (and a
+            # regen can't push under a deploy mid-build).
+            exec 8>/opt/doseg.lock
+            flock -w 1800 8 || { echo "deploy: pipeline lock busy (regen in progress)"; exit 1; }
+
             cd /opt/doseg
 
             # Save rollback point

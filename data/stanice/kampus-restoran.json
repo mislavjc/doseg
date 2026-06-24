@@ -224,9 +224,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 54,
-    "stations45": 199
+    "stations15": 7,
+    "stations30": 32,
+    "stations45": 102
   },
   "prevSlug": "kampus-fakultet",
   "nextSlug": "kanalski-put"

@@ -12,10 +12,10 @@
     "134"
   ],
   "firstDeparture": "4:43",
-  "lastDeparture": "23:36",
+  "lastDeparture": "0:01",
   "peakIntervalMin": [
-    9,
-    14
+    1,
+    25
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 27.5,
       "peakRangeMin": [
-        20,
-        21
+        25,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     }
   ],
   "neighbors": [
@@ -56,8 +56,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92759,
@@ -88,9 +88,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 80,
-    "stations45": 274
+    "stations15": 31,
+    "stations30": 178,
+    "stations45": 408
   },
   "prevSlug": "mazuraniceva",
   "nextSlug": "medasni-klanac"

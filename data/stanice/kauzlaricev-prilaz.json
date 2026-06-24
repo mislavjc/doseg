@@ -27,12 +27,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.4,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        8,
+        9,
         9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "220",
@@ -366,9 +366,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 97,
-    "stations45": 323
+    "stations15": 21,
+    "stations30": 102,
+    "stations45": 313
   },
   "prevSlug": "katarinin-trg",
   "nextSlug": "kazaliste-tresnja"

@@ -2,8 +2,8 @@
   "slug": "jandriceva",
   "name": "Jandrićeva",
   "kvart": "Gornji grad - Medveščak",
-  "lat": 45.83679,
-  "lon": 15.97739,
+  "lat": 45.83674,
+  "lon": 15.97722,
   "mode": "both",
   "bothDirections": true,
   "lineCount": 4,
@@ -16,10 +16,10 @@
     "104"
   ],
   "firstDeparture": "4:42",
-  "lastDeparture": "0:46",
+  "lastDeparture": "0:41",
   "peakIntervalMin": [
     1,
-    3
+    4
   ],
   "lines": [
     {
@@ -29,12 +29,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.3,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "14",
@@ -43,12 +43,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.6,
+      "peakHeadwayMin": 9.9,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "33",
@@ -92,10 +92,10 @@
   ],
   "hero": {
     "bbox": [
-      15.97532,
-      45.83535,
-      15.97946,
-      45.83824
+      15.97515,
+      45.8353,
+      15.97929,
+      45.83818
     ],
     "lines": [
       {
@@ -297,6 +297,10 @@
           [
             15.97985,
             45.82255
+          ],
+          [
+            15.97982,
+            45.82249
           ]
         ]
       },
@@ -499,6 +503,10 @@
           [
             15.97985,
             45.82255
+          ],
+          [
+            15.97982,
+            45.82249
           ]
         ]
       },
@@ -701,6 +709,10 @@
           [
             15.97985,
             45.82255
+          ],
+          [
+            15.97982,
+            45.82249
           ]
         ]
       },
@@ -785,10 +797,6 @@
             45.83728
           ],
           [
-            15.97715,
-            45.83726
-          ],
-          [
             15.97728,
             45.83676
           ],
@@ -815,6 +823,10 @@
           [
             15.97675,
             45.8368
+          ],
+          [
+            15.97664,
+            45.83694
           ],
           [
             15.97663,
@@ -921,9 +933,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 152,
-    "stations45": 395
+    "stations15": 20,
+    "stations30": 112,
+    "stations45": 288
   },
   "prevSlug": "jalsina",
   "nextSlug": "jankomir"

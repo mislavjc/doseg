@@ -108,7 +108,6 @@
           "lon": 15.95592,
           "offsetMin": 9,
           "tramInterchange": [
-            "1",
             "2",
             "6",
             "11"
@@ -1170,10 +1169,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "1",
-        "stopName": "Vinogradska 3"
-      },
-      {
         "broj": "2",
         "stopName": "Vinogradska 3"
       },
@@ -1190,7 +1185,7 @@
   "prevBroj": "138",
   "nextBroj": "140",
   "reach": {
-    "areaKm2": 13.8,
+    "areaKm2": 13.3,
     "stopName": "Šercerova-Šer.prečac",
     "lat": 45.8257,
     "lon": 15.9577

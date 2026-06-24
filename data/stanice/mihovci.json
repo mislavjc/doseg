@@ -12,11 +12,11 @@
     "209",
     "239"
   ],
-  "firstDeparture": "4:22",
-  "lastDeparture": "0:33",
+  "firstDeparture": "4:27",
+  "lastDeparture": "0:38",
   "peakIntervalMin": [
-    2,
-    10
+    1,
+    14
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        19
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "239",
@@ -978,9 +978,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 72,
-    "stations45": 206
+    "stations15": 7,
+    "stations30": 30,
+    "stations45": 81
   },
   "prevSlug": "mihaljevac",
   "nextSlug": "mije-haleusa"

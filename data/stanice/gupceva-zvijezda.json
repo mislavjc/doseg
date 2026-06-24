@@ -14,10 +14,10 @@
   ],
   "busLines": [],
   "firstDeparture": "4:46",
-  "lastDeparture": "0:41",
+  "lastDeparture": "0:37",
   "peakIntervalMin": [
     1,
-    4
+    5
   ],
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.3,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "14",
@@ -41,12 +41,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.5,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        7
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "33",
@@ -1059,9 +1059,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 162,
-    "stations45": 449
+    "stations15": 33,
+    "stations30": 146,
+    "stations45": 387
   },
   "prevSlug": "gumerec",
   "nextSlug": "gustava-krkleca"

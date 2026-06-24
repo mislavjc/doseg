@@ -6,16 +6,17 @@
   "lon": 16.12526,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [],
   "busLines": [
-    "263"
+    "263",
+    "270"
   ],
-  "firstDeparture": "4:39",
-  "lastDeparture": "0:39",
+  "firstDeparture": "4:37",
+  "lastDeparture": "0:14",
   "peakIntervalMin": [
-    4,
-    23
+    2,
+    20
   ],
   "lines": [
     {
@@ -25,12 +26,23 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        18,
-        23
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -41,6 +53,14 @@
     {
       "name": "Kašina - centar",
       "slug": "kasina-centar"
+    },
+    {
+      "name": "Soblinečka 22",
+      "slug": "soblinecka-22"
+    },
+    {
+      "name": "Put za Kašinu",
+      "slug": "put-za-kasinu"
     }
   ],
   "hero": {
@@ -284,13 +304,47 @@
             45.91962
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13313,
+            45.91161
+          ],
+          [
+            16.13123,
+            45.90873
+          ],
+          [
+            16.13047,
+            45.90425
+          ],
+          [
+            16.1252,
+            45.90597
+          ],
+          [
+            16.12489,
+            45.90062
+          ],
+          [
+            16.12489,
+            45.89753
+          ],
+          [
+            16.12362,
+            45.89269
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 53,
-    "stations45": 139
+    "stations15": 26,
+    "stations30": 48,
+    "stations45": 123
   },
   "prevSlug": "skocilovici",
   "nextSlug": "skola-vugrovec"

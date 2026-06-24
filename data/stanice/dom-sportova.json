@@ -12,10 +12,10 @@
     "118"
   ],
   "firstDeparture": "4:40",
-  "lastDeparture": "0:30",
+  "lastDeparture": "0:35",
   "peakIntervalMin": [
-    9,
-    9
+    10,
+    10
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Trg Mažur.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.6
     }
   ],
   "neighbors": [
@@ -277,8 +277,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 144,
-    "stations45": 425
+    "stations30": 122,
+    "stations45": 401
   },
   "prevSlug": "dom-ksaver",
   "nextSlug": "dom-svetog-josipa"

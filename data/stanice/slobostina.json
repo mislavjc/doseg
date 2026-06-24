@@ -224,9 +224,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 105,
-    "stations45": 325
+    "stations15": 20,
+    "stations30": 102,
+    "stations45": 301
   },
   "prevSlug": "sljemenska",
   "nextSlug": "slovenska"

@@ -2010,43 +2010,37 @@
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
@@ -2132,42 +2126,36 @@
         {
           "hour": 9,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
             45
           ]
         },
@@ -2479,7 +2467,7 @@
   "prevBroj": "104",
   "nextBroj": "106",
   "reach": {
-    "areaKm2": 11.0,
+    "areaKm2": 17.5,
     "stopName": "Jurjevska 77",
     "lat": 45.8328,
     "lon": 15.97527

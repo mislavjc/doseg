@@ -270,9 +270,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 78,
-    "stations45": 207
+    "stations15": 17,
+    "stations30": 96,
+    "stations45": 262
   },
   "prevSlug": "branim-trznica",
   "nextSlug": "branimir-centar"

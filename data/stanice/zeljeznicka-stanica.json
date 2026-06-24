@@ -11,11 +11,11 @@
   "busLines": [
     "172"
   ],
-  "firstDeparture": "5:09",
-  "lastDeparture": "1:59",
+  "firstDeparture": "5:12",
+  "lastDeparture": "1:37",
   "peakIntervalMin": [
-    7,
-    9
+    10,
+    10
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 7.9,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     }
   ],
   "neighbors": [
@@ -241,8 +241,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 59,
-    "stations45": 164
+    "stations30": 67,
+    "stations45": 189
   },
   "prevSlug": "zelengaj-gornji-grad-medvescak",
   "nextSlug": "zeljeznicka-stanica-2"

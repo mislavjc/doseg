@@ -17,8 +17,8 @@
   "firstDeparture": "4:31",
   "lastDeparture": "1:10",
   "peakIntervalMin": [
-    1,
-    3
+    2,
+    5
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "114",
@@ -42,12 +42,9 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 39.5,
-      "peakRangeMin": [
-        39,
-        40
-      ],
-      "allDayHeadwayMin": 40.0
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "115",
@@ -56,12 +53,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 12.5,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     },
     {
       "broj": "116",
@@ -235,8 +232,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93669,
-            45.79615
+            15.93668,
+            45.79618
           ],
           [
             15.93686,
@@ -675,9 +672,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 102,
-    "stations45": 305
+    "stations15": 29,
+    "stations30": 136,
+    "stations45": 393
   },
   "prevSlug": "rterminali-zitnjak",
   "nextSlug": "rudolfa-kolaka"

@@ -2,8 +2,8 @@
   "slug": "mo-n-brestje",
   "name": "MO N.Brestje",
   "kvart": "Sesvete",
-  "lat": 45.82884,
-  "lon": 16.09105,
+  "lat": 45.8289,
+  "lon": 16.09108,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 1,
@@ -46,10 +46,10 @@
   ],
   "hero": {
     "bbox": [
-      16.08898,
-      45.82739,
-      16.09312,
-      45.83028
+      16.08901,
+      45.82746,
+      16.09315,
+      45.83035
     ],
     "lines": [
       {
@@ -601,9 +601,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 97,
-    "stations45": 225
+    "stations15": 24,
+    "stations30": 88,
+    "stations45": 207
   },
   "prevSlug": "mlinovi-gornji",
   "nextSlug": "mokricka"

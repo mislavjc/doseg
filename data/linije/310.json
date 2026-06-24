@@ -1996,6 +1996,12 @@
         "terminal": "Gl.kolodvor"
       },
       {
+        "broj": "313",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2028,7 +2034,7 @@
   "prevBroj": "308",
   "nextBroj": "311",
   "reach": {
-    "areaKm2": 5.4,
+    "areaKm2": 7.1,
     "stopName": "Lomnica-dom zdravlja",
     "lat": 45.71403,
     "lon": 16.02292

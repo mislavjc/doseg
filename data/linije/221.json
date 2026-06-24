@@ -2037,6 +2037,12 @@
         "terminal": "Gl.kolodvor"
       },
       {
+        "broj": "313",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2069,7 +2075,7 @@
   "prevBroj": "220",
   "nextBroj": "222",
   "reach": {
-    "areaKm2": 22.6,
+    "areaKm2": 26.9,
     "stopName": "Islandska",
     "lat": 45.77244,
     "lon": 15.98883

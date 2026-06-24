@@ -15,8 +15,8 @@
   "firstDeparture": "4:48",
   "lastDeparture": "1:20",
   "peakIntervalMin": [
-    3,
-    32
+    4,
+    21
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        28
       ],
-      "allDayHeadwayMin": 34.2
+      "allDayHeadwayMin": 30.5
     }
   ],
   "neighbors": [
@@ -617,9 +617,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 138,
-    "stations45": 287
+    "stations15": 3,
+    "stations30": 37,
+    "stations45": 163
   },
   "prevSlug": "kovaceviceva",
   "nextSlug": "kovinska-stenjevec-2"

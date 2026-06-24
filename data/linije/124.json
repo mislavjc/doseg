@@ -17,8 +17,8 @@
       "stops": [
         {
           "name": "Črnomerec",
-          "lat": 45.81606,
-          "lon": 15.93333,
+          "lat": 45.81567,
+          "lon": 15.93369,
           "offsetMin": 0,
           "tramInterchange": [
             "2",
@@ -30,7 +30,7 @@
           "name": "Kustošijanska",
           "lat": 45.81377,
           "lon": 15.92825,
-          "offsetMin": 3,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
@@ -44,91 +44,91 @@
           "name": "Roginina",
           "lat": 45.8116,
           "lon": 15.9172,
-          "offsetMin": 5,
+          "offsetMin": 4,
           "tramInterchange": []
         },
         {
           "name": "Vrapčanska",
           "lat": 45.81302,
           "lon": 15.90513,
-          "offsetMin": 8,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Vrapčanska aleja",
           "lat": 45.81262,
           "lon": 15.89524,
-          "offsetMin": 9,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Gospodska",
           "lat": 45.81305,
           "lon": 15.8872,
-          "offsetMin": 10,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Bolnička-Gospodska",
           "lat": 45.81807,
           "lon": 15.88546,
-          "offsetMin": 11,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Karažnik",
           "lat": 45.81903,
           "lon": 15.88116,
-          "offsetMin": 12,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Čileanska",
           "lat": 45.81932,
           "lon": 15.87538,
-          "offsetMin": 14,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Stare Gajnice",
           "lat": 45.81908,
           "lon": 15.87078,
-          "offsetMin": 15,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Mesekov put",
           "lat": 45.82121,
           "lon": 15.87111,
-          "offsetMin": 16,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Kancelak",
           "lat": 45.8257,
           "lon": 15.87008,
-          "offsetMin": 17,
+          "offsetMin": 15,
           "tramInterchange": []
         },
         {
           "name": "Kudekov put",
           "lat": 45.83016,
           "lon": 15.8702,
-          "offsetMin": 18,
+          "offsetMin": 16,
           "tramInterchange": []
         },
         {
           "name": "Gornji Stenjevec",
           "lat": 45.83329,
           "lon": 15.8696,
-          "offsetMin": 19,
+          "offsetMin": 17,
           "tramInterchange": []
         }
       ],
       "shape": [
         [
-          15.93332,
-          45.81605
+          15.93331,
+          45.81567
         ],
         [
           15.93328,
@@ -1401,7 +1401,7 @@
   "bbox": [
     15.8696,
     45.81134,
-    15.93333,
+    15.93369,
     45.83329
   ],
   "histogram": [
@@ -1423,11 +1423,11 @@
     4,
     5,
     5,
-    4,
+    3,
     3,
     2,
     2,
-    2,
+    3,
     2
   ],
   "timetable": {
@@ -1530,38 +1530,38 @@
         {
           "hour": 18,
           "minutes": [
-            15,
-            40
+            15
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            30
+            5,
+            55
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            25
+            50
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            20
+            35
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            15
+            30
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            10
+            15
           ]
         }
       ],
@@ -1676,32 +1676,32 @@
         {
           "hour": 19,
           "minutes": [
-            5,
-            55
+            30
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            50
+            20
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            45
+            15
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            40
+            0,
+            50
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            35
+            45
           ]
         }
       ]
@@ -1711,269 +1711,236 @@
         {
           "hour": 5,
           "minutes": [
-            10,
-            30,
-            50
+            25
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
-            35
+            15
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            25,
-            50
+            5
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            40
+            0,
+            55
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            5,
-            30,
-            55
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            20,
             45
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            35
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
-            25,
-            50
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            50
+            25
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5,
-            40,
-            55
+            20
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            30,
-            45
+            15
           ]
         },
         {
           "hour": 16,
-          "minutes": [
-            15,
-            35
-          ]
-        },
-        {
-          "hour": 17,
           "minutes": [
             10
           ]
         },
         {
-          "hour": 18,
-          "minutes": [
-            5,
-            50
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            45
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            15
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            5,
-            45
-          ]
-        }
-      ],
-      [
-        {
-          "hour": 4,
-          "minutes": [
-            45
-          ]
-        },
-        {
-          "hour": 5,
-          "minutes": [
-            5,
-            30,
-            50
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            10,
-            35
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            0,
-            25,
-            50
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            15,
-            40
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            5,
-            30,
-            55
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            20,
-            45
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            10,
-            35
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            0,
-            25,
-            50
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            20,
-            40
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            15,
-            30
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            5,
-            20,
-            55
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            10,
-            45
-          ]
-        },
-        {
           "hour": 17,
           "minutes": [
-            0,
-            35
+            5
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            30
+            0,
+            55
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15
+            45
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            10,
-            55
+            35
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            40
+            25
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            25
+            15
           ]
         },
         {
           "hour": 23,
           "minutes": [
             5
+          ]
+        }
+      ],
+      [
+        {
+          "hour": 5,
+          "minutes": [
+            0,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            5,
+            55
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            35
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            0,
+            50
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            30
           ]
         }
       ]
@@ -2382,7 +2349,7 @@
   "prevBroj": "123",
   "nextBroj": "125",
   "reach": {
-    "areaKm2": 23.0,
+    "areaKm2": 20.3,
     "stopName": "Bolnička-Gospodska",
     "lat": 45.81807,
     "lon": 15.88546
@@ -2390,10 +2357,10 @@
   "stats": {
     "dailyDepartures": 74,
     "firstDeparture": "05:05",
-    "lastDeparture": "23:10",
+    "lastDeparture": "23:15",
     "peakHeadwayMin": 27.5,
-    "avgHeadwayMin": 31.0,
-    "travelTimeMin": 18.8,
-    "distanceKm": 7.4
+    "avgHeadwayMin": 31.1,
+    "travelTimeMin": 16.5,
+    "distanceKm": 7.3
   }
 }

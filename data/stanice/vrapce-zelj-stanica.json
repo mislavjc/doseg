@@ -14,8 +14,8 @@
   "firstDeparture": "4:11",
   "lastDeparture": "0:23",
   "peakIntervalMin": [
-    2,
-    28
+    30,
+    40
   ],
   "lines": [
     {
@@ -25,12 +25,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     }
   ],
   "neighbors": [
@@ -332,9 +329,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 132,
-    "stations45": 286
+    "stations15": 33,
+    "stations30": 118,
+    "stations45": 271
   },
   "prevSlug": "vrapcanska-aleja",
   "nextSlug": "vrbani"

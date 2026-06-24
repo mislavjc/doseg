@@ -16,11 +16,11 @@
     "276",
     "281"
   ],
-  "firstDeparture": "4:32",
+  "firstDeparture": "4:28",
   "lastDeparture": "0:22",
   "peakIntervalMin": [
     1,
-    4
+    5
   ],
   "lines": [
     {
@@ -30,12 +30,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "216",
@@ -46,7 +46,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "222",
@@ -85,7 +85,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "281",
@@ -1483,9 +1483,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 195,
-    "stations45": 429
+    "stations15": 37,
+    "stations30": 215,
+    "stations45": 465
   },
   "prevSlug": "komari",
   "nextSlug": "konzum"

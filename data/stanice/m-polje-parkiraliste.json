@@ -12,7 +12,7 @@
     "267"
   ],
   "firstDeparture": "7:07",
-  "lastDeparture": "18:07",
+  "lastDeparture": "19:47",
   "peakIntervalMin": null,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 110.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
     }
   ],
   "neighbors": [
@@ -211,8 +211,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 50,
-    "stations45": 129
+    "stations30": 35,
+    "stations45": 120
   },
   "prevSlug": "m-polje-okretiste",
   "nextSlug": "m-trnava-v-rocica"

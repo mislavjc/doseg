@@ -12,11 +12,11 @@
     "209",
     "239"
   ],
-  "firstDeparture": "4:26",
-  "lastDeparture": "0:28",
+  "firstDeparture": "4:31",
+  "lastDeparture": "0:33",
   "peakIntervalMin": [
-    2,
-    10
+    6,
+    12
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        15,
-        19
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "239",
@@ -666,9 +666,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 25,
-    "stations45": 85
+    "stations15": 7,
+    "stations30": 30,
+    "stations45": 81
   },
   "prevSlug": "kamenolom-sesvete",
   "nextSlug": "kampus-fakultet"

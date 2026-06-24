@@ -857,56 +857,7 @@
       ]
     ],
     "nedjelja": [
-      [
-        {
-          "hour": 8,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            30
-          ]
-        }
-      ]
+      []
     ]
   },
   "related": {
@@ -977,7 +928,7 @@
   "prevBroj": "203",
   "nextBroj": "205",
   "reach": {
-    "areaKm2": 17.9,
+    "areaKm2": 15.0,
     "stopName": "Bijenička",
     "lat": 45.82461,
     "lon": 15.98491

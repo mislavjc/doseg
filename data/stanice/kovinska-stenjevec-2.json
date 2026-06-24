@@ -15,8 +15,8 @@
   "firstDeparture": "4:20",
   "lastDeparture": "1:55",
   "peakIntervalMin": [
-    16,
-    25
+    12,
+    24
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     }
   ],
   "neighbors": [
@@ -570,8 +570,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 50,
-    "stations45": 183
+    "stations30": 37,
+    "stations45": 163
   },
   "prevSlug": "kovinska-stenjevec",
   "nextSlug": "kozari-bok"

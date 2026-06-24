@@ -7,7 +7,7 @@
     "Lučko"
   ],
   "via": [
-    "St.dom Stjepan Radić",
+    "St. dom S. Radić",
     "Karlovačka 18"
   ],
   "oneWay": false,
@@ -27,7 +27,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 1,
@@ -1545,8 +1545,8 @@
     1,
     3,
     3,
-    3,
     2,
+    1,
     1,
     1
   ],
@@ -1655,8 +1655,7 @@
         {
           "hour": 20,
           "minutes": [
-            35,
-            55
+            35
           ]
         },
         {
@@ -1769,8 +1768,7 @@
         {
           "hour": 21,
           "minutes": [
-            0,
-            15
+            0
           ]
         },
         {
@@ -2254,19 +2252,19 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
@@ -2279,11 +2277,11 @@
     "lon": 15.9258
   },
   "stats": {
-    "dailyDepartures": 54,
+    "dailyDepartures": 52,
     "firstDeparture": "04:40",
     "lastDeparture": "22:30",
     "peakHeadwayMin": 57.5,
-    "avgHeadwayMin": 41.2,
+    "avgHeadwayMin": 42.8,
     "travelTimeMin": 15.5,
     "distanceKm": 9.6
   }

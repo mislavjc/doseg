@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:21",
   "lastDeparture": "22:26",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "207",
@@ -25,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        38,
-        43
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -156,9 +150,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 152,
-    "stations45": 410
+    "stations15": 23,
+    "stations30": 97,
+    "stations45": 287
   },
   "prevSlug": "bijenicka",
   "nextSlug": "bijenicka-bocaliste"

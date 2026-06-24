@@ -15,8 +15,8 @@
   "firstDeparture": "4:10",
   "lastDeparture": "0:26",
   "peakIntervalMin": [
-    4,
-    7
+    9,
+    13
   ],
   "lines": [
     {
@@ -26,12 +26,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     },
     {
       "broj": "146",
@@ -40,12 +37,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -485,9 +482,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 132,
-    "stations45": 286
+    "stations15": 26,
+    "stations30": 105,
+    "stations45": 251
   },
   "prevSlug": "stefanovec-70",
   "nextSlug": "stenjevecka"

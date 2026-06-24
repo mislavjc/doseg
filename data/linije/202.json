@@ -644,21 +644,21 @@
     0,
     0,
     0,
-    2,
-    5,
+    1,
     4,
-    6,
+    3,
     4,
-    5,
-    5,
+    3,
     4,
-    6,
+    3,
+    3,
     4,
+    3,
     4,
-    6,
+    3,
     4,
-    6,
-    4,
+    3,
+    3,
     3,
     3,
     4,
@@ -677,111 +677,101 @@
         {
           "hour": 5,
           "minutes": [
-            5,
-            25,
+            15,
             50
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
-            40
+            25
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            5,
-            30,
-            55
+            0,
+            35
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            20,
+            10,
             45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            10,
-            35
+            20,
+            55
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            0,
-            25,
-            50
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
+            5,
             40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            5,
-            30,
-            55
+            15,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            20,
-            45
+            25
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            40
+            0,
+            35
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            30,
-            55
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            25,
+            10,
             45
           ]
         },
         {
-          "hour": 17,
-          "minutes": [
-            5,
-            30,
-            55
-          ]
-        },
-        {
-          "hour": 18,
+          "hour": 16,
           "minutes": [
             20,
             55
           ]
         },
         {
-          "hour": 19,
+          "hour": 17,
           "minutes": [
             30
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            5,
+            45
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            25
           ]
         },
         {
@@ -814,112 +804,97 @@
       ],
       [
         {
-          "hour": 4,
-          "minutes": [
-            55
-          ]
-        },
-        {
           "hour": 5,
           "minutes": [
-            20,
-            45
+            0,
+            35
           ]
         },
         {
           "hour": 6,
           "minutes": [
             10,
-            35
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            25,
-            50
+            20,
+            55
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            40
+            30
           ]
         },
         {
           "hour": 9,
           "minutes": [
             5,
-            30,
-            55
+            40
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            20,
-            45
+            15,
+            50
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            35
+            25
           ]
         },
         {
           "hour": 12,
           "minutes": [
             0,
-            25,
-            50
+            35
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            40
+            10,
+            45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5,
-            35
+            20,
+            55
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
-            35
+            5,
+            40
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            0,
-            25,
-            50
+            15,
+            55
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            15,
-            40
+            35
           ]
         },
         {
@@ -990,50 +965,40 @@
           "hour": 8,
           "minutes": [
             10,
-            25,
             45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            0,
             20,
-            35,
             55
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            10,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
             5,
-            20,
-            40,
-            55
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
             15,
-            30,
             50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            5,
-            25,
-            40
+            25
           ]
         },
         {
@@ -1130,56 +1095,46 @@
         {
           "hour": 8,
           "minutes": [
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 9,
           "minutes": [
             5,
-            20,
-            40,
-            55
+            40
           ]
         },
         {
           "hour": 10,
           "minutes": [
             15,
-            30,
             50
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            5,
-            25,
-            40
+            25
           ]
         },
         {
           "hour": 12,
           "minutes": [
             0,
-            15,
-            35,
-            50
+            35
           ]
         },
         {
           "hour": 13,
           "minutes": [
             10,
-            25,
             45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
             20,
             55
           ]
@@ -1580,17 +1535,17 @@
   "prevBroj": "201",
   "nextBroj": "203",
   "reach": {
-    "areaKm2": 14.9,
+    "areaKm2": 18.4,
     "stopName": "Jordanovac",
     "lat": 45.82658,
     "lon": 15.99714
   },
   "stats": {
-    "dailyDepartures": 86,
+    "dailyDepartures": 66,
     "firstDeparture": "04:40",
     "lastDeparture": "23:35",
-    "peakHeadwayMin": 25.0,
-    "avgHeadwayMin": 27.0,
+    "peakHeadwayMin": 35.0,
+    "avgHeadwayMin": 35.5,
     "travelTimeMin": 6.0,
     "distanceKm": 2.5
   }

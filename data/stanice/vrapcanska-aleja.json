@@ -27,7 +27,7 @@
   "lastDeparture": "1:41",
   "peakIntervalMin": [
     1,
-    2
+    1
   ],
   "lines": [
     {
@@ -37,12 +37,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "121",
@@ -95,7 +95,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     },
     {
       "broj": "130",
@@ -143,12 +143,9 @@
       "headsign": "Manterovčak 78",
       "isLoop": true,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 30.0
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     },
     {
       "broj": "143",
@@ -157,12 +154,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.3,
+      "peakHeadwayMin": 60.0,
       "peakRangeMin": [
-        24,
-        28
+        60,
+        60
       ],
-      "allDayHeadwayMin": 32.8
+      "allDayHeadwayMin": 60.0
     },
     {
       "broj": "172",
@@ -171,12 +168,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.9,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        7,
-        9
+        8,
+        13
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     },
     {
       "broj": "176",
@@ -2367,9 +2364,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 132,
-    "stations45": 286
+    "stations15": 34,
+    "stations30": 117,
+    "stations45": 271
   },
   "prevSlug": "vrapcanska-269",
   "nextSlug": "vrapce-zelj-stanica"

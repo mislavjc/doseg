@@ -14,8 +14,8 @@
   "firstDeparture": "4:39",
   "lastDeparture": "23:39",
   "peakIntervalMin": [
-    15,
-    25
+    30,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        25
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.8
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -384,9 +384,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 91,
-    "stations45": 249
+    "stations15": 11,
+    "stations30": 51,
+    "stations45": 162
   },
   "prevSlug": "novaki-gornja-dubrava",
   "nextSlug": "novaki-selska"

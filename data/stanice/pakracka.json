@@ -56,8 +56,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92993,
@@ -92,9 +92,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 92,
-    "stations45": 299
+    "stations15": 13,
+    "stations30": 103,
+    "stations45": 353
   },
   "prevSlug": "p-d-runolist",
   "nextSlug": "palcici-odvojak"

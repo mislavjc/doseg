@@ -728,6 +728,7 @@
           "lon": 15.93697,
           "offsetMin": 20,
           "tramInterchange": [
+            "1",
             "3",
             "9",
             "12"
@@ -2239,7 +2240,7 @@
   "prevBroj": "115",
   "nextBroj": "117",
   "reach": {
-    "areaKm2": 17.4,
+    "areaKm2": 27.5,
     "stopName": "Savska Opatovina",
     "lat": 45.79753,
     "lon": 15.8866

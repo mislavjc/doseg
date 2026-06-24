@@ -2325,21 +2325,19 @@
           "hour": 5,
           "minutes": [
             5,
-            30,
             55
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            25,
             55
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            25,
+            30,
             55
           ]
         },
@@ -2437,14 +2435,12 @@
         {
           "hour": 21,
           "minutes": [
-            25,
             55
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            20,
             55
           ]
         },
@@ -2656,7 +2652,7 @@
   "prevBroj": "204",
   "nextBroj": "206",
   "reach": {
-    "areaKm2": 11.5,
+    "areaKm2": 9.2,
     "stopName": "Štefanovec 114",
     "lat": 45.86988,
     "lon": 16.01689

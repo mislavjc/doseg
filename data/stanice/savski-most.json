@@ -42,12 +42,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        8,
-        9
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "7",
@@ -56,12 +56,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.4,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -100,7 +100,7 @@
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "111",
@@ -125,7 +125,7 @@
         56,
         59
       ],
-      "allDayHeadwayMin": 41.2
+      "allDayHeadwayMin": 42.8
     },
     {
       "broj": "132",
@@ -151,7 +151,7 @@
       "peakHeadwayMin": 24.0,
       "peakRangeMin": [
         20,
-        30
+        25
       ],
       "allDayHeadwayMin": 27.6
     },
@@ -195,7 +195,7 @@
         18,
         43
       ],
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -264,10 +264,6 @@
     {
       "name": "St. dom S. Radić",
       "slug": "st-dom-s-radic"
-    },
-    {
-      "name": "St.dom Stjepan Radić",
-      "slug": "st-dom-stjepan-radic"
     },
     {
       "name": "Remetinečka os.škola",
@@ -2683,9 +2679,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 202,
-    "stations45": 458
+    "stations15": 36,
+    "stations30": 237,
+    "stations45": 525
   },
   "prevSlug": "savski-gaj-xii",
   "nextSlug": "savudrijska"

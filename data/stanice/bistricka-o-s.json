@@ -2,24 +2,25 @@
   "slug": "bistricka-o-s",
   "name": "Bistrička - O.Š.",
   "kvart": "Sesvete",
-  "lat": 45.8305,
+  "lat": 45.83049,
   "lon": 16.10691,
   "mode": "bus",
   "bothDirections": false,
-  "lineCount": 5,
+  "lineCount": 6,
   "tramLines": [],
   "busLines": [
     "261",
     "262",
     "263",
     "267",
+    "270",
     "280"
   ],
   "firstDeparture": "4:47",
-  "lastDeparture": "0:51",
+  "lastDeparture": "0:26",
   "peakIntervalMin": [
-    1,
-    19
+    3,
+    13
   ],
   "lines": [
     {
@@ -51,12 +52,9 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        28,
-        33
-      ],
-      "allDayHeadwayMin": 42.9
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 51.1
     },
     {
       "broj": "267",
@@ -67,7 +65,21 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     },
     {
       "broj": "280",
@@ -968,6 +980,32 @@
         ]
       },
       {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10896,
+            45.84213
+          ],
+          [
+            16.10691,
+            45.8305
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ],
+          [
+            16.10793,
+            45.82592
+          ]
+        ]
+      },
+      {
         "broj": "280",
         "mode": "bus",
         "shape": [
@@ -1188,9 +1226,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 117,
-    "stations45": 248
+    "stations15": 34,
+    "stations30": 97,
+    "stations45": 216
   },
   "prevSlug": "bikceviceva-staza",
   "nextSlug": "bistricka-zagrebacka"

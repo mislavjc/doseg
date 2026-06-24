@@ -14,8 +14,8 @@
   "firstDeparture": "5:11",
   "lastDeparture": "23:26",
   "peakIntervalMin": [
-    1,
-    7
+    3,
+    6
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.6,
+      "peakHeadwayMin": 8.8,
       "peakRangeMin": [
-        7,
-        8
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     }
   ],
   "neighbors": [
@@ -232,9 +232,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 229,
-    "stations45": 488
+    "stations15": 19,
+    "stations30": 191,
+    "stations45": 471
   },
   "prevSlug": "blaza-jurisica",
   "nextSlug": "bliznec"

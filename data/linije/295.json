@@ -87,6 +87,7 @@
           "tramInterchange": [
             "6",
             "7",
+            "8",
             "14"
           ]
         }
@@ -146,8 +147,8 @@
         },
         {
           "name": "Zapruđe",
-          "lat": 45.78187,
-          "lon": 16.00269,
+          "lat": 45.78188,
+          "lon": 16.00267,
           "offsetMin": 5,
           "tramInterchange": [
             "6",
@@ -198,7 +199,7 @@
           45.78179
         ],
         [
-          16.00268,
+          16.00267,
           45.78186
         ]
       ]
@@ -208,7 +209,7 @@
     16.00104,
     45.7605,
     16.02179,
-    45.78187
+    45.78188
   ],
   "histogram": [
     0,
@@ -548,6 +549,12 @@
   "related": {
     "sharedTerminal": [
       {
+        "broj": "8",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Šišićeva"
+      },
+      {
         "broj": "14",
         "mode": "tram",
         "isNight": false,
@@ -571,7 +578,7 @@
   "prevBroj": "290",
   "nextBroj": "307",
   "reach": {
-    "areaKm2": 7.4,
+    "areaKm2": 6.8,
     "stopName": "Jakuševec, škola",
     "lat": 45.76087,
     "lon": 16.01085

@@ -1511,8 +1511,8 @@
     6,
     4,
     4,
-    5,
-    5,
+    4,
+    4,
     4,
     3
   ],
@@ -1644,7 +1644,6 @@
           "hour": 20,
           "minutes": [
             10,
-            30,
             45
           ]
         },
@@ -1793,14 +1792,13 @@
         {
           "hour": 20,
           "minutes": [
-            15,
+            10,
             40
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            0,
             15,
             45
           ]
@@ -2413,17 +2411,17 @@
   "prevBroj": "233",
   "nextBroj": "235",
   "reach": {
-    "areaKm2": 39.2,
+    "areaKm2": 38.7,
     "stopName": "Trnsko",
     "lat": 45.77733,
     "lon": 15.96449
   },
   "stats": {
-    "dailyDepartures": 98,
+    "dailyDepartures": 96,
     "firstDeparture": "04:20",
     "lastDeparture": "23:25",
     "peakHeadwayMin": 22.5,
-    "avgHeadwayMin": 23.9,
+    "avgHeadwayMin": 24.4,
     "travelTimeMin": 25.0,
     "distanceKm": 7.7
   }

@@ -15,8 +15,8 @@
   "firstDeparture": "4:07",
   "lastDeparture": "1:52",
   "peakIntervalMin": [
-    7,
-    29
+    27,
+    36
   ],
   "lines": [
     {
@@ -40,12 +40,9 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 35.0,
-      "peakRangeMin": [
-        30,
-        38
-      ],
-      "allDayHeadwayMin": 36.1
+      "peakHeadwayMin": 75.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.5
     }
   ],
   "neighbors": [
@@ -301,9 +298,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 84,
-    "stations45": 207
+    "stations15": 17,
+    "stations30": 94,
+    "stations45": 245
   },
   "prevSlug": "vucak-podsused-vrapce",
   "nextSlug": "vugrovec-d-groblje"

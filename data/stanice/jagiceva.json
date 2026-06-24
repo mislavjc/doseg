@@ -11,11 +11,11 @@
     "2"
   ],
   "busLines": [],
-  "firstDeparture": "5:25",
-  "lastDeparture": "0:39",
+  "firstDeparture": "5:24",
+  "lastDeparture": "0:37",
   "peakIntervalMin": [
-    8,
-    8
+    10,
+    11
   ],
   "lines": [
     {
@@ -25,18 +25,18 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.3,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        8,
-        8
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.0
+      "allDayHeadwayMin": 12.0
     }
   ],
   "neighbors": [
     {
-      "name": "HNK2",
-      "slug": "hnk2"
+      "name": "HNK 2 - Adžijina",
+      "slug": "hnk-2-adzijina"
     },
     {
       "name": "Trg dr. F. Tuđmana",
@@ -388,9 +388,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 205,
-    "stations45": 492
+    "stations15": 39,
+    "stations30": 211,
+    "stations45": 516
   },
   "prevSlug": "jackovina-53",
   "nextSlug": "jakusevec-centar"

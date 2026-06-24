@@ -15,8 +15,8 @@
   "firstDeparture": "4:58",
   "lastDeparture": "23:33",
   "peakIntervalMin": [
-    4,
-    8
+    5,
+    10
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.4,
+      "peakHeadwayMin": 10.7,
       "peakRangeMin": [
-        8,
-        12
+        9,
+        13
       ],
-      "allDayHeadwayMin": 10.8
+      "allDayHeadwayMin": 11.8
     },
     {
       "broj": "146",
@@ -40,12 +40,12 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 24.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        24,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -373,9 +373,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 291,
-    "stations45": 556
+    "stations15": 42,
+    "stations30": 232,
+    "stations45": 477
   },
   "prevSlug": "potocko",
   "nextSlug": "prajzov-brijeg"

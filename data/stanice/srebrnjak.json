@@ -13,11 +13,11 @@
     "207",
     "238"
   ],
-  "firstDeparture": "4:25",
+  "firstDeparture": "4:40",
   "lastDeparture": "23:21",
   "peakIntervalMin": [
-    1,
-    9
+    5,
+    10
   ],
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": [
-        25,
-        25
+        35,
+        35
       ],
-      "allDayHeadwayMin": 27.2
+      "allDayHeadwayMin": 35.5
     },
     {
       "broj": "207",
@@ -41,10 +41,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        38,
-        43
+        43,
+        48
       ],
       "allDayHeadwayMin": 42.0
     },
@@ -815,9 +815,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 153,
-    "stations45": 410
+    "stations15": 27,
+    "stations30": 102,
+    "stations45": 288
   },
   "prevSlug": "sportski-centar-trnje",
   "nextSlug": "srebrnjak-10"

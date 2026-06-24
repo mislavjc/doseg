@@ -16,7 +16,7 @@
   "lastDeparture": "0:06",
   "peakIntervalMin": [
     11,
-    25
+    31
   ],
   "lines": [
     {
@@ -26,9 +26,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "276",
@@ -37,9 +37,9 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -972,8 +972,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 27,
-    "stations45": 96
+    "stations30": 28,
+    "stations45": 89
   },
   "prevSlug": "resnicki-put",
   "nextSlug": "resnik-i-crkva"

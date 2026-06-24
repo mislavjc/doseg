@@ -15,8 +15,8 @@
   "firstDeparture": "4:51",
   "lastDeparture": "1:47",
   "peakIntervalMin": [
-    2,
-    8
+    3,
+    9
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.4,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        8,
+        9,
         9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "220",
@@ -410,8 +410,8 @@
   },
   "reach": {
     "stations15": 21,
-    "stations30": 97,
-    "stations45": 323
+    "stations30": 102,
+    "stations45": 313
   },
   "prevSlug": "hrastovicka",
   "nextSlug": "hrgovici"

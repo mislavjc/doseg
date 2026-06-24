@@ -12,10 +12,10 @@
     "263"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "0:38",
+  "lastDeparture": "0:13",
   "peakIntervalMin": [
-    9,
-    23
+    23,
+    28
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        25
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
     }
   ],
   "neighbors": [
@@ -288,9 +288,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 53,
-    "stations45": 139
+    "stations15": 26,
+    "stations30": 48,
+    "stations45": 123
   },
   "prevSlug": "kasina-179",
   "nextSlug": "kasina-okretiste"

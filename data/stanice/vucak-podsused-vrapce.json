@@ -15,8 +15,8 @@
   "firstDeparture": "4:47",
   "lastDeparture": "1:23",
   "peakIntervalMin": [
-    6,
-    26
+    20,
+    35
   ],
   "lines": [
     {
@@ -40,12 +40,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     }
   ],
   "neighbors": [
@@ -313,9 +310,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 91,
-    "stations45": 212
+    "stations15": 19,
+    "stations30": 94,
+    "stations45": 245
   },
   "prevSlug": "vrhovec-62",
   "nextSlug": "vucak-podsused-vrapce-2"

@@ -15,7 +15,7 @@
   "firstDeparture": "4:51",
   "lastDeparture": "1:46",
   "peakIntervalMin": [
-    3,
+    2,
     8
   ],
   "lines": [
@@ -26,12 +26,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.4,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        8,
+        9,
         9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "220",
@@ -413,9 +413,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
+    "stations15": 21,
     "stations30": 102,
-    "stations45": 320
+    "stations45": 301
   },
   "prevSlug": "144-brigade-lj-posav",
   "nextSlug": "adamovec-centar"

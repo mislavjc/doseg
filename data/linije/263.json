@@ -7,7 +7,8 @@
     "Planina Gornja"
   ],
   "via": [
-    "Bistrička-Zagrebačka"
+    "Bistrička-Zagrebačka",
+    "Mark.polje-raskrižje"
   ],
   "oneWay": false,
   "directions": [
@@ -1833,24 +1834,24 @@
     0,
     3,
     5,
-    4,
-    5,
+    3,
+    3,
     3,
     2,
     3,
-    5,
-    3,
-    4,
-    5,
-    4,
-    4,
-    4,
-    4,
-    3,
-    3,
-    4,
     2,
-    2
+    4,
+    3,
+    4,
+    3,
+    3,
+    3,
+    2,
+    2,
+    3,
+    2,
+    3,
+    1
   ],
   "timetable": {
     "radniDan": [
@@ -1858,145 +1859,135 @@
         {
           "hour": 4,
           "minutes": [
-            45
+            20,
+            50
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            0,
-            10,
-            40
+            15,
+            45
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            25,
-            35
+            15,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            25,
+            15,
             45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
-            40
+            10,
+            50
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            20,
-            50
+            30
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            35
+            10,
+            50
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            40,
-            55
+            30,
+            50
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            25,
-            40
+            15,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0,
             20,
-            40
+            45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
-            20,
+            15,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            0,
-            25,
-            40
+            15,
+            45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
-            20,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            5,
-            35
+            10,
+            55
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0,
-            35
+            40
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
-            30
+            20
           ]
         },
         {
           "hour": 20,
           "minutes": [
             0,
-            30
+            40
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            10,
             45
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            30
+            20
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            50
+            30
           ]
         }
       ],
@@ -2004,67 +1995,65 @@
         {
           "hour": 4,
           "minutes": [
-            30,
-            55
+            30
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            20,
-            50
+            0,
+            30,
+            55
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            40
+            30
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
-            40
+            30
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            40
+            50
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            30
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            0,
-            30
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            15,
             50
           ]
         },
         {
           "hour": 12,
           "minutes": [
+            10,
             35
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            20
+            0
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5,
-            45
+            0,
+            30
           ]
         },
         {
@@ -2076,21 +2065,19 @@
         {
           "hour": 16,
           "minutes": [
-            25
+            30
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            10,
-            50
+            0
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            20,
-            50
+            0
           ]
         },
         {
@@ -2102,32 +2089,26 @@
         {
           "hour": 20,
           "minutes": [
-            15
+            0
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            15,
-            50
+            20
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            25
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            10
+            25,
+            55
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            30
+            5
           ]
         }
       ]
@@ -2144,84 +2125,78 @@
           "hour": 5,
           "minutes": [
             10,
-            45
+            50
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
-            45
+            10,
+            50
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            45
+            10,
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            45
+            10,
+            50
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            45
+            10,
+            50
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            45
+            10,
+            50
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
@@ -2259,7 +2234,7 @@
         {
           "hour": 22,
           "minutes": [
-            10
+            15
           ]
         },
         {
@@ -2292,7 +2267,7 @@
         {
           "hour": 7,
           "minutes": [
-            30
+            10
           ]
         },
         {
@@ -2304,25 +2279,20 @@
         {
           "hour": 9,
           "minutes": [
-            30
+            50
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            0
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            0
+            10,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0
+            10
           ]
         },
         {
@@ -2334,7 +2304,7 @@
         {
           "hour": 15,
           "minutes": [
-            30
+            10
           ]
         },
         {
@@ -2346,7 +2316,7 @@
         {
           "hour": 17,
           "minutes": [
-            0,
+            10,
             50
           ]
         },
@@ -2721,17 +2691,17 @@
   "prevBroj": "262",
   "nextBroj": "264",
   "reach": {
-    "areaKm2": 17.4,
+    "areaKm2": 19.7,
     "stopName": "Reber, Habeki",
     "lat": 45.88497,
     "lon": 16.11544
   },
   "stats": {
-    "dailyDepartures": 73,
-    "firstDeparture": "04:45",
-    "lastDeparture": "23:50",
-    "peakHeadwayMin": 25.0,
-    "avgHeadwayMin": 26.6,
+    "dailyDepartures": 58,
+    "firstDeparture": "04:20",
+    "lastDeparture": "23:30",
+    "peakHeadwayMin": 31.7,
+    "avgHeadwayMin": 34.8,
     "travelTimeMin": 34.3,
     "distanceKm": 19.1
   }

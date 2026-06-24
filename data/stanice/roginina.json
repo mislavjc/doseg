@@ -36,12 +36,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     },
     {
       "broj": "120",
@@ -50,12 +47,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "121",
@@ -108,7 +105,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     },
     {
       "broj": "125",
@@ -187,12 +184,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -219,7 +216,7 @@
         "shape": [
           [
             15.93332,
-            45.81605
+            45.81567
           ],
           [
             15.9333,
@@ -497,7 +494,7 @@
         "shape": [
           [
             15.93332,
-            45.81605
+            45.81567
           ],
           [
             15.9333,
@@ -692,8 +689,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93332,
-            45.81605
+            15.9333,
+            45.81567
           ],
           [
             15.93328,
@@ -2024,8 +2021,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93332,
-            45.81605
+            15.93319,
+            45.81577
           ],
           [
             15.93314,
@@ -2892,9 +2889,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 156,
-    "stations45": 365
+    "stations15": 33,
+    "stations30": 170,
+    "stations45": 377
   },
   "prevSlug": "rockefellerova",
   "nextSlug": "rosandiceva"

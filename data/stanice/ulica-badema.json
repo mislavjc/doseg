@@ -6,18 +6,19 @@
   "lon": 16.0646,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 3,
+  "lineCount": 4,
   "tramLines": [],
   "busLines": [
     "214",
     "225",
-    "235"
+    "235",
+    "279"
   ],
   "firstDeparture": "4:16",
-  "lastDeparture": "23:14",
+  "lastDeparture": "0:11",
   "peakIntervalMin": [
-    5,
-    14
+    2,
+    8
   ],
   "lines": [
     {
@@ -55,6 +56,20 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 63.2
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -1716,13 +1731,51 @@
             45.80754
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.06298,
+            45.82815
+          ],
+          [
+            16.06365,
+            45.82518
+          ],
+          [
+            16.06407,
+            45.82222
+          ],
+          [
+            16.06469,
+            45.81769
+          ],
+          [
+            16.06615,
+            45.81396
+          ],
+          [
+            16.06426,
+            45.80909
+          ],
+          [
+            16.07207,
+            45.80601
+          ]
+        ]
       }
     ]
   },
   "reach": {
     "stations15": 12,
-    "stations30": 70,
-    "stations45": 221
+    "stations30": 60,
+    "stations45": 190
   },
   "prevSlug": "ul-kaktusa-47",
   "nextSlug": "ulica-breza"

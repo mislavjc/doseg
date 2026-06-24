@@ -11,11 +11,11 @@
   "busLines": [
     "118"
   ],
-  "firstDeparture": "4:36",
-  "lastDeparture": "0:44",
+  "firstDeparture": "4:37",
+  "lastDeparture": "0:58",
   "peakIntervalMin": [
-    2,
-    8
+    3,
+    7
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     }
   ],
   "neighbors": [
@@ -280,9 +280,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 158,
-    "stations45": 415
+    "stations15": 23,
+    "stations30": 136,
+    "stations45": 430
   },
   "prevSlug": "derdici",
   "nextSlug": "desprimska"

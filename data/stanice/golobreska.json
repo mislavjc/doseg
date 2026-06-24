@@ -31,7 +31,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -112,7 +112,7 @@
   "reach": {
     "stations15": 8,
     "stations30": 15,
-    "stations45": 45
+    "stations45": 46
   },
   "prevSlug": "goljak",
   "nextSlug": "golobreska-1-odvojak"

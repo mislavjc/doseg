@@ -12,11 +12,11 @@
     "201",
     "207"
   ],
-  "firstDeparture": "4:21",
+  "firstDeparture": "4:36",
   "lastDeparture": "23:25",
   "peakIntervalMin": [
-    5,
-    13
+    6,
+    14
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": [
-        25,
-        25
+        35,
+        35
       ],
-      "allDayHeadwayMin": 27.2
+      "allDayHeadwayMin": 35.5
     },
     {
       "broj": "207",
@@ -40,10 +40,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        38,
-        43
+        43,
+        48
       ],
       "allDayHeadwayMin": 42.0
     }
@@ -221,9 +221,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 207,
-    "stations45": 506
+    "stations15": 38,
+    "stations30": 181,
+    "stations45": 474
   },
   "prevSlug": "srebrnjak",
   "nextSlug": "srebrnjak-131"

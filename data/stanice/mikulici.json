@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "0:00",
+  "lastDeparture": "0:20",
   "peakIntervalMin": [
-    5,
-    8
+    8,
+    12
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -308,9 +308,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 47,
-    "stations45": 184
+    "stations15": 12,
+    "stations30": 37,
+    "stations45": 183
   },
   "prevSlug": "mije-haleusa",
   "nextSlug": "milace"

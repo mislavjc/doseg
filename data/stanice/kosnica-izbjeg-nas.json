@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -452,8 +452,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 46,
-    "stations45": 153
+    "stations30": 42,
+    "stations45": 137
   },
   "prevSlug": "kosnica",
   "nextSlug": "kosnica-nadvoznjak"

@@ -11,11 +11,11 @@
   "busLines": [
     "269"
   ],
-  "firstDeparture": "4:33",
-  "lastDeparture": "1:08",
+  "firstDeparture": "4:37",
+  "lastDeparture": "1:07",
   "peakIntervalMin": [
-    12,
-    12
+    15,
+    15
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 12.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.2
+      "allDayHeadwayMin": 17.6
     }
   ],
   "neighbors": [
@@ -181,8 +181,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 29,
-    "stations45": 99
+    "stations30": 55,
+    "stations45": 158
   },
   "prevSlug": "knezija",
   "nextSlug": "kobiljak-96"

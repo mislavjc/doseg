@@ -15,11 +15,11 @@
     "225",
     "276"
   ],
-  "firstDeparture": "4:38",
+  "firstDeparture": "4:34",
   "lastDeparture": "0:14",
   "peakIntervalMin": [
-    2,
-    5
+    1,
+    7
   ],
   "lines": [
     {
@@ -29,12 +29,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "216",
@@ -43,9 +43,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "222",
@@ -84,7 +84,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -1035,8 +1035,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 46,
-    "stations45": 186
+    "stations30": 55,
+    "stations45": 200
   },
   "prevSlug": "rt-jankomir",
   "nextSlug": "rudeska"

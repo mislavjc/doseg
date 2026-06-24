@@ -12,7 +12,7 @@
     "267"
   ],
   "firstDeparture": "6:56",
-  "lastDeparture": "17:56",
+  "lastDeparture": "19:36",
   "peakIntervalMin": null,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
     }
   ],
   "neighbors": [
@@ -179,8 +179,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 50,
-    "stations45": 129
+    "stations30": 35,
+    "stations45": 120
   },
   "prevSlug": "markovici",
   "nextSlug": "markusev-popovec-62"

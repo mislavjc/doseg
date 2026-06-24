@@ -17,7 +17,7 @@
   "lastDeparture": "1:17",
   "peakIntervalMin": [
     3,
-    16
+    15
   ],
   "lines": [
     {
@@ -41,12 +41,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        28
       ],
-      "allDayHeadwayMin": 34.2
+      "allDayHeadwayMin": 30.5
     },
     {
       "broj": "168",
@@ -760,8 +760,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 46,
-    "stations45": 166
+    "stations30": 60,
+    "stations45": 193
   },
   "prevSlug": "put-za-tumbre",
   "nextSlug": "r-terminali-jankomir-stenjevec-2"

@@ -464,9 +464,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 154,
-    "stations45": 413
+    "stations15": 17,
+    "stations30": 112,
+    "stations45": 364
   },
   "prevSlug": "laskocica-42",
   "nextSlug": "lastovska-skola"

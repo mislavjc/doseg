@@ -7,8 +7,8 @@
     "Markovo polje"
   ],
   "via": [
-    "Ulica Kaktusa",
-    "Bistrička-Zagrebačka"
+    "Bistrička-Zagrebačka",
+    "Vugrovečka 42"
   ],
   "oneWay": false,
   "directions": [
@@ -1047,8 +1047,8 @@
     2,
     3,
     2,
-    1,
-    0,
+    3,
+    2,
     0,
     0,
     0,
@@ -1124,6 +1124,18 @@
           "minutes": [
             40
           ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
         }
       ],
       [
@@ -1197,7 +1209,14 @@
         {
           "hour": 18,
           "minutes": [
-            5
+            5,
+            55
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            45
           ]
         }
       ]
@@ -1517,11 +1536,11 @@
     "lon": 16.11057
   },
   "stats": {
-    "dailyDepartures": 26,
+    "dailyDepartures": 30,
     "firstDeparture": "06:40",
-    "lastDeparture": "17:40",
+    "lastDeparture": "19:20",
     "peakHeadwayMin": null,
-    "avgHeadwayMin": 55.0,
+    "avgHeadwayMin": 54.3,
     "travelTimeMin": 19.0,
     "distanceKm": 8.1
   }

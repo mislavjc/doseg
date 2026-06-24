@@ -11,11 +11,11 @@
   "busLines": [
     "128"
   ],
-  "firstDeparture": "4:41",
-  "lastDeparture": "0:14",
+  "firstDeparture": "4:39",
+  "lastDeparture": "0:24",
   "peakIntervalMin": [
-    3,
-    7
+    1,
+    15
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.1,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        10,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 14.0
+      "allDayHeadwayMin": 16.5
     }
   ],
   "neighbors": [
@@ -448,9 +448,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 59,
-    "stations45": 237
+    "stations15": 11,
+    "stations30": 37,
+    "stations45": 183
   },
   "prevSlug": "trdice-56",
   "nextSlug": "tresnjevacki-trg"

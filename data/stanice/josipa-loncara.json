@@ -14,8 +14,8 @@
   "firstDeparture": "4:08",
   "lastDeparture": "0:29",
   "peakIntervalMin": [
-    11,
-    19
+    30,
+    48
   ],
   "lines": [
     {
@@ -25,12 +25,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     }
   ],
   "neighbors": [
@@ -204,9 +201,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 139,
-    "stations45": 287
+    "stations15": 22,
+    "stations30": 99,
+    "stations45": 245
   },
   "prevSlug": "jordanovac-maksimir-2",
   "nextSlug": "josipa-sabana"

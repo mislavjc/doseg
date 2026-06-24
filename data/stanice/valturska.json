@@ -14,8 +14,8 @@
   "firstDeparture": "4:29",
   "lastDeparture": "0:56",
   "peakIntervalMin": [
-    3,
-    15
+    18,
+    18
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -348,9 +348,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
+    "stations15": 17,
     "stations30": 82,
-    "stations45": 260
+    "stations45": 259
   },
   "prevSlug": "utrina",
   "nextSlug": "varazdinska-selcina"

@@ -16,8 +16,8 @@
   "firstDeparture": "4:26",
   "lastDeparture": "0:46",
   "peakIntervalMin": [
-    8,
-    21
+    9,
+    15
   ],
   "lines": [
     {
@@ -41,12 +41,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 38.3,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        38,
-        40
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "168",
@@ -684,8 +684,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 23,
-    "stations45": 120
+    "stations30": 45,
+    "stations45": 175
   },
   "prevSlug": "r-terminali-jankomir-stenjevec",
   "nextSlug": "radic-setaliste"

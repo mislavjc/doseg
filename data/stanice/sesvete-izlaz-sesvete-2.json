@@ -1,0 +1,133 @@
+{
+  "slug": "sesvete-izlaz-sesvete-2",
+  "name": "Sesvete-izlaz",
+  "kvart": "Sesvete",
+  "lat": 45.82458,
+  "lon": 16.10594,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 3,
+  "tramLines": [],
+  "busLines": [
+    "277",
+    "282",
+    "284"
+  ],
+  "firstDeparture": "4:30",
+  "lastDeparture": "0:15",
+  "peakIntervalMin": [
+    13,
+    25
+  ],
+  "lines": [
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 101.8
+    },
+    {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        25,
+        28
+      ],
+      "allDayHeadwayMin": 38.7
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 124.4
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Jelkovečka",
+      "slug": "jelkovecka"
+    },
+    {
+      "name": "Ljudevita Posavskog",
+      "slug": "ljudevita-posavskog"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.10387,
+      45.82314,
+      16.10801,
+      45.82603
+    ],
+    "lines": [
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11685,
+            45.81952
+          ],
+          [
+            16.10594,
+            45.82458
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10196,
+            45.81769
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.10594,
+            45.82458
+          ]
+        ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11685,
+            45.81952
+          ],
+          [
+            16.10594,
+            45.82458
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 18,
+    "stations30": 78,
+    "stations45": 208
+  },
+  "prevSlug": "sesvete-izlaz-sesvete",
+  "nextSlug": "sesvete-ukrcaj-sesvete"
+}

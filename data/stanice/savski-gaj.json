@@ -18,7 +18,7 @@
     "234"
   ],
   "firstDeparture": "4:35",
-  "lastDeparture": "1:00",
+  "lastDeparture": "0:57",
   "peakIntervalMin": [
     1,
     2
@@ -31,12 +31,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "14",
@@ -45,12 +45,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.7,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -70,12 +70,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.6,
+      "peakHeadwayMin": 8.7,
       "peakRangeMin": [
-        7,
-        8
+        8,
+        9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "222",
@@ -103,7 +103,7 @@
         19,
         21
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     }
   ],
   "neighbors": [
@@ -116,8 +116,8 @@
       "slug": "trnsko"
     },
     {
-      "name": "St.dom Stjepan Radić",
-      "slug": "st-dom-stjepan-radic"
+      "name": "St. dom S. Radić",
+      "slug": "st-dom-s-radic"
     },
     {
       "name": "Remetinečka os.škola",
@@ -1699,9 +1699,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 182,
-    "stations45": 433
+    "stations15": 26,
+    "stations30": 181,
+    "stations45": 451
   },
   "prevSlug": "savska-opatovina",
   "nextSlug": "savski-gaj-rotor"

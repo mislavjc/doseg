@@ -12,10 +12,10 @@
     "210"
   ],
   "firstDeparture": "4:39",
-  "lastDeparture": "0:56",
+  "lastDeparture": "0:51",
   "peakIntervalMin": [
-    7,
-    14
+    14,
+    18
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -244,9 +244,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 122,
-    "stations45": 357
+    "stations15": 28,
+    "stations30": 102,
+    "stations45": 324
   },
   "prevSlug": "sv-ivana-d-grubera",
   "nextSlug": "svarcanska"

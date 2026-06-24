@@ -12,10 +12,10 @@
     "143"
   ],
   "firstDeparture": "5:04",
-  "lastDeparture": "22:37",
+  "lastDeparture": "23:07",
   "peakIntervalMin": [
-    4,
-    22
+    9,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,9 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.3,
-      "peakRangeMin": [
-        24,
-        28
-      ],
-      "allDayHeadwayMin": 32.8
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -332,9 +329,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 33,
-    "stations45": 83
+    "stations15": 14,
+    "stations30": 64,
+    "stations45": 161
   },
   "prevSlug": "borongajska-kampus",
   "nextSlug": "borovje-pescenica-zitnjak"

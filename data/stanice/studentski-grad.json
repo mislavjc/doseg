@@ -12,10 +12,10 @@
     "210"
   ],
   "firstDeparture": "4:47",
-  "lastDeparture": "0:45",
+  "lastDeparture": "0:40",
   "peakIntervalMin": [
-    8,
-    12
+    2,
+    28
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -389,8 +389,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 75,
-    "stations45": 238
+    "stations30": 46,
+    "stations45": 179
   },
   "prevSlug": "studentski-centar",
   "nextSlug": "stuglenica"

@@ -513,8 +513,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 48,
-    "stations45": 155
+    "stations30": 45,
+    "stations45": 175
   },
   "prevSlug": "bukovacka-23",
   "nextSlug": "bukovacka-68"

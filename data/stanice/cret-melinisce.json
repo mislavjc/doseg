@@ -12,11 +12,11 @@
     "227",
     "232"
   ],
-  "firstDeparture": "4:39",
+  "firstDeparture": "4:40",
   "lastDeparture": "0:04",
   "peakIntervalMin": [
-    3,
-    13
+    4,
+    14
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Svetice",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.1,
+      "peakHeadwayMin": 16.5,
       "peakRangeMin": [
-        13,
-        13
+        16,
+        17
       ],
-      "allDayHeadwayMin": 16.9
+      "allDayHeadwayMin": 18.2
     },
     {
       "broj": "232",
@@ -515,8 +515,8 @@
             45.83908
           ],
           [
-            16.01903,
-            45.83967
+            16.01968,
+            45.8393
           ],
           [
             16.01903,
@@ -1225,6 +1225,10 @@
             45.83906
           ],
           [
+            16.0197,
+            45.83931
+          ],
+          [
             16.01969,
             45.83932
           ],
@@ -1235,10 +1239,6 @@
           [
             16.01952,
             45.83939
-          ],
-          [
-            16.01956,
-            45.83943
           ],
           [
             16.01971,
@@ -1301,9 +1301,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 59,
-    "stations45": 178
+    "stations15": 18,
+    "stations30": 56,
+    "stations45": 148
   },
   "prevSlug": "cret-27",
   "nextSlug": "crkva"

@@ -32,12 +32,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "214",
@@ -57,9 +57,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "222",
@@ -109,7 +109,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "281",
@@ -1784,8 +1784,8 @@
   },
   "reach": {
     "stations15": 21,
-    "stations30": 77,
-    "stations45": 266
+    "stations30": 89,
+    "stations45": 288
   },
   "prevSlug": "zelena-mag-rusiscak",
   "nextSlug": "zelencica"

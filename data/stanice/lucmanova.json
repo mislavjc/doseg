@@ -16,7 +16,7 @@
   "lastDeparture": "23:50",
   "peakIntervalMin": [
     7,
-    12
+    11
   ],
   "lines": [
     {
@@ -28,8 +28,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     },

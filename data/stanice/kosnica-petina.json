@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -457,7 +457,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 9,
-    "stations45": 40
+    "stations45": 38
   },
   "prevSlug": "kosnica-nadvoznjak",
   "nextSlug": "kostanjevec"

@@ -6,18 +6,33 @@
   "lon": 16.10024,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [],
   "busLines": [
+    "279",
     "281"
   ],
-  "firstDeparture": "4:39",
+  "firstDeparture": "4:36",
   "lastDeparture": "0:10",
   "peakIntervalMin": [
     6,
-    24
+    9
   ],
   "lines": [
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
+    },
     {
       "broj": "281",
       "mode": "bus",
@@ -35,16 +50,28 @@
   ],
   "neighbors": [
     {
+      "name": "Slavonska-Čulinečka",
+      "slug": "slavonska-culinecka-pescenica-zitnjak"
+    },
+    {
+      "name": "144 brigade-Lj.Posav",
+      "slug": "144-brigade-lj-posav"
+    },
+    {
+      "name": "Lj.Posav.-Rimski put",
+      "slug": "lj-posav-rimski-put"
+    },
+    {
+      "name": "Resnik silos",
+      "slug": "resnik-silos"
+    },
+    {
       "name": "Resnik III",
       "slug": "resnik-iii-pescenica-zitnjak"
     },
     {
       "name": "Rimski put-bazen",
-      "slug": "rimski-put-bazen-sesvete"
-    },
-    {
-      "name": "Lj.Posav.-Rimski put",
-      "slug": "lj-posav-rimski-put"
+      "slug": "rimski-put-bazen"
     }
   ],
   "hero": {
@@ -55,6 +82,28 @@
       45.80868
     ],
     "lines": [
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10892,
+            45.81279
+          ],
+          [
+            16.11481,
+            45.81227
+          ]
+        ]
+      },
       {
         "broj": "281",
         "mode": "bus",
@@ -152,9 +201,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 83,
-    "stations45": 291
+    "stations15": 17,
+    "stations30": 69,
+    "stations45": 273
   },
   "prevSlug": "slavenskoga-jug",
   "nextSlug": "slavonska-culinecka-pescenica-zitnjak"

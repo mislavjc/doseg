@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -428,8 +428,8 @@
   },
   "reach": {
     "stations15": 13,
-    "stations30": 47,
-    "stations45": 153
+    "stations30": 43,
+    "stations45": 137
   },
   "prevSlug": "kosnica-izbjeg-nas",
   "nextSlug": "kosnica-petina"

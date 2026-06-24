@@ -881,29 +881,29 @@
         },
         {
           "name": "Budenečka 34",
-          "lat": 45.83472,
-          "lon": 16.17916,
+          "lat": 45.83485,
+          "lon": 16.17871,
           "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Budenečka 14",
-          "lat": 45.83485,
-          "lon": 16.17871,
+          "lat": 45.83659,
+          "lon": 16.17429,
           "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Budenec-Stančira",
-          "lat": 45.83659,
-          "lon": 16.17429,
+          "lat": 45.83928,
+          "lon": 16.1692,
           "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Šijavrh",
-          "lat": 45.83928,
-          "lon": 16.1692,
+          "lat": 45.84595,
+          "lon": 16.16291,
           "offsetMin": 11,
           "tramInterchange": []
         },
@@ -1190,10 +1190,6 @@
           45.83431
         ],
         [
-          16.17916,
-          45.83471
-        ],
-        [
           16.17915,
           45.83471
         ],
@@ -1292,6 +1288,10 @@
         [
           16.16312,
           45.84453
+        ],
+        [
+          16.16285,
+          45.84594
         ],
         [
           16.16283,
@@ -2104,13 +2104,7 @@
         {
           "hour": 22,
           "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            15
+            55
           ]
         }
       ],
@@ -2210,8 +2204,7 @@
         {
           "hour": 23,
           "minutes": [
-            15,
-            55
+            30
           ]
         }
       ]
@@ -2429,7 +2422,7 @@
   "prevBroj": "273",
   "nextBroj": "275",
   "reach": {
-    "areaKm2": 6.2,
+    "areaKm2": 6.1,
     "stopName": "Šašinovec-vatr. dom",
     "lat": 45.84997,
     "lon": 16.16516

@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:24",
-  "lastDeparture": "0:07",
+  "lastDeparture": "0:27",
   "peakIntervalMin": [
-    4,
-    9
+    3,
+    17
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -384,9 +384,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 91,
-    "stations45": 251
+    "stations15": 20,
+    "stations30": 119,
+    "stations45": 324
   },
   "prevSlug": "stenjevecka",
   "nextSlug": "strmec-bukevski"

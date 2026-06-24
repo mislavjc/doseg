@@ -6,19 +6,20 @@
   "lon": 16.06368,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "210",
     "214",
     "225",
-    "235"
+    "235",
+    "279"
   ],
   "firstDeparture": "4:13",
-  "lastDeparture": "0:37",
+  "lastDeparture": "0:32",
   "peakIntervalMin": [
     2,
-    8
+    7
   ],
   "lines": [
     {
@@ -28,12 +29,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "214",
@@ -70,6 +71,20 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 63.2
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -1069,13 +1084,43 @@
             45.81159
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.06298,
+            45.82815
+          ],
+          [
+            16.06365,
+            45.82518
+          ],
+          [
+            16.06407,
+            45.82222
+          ],
+          [
+            16.06469,
+            45.81769
+          ],
+          [
+            16.06615,
+            45.81396
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 116,
-    "stations45": 300
+    "stations15": 23,
+    "stations30": 98,
+    "stations45": 278
   },
   "prevSlug": "ulica-badema",
   "nextSlug": "ulica-crnomerec-46"

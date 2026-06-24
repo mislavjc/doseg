@@ -11,11 +11,11 @@
   "busLines": [
     "128"
   ],
-  "firstDeparture": "4:38",
-  "lastDeparture": "0:16",
+  "firstDeparture": "4:36",
+  "lastDeparture": "0:26",
   "peakIntervalMin": [
-    2,
-    8
+    5,
+    10
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        10,
-        11
+        15,
+        15
       ],
-      "allDayHeadwayMin": 14.0
+      "allDayHeadwayMin": 16.5
     }
   ],
   "neighbors": [
@@ -484,9 +484,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 133,
-    "stations45": 324
+    "stations15": 14,
+    "stations30": 60,
+    "stations45": 194
   },
   "prevSlug": "bijenicka-bocaliste",
   "nextSlug": "bikceviceva-staza"

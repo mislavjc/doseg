@@ -45,7 +45,7 @@
         19,
         21
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     }
   ],
   "neighbors": [
@@ -821,9 +821,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 142,
-    "stations45": 393
+    "stations15": 38,
+    "stations30": 128,
+    "stations45": 322
   },
   "prevSlug": "remete-maksimir-2",
   "nextSlug": "remetinecka-15"

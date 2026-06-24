@@ -43,7 +43,7 @@
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "111",
@@ -79,8 +79,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     },
@@ -124,7 +124,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -199,7 +199,7 @@
         19,
         21
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     },
     {
       "broj": "315",
@@ -215,8 +215,8 @@
   ],
   "neighbors": [
     {
-      "name": "St.dom Stjepan Radić",
-      "slug": "st-dom-stjepan-radic"
+      "name": "St. dom S. Radić",
+      "slug": "st-dom-s-radic"
     },
     {
       "name": "Savski gaj XII.",
@@ -3514,8 +3514,8 @@
             45.76575
           ],
           [
-            15.94605,
-            45.76574
+            15.94603,
+            45.76539
           ],
           [
             15.94599,
@@ -3526,9 +3526,9 @@
     ]
   },
   "reach": {
-    "stations15": 45,
+    "stations15": 43,
     "stations30": 177,
-    "stations45": 432
+    "stations45": 433
   },
   "prevSlug": "remetinecka-15",
   "nextSlug": "remetinecki-gaj"

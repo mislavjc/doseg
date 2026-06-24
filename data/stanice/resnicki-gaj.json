@@ -2,22 +2,23 @@
   "slug": "resnicki-gaj",
   "name": "Resnički gaj",
   "kvart": "Donja Dubrava",
-  "lat": 45.80965,
-  "lon": 16.0647,
+  "lat": 45.80959,
+  "lon": 16.06474,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 3,
+  "lineCount": 4,
   "tramLines": [],
   "busLines": [
     "214",
     "225",
-    "235"
+    "235",
+    "279"
   ],
   "firstDeparture": "4:18",
-  "lastDeparture": "23:11",
+  "lastDeparture": "0:08",
   "peakIntervalMin": [
     3,
-    13
+    7
   ],
   "lines": [
     {
@@ -55,6 +56,20 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 63.2
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -73,10 +88,10 @@
   ],
   "hero": {
     "bbox": [
-      16.06263,
-      45.8082,
-      16.06677,
-      45.81109
+      16.06267,
+      45.80814,
+      16.06681,
+      45.81103
     ],
     "lines": [
       {
@@ -1792,13 +1807,43 @@
             45.80055
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.06407,
+            45.82222
+          ],
+          [
+            16.06469,
+            45.81769
+          ],
+          [
+            16.06615,
+            45.81396
+          ],
+          [
+            16.06426,
+            45.80909
+          ],
+          [
+            16.07207,
+            45.80601
+          ],
+          [
+            16.07683,
+            45.80381
+          ]
+        ]
       }
     ]
   },
   "reach": {
     "stations15": 6,
-    "stations30": 41,
-    "stations45": 137
+    "stations30": 38,
+    "stations45": 138
   },
   "prevSlug": "remetska-19",
   "nextSlug": "resnicki-put"

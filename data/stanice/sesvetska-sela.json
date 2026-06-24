@@ -12,11 +12,11 @@
     "269",
     "278"
   ],
-  "firstDeparture": "4:39",
-  "lastDeparture": "1:14",
+  "firstDeparture": "4:43",
+  "lastDeparture": "1:13",
   "peakIntervalMin": [
-    1,
-    7
+    4,
+    12
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.1,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.2
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "278",
@@ -40,12 +40,12 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 50.0,
       "peakRangeMin": [
-        15,
-        35
+        50,
+        50
       ],
-      "allDayHeadwayMin": 40.0
+      "allDayHeadwayMin": 46.0
     }
   ],
   "neighbors": [
@@ -245,10 +245,10 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 91,
-    "stations45": 224
+    "stations15": 10,
+    "stations30": 57,
+    "stations45": 162
   },
-  "prevSlug": "sesvete-ukrcaj",
+  "prevSlug": "sesvete-ukrcaj-sesvete-2",
   "nextSlug": "sesvetski-kraljevec"
 }

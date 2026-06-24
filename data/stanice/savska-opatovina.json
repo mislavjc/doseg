@@ -18,7 +18,7 @@
   "lastDeparture": "1:15",
   "peakIntervalMin": [
     1,
-    5
+    6
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.5,
       "peakRangeMin": [
-        15,
-        15
+        20,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "116",
@@ -56,12 +56,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 38.3,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        38,
-        40
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "168",
@@ -672,9 +672,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 95,
-    "stations45": 282
+    "stations15": 22,
+    "stations30": 115,
+    "stations45": 373
   },
   "prevSlug": "savska-metro",
   "nextSlug": "savski-gaj"

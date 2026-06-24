@@ -11,11 +11,11 @@
   "busLines": [
     "269"
   ],
-  "firstDeparture": "4:31",
-  "lastDeparture": "1:06",
+  "firstDeparture": "4:35",
+  "lastDeparture": "1:05",
   "peakIntervalMin": [
-    3,
-    10
+    4,
+    11
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.2
+      "allDayHeadwayMin": 17.6
     }
   ],
   "neighbors": [
@@ -188,9 +188,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 29,
-    "stations45": 99
+    "stations15": 12,
+    "stations30": 55,
+    "stations45": 158
   },
   "prevSlug": "sesvetska-sela",
   "nextSlug": "sheraton"

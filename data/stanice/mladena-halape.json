@@ -2,8 +2,8 @@
   "slug": "mladena-halape",
   "name": "Mladena Halape",
   "kvart": "Sesvete",
-  "lat": 45.81384,
-  "lon": 16.1867,
+  "lat": 45.81383,
+  "lon": 16.18633,
   "mode": "bus",
   "bothDirections": false,
   "lineCount": 1,
@@ -12,10 +12,10 @@
     "269"
   ],
   "firstDeparture": "5:19",
-  "lastDeparture": "23:44",
+  "lastDeparture": "23:59",
   "peakIntervalMin": [
-    12,
-    12
+    15,
+    15
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Ses.Kraljev.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 12.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 16.7
+      "allDayHeadwayMin": 17.5
     }
   ],
   "neighbors": [
@@ -45,10 +45,10 @@
   ],
   "hero": {
     "bbox": [
-      16.18464,
-      45.8124,
-      16.18877,
-      45.81528
+      16.18426,
+      45.81239,
+      16.18839,
+      45.81527
     ],
     "lines": [
       {
@@ -120,10 +120,6 @@
             45.81384
           ],
           [
-            16.1867,
-            45.81384
-          ],
-          [
             16.1864,
             45.81374
           ],
@@ -154,7 +150,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 12,
-    "stations45": 45
+    "stations45": 54
   },
   "prevSlug": "misevecka",
   "nextSlug": "mlinarska"

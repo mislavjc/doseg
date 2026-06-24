@@ -13,10 +13,10 @@
     "222",
     "281"
   ],
-  "firstDeparture": "4:52",
+  "firstDeparture": "4:49",
   "lastDeparture": "23:52",
   "peakIntervalMin": [
-    2,
+    1,
     6
   ],
   "lines": [
@@ -27,12 +27,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "222",
@@ -806,9 +806,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 170,
-    "stations45": 414
+    "stations15": 31,
+    "stations30": 198,
+    "stations45": 448
   },
   "prevSlug": "radnicka-trnje-2",
   "nextSlug": "ranci"

@@ -12,10 +12,10 @@
     "172"
   ],
   "firstDeparture": "4:36",
-  "lastDeparture": "1:46",
+  "lastDeparture": "1:56",
   "peakIntervalMin": [
-    2,
-    7
+    1,
+    10
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.9,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     }
   ],
   "neighbors": [
@@ -288,9 +288,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 59,
-    "stations45": 164
+    "stations15": 25,
+    "stations30": 67,
+    "stations45": 189
   },
   "prevSlug": "kod-skalica",
   "nextSlug": "kolakova-grizanska"

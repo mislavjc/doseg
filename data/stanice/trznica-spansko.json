@@ -13,9 +13,9 @@
     "136"
   ],
   "firstDeparture": "4:34",
-  "lastDeparture": "1:02",
+  "lastDeparture": "1:05",
   "peakIntervalMin": [
-    2,
+    1,
     5
   ],
   "lines": [
@@ -26,12 +26,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 12.4,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     },
     {
       "broj": "136",
@@ -510,8 +510,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 170,
-    "stations45": 388
+    "stations30": 138,
+    "stations45": 300
   },
   "prevSlug": "trznica-kvatric-donji-grad-2",
   "nextSlug": "tumbri"

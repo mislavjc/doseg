@@ -12,10 +12,10 @@
     "172"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "1:48",
+  "lastDeparture": "1:58",
   "peakIntervalMin": [
-    7,
-    9
+    10,
+    10
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.2,
+      "peakHeadwayMin": 11.0,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 14.4
     }
   ],
   "neighbors": [
@@ -272,9 +272,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 59,
-    "stations45": 164
+    "stations15": 18,
+    "stations30": 67,
+    "stations45": 189
   },
   "prevSlug": "king-cross",
   "nextSlug": "klanjec"

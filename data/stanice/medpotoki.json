@@ -28,12 +28,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "122",
@@ -717,8 +717,8 @@
   },
   "reach": {
     "stations15": 36,
-    "stations30": 141,
-    "stations45": 288
+    "stations30": 117,
+    "stations45": 271
   },
   "prevSlug": "medasni-klanac",
   "nextSlug": "medpotoki-30"

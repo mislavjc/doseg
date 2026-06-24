@@ -12,11 +12,11 @@
     "107",
     "108"
   ],
-  "firstDeparture": "5:00",
-  "lastDeparture": "23:25",
+  "firstDeparture": "4:56",
+  "lastDeparture": "23:10",
   "peakIntervalMin": [
-    3,
-    10
+    6,
+    11
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "108",
@@ -377,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 201,
-    "stations45": 471
+    "stations15": 16,
+    "stations30": 150,
+    "stations45": 393
   },
   "prevSlug": "markusevecka-trnava",
   "nextSlug": "masiceva"

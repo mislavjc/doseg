@@ -1507,9 +1507,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 66,
-    "stations45": 248
+    "stations15": 8,
+    "stations30": 54,
+    "stations45": 175
   },
   "prevSlug": "trnava",
   "nextSlug": "trnovcica-117"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:26",
   "lastDeparture": "22:31",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "207",
@@ -25,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        38,
-        43
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -149,8 +143,8 @@
   },
   "reach": {
     "stations15": 15,
-    "stations30": 65,
-    "stations45": 251
+    "stations30": 53,
+    "stations45": 227
   },
   "prevSlug": "rim-14a",
   "nextSlug": "rim-put-dj-igraliste"

@@ -14,8 +14,8 @@
   "firstDeparture": "4:31",
   "lastDeparture": "0:55",
   "peakIntervalMin": [
-    4,
-    14
+    14,
+    21
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -405,8 +405,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 50,
-    "stations45": 184
+    "stations30": 52,
+    "stations45": 216
   },
   "prevSlug": "sisiceva",
   "nextSlug": "skabrnjska"

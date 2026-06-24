@@ -2,24 +2,25 @@
   "slug": "ulica-platana",
   "name": "Ulica Platana",
   "kvart": "Donja Dubrava",
-  "lat": 45.82282,
-  "lon": 16.06427,
+  "lat": 45.82281,
+  "lon": 16.06424,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 5,
+  "lineCount": 6,
   "tramLines": [],
   "busLines": [
     "210",
     "214",
     "225",
     "231",
-    "235"
+    "235",
+    "279"
   ],
   "firstDeparture": "4:15",
-  "lastDeparture": "0:36",
+  "lastDeparture": "0:31",
   "peakIntervalMin": [
     2,
-    8
+    6
   ],
   "lines": [
     {
@@ -29,12 +30,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "214",
@@ -85,6 +86,20 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 63.2
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -93,7 +108,7 @@
       "slug": "ulica-breza"
     },
     {
-      "name": "Aleja Javora",
+      "name": "Aleja javora",
       "slug": "aleja-javora-donja-dubrava"
     },
     {
@@ -107,10 +122,10 @@
   ],
   "hero": {
     "bbox": [
-      16.06221,
-      45.82138,
-      16.06634,
-      45.82426
+      16.06217,
+      45.82137,
+      16.0663,
+      45.82425
     ],
     "lines": [
       {
@@ -2162,13 +2177,47 @@
             45.81101
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.06298,
+            45.82815
+          ],
+          [
+            16.06365,
+            45.82518
+          ],
+          [
+            16.06407,
+            45.82222
+          ],
+          [
+            16.06469,
+            45.81769
+          ],
+          [
+            16.06615,
+            45.81396
+          ],
+          [
+            16.06426,
+            45.80909
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 92,
-    "stations45": 270
+    "stations15": 24,
+    "stations30": 99,
+    "stations45": 279
   },
   "prevSlug": "ulica-kaktusa",
   "nextSlug": "ulica-rudolfa-fizira"

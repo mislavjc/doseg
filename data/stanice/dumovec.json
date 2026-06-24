@@ -11,10 +11,10 @@
   "busLines": [
     "276"
   ],
-  "firstDeparture": "4:53",
-  "lastDeparture": "23:37",
+  "firstDeparture": "4:48",
+  "lastDeparture": "23:42",
   "peakIntervalMin": [
-    11,
+    13,
     20
   ],
   "lines": [
@@ -25,9 +25,9 @@
       "headsign": "Kvaternikov trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -186,8 +186,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 34,
-    "stations45": 108
+    "stations30": 32,
+    "stations45": 93
   },
   "prevSlug": "dudovec",
   "nextSlug": "dumovec-okretiste"

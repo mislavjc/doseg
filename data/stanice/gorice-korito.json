@@ -14,8 +14,8 @@
   "firstDeparture": "6:30",
   "lastDeparture": "22:35",
   "peakIntervalMin": [
-    41,
-    44
+    43,
+    48
   ],
   "lines": [
     {
@@ -25,10 +25,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 42.5,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        41,
-        44
+        43,
+        48
       ],
       "allDayHeadwayMin": 42.0
     }
@@ -148,9 +148,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 84,
-    "stations45": 265
+    "stations15": 20,
+    "stations30": 88,
+    "stations45": 287
   },
   "prevSlug": "gorice-69",
   "nextSlug": "gornja-kustosija"

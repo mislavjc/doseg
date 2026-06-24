@@ -28,7 +28,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 41.2
+      "allDayHeadwayMin": 42.8
     },
     {
       "broj": "222",
@@ -782,9 +782,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 80,
-    "stations45": 276
+    "stations15": 22,
+    "stations30": 77,
+    "stations45": 253
   },
   "prevSlug": "arbanasova-44",
   "nextSlug": "arena-centar-novi-zagreb-zapad-2"

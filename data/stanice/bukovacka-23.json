@@ -56,12 +56,12 @@
       "headsign": "Svetice",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.1,
+      "peakHeadwayMin": 16.6,
       "peakRangeMin": [
-        13,
-        13
+        16,
+        17
       ],
-      "allDayHeadwayMin": 16.9
+      "allDayHeadwayMin": 18.2
     },
     {
       "broj": "228",
@@ -1379,9 +1379,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 226,
-    "stations45": 519
+    "stations15": 36,
+    "stations30": 190,
+    "stations45": 474
   },
   "prevSlug": "bukovacka-160",
   "nextSlug": "bukovacka-276"

@@ -18,8 +18,8 @@
   "firstDeparture": "4:33",
   "lastDeparture": "0:53",
   "peakIntervalMin": [
-    2,
-    6
+    3,
+    7
   ],
   "lines": [
     {
@@ -29,12 +29,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "113",
@@ -57,12 +57,9 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        40,
-        40
-      ],
-      "allDayHeadwayMin": 39.8
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "115",
@@ -71,12 +68,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.8,
+      "peakHeadwayMin": 13.0,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        13
       ],
-      "allDayHeadwayMin": 12.2
+      "allDayHeadwayMin": 14.9
     },
     {
       "broj": "116",
@@ -801,8 +798,8 @@
   },
   "reach": {
     "stations15": 18,
-    "stations30": 110,
-    "stations45": 339
+    "stations30": 116,
+    "stations45": 378
   },
   "prevSlug": "dragonozec-skola",
   "nextSlug": "dragutina-golika-tresnjevka-jug-2"

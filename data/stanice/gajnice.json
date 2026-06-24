@@ -18,7 +18,7 @@
     "177"
   ],
   "firstDeparture": "4:37",
-  "lastDeparture": "1:59",
+  "lastDeparture": "1:45",
   "peakIntervalMin": [
     1,
     3
@@ -31,12 +31,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "122",
@@ -84,12 +84,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.4,
+      "peakHeadwayMin": 10.5,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        13
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     },
     {
       "broj": "176",
@@ -1052,10 +1052,10 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 145,
-    "stations45": 292
+    "stations15": 33,
+    "stations30": 112,
+    "stations45": 271
   },
-  "prevSlug": "gajci-lovre-sedinica",
+  "prevSlug": "gajani",
   "nextSlug": "gajnicki-vidikovac"
 }

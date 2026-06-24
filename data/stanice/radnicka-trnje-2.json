@@ -13,11 +13,11 @@
     "222",
     "281"
   ],
-  "firstDeparture": "4:51",
+  "firstDeparture": "4:48",
   "lastDeparture": "23:46",
   "peakIntervalMin": [
     6,
-    10
+    12
   ],
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 20.8,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.7
+      "allDayHeadwayMin": 26.2
     },
     {
       "broj": "222",
@@ -458,9 +458,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 171,
-    "stations45": 409
+    "stations15": 30,
+    "stations30": 201,
+    "stations45": 450
   },
   "prevSlug": "radnicka-trnje",
   "nextSlug": "rakusina"

@@ -777,9 +777,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 75,
-    "stations45": 206
+    "stations15": 12,
+    "stations30": 93,
+    "stations45": 261
   },
   "prevSlug": "dubecka-89",
   "nextSlug": "dubje"

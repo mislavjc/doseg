@@ -32,12 +32,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "216",
@@ -48,7 +48,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.2
+      "allDayHeadwayMin": 232.5
     },
     {
       "broj": "217",
@@ -98,7 +98,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "281",
@@ -700,10 +700,6 @@
             45.7891
           ],
           [
-            16.0335,
-            45.78899
-          ],
-          [
             16.03364,
             45.78892
           ],
@@ -717,6 +713,10 @@
           ],
           [
             16.03529,
+            45.78804
+          ],
+          [
+            16.0353,
             45.78804
           ],
           [
@@ -1854,10 +1854,6 @@
             45.7891
           ],
           [
-            16.0335,
-            45.78899
-          ],
-          [
             16.03364,
             45.78892
           ],
@@ -1874,6 +1870,10 @@
             45.78804
           ],
           [
+            16.0353,
+            45.78804
+          ],
+          [
             16.03566,
             45.78792
           ]
@@ -1882,9 +1882,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 195,
-    "stations45": 429
+    "stations15": 28,
+    "stations30": 176,
+    "stations45": 420
   },
   "prevSlug": "radnicka-ina",
   "nextSlug": "radnicka-pescenica-zitnjak-2"

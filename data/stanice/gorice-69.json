@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:28",
   "lastDeparture": "22:33",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "207",
@@ -25,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        38,
-        43
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -142,7 +136,7 @@
   "reach": {
     "stations15": 10,
     "stations30": 32,
-    "stations45": 105
+    "stations45": 109
   },
   "prevSlug": "gorice-45",
   "nextSlug": "gorice-korito"

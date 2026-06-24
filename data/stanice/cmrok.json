@@ -677,9 +677,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 103,
-    "stations45": 282
+    "stations15": 18,
+    "stations30": 98,
+    "stations45": 251
   },
   "prevSlug": "cimermanova",
   "nextSlug": "co-prekrizje"

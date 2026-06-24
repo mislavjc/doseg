@@ -204,9 +204,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 59,
-    "stations45": 219
+    "stations15": 9,
+    "stations30": 51,
+    "stations45": 195
   },
   "prevSlug": "grac-mihaljevac",
   "nextSlug": "gracanska-10"

@@ -11,11 +11,11 @@
   "busLines": [
     "118"
   ],
-  "firstDeparture": "4:45",
-  "lastDeparture": "0:35",
+  "firstDeparture": "4:44",
+  "lastDeparture": "0:50",
   "peakIntervalMin": [
-    1,
-    8
+    3,
+    7
   ],
   "lines": [
     {
@@ -25,18 +25,18 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     }
   ],
   "neighbors": [
     {
-      "name": "HNK2",
-      "slug": "hnk2"
+      "name": "HNK2 - Adžijina",
+      "slug": "hnk2-adzijina"
     }
   ],
   "hero": {
@@ -168,9 +168,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 262,
-    "stations45": 560
+    "stations15": 39,
+    "stations30": 233,
+    "stations45": 561
   },
   "prevSlug": "trg-lovre-matacica",
   "nextSlug": "trg-p-kresimira"

@@ -14,11 +14,11 @@
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:27",
-  "lastDeparture": "0:51",
+  "firstDeparture": "4:25",
+  "lastDeparture": "0:56",
   "peakIntervalMin": [
     1,
-    2
+    3
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.7,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -42,12 +42,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "8",
@@ -56,12 +56,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "31",
@@ -1232,9 +1232,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 119,
-    "stations45": 345
+    "stations15": 25,
+    "stations30": 135,
+    "stations45": 389
   },
   "prevSlug": "moravce-benkova",
   "nextSlug": "mrksina"

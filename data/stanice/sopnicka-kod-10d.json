@@ -11,8 +11,8 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "5:27",
-  "lastDeparture": "16:32",
+  "firstDeparture": "0:00",
+  "lastDeparture": "0:00",
   "peakIntervalMin": null,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 83.1
+      "allDayHeadwayMin": null
     }
   ],
   "neighbors": [
@@ -267,8 +267,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 43,
-    "stations45": 134
+    "stations30": 22,
+    "stations45": 99
   },
   "prevSlug": "sopnicka-37",
   "nextSlug": "sopnicka-skola"

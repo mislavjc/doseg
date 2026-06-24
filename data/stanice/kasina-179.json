@@ -12,10 +12,10 @@
     "263"
   ],
   "firstDeparture": "4:36",
-  "lastDeparture": "0:36",
+  "lastDeparture": "0:11",
   "peakIntervalMin": [
-    11,
-    18
+    18,
+    25
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        25
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
     }
   ],
   "neighbors": [
@@ -241,8 +241,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 6,
-    "stations45": 23
+    "stations30": 3,
+    "stations45": 21
   },
   "prevSlug": "kasina-128",
   "nextSlug": "kasina-centar"

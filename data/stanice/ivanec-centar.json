@@ -490,9 +490,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 54,
-    "stations45": 161
+    "stations15": 9,
+    "stations30": 44,
+    "stations45": 165
   },
   "prevSlug": "ivana-sturlica-15",
   "nextSlug": "ivanecka"

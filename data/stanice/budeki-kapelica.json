@@ -14,8 +14,8 @@
   "firstDeparture": "4:25",
   "lastDeparture": "23:31",
   "peakIntervalMin": [
-    8,
-    12
+    12,
+    19
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -372,10 +372,10 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 15,
-    "stations45": 63
+    "stations15": 19,
+    "stations30": 47,
+    "stations45": 158
   },
   "prevSlug": "brod-kunticeva",
-  "nextSlug": "budenec-stancira-sesvete"
+  "nextSlug": "budenec-stancira"
 }

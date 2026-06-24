@@ -14,8 +14,8 @@
   "firstDeparture": "7:02",
   "lastDeparture": "22:02",
   "peakIntervalMin": [
-    15,
-    15
+    30,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "T.b.J.Jelačića",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.9
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -160,6 +160,10 @@
             45.81563
           ],
           [
+            15.97473,
+            45.81569
+          ],
+          [
             15.97478,
             45.81576
           ],
@@ -174,10 +178,6 @@
           [
             15.97483,
             45.81587
-          ],
-          [
-            15.97484,
-            45.81594
           ],
           [
             15.97485,
@@ -340,9 +340,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 209,
-    "stations45": 502
+    "stations15": 31,
+    "stations30": 177,
+    "stations45": 493
   },
   "prevSlug": "kasinska-sopnica",
   "nextSlug": "kauzlaricev-prilaz"

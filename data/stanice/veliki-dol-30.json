@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:24",
   "lastDeparture": "22:29",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "207",
@@ -25,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        38,
-        43
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -156,9 +150,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 79,
-    "stations45": 251
+    "stations15": 28,
+    "stations30": 106,
+    "stations45": 329
   },
   "prevSlug": "velika-mlaka",
   "nextSlug": "veliki-vrh"

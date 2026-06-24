@@ -12,10 +12,10 @@
     "117",
     "118"
   ],
-  "firstDeparture": "4:31",
-  "lastDeparture": "0:49",
+  "firstDeparture": "4:30",
+  "lastDeparture": "1:03",
   "peakIntervalMin": [
-    2,
+    3,
     7
   ],
   "lines": [
@@ -40,12 +40,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     }
   ],
   "neighbors": [
@@ -75,8 +75,12 @@
         "mode": "bus",
         "shape": [
           [
-            15.93164,
-            45.81263
+            15.93369,
+            45.81567
+          ],
+          [
+            15.93144,
+            45.81264
           ],
           [
             15.92993,
@@ -305,9 +309,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 77,
-    "stations45": 290
+    "stations15": 11,
+    "stations30": 61,
+    "stations45": 243
   },
   "prevSlug": "bastijanova-tresnjevka-sjever",
   "nextSlug": "beciceve-stube"

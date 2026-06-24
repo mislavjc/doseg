@@ -6,17 +6,18 @@
   "lon": 16.11516,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 2,
+  "lineCount": 3,
   "tramLines": [],
   "busLines": [
     "262",
-    "263"
+    "263",
+    "270"
   ],
-  "firstDeparture": "4:39",
-  "lastDeparture": "0:43",
+  "firstDeparture": "4:32",
+  "lastDeparture": "0:18",
   "peakIntervalMin": [
-    5,
-    13
+    3,
+    12
   ],
   "lines": [
     {
@@ -37,12 +38,26 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        29
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -390,13 +405,31 @@
             45.89033
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11539,
+            45.8856
+          ],
+          [
+            16.11512,
+            45.87757
+          ],
+          [
+            16.11335,
+            45.87029
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 47,
-    "stations45": 126
+    "stations15": 27,
+    "stations30": 49,
+    "stations45": 124
   },
   "prevSlug": "durakov-breg",
   "nextSlug": "dvd-precko"

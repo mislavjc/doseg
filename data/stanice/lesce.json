@@ -15,7 +15,7 @@
   "lastDeparture": "0:51",
   "peakIntervalMin": [
     8,
-    10
+    28
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -389,8 +389,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 43,
-    "stations45": 150
+    "stations30": 34,
+    "stations45": 125
   },
   "prevSlug": "lepusici",
   "nextSlug": "leskovec-primorska"

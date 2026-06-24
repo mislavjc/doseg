@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:31",
-  "lastDeparture": "0:00",
+  "lastDeparture": "0:20",
   "peakIntervalMin": [
-    4,
-    10
+    10,
+    11
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -400,9 +400,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 47,
-    "stations45": 184
+    "stations15": 4,
+    "stations30": 19,
+    "stations45": 54
   },
   "prevSlug": "svilkovici-tresnjevka-jug",
   "nextSlug": "talovceva"

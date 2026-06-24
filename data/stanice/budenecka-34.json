@@ -2,8 +2,8 @@
   "slug": "budenecka-34",
   "name": "Budenečka 34",
   "kvart": "Sesvete",
-  "lat": 45.83471,
-  "lon": 16.17916,
+  "lat": 45.83477,
+  "lon": 16.17893,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 1,
@@ -33,7 +33,7 @@
   "neighbors": [
     {
       "name": "Budenečka 14",
-      "slug": "budenecka-14-sesvete-2"
+      "slug": "budenecka-14"
     },
     {
       "name": "Cerje",
@@ -42,10 +42,10 @@
   ],
   "hero": {
     "bbox": [
-      16.17709,
-      45.83327,
-      16.18122,
-      45.83615
+      16.17686,
+      45.83333,
+      16.181,
+      45.83622
     ],
     "lines": [
       {
@@ -95,10 +95,6 @@
           [
             16.18022,
             45.83431
-          ],
-          [
-            16.17916,
-            45.83471
           ],
           [
             16.17915,
@@ -201,10 +197,10 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 4,
+    "stations15": 3,
+    "stations30": 3,
     "stations45": 16
   },
-  "prevSlug": "budenecka-14-sesvete-2",
+  "prevSlug": "budenecka-14",
   "nextSlug": "buhini"
 }

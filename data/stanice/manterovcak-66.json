@@ -11,12 +11,9 @@
   "busLines": [
     "142"
   ],
-  "firstDeparture": "5:07",
-  "lastDeparture": "23:07",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "firstDeparture": "5:37",
+  "lastDeparture": "22:37",
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "142",
@@ -25,12 +22,9 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 30.0
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -541,8 +535,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 63,
-    "stations45": 152
+    "stations30": 45,
+    "stations45": 146
   },
   "prevSlug": "manterovcak-46",
   "nextSlug": "manterovcak-78"

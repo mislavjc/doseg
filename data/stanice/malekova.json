@@ -12,10 +12,10 @@
     "206"
   ],
   "firstDeparture": "4:39",
-  "lastDeparture": "23:47",
+  "lastDeparture": "23:12",
   "peakIntervalMin": [
-    7,
-    9
+    9,
+    22
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -241,8 +241,8 @@
   },
   "reach": {
     "stations15": 27,
-    "stations30": 121,
-    "stations45": 363
+    "stations30": 98,
+    "stations45": 304
   },
   "prevSlug": "maksimirska-naselja",
   "nextSlug": "malomlacka-30"

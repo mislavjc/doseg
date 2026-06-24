@@ -284,9 +284,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
+    "stations15": 26,
     "stations30": 118,
-    "stations45": 344
+    "stations45": 365
   },
   "prevSlug": "sestinski-dol",
   "nextSlug": "sestinski-lagvic"

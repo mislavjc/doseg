@@ -14,8 +14,8 @@
   "firstDeparture": "4:33",
   "lastDeparture": "0:52",
   "peakIntervalMin": [
-    8,
-    10
+    10,
+    25
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -437,8 +437,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 30,
-    "stations45": 125
+    "stations30": 20,
+    "stations45": 90
   },
   "prevSlug": "zelena-trznica",
   "nextSlug": "zelengaj"

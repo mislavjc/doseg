@@ -14,7 +14,7 @@
     "213"
   ],
   "firstDeparture": "4:09",
-  "lastDeparture": "0:41",
+  "lastDeparture": "0:46",
   "peakIntervalMin": [
     1,
     6
@@ -27,12 +27,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        21
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "209",
@@ -41,12 +41,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        15,
-        19
+        20,
+        21
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "213",
@@ -1030,9 +1030,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 92,
-    "stations45": 245
+    "stations15": 33,
+    "stations30": 91,
+    "stations45": 184
   },
   "prevSlug": "sumarske-jaslice",
   "nextSlug": "sunekova-172"

@@ -15,8 +15,8 @@
   "firstDeparture": "4:21",
   "lastDeparture": "1:56",
   "peakIntervalMin": [
-    16,
-    25
+    8,
+    23
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     }
   ],
   "neighbors": [
@@ -498,8 +498,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 23,
-    "stations45": 110
+    "stations30": 27,
+    "stations45": 131
   },
   "prevSlug": "okt-miletica-stenjevec",
   "nextSlug": "olipska"

@@ -16,8 +16,8 @@
   "firstDeparture": "4:06",
   "lastDeparture": "0:59",
   "peakIntervalMin": [
-    1,
-    7
+    2,
+    10
   ],
   "lines": [
     {
@@ -41,12 +41,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     },
     {
       "broj": "232",
@@ -746,6 +746,10 @@
             45.83906
           ],
           [
+            16.0197,
+            45.83931
+          ],
+          [
             16.01969,
             45.83932
           ],
@@ -756,10 +760,6 @@
           [
             16.01952,
             45.83939
-          ],
-          [
-            16.01956,
-            45.83943
           ],
           [
             16.01971,
@@ -822,9 +822,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 136,
-    "stations45": 374
+    "stations15": 12,
+    "stations30": 69,
+    "stations45": 290
   },
   "prevSlug": "rudeska",
   "nextSlug": "ruscenica"

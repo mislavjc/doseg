@@ -28,8 +28,8 @@
         },
         {
           "name": "Habdelićeva",
-          "lat": 45.81591,
-          "lon": 15.97534,
+          "lat": 45.81569,
+          "lon": 15.97475,
           "offsetMin": 3,
           "tramInterchange": []
         },
@@ -176,6 +176,10 @@
           45.81563
         ],
         [
+          15.97473,
+          45.81569
+        ],
+        [
           15.97478,
           45.81576
         ],
@@ -190,10 +194,6 @@
         [
           15.97483,
           45.81587
-        ],
-        [
-          15.97484,
-          45.81594
         ],
         [
           15.97485,
@@ -625,14 +625,14 @@
     0,
     0,
     0,
-    7,
-    8,
-    6,
-    8,
-    8,
-    8,
-    8,
-    5,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
     4,
     4,
     4,
@@ -650,62 +650,49 @@
           "hour": 7,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 8,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 9,
           "minutes": [
             0,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 10,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 12,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            30
           ]
         },
         {
@@ -776,23 +763,19 @@
           "hour": 7,
           "minutes": [
             15,
-            30,
             45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
             15,
-            30,
             45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            0,
             15,
             45
           ]
@@ -800,43 +783,34 @@
         {
           "hour": 10,
           "minutes": [
-            0,
             15,
-            30,
             45
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            0,
             15,
-            30,
             45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
             15,
-            30,
             45
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0,
             15,
-            30,
             45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
             15,
             45
           ]
@@ -1320,17 +1294,17 @@
   "prevBroj": "149",
   "nextBroj": "151",
   "reach": {
-    "areaKm2": 20.3,
+    "areaKm2": 18.8,
     "stopName": "Muzej grada Zagreba",
     "lat": 45.8183,
     "lon": 15.97479
   },
   "stats": {
-    "dailyDepartures": 88,
+    "dailyDepartures": 62,
     "firstDeparture": "07:00",
     "lastDeparture": "22:00",
-    "peakHeadwayMin": 15.0,
-    "avgHeadwayMin": 20.9,
+    "peakHeadwayMin": 30.0,
+    "avgHeadwayMin": 30.0,
     "travelTimeMin": 8.5,
     "distanceKm": 2.0
   }

@@ -23,10 +23,10 @@
     "281"
   ],
   "firstDeparture": "4:28",
-  "lastDeparture": "1:09",
+  "lastDeparture": "1:00",
   "peakIntervalMin": [
     1,
-    2
+    3
   ],
   "lines": [
     {
@@ -36,12 +36,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 10.5,
       "peakRangeMin": [
-        8,
-        8
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.0
+      "allDayHeadwayMin": 11.6
     },
     {
       "broj": "3",
@@ -50,12 +50,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.9,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        14,
-        14
+        16,
+        17
       ],
-      "allDayHeadwayMin": 14.7
+      "allDayHeadwayMin": 17.3
     },
     {
       "broj": "33",
@@ -75,12 +75,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.8,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "214",
@@ -102,7 +102,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "222",
@@ -152,7 +152,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "281",
@@ -2780,9 +2780,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 140,
-    "stations45": 319
+    "stations15": 31,
+    "stations30": 162,
+    "stations45": 392
   },
   "prevSlug": "dvorac-luznica",
   "nextSlug": "fakultetsko-dobro"

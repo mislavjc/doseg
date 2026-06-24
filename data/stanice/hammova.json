@@ -12,10 +12,10 @@
     "206"
   ],
   "firstDeparture": "4:39",
-  "lastDeparture": "23:47",
+  "lastDeparture": "23:12",
   "peakIntervalMin": [
     8,
-    8
+    23
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -244,9 +244,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 77,
-    "stations45": 238
+    "stations15": 17,
+    "stations30": 55,
+    "stations45": 224
   },
   "prevSlug": "habdeliceva",
   "nextSlug": "hanamanova"

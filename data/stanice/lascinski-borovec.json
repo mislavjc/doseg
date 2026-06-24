@@ -15,7 +15,7 @@
   "firstDeparture": "6:05",
   "lastDeparture": "22:22",
   "peakIntervalMin": [
-    7,
+    8,
     21
   ],
   "lines": [
@@ -26,10 +26,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        38,
-        43
+        43,
+        48
       ],
       "allDayHeadwayMin": 42.0
     },
@@ -634,9 +634,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 128,
-    "stations45": 340
+    "stations15": 22,
+    "stations30": 92,
+    "stations45": 287
   },
   "prevSlug": "laniste",
   "nextSlug": "laskocica-2"

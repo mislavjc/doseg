@@ -14,10 +14,10 @@
     "182"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "1:42",
+  "lastDeparture": "1:52",
   "peakIntervalMin": [
-    1,
-    6
+    2,
+    5
   ],
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.8,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     },
     {
       "broj": "174",
@@ -739,10 +739,10 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 28,
-    "stations45": 86
+    "stations15": 11,
+    "stations30": 33,
+    "stations45": 101
   },
-  "prevSlug": "st-dom-stjepan-radic",
+  "prevSlug": "st-dom-s-radic",
   "nextSlug": "stara-oporovecka"
 }

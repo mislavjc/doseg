@@ -13,10 +13,10 @@
     "146"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "1:05",
+  "lastDeparture": "1:09",
   "peakIntervalMin": [
     2,
-    6
+    7
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 12.4,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     },
     {
       "broj": "146",
@@ -40,12 +40,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -329,9 +329,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 89,
-    "stations45": 258
+    "stations15": 8,
+    "stations30": 70,
+    "stations45": 195
   },
   "prevSlug": "bocarski-dom",
   "nextSlug": "boln-jordanovac"

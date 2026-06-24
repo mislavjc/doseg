@@ -957,25 +957,25 @@
     0,
     0,
     0,
-    6,
-    2,
-    6,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    2,
-    4,
-    4,
-    4,
     2,
     2,
-    4,
-    4,
     2,
-    0
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
   ],
   "timetable": {
     "radniDan": [
@@ -983,124 +983,115 @@
         {
           "hour": 5,
           "minutes": [
-            0,
-            25,
-            50
+            0
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            30
+            0
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            25,
-            45
+            0
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            20,
-            45
+            0
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            40
+            0
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            40
+            0
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            35
+            0
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
-            25
+            0
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            25,
-            50
+            0
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            30
+            0
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            0,
-            35
+            0
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
-            30
+            0
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            0,
-            35
+            0
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            30
+            0
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15
+            0
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            0,
-            40
+            0
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            10,
-            40
+            0
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            30
+            0
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            0
           ]
         }
       ],
@@ -1108,124 +1099,115 @@
         {
           "hour": 5,
           "minutes": [
-            6,
-            31,
-            56
+            6
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            36
+            6
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            6,
-            31,
-            51
+            16
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            26,
-            51
+            6
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            21,
-            46
+            16
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            21,
-            46
+            6
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            16,
-            41
+            11
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            6,
-            31
+            16
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            31,
-            56
+            6
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            36
+            6
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            6,
-            41
+            6
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            6,
-            36
+            6
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            6,
-            41
+            6
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            36
+            6
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            21
+            6
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            6,
-            46
+            6
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            16,
-            46
+            6
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            36
+            6
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            6
           ]
         }
       ]
@@ -1521,17 +1503,17 @@
   "prevBroj": "142",
   "nextBroj": "144",
   "reach": {
-    "areaKm2": 15.3,
+    "areaKm2": 17.4,
     "stopName": "Gospodska 108",
     "lat": 45.82038,
     "lon": 15.88165
   },
   "stats": {
-    "dailyDepartures": 66,
+    "dailyDepartures": 38,
     "firstDeparture": "05:00",
-    "lastDeparture": "22:30",
-    "peakHeadwayMin": 26.3,
-    "avgHeadwayMin": 32.8,
+    "lastDeparture": "23:00",
+    "peakHeadwayMin": 60.0,
+    "avgHeadwayMin": 60.0,
     "travelTimeMin": 5.0,
     "distanceKm": 3.3
   }

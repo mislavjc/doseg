@@ -2,8 +2,8 @@
   "slug": "savisce",
   "name": "Savišće",
   "kvart": "Peščenica - Žitnjak",
-  "lat": 45.78921,
-  "lon": 16.03428,
+  "lat": 45.78899,
+  "lon": 16.03461,
   "mode": "both",
   "bothDirections": true,
   "lineCount": 5,
@@ -17,10 +17,10 @@
     "290"
   ],
   "firstDeparture": "4:17",
-  "lastDeparture": "1:12",
+  "lastDeparture": "1:03",
   "peakIntervalMin": [
     1,
-    2
+    3
   ],
   "lines": [
     {
@@ -30,12 +30,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 10.5,
       "peakRangeMin": [
-        8,
-        8
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.0
+      "allDayHeadwayMin": 11.6
     },
     {
       "broj": "3",
@@ -44,12 +44,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.9,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        14,
-        14
+        16,
+        17
       ],
-      "allDayHeadwayMin": 14.7
+      "allDayHeadwayMin": 17.3
     },
     {
       "broj": "33",
@@ -111,10 +111,10 @@
   ],
   "hero": {
     "bbox": [
-      16.03222,
-      45.78777,
-      16.03635,
-      45.79065
+      16.03254,
+      45.78754,
+      16.03668,
+      45.79043
     ],
     "lines": [
       {
@@ -684,10 +684,6 @@
             45.7891
           ],
           [
-            16.0335,
-            45.78899
-          ],
-          [
             16.03364,
             45.78892
           ],
@@ -701,6 +697,10 @@
           ],
           [
             16.03529,
+            45.78804
+          ],
+          [
+            16.0353,
             45.78804
           ],
           [
@@ -860,19 +860,15 @@
           [
             16.01926,
             45.79641
-          ],
-          [
-            16.01758,
-            45.79732
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 108,
-    "stations45": 295
+    "stations15": 21,
+    "stations30": 77,
+    "stations45": 275
   },
   "prevSlug": "savica-i",
   "nextSlug": "savska"

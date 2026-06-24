@@ -2,8 +2,8 @@
   "slug": "zaprude-novi-zagreb-istok",
   "name": "Zapruđe",
   "kvart": "Novi Zagreb - istok",
-  "lat": 45.77831,
-  "lon": 16.00135,
+  "lat": 45.77822,
+  "lon": 16.00128,
   "mode": "both",
   "bothDirections": true,
   "lineCount": 8,
@@ -19,8 +19,8 @@
     "307",
     "308"
   ],
-  "firstDeparture": "4:28",
-  "lastDeparture": "1:10",
+  "firstDeparture": "4:26",
+  "lastDeparture": "1:07",
   "peakIntervalMin": [
     1,
     1
@@ -33,12 +33,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.9,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -47,12 +47,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "8",
@@ -61,12 +61,12 @@
       "headsign": "Mihaljevac",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "14",
@@ -75,12 +75,12 @@
       "headsign": "Mihaljevac",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.7,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -127,7 +127,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -144,26 +144,22 @@
       "slug": "folnegovicevo"
     },
     {
-      "name": "Sarajevsk-Ukrajinska",
-      "slug": "sarajevsk-ukrajinska"
+      "name": "Sarajev.-Ukrajinska",
+      "slug": "sarajev-ukrajinska"
     }
   ],
   "hero": {
     "bbox": [
-      15.99929,
-      45.77687,
-      16.00342,
-      45.77975
+      15.99921,
+      45.77678,
+      16.00335,
+      45.77967
     ],
     "lines": [
       {
         "broj": "6",
         "mode": "tram",
         "shape": [
-          [
-            16.00193,
-            45.79261
-          ],
           [
             16.00207,
             45.79243
@@ -765,10 +761,6 @@
         "mode": "tram",
         "shape": [
           [
-            16.00193,
-            45.79261
-          ],
-          [
             16.00207,
             45.79243
           ],
@@ -1032,10 +1024,6 @@
         "broj": "31",
         "mode": "tram",
         "shape": [
-          [
-            16.00193,
-            45.79261
-          ],
           [
             16.00207,
             45.79243
@@ -1685,10 +1673,6 @@
           [
             16.00231,
             45.7925
-          ],
-          [
-            16.00215,
-            45.79259
           ]
         ]
       },
@@ -1923,9 +1907,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 173,
-    "stations45": 457
+    "stations15": 33,
+    "stations30": 160,
+    "stations45": 393
   },
   "prevSlug": "zapci",
   "nextSlug": "zaprude-novi-zagreb-istok-2"

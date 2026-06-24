@@ -31,7 +31,7 @@
         20,
         25
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     },
     {
       "broj": "243",
@@ -695,8 +695,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 135,
-    "stations45": 424
+    "stations30": 121,
+    "stations45": 346
   },
   "prevSlug": "spansko",
   "nextSlug": "sportski-centar-trnje"

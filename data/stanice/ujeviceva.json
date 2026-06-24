@@ -11,11 +11,11 @@
   "busLines": [
     "107"
   ],
-  "firstDeparture": "4:57",
-  "lastDeparture": "23:22",
+  "firstDeparture": "4:59",
+  "lastDeparture": "23:07",
   "peakIntervalMin": [
-    5,
-    10
+    3,
+    17
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.8,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     }
   ],
   "neighbors": [
@@ -172,8 +172,8 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 168,
+    "stations15": 19,
+    "stations30": 159,
     "stations45": 421
   },
   "prevSlug": "ucit-fakultet",

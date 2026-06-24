@@ -11,12 +11,9 @@
   "busLines": [
     "142"
   ],
-  "firstDeparture": "5:10",
-  "lastDeparture": "23:10",
-  "peakIntervalMin": [
-    29,
-    30
-  ],
+  "firstDeparture": "5:40",
+  "lastDeparture": "22:40",
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "142",
@@ -25,12 +22,9 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 28.8,
-      "peakRangeMin": [
-        29,
-        30
-      ],
-      "allDayHeadwayMin": 30.0
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -541,8 +535,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 24,
-    "stations45": 113
+    "stations30": 25,
+    "stations45": 121
   },
   "prevSlug": "jablanovac",
   "nextSlug": "jackovina-46"

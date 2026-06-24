@@ -15,8 +15,8 @@
   "firstDeparture": "4:50",
   "lastDeparture": "23:41",
   "peakIntervalMin": [
-    10,
-    12
+    11,
+    15
   ],
   "lines": [
     {
@@ -37,12 +37,12 @@
       "headsign": "Ses.Kraljev.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.1,
+      "peakHeadwayMin": 15.4,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 16.7
+      "allDayHeadwayMin": 17.5
     }
   ],
   "neighbors": [
@@ -226,9 +226,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 186,
-    "stations45": 515
+    "stations15": 17,
+    "stations30": 125,
+    "stations45": 398
   },
   "prevSlug": "borongaj",
   "nextSlug": "borongajska-kampus"

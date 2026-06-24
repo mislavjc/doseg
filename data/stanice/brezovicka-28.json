@@ -25,18 +25,18 @@
       "headsign": "Botinec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.6,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     }
   ],
   "neighbors": [
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     },
     {
       "name": "Bašćanske ploče",
@@ -300,9 +300,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 71,
-    "stations45": 256
+    "stations15": 15,
+    "stations30": 74,
+    "stations45": 250
   },
   "prevSlug": "brezovica-skola",
   "nextSlug": "brezovicka-80"

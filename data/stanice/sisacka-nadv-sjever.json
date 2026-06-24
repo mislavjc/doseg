@@ -16,7 +16,7 @@
   "lastDeparture": "23:38",
   "peakIntervalMin": [
     6,
-    16
+    19
   ],
   "lines": [
     {
@@ -28,8 +28,8 @@
       "bothDirections": false,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     },
@@ -56,7 +56,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     }
   ],
   "hero": {
@@ -616,7 +616,7 @@
   "reach": {
     "stations15": 9,
     "stations30": 42,
-    "stations45": 112
+    "stations45": 105
   },
   "prevSlug": "sirkovina",
   "nextSlug": "sisiceva"

@@ -11,11 +11,11 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:30",
-  "lastDeparture": "0:25",
+  "firstDeparture": "4:35",
+  "lastDeparture": "0:30",
   "peakIntervalMin": [
     5,
-    10
+    15
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        15,
-        18
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [
@@ -272,9 +272,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 25,
-    "stations45": 85
+    "stations15": 9,
+    "stations30": 30,
+    "stations45": 81
   },
   "prevSlug": "crnomerec",
   "nextSlug": "cucerje-crkva"

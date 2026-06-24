@@ -7,7 +7,7 @@
     "Prečko"
   ],
   "via": [
-    "St.dom Stjepan Radić",
+    "St. dom S. Radić",
     "Karlovačka 97"
   ],
   "oneWay": false,
@@ -27,7 +27,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -2629,19 +2629,19 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },

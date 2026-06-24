@@ -16,7 +16,7 @@
   "firstDeparture": "4:23",
   "lastDeparture": "0:33",
   "peakIntervalMin": [
-    2,
+    1,
     6
   ],
   "lines": [
@@ -46,7 +46,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     },
     {
       "broj": "130",
@@ -114,8 +114,8 @@
             45.81932
           ],
           [
-            15.87537,
-            45.81761
+            15.87528,
+            45.81746
           ]
         ]
       },
@@ -778,9 +778,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 104,
-    "stations45": 236
+    "stations15": 26,
+    "stations30": 79,
+    "stations45": 206
   },
   "prevSlug": "bolnica-vuk-vrhovac",
   "nextSlug": "bolsiceva"

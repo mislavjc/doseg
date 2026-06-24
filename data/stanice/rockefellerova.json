@@ -15,11 +15,11 @@
     "226",
     "238"
   ],
-  "firstDeparture": "4:30",
+  "firstDeparture": "4:32",
   "lastDeparture": "0:35",
   "peakIntervalMin": [
     1,
-    5
+    4
   ],
   "lines": [
     {
@@ -43,12 +43,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": [
-        25,
-        25
+        35,
+        35
       ],
-      "allDayHeadwayMin": 27.2
+      "allDayHeadwayMin": 35.5
     },
     {
       "broj": "203",
@@ -1093,10 +1093,10 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 188,
-    "stations45": 467
+    "stations15": 28,
+    "stations30": 129,
+    "stations45": 382
   },
-  "prevSlug": "rimski-put-bazen-sesvete-2",
+  "prevSlug": "rimski-put-bazen",
   "nextSlug": "roginina"
 }

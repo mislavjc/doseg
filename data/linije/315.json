@@ -41,8 +41,8 @@
         },
         {
           "name": "Naletilićeva",
-          "lat": 45.76575,
-          "lon": 15.94606,
+          "lat": 45.76539,
+          "lon": 15.946,
           "offsetMin": 6,
           "tramInterchange": []
         },
@@ -397,8 +397,8 @@
           45.76575
         ],
         [
-          15.94605,
-          45.76574
+          15.94603,
+          45.76539
         ],
         [
           15.94599,
@@ -2327,7 +2327,7 @@
   "prevBroj": "313",
   "nextBroj": "330",
   "reach": {
-    "areaKm2": 6.5,
+    "areaKm2": 7.9,
     "stopName": "Malomlačka-Igrališna",
     "lat": 45.73003,
     "lon": 15.97613

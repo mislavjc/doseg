@@ -15,8 +15,8 @@
   "firstDeparture": "4:55",
   "lastDeparture": "23:50",
   "peakIntervalMin": [
-    3,
-    15
+    5,
+    19
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.0,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "281",
@@ -277,9 +277,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 147,
-    "stations45": 363
+    "stations15": 18,
+    "stations30": 138,
+    "stations45": 372
   },
   "prevSlug": "tomislavova",
   "nextSlug": "tr-savica-trnje-2"

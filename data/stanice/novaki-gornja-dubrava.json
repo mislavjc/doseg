@@ -14,8 +14,8 @@
   "firstDeparture": "4:17",
   "lastDeparture": "23:12",
   "peakIntervalMin": [
-    20,
-    20
+    30,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -348,9 +348,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 98,
-    "stations45": 251
+    "stations15": 11,
+    "stations30": 49,
+    "stations45": 160
   },
   "prevSlug": "nova-ves",
   "nextSlug": "novaki-gornja-dubrava-2"

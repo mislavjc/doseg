@@ -14,8 +14,8 @@
   "firstDeparture": "4:32",
   "lastDeparture": "0:53",
   "peakIntervalMin": [
-    6,
-    12
+    12,
+    23
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -460,9 +460,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 35,
-    "stations45": 126
+    "stations15": 13,
+    "stations30": 36,
+    "stations45": 128
   },
   "prevSlug": "persinovec-72",
   "nextSlug": "petina"

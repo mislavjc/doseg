@@ -16,8 +16,8 @@
   "firstDeparture": "4:20",
   "lastDeparture": "0:01",
   "peakIntervalMin": [
-    1,
-    8
+    2,
+    7
   ],
   "lines": [
     {
@@ -38,12 +38,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 11.3,
       "peakRangeMin": [
-        10,
-        10
+        11,
+        12
       ],
-      "allDayHeadwayMin": 12.1
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "235",
@@ -1840,9 +1840,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 100,
-    "stations45": 317
+    "stations15": 11,
+    "stations30": 95,
+    "stations45": 244
   },
   "prevSlug": "trg-zrt-fasizma",
   "nextSlug": "trnava-i-trgovina"

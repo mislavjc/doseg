@@ -20,9 +20,7 @@
           "lon": 16.01838,
           "offsetMin": 0,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         },
         {
@@ -82,7 +80,7 @@
           "tramInterchange": []
         },
         {
-          "name": "Aleja Javora",
+          "name": "Aleja javora",
           "lat": 45.82321,
           "lon": 16.06873,
           "offsetMin": 12,
@@ -574,9 +572,7 @@
           "lon": 16.01865,
           "offsetMin": 20,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         }
       ],
@@ -1840,22 +1836,10 @@
         "terminal": "Dubec"
       },
       {
-        "broj": "9",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
-      },
-      {
         "broj": "11",
         "mode": "tram",
         "isNight": false,
         "terminal": "Dubec"
-      },
-      {
-        "broj": "17",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
       },
       {
         "broj": "32",
@@ -1989,7 +1973,7 @@
   "prevBroj": "230",
   "nextBroj": "232",
   "reach": {
-    "areaKm2": 21.2,
+    "areaKm2": 15.9,
     "stopName": "Osječka",
     "lat": 45.81974,
     "lon": 16.05593

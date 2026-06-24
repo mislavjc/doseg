@@ -11,11 +11,11 @@
   "busLines": [
     "128"
   ],
-  "firstDeparture": "4:33",
-  "lastDeparture": "0:22",
+  "firstDeparture": "4:32",
+  "lastDeparture": "0:32",
   "peakIntervalMin": [
-    2,
-    8
+    1,
+    15
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        10,
-        11
+        15,
+        15
       ],
-      "allDayHeadwayMin": 14.0
+      "allDayHeadwayMin": 16.5
     }
   ],
   "neighbors": [
@@ -388,9 +388,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 186,
-    "stations45": 398
+    "stations15": 36,
+    "stations30": 180,
+    "stations45": 403
   },
   "prevSlug": "bolnica-srebrnjak",
   "nextSlug": "bolnica-vrapce"

@@ -20,14 +20,14 @@
           "tramInterchange": []
         },
         {
-          "name": "Sarajevsk-Ukrajinska",
+          "name": "Sarajev.-Ukrajinska",
           "lat": 45.77253,
           "lon": 16.00383,
           "offsetMin": 1,
           "tramInterchange": []
         },
         {
-          "name": "Sarajevsk-Vatikanska",
+          "name": "Sarajev.-Vatikanska",
           "lat": 45.7676,
           "lon": 16.00575,
           "offsetMin": 2,
@@ -140,8 +140,8 @@
         },
         {
           "name": "Črnkovec",
-          "lat": 45.75176,
-          "lon": 16.10985,
+          "lat": 45.75171,
+          "lon": 16.10954,
           "offsetMin": 21,
           "tramInterchange": []
         },
@@ -1120,14 +1120,14 @@
           "tramInterchange": []
         },
         {
-          "name": "Sarajevsk-Vatikanska",
+          "name": "Sarajev.-Vatikanska",
           "lat": 45.76933,
           "lon": 16.00538,
           "offsetMin": 27,
           "tramInterchange": []
         },
         {
-          "name": "Sarajevsk-Ukrajinska",
+          "name": "Sarajev.-Ukrajinska",
           "lat": 45.77327,
           "lon": 16.00261,
           "offsetMin": 28,
@@ -2121,6 +2121,12 @@
   "related": {
     "sharedTerminal": [
       {
+        "broj": "8",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Zapruđe"
+      },
+      {
         "broj": "14",
         "mode": "tram",
         "isNight": false,
@@ -2144,7 +2150,7 @@
   "prevBroj": "295",
   "nextBroj": "308",
   "reach": {
-    "areaKm2": 11.8,
+    "areaKm2": 6.0,
     "stopName": "Selnica-put za Bapče",
     "lat": 45.74948,
     "lon": 16.10122

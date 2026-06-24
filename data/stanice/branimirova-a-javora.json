@@ -13,10 +13,10 @@
     "231"
   ],
   "firstDeparture": "4:42",
-  "lastDeparture": "0:28",
+  "lastDeparture": "0:23",
   "peakIntervalMin": [
     5,
-    15
+    21
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "231",
@@ -47,7 +47,7 @@
   ],
   "neighbors": [
     {
-      "name": "Aleja Javora",
+      "name": "Aleja javora",
       "slug": "aleja-javora-donja-dubrava"
     },
     {
@@ -511,8 +511,8 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 89,
-    "stations45": 249
+    "stations30": 102,
+    "stations45": 279
   },
   "prevSlug": "branimir-centar",
   "nextSlug": "branovec"

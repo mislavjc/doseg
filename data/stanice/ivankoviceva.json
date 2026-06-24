@@ -797,9 +797,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 77,
-    "stations45": 206
+    "stations15": 17,
+    "stations30": 95,
+    "stations45": 261
   },
   "prevSlug": "ivanjorecka-posta",
   "nextSlug": "ivanoviceva-ulica"

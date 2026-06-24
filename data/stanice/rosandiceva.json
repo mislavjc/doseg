@@ -793,9 +793,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 76,
-    "stations45": 206
+    "stations15": 14,
+    "stations30": 94,
+    "stations45": 261
   },
   "prevSlug": "roginina",
   "nextSlug": "rozici"

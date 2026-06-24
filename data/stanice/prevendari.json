@@ -269,10 +269,10 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 19,
+    "stations15": 8,
+    "stations30": 20,
     "stations45": 40
   },
-  "prevSlug": "prepustovec-vurnovec",
+  "prevSlug": "prekvrsje-skola",
   "nextSlug": "prevende"
 }

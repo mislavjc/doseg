@@ -11,11 +11,11 @@
   "busLines": [
     "128"
   ],
-  "firstDeparture": "4:41",
-  "lastDeparture": "0:15",
+  "firstDeparture": "4:39",
+  "lastDeparture": "0:25",
   "peakIntervalMin": [
-    4,
-    6
+    1,
+    14
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.1,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        10,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 14.0
+      "allDayHeadwayMin": 16.5
     }
   ],
   "neighbors": [
@@ -468,9 +468,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 59,
-    "stations45": 237
+    "stations15": 11,
+    "stations30": 37,
+    "stations45": 183
   },
   "prevSlug": "vikend-naselje-brezovica-2",
   "nextSlug": "vile-velebita"

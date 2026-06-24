@@ -424,9 +424,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 51,
-    "stations45": 216
+    "stations15": 9,
+    "stations30": 75,
+    "stations45": 271
   },
   "prevSlug": "fancevljev-prilaz",
   "nextSlug": "ferde-kocha"

@@ -19,7 +19,7 @@
   "lastDeparture": "1:06",
   "peakIntervalMin": [
     1,
-    6
+    8
   ],
   "lines": [
     {
@@ -29,12 +29,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 21.8,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        24
       ],
-      "allDayHeadwayMin": 22.7
+      "allDayHeadwayMin": 26.2
     },
     {
       "broj": "113",
@@ -57,12 +57,9 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 39.5,
-      "peakRangeMin": [
-        39,
-        40
-      ],
-      "allDayHeadwayMin": 40.0
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "115",
@@ -71,12 +68,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.8,
+      "peakHeadwayMin": 12.9,
       "peakRangeMin": [
-        10,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     },
     {
       "broj": "116",
@@ -480,8 +477,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.93669,
-            45.79615
+            15.93668,
+            45.79618
           ],
           [
             15.93686,
@@ -760,9 +757,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 110,
-    "stations45": 339
+    "stations15": 16,
+    "stations30": 116,
+    "stations45": 378
   },
   "prevSlug": "fallerovo-tresnjevka-jug",
   "nextSlug": "fancevljev-prilaz"

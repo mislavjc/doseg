@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -85,12 +85,12 @@
             45.75171
           ],
           [
-            16.10953,
-            45.75176
+            16.1095,
+            45.75175
           ],
           [
-            16.1096,
-            45.75185
+            16.10953,
+            45.75176
           ],
           [
             16.10966,

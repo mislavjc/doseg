@@ -558,9 +558,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 146,
-    "stations45": 399
+    "stations15": 23,
+    "stations30": 95,
+    "stations45": 308
   },
   "prevSlug": "horvatovac-40",
   "nextSlug": "horvatovac-trgovina"

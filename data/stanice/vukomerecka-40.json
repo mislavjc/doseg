@@ -13,10 +13,10 @@
     "215",
     "235"
   ],
-  "firstDeparture": "4:21",
-  "lastDeparture": "0:02",
+  "firstDeparture": "4:22",
+  "lastDeparture": "0:03",
   "peakIntervalMin": [
-    3,
+    2,
     6
   ],
   "lines": [
@@ -38,12 +38,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 11.3,
       "peakRangeMin": [
-        10,
-        10
+        11,
+        12
       ],
-      "allDayHeadwayMin": 12.1
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "235",
@@ -1924,9 +1924,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 74,
-    "stations45": 221
+    "stations15": 9,
+    "stations30": 54,
+    "stations45": 166
   },
   "prevSlug": "vukomerec-okretiste",
   "nextSlug": "vukomeric-i"

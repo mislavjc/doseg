@@ -7,7 +7,7 @@
     "Ašpergeri"
   ],
   "via": [
-    "St.dom Stjepan Radić"
+    "St. dom S. Radić"
   ],
   "oneWay": false,
   "directions": [
@@ -26,7 +26,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -1255,26 +1255,26 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "161",
   "nextBroj": "163",
   "reach": {
-    "areaKm2": 7.7,
+    "areaKm2": 10.8,
     "stopName": "Hudobička 1",
     "lat": 45.71073,
     "lon": 15.89667

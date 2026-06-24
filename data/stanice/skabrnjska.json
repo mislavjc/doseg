@@ -14,8 +14,8 @@
   "firstDeparture": "4:27",
   "lastDeparture": "0:57",
   "peakIntervalMin": [
-    5,
-    15
+    15,
+    20
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -301,9 +301,9 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 111,
-    "stations45": 274
+    "stations30": 86,
+    "stations45": 268
   },
   "prevSlug": "sjeverna",
-  "nextSlug": "skanici"
+  "nextSlug": "skocilovici"
 }

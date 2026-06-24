@@ -14,8 +14,8 @@
   "firstDeparture": "4:49",
   "lastDeparture": "0:02",
   "peakIntervalMin": [
-    3,
-    21
+    14,
+    17
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -392,9 +392,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 149,
-    "stations45": 360
+    "stations15": 16,
+    "stations30": 86,
+    "stations45": 226
   },
   "prevSlug": "stenjevec",
   "nextSlug": "strma-cesta"

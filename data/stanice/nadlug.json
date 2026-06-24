@@ -225,10 +225,10 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 8,
-    "stations45": 11
+    "stations15": 3,
+    "stations30": 10,
+    "stations45": 13
   },
   "prevSlug": "nabrezje",
-  "nextSlug": "naletiliceva"
+  "nextSlug": "naletiliceva-104"
 }

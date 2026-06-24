@@ -42,7 +42,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 41.2
+      "allDayHeadwayMin": 42.8
     },
     {
       "broj": "132",
@@ -1434,7 +1434,7 @@
   "reach": {
     "stations15": 6,
     "stations30": 9,
-    "stations45": 62
+    "stations45": 60
   },
   "prevSlug": "karlovacka-18",
   "nextSlug": "kasina-110"

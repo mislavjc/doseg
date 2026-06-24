@@ -17,8 +17,8 @@
   "firstDeparture": "4:46",
   "lastDeparture": "0:15",
   "peakIntervalMin": [
-    2,
-    7
+    3,
+    8
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.5,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        8,
-        12
+        9,
+        14
       ],
-      "allDayHeadwayMin": 10.8
+      "allDayHeadwayMin": 11.8
     },
     {
       "broj": "117",
@@ -53,12 +53,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        20,
-        21
+        25,
+        28
       ],
-      "allDayHeadwayMin": 21.4
+      "allDayHeadwayMin": 26.4
     },
     {
       "broj": "146",
@@ -67,12 +67,12 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 24.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        24,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -664,9 +664,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 227,
-    "stations45": 461
+    "stations15": 37,
+    "stations30": 226,
+    "stations45": 472
   },
   "prevSlug": "tehnicki-muzej",
   "nextSlug": "terminal"

@@ -2,8 +2,8 @@
   "slug": "precko-terminal",
   "name": "Prečko-terminal",
   "kvart": "Trešnjevka - jug",
-  "lat": 45.79495,
-  "lon": 15.89967,
+  "lat": 45.79496,
+  "lon": 15.89968,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 4,
@@ -15,10 +15,10 @@
     "168"
   ],
   "firstDeparture": "4:10",
-  "lastDeparture": "0:43",
+  "lastDeparture": "0:30",
   "peakIntervalMin": [
-    2,
-    6
+    3,
+    8
   ],
   "lines": [
     {
@@ -28,12 +28,9 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 39.5,
-      "peakRangeMin": [
-        39,
-        40
-      ],
-      "allDayHeadwayMin": 40.0
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "120",
@@ -42,12 +39,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 38.3,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        38,
-        40
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "134",
@@ -56,12 +53,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        20,
-        25
+        28,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     },
     {
       "broj": "168",
@@ -91,10 +88,10 @@
   ],
   "hero": {
     "bbox": [
-      15.8976,
-      45.79351,
+      15.89761,
+      45.79352,
       15.90174,
-      45.79639
+      45.79641
     ],
     "lines": [
       {
@@ -504,9 +501,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 99,
-    "stations45": 294
+    "stations15": 29,
+    "stations30": 135,
+    "stations45": 392
   },
   "prevSlug": "precko",
   "nextSlug": "predsjednicki-dvori"

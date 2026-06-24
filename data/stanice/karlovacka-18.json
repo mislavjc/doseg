@@ -42,7 +42,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 41.2
+      "allDayHeadwayMin": 42.8
     },
     {
       "broj": "132",
@@ -84,7 +84,7 @@
   "neighbors": [
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     },
     {
       "name": "Karlovačka 97",
@@ -1529,8 +1529,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 74,
-    "stations45": 259
+    "stations30": 77,
+    "stations45": 253
   },
   "prevSlug": "karlovacka-157",
   "nextSlug": "karlovacka-97"

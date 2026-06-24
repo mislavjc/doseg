@@ -312,9 +312,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 138,
-    "stations45": 335
+    "stations15": 14,
+    "stations30": 98,
+    "stations45": 230
   },
   "prevSlug": "dioki",
   "nextSlug": "djecji-dom-nazorova"

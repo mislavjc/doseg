@@ -11,8 +11,8 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "5:26",
-  "lastDeparture": "16:31",
+  "firstDeparture": "0:00",
+  "lastDeparture": "0:00",
   "peakIntervalMin": null,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 83.1
+      "allDayHeadwayMin": null
     }
   ],
   "neighbors": [
@@ -267,8 +267,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 57,
-    "stations45": 167
+    "stations30": 51,
+    "stations45": 156
   },
   "prevSlug": "solici",
   "nextSlug": "sopnicka-kod-10d"

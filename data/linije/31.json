@@ -65,7 +65,6 @@
           "lon": 15.95682,
           "offsetMin": 6,
           "tramInterchange": [
-            "1",
             "2",
             "6",
             "11"
@@ -77,7 +76,6 @@
           "lon": 15.96309,
           "offsetMin": 8,
           "tramInterchange": [
-            "1",
             "6",
             "11"
           ]
@@ -114,8 +112,8 @@
         },
         {
           "name": "Zrinjevac",
-          "lat": 45.80888,
-          "lon": 15.97774,
+          "lat": 45.80951,
+          "lon": 15.97765,
           "offsetMin": 13,
           "tramInterchange": [
             "6",
@@ -157,7 +155,8 @@
           "tramInterchange": [
             "2",
             "6",
-            "8"
+            "8",
+            "13"
           ]
         },
         {
@@ -1261,7 +1260,8 @@
           "tramInterchange": [
             "2",
             "6",
-            "8"
+            "8",
+            "13"
           ]
         },
         {
@@ -1337,7 +1337,6 @@
           "lon": 15.96473,
           "offsetMin": 38,
           "tramInterchange": [
-            "1",
             "6",
             "11"
           ]
@@ -1348,7 +1347,6 @@
           "lon": 15.95779,
           "offsetMin": 40,
           "tramInterchange": [
-            "1",
             "2",
             "6",
             "11"
@@ -2569,7 +2567,7 @@
     "tramCrossings": [
       {
         "broj": "1",
-        "stopName": "Trg dr. F. Tuđmana"
+        "stopName": "Frankopanska"
       },
       {
         "broj": "2",
@@ -2628,7 +2626,7 @@
   "prevBroj": "17",
   "nextBroj": "32",
   "reach": {
-    "areaKm2": 25.4,
+    "areaKm2": 39.5,
     "stopName": "Folnegovićevo",
     "lat": 45.79224,
     "lon": 16.00219

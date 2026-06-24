@@ -12,7 +12,7 @@
     "267"
   ],
   "firstDeparture": "6:59",
-  "lastDeparture": "18:05",
+  "lastDeparture": "19:45",
   "peakIntervalMin": [
     31,
     80
@@ -27,7 +27,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
     }
   ],
   "neighbors": [

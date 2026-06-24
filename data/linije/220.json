@@ -2159,6 +2159,12 @@
         "terminal": "Gl.kolodvor"
       },
       {
+        "broj": "313",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2195,7 +2201,7 @@
   "prevBroj": "219",
   "nextBroj": "221",
   "reach": {
-    "areaKm2": 28.8,
+    "areaKm2": 31.2,
     "stopName": "Središće",
     "lat": 45.77704,
     "lon": 15.99039

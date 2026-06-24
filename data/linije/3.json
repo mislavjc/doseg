@@ -21,6 +21,7 @@
           "lon": 15.93857,
           "offsetMin": 0,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -31,6 +32,7 @@
           "lon": 15.9441,
           "offsetMin": 2,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -41,6 +43,7 @@
           "lon": 15.94845,
           "offsetMin": 4,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -51,6 +54,7 @@
           "lon": 15.95484,
           "offsetMin": 5,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -61,6 +65,7 @@
           "lon": 15.95931,
           "offsetMin": 7,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -71,6 +76,7 @@
           "lon": 15.96431,
           "offsetMin": 9,
           "tramInterchange": [
+            "1",
             "4",
             "9",
             "12",
@@ -85,6 +91,7 @@
           "lon": 15.96421,
           "offsetMin": 10,
           "tramInterchange": [
+            "1",
             "4",
             "9",
             "12",
@@ -1170,6 +1177,7 @@
           "lon": 15.96468,
           "offsetMin": 34,
           "tramInterchange": [
+            "1",
             "4",
             "9",
             "12",
@@ -1182,8 +1190,9 @@
           "name": "Tehnički muzej",
           "lat": 45.8034,
           "lon": 15.96352,
-          "offsetMin": 35,
+          "offsetMin": 36,
           "tramInterchange": [
+            "1",
             "4",
             "9",
             "12",
@@ -1198,6 +1207,7 @@
           "lon": 15.95967,
           "offsetMin": 37,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -1208,6 +1218,7 @@
           "lon": 15.95448,
           "offsetMin": 38,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -1218,6 +1229,7 @@
           "lon": 15.94703,
           "offsetMin": 41,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -1228,6 +1240,7 @@
           "lon": 15.94228,
           "offsetMin": 44,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -1238,6 +1251,7 @@
           "lon": 15.93762,
           "offsetMin": 45,
           "tramInterchange": [
+            "1",
             "9",
             "12"
           ]
@@ -1899,25 +1913,25 @@
     0,
     0,
     5,
+    6,
+    6,
     8,
-    8,
-    8,
-    9,
-    8,
-    9,
-    9,
-    8,
-    9,
-    8,
-    9,
-    9,
-    8,
-    8,
+    6,
     8,
     8,
     6,
     8,
-    6
+    8,
+    6,
+    8,
+    8,
+    6,
+    8,
+    6,
+    7,
+    6,
+    6,
+    5
   ],
   "timetable": {
     "radniDan": [
@@ -1926,179 +1940,167 @@
           "hour": 4,
           "minutes": [
             3,
+            22,
+            40,
+            59
+          ]
+        },
+        {
+          "hour": 5,
+          "minutes": [
+            18,
+            38,
+            57
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            16,
+            35,
+            53
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            9,
+            25,
+            42,
+            59
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            15,
+            32,
+            48
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            5,
+            21,
+            37,
+            54
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            10,
+            26,
+            42,
+            58
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            14,
+            31,
+            47
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            3,
             19,
             35,
             51
           ]
         },
         {
-          "hour": 5,
-          "minutes": [
-            7,
-            23,
-            39,
-            55
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            11,
-            26,
-            38,
-            52
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            6,
-            20,
-            34,
-            49
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            3,
-            17,
-            31,
-            45,
-            59
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            13,
-            27,
-            41,
-            55
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            8,
-            22,
-            36,
-            50
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            4,
-            18,
-            31,
-            45,
-            59
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            13,
-            27,
-            41,
-            54
-          ]
-        },
-        {
           "hour": 13,
           "minutes": [
             8,
-            22,
-            36,
-            50
+            24,
+            40,
+            57
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            4,
-            18,
-            32,
+            13,
+            29,
             46
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            0,
-            14,
-            28,
-            42,
-            56
+            2,
+            18,
+            35,
+            51
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
+            8,
             24,
-            38,
-            53
+            40,
+            57
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            7,
-            21,
-            35,
-            49
+            13,
+            29,
+            46
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            3,
-            17,
-            32,
-            48
+            2,
+            18,
+            35,
+            53
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            4,
-            20,
-            36,
-            53
+            12,
+            32,
+            52
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            9,
-            25,
-            41,
-            57
+            11,
+            31,
+            51
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            13,
+            10,
             29,
-            45
+            48
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            1,
-            17,
-            33,
-            49
+            6,
+            25,
+            44
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            5,
+            3,
             21
           ]
         }
@@ -2113,180 +2115,168 @@
         {
           "hour": 5,
           "minutes": [
-            5,
-            21,
-            37,
-            54
+            8,
+            27,
+            47
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            9,
-            25,
-            41,
-            57
+            6,
+            27,
+            47
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            12,
-            26,
+            6,
+            24,
             40,
-            54
+            57
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            8,
-            22,
-            36,
-            50
+            13,
+            30,
+            46
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            5,
+            3,
             19,
-            33,
-            46
+            36,
+            52
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            0,
-            14,
-            28,
+            8,
+            24,
             41,
-            55
+            57
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            9,
-            23,
-            37,
-            51
+            13,
+            29,
+            45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            4,
+            1,
             18,
-            32,
-            46
+            34,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0,
-            13,
-            27,
-            42,
-            56
+            6,
+            22,
+            39,
+            55
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            10,
-            24,
-            38,
-            52
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            6,
-            20,
-            34,
-            48
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            2,
-            16,
-            30,
-            44,
-            58
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            12,
-            26,
-            40,
-            54
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            8,
-            22,
-            36,
-            49
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            3,
-            19,
-            35,
-            51
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            7,
-            23,
-            39,
-            56
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            12,
+            11,
             28,
             44
           ]
         },
         {
+          "hour": 15,
+          "minutes": [
+            1,
+            17,
+            33,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            6,
+            22,
+            39,
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            11,
+            28,
+            44
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            1,
+            17,
+            33,
+            51
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            8,
+            25,
+            41
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            1,
+            20,
+            39,
+            58
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            19,
+            37,
+            56
+          ]
+        },
+        {
           "hour": 22,
           "minutes": [
-            0,
-            16,
-            32,
-            47
+            15,
+            34,
+            53
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            3,
-            19,
-            35,
-            51
+            11,
+            30,
+            49
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            7
+            8
           ]
         }
       ]
@@ -2302,6 +2292,12 @@
   },
   "related": {
     "sharedTerminal": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Ljubljanica"
+      },
       {
         "broj": "2",
         "mode": "tram",
@@ -2359,6 +2355,10 @@
     ],
     "tramCrossings": [
       {
+        "broj": "1",
+        "stopName": "Selska"
+      },
+      {
         "broj": "2",
         "stopName": "Držićeva"
       },
@@ -2407,17 +2407,17 @@
   "prevBroj": "2",
   "nextBroj": "4",
   "reach": {
-    "areaKm2": 36.2,
+    "areaKm2": 33.4,
     "stopName": "Držićeva",
     "lat": 45.80113,
     "lon": 15.99643
   },
   "stats": {
-    "dailyDepartures": 160,
+    "dailyDepartures": 136,
     "firstDeparture": "04:03",
     "lastDeparture": "23:21",
-    "peakHeadwayMin": 14.2,
-    "avgHeadwayMin": 14.7,
+    "peakHeadwayMin": 16.6,
+    "avgHeadwayMin": 17.3,
     "travelTimeMin": 41.8,
     "distanceKm": 9.9
   }

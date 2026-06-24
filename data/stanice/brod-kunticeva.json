@@ -37,7 +37,7 @@
     },
     {
       "name": "Poljaki",
-      "slug": "poljaki-sesvete"
+      "slug": "poljaki"
     }
   ],
   "hero": {
@@ -342,8 +342,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 19,
-    "stations45": 43
+    "stations30": 10,
+    "stations45": 42
   },
   "prevSlug": "britanski-trg",
   "nextSlug": "budeki-kapelica"

@@ -15,10 +15,10 @@
     "213"
   ],
   "firstDeparture": "4:08",
-  "lastDeparture": "0:49",
+  "lastDeparture": "0:47",
   "peakIntervalMin": [
     1,
-    4
+    5
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        21
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "209",
@@ -42,12 +42,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        15,
-        19
+        20,
+        21
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "210",
@@ -56,12 +56,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     },
     {
       "broj": "213",
@@ -1347,9 +1347,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 94,
-    "stations45": 245
+    "stations15": 47,
+    "stations30": 145,
+    "stations45": 354
   },
   "prevSlug": "stadion",
   "nextSlug": "stare-gajnice"

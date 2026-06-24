@@ -453,9 +453,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 126,
-    "stations45": 405
+    "stations15": 23,
+    "stations30": 109,
+    "stations45": 343
   },
   "prevSlug": "boln-jordanovac",
   "nextSlug": "bolnica-rebro"

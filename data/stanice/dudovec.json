@@ -17,8 +17,8 @@
   "firstDeparture": "4:24",
   "lastDeparture": "0:32",
   "peakIntervalMin": [
-    1,
-    5
+    2,
+    7
   ],
   "lines": [
     {
@@ -67,12 +67,9 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.3,
-      "peakRangeMin": [
-        24,
-        28
-      ],
-      "allDayHeadwayMin": 32.8
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -138,8 +135,8 @@
             45.81932
           ],
           [
-            15.87537,
-            45.81761
+            15.87528,
+            45.81746
           ]
         ]
       },
@@ -1180,9 +1177,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 101,
-    "stations45": 236
+    "stations15": 23,
+    "stations30": 79,
+    "stations45": 208
   },
   "prevSlug": "dubravica",
   "nextSlug": "dumovec"

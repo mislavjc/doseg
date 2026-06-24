@@ -13,8 +13,8 @@
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:42",
-  "lastDeparture": "0:59",
+  "firstDeparture": "4:41",
+  "lastDeparture": "0:56",
   "peakIntervalMin": [
     1,
     3
@@ -27,12 +27,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "14",
@@ -41,12 +41,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.7,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -647,9 +647,9 @@
     ]
   },
   "reach": {
-    "stations15": 43,
-    "stations30": 214,
-    "stations45": 489
+    "stations15": 30,
+    "stations30": 181,
+    "stations45": 451
   },
   "prevSlug": "savski-gaj",
   "nextSlug": "savski-gaj-xii"

@@ -452,9 +452,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 32,
-    "stations45": 104
+    "stations15": 9,
+    "stations30": 27,
+    "stations45": 92
   },
   "prevSlug": "markusev-popovec-62",
   "nextSlug": "markusev-trnava-84"

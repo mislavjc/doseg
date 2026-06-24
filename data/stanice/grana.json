@@ -14,7 +14,7 @@
     "213"
   ],
   "firstDeparture": "4:07",
-  "lastDeparture": "0:43",
+  "lastDeparture": "0:48",
   "peakIntervalMin": [
     1,
     6
@@ -27,12 +27,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        21
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "209",
@@ -41,12 +41,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        15,
-        19
+        20,
+        21
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "213",
@@ -994,9 +994,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 85,
-    "stations45": 243
+    "stations15": 36,
+    "stations30": 128,
+    "stations45": 354
   },
   "prevSlug": "grahovec",
   "nextSlug": "grancarska-22"

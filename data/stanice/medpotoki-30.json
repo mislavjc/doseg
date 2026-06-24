@@ -12,11 +12,8 @@
     "143"
   ],
   "firstDeparture": "5:03",
-  "lastDeparture": "22:33",
-  "peakIntervalMin": [
-    24,
-    28
-  ],
+  "lastDeparture": "23:03",
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "143",
@@ -25,12 +22,9 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 26.3,
-      "peakRangeMin": [
-        24,
-        28
-      ],
-      "allDayHeadwayMin": 32.8
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -356,9 +350,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 85,
-    "stations45": 203
+    "stations15": 23,
+    "stations30": 78,
+    "stations45": 208
   },
   "prevSlug": "medpotoki",
   "nextSlug": "medvescak"

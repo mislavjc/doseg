@@ -244,9 +244,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 110,
-    "stations45": 288
+    "stations15": 15,
+    "stations30": 98,
+    "stations45": 251
   },
   "prevSlug": "snjezna-kraljica",
   "nextSlug": "soblinec"

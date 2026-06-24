@@ -17,8 +17,8 @@
   "firstDeparture": "4:10",
   "lastDeparture": "1:12",
   "peakIntervalMin": [
-    3,
-    11
+    2,
+    13
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 21.8,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        24
       ],
-      "allDayHeadwayMin": 22.7
+      "allDayHeadwayMin": 26.2
     },
     {
       "broj": "116",
@@ -56,12 +56,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        28
       ],
-      "allDayHeadwayMin": 34.2
+      "allDayHeadwayMin": 30.5
     },
     {
       "broj": "168",
@@ -600,10 +600,10 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 99,
-    "stations45": 294
+    "stations15": 27,
+    "stations30": 117,
+    "stations45": 373
   },
-  "prevSlug": "slanovecka-skola",
+  "prevSlug": "slatinska",
   "nextSlug": "slavenskog-tresnjevka-jug"
 }

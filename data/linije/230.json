@@ -1182,19 +1182,19 @@
     0,
     0,
     2,
-    5,
-    6,
-    8,
     4,
     3,
+    4,
+    2,
     3,
     3,
     3,
-    7,
-    7,
-    6,
-    8,
-    5,
+    3,
+    3,
+    4,
+    3,
+    4,
+    3,
     4,
     3,
     3,
@@ -1215,31 +1215,26 @@
           "hour": 5,
           "minutes": [
             0,
-            35,
-            50
+            35
           ]
         },
         {
           "hour": 6,
           "minutes": [
             10,
-            25,
             45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
             20,
-            35,
             55
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            10,
             40
           ]
         },
@@ -1272,41 +1267,33 @@
         {
           "hour": 13,
           "minutes": [
-            0,
-            20,
-            40
+            20
           ]
         },
         {
           "hour": 14,
           "minutes": [
             0,
-            15,
-            35,
-            50
+            35
           ]
         },
         {
           "hour": 15,
           "minutes": [
             10,
-            25,
             45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
             20,
-            35,
             55
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            10,
             30
           ]
         },
@@ -1374,25 +1361,20 @@
         {
           "hour": 6,
           "minutes": [
-            5,
-            25,
-            40
+            25
           ]
         },
         {
           "hour": 7,
           "minutes": [
             0,
-            15,
-            35,
-            50
+            35
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            10,
-            25
+            10
           ]
         },
         {
@@ -1425,41 +1407,33 @@
           "hour": 13,
           "minutes": [
             0,
-            20,
-            40,
-            55
+            40
           ]
         },
         {
           "hour": 14,
           "minutes": [
             15,
-            30,
             50
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            25,
-            40
+            25
           ]
         },
         {
           "hour": 16,
           "minutes": [
             0,
-            15,
-            35,
-            50
+            35
           ]
         },
         {
           "hour": 17,
           "minutes": [
             10,
-            25,
             45
           ]
         },
@@ -2013,17 +1987,17 @@
   "prevBroj": "229",
   "nextBroj": "231",
   "reach": {
-    "areaKm2": 12.6,
+    "areaKm2": 14.7,
     "stopName": "Pesteri",
     "lat": 45.848,
     "lon": 16.03779
   },
   "stats": {
-    "dailyDepartures": 92,
+    "dailyDepartures": 66,
     "firstDeparture": "04:25",
     "lastDeparture": "24:35",
-    "peakHeadwayMin": 20.0,
-    "avgHeadwayMin": 26.9,
+    "peakHeadwayMin": 40.0,
+    "avgHeadwayMin": 37.8,
     "travelTimeMin": 11.0,
     "distanceKm": 4.5
   }

@@ -19,7 +19,7 @@
   "lastDeparture": "1:11",
   "peakIntervalMin": [
     1,
-    3
+    4
   ],
   "lines": [
     {
@@ -29,12 +29,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.5,
       "peakRangeMin": [
-        15,
-        15
+        20,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "114",
@@ -43,12 +43,9 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 39.5,
-      "peakRangeMin": [
-        39,
-        40
-      ],
-      "allDayHeadwayMin": 40.0
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "115",
@@ -57,12 +54,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.8,
+      "peakHeadwayMin": 13.5,
       "peakRangeMin": [
-        10,
-        11
+        12,
+        16
       ],
-      "allDayHeadwayMin": 12.2
+      "allDayHeadwayMin": 14.9
     },
     {
       "broj": "116",
@@ -85,12 +82,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        20,
-        25
+        28,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     }
   ],
   "neighbors": [
@@ -820,9 +817,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 108,
-    "stations45": 312
+    "stations15": 26,
+    "stations30": 117,
+    "stations45": 373
   },
   "prevSlug": "zagrebacka-94",
   "nextSlug": "zagrepcanka"

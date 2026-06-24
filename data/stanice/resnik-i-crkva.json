@@ -16,8 +16,8 @@
   "firstDeparture": "4:31",
   "lastDeparture": "0:07",
   "peakIntervalMin": [
-    2,
-    15
+    3,
+    14
   ],
   "lines": [
     {
@@ -27,9 +27,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "225",
@@ -52,12 +52,9 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 57.5,
-      "peakRangeMin": [
-        46,
-        69
-      ],
-      "allDayHeadwayMin": 44.8
+      "peakHeadwayMin": 80.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -1444,8 +1441,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 36,
-    "stations45": 143
+    "stations30": 42,
+    "stations45": 162
   },
   "prevSlug": "resnik-104",
   "nextSlug": "resnik-i-kbr-47"

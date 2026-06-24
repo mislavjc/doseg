@@ -11,10 +11,10 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:17",
-  "lastDeparture": "0:37",
+  "firstDeparture": "4:22",
+  "lastDeparture": "0:42",
   "peakIntervalMin": [
-    3,
+    10,
     14
   ],
   "lines": [
@@ -25,12 +25,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        18
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [
@@ -360,9 +360,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 72,
-    "stations45": 206
+    "stations15": 11,
+    "stations30": 30,
+    "stations45": 81
   },
   "prevSlug": "cucerje-crkva",
   "nextSlug": "cukovici"

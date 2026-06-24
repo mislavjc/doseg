@@ -30,12 +30,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "122",
@@ -74,7 +74,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     },
     {
       "broj": "130",
@@ -1258,9 +1258,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 141,
-    "stations45": 288
+    "stations15": 30,
+    "stations30": 100,
+    "stations45": 251
   },
   "prevSlug": "gornjostupnicka",
   "nextSlug": "gospodska-108"

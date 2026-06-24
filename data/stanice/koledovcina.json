@@ -14,10 +14,10 @@
   ],
   "busLines": [],
   "firstDeparture": "4:44",
-  "lastDeparture": "1:11",
+  "lastDeparture": "1:02",
   "peakIntervalMin": [
     1,
-    4
+    5
   ],
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 10.5,
       "peakRangeMin": [
-        8,
-        8
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.0
+      "allDayHeadwayMin": 11.6
     },
     {
       "broj": "3",
@@ -41,12 +41,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.9,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        14,
-        14
+        16,
+        17
       ],
-      "allDayHeadwayMin": 14.7
+      "allDayHeadwayMin": 17.3
     },
     {
       "broj": "33",
@@ -639,8 +639,8 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 109,
+    "stations15": 23,
+    "stations30": 97,
     "stations45": 295
   },
   "prevSlug": "koledinecka-skola",

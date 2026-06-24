@@ -27,12 +27,12 @@
       "headsign": "Botinec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.6,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "161",
@@ -46,7 +46,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -71,7 +71,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     },
     {
       "name": "Brezovička 80",
@@ -331,9 +331,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 29,
-    "stations45": 106
+    "stations15": 9,
+    "stations30": 39,
+    "stations45": 149
   },
   "prevSlug": "barutanski-jarak-96",
   "nextSlug": "bastaliceva-ii"

@@ -2,8 +2,8 @@
   "slug": "spansko",
   "name": "Špansko",
   "kvart": "Stenjevec",
-  "lat": 45.80232,
-  "lon": 15.88969,
+  "lat": 45.8023,
+  "lon": 15.88965,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 2,
@@ -13,10 +13,10 @@
     "136"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "1:03",
+  "lastDeparture": "1:07",
   "peakIntervalMin": [
     2,
-    5
+    6
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 12.4,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     },
     {
       "broj": "136",
@@ -60,10 +60,10 @@
   ],
   "hero": {
     "bbox": [
-      15.88762,
-      45.80088,
-      15.89176,
-      45.80377
+      15.88758,
+      45.80086,
+      15.89172,
+      45.80375
     ],
     "lines": [
       {
@@ -417,9 +417,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 60,
-    "stations45": 226
+    "stations15": 20,
+    "stations30": 66,
+    "stations45": 204
   },
   "prevSlug": "sostarici",
   "nextSlug": "sportski-centar-novi-zagreb-zapad"

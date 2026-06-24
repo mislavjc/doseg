@@ -360,9 +360,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 81,
-    "stations45": 203
+    "stations15": 19,
+    "stations30": 73,
+    "stations45": 205
   },
   "prevSlug": "gajnice",
   "nextSlug": "galijska"

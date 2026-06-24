@@ -351,16 +351,16 @@
     0,
     2,
     3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    2,
+    3,
     4,
-    3,
     2,
-    2,
-    2,
-    3,
-    3,
-    3,
-    3,
-    3,
     2,
     2,
     4,
@@ -425,20 +425,20 @@
         {
           "hour": 13,
           "minutes": [
-            15
+            20
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            25
+            30
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            50
+            15,
+            45
           ]
         },
         {
@@ -450,7 +450,7 @@
         {
           "hour": 17,
           "minutes": [
-            20
+            25
           ]
         },
         {
@@ -491,14 +491,12 @@
           "hour": 7,
           "minutes": [
             0,
-            35,
             50
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            25,
             40
           ]
         },
@@ -529,28 +527,27 @@
         {
           "hour": 13,
           "minutes": [
-            10,
-            35
+            5
           ]
         },
         {
           "hour": 14,
           "minutes": [
             5,
-            40
+            50
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            25
+            25,
+            55
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
-            55
+            45
           ]
         },
         {
@@ -640,13 +637,13 @@
   "prevBroj": "277",
   "nextBroj": "279",
   "reach": {
-    "areaKm2": 13.8,
+    "areaKm2": 14.3,
     "stopName": "Blage Zadre",
     "lat": 45.82382,
     "lon": 16.12644
   },
   "stats": {
-    "dailyDepartures": 45,
+    "dailyDepartures": 42,
     "firstDeparture": "05:20",
     "lastDeparture": "20:40",
     "peakHeadwayMin": 55.0,

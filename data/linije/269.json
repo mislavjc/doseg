@@ -20,9 +20,7 @@
           "lon": 16.01838,
           "offsetMin": 0,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         },
         {
@@ -135,8 +133,8 @@
         },
         {
           "name": "Mladena Halape",
-          "lat": 45.81384,
-          "lon": 16.1867,
+          "lat": 45.81383,
+          "lon": 16.18633,
           "offsetMin": 30,
           "tramInterchange": []
         },
@@ -638,10 +636,6 @@
           45.81384
         ],
         [
-          16.1867,
-          45.81384
-        ],
-        [
           16.1864,
           45.81374
         ],
@@ -695,14 +689,14 @@
           "name": "Sesvetski Kraljevec",
           "lat": 45.81841,
           "lon": 16.16916,
-          "offsetMin": 6,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Kobiljak 69",
           "lat": 45.82238,
           "lon": 16.15954,
-          "offsetMin": 8,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
@@ -716,7 +710,7 @@
           "name": "Kraljevečki Novaki",
           "lat": 45.82571,
           "lon": 16.14341,
-          "offsetMin": 11,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
@@ -730,14 +724,14 @@
           "name": "Blage Zadre",
           "lat": 45.82398,
           "lon": 16.12472,
-          "offsetMin": 15,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Vladimira Nazora",
           "lat": 45.82508,
           "lon": 16.11644,
-          "offsetMin": 17,
+          "offsetMin": 16,
           "tramInterchange": []
         },
         {
@@ -761,14 +755,14 @@
           "name": "Osječka",
           "lat": 45.8196,
           "lon": 16.05399,
-          "offsetMin": 33,
+          "offsetMin": 30,
           "tramInterchange": []
         },
         {
           "name": "Štefanov.-Stud.kamp.",
           "lat": 45.81849,
           "lon": 16.0475,
-          "offsetMin": 34,
+          "offsetMin": 33,
           "tramInterchange": []
         },
         {
@@ -784,9 +778,7 @@
           "lon": 16.01865,
           "offsetMin": 39,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         }
       ],
@@ -1377,29 +1369,29 @@
     45.82832
   ],
   "histogram": [
-    0,
+    1,
     1,
     0,
     0,
     2,
+    6,
+    8,
+    8,
+    8,
     7,
-    10,
-    10,
+    6,
+    6,
+    6,
+    8,
     9,
-    7,
-    6,
-    4,
-    9,
-    8,
-    10,
     8,
     8,
-    10,
+    8,
+    8,
     7,
     6,
     6,
-    5,
-    4,
+    6,
     3
   ],
   "timetable": {
@@ -1414,134 +1406,130 @@
         {
           "hour": 5,
           "minutes": [
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            5,
+            20,
+            35,
+            50
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            5,
+            20,
+            35,
+            50
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            5,
+            20,
+            35,
+            53
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            13,
+            33,
+            54
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            15,
+            35,
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            15,
+            35,
+            55
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
             15,
             30,
             45
           ]
         },
         {
-          "hour": 6,
+          "hour": 13,
           "minutes": [
             0,
             15,
             30,
-            42,
-            55
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            7,
-            19,
-            31,
-            43,
-            55
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            7,
-            20,
-            30,
-            52
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            14,
-            34,
-            50
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            12,
-            34,
-            56
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            18,
-            40
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            0,
-            14,
-            28,
-            41,
-            55
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            8,
-            22,
-            36,
-            50
+            45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            3,
+            1,
             17,
-            30,
-            44,
-            58
+            31,
+            45,
+            59
           ]
         },
         {
           "hour": 15,
           "minutes": [
             12,
-            25,
-            39,
-            52
+            23,
+            35,
+            50
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            6,
+            5,
             20,
-            34,
-            47
+            35,
+            50
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            1,
-            14,
-            28,
-            42,
-            56
+            5,
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            9,
-            23,
-            40
+            5,
+            20,
+            35,
+            52
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
-            25,
-            45
+            10,
+            30,
+            50
           ]
         },
         {
@@ -1549,27 +1537,29 @@
           "minutes": [
             10,
             30,
-            55
+            50
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            15,
-            40
+            10,
+            30,
+            50
           ]
         },
         {
           "hour": 22,
           "minutes": [
             10,
-            35
+            30,
+            50
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            15
+            30
           ]
         }
       ],
@@ -1577,7 +1567,7 @@
         {
           "hour": 4,
           "minutes": [
-            25
+            30
           ]
         },
         {
@@ -1593,139 +1583,48 @@
           "hour": 6,
           "minutes": [
             0,
-            12,
-            24,
-            36,
-            48
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
             0,
-            12,
-            24,
-            37,
-            49
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            1,
-            13,
-            25,
-            37,
-            48
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 9,
           "minutes": [
             0,
-            10,
-            32,
-            54
+            15,
+            33,
+            53
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            14,
+            13,
             34,
-            56
+            55
           ]
         },
         {
           "hour": 11,
-          "minutes": [
-            18,
-            40
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            2,
-            24,
-            41,
-            55
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            9,
-            22,
-            36,
-            49
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            3,
-            17,
-            31,
-            44,
-            58
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            11,
-            25,
-            39,
-            53
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            6,
-            20,
-            33,
-            47
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            1,
-            15,
-            28,
-            42,
-            55
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            9,
-            23,
-            37,
-            50
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            4,
-            25,
-            45
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            10,
-            30,
-            55
-          ]
-        },
-        {
-          "hour": 21,
           "minutes": [
             15,
             35,
@@ -1733,9 +1632,97 @@
           ]
         },
         {
+          "hour": 12,
+          "minutes": [
+            15,
+            35,
+            53
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            7,
+            23,
+            40,
+            55
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            10,
+            25,
+            40,
+            56
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            10,
+            25,
+            40,
+            55
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            10,
+            25,
+            40,
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            10,
+            25,
+            40,
+            55
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            10,
+            25,
+            40,
+            52
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            5,
+            18,
+            33,
+            52
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            10,
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            10,
+            30,
+            50
+          ]
+        },
+        {
           "hour": 22,
           "minutes": [
-            20,
+            10,
+            30,
             50
           ]
         },
@@ -1743,7 +1730,13 @@
           "hour": 23,
           "minutes": [
             10,
-            55
+            35
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            5
           ]
         },
         {
@@ -2325,18 +2318,6 @@
         "terminal": "Borongaj"
       },
       {
-        "broj": "9",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
-      },
-      {
-        "broj": "17",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
-      },
-      {
         "broj": "32",
         "mode": "tram",
         "isNight": true,
@@ -2369,17 +2350,17 @@
   "prevBroj": "268",
   "nextBroj": "270",
   "reach": {
-    "areaKm2": 13.0,
+    "areaKm2": 13.7,
     "stopName": "Sesvetska Sela",
     "lat": 45.82372,
     "lon": 16.13189
   },
   "stats": {
-    "dailyDepartures": 140,
+    "dailyDepartures": 136,
     "firstDeparture": "04:50",
-    "lastDeparture": "23:15",
-    "peakHeadwayMin": 13.1,
-    "avgHeadwayMin": 16.7,
+    "lastDeparture": "23:30",
+    "peakHeadwayMin": 15.4,
+    "avgHeadwayMin": 17.5,
     "travelTimeMin": 30.5,
     "distanceKm": 14.9
   }

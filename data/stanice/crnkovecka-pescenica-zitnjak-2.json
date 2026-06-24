@@ -297,9 +297,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 94,
-    "stations45": 294
+    "stations15": 14,
+    "stations30": 75,
+    "stations45": 275
   },
   "prevSlug": "crnkovecka-pescenica-zitnjak",
   "nextSlug": "crnomerec"

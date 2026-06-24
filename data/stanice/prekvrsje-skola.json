@@ -33,7 +33,7 @@
   "neighbors": [
     {
       "name": "Poljaki",
-      "slug": "poljaki-sesvete-2"
+      "slug": "poljaki"
     },
     {
       "name": "Gor Prekvršje P.i T.",
@@ -459,8 +459,8 @@
   "reach": {
     "stations15": 3,
     "stations30": 11,
-    "stations45": 32
+    "stations45": 42
   },
   "prevSlug": "predsjednicki-dvori",
-  "nextSlug": "prepustovec-izletist"
+  "nextSlug": "prevendari"
 }

@@ -14,7 +14,7 @@
   "firstDeparture": "5:09",
   "lastDeparture": "23:56",
   "peakIntervalMin": [
-    7,
+    5,
     20
   ],
   "lines": [
@@ -27,8 +27,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     }
@@ -312,9 +312,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 56,
-    "stations45": 210
+    "stations15": 7,
+    "stations30": 57,
+    "stations45": 195
   },
   "prevSlug": "most-mladosti",
   "nextSlug": "mrksina-65-crkva"

@@ -31,7 +31,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.2
+      "allDayHeadwayMin": 232.5
     },
     {
       "broj": "217",
@@ -67,7 +67,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "290",
@@ -879,9 +879,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 197,
-    "stations45": 433
+    "stations15": 31,
+    "stations30": 176,
+    "stations45": 420
   },
   "prevSlug": "heinzelova",
   "nextSlug": "heinzelova-sjever"

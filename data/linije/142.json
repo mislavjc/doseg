@@ -588,25 +588,25 @@
     0,
     0,
     0,
-    2,
-    3,
-    2,
-    2,
     1,
-    2,
-    2,
-    3,
     1,
-    2,
-    2,
-    2,
-    2,
-    3,
     1,
-    2,
-    2,
-    2,
-    1
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
   ],
   "timetable": {
     "radniDan": [
@@ -614,30 +614,25 @@
         {
           "hour": 5,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            25,
-            50
+            30
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            30
           ]
         },
         {
@@ -649,98 +644,79 @@
         {
           "hour": 10,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
-            30,
-            55
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            20
+            30
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            0,
-            35
+            30
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0,
-            30,
-            55
+            30
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            20
+            30
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            0,
             30
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            0
           ]
         }
       ]
@@ -972,11 +948,11 @@
     "lon": 15.90016
   },
   "stats": {
-    "dailyDepartures": 37,
-    "firstDeparture": "05:00",
-    "lastDeparture": "23:00",
-    "peakHeadwayMin": 30.0,
-    "avgHeadwayMin": 30.0,
+    "dailyDepartures": 18,
+    "firstDeparture": "05:30",
+    "lastDeparture": "22:30",
+    "peakHeadwayMin": 60.0,
+    "avgHeadwayMin": 60.0,
     "travelTimeMin": 19.0,
     "distanceKm": 4.8
   }

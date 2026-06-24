@@ -26,12 +26,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.3,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        8,
-        8
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.8
+      "allDayHeadwayMin": 11.8
     },
     {
       "broj": "220",
@@ -342,8 +342,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 97,
-    "stations45": 323
+    "stations30": 102,
+    "stations45": 313
   },
   "prevSlug": "vatikanska",
   "nextSlug": "vatrogasni-dom"

@@ -148,10 +148,10 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 13,
-    "stations45": 32
+    "stations15": 3,
+    "stations30": 8,
+    "stations45": 21
   },
   "prevSlug": "sheraton",
-  "nextSlug": "sijavrh-sesvete"
+  "nextSlug": "sijavrh"
 }

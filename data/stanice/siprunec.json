@@ -722,8 +722,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 20,
-    "stations45": 85
+    "stations30": 6,
+    "stations45": 33
   },
   "prevSlug": "sinbuk",
   "nextSlug": "sirkovina"

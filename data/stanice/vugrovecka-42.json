@@ -6,17 +6,18 @@
   "lon": 16.11162,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 5,
+  "lineCount": 6,
   "tramLines": [],
   "busLines": [
     "261",
     "262",
     "263",
     "267",
+    "270",
     "280"
   ],
   "firstDeparture": "4:25",
-  "lastDeparture": "0:48",
+  "lastDeparture": "0:23",
   "peakIntervalMin": [
     2,
     6
@@ -51,12 +52,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        29
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
     },
     {
       "broj": "267",
@@ -67,7 +68,21 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     },
     {
       "broj": "280",
@@ -744,6 +759,32 @@
         ]
       },
       {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1149,
+            45.863
+          ],
+          [
+            16.11247,
+            45.85368
+          ],
+          [
+            16.11163,
+            45.85152
+          ],
+          [
+            16.11056,
+            45.8485
+          ],
+          [
+            16.10896,
+            45.84213
+          ]
+        ]
+      },
+      {
         "broj": "280",
         "mode": "bus",
         "shape": [
@@ -901,8 +942,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 46,
-    "stations45": 125
+    "stations30": 31,
+    "stations45": 116
   },
   "prevSlug": "vugrovecka-21",
   "nextSlug": "vugrovecka-70"

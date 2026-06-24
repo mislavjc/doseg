@@ -7,7 +7,7 @@
     "Havidić Selo"
   ],
   "via": [
-    "St.dom Stjepan Radić"
+    "St. dom S. Radić"
   ],
   "oneWay": false,
   "directions": [
@@ -25,7 +25,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -52,8 +52,8 @@
         },
         {
           "name": "Naletilićeva",
-          "lat": 45.76575,
-          "lon": 15.94606,
+          "lat": 45.76539,
+          "lon": 15.946,
           "offsetMin": 6,
           "tramInterchange": []
         },
@@ -2471,26 +2471,26 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "159",
   "nextBroj": "161",
   "reach": {
-    "areaKm2": 10.8,
+    "areaKm2": 6.4,
     "stopName": "Brezje",
     "lat": 45.70683,
     "lon": 15.93845

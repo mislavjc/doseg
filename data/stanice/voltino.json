@@ -12,9 +12,9 @@
     "118"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "0:50",
+  "lastDeparture": "1:04",
   "peakIntervalMin": [
-    4,
+    5,
     5
   ],
   "lines": [
@@ -25,12 +25,12 @@
       "headsign": "Trg Mažuranića",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     }
   ],
   "neighbors": [
@@ -244,10 +244,10 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 74,
-    "stations45": 289
+    "stations15": 11,
+    "stations30": 54,
+    "stations45": 241
   },
-  "prevSlug": "vojnoviceva",
+  "prevSlug": "vodovodna",
   "nextSlug": "voncinina"
 }

@@ -15,7 +15,7 @@
   "lastDeparture": "0:51",
   "peakIntervalMin": [
     6,
-    12
+    29
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     }
   ],
   "neighbors": [
@@ -360,8 +360,8 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 43,
+    "stations15": 10,
+    "stations30": 48,
     "stations45": 150
   },
   "prevSlug": "bliznec",

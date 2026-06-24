@@ -31,7 +31,7 @@
         56,
         59
       ],
-      "allDayHeadwayMin": 41.2
+      "allDayHeadwayMin": 42.8
     },
     {
       "broj": "234",
@@ -45,13 +45,13 @@
         20,
         20
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     }
   ],
   "neighbors": [
     {
-      "name": "St.dom Stjepan Radić",
-      "slug": "st-dom-stjepan-radic"
+      "name": "St. dom S. Radić",
+      "slug": "st-dom-s-radic"
     },
     {
       "name": "Arena centar",
@@ -71,7 +71,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad"
     }
   ],
   "hero": {
@@ -721,9 +721,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 100,
-    "stations45": 289
+    "stations15": 21,
+    "stations30": 97,
+    "stations45": 294
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad-2",
   "nextSlug": "aspergeri"

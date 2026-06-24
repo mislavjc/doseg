@@ -17,7 +17,7 @@
   "firstDeparture": "4:33",
   "lastDeparture": "1:23",
   "peakIntervalMin": [
-    3,
+    4,
     10
   ],
   "lines": [
@@ -28,12 +28,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.6,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "159",
@@ -79,7 +79,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     }
   ],
   "hero": {
@@ -825,9 +825,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 138,
-    "stations45": 390
+    "stations15": 29,
+    "stations30": 124,
+    "stations45": 319
   },
   "prevSlug": "lukavec-kanal",
   "nextSlug": "lukoranska-novi-zagreb-zapad-2"

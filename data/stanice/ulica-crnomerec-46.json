@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:22",
-  "lastDeparture": "0:09",
+  "lastDeparture": "0:29",
   "peakIntervalMin": [
-    1,
-    12
+    7,
+    13
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -320,9 +320,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 181,
-    "stations45": 396
+    "stations15": 23,
+    "stations30": 150,
+    "stations45": 349
   },
   "prevSlug": "ulica-breza",
   "nextSlug": "ulica-grada-chicaga"

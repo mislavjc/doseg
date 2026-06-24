@@ -15,8 +15,8 @@
   "firstDeparture": "5:23",
   "lastDeparture": "23:00",
   "peakIntervalMin": [
-    3,
-    7
+    5,
+    10
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "T.b.J.Jelačića",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.9
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -569,6 +569,10 @@
             45.81563
           ],
           [
+            15.97473,
+            45.81569
+          ],
+          [
             15.97478,
             45.81576
           ],
@@ -583,10 +587,6 @@
           [
             15.97483,
             45.81587
-          ],
-          [
-            15.97484,
-            45.81594
           ],
           [
             15.97485,
@@ -749,9 +749,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 139,
-    "stations45": 449
+    "stations15": 28,
+    "stations30": 156,
+    "stations45": 482
   },
   "prevSlug": "ii-kraljevec",
   "nextSlug": "inker"

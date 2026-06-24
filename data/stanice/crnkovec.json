@@ -2,8 +2,8 @@
   "slug": "crnkovec",
   "name": "Črnkovec",
   "kvart": null,
-  "lat": 45.7518,
-  "lon": 16.10976,
+  "lat": 45.75178,
+  "lon": 16.10964,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 2,
@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -58,10 +58,10 @@
   ],
   "hero": {
     "bbox": [
-      16.1077,
-      45.75036,
-      16.11183,
-      45.75324
+      16.10758,
+      45.75034,
+      16.11171,
+      45.75322
     ],
     "lines": [
       {
@@ -247,6 +247,10 @@
           [
             16.09033,
             45.75486
+          ],
+          [
+            16.08967,
+            45.7553
           ]
         ]
       },
@@ -389,6 +393,10 @@
           [
             16.09033,
             45.75486
+          ],
+          [
+            16.08967,
+            45.7553
           ]
         ]
       }

@@ -14,8 +14,8 @@
   "firstDeparture": "4:19",
   "lastDeparture": "23:37",
   "peakIntervalMin": [
-    2,
-    16
+    8,
+    22
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -340,9 +340,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 98,
-    "stations45": 251
+    "stations15": 12,
+    "stations30": 48,
+    "stations45": 159
   },
   "prevSlug": "mirosevecina",
   "nextSlug": "mirosevecka-190"

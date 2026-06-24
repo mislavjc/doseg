@@ -14,8 +14,8 @@
   "firstDeparture": "5:10",
   "lastDeparture": "23:25",
   "peakIntervalMin": [
-    8,
-    9
+    9,
+    11
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.1,
+      "peakHeadwayMin": 10.2,
       "peakRangeMin": [
-        8,
-        9
+        9,
+        11
       ],
-      "allDayHeadwayMin": 10.8
+      "allDayHeadwayMin": 11.8
     }
   ],
   "neighbors": [
@@ -292,9 +292,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 167,
-    "stations45": 421
+    "stations15": 19,
+    "stations30": 194,
+    "stations45": 480
   },
   "prevSlug": "kauzlaricev-prilaz",
   "nextSlug": "kb-dubrava"

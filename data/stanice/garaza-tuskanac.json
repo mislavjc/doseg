@@ -14,8 +14,8 @@
   "firstDeparture": "7:00",
   "lastDeparture": "22:22",
   "peakIntervalMin": [
-    7,
-    8
+    8,
+    22
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "T.b.J.Jelačića",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.9
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -160,6 +160,10 @@
             45.81563
           ],
           [
+            15.97473,
+            45.81569
+          ],
+          [
             15.97478,
             45.81576
           ],
@@ -174,10 +178,6 @@
           [
             15.97483,
             45.81587
-          ],
-          [
-            15.97484,
-            45.81594
           ],
           [
             15.97485,
@@ -340,8 +340,8 @@
     ]
   },
   "reach": {
-    "stations15": 41,
-    "stations30": 191,
+    "stations15": 32,
+    "stations30": 177,
     "stations45": 493
   },
   "prevSlug": "galzenica",

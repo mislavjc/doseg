@@ -301,8 +301,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 32,
-    "stations45": 104
+    "stations30": 21,
+    "stations45": 72
   },
   "prevSlug": "bidrovec-brana",
   "nextSlug": "bijenicka"

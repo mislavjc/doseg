@@ -14,8 +14,8 @@
   "firstDeparture": "4:14",
   "lastDeparture": "23:42",
   "peakIntervalMin": [
-    8,
-    13
+    3,
+    28
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        21
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -380,9 +380,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 85,
-    "stations45": 243
+    "stations15": 18,
+    "stations30": 65,
+    "stations45": 163
   },
   "prevSlug": "granesina-groblje",
   "nextSlug": "grebenscica"

@@ -16,8 +16,8 @@
   "firstDeparture": "4:07",
   "lastDeparture": "1:53",
   "peakIntervalMin": [
-    4,
-    9
+    2,
+    12
   ],
   "lines": [
     {
@@ -41,12 +41,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     },
     {
       "broj": "120",
@@ -55,12 +52,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     }
   ],
   "neighbors": [
@@ -566,9 +563,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 138,
-    "stations45": 287
+    "stations15": 6,
+    "stations30": 58,
+    "stations45": 195
   },
   "prevSlug": "sajam-jakusevec",
   "nextSlug": "sarajev-jakusevecka"

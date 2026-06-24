@@ -17,10 +17,11 @@
       "stops": [
         {
           "name": "Ljubljanica",
-          "lat": 45.79616,
-          "lon": 15.93677,
+          "lat": 45.79618,
+          "lon": 15.93669,
           "offsetMin": 0,
           "tramInterchange": [
+            "1",
             "3",
             "9",
             "12"
@@ -30,42 +31,42 @@
           "name": "Fallerovo",
           "lat": 45.79409,
           "lon": 15.93546,
-          "offsetMin": 1,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Dragutina Golika",
           "lat": 45.79453,
           "lon": 15.92998,
-          "offsetMin": 3,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Hrvatskog sokola",
           "lat": 45.79525,
           "lon": 15.92155,
-          "offsetMin": 4,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Rudeška",
           "lat": 45.79558,
           "lon": 15.91852,
-          "offsetMin": 5,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Zagrebačka",
           "lat": 45.79555,
           "lon": 15.90809,
-          "offsetMin": 7,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Hatzeova",
           "lat": 45.79154,
           "lon": 15.90566,
-          "offsetMin": 9,
+          "offsetMin": 0,
           "tramInterchange": [
             "5",
             "17"
@@ -75,28 +76,28 @@
           "name": "Dore Pejačević",
           "lat": 45.7909,
           "lon": 15.90141,
-          "offsetMin": 10,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "DVD Prečko",
           "lat": 45.79183,
           "lon": 15.8982,
-          "offsetMin": 11,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Paljetkova",
           "lat": 45.79306,
           "lon": 15.89455,
-          "offsetMin": 11,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Prečko-terminal",
           "lat": 45.79476,
           "lon": 15.89961,
-          "offsetMin": 14,
+          "offsetMin": 0,
           "tramInterchange": [
             "5",
             "17"
@@ -105,8 +106,8 @@
       ],
       "shape": [
         [
-          15.93669,
-          45.79615
+          15.93668,
+          45.79618
         ],
         [
           15.93686,
@@ -335,8 +336,8 @@
       "stops": [
         {
           "name": "Prečko-terminal",
-          "lat": 45.79488,
-          "lon": 15.89965,
+          "lat": 45.79499,
+          "lon": 15.89969,
           "offsetMin": 0,
           "tramInterchange": [
             "5",
@@ -347,43 +348,44 @@
           "name": "Slavenskog",
           "lat": 45.79655,
           "lon": 15.90133,
-          "offsetMin": 1,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Zagrebačka",
           "lat": 45.79598,
           "lon": 15.90998,
-          "offsetMin": 2,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Rudeška",
           "lat": 45.79496,
           "lon": 15.92085,
-          "offsetMin": 3,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Hrvatskog sokola",
           "lat": 45.79472,
           "lon": 15.92402,
-          "offsetMin": 4,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Dragutina Golika",
           "lat": 45.79401,
           "lon": 15.93264,
-          "offsetMin": 5,
+          "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Ljubljanica",
           "lat": 45.79706,
           "lon": 15.93697,
-          "offsetMin": 7,
+          "offsetMin": 0,
           "tramInterchange": [
+            "1",
             "3",
             "9",
             "12"
@@ -392,8 +394,8 @@
       ],
       "shape": [
         [
-          15.89971,
-          45.79511
+          15.89967,
+          45.79499
         ],
         [
           15.89977,
@@ -585,302 +587,35 @@
     45.79706
   ],
   "histogram": [
-    2,
     0,
     0,
     0,
-    1,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3,
-    3
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   ],
   "timetable": {
     "radniDan": [
-      [
-        {
-          "hour": 5,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            31
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            11,
-            51
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            29
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            9,
-            49
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            29
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            9,
-            50
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            15,
-            45
-          ]
-        },
-        {
-          "hour": 24,
-          "minutes": [
-            30
-          ]
-        }
-      ],
-      [
-        {
-          "hour": 4,
-          "minutes": [
-            50
-          ]
-        },
-        {
-          "hour": 5,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            15,
-            50
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            10,
-            50
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 24,
-          "minutes": [
-            5
-          ]
-        }
-      ]
+      [],
+      []
     ],
     "subota": [
       [],
@@ -893,6 +628,12 @@
   },
   "related": {
     "sharedTerminal": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Ljubljanica"
+      },
       {
         "broj": "3",
         "mode": "tram",
@@ -968,18 +709,18 @@
   "prevBroj": "113",
   "nextBroj": "115",
   "reach": {
-    "areaKm2": 17.5,
+    "areaKm2": 28.2,
     "stopName": "Zagrebačka",
     "lat": 45.79555,
     "lon": 15.90809
   },
   "stats": {
-    "dailyDepartures": 60,
-    "firstDeparture": "05:10",
-    "lastDeparture": "24:30",
-    "peakHeadwayMin": 39.5,
-    "avgHeadwayMin": 40.0,
-    "travelTimeMin": 13.7,
+    "dailyDepartures": 0,
+    "firstDeparture": "00:00",
+    "lastDeparture": "00:00",
+    "peakHeadwayMin": null,
+    "avgHeadwayMin": null,
+    "travelTimeMin": 0.0,
     "distanceKm": 4.8
   }
 }

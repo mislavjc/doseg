@@ -15,8 +15,8 @@
   "firstDeparture": "4:46",
   "lastDeparture": "0:46",
   "peakIntervalMin": [
-    2,
-    12
+    4,
+    14
   ],
   "lines": [
     {
@@ -40,12 +40,9 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 30.0
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     }
   ],
   "neighbors": [
@@ -910,8 +907,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 101,
-    "stations45": 236
+    "stations30": 92,
+    "stations45": 226
   },
   "prevSlug": "mandalicina",
   "nextSlug": "manterovcak-46"

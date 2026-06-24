@@ -6,16 +6,17 @@
   "lon": 16.07231,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [],
   "busLines": [
-    "225"
+    "225",
+    "279"
   ],
-  "firstDeparture": "4:58",
-  "lastDeparture": "22:28",
+  "firstDeparture": "4:31",
+  "lastDeparture": "0:06",
   "peakIntervalMin": [
-    18,
-    37
+    1,
+    15
   ],
   "lines": [
     {
@@ -31,6 +32,20 @@
         45
       ],
       "allDayHeadwayMin": 55.6
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -41,6 +56,14 @@
     {
       "name": "Resnik I,kbr.47",
       "slug": "resnik-i-kbr-47"
+    },
+    {
+      "name": "Slavonska-Čulinečka",
+      "slug": "slavonska-culinecka-pescenica-zitnjak-2"
+    },
+    {
+      "name": "Slavon.-Lj.Posavskog",
+      "slug": "slavon-lj-posavskog"
     }
   ],
   "hero": {
@@ -728,13 +751,39 @@
             45.80027
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.06469,
+            45.81769
+          ],
+          [
+            16.06615,
+            45.81396
+          ],
+          [
+            16.06426,
+            45.80909
+          ],
+          [
+            16.07207,
+            45.80601
+          ],
+          [
+            16.07683,
+            45.80381
+          ]
+        ]
       }
     ]
   },
   "reach": {
     "stations15": 10,
-    "stations30": 62,
-    "stations45": 221
+    "stations30": 77,
+    "stations45": 261
   },
   "prevSlug": "resnik-iii-pescenica-zitnjak-2",
   "nextSlug": "rim"

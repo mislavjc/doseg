@@ -1,0 +1,97 @@
+{
+  "slug": "soblinecka-22",
+  "name": "Soblinečka 22",
+  "kvart": "Sesvete",
+  "lat": 45.90397,
+  "lon": 16.13034,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "270"
+  ],
+  "firstDeparture": "4:38",
+  "lastDeparture": "23:23",
+  "peakIntervalMin": [
+    51,
+    54
+  ],
+  "lines": [
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Blaguša",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 52.5,
+      "peakRangeMin": [
+        51,
+        54
+      ],
+      "allDayHeadwayMin": 45.0
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Škola Kašina",
+      "slug": "skola-kasina"
+    },
+    {
+      "name": "Frljur-Blaguška",
+      "slug": "frljur-blaguska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.12827,
+      45.90253,
+      16.13241,
+      45.90541
+    ],
+    "lines": [
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.12375,
+            45.89275
+          ],
+          [
+            16.12506,
+            45.89725
+          ],
+          [
+            16.12523,
+            45.9012
+          ],
+          [
+            16.12532,
+            45.90592
+          ],
+          [
+            16.13034,
+            45.90397
+          ],
+          [
+            16.13122,
+            45.90872
+          ],
+          [
+            16.13315,
+            45.91169
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 13,
+    "stations30": 13,
+    "stations45": 28
+  },
+  "prevSlug": "soblinec-rask-skola",
+  "nextSlug": "sobolski-put"
+}

@@ -13,10 +13,10 @@
     "118"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "0:42",
+  "lastDeparture": "0:56",
   "peakIntervalMin": [
     1,
-    3
+    4
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.5,
+      "peakHeadwayMin": 8.8,
       "peakRangeMin": [
-        7,
-        8
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "118",
@@ -40,12 +40,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     }
   ],
   "neighbors": [
@@ -561,9 +561,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 173,
-    "stations45": 419
+    "stations15": 32,
+    "stations30": 223,
+    "stations45": 472
   },
   "prevSlug": "zadvorska-58b",
   "nextSlug": "zagrebacka"

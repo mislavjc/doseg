@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "0:01",
+  "lastDeparture": "0:21",
   "peakIntervalMin": [
-    2,
-    10
+    9,
+    11
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -444,9 +444,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 49,
-    "stations45": 184
+    "stations15": 15,
+    "stations30": 113,
+    "stations45": 322
   },
   "prevSlug": "goranska",
   "nextSlug": "goricanka"

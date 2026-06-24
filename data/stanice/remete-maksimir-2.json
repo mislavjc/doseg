@@ -2,21 +2,21 @@
   "slug": "remete-maksimir-2",
   "name": "Remete",
   "kvart": "Maksimir",
-  "lat": 45.85022,
-  "lon": 15.99338,
+  "lat": 45.85025,
+  "lon": 15.99334,
   "mode": "bus",
-  "bothDirections": true,
+  "bothDirections": false,
   "lineCount": 2,
   "tramLines": [],
   "busLines": [
     "203",
     "226"
   ],
-  "firstDeparture": "4:42",
+  "firstDeparture": "4:44",
   "lastDeparture": "0:24",
   "peakIntervalMin": [
     5,
-    13
+    22
   ],
   "lines": [
     {
@@ -39,7 +39,7 @@
       "isNight": false,
       "headsign": "Svetice",
       "isLoop": false,
-      "bothDirections": true,
+      "bothDirections": false,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": [
         38,
@@ -64,10 +64,10 @@
   ],
   "hero": {
     "bbox": [
-      15.99131,
-      45.84878,
-      15.99545,
-      45.85166
+      15.99127,
+      45.84881,
+      15.99541,
+      45.8517
     ],
     "lines": [
       {
@@ -502,8 +502,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 73,
-    "stations45": 248
+    "stations30": 58,
+    "stations45": 241
   },
   "prevSlug": "remete-maksimir",
   "nextSlug": "remetinec"

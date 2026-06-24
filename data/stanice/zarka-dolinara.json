@@ -30,7 +30,7 @@
         20,
         25
       ],
-      "allDayHeadwayMin": 23.9
+      "allDayHeadwayMin": 24.4
     }
   ],
   "neighbors": [
@@ -476,9 +476,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 185,
-    "stations45": 452
+    "stations15": 21,
+    "stations30": 143,
+    "stations45": 427
   },
   "prevSlug": "zaprude-novi-zagreb-istok-2",
   "nextSlug": "zastavn-nadvoznjak"

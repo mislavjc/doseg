@@ -27,84 +27,84 @@
           "name": "Bolnica Sveti Duh",
           "lat": 45.81986,
           "lon": 15.93788,
-          "offsetMin": 3,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
           "name": "Orahovac",
           "lat": 45.82346,
           "lon": 15.93851,
-          "offsetMin": 5,
+          "offsetMin": 4,
           "tramInterchange": []
         },
         {
           "name": "Čukovići",
           "lat": 45.82702,
           "lon": 15.93803,
-          "offsetMin": 6,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Trsje",
           "lat": 45.83083,
           "lon": 15.93895,
-          "offsetMin": 8,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
           "name": "Bijenik - crkva",
           "lat": 45.83327,
           "lon": 15.93857,
-          "offsetMin": 9,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Čičkovina",
           "lat": 45.83464,
           "lon": 15.93729,
-          "offsetMin": 9,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Viktora Vide",
           "lat": 45.8386,
           "lon": 15.9358,
-          "offsetMin": 11,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Treščak",
           "lat": 45.84135,
           "lon": 15.93596,
-          "offsetMin": 12,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Selišće",
           "lat": 45.84393,
           "lon": 15.93638,
-          "offsetMin": 12,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Trpučev breg",
           "lat": 45.84741,
           "lon": 15.93879,
-          "offsetMin": 13,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Lukšić",
           "lat": 45.85019,
           "lon": 15.9386,
-          "offsetMin": 14,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Lukšić-okretište",
           "lat": 45.85305,
           "lon": 15.93521,
-          "offsetMin": 16,
+          "offsetMin": 14,
           "tramInterchange": []
         }
       ],
@@ -1400,30 +1400,30 @@
     45.85305
   ],
   "histogram": [
-    1,
+    2,
     0,
     0,
     0,
     3,
-    9,
-    11,
-    11,
-    12,
-    9,
+    6,
     8,
     8,
     8,
-    11,
-    10,
-    10,
-    11,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
     8,
     6,
     6,
     6,
     6,
-    6,
-    8
+    5
   ],
   "timetable": {
     "radniDan": [
@@ -1432,37 +1432,32 @@
           "hour": 4,
           "minutes": [
             30,
-            45
+            50
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            0,
-            15,
+            10,
             30,
-            42,
-            53
+            50
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            4,
+            0,
             15,
-            27,
-            38,
-            49
+            30,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
             0,
-            10,
-            22,
-            35,
-            40,
+            15,
+            30,
             45
           ]
         },
@@ -1470,11 +1465,9 @@
           "hour": 8,
           "minutes": [
             0,
-            10,
-            20,
+            15,
             30,
-            40,
-            50
+            45
           ]
         },
         {
@@ -1500,8 +1493,8 @@
           "minutes": [
             0,
             15,
-            25,
-            40
+            30,
+            45
           ]
         },
         {
@@ -1510,47 +1503,42 @@
             0,
             15,
             30,
-            45
+            40
           ]
         },
         {
           "hour": 13,
           "minutes": [
             0,
-            14,
-            25,
-            36,
-            47,
-            59
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            10,
-            21,
-            32,
-            44,
-            55
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            6,
-            17,
-            29,
-            40,
-            51
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            2,
-            12,
-            22,
-            32,
+            0,
+            15,
+            30,
             45
           ]
         },
@@ -1567,8 +1555,9 @@
           "hour": 18,
           "minutes": [
             0,
-            20,
-            40
+            15,
+            30,
+            45
           ]
         },
         {
@@ -1607,9 +1596,13 @@
           "hour": 23,
           "minutes": [
             0,
-            20,
-            35,
-            55
+            30
+          ]
+        },
+        {
+          "hour": 24,
+          "minutes": [
+            0
           ]
         }
       ],
@@ -1623,6 +1616,14 @@
         {
           "hour": 5,
           "minutes": [
+            10,
+            30,
+            50
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
             5,
             20,
             35,
@@ -1630,42 +1631,27 @@
           ]
         },
         {
-          "hour": 6,
-          "minutes": [
-            2,
-            13,
-            24,
-            35,
-            47,
-            58
-          ]
-        },
-        {
           "hour": 7,
           "minutes": [
-            9,
+            5,
             20,
-            30,
-            40,
-            55
+            35,
+            50
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
-            10,
+            5,
             20,
-            30,
-            40,
+            35,
             50
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            0,
-            10,
+            5,
             20,
             35,
             50
@@ -1703,40 +1689,35 @@
           "minutes": [
             5,
             20,
-            34,
-            45,
-            56
+            35,
+            50
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            7,
-            19,
-            30,
-            41,
-            52
+            5,
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            4,
-            15,
-            26,
-            37,
-            49
+            5,
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
-            11,
-            22,
-            32,
-            42,
-            52
+            5,
+            20,
+            35,
+            50
           ]
         },
         {
@@ -1753,13 +1734,14 @@
           "minutes": [
             5,
             20,
-            40
+            35,
+            50
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
+            5,
             20,
             40
           ]
@@ -1792,15 +1774,14 @@
           "hour": 23,
           "minutes": [
             0,
-            15,
-            35,
-            55
+            20,
+            50
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            10
+            20
           ]
         }
       ]
@@ -2524,18 +2505,18 @@
   "prevBroj": "127",
   "nextBroj": "129",
   "reach": {
-    "areaKm2": 12.0,
+    "areaKm2": 11.2,
     "stopName": "Čičkovina",
     "lat": 45.83464,
     "lon": 15.93729
   },
   "stats": {
-    "dailyDepartures": 168,
+    "dailyDepartures": 144,
     "firstDeparture": "04:30",
-    "lastDeparture": "23:55",
-    "peakHeadwayMin": 10.0,
-    "avgHeadwayMin": 14.0,
-    "travelTimeMin": 16.3,
+    "lastDeparture": "24:00",
+    "peakHeadwayMin": 15.0,
+    "avgHeadwayMin": 16.5,
+    "travelTimeMin": 14.0,
     "distanceKm": 5.1
   }
 }

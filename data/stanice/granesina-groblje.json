@@ -14,8 +14,8 @@
   "firstDeparture": "4:15",
   "lastDeparture": "23:41",
   "peakIntervalMin": [
-    8,
-    13
+    1,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -400,9 +400,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 98,
-    "stations45": 251
+    "stations15": 13,
+    "stations30": 53,
+    "stations45": 160
   },
   "prevSlug": "grancarska-22",
   "nextSlug": "granesina-skola"

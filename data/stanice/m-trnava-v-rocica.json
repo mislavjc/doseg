@@ -476,9 +476,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 32,
-    "stations45": 104
+    "stations15": 10,
+    "stations30": 27,
+    "stations45": 92
   },
   "prevSlug": "m-polje-parkiraliste",
   "nextSlug": "maksimirska-naselja"

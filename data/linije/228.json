@@ -21,9 +21,7 @@
           "lon": 16.01792,
           "offsetMin": 0,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         },
         {
@@ -100,9 +98,7 @@
           "lon": 16.01865,
           "offsetMin": 21,
           "tramInterchange": [
-            "1",
-            "9",
-            "17"
+            "1"
           ]
         }
       ],
@@ -1104,18 +1100,6 @@
         "terminal": "Borongaj"
       },
       {
-        "broj": "9",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
-      },
-      {
-        "broj": "17",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Borongaj"
-      },
-      {
         "broj": "32",
         "mode": "tram",
         "isNight": true,
@@ -1160,7 +1144,7 @@
   "prevBroj": "227",
   "nextBroj": "229",
   "reach": {
-    "areaKm2": 18.3,
+    "areaKm2": 20.9,
     "stopName": "Labudovac",
     "lat": 45.82274,
     "lon": 15.99792

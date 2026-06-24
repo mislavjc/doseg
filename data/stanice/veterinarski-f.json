@@ -30,12 +30,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 11.2,
       "peakRangeMin": [
-        10,
-        10
+        11,
+        11
       ],
-      "allDayHeadwayMin": 12.1
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "216",
@@ -46,7 +46,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "217",
@@ -82,7 +82,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     },
     {
       "broj": "290",
@@ -768,9 +768,9 @@
     ]
   },
   "reach": {
-    "stations15": 56,
-    "stations30": 244,
-    "stations45": 580
+    "stations15": 55,
+    "stations30": 254,
+    "stations45": 573
   },
   "prevSlug": "veslacka",
   "nextSlug": "vg-groblje"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:29",
   "lastDeparture": "22:34",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "peakIntervalMin": null,
   "lines": [
     {
       "broj": "207",
@@ -25,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 40.0,
-      "peakRangeMin": [
-        38,
-        43
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -149,8 +143,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 52,
-    "stations45": 188
+    "stations30": 58,
+    "stations45": 202
   },
   "prevSlug": "goricanka",
   "nextSlug": "gorice-69"

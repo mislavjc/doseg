@@ -172,9 +172,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 145,
-    "stations45": 400
+    "stations15": 13,
+    "stations30": 143,
+    "stations45": 418
   },
   "prevSlug": "blizno",
   "nextSlug": "bol-jankomir"

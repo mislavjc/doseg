@@ -14,8 +14,8 @@
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:25",
-  "lastDeparture": "0:49",
+  "firstDeparture": "4:24",
+  "lastDeparture": "0:54",
   "peakIntervalMin": [
     1,
     2
@@ -28,12 +28,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.7,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -42,12 +42,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "8",
@@ -56,12 +56,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "31",
@@ -1280,9 +1280,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 156,
-    "stations45": 410
+    "stations15": 24,
+    "stations30": 131,
+    "stations45": 387
   },
   "prevSlug": "borovje-pescenica-zitnjak",
   "nextSlug": "bosanska"

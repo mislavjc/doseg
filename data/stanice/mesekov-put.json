@@ -12,10 +12,10 @@
     "124"
   ],
   "firstDeparture": "4:43",
-  "lastDeparture": "23:38",
+  "lastDeparture": "23:48",
   "peakIntervalMin": [
-    12,
-    18
+    15,
+    16
   ],
   "lines": [
     {
@@ -30,7 +30,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     }
   ],
   "neighbors": [
@@ -420,9 +420,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 87,
-    "stations45": 207
+    "stations15": 26,
+    "stations30": 90,
+    "stations45": 232
   },
   "prevSlug": "mercatone",
   "nextSlug": "micani"

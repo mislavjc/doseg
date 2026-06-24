@@ -2,38 +2,22 @@
   "slug": "zapadni-kolodvor",
   "name": "Zapadni kolodvor",
   "kvart": "Črnomerec",
-  "lat": 45.80944,
-  "lon": 15.95485,
-  "mode": "both",
-  "bothDirections": true,
-  "lineCount": 2,
-  "tramLines": [
-    "1"
-  ],
+  "lat": 45.80949,
+  "lon": 15.95393,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
   "busLines": [
     "146"
   ],
-  "firstDeparture": "4:42",
-  "lastDeparture": "0:13",
+  "firstDeparture": "5:06",
+  "lastDeparture": "23:36",
   "peakIntervalMin": [
-    3,
-    6
+    30,
+    30
   ],
   "lines": [
-    {
-      "broj": "1",
-      "mode": "tram",
-      "isNight": false,
-      "headsign": "Borongaj",
-      "isLoop": false,
-      "bothDirections": true,
-      "peakHeadwayMin": 12.0,
-      "peakRangeMin": [
-        11,
-        13
-      ],
-      "allDayHeadwayMin": 14.5
-    },
     {
       "broj": "146",
       "mode": "bus",
@@ -41,23 +25,15 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 24.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        24,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
-    {
-      "name": "Trg dr. F. Tuđmana",
-      "slug": "trg-dr-f-tudmana"
-    },
-    {
-      "name": "Talovčeva",
-      "slug": "talovceva"
-    },
     {
       "name": "Pr. b. Filipovića",
       "slug": "pr-b-filipovica"
@@ -69,174 +45,12 @@
   ],
   "hero": {
     "bbox": [
-      15.95278,
-      45.808,
-      15.95691,
-      45.81088
+      15.95186,
+      45.80805,
+      15.956,
+      45.81094
     ],
     "lines": [
-      {
-        "broj": "1",
-        "mode": "tram",
-        "shape": [
-          [
-            15.95649,
-            45.8093
-          ],
-          [
-            15.95682,
-            45.80929
-          ],
-          [
-            15.95697,
-            45.80935
-          ],
-          [
-            15.95706,
-            45.80952
-          ],
-          [
-            15.95745,
-            45.8128
-          ],
-          [
-            15.95745,
-            45.81303
-          ],
-          [
-            15.95747,
-            45.81307
-          ],
-          [
-            15.95756,
-            45.81314
-          ],
-          [
-            15.9582,
-            45.81312
-          ],
-          [
-            15.95863,
-            45.81309
-          ],
-          [
-            15.95963,
-            45.81298
-          ],
-          [
-            15.96112,
-            45.81268
-          ],
-          [
-            15.96253,
-            45.81238
-          ],
-          [
-            15.96299,
-            45.8123
-          ],
-          [
-            15.96308,
-            45.81233
-          ],
-          [
-            15.96308,
-            45.81232
-          ],
-          [
-            15.96316,
-            45.81226
-          ],
-          [
-            15.96331,
-            45.81226
-          ],
-          [
-            15.96366,
-            45.81227
-          ],
-          [
-            15.9639,
-            45.81231
-          ],
-          [
-            15.96423,
-            45.81238
-          ],
-          [
-            15.96493,
-            45.81257
-          ],
-          [
-            15.96565,
-            45.81278
-          ],
-          [
-            15.96668,
-            45.81302
-          ],
-          [
-            15.96743,
-            45.81316
-          ],
-          [
-            15.96833,
-            45.81325
-          ],
-          [
-            15.96904,
-            45.81328
-          ],
-          [
-            15.9694,
-            45.81325
-          ],
-          [
-            15.96941,
-            45.81325
-          ],
-          [
-            15.96942,
-            45.81325
-          ],
-          [
-            15.96939,
-            45.81329
-          ],
-          [
-            15.96939,
-            45.81329
-          ],
-          [
-            15.9704,
-            45.81325
-          ],
-          [
-            15.97101,
-            45.81322
-          ],
-          [
-            15.97182,
-            45.81317
-          ],
-          [
-            15.97301,
-            45.81313
-          ],
-          [
-            15.97428,
-            45.81306
-          ],
-          [
-            15.97445,
-            45.81305
-          ],
-          [
-            15.97474,
-            45.81304
-          ]
-        ]
-      },
       {
         "broj": "146",
         "mode": "bus",
@@ -322,9 +136,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 212,
-    "stations45": 492
+    "stations15": 17,
+    "stations30": 115,
+    "stations45": 396
   },
   "prevSlug": "zamenhofova",
   "nextSlug": "zapci"

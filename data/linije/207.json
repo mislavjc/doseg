@@ -390,14 +390,14 @@
         {
           "hour": 8,
           "minutes": [
-            5,
-            40
+            10,
+            50
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            20
+            25
           ]
         },
         {
@@ -649,7 +649,7 @@
   "prevBroj": "206",
   "nextBroj": "208",
   "reach": {
-    "areaKm2": 11.4,
+    "areaKm2": 6.8,
     "stopName": "Gorice 69",
     "lat": 45.8405,
     "lon": 15.99024
@@ -658,7 +658,7 @@
     "dailyDepartures": 24,
     "firstDeparture": "06:10",
     "lastDeparture": "22:15",
-    "peakHeadwayMin": 40.0,
+    "peakHeadwayMin": 45.0,
     "avgHeadwayMin": 42.0,
     "travelTimeMin": 32.5,
     "distanceKm": 9.4

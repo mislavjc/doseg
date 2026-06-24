@@ -1,0 +1,161 @@
+{
+  "slug": "slatinska",
+  "name": "Slatinska",
+  "kvart": "Sesvete",
+  "lat": 45.82477,
+  "lon": 16.10099,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 3,
+  "tramLines": [],
+  "busLines": [
+    "277",
+    "282",
+    "284"
+  ],
+  "firstDeparture": "4:40",
+  "lastDeparture": "23:50",
+  "peakIntervalMin": [
+    11,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ses.Selnica",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 105.0
+    },
+    {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 28.3,
+      "peakRangeMin": [
+        23,
+        33
+      ],
+      "allDayHeadwayMin": 38.4
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ivanja Reka",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 45.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 74.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sesvete-ukrcaj",
+      "slug": "sesvete-ukrcaj-sesvete-2"
+    },
+    {
+      "name": "Ljudevita Posavskog",
+      "slug": "ljudevita-posavskog"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.09892,
+      45.82333,
+      16.10306,
+      45.82621
+    ],
+    "lines": [
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10892,
+            45.81279
+          ]
+        ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 28,
+    "stations30": 89,
+    "stations45": 211
+  },
+  "prevSlug": "slanovecka-skola",
+  "nextSlug": "slavenskog-stenjevec"
+}

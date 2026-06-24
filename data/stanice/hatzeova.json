@@ -13,10 +13,10 @@
     "134"
   ],
   "firstDeparture": "5:13",
-  "lastDeparture": "0:38",
+  "lastDeparture": "0:08",
   "peakIntervalMin": [
-    9,
-    17
+    28,
+    30
   ],
   "lines": [
     {
@@ -26,12 +26,9 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 39.5,
-      "peakRangeMin": [
-        39,
-        40
-      ],
-      "allDayHeadwayMin": 40.0
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "134",
@@ -40,12 +37,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        20,
-        25
+        28,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     }
   ],
   "neighbors": [
@@ -285,9 +282,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 131,
-    "stations45": 346
+    "stations15": 25,
+    "stations30": 98,
+    "stations45": 284
   },
   "prevSlug": "harambasiceva",
   "nextSlug": "havidic-selo"

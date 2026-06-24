@@ -14,7 +14,7 @@
   "firstDeparture": "5:09",
   "lastDeparture": "23:56",
   "peakIntervalMin": [
-    9,
+    6,
     20
   ],
   "lines": [
@@ -27,8 +27,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     }
@@ -334,7 +334,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 28,
-    "stations45": 98
+    "stations45": 91
   },
   "prevSlug": "mrksina",
   "nextSlug": "mrksina-67c"

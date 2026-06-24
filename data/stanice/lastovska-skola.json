@@ -328,9 +328,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 126,
-    "stations45": 353
+    "stations15": 16,
+    "stations30": 112,
+    "stations45": 364
   },
   "prevSlug": "lastovska",
   "nextSlug": "lekneno-i"

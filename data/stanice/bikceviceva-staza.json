@@ -814,9 +814,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 36,
-    "stations45": 104
+    "stations15": 1,
+    "stations30": 28,
+    "stations45": 80
   },
   "prevSlug": "bijenik-crkva",
   "nextSlug": "bistricka-o-s"

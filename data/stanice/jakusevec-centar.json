@@ -54,7 +54,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -453,8 +453,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 36,
-    "stations45": 144
+    "stations30": 32,
+    "stations45": 124
   },
   "prevSlug": "jagiceva",
   "nextSlug": "jakusevec-groblje"

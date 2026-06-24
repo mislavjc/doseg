@@ -569,6 +569,10 @@
             45.83906
           ],
           [
+            16.0197,
+            45.83931
+          ],
+          [
             16.01969,
             45.83932
           ],
@@ -579,10 +583,6 @@
           [
             16.01952,
             45.83939
-          ],
-          [
-            16.01956,
-            45.83943
           ],
           [
             16.01971,
@@ -645,9 +645,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 76,
-    "stations45": 222
+    "stations15": 10,
+    "stations30": 55,
+    "stations45": 154
   },
   "prevSlug": "svetice-maksimir-2",
   "nextSlug": "svetosimunska-trgov"

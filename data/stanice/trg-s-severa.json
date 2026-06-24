@@ -770,8 +770,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 30,
-    "stations45": 115
+    "stations30": 29,
+    "stations45": 123
   },
   "prevSlug": "trg-rep-hrvatske",
   "nextSlug": "trg-svetog-simuna"

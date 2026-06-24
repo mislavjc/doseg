@@ -15,7 +15,7 @@
   "lastDeparture": "0:10",
   "peakIntervalMin": [
     1,
-    9
+    11
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 11.2,
       "peakRangeMin": [
-        10,
-        10
+        11,
+        11
       ],
-      "allDayHeadwayMin": 12.1
+      "allDayHeadwayMin": 13.3
     }
   ],
   "neighbors": [
@@ -364,9 +364,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 115,
-    "stations45": 369
+    "stations15": 22,
+    "stations30": 101,
+    "stations45": 337
   },
   "prevSlug": "turopolj-markulini",
   "nextSlug": "tuskanac"

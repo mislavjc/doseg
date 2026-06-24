@@ -26,8 +26,8 @@
     "232",
     "235"
   ],
-  "firstDeparture": "3:58",
-  "lastDeparture": "1:07",
+  "firstDeparture": "3:57",
+  "lastDeparture": "1:04",
   "peakIntervalMin": [
     1,
     1
@@ -40,12 +40,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.3,
+      "peakHeadwayMin": 11.7,
       "peakRangeMin": [
-        8,
-        10
+        11,
+        12
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "7",
@@ -54,26 +54,26 @@
       "headsign": "Savski gaj-rotor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.1,
+      "peakHeadwayMin": 10.2,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        11
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "11",
       "mode": "tram",
       "isNight": false,
-      "headsign": "Črnomerec",
+      "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.6,
+      "peakHeadwayMin": 8.0,
       "peakRangeMin": [
-        7,
-        7
+        8,
+        8
       ],
-      "allDayHeadwayMin": 7.6
+      "allDayHeadwayMin": 9.1
     },
     {
       "broj": "12",
@@ -82,12 +82,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        7,
-        8
+        8,
+        9
       ],
-      "allDayHeadwayMin": 8.6
+      "allDayHeadwayMin": 9.9
     },
     {
       "broj": "34",
@@ -121,12 +121,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "208",
@@ -135,12 +135,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        21
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "209",
@@ -149,12 +149,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 21.0,
       "peakRangeMin": [
-        15,
-        18
+        20,
+        20
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "210",
@@ -163,12 +163,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "213",
@@ -205,12 +205,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        15,
-        20
+        38,
+        43
       ],
-      "allDayHeadwayMin": 26.9
+      "allDayHeadwayMin": 37.8
     },
     {
       "broj": "232",
@@ -431,148 +431,196 @@
         "mode": "tram",
         "shape": [
           [
-            16.05542,
-            45.82957
+            16.01785,
+            45.81992
           ],
           [
-            16.05448,
-            45.82943
+            16.02095,
+            45.82063
           ],
           [
-            16.05447,
-            45.82943
+            16.02227,
+            45.82092
           ],
           [
-            16.05437,
-            45.82941
+            16.02272,
+            45.82104
           ],
           [
-            16.05231,
-            45.82884
+            16.02272,
+            45.82104
           ],
           [
-            16.05189,
-            45.82877
+            16.02272,
+            45.82102
           ],
           [
-            16.05189,
-            45.82877
+            16.02273,
+            45.82102
           ],
           [
-            16.05184,
-            45.82873
+            16.02287,
+            45.82108
           ],
           [
-            16.05075,
-            45.82832
+            16.02363,
+            45.82126
           ],
           [
-            16.04877,
-            45.82769
+            16.02749,
+            45.82207
           ],
           [
-            16.04815,
-            45.82759
+            16.02749,
+            45.82207
           ],
           [
-            16.04815,
-            45.82758
+            16.03454,
+            45.82362
           ],
           [
-            16.04812,
-            45.82749
+            16.03491,
+            45.82365
           ],
           [
-            16.04665,
-            45.82698
-          ],
-          [
-            16.04416,
-            45.82608
-          ],
-          [
-            16.04369,
-            45.82598
-          ],
-          [
-            16.04351,
-            45.82586
-          ],
-          [
-            16.0424,
-            45.82551
-          ],
-          [
-            16.04109,
-            45.82518
-          ],
-          [
-            16.04001,
-            45.82487
-          ],
-          [
-            16.03889,
-            45.82459
-          ],
-          [
-            16.0377,
-            45.82434
-          ],
-          [
-            16.03713,
-            45.82432
-          ],
-          [
-            16.03713,
-            45.82432
-          ],
-          [
-            16.03696,
-            45.82423
-          ],
-          [
-            16.03531,
+            16.03567,
             45.82382
           ],
           [
-            16.03386,
-            45.82352
+            16.03814,
+            45.82435
           ],
           [
-            16.03201,
-            45.82312
+            16.03997,
+            45.82483
           ],
           [
-            16.03075,
-            45.82283
+            16.03999,
+            45.82485
           ],
           [
-            16.02949,
-            45.82257
+            16.04,
+            45.82485
           ],
           [
-            16.02829,
-            45.82235
+            16.04001,
+            45.82483
           ],
           [
-            16.02829,
-            45.82235
+            16.04161,
+            45.82524
           ],
           [
-            16.02819,
-            45.82232
+            16.04168,
+            45.82525
           ],
           [
-            16.02374,
-            45.82136
+            16.04174,
+            45.82527
           ],
           [
-            16.02208,
-            45.82097
+            16.04211,
+            45.82536
           ],
           [
-            16.02207,
-            45.82097
+            16.04235,
+            45.82544
+          ],
+          [
+            16.04314,
+            45.82565
+          ],
+          [
+            16.04397,
+            45.82593
+          ],
+          [
+            16.04528,
+            45.82642
+          ],
+          [
+            16.04535,
+            45.82643
+          ],
+          [
+            16.04536,
+            45.8264
+          ],
+          [
+            16.04533,
+            45.82642
+          ],
+          [
+            16.04667,
+            45.82691
+          ],
+          [
+            16.04798,
+            45.82736
+          ],
+          [
+            16.04872,
+            45.8276
+          ],
+          [
+            16.04872,
+            45.8276
+          ],
+          [
+            16.04902,
+            45.82772
+          ],
+          [
+            16.05241,
+            45.82882
+          ],
+          [
+            16.05249,
+            45.82881
+          ],
+          [
+            16.05244,
+            45.82887
+          ],
+          [
+            16.05244,
+            45.82888
+          ],
+          [
+            16.05246,
+            45.8288
+          ],
+          [
+            16.05318,
+            45.82901
+          ],
+          [
+            16.05361,
+            45.8291
+          ],
+          [
+            16.05403,
+            45.8292
+          ],
+          [
+            16.05447,
+            45.8293
+          ],
+          [
+            16.05508,
+            45.82942
+          ],
+          [
+            16.05546,
+            45.82949
+          ],
+          [
+            16.05574,
+            45.82952
+          ],
+          [
+            16.05624,
+            45.82957
           ]
         ]
       },
@@ -2249,9 +2297,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 216,
-    "stations45": 471
+    "stations15": 24,
+    "stations30": 157,
+    "stations45": 450
   },
   "prevSlug": "dubranec-vikend-nas",
   "nextSlug": "dubravica"

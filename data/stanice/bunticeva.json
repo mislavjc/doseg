@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 180,
-    "stations45": 455
+    "stations15": 31,
+    "stations30": 133,
+    "stations45": 381
   },
   "prevSlug": "bundek",
   "nextSlug": "buzin-novi-zagreb-istok"

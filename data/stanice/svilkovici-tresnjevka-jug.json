@@ -17,8 +17,8 @@
   "firstDeparture": "4:27",
   "lastDeparture": "0:47",
   "peakIntervalMin": [
-    4,
-    9
+    3,
+    10
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.7,
+      "peakHeadwayMin": 23.5,
       "peakRangeMin": [
-        15,
-        15
+        20,
+        26
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 25.3
     },
     {
       "broj": "116",
@@ -56,12 +56,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 38.3,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        38,
-        40
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "168",
@@ -684,9 +684,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 99,
-    "stations45": 294
+    "stations15": 26,
+    "stations30": 117,
+    "stations45": 373
   },
   "prevSlug": "svilkovici-stenjevec",
   "nextSlug": "talani"

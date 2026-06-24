@@ -1367,21 +1367,20 @@
         {
           "hour": 5,
           "minutes": [
-            0,
-            30
+            10,
+            50
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
+            5,
             30
           ]
         },
@@ -1479,39 +1478,41 @@
         {
           "hour": 21,
           "minutes": [
-            0,
-            30
+            10,
+            50
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            0,
-            30,
+            10,
             50
           ]
         }
       ],
       [
         {
+          "hour": 4,
+          "minutes": [
+            50
+          ]
+        },
+        {
           "hour": 5,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            30
+            10
           ]
         },
         {
@@ -1609,29 +1610,27 @@
           "hour": 20,
           "minutes": [
             0,
-            30
+            30,
+            50
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            0,
-            30
+            10,
+            50
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            0,
-            30,
-            50
+            30
           ]
         },
         {
@@ -2087,7 +2086,7 @@
   "prevBroj": "222",
   "nextBroj": "224",
   "reach": {
-    "areaKm2": 14.4,
+    "areaKm2": 15.9,
     "stopName": "Trnovčica 117",
     "lat": 45.83602,
     "lon": 16.06877

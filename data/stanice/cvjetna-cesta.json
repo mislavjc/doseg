@@ -6,16 +6,17 @@
   "lon": 16.12497,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [],
   "busLines": [
-    "263"
+    "263",
+    "270"
   ],
-  "firstDeparture": "4:40",
-  "lastDeparture": "0:40",
+  "firstDeparture": "4:35",
+  "lastDeparture": "0:15",
   "peakIntervalMin": [
-    6,
-    21
+    3,
+    23
   ],
   "lines": [
     {
@@ -25,12 +26,23 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        18,
-        23
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 65.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -252,13 +264,47 @@
             45.91142
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.13123,
+            45.90873
+          ],
+          [
+            16.13047,
+            45.90425
+          ],
+          [
+            16.1252,
+            45.90597
+          ],
+          [
+            16.12489,
+            45.90062
+          ],
+          [
+            16.12489,
+            45.89753
+          ],
+          [
+            16.12362,
+            45.89269
+          ],
+          [
+            16.11539,
+            45.8856
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 46,
-    "stations45": 125
+    "stations15": 26,
+    "stations30": 48,
+    "stations45": 123
   },
   "prevSlug": "culinecka-119",
   "nextSlug": "cvjetna-ulica"

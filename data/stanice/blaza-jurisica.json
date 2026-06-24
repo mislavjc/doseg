@@ -12,10 +12,10 @@
     "210"
   ],
   "firstDeparture": "4:44",
-  "lastDeparture": "0:50",
+  "lastDeparture": "0:45",
   "peakIntervalMin": [
-    4,
-    16
+    6,
+    26
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -421,8 +421,8 @@
   },
   "reach": {
     "stations15": 26,
-    "stations30": 87,
-    "stations45": 243
+    "stations30": 78,
+    "stations45": 239
   },
   "prevSlug": "blagusa-kapela",
   "nextSlug": "blaza-trogiranina"

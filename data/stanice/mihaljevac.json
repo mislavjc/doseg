@@ -33,12 +33,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.6,
+      "peakHeadwayMin": 18.3,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "14",
@@ -47,12 +47,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.5,
+      "peakHeadwayMin": 9.9,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "15",
@@ -918,10 +918,6 @@
             45.83728
           ],
           [
-            15.97715,
-            45.83726
-          ],
-          [
             15.97728,
             45.83676
           ],
@@ -948,6 +944,10 @@
           [
             15.97675,
             45.8368
+          ],
+          [
+            15.97664,
+            45.83694
           ],
           [
             15.97663,
@@ -1274,9 +1274,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 131,
-    "stations45": 369
+    "stations15": 32,
+    "stations30": 122,
+    "stations45": 303
   },
   "prevSlug": "micevec-nadvoznjak",
   "nextSlug": "mihovci"

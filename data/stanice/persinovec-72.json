@@ -36,7 +36,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 90.0
+      "allDayHeadwayMin": null
     }
   ],
   "neighbors": [

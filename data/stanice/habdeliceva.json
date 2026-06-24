@@ -2,8 +2,8 @@
   "slug": "habdeliceva",
   "name": "Habdelićeva",
   "kvart": "Gornji grad - Medveščak",
-  "lat": 45.81591,
-  "lon": 15.97534,
+  "lat": 45.81569,
+  "lon": 15.97475,
   "mode": "bus",
   "bothDirections": false,
   "lineCount": 1,
@@ -14,8 +14,8 @@
   "firstDeparture": "7:03",
   "lastDeparture": "22:03",
   "peakIntervalMin": [
-    15,
-    15
+    30,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "T.b.J.Jelačića",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.9
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -45,10 +45,10 @@
   ],
   "hero": {
     "bbox": [
-      15.97327,
-      45.81446,
-      15.97741,
-      45.81735
+      15.97268,
+      45.81425,
+      15.97682,
+      45.81713
     ],
     "lines": [
       {
@@ -160,6 +160,10 @@
             45.81563
           ],
           [
+            15.97473,
+            45.81569
+          ],
+          [
             15.97478,
             45.81576
           ],
@@ -174,10 +178,6 @@
           [
             15.97483,
             45.81587
-          ],
-          [
-            15.97484,
-            45.81594
           ],
           [
             15.97485,
@@ -340,9 +340,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 209,
-    "stations45": 502
+    "stations15": 31,
+    "stations30": 177,
+    "stations45": 493
   },
   "prevSlug": "gustava-krkleca",
   "nextSlug": "hammova"

@@ -16,7 +16,7 @@
   "lastDeparture": "23:59",
   "peakIntervalMin": [
     1,
-    6
+    7
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -765,9 +765,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 166,
-    "stations45": 387
+    "stations15": 20,
+    "stations30": 120,
+    "stations45": 271
   },
   "prevSlug": "hunjka",
   "nextSlug": "i-gardijske-brigade"

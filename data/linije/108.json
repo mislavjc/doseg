@@ -759,6 +759,12 @@
         "terminal": "Gl.kolodvor"
       },
       {
+        "broj": "313",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
         "broj": "315",
         "mode": "bus",
         "isNight": false,
@@ -801,7 +807,7 @@
   "prevBroj": "107",
   "nextBroj": "109",
   "reach": {
-    "areaKm2": 15.7,
+    "areaKm2": 21.2,
     "stopName": "Kockica",
     "lat": 45.79152,
     "lon": 15.96826

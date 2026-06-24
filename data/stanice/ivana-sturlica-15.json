@@ -558,9 +558,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 124,
-    "stations45": 249
+    "stations15": 34,
+    "stations30": 101,
+    "stations45": 223
   },
   "prevSlug": "ivana-pavla-ii",
   "nextSlug": "ivanec-centar"

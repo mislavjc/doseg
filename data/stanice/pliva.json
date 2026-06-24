@@ -2,8 +2,8 @@
   "slug": "pliva",
   "name": "Pliva",
   "kvart": "Črnomerec",
-  "lat": 45.81263,
-  "lon": 15.93164,
+  "lat": 45.81264,
+  "lon": 15.93144,
   "mode": "bus",
   "bothDirections": false,
   "lineCount": 2,
@@ -13,10 +13,10 @@
     "134"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "23:42",
+  "lastDeparture": "23:55",
   "peakIntervalMin": [
-    10,
-    20
+    4,
+    25
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 27.5,
       "peakRangeMin": [
-        20,
-        21
+        25,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     }
   ],
   "neighbors": [
@@ -60,10 +60,10 @@
   ],
   "hero": {
     "bbox": [
-      15.92957,
+      15.92937,
       45.81119,
-      15.9337,
-      45.81407
+      15.93351,
+      45.81408
     ],
     "lines": [
       {
@@ -71,12 +71,12 @@
         "mode": "bus",
         "shape": [
           [
-            15.93333,
-            45.81606
+            15.93369,
+            45.81567
           ],
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92993,
@@ -101,12 +101,12 @@
         "mode": "bus",
         "shape": [
           [
-            15.93333,
-            45.81606
+            15.93369,
+            45.81567
           ],
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92759,
@@ -125,9 +125,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 185,
-    "stations45": 396
+    "stations15": 25,
+    "stations30": 180,
+    "stations45": 401
   },
   "prevSlug": "planinska-20",
   "nextSlug": "podbrezje"

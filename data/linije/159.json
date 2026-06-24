@@ -7,7 +7,7 @@
     "Strmec"
   ],
   "via": [
-    "St.dom Stjepan Radić",
+    "St. dom S. Radić",
     "Zlatareva zlata"
   ],
   "oneWay": false,
@@ -26,7 +26,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -53,8 +53,8 @@
         },
         {
           "name": "Naletilićeva",
-          "lat": 45.76575,
-          "lon": 15.94606,
+          "lat": 45.76539,
+          "lon": 15.946,
           "offsetMin": 6,
           "tramInterchange": []
         },
@@ -353,7 +353,7 @@
         ],
         [
           15.94605,
-          45.76574
+          45.76575
         ],
         [
           15.94586,
@@ -2117,26 +2117,26 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "151",
   "nextBroj": "160",
   "reach": {
-    "areaKm2": 9.8,
+    "areaKm2": 17.8,
     "stopName": "Naletilićeva 104",
     "lat": 45.73802,
     "lon": 15.93209

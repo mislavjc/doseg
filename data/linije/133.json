@@ -7,7 +7,7 @@
     "Čehi"
   ],
   "via": [
-    "St.dom Stjepan Radić"
+    "St. dom S. Radić"
   ],
   "oneWay": false,
   "directions": [
@@ -25,7 +25,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -1415,8 +1415,8 @@
     5,
     5,
     3,
-    4,
-    4,
+    3,
+    3,
     2,
     2,
     1,
@@ -1444,7 +1444,7 @@
           "hour": 7,
           "minutes": [
             0,
-            30,
+            25,
             45
           ]
         },
@@ -1481,15 +1481,15 @@
           "hour": 12,
           "minutes": [
             15,
-            45
+            40
           ]
         },
         {
           "hour": 13,
           "minutes": [
             5,
-            30,
-            45
+            35,
+            50
           ]
         },
         {
@@ -1520,14 +1520,14 @@
           "hour": 17,
           "minutes": [
             0,
-            30
+            35
           ]
         },
         {
           "hour": 18,
           "minutes": [
             0,
-            30
+            35
           ]
         },
         {
@@ -1644,20 +1644,18 @@
         {
           "hour": 17,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0,
             25
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            10,
             40
           ]
         },
@@ -2188,32 +2186,32 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "132",
   "nextBroj": "134",
   "reach": {
-    "areaKm2": 10.6,
+    "areaKm2": 14.2,
     "stopName": "Mrkšina 67C",
     "lat": 45.75371,
     "lon": 15.96718
   },
   "stats": {
-    "dailyDepartures": 68,
+    "dailyDepartures": 66,
     "firstDeparture": "05:00",
     "lastDeparture": "23:25",
     "peakHeadwayMin": 24.0,

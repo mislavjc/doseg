@@ -31,7 +31,7 @@
         35,
         55
       ],
-      "allDayHeadwayMin": 41.5
+      "allDayHeadwayMin": 43.2
     },
     {
       "broj": "222",
@@ -59,7 +59,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad"
     }
   ],
   "hero": {
@@ -654,8 +654,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 80,
-    "stations45": 276
+    "stations30": 77,
+    "stations45": 253
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad",
   "nextSlug": "arena-zagreb"

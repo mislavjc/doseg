@@ -7,7 +7,7 @@
     "Štrpet"
   ],
   "via": [
-    "St.dom Stjepan Radić"
+    "St. dom S. Radić"
   ],
   "oneWay": false,
   "directions": [
@@ -26,7 +26,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 2,
@@ -658,8 +658,8 @@
     0,
     0,
     1,
-    5,
-    5,
+    4,
+    4,
     2,
     4,
     2,
@@ -685,7 +685,6 @@
           "hour": 5,
           "minutes": [
             5,
-            30,
             50
           ]
         },
@@ -830,7 +829,6 @@
         {
           "hour": 6,
           "minutes": [
-            10,
             30,
             45
           ]
@@ -1469,36 +1467,36 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "160",
   "nextBroj": "162",
   "reach": {
-    "areaKm2": 7.7,
+    "areaKm2": 10.8,
     "stopName": "Hudobička 1",
     "lat": 45.71073,
     "lon": 15.89667
   },
   "stats": {
-    "dailyDepartures": 63,
+    "dailyDepartures": 61,
     "firstDeparture": "05:05",
     "lastDeparture": "24:05",
     "peakHeadwayMin": 40.0,
-    "avgHeadwayMin": 38.0,
+    "avgHeadwayMin": 39.3,
     "travelTimeMin": 32.7,
     "distanceKm": 18.1
   }

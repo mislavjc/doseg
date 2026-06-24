@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 180,
-    "stations45": 455
+    "stations15": 33,
+    "stations30": 126,
+    "stations45": 371
   },
   "prevSlug": "borovje-trnje",
   "nextSlug": "botanicki-vrt"

@@ -12,10 +12,10 @@
     "127"
   ],
   "firstDeparture": "4:26",
-  "lastDeparture": "0:05",
+  "lastDeparture": "0:25",
   "peakIntervalMin": [
-    5,
-    7
+    1,
+    19
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        12,
-        14
+        20,
+        20
       ],
-      "allDayHeadwayMin": 17.1
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [
@@ -456,9 +456,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 49,
-    "stations45": 186
+    "stations15": 16,
+    "stations30": 113,
+    "stations45": 322
   },
   "prevSlug": "josipa-loncara",
   "nextSlug": "josipa-stadlera"

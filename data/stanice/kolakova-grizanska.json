@@ -13,10 +13,10 @@
     "210"
   ],
   "firstDeparture": "4:43",
-  "lastDeparture": "0:52",
+  "lastDeparture": "0:47",
   "peakIntervalMin": [
-    1,
-    10
+    3,
+    14
   ],
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 17.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 29.9
     },
     {
       "broj": "210",
@@ -40,12 +40,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -633,9 +633,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 84,
-    "stations45": 244
+    "stations15": 18,
+    "stations30": 54,
+    "stations45": 214
   },
   "prevSlug": "kodrmanova",
   "nextSlug": "kolareva"

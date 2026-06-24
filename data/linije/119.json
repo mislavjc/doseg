@@ -17,8 +17,8 @@
       "stops": [
         {
           "name": "Črnomerec",
-          "lat": 45.81606,
-          "lon": 15.93333,
+          "lat": 45.81567,
+          "lon": 15.93369,
           "offsetMin": 0,
           "tramInterchange": [
             "2",
@@ -135,7 +135,7 @@
       "shape": [
         [
           15.93332,
-          45.81605
+          45.81567
         ],
         [
           15.9333,
@@ -1346,28 +1346,28 @@
   "bbox": [
     15.83598,
     45.81045,
-    15.93333,
-    45.81606
+    15.93369,
+    45.81567
   ],
   "histogram": [
     1,
     0,
     0,
     0,
-    4,
-    4,
     3,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    3,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
     2,
     2,
     2,
@@ -1387,91 +1387,78 @@
         {
           "hour": 5,
           "minutes": [
-            0,
             30
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            5,
             35
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
             45
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            15,
             45
           ]
         },
@@ -1496,7 +1483,7 @@
         {
           "hour": 21,
           "minutes": [
-            50
+            45
           ]
         },
         {
@@ -1523,91 +1510,73 @@
           "hour": 4,
           "minutes": [
             5,
-            30,
             55
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            25,
             55
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            35
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            45
+            0
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
-            45
+            15
           ]
         },
         {
@@ -2328,18 +2297,18 @@
   "prevBroj": "118",
   "nextBroj": "120",
   "reach": {
-    "areaKm2": 22.2,
+    "areaKm2": 24.5,
     "stopName": "Stenjevec",
     "lat": 45.81178,
     "lon": 15.88358
   },
   "stats": {
-    "dailyDepartures": 68,
+    "dailyDepartures": 42,
     "firstDeparture": "04:30",
     "lastDeparture": "24:15",
-    "peakHeadwayMin": 30.0,
-    "avgHeadwayMin": 35.9,
+    "peakHeadwayMin": 60.0,
+    "avgHeadwayMin": 59.3,
     "travelTimeMin": 19.5,
-    "distanceKm": 8.4
+    "distanceKm": 8.3
   }
 }

@@ -2,23 +2,24 @@
   "slug": "aleja-mira",
   "name": "Aleja mira",
   "kvart": "Sesvete",
-  "lat": 45.86253,
-  "lon": 16.11511,
+  "lat": 45.8626,
+  "lon": 16.11507,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "261",
     "262",
     "263",
-    "267"
+    "267",
+    "270"
   ],
   "firstDeparture": "4:27",
-  "lastDeparture": "0:46",
+  "lastDeparture": "0:21",
   "peakIntervalMin": [
-    2,
-    8
+    1,
+    7
   ],
   "lines": [
     {
@@ -50,12 +51,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        29
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
     },
     {
       "broj": "267",
@@ -66,7 +67,21 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 55.0
+      "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -93,10 +108,10 @@
   ],
   "hero": {
     "bbox": [
-      16.11304,
-      45.86109,
-      16.11718,
-      45.86397
+      16.113,
+      45.86116,
+      16.11714,
+      45.86404
     ],
     "lines": [
       {
@@ -310,6 +325,14 @@
           [
             16.1116,
             45.87599
+          ],
+          [
+            16.11146,
+            45.8767
+          ],
+          [
+            16.11146,
+            45.87671
           ]
         ]
       },
@@ -774,13 +797,35 @@
             45.86051
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11335,
+            45.87029
+          ],
+          [
+            16.1149,
+            45.863
+          ],
+          [
+            16.11247,
+            45.85368
+          ],
+          [
+            16.11163,
+            45.85152
+          ]
+        ]
       }
     ]
   },
   "reach": {
     "stations15": 22,
-    "stations30": 49,
-    "stations45": 128
+    "stations30": 44,
+    "stations45": 119
   },
   "prevSlug": "aleja-javora-gornja-dubrava",
   "nextSlug": "aleja-tisine"

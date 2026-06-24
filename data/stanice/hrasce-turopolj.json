@@ -2,8 +2,8 @@
   "slug": "hrasce-turopolj",
   "name": "Hrašće Turopolj.",
   "kvart": "Novi Zagreb - istok",
-  "lat": 45.73547,
-  "lon": 16.01082,
+  "lat": 45.73514,
+  "lon": 16.01061,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 2,
@@ -57,20 +57,16 @@
   ],
   "hero": {
     "bbox": [
-      16.00875,
-      45.73403,
-      16.01288,
-      45.73691
+      16.00854,
+      45.7337,
+      16.01267,
+      45.73658
     ],
     "lines": [
       {
         "broj": "241",
         "mode": "bus",
         "shape": [
-          [
-            15.99602,
-            45.74545
-          ],
           [
             15.99796,
             45.74406
@@ -351,8 +347,8 @@
   },
   "reach": {
     "stations15": 15,
-    "stations30": 47,
-    "stations45": 180
+    "stations30": 46,
+    "stations45": 143
   },
   "prevSlug": "hrasce-mljekara",
   "nextSlug": "hrastovicka"

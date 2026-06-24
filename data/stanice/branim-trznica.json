@@ -6,16 +6,17 @@
   "lon": 15.99171,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [
     "2",
     "6",
     "8",
+    "13",
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:53",
-  "lastDeparture": "0:51",
+  "firstDeparture": "4:39",
+  "lastDeparture": "0:49",
   "peakIntervalMin": [
     1,
     2
@@ -28,12 +29,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 10.4,
       "peakRangeMin": [
-        8,
-        8
+        10,
+        11
       ],
-      "allDayHeadwayMin": 10.0
+      "allDayHeadwayMin": 11.6
     },
     {
       "broj": "6",
@@ -42,12 +43,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.6,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "8",
@@ -56,12 +57,26 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.7,
+      "peakHeadwayMin": 18.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
+    },
+    {
+      "broj": "13",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Kvat. trg",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 13.8,
+      "peakRangeMin": [
+        13,
+        14
+      ],
+      "allDayHeadwayMin": 14.2
     },
     {
       "broj": "31",
@@ -87,6 +102,10 @@
     {
       "name": "Sheraton",
       "slug": "sheraton"
+    },
+    {
+      "name": "Trg P. Krešimira",
+      "slug": "trg-p-kresimira"
     }
   ],
   "hero": {
@@ -492,15 +511,15 @@
             45.81143
           ],
           [
+            15.97767,
+            45.8095
+          ],
+          [
             15.97774,
             45.809
           ],
           [
             15.97773,
-            45.80888
-          ],
-          [
-            15.97774,
             45.80888
           ],
           [
@@ -952,6 +971,48 @@
         ]
       },
       {
+        "broj": "13",
+        "mode": "tram",
+        "shape": [
+          [
+            15.97727,
+            45.81286
+          ],
+          [
+            15.97765,
+            45.80951
+          ],
+          [
+            15.97928,
+            45.80521
+          ],
+          [
+            15.98377,
+            45.80544
+          ],
+          [
+            15.99198,
+            45.80614
+          ],
+          [
+            15.9917,
+            45.80811
+          ],
+          [
+            15.99386,
+            45.81092
+          ],
+          [
+            15.99653,
+            45.81406
+          ],
+          [
+            15.99666,
+            45.81486
+          ]
+        ]
+      },
+      {
         "broj": "31",
         "mode": "tram",
         "shape": [
@@ -1032,15 +1093,15 @@
             45.81143
           ],
           [
+            15.97767,
+            45.8095
+          ],
+          [
             15.97774,
             45.809
           ],
           [
             15.97773,
-            45.80888
-          ],
-          [
-            15.97774,
             45.80888
           ],
           [
@@ -1248,9 +1309,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 240,
-    "stations45": 574
+    "stations15": 44,
+    "stations30": 243,
+    "stations45": 590
   },
   "prevSlug": "branim-skrnjugova",
   "nextSlug": "branim-zagrebacka"

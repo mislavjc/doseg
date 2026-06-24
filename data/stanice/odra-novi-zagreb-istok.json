@@ -1070,9 +1070,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 105,
-    "stations45": 325
+    "stations15": 21,
+    "stations30": 104,
+    "stations45": 301
   },
   "prevSlug": "odra-nadvoznjak",
   "nextSlug": "odra-novi-zagreb-istok-2"

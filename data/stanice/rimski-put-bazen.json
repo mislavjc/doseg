@@ -1,0 +1,231 @@
+{
+  "slug": "rimski-put-bazen",
+  "name": "Rimski put-bazen",
+  "kvart": "Sesvete",
+  "lat": 45.80984,
+  "lon": 16.10682,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 3,
+  "tramLines": [],
+  "busLines": [
+    "279",
+    "281",
+    "282"
+  ],
+  "firstDeparture": "4:48",
+  "lastDeparture": "0:11",
+  "peakIntervalMin": [
+    2,
+    15
+  ],
+  "lines": [
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 33.8
+    },
+    {
+      "broj": "281",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 29.9
+    },
+    {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        25,
+        33
+      ],
+      "allDayHeadwayMin": 38.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Rim.put-dj.igralište",
+      "slug": "rim-put-dj-igraliste"
+    },
+    {
+      "name": "Lj.Posav.-Rimski put",
+      "slug": "lj-posav-rimski-put"
+    },
+    {
+      "name": "Slavon.-Lj.Posavskog",
+      "slug": "slavon-lj-posavskog"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.10475,
+      45.8084,
+      16.10889,
+      45.81128
+    ],
+    "lines": [
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11402,
+            45.81287
+          ],
+          [
+            16.11276,
+            45.80976
+          ],
+          [
+            16.10728,
+            45.80985
+          ],
+          [
+            16.10196,
+            45.80992
+          ],
+          [
+            16.0994,
+            45.80657
+          ]
+        ]
+      },
+      {
+        "broj": "281",
+        "mode": "bus",
+        "shape": [
+          [
+            16.08857,
+            45.80537
+          ],
+          [
+            16.09178,
+            45.80575
+          ],
+          [
+            16.09505,
+            45.80604
+          ],
+          [
+            16.09815,
+            45.8061
+          ],
+          [
+            16.10062,
+            45.80603
+          ],
+          [
+            16.10083,
+            45.80612
+          ],
+          [
+            16.10094,
+            45.80772
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10107,
+            45.80791
+          ],
+          [
+            16.10106,
+            45.80791
+          ],
+          [
+            16.10123,
+            45.80982
+          ],
+          [
+            16.10588,
+            45.80983
+          ],
+          [
+            16.10589,
+            45.80982
+          ],
+          [
+            16.10589,
+            45.80982
+          ],
+          [
+            16.10974,
+            45.80976
+          ],
+          [
+            16.11449,
+            45.8097
+          ],
+          [
+            16.11475,
+            45.80977
+          ],
+          [
+            16.11483,
+            45.81042
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11402,
+            45.81287
+          ],
+          [
+            16.11276,
+            45.80976
+          ],
+          [
+            16.10728,
+            45.80985
+          ],
+          [
+            16.10196,
+            45.80992
+          ],
+          [
+            16.10196,
+            45.81769
+          ],
+          [
+            16.10334,
+            45.82111
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 7,
+    "stations30": 25,
+    "stations45": 109
+  },
+  "prevSlug": "rim-put-dj-igraliste",
+  "nextSlug": "rockefellerova"
+}

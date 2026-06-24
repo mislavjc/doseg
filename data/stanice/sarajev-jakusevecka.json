@@ -54,7 +54,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 98.2
+      "allDayHeadwayMin": 99.1
     }
   ],
   "neighbors": [
@@ -508,10 +508,10 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 44,
-    "stations45": 185
+    "stations15": 8,
+    "stations30": 38,
+    "stations45": 140
   },
   "prevSlug": "samoborska",
-  "nextSlug": "sarajevsk-ukrajinska"
+  "nextSlug": "sarajev-ukrajinska"
 }

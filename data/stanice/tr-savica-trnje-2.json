@@ -13,7 +13,7 @@
     "218",
     "281"
   ],
-  "firstDeparture": "4:53",
+  "firstDeparture": "4:51",
   "lastDeparture": "23:49",
   "peakIntervalMin": [
     2,
@@ -27,12 +27,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 20.8,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        23
       ],
-      "allDayHeadwayMin": 22.7
+      "allDayHeadwayMin": 26.2
     },
     {
       "broj": "218",
@@ -606,9 +606,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 168,
-    "stations45": 391
+    "stations15": 15,
+    "stations30": 146,
+    "stations45": 380
   },
   "prevSlug": "tr-savica-trnje",
   "nextSlug": "trafostanica"

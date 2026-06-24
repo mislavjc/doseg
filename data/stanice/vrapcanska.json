@@ -25,7 +25,7 @@
     "172"
   ],
   "firstDeparture": "4:13",
-  "lastDeparture": "1:26",
+  "lastDeparture": "1:24",
   "peakIntervalMin": [
     1,
     2
@@ -38,12 +38,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     },
     {
       "broj": "120",
@@ -52,12 +49,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     },
     {
       "broj": "121",
@@ -110,7 +107,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.7
+      "allDayHeadwayMin": 30.9
     },
     {
       "broj": "125",
@@ -189,12 +186,9 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 30.0
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 60.0
     },
     {
       "broj": "146",
@@ -203,12 +197,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.3,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        23,
-        24
+        30,
+        30
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     },
     {
       "broj": "172",
@@ -217,12 +211,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.1,
+      "peakHeadwayMin": 10.5,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 14.4
     }
   ],
   "neighbors": [
@@ -3634,9 +3628,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 162,
-    "stations45": 365
+    "stations15": 37,
+    "stations30": 173,
+    "stations45": 377
   },
   "prevSlug": "voncinina",
   "nextSlug": "vrapcanska-269"

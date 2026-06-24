@@ -389,8 +389,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 75,
-    "stations45": 201
+    "stations30": 67,
+    "stations45": 161
   },
   "prevSlug": "cmrok",
   "nextSlug": "corova"

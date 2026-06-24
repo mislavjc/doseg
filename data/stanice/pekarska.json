@@ -28,7 +28,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -125,7 +125,7 @@
   "reach": {
     "stations15": 9,
     "stations30": 29,
-    "stations45": 84
+    "stations45": 83
   },
   "prevSlug": "pavlinoviceva",
   "nextSlug": "perjavica"

@@ -144,8 +144,8 @@
             45.80358
           ],
           [
-            16.07325,
-            45.80358
+            16.07224,
+            45.80341
           ],
           [
             16.06932,
@@ -157,8 +157,8 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 56,
-    "stations45": 233
+    "stations30": 69,
+    "stations45": 273
   },
   "prevSlug": "resnik-iii-pescenica-zitnjak",
   "nextSlug": "resnik-silos"

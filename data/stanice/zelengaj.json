@@ -12,10 +12,10 @@
     "172"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "1:43",
+  "lastDeparture": "1:50",
   "peakIntervalMin": [
-    4,
-    5
+    2,
+    8
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.9,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     }
   ],
   "neighbors": [
@@ -196,9 +196,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 31,
-    "stations45": 89
+    "stations15": 15,
+    "stations30": 36,
+    "stations45": 104
   },
   "prevSlug": "zelencica",
   "nextSlug": "zelengaj-53"

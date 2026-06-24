@@ -2,21 +2,22 @@
   "slug": "reber-habeki",
   "name": "Reber, Habeki",
   "kvart": "Sesvete",
-  "lat": 45.88533,
-  "lon": 16.11534,
+  "lat": 45.88531,
+  "lon": 16.11536,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 2,
+  "lineCount": 3,
   "tramLines": [],
   "busLines": [
     "262",
-    "263"
+    "263",
+    "270"
   ],
-  "firstDeparture": "4:38",
-  "lastDeparture": "0:42",
+  "firstDeparture": "4:34",
+  "lastDeparture": "0:17",
   "peakIntervalMin": [
-    2,
-    15
+    3,
+    12
   ],
   "lines": [
     {
@@ -37,12 +38,26 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        18,
-        23
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -61,10 +76,10 @@
   ],
   "hero": {
     "bbox": [
-      16.11327,
-      45.88389,
-      16.11741,
-      45.88677
+      16.11329,
+      45.88387,
+      16.11743,
+      45.88675
     ],
     "lines": [
       {
@@ -422,13 +437,35 @@
             45.89774
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.12489,
+            45.89753
+          ],
+          [
+            16.12362,
+            45.89269
+          ],
+          [
+            16.11539,
+            45.8856
+          ],
+          [
+            16.11512,
+            45.87757
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 48,
-    "stations45": 127
+    "stations15": 30,
+    "stations30": 50,
+    "stations45": 125
   },
   "prevSlug": "ravnice-maksimir-2",
   "nextSlug": "rebro-5"

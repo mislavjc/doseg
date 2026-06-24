@@ -11,10 +11,10 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:16",
-  "lastDeparture": "0:38",
+  "firstDeparture": "4:21",
+  "lastDeparture": "0:43",
   "peakIntervalMin": [
-    3,
+    9,
     13
   ],
   "lines": [
@@ -25,12 +25,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        18
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [
@@ -356,9 +356,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 73,
-    "stations45": 206
+    "stations15": 14,
+    "stations30": 33,
+    "stations45": 81
   },
   "prevSlug": "sunekova-12",
   "nextSlug": "sutinska-vrela"

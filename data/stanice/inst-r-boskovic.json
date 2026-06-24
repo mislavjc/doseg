@@ -15,11 +15,11 @@
     "226",
     "238"
   ],
-  "firstDeparture": "4:27",
+  "firstDeparture": "4:35",
   "lastDeparture": "0:32",
   "peakIntervalMin": [
     1,
-    3
+    4
   ],
   "lines": [
     {
@@ -43,12 +43,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": [
-        25,
-        25
+        35,
+        35
       ],
-      "allDayHeadwayMin": 27.2
+      "allDayHeadwayMin": 35.5
     },
     {
       "broj": "203",
@@ -1309,9 +1309,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 155,
-    "stations45": 401
+    "stations15": 23,
+    "stations30": 105,
+    "stations45": 303
   },
   "prevSlug": "inker",
   "nextSlug": "institut-za-bilje"

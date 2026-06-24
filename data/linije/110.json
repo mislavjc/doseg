@@ -7,7 +7,7 @@
     "Botinec"
   ],
   "via": [
-    "St.dom Stjepan Radić",
+    "St. dom S. Radić",
     "Savski gaj XII."
   ],
   "oneWay": false,
@@ -27,7 +27,7 @@
           ]
         },
         {
-          "name": "St.dom Stjepan Radić",
+          "name": "St. dom S. Radić",
           "lat": 45.78621,
           "lon": 15.95076,
           "offsetMin": 1,
@@ -828,20 +828,20 @@
     0,
     5,
     8,
-    11,
-    13,
+    6,
     12,
     12,
     12,
+    10,
     8,
+    10,
     12,
     12,
     12,
-    12,
-    12,
+    10,
+    7,
     8,
     8,
-    9,
     8,
     8,
     8,
@@ -863,19 +863,16 @@
           "minutes": [
             5,
             20,
-            35,
-            50
+            30,
+            55
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            5,
             20,
-            30,
-            40,
-            50,
-            55
+            35,
+            50
           ]
         },
         {
@@ -916,8 +913,7 @@
           "minutes": [
             0,
             10,
-            20,
-            30,
+            25,
             40,
             50
           ]
@@ -927,16 +923,15 @@
           "minutes": [
             5,
             20,
-            30,
-            45
+            35,
+            50
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
-            10,
-            20,
+            5,
+            15,
             30,
             40,
             50
@@ -972,17 +967,16 @@
             20,
             30,
             40,
-            50
+            55
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
-            10,
+            5,
             20,
             30,
-            40,
+            45,
             55
           ]
         },
@@ -990,8 +984,7 @@
           "hour": 17,
           "minutes": [
             10,
-            20,
-            30,
+            25,
             45
           ]
         },
@@ -1077,119 +1070,19 @@
             0,
             15,
             30,
-            45
+            40
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            15,
+            10,
             30,
-            40,
-            50
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            0,
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            5,
-            20,
-            35,
             45
           ]
         },
         {
-          "hour": 12,
-          "minutes": [
-            0,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 13,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            45,
-            55
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            5,
-            15,
-            25,
-            35,
-            40,
-            50
-          ]
-        },
-        {
-          "hour": 16,
+          "hour": 7,
           "minutes": [
             0,
             10,
@@ -1200,28 +1093,121 @@
           ]
         },
         {
-          "hour": 17,
+          "hour": 8,
           "minutes": [
-            5,
+            0,
+            10,
             20,
             30,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 9,
+          "minutes": [
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            10,
+            20,
+            35,
+            50
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0,
+            15,
+            30,
             45
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0,
+            15,
+            25,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            5,
+            15,
+            30,
+            40,
+            55
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            10,
+            25,
+            40,
+            55
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            10,
+            25,
+            40,
+            55
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
-            15,
+            10,
             25,
             40,
             55
@@ -2121,36 +2107,36 @@
     "tramCrossings": [
       {
         "broj": "5",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "7",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "14",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       },
       {
         "broj": "17",
-        "stopName": "St.dom Stjepan Radić"
+        "stopName": "St. dom S. Radić"
       }
     ]
   },
   "prevBroj": "109",
   "nextBroj": "111",
   "reach": {
-    "areaKm2": 34.5,
+    "areaKm2": 31.8,
     "stopName": "Naletilićeva",
     "lat": 45.76717,
     "lon": 15.94549
   },
   "stats": {
-    "dailyDepartures": 204,
+    "dailyDepartures": 190,
     "firstDeparture": "04:20",
     "lastDeparture": "25:10",
     "peakHeadwayMin": 10.0,
-    "avgHeadwayMin": 12.4,
+    "avgHeadwayMin": 13.3,
     "travelTimeMin": 9.0,
     "distanceKm": 5.2
   }

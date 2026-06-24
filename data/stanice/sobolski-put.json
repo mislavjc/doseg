@@ -16,7 +16,7 @@
   "firstDeparture": "4:23",
   "lastDeparture": "0:04",
   "peakIntervalMin": [
-    3,
+    1,
     6
   ],
   "lines": [
@@ -38,12 +38,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 11.3,
       "peakRangeMin": [
-        10,
-        10
+        11,
+        12
       ],
-      "allDayHeadwayMin": 12.1
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "235",
@@ -2008,10 +2008,10 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 87,
-    "stations45": 280
+    "stations15": 20,
+    "stations30": 117,
+    "stations45": 339
   },
-  "prevSlug": "soblinec-rask-skola",
+  "prevSlug": "soblinecka-22",
   "nextSlug": "sokolska"
 }

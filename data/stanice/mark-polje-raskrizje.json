@@ -6,18 +6,19 @@
   "lon": 16.11336,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 3,
+  "lineCount": 4,
   "tramLines": [],
   "busLines": [
     "261",
     "262",
-    "263"
+    "263",
+    "270"
   ],
   "firstDeparture": "4:28",
-  "lastDeparture": "0:45",
+  "lastDeparture": "0:20",
   "peakIntervalMin": [
     2,
-    10
+    8
   ],
   "lines": [
     {
@@ -49,12 +50,26 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 28.3,
       "peakRangeMin": [
-        19,
-        29
+        28,
+        30
       ],
-      "allDayHeadwayMin": 26.6
+      "allDayHeadwayMin": 34.8
+    },
+    {
+      "broj": "270",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": [
+        43,
+        58
+      ],
+      "allDayHeadwayMin": 44.0
     }
   ],
   "neighbors": [
@@ -620,13 +635,31 @@
             45.88405
           ]
         ]
+      },
+      {
+        "broj": "270",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11512,
+            45.87757
+          ],
+          [
+            16.11335,
+            45.87029
+          ],
+          [
+            16.1149,
+            45.863
+          ]
+        ]
       }
     ]
   },
   "reach": {
     "stations15": 19,
-    "stations30": 46,
-    "stations45": 125
+    "stations30": 41,
+    "stations45": 116
   },
   "prevSlug": "marina-tartaglie",
   "nextSlug": "markov-trg"

@@ -15,7 +15,7 @@
   "lastDeparture": "23:59",
   "peakIntervalMin": [
     5,
-    20
+    19
   ],
   "lines": [
     {
@@ -27,8 +27,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        19,
-        30
+        20,
+        26
       ],
       "allDayHeadwayMin": 27.6
     }
@@ -364,9 +364,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 107,
-    "stations45": 355
+    "stations15": 5,
+    "stations30": 29,
+    "stations45": 94
   },
   "prevSlug": "folnegovicevo",
   "nextSlug": "frankopanska"

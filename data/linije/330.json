@@ -7,8 +7,7 @@
     "V. Gorica"
   ],
   "via": [
-    "Muzej suv.umjetnosti",
-    "Galženica"
+    "Muzej suv.umjetnosti"
   ],
   "oneWay": false,
   "directions": [
@@ -55,8 +54,8 @@
         },
         {
           "name": "Velika Gorica",
-          "lat": 45.71148,
-          "lon": 16.0775,
+          "lat": 45.71142,
+          "lon": 16.07693,
           "offsetMin": 24,
           "tramInterchange": []
         }
@@ -479,8 +478,12 @@
           45.71136
         ],
         [
-          16.07736,
-          45.71138
+          16.07734,
+          45.7114
+        ],
+        [
+          16.07724,
+          45.71146
         ]
       ]
     },
@@ -1153,7 +1156,7 @@
         "broj": "313",
         "mode": "bus",
         "isNight": false,
-        "terminal": "V. Gorica"
+        "terminal": "Gl.kolodvor"
       }
     ],
     "tramCrossings": [
@@ -1170,7 +1173,7 @@
   "prevBroj": "315",
   "nextBroj": null,
   "reach": {
-    "areaKm2": 14.8,
+    "areaKm2": 10.8,
     "stopName": "Kolodvorska",
     "lat": 45.71475,
     "lon": 16.06153

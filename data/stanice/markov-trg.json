@@ -14,8 +14,8 @@
   "firstDeparture": "7:20",
   "lastDeparture": "22:20",
   "peakIntervalMin": [
-    15,
-    15
+    30,
+    30
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "G. Tuškanac",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        15,
-        15
+        30,
+        30
       ],
-      "allDayHeadwayMin": 20.9
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -260,8 +260,8 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 191,
+    "stations15": 30,
+    "stations30": 177,
     "stations45": 493
   },
   "prevSlug": "mark-polje-raskrizje",

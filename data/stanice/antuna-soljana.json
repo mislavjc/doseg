@@ -11,11 +11,11 @@
   "busLines": [
     "115"
   ],
-  "firstDeparture": "4:35",
-  "lastDeparture": "1:01",
+  "firstDeparture": "4:36",
+  "lastDeparture": "1:03",
   "peakIntervalMin": [
     4,
-    7
+    8
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 12.4,
       "peakRangeMin": [
-        11,
-        11
+        12,
+        12
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 15.0
     }
   ],
   "neighbors": [
@@ -228,9 +228,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 96,
-    "stations45": 265
+    "stations15": 22,
+    "stations30": 88,
+    "stations45": 240
   },
   "prevSlug": "antolkovici",
   "nextSlug": "arbanasova-44"

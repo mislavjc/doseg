@@ -281,8 +281,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 48,
-    "stations45": 155
+    "stations30": 45,
+    "stations45": 175
   },
   "prevSlug": "kosnica-petina",
   "nextSlug": "kotoripska"

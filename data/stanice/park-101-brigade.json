@@ -2,8 +2,8 @@
   "slug": "park-101-brigade",
   "name": "Park 101.Brigade",
   "kvart": "Podsused - Vrapče",
-  "lat": 45.81749,
-  "lon": 15.87531,
+  "lat": 45.81746,
+  "lon": 15.87528,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 1,
@@ -45,10 +45,10 @@
   ],
   "hero": {
     "bbox": [
-      15.87324,
-      45.81605,
-      15.87737,
-      45.81893
+      15.87321,
+      45.81602,
+      15.87735,
+      45.8189
     ],
     "lines": [
       {
@@ -76,16 +76,16 @@
             45.81932
           ],
           [
-            15.87537,
-            45.81761
+            15.87528,
+            45.81746
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 118,
+    "stations15": 33,
+    "stations30": 101,
     "stations45": 251
   },
   "prevSlug": "pantovcak-82",

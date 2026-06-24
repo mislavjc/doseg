@@ -12,10 +12,10 @@
     "210"
   ],
   "firstDeparture": "5:04",
-  "lastDeparture": "0:39",
+  "lastDeparture": "0:34",
   "peakIntervalMin": [
-    20,
-    20
+    31,
+    34
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 32.5,
       "peakRangeMin": [
-        20,
-        20
+        31,
+        34
       ],
-      "allDayHeadwayMin": 22.2
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [
@@ -348,9 +348,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 144,
-    "stations45": 378
+    "stations15": 27,
+    "stations30": 115,
+    "stations45": 332
   },
   "prevSlug": "klanjec",
   "nextSlug": "klin-koledinecka"

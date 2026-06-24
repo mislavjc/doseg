@@ -34,12 +34,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.9,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -48,12 +48,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.2,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "14",
@@ -62,12 +62,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.7,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -87,12 +87,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.9,
+      "peakHeadwayMin": 8.7,
       "peakRangeMin": [
         8,
-        8
+        9
       ],
-      "allDayHeadwayMin": 10.5
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "219",
@@ -2100,9 +2100,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 166,
-    "stations45": 445
+    "stations15": 27,
+    "stations30": 171,
+    "stations45": 458
   },
   "prevSlug": "sopnicka-skola",
   "nextSlug": "sostarici"

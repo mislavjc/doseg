@@ -14,10 +14,10 @@
     "134"
   ],
   "firstDeparture": "4:34",
-  "lastDeparture": "0:46",
+  "lastDeparture": "1:00",
   "peakIntervalMin": [
     1,
-    4
+    5
   ],
   "lines": [
     {
@@ -41,12 +41,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        9,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 10.1
+      "allDayHeadwayMin": 11.7
     },
     {
       "broj": "134",
@@ -55,12 +55,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 27.5,
       "peakRangeMin": [
-        20,
-        21
+        25,
+        30
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 26.4
     }
   ],
   "neighbors": [
@@ -98,12 +98,12 @@
         "mode": "bus",
         "shape": [
           [
-            15.93333,
-            45.81606
+            15.93369,
+            45.81567
           ],
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92993,
@@ -350,12 +350,12 @@
         "mode": "bus",
         "shape": [
           [
-            15.93333,
-            45.81606
+            15.93369,
+            45.81567
           ],
           [
-            15.93164,
-            45.81263
+            15.93144,
+            45.81264
           ],
           [
             15.92759,
@@ -378,9 +378,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 145,
-    "stations45": 352
+    "stations15": 34,
+    "stations30": 198,
+    "stations45": 437
   },
   "prevSlug": "tomislavov-dom",
   "nextSlug": "tr-savica-trnje"

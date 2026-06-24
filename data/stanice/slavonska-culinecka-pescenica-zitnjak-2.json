@@ -2,8 +2,8 @@
   "slug": "slavonska-culinecka-pescenica-zitnjak-2",
   "name": "Slavonska-Čulinečka",
   "kvart": "Peščenica - Žitnjak",
-  "lat": 45.80358,
-  "lon": 16.07326,
+  "lat": 45.8034,
+  "lon": 16.07225,
   "mode": "bus",
   "bothDirections": false,
   "lineCount": 1,
@@ -45,10 +45,10 @@
   ],
   "hero": {
     "bbox": [
-      16.07119,
-      45.80214,
-      16.07533,
-      45.80502
+      16.07018,
+      45.80196,
+      16.07432,
+      45.80485
     ],
     "lines": [
       {
@@ -88,8 +88,8 @@
             45.80358
           ],
           [
-            16.07325,
-            45.80358
+            16.07224,
+            45.80341
           ],
           [
             16.06932,
@@ -100,9 +100,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 56,
-    "stations45": 233
+    "stations15": 6,
+    "stations30": 62,
+    "stations45": 248
   },
   "prevSlug": "slavonska-culinecka-pescenica-zitnjak",
   "nextSlug": "sljemenska"

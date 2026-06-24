@@ -15,8 +15,8 @@
   "firstDeparture": "4:28",
   "lastDeparture": "0:04",
   "peakIntervalMin": [
-    13,
-    23
+    14,
+    29
   ],
   "lines": [
     {
@@ -26,9 +26,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "276",
@@ -37,9 +37,9 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 44.8
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -856,8 +856,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 37,
-    "stations45": 143
+    "stations30": 42,
+    "stations45": 162
   },
   "prevSlug": "mihovci",
   "nextSlug": "mikulici"

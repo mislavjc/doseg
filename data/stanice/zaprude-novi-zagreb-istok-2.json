@@ -3,7 +3,7 @@
   "name": "Zapruđe",
   "kvart": "Novi Zagreb - istok",
   "lat": 45.78178,
-  "lon": 16.00293,
+  "lon": 16.00292,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 1,
@@ -41,7 +41,7 @@
   ],
   "hero": {
     "bbox": [
-      16.00086,
+      16.00085,
       45.78034,
       16.00499,
       45.78322
@@ -64,9 +64,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 118,
-    "stations45": 345
+    "stations15": 23,
+    "stations30": 134,
+    "stations45": 389
   },
   "prevSlug": "zaprude-novi-zagreb-istok",
   "nextSlug": "zarka-dolinara"

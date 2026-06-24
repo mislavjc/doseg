@@ -11,11 +11,11 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:18",
-  "lastDeparture": "0:36",
+  "firstDeparture": "4:23",
+  "lastDeparture": "0:41",
   "peakIntervalMin": [
-    4,
-    14
+    9,
+    17
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        15,
-        18
+        20,
+        25
       ],
-      "allDayHeadwayMin": 18.6
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [
@@ -352,9 +352,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 72,
-    "stations45": 206
+    "stations15": 10,
+    "stations30": 30,
+    "stations45": 81
   },
   "prevSlug": "grskoviceva",
   "nextSlug": "gupceva-zvijezda"

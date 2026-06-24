@@ -16,8 +16,8 @@
   "busLines": [
     "222"
   ],
-  "firstDeparture": "4:30",
-  "lastDeparture": "1:10",
+  "firstDeparture": "4:29",
+  "lastDeparture": "1:07",
   "peakIntervalMin": [
     1,
     2
@@ -30,12 +30,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 6.9,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.0
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -44,12 +44,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.0,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        7,
-        7
+        9,
+        9
       ],
-      "allDayHeadwayMin": 8.2
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "14",
@@ -58,12 +58,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 7.7,
+      "peakHeadwayMin": 9.8,
       "peakRangeMin": [
-        7,
-        8
+        10,
+        10
       ],
-      "allDayHeadwayMin": 8.8
+      "allDayHeadwayMin": 10.7
     },
     {
       "broj": "31",
@@ -1402,9 +1402,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 173,
-    "stations45": 457
+    "stations15": 32,
+    "stations30": 160,
+    "stations45": 393
   },
   "prevSlug": "ulica-rudolfa-fizira",
   "nextSlug": "valturska"

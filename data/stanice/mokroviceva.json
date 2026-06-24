@@ -14,8 +14,8 @@
   "firstDeparture": "4:09",
   "lastDeparture": "0:28",
   "peakIntervalMin": [
-    10,
-    21
+    30,
+    47
   ],
   "lines": [
     {
@@ -25,12 +25,9 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 35.9
+      "peakHeadwayMin": 60.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 59.3
     }
   ],
   "neighbors": [
@@ -216,9 +213,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 132,
-    "stations45": 286
+    "stations15": 23,
+    "stations30": 99,
+    "stations45": 245
   },
   "prevSlug": "mokricka",
   "nextSlug": "moravce-benkova"

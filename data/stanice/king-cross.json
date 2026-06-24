@@ -15,8 +15,8 @@
   "firstDeparture": "4:23",
   "lastDeparture": "1:58",
   "peakIntervalMin": [
-    6,
-    16
+    1,
+    10
   ],
   "lines": [
     {
@@ -40,12 +40,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 37.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        36,
-        39
+        25,
+        25
       ],
-      "allDayHeadwayMin": 31.4
+      "allDayHeadwayMin": 31.1
     }
   ],
   "neighbors": [
@@ -449,9 +449,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 138,
-    "stations45": 287
+    "stations15": 2,
+    "stations30": 27,
+    "stations45": 131
   },
   "prevSlug": "kestenovac-drage",
   "nextSlug": "klake"

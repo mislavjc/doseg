@@ -15,10 +15,10 @@
   ],
   "busLines": [],
   "firstDeparture": "4:56",
-  "lastDeparture": "0:52",
+  "lastDeparture": "0:55",
   "peakIntervalMin": [
     1,
-    4
+    6
   ],
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 11.3,
       "peakRangeMin": [
-        8,
-        10
+        11,
+        11
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "8",
@@ -42,12 +42,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 14.7,
+      "peakHeadwayMin": 18.4,
       "peakRangeMin": [
-        15,
-        15
+        18,
+        18
       ],
-      "allDayHeadwayMin": 15.1
+      "allDayHeadwayMin": 17.6
     },
     {
       "broj": "33",
@@ -1201,15 +1201,15 @@
             45.81143
           ],
           [
+            15.97767,
+            45.8095
+          ],
+          [
             15.97774,
             45.809
           ],
           [
             15.97773,
-            45.80888
-          ],
-          [
-            15.97774,
             45.80888
           ],
           [
@@ -1477,6 +1477,10 @@
             45.81438
           ],
           [
+            15.99591,
+            45.81458
+          ],
+          [
             15.99621,
             45.81468
           ],
@@ -1487,10 +1491,6 @@
           [
             15.99706,
             45.81492
-          ],
-          [
-            15.99706,
-            45.81493
           ],
           [
             15.99716,
@@ -1509,9 +1509,9 @@
     ]
   },
   "reach": {
-    "stations15": 51,
-    "stations30": 263,
-    "stations45": 594
+    "stations15": 42,
+    "stations30": 256,
+    "stations45": 627
   },
   "prevSlug": "trakoscanska-selcina",
   "nextSlug": "trdice-52"

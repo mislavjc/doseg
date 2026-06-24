@@ -16,8 +16,8 @@
   "firstDeparture": "4:35",
   "lastDeparture": "0:11",
   "peakIntervalMin": [
-    1,
-    15
+    2,
+    16
   ],
   "lines": [
     {
@@ -27,9 +27,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 105.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 78.4
+      "allDayHeadwayMin": 235.2
     },
     {
       "broj": "225",
@@ -52,12 +52,9 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 57.5,
-      "peakRangeMin": [
-        46,
-        69
-      ],
-      "allDayHeadwayMin": 44.8
+      "peakHeadwayMin": 80.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 45.0
     }
   ],
   "neighbors": [
@@ -1432,8 +1429,8 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 56,
-    "stations45": 233
+    "stations30": 69,
+    "stations45": 273
   },
   "prevSlug": "sercerova-ser-precac",
   "nextSlug": "sestin-dol-odvojak"

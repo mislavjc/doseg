@@ -380,9 +380,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 102,
-    "stations45": 296
+    "stations15": 17,
+    "stations30": 83,
+    "stations45": 276
   },
   "prevSlug": "sasinovec-vatr-dom",
   "nextSlug": "savisce"

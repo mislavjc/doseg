@@ -12,10 +12,10 @@
     "210"
   ],
   "firstDeparture": "4:45",
-  "lastDeparture": "0:48",
+  "lastDeparture": "0:43",
   "peakIntervalMin": [
-    7,
-    13
+    3,
+    29
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 31.7,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        33
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -408,9 +408,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 87,
-    "stations45": 243
+    "stations15": 36,
+    "stations30": 128,
+    "stations45": 354
   },
   "prevSlug": "masiceva",
   "nextSlug": "maticki"

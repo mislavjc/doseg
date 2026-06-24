@@ -1748,9 +1748,9 @@
     0,
     0,
     3,
-    5,
-    6,
-    7,
+    4,
+    4,
+    4,
     4,
     4,
     4,
@@ -1782,37 +1782,34 @@
           "hour": 5,
           "minutes": [
             0,
-            30,
-            50
+            30
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            10,
-            30,
-            50
+            0,
+            30
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            5,
-            30,
-            50
+            0,
+            30
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            10,
+            0,
             30
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            5,
+            0,
             30
           ]
         },
@@ -1932,24 +1929,21 @@
           "hour": 6,
           "minutes": [
             0,
-            20,
-            40
+            30
           ]
         },
         {
           "hour": 7,
           "minutes": [
             0,
-            15,
-            30,
-            55
+            30
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            20,
-            40
+            0,
+            30
           ]
         },
         {
@@ -2064,27 +2058,25 @@
         {
           "hour": 4,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            5,
             40
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
             50
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            25
+            30
           ]
         },
         {
@@ -2176,23 +2168,16 @@
           ]
         },
         {
-          "hour": 21,
-          "minutes": [
-            25
-          ]
-        },
-        {
           "hour": 22,
           "minutes": [
-            0,
-            35
+            0
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            10,
-            45
+            0,
+            55
           ]
         }
       ],
@@ -2200,15 +2185,13 @@
         {
           "hour": 5,
           "minutes": [
-            0,
-            35
+            0
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            10,
-            45
+            10
           ]
         },
         {
@@ -2308,8 +2291,7 @@
         {
           "hour": 21,
           "minutes": [
-            20,
-            55
+            20
           ]
         },
         {
@@ -2321,14 +2303,13 @@
         {
           "hour": 23,
           "minutes": [
-            5,
-            40
+            25
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            15
+            20
           ]
         }
       ]
@@ -2651,17 +2632,17 @@
   "prevBroj": "207",
   "nextBroj": "209",
   "reach": {
-    "areaKm2": 21.7,
+    "areaKm2": 18.3,
     "stopName": "Put za Bediće",
     "lat": 45.8593,
     "lon": 16.04007
   },
   "stats": {
-    "dailyDepartures": 84,
+    "dailyDepartures": 78,
     "firstDeparture": "04:05",
     "lastDeparture": "23:00",
-    "peakHeadwayMin": 21.3,
-    "avgHeadwayMin": 27.7,
+    "peakHeadwayMin": 30.0,
+    "avgHeadwayMin": 29.9,
     "travelTimeMin": 21.8,
     "distanceKm": 10.2
   }

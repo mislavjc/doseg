@@ -1,0 +1,165 @@
+{
+  "slug": "sesvete-ukrcaj-sesvete-2",
+  "name": "Sesvete-ukrcaj",
+  "kvart": "Sesvete",
+  "lat": 45.82439,
+  "lon": 16.10546,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 3,
+  "tramLines": [],
+  "busLines": [
+    "277",
+    "282",
+    "284"
+  ],
+  "firstDeparture": "4:40",
+  "lastDeparture": "23:50",
+  "peakIntervalMin": [
+    11,
+    20
+  ],
+  "lines": [
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ses.Selnica",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 105.0
+    },
+    {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 28.3,
+      "peakRangeMin": [
+        23,
+        33
+      ],
+      "allDayHeadwayMin": 38.4
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ivanja Reka",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 45.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 74.7
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Slatinska",
+      "slug": "slatinska"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.10339,
+      45.82294,
+      16.10753,
+      45.82583
+    ],
+    "lines": [
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10892,
+            45.81279
+          ],
+          [
+            16.11481,
+            45.81227
+          ]
+        ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10546,
+            45.82439
+          ],
+          [
+            16.10099,
+            45.82477
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ],
+          [
+            16.11926,
+            45.81435
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 20,
+    "stations30": 79,
+    "stations45": 209
+  },
+  "prevSlug": "sesvete-ukrcaj-sesvete",
+  "nextSlug": "sesvetska-sela"
+}

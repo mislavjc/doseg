@@ -454,12 +454,12 @@
             45.82891
           ],
           [
-            16.09089,
+            16.09088,
             45.82884
           ],
           [
-            16.09088,
-            45.82884
+            16.09082,
+            45.82895
           ],
           [
             16.09077,
@@ -530,9 +530,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 78,
-    "stations45": 206
+    "stations15": 17,
+    "stations30": 72,
+    "stations45": 172
   },
   "prevSlug": "ul-kaktusa-34",
   "nextSlug": "ulica-badema"

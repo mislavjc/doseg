@@ -17,10 +17,10 @@
     "177"
   ],
   "firstDeparture": "4:34",
-  "lastDeparture": "1:56",
+  "lastDeparture": "1:50",
   "peakIntervalMin": [
     1,
-    3
+    4
   ],
   "lines": [
     {
@@ -69,12 +69,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        7,
-        9
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.6
+      "allDayHeadwayMin": 13.7
     },
     {
       "broj": "176",
@@ -1447,9 +1447,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 124,
-    "stations45": 256
+    "stations15": 26,
+    "stations30": 112,
+    "stations45": 271
   },
   "prevSlug": "pri-spoljaru",
   "nextSlug": "prigornica-sjever"

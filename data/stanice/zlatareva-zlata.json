@@ -17,7 +17,7 @@
   "firstDeparture": "4:31",
   "lastDeparture": "1:21",
   "peakIntervalMin": [
-    1,
+    2,
     9
   ],
   "lines": [
@@ -28,12 +28,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.6,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 12.4
+      "allDayHeadwayMin": 13.3
     },
     {
       "broj": "159",
@@ -83,7 +83,7 @@
     },
     {
       "name": "Naletilićeva",
-      "slug": "naletiliceva"
+      "slug": "naletiliceva-novi-zagreb-zapad-2"
     },
     {
       "name": "Naletilićeva 54",
@@ -813,9 +813,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 76,
-    "stations45": 273
+    "stations15": 19,
+    "stations30": 96,
+    "stations45": 291
   },
   "prevSlug": "zitnjak-okretiste",
   "nextSlug": "znikina"

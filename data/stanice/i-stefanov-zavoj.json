@@ -14,10 +14,10 @@
     "269"
   ],
   "firstDeparture": "4:48",
-  "lastDeparture": "1:35",
+  "lastDeparture": "1:34",
   "peakIntervalMin": [
-    1,
-    7
+    2,
+    9
   ],
   "lines": [
     {
@@ -49,12 +49,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.1,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        12
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.2
+      "allDayHeadwayMin": 17.6
     }
   ],
   "neighbors": [
@@ -624,9 +624,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
+    "stations15": 7,
     "stations30": 82,
-    "stations45": 311
+    "stations45": 276
   },
   "prevSlug": "i-gardijske-brigade",
   "nextSlug": "ii-kraljevec"

@@ -14,8 +14,8 @@
   "firstDeparture": "4:26",
   "lastDeparture": "23:30",
   "peakIntervalMin": [
-    7,
-    11
+    10,
+    21
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -293,8 +293,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 32,
-    "stations45": 104
+    "stations30": 22,
+    "stations45": 72
   },
   "prevSlug": "vidovec-skola",
   "nextSlug": "viii-jazbinski-odv"

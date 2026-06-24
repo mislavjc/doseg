@@ -649,8 +649,8 @@
         },
         {
           "name": "Slavonska-Čulinečka",
-          "lat": 45.80358,
-          "lon": 16.07326,
+          "lat": 45.8034,
+          "lon": 16.07225,
           "offsetMin": 8,
           "tramInterchange": []
         },
@@ -855,8 +855,8 @@
           45.80358
         ],
         [
-          16.07325,
-          45.80358
+          16.07224,
+          45.80341
         ],
         [
           16.06932,
@@ -1998,6 +1998,12 @@
         "terminal": "Gl.kolodvor"
       },
       {
+        "broj": "313",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Gl.kolodvor"
+      },
+      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2026,7 +2032,7 @@
   "prevBroj": "280",
   "nextBroj": "282",
   "reach": {
-    "areaKm2": 30.3,
+    "areaKm2": 31.0,
     "stopName": "Elka",
     "lat": 45.79745,
     "lon": 16.03877

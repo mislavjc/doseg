@@ -14,8 +14,8 @@
   "firstDeparture": "4:20",
   "lastDeparture": "23:36",
   "peakIntervalMin": [
-    1,
-    15
+    9,
+    21
   ],
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        20,
-        20
+        30,
+        30
       ],
-      "allDayHeadwayMin": 27.7
+      "allDayHeadwayMin": 29.9
     }
   ],
   "neighbors": [
@@ -352,9 +352,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 92,
-    "stations45": 245
+    "stations15": 13,
+    "stations30": 47,
+    "stations45": 158
   },
   "prevSlug": "cepelovacki-put",
   "nextSlug": "cergari"

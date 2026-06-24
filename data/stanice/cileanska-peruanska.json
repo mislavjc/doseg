@@ -56,8 +56,8 @@
         "mode": "bus",
         "shape": [
           [
-            15.87524,
-            45.81736
+            15.87522,
+            45.81745
           ],
           [
             15.87521,
@@ -297,7 +297,7 @@
   },
   "reach": {
     "stations15": 35,
-    "stations30": 118,
+    "stations30": 101,
     "stations45": 251
   },
   "prevSlug": "cileanska",

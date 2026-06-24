@@ -80,7 +80,6 @@
           "lon": 15.95592,
           "offsetMin": 8,
           "tramInterchange": [
-            "1",
             "2",
             "6",
             "11"
@@ -1022,10 +1021,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "1",
-        "stopName": "Vinogradska 3"
-      },
-      {
         "broj": "2",
         "stopName": "Vinogradska 3"
       },
@@ -1042,7 +1037,7 @@
   "prevBroj": "140",
   "nextBroj": "142",
   "reach": {
-    "areaKm2": 15.4,
+    "areaKm2": 15.9,
     "stopName": "Vinogradi 27",
     "lat": 45.82135,
     "lon": 15.9499

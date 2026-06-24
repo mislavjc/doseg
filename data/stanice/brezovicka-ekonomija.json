@@ -31,7 +31,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 37.9
+      "allDayHeadwayMin": 39.2
     },
     {
       "broj": "162",
@@ -112,7 +112,7 @@
   "reach": {
     "stations15": 1,
     "stations30": 10,
-    "stations45": 39
+    "stations45": 40
   },
   "prevSlug": "brezovicka-ambulanta",
   "nextSlug": "britanski-trg"

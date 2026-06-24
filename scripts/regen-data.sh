@@ -71,8 +71,12 @@ if [ "${REGEN_DISTRICTS:-0}" = "1" ]; then
 fi
 
 echo "==> Baking heroes (geometry-gated → near no-op unless a route/stop moved)"
+# --ignore-scripts: the bun image has no Python/build toolchain, so a native
+# postinstall (better-sqlite3 → node-gyp) would abort the install. The hero
+# scripts only need JS + sharp's prebuilt binary (no build step), so skipping
+# lifecycle scripts is safe and avoids the gyp failure.
 docker run --rm -v "$PWD:/app" -w /app oven/bun:latest \
-  sh -c "bun install --frozen-lockfile && bun scripts/build-line-heroes.ts && bun scripts/build-stop-heroes.ts && bun scripts/build-kvart-heroes.ts"
+  sh -c "bun install --frozen-lockfile --ignore-scripts && bun scripts/build-line-heroes.ts && bun scripts/build-stop-heroes.ts && bun scripts/build-kvart-heroes.ts"
 
 # Record the feed checksum the runner computed (audit trail), if it was passed in.
 if [ -n "${CHECKSUMS:-}" ]; then

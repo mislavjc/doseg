@@ -45,6 +45,25 @@ services:
           memory: 512M
     restart: unless-stopped
 
+  # One-shot page-data generator (tools profile → never starts with `up`).
+  # Shares the otp/isochrone network and writes regenerated JSON into the ./data
+  # mount. Driven by scripts/regen-data.sh, e.g.:
+  #   docker compose --profile tools run --rm scorer --line-pages
+  # working_dir is one level under the data mount so the binary's hardcoded
+  # `../data` resolves to /app/data; user root so it can write the mount.
+  scorer:
+    build: ./transit
+    profiles: ["tools"]
+    user: root
+    working_dir: /app/transit
+    entrypoint: ["transit-scorer"]
+    environment:
+      - OTP_URL=http://otp:8080
+      - ISOCHRONE_URL=http://isochrone:3001
+    volumes:
+      - ./data:/app/data
+    restart: "no"
+
   app:
     build: .
     environment:

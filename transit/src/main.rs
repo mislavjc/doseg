@@ -1364,8 +1364,35 @@ fn compute_accessibility_profile(
     );
 }
 
+/// Remove `*.json` files in `dir` whose filename isn't in `keep`; returns the
+/// count removed. Run after a full (unfiltered) regen so stops/lines that left
+/// the feed — or were renamed to a new slug — don't leave orphaned pages that
+/// would otherwise be committed and deployed as stale, unlinked URLs.
+pub fn prune_orphan_json(dir: &std::path::Path, keep: &std::collections::HashSet<String>) -> usize {
+    let mut removed = 0;
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            if name.ends_with(".json")
+                && !keep.contains(name.as_ref())
+                && std::fs::remove_file(entry.path()).is_ok()
+            {
+                removed += 1;
+            }
+        }
+    }
+    removed
+}
+
 /// Simple ISO 8601 timestamp without pulling in chrono.
 pub fn chrono_now_iso() -> String {
+    // The page-data generator pins this to a feed-derived value (via the
+    // GENERATED_AT env) so regenerating from an unchanged feed yields
+    // byte-identical output — no timestamp-only churn in the committed data.
+    if let Some(v) = std::env::var("GENERATED_AT").ok().filter(|s| !s.is_empty()) {
+        return v;
+    }
     use std::time::SystemTime;
     let dur = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)

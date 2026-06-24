@@ -87,12 +87,18 @@ echo "==> Validation gate (fail-closed)"
 python3 scripts/regen-data-gate.py
 
 echo "==> Staging regenerated artifacts"
-git add -A \
-  data/linije data/stanice data/kvart \
+# Stage each artifact independently: a single `git add` over all paths aborts
+# all-or-nothing if ANY pathspec matches nothing (e.g. accessibility-profile.json
+# or the district-scores glob when REGEN_DISTRICTS is off), which would silently
+# stage nothing and skip the commit. The `[ -e ]` guard tolerates absent paths;
+# `-A` per path still stages deletions (pruned orphan pages).
+for p in data/linije data/stanice data/kvart \
   public/linije public/stanice public/kvart \
   data/gtfs/checksums.sha256 \
   data/district-scores*.json data/route-stats.json data/network-stats.json \
-  data/centrality-stats.json data/accessibility-profile.json 2>/dev/null || true
+  data/centrality-stats.json data/accessibility-profile.json; do
+  [ -e "$p" ] && git add -A -- "$p"
+done
 
 if git diff --cached --quiet; then
   echo "==> No material change — nothing to commit (feed schedule unchanged)."

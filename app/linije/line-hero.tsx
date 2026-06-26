@@ -276,8 +276,7 @@ function HeroVariant({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
-        alt=""
-        aria-hidden
+        alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
         className="absolute inset-0 h-full w-full object-cover"
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}

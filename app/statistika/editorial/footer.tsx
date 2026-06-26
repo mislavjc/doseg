@@ -16,7 +16,11 @@ type Column = { label: string; items: Item[] }
 const COLUMNS: Column[] = [
   {
     label: "izvori",
-    items: [{ t: "zet gtfs · gtfs-rt" }, { t: "openstreetmap" }, { t: "otp · dzs 2021" }],
+    items: [
+      { t: "zet gtfs · rt", href: "https://www.zet.hr", external: true },
+      { t: "© openstreetmap", href: "https://www.openstreetmap.org/copyright", external: true },
+      { t: "dzs 2021", href: "https://dzs.gov.hr", external: true },
+    ],
   },
   {
     label: "preuzmi",

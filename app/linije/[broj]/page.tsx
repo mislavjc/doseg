@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { Provenijencija, SectionHeader } from "@/app/statistika/editorial/blocks"
 import { CestaPitanja, faqJsonLd } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
-import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
+import { JsonLd, breadcrumbJsonLd, lineStopsJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadHeroMeta, loadLineData, loadLineIndex } from "@/lib/line-data"
 import { resolveStopSlugs } from "@/lib/stop-data"
@@ -99,6 +99,7 @@ export default async function LinijaPage({
           { name: `Linija ${data.broj}`, path: `/linije/${data.broj}` },
         ])}
       />
+      <JsonLd data={lineStopsJsonLd(data.broj, data.directions[0].stops, stopSlugs)} />
 
       <LineHero data={data} meta={loadHeroMeta(broj)} />
 

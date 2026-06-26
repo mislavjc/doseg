@@ -95,7 +95,7 @@ function StopHeroVariant({
     >
       {src && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+        <img src={src} alt={`Karta stanice ${data.name} u Zagrebu`} className="absolute inset-0 h-full w-full object-cover" />
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

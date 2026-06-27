@@ -17,7 +17,7 @@ const COLUMNS: Column[] = [
   {
     label: "izvori",
     items: [
-      { t: "zet gtfs · rt", href: "https://www.zet.hr", external: true },
+      { t: "zet gtfs · rt", href: "https://www.zet.hr/odredbe/datoteke-u-gtfs-formatu/669", external: true },
       { t: "© openstreetmap", href: "https://www.openstreetmap.org/copyright", external: true },
       { t: "dzs 2021", href: "https://dzs.gov.hr", external: true },
     ],

@@ -30,20 +30,89 @@ export function lineListProse(data: StopPageData): string {
   return [trams, buses].filter(Boolean).join(" te ")
 }
 
-/** "5" when lo == hi, else "5–8" (or "5 do 8" with sep " do "). The shared
- *  equal-vs-range branch used across the fact row, FAQ, and per-line headway. */
-export function rangeText([lo, hi]: [number, number], sep = "–"): string {
-  return lo === hi ? `${lo}` : `${lo}${sep}${hi}`
+/** "5" when lo == hi, else "5–8". The shared equal-vs-range branch. */
+export function rangeText([lo, hi]: [number, number]): string {
+  return lo === hi ? `${lo}` : `${lo}–${hi}`
 }
 
-/** "U špici vozilo naiđe svakih 3 do 5 minuta" — combined peak interval, or null. */
-function peakSentence(data: StopPageData): string | null {
-  const range = data.peakIntervalMin
-  if (!range) return null
-  const [lo, hi] = range
-  return lo === hi
-    ? `U špici vozilo naiđe svakih ${lo} ${plural(lo, "minutu", "minute", "minuta")}`
-    : `U špici vozilo naiđe svakih ${lo} do ${hi} minuta`
+/**
+ * The single most frequent calling line (lowest headway) — the honest "headline"
+ * frequency. Pooling every line × both directions overstated it badly: at Elka
+ * eleven lines averaging 20–80 min read as a fake "1–3 min", and a stop looked
+ * busier the more rare lines were listed. This figure can't be gamed and names a
+ * real direction. `headway` is the line's "svakih N min" string; `inPeak` is
+ * false for a line that only runs outside the 07–09 window (all-day gap shown).
+ */
+export function mostFrequentLine(
+  data: StopPageData
+): { line: StopLine; headway: string; inPeak: boolean } | null {
+  let best: StopLine | null = null
+  let bestKey = Infinity
+  for (const l of data.lines) {
+    const key = l.peakHeadwayMin ?? l.allDayHeadwayMin
+    if (key == null) continue
+    if (key < bestKey) {
+      bestKey = key
+      best = l
+    }
+  }
+  if (!best) return null
+  const inPeak = best.peakRangeMin != null || best.peakHeadwayMin != null
+  // Reuse lineHeadway for the range / all-day branches; add the peak-scalar tier
+  // it doesn't cover. The selection above guarantees a non-null result.
+  const headway =
+    best.peakRangeMin == null && best.peakHeadwayMin != null
+      ? `svakih ${Math.round(best.peakHeadwayMin)} min`
+      : lineHeadway(best)!
+  return { line: best, headway, inPeak }
+}
+
+/**
+ * Distinct outbound directions the lines leave on. Reads the generator's
+ * `directionGroups`; until the next feed regen ships that field, falls back to
+ * the legacy binary `bothDirections` so existing pages keep their suffix.
+ */
+function directionCount(data: StopPageData): number {
+  const g = (data as { directionGroups?: number }).directionGroups
+  return g ?? (data.bothDirections ? 2 : 1)
+}
+
+/** one-way / two-way / multi-corridor — classify the count once so the chip and
+ *  the FAQ phrase can't drift apart. */
+type DirectionKind = "one" | "two" | "multi"
+function directionKind(data: StopPageData): DirectionKind {
+  const g = directionCount(data)
+  return g >= 3 ? "multi" : g === 2 ? "two" : "one"
+}
+
+/**
+ * Direction chip for the subtitle/section: a normal two-way stop ("oba smjera"),
+ * a small multi-corridor stop ("više smjerova"), or a genuine interchange with
+ * many lines ("čvorište"). null for a one-way stop. Fixes "oba smjera" on hubs
+ * like Glavni kolodvor, where the lines actually fan out several ways.
+ */
+export function directionLabel(data: StopPageData): string | null {
+  switch (directionKind(data)) {
+    case "multi":
+      return data.lineCount >= 5 ? "čvorište" : "više smjerova"
+    case "two":
+      return "oba smjera"
+    default:
+      return null
+  }
+}
+
+/** FAQ fragment for the line-count sentence, derived from the same direction
+ *  kind as the chip (not by string-matching directionLabel's output). */
+export function directionNote(data: StopPageData): string {
+  switch (directionKind(data)) {
+    case "multi":
+      return ", iz više smjerova"
+    case "two":
+      return ", u oba smjera"
+    default:
+      return ""
+  }
 }
 
 /** Lede paragraph under the title. */
@@ -51,8 +120,14 @@ export function introText(data: StopPageData): string {
   const n = data.lineCount
   const linije = `${numberWord(n)} ${plural(n, "linija", "linije", "linija")}`
   const parts = [`Ovdje staje ${linije}: ${lineListProse(data)}.`]
-  const peak = peakSentence(data)
-  if (peak) parts.push(`${peak}.`)
+  const mf = mostFrequentLine(data)
+  if (mf) {
+    parts.push(
+      `Najčešća linija, ${lineModeNoun(mf.line)} ${mf.line.broj}, ${
+        mf.inPeak ? "u špici " : ""
+      }vozi ${mf.headway}.`
+    )
+  }
   parts.push(`Prvi polazak je u ${data.firstDeparture}, zadnji u ${data.lastDeparture}.`)
   return parts.join(" ")
 }
@@ -66,7 +141,8 @@ export function subtitle(data: StopPageData): string {
         ? "Tramvajska stanica"
         : "Autobusna stanica"
   const where = data.kvart ? ` u kvartu ${data.kvart}` : " u Zagrebu"
-  const smjer = data.bothDirections ? " · oba smjera" : ""
+  const dir = directionLabel(data)
+  const smjer = dir ? ` · ${dir}` : ""
   return `${kind}${where}${smjer}`
 }
 

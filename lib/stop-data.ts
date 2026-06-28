@@ -4,6 +4,7 @@ import { getDataDir } from "@/lib/data-dir"
 import { fastDistKm } from "@/lib/geo"
 import type { LineHeroMeta } from "@/lib/line-data"
 import type { StopIndexEntry } from "@/lib/generated/StopIndexEntry"
+import type { StopMode } from "@/lib/generated/StopMode"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import type { StopPagesIndex } from "@/lib/generated/StopPagesIndex"
 import { readJsonCached } from "@/lib/page-data"
@@ -63,6 +64,41 @@ function stopsByName(): Map<string, StopIndexEntry[]> {
   }
   byName = m
   return m
+}
+
+export interface SiblingStop {
+  slug: string
+  kvart: string | null
+  mode: StopMode
+  lineCount: number
+  /** Straight-line distance from the current stop, metres. */
+  distM: number
+}
+
+/**
+ * Other stop pages that share this stop's exact name, nearest first. ~105 pages
+ * carry a non-unique name (e.g. two "Tr. Savica" in Trnje) and the slug only
+ * disambiguates them with an opaque "-2"; surfacing the siblings (kvart +
+ * distance) lets a reader tell which physical stop they're on. Empty when the
+ * name is unique or the index is absent.
+ */
+export function siblingStops(self: {
+  slug: string
+  name: string
+  lat: number
+  lon: number
+}): SiblingStop[] {
+  const cands = stopsByName().get(self.name) ?? []
+  return cands
+    .filter((c) => c.slug !== self.slug)
+    .map((c) => ({
+      slug: c.slug,
+      kvart: c.kvart,
+      mode: c.mode,
+      lineCount: c.lineCount,
+      distM: Math.round(fastDistKm(self.lat, self.lon, c.lat, c.lon) * 1000),
+    }))
+    .sort((a, b) => a.distM - b.distM)
 }
 
 /**

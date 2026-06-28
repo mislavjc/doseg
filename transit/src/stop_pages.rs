@@ -153,10 +153,15 @@ pub struct StopPageData {
     /// First / last weekday passing time across all calling lines ("HH:MM").
     pub first_departure: String,
     pub last_departure: String,
-    /// Combined peak gap range across every calling line & direction [low, high],
-    /// minutes — the "vozilo naiđe svakih 3–5 min" figure.
-    #[ts(type = "[number, number] | null")]
-    pub peak_interval_min: Option<(u32, u32)>,
+    /// Distinct outbound compass directions the calling lines leave on (bearings
+    /// clustered within 45°): 1 = one-way, 2 = two-way, 3+ = multi-corridor. The
+    /// raw count only — the display label ("oba smjera" / "više smjerova" /
+    /// "čvorište", the last gated on line count) is chosen in the frontend
+    /// (app/stanice/copy.ts `directionLabel`). Replaces the old pooled cross-line
+    /// "interval" headline, which summed every line × both directions into a
+    /// frequency no single rider experienced — at Elka 11 lines averaging
+    /// 20–80 min collapsed into a fake "1–3 min".
+    pub direction_groups: u32,
     pub lines: Vec<StopLine>,
     pub neighbors: Vec<StopNeighbor>,
     pub hero: StopHeroGeom,
@@ -244,6 +249,37 @@ fn gap_range_min(times: &[f64], start: f64, end: f64) -> Option<(u32, u32)> {
     let lo = crate::percentile(&gaps, 25.0).round().max(1.0) as u32;
     let hi = crate::percentile(&gaps, 75.0).round().max(lo as f64) as u32;
     Some((lo, hi))
+}
+
+/// Initial compass bearing (degrees, 0 = N, clockwise) from (lat1,lon1) toward
+/// (lat2,lon2) — the direction a vehicle leaves the stop on.
+fn bearing_deg(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
+    let (p1, p2) = (lat1.to_radians(), lat2.to_radians());
+    let dl = (lon2 - lon1).to_radians();
+    let y = dl.sin() * p2.cos();
+    let x = p1.cos() * p2.sin() - p1.sin() * p2.cos() * dl.cos();
+    (y.atan2(x).to_degrees() + 360.0) % 360.0
+}
+
+/// How many distinct outbound directions the calling lines leave on. Bearings
+/// within 45° of each other count as one corridor (a curving street or a slight
+/// branch stays one direction); a true interchange splits into 3+. A linear
+/// two-way stop yields 2 (the corridor's opposite ends). 0 when there are none.
+fn distinct_directions(bearings: &[f64]) -> u32 {
+    if bearings.is_empty() {
+        return 0;
+    }
+    let mut b: Vec<f64> = bearings.to_vec();
+    b.sort_by(|x, y| x.partial_cmp(y).unwrap());
+    let n = b.len();
+    let mut groups = 0u32;
+    for i in 0..n {
+        let next = if i + 1 < n { b[i + 1] } else { b[0] + 360.0 };
+        if next - b[i] > 45.0 {
+            groups += 1;
+        }
+    }
+    groups.max(1)
 }
 
 // ---------------------------------------------------------------------------
@@ -704,7 +740,7 @@ impl Ctx<'_> {
         }
 
         let mut stop_lines: Vec<StopLine> = Vec::new();
-        let mut all_peak_times: Vec<f64> = Vec::new();
+        let mut outbound_bearings: Vec<f64> = Vec::new();
         let mut first_last: Vec<f64> = Vec::new();
         let mut neighbor_names: Vec<String> = Vec::new();
         let mut hero_lines: Vec<StopHeroLine> = Vec::new();
@@ -747,6 +783,26 @@ impl Ctx<'_> {
                 let dom = self.patterns[o.pi];
                 let dominant_first = (dom.stops[0].lat, dom.stops[0].lon);
                 let times = passing_times(lp, dominant_first, o.direction, DAY_RADNI, o.offset_sec);
+
+                // Outbound bearing for the distinct-direction count: toward the
+                // next stop in travel direction, stepping past any platform within
+                // 120 m so the bearing reflects the corridor, not a split platform.
+                // A terminus arrival (no next stop) contributes no direction.
+                let mut k = o.pos + 1;
+                while k < dom.stops.len()
+                    && fast_dist_km(cluster.lat, cluster.lon, dom.stops[k].lat, dom.stops[k].lon)
+                        < 0.12
+                {
+                    k += 1;
+                }
+                if let Some(next) = dom.stops.get(k) {
+                    outbound_bearings.push(bearing_deg(
+                        cluster.lat,
+                        cluster.lon,
+                        next.lat,
+                        next.lon,
+                    ));
+                }
 
                 let raw_headsign = dom
                     .headsign
@@ -810,11 +866,6 @@ impl Ctx<'_> {
             }
 
             for d in &per_dir {
-                all_peak_times.extend(
-                    d.times
-                        .iter()
-                        .filter(|&&x| (PEAK_START..=PEAK_END).contains(&x)),
-                );
                 // Night lines (31–34) would stretch "first/last" across the small
                 // hours and make the daytime window look absurd — exclude them from
                 // the window fact (they still appear in `lines`).
@@ -876,7 +927,7 @@ impl Ctx<'_> {
         };
         let first_departure = format_clock(span.first().copied().unwrap_or(0.0));
         let last_departure = format_clock(span.last().copied().unwrap_or(0.0));
-        let peak_interval_min = gap_range_min(&all_peak_times, PEAK_START, PEAK_END);
+        let direction_groups = distinct_directions(&outbound_bearings);
 
         // Hero crop = a fixed window around the stop (constant zoom); the clipped
         // corridors run off its edges. ~111 km per degree lat; lon shrinks by cos.
@@ -938,7 +989,7 @@ impl Ctx<'_> {
             bus_lines,
             first_departure,
             last_departure,
-            peak_interval_min,
+            direction_groups,
             lines: stop_lines,
             neighbors,
             hero,

@@ -654,8 +654,8 @@ function HzTrainBody({
           Tramvaj vs. vlak
         </div>
         <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-300">
-          Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji, ali na
-          frekventnim stanicama s više linija efektivno čekanje je ~2-3 min.
+          Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji — a na
+          koridorima s više linija u istom smjeru i češće.
           Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi
           značajno proširio doseg perifernih kvartova poput Sesveta i Velike
           Gorice.

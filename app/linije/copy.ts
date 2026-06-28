@@ -96,20 +96,99 @@ export function peakRange(data: LinePageData): [number, number] | null {
   return [lo, hi]
 }
 
-/** Busiest-hour weekday departure count (for "X polazaka na sat u špici"). */
-export function peakHourly(data: LinePageData): number {
-  return Math.max(...data.histogram, 0)
+/** minutes-of-day (GTFS, may exceed 1440 past midnight) → "H:MM" wall clock. */
+function clockFromMin(min: number): string {
+  const h = Math.floor(min / 60) % 24
+  return `${h}:${String(min % 60).padStart(2, "0")}`
 }
 
-/** Which day types actually have service. */
-export function serviceDays(data: LinePageData): {
+function hasService(rows: HourRow[][]): boolean {
+  return rows.some((dir) => dir.length > 0)
+}
+
+export type ServiceStatus = "weekday" | "weekendOnly" | "none"
+
+/** The representative service day to describe — weekday if the line runs then,
+ *  else the weekend — and its status. The day-priority rule lives here once;
+ *  serviceStatus and serviceHistogram both read it. */
+function representativeDay(data: LinePageData): {
+  status: ServiceStatus
+  rows: HourRow[][]
+} {
+  const tt = data.timetable
+  if (hasService(tt.radniDan)) return { status: "weekday", rows: tt.radniDan }
+  if (hasService(tt.subota)) return { status: "weekendOnly", rows: tt.subota }
+  if (hasService(tt.nedjelja)) return { status: "weekendOnly", rows: tt.nedjelja }
+  return { status: "none", rows: [] }
+}
+
+/** What service the line actually has, from the committed timetable. Lines
+ *  suspended on the sampled weekday (summer track works are routine) otherwise
+ *  render a misleading "0 polazaka / 0:00". */
+export function serviceStatus(data: LinePageData): ServiceStatus {
+  return representativeDay(data).status
+}
+
+/** First/last departure (minutes-of-day) across the given day rows, or null. */
+function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
+  const mins = rows.flatMap(flatDepartures)
+  return mins.length ? [Math.min(...mins), Math.max(...mins)] : null
+}
+
+/**
+ * Departures-per-hour (0–23, GTFS hours past midnight folded) for the busier
+ * single direction on the representative service day. The frequency hook/chart
+ * describe THIS series — not `data.histogram`, which sums both directions and so
+ * reads as ~2x the frequency a one-way rider actually gets.
+ */
+export function serviceHistogram(data: LinePageData): number[] {
+  let best: HourRow[] = []
+  let bestN = -1
+  for (const dir of representativeDay(data).rows) {
+    const n = dir.reduce((s, r) => s + r.minutes.length, 0)
+    if (n > bestN) {
+      bestN = n
+      best = dir
+    }
+  }
+  const hist = new Array<number>(24).fill(0)
+  for (const r of best) hist[r.hour % 24] += r.minutes.length
+  return hist
+}
+
+/** Weekend service shape, so the three weekend-aware copy spots classify once. */
+export type WeekendKind = "both" | "saturday" | "sunday" | "none"
+export function weekendKind(data: LinePageData): WeekendKind {
+  const { subota, nedjelja } = serviceDays(data)
+  if (subota && nedjelja) return "both"
+  if (subota) return "saturday"
+  if (nedjelja) return "sunday"
+  return "none"
+}
+
+/** "vozni red" sub-note, honest for weekend-only lines (no "radni dan" claim). */
+export function vozniRedNote(data: LinePageData): string {
+  if (serviceStatus(data) === "weekendOnly") {
+    return {
+      both: " Polasci za subotu i nedjelju.",
+      saturday: " Polasci za subotu.",
+      sunday: " Polasci za nedjelju.",
+      none: "",
+    }[weekendKind(data)]
+  }
+  return weekendKind(data) !== "none"
+    ? " Polasci za radni dan, subotu i nedjelju."
+    : " Vozi samo radnim danom."
+}
+
+/** Which day types actually have service. Internal — only weekendKind reads it. */
+function serviceDays(data: LinePageData): {
   subota: boolean
   nedjelja: boolean
 } {
-  const has = (rows: HourRow[][]) => rows.some((dir) => dir.length > 0)
   return {
-    subota: has(data.timetable.subota),
-    nedjelja: has(data.timetable.nedjelja),
+    subota: hasService(data.timetable.subota),
+    nedjelja: hasService(data.timetable.nedjelja),
   }
 }
 
@@ -132,15 +211,30 @@ export function terminalChips(data: LinePageData): (string | undefined)[] {
   })
 }
 
-/** Intro paragraph under the title. */
+/** Intro paragraph under the title. Doubles as the SEO/OG description, so the
+ *  suspended-line cases must read honestly rather than "0 puta / 0:00 / 0 min". */
 export function introText(data: LinePageData): string {
   const noun = modeNoun(data.mode)
+  const stops = data.directions[0].stops.length
+  const travel = Math.round(data.stats.travelTimeMin)
+  const km = data.stats.distanceKm.toLocaleString("hr-HR", { maximumFractionDigits: 1 })
+  const krozStanica = `kroz ${stops} ${plural(stops, "stanicu", "stanice", "stanica")}`
+  const trajanje = `${travel} ${plural(travel, "minutu", "minute", "minuta")}`
+  const status = serviceStatus(data)
+
+  if (status === "none") {
+    return `Linija ${data.broj} trenutno ne prometuje — u aktualnom voznom redu nema nijednog polaska. Trasa je duga ${km} km ${krozStanica}.`
+  }
+  if (status === "weekendOnly") {
+    const fl = firstLastOfRows([...data.timetable.subota, ...data.timetable.nedjelja])
+    const span = fl ? ` Prvi polazak je u ${clockFromMin(fl[0])}, zadnji u ${clockFromMin(fl[1])}.` : ""
+    return `Linija ${data.broj} vozi samo vikendom, radnim danom ne.${span} Od kraja do kraja ${noun} vozi ${trajanje} ${krozStanica}.`
+  }
+
   const range = peakRange(data)
   const first = clockTime(data.stats.firstDeparture)
   const last = clockTime(data.stats.lastDeparture)
-  const stops = data.directions[0].stops.length
-  const travel = Math.round(data.stats.travelTimeMin)
-  const tail = `Prvi ${noun} s terminala ${data.terminals[0]} kreće u ${first}, zadnji u ${last}, a od kraja do kraja vozi ${travel} ${plural(travel, "minutu", "minute", "minuta")} kroz ${stops} ${plural(stops, "stanicu", "stanice", "stanica")}.`
+  const tail = `Prvi ${noun} s terminala ${data.terminals[0]} kreće u ${first}, zadnji u ${last}, a od kraja do kraja vozi ${trajanje} ${krozStanica}.`
   if (range) {
     const [lo, hi] = range
     const spica =

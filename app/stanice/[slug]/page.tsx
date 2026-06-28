@@ -6,12 +6,13 @@ import { CestaPitanja, faqJsonLd } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
-import { loadStopData, loadStopHeroMeta, loadStopIndex } from "@/lib/stop-data"
+import { loadStopData, loadStopHeroMeta, loadStopIndex, siblingStops } from "@/lib/stop-data"
 
 import { introText, stopTitle } from "../copy"
 import {
   Cinjenice,
   DosegOdavde,
+  IstoimeneStanice,
   LinijeKojeStaju,
   Naslov,
   PrevNext,
@@ -62,6 +63,7 @@ export default async function StanicaPage({
   if (!data) notFound()
   const index = loadStopIndex()
   const faq = buildFaq(data)
+  const siblings = siblingStops(data)
 
   return (
     <EditorialShell>
@@ -95,6 +97,12 @@ export default async function StanicaPage({
       <Section width="article" className="pb-0 sm:pb-0">
         <SusjedneStanice data={data} />
       </Section>
+
+      {siblings.length > 0 && (
+        <Section width="article" className="pb-0 sm:pb-0">
+          <IstoimeneStanice name={data.name} siblings={siblings} />
+        </Section>
+      )}
 
       <Section width="article" className="pb-0 sm:pb-0">
         <CestaPitanja items={faq} />

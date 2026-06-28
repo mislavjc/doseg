@@ -90,7 +90,7 @@ export function Footer({ updated }: { updated: string }) {
           <div className="flex items-center gap-[11px]">
             <Image
               src="/doseg-mark.png"
-              alt=""
+              alt="Doseg"
               width={34}
               height={25}
               className="h-[25px] w-[34px] object-contain"

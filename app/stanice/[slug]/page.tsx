@@ -48,6 +48,9 @@ export async function generateMetadata({
       title,
       description,
       type: "article",
+      url: `/stanice/${data.slug}`,
+      siteName: "Doseg",
+      locale: "hr_HR",
       images: [{ url: `/api/og?stanica=${data.slug}&v=${ogVersion}`, width: 1200, height: 630 }],
     },
   }

@@ -4,13 +4,6 @@ import { loadKvartIndex } from "@/lib/kvart-data"
 import { loadLineIndex } from "@/lib/line-data"
 import { loadStopIndex } from "@/lib/stop-data"
 
-/**
- * Stops are pSEO at scale (~1230 pages); the long tail of single-line stops is
- * thin. Gate the sitemap to real interchanges (≥ this many lines) while the line
- * pages are still indexing, then widen once they do.
- */
-const STOP_MIN_LINES = 3
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const lines = loadLineIndex()
   const kvartovi = loadKvartIndex()
@@ -37,11 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `https://doseg.hr/kvartovi/${k.slug}`,
       lastModified: linesUpdated,
     })),
-    ...stops.stops
-      .filter((s) => s.lineCount >= STOP_MIN_LINES)
-      .map((s) => ({
-        url: `https://doseg.hr/stanice/${s.slug}`,
-        lastModified: stopsUpdated,
-      })),
+    // All stop pages are in the sitemap: line/stop indexing is confirmed working
+    // in GSC (stops entering the serving set), so the long tail is now worth
+    // surfacing for discovery rather than gated behind an interchange threshold.
+    ...stops.stops.map((s) => ({
+      url: `https://doseg.hr/stanice/${s.slug}`,
+      lastModified: stopsUpdated,
+    })),
   ]
 }

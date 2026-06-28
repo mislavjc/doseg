@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     description:
       "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta.",
     type: "website",
+    url: "/",
+    siteName: "Doseg",
+    locale: "hr_HR",
     images: [{ url: "/og.jpg", width: 1200, height: 630, type: "image/jpeg" }],
   },
   twitter: {

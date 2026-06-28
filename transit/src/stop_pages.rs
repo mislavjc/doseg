@@ -796,8 +796,12 @@ impl Ctx<'_> {
                     k += 1;
                 }
                 if let Some(next) = dom.stops.get(k) {
-                    outbound_bearings
-                        .push(bearing_deg(cluster.lat, cluster.lon, next.lat, next.lon));
+                    outbound_bearings.push(bearing_deg(
+                        cluster.lat,
+                        cluster.lon,
+                        next.lat,
+                        next.lon,
+                    ));
                 }
 
                 let raw_headsign = dom

@@ -79,7 +79,7 @@ export function SiteNav({
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/doseg-mark.png"
-            alt=""
+            alt="Doseg"
             width={28}
             height={21}
             className="h-[21px] w-7 object-contain"

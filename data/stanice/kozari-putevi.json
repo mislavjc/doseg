@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    15,
-    39
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "237",
@@ -272,9 +269,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 52,
-    "stations45": 169
+    "stations15": 8,
+    "stations30": 38,
+    "stations45": 113
   },
   "prevSlug": "kozari-put-1-odv-5",
   "nextSlug": "kozincev-put"

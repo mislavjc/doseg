@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    10,
-    12
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "221",
@@ -292,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 87,
-    "stations45": 289
+    "stations15": 16,
+    "stations30": 50,
+    "stations45": 161
   },
   "prevSlug": "ujeviceva",
   "nextSlug": "ul-kaktusa-34"

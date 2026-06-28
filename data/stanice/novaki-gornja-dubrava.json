@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:17",
   "lastDeparture": "23:12",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "208",
@@ -348,9 +345,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 49,
-    "stations45": 160
+    "stations15": 7,
+    "stations30": 17,
+    "stations45": 22
   },
   "prevSlug": "nova-ves",
   "nextSlug": "novaki-gornja-dubrava-2"

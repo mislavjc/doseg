@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:30",
-  "peakIntervalMin": [
-    10,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "242",
@@ -137,9 +134,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 103,
-    "stations45": 317
+    "stations15": 14,
+    "stations30": 91,
+    "stations45": 254
   },
   "prevSlug": "podbrezje",
   "nextSlug": "podbreznica"

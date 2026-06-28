@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:26",
   "lastDeparture": "22:31",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "207",
@@ -142,9 +142,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 53,
-    "stations45": 227
+    "stations15": 20,
+    "stations30": 59,
+    "stations45": 135
   },
   "prevSlug": "rim-14a",
   "nextSlug": "rim-put-dj-igraliste"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "1:03",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "117",
@@ -310,8 +307,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 61,
-    "stations45": 243
+    "stations30": 59,
+    "stations45": 212
   },
   "prevSlug": "bastijanova-tresnjevka-sjever",
   "nextSlug": "beciceve-stube"

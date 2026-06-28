@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "23:41",
-  "peakIntervalMin": [
-    11,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "231",
@@ -226,9 +223,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 125,
-    "stations45": 398
+    "stations15": 11,
+    "stations30": 76,
+    "stations45": 222
   },
   "prevSlug": "borongaj",
   "nextSlug": "borongajska-kampus"

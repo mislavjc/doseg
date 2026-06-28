@@ -30,10 +30,7 @@
   ],
   "firstDeparture": "4:11",
   "lastDeparture": "1:10",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "5",
@@ -3079,9 +3076,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 230,
-    "stations45": 517
+    "stations15": 57,
+    "stations30": 196,
+    "stations45": 381
   },
   "prevSlug": "sruki",
   "nextSlug": "stadion"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    28,
-    43
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "164",
@@ -267,8 +264,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 5,
-    "stations45": 25
+    "stations30": 12,
+    "stations45": 47
   },
   "prevSlug": "puntijarka",
   "nextSlug": "pusticki"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "211",
@@ -797,9 +794,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 95,
-    "stations45": 261
+    "stations15": 16,
+    "stations30": 52,
+    "stations45": 129
   },
   "prevSlug": "ivanjorecka-posta",
   "nextSlug": "ivanoviceva-ulica"

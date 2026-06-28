@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "1:13",
-  "peakIntervalMin": [
-    4,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "269",
@@ -245,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 57,
-    "stations45": 162
+    "stations15": 15,
+    "stations30": 24,
+    "stations45": 69
   },
   "prevSlug": "sesvete-ukrcaj-sesvete-2",
   "nextSlug": "sesvetski-kraljevec"

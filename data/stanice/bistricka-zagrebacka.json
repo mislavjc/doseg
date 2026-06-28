@@ -29,10 +29,7 @@
   ],
   "firstDeparture": "3:37",
   "lastDeparture": "1:19",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "212",
@@ -3398,9 +3395,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 98,
-    "stations45": 217
+    "stations15": 20,
+    "stations30": 41,
+    "stations45": 123
   },
   "prevSlug": "bistricka-o-s",
   "nextSlug": "bizek"

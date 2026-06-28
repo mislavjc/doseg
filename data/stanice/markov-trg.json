@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:20",
   "lastDeparture": "22:20",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "150",
@@ -260,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 177,
-    "stations45": 493
+    "stations15": 24,
+    "stations30": 103,
+    "stations45": 266
   },
   "prevSlug": "mark-polje-raskrizje",
   "nextSlug": "markovici"

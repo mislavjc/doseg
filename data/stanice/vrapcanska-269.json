@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:41",
-  "peakIntervalMin": [
-    9,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "125",
@@ -312,9 +309,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 15,
-    "stations45": 115
+    "stations15": 8,
+    "stations30": 41,
+    "stations45": 119
   },
   "prevSlug": "vrapcanska",
   "nextSlug": "vrapcanska-aleja"

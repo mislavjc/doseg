@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "3:33",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    5,
-    19
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "212",
@@ -1058,9 +1055,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 76,
-    "stations45": 175
+    "stations15": 19,
+    "stations30": 52,
+    "stations45": 142
   },
   "prevSlug": "zagrebacka",
   "nextSlug": "zagrebacka-42"

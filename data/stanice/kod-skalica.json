@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    1,
-    15
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "176",
@@ -515,8 +512,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 7,
-    "stations45": 14
+    "stations30": 6,
+    "stations45": 6
   },
   "prevSlug": "kod-ilenica",
   "nextSlug": "kodrmanova"

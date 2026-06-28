@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    16,
-    27
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "132",
@@ -378,7 +375,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 13,
-    "stations45": 57
+    "stations45": 47
   },
   "prevSlug": "hrusevecka",
   "nextSlug": "hrvatskog-sokola-tresnjevka-jug"

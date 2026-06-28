@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    7,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -664,9 +661,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 113,
-    "stations45": 334
+    "stations15": 12,
+    "stations30": 52,
+    "stations45": 146
   },
   "prevSlug": "oboj-jurja-ves",
   "nextSlug": "oborovo-brezinska"

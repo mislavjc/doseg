@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "0:25",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "261",
@@ -857,9 +854,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 31,
-    "stations45": 116
+    "stations15": 18,
+    "stations30": 33,
+    "stations45": 114
   },
   "prevSlug": "kasinci",
   "nextSlug": "kasinska-sopnica"

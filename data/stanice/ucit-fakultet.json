@@ -17,10 +17,7 @@
   "busLines": [],
   "firstDeparture": "4:48",
   "lastDeparture": "1:10",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -969,9 +966,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 220,
-    "stations45": 534
+    "stations15": 35,
+    "stations30": 152,
+    "stations45": 399
   },
   "prevSlug": "tuskanova",
   "nextSlug": "ujeviceva"

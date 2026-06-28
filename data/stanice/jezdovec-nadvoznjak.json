@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "0:39",
-  "peakIntervalMin": [
-    24,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "168",
@@ -168,9 +165,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 33,
-    "stations45": 128
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "jesenovecka-29",
   "nextSlug": "jezdovec-vojarna"

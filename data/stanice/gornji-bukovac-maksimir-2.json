@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:09",
-  "peakIntervalMin": [
-    3,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -685,8 +682,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 42,
-    "stations45": 146
+    "stations30": 36,
+    "stations45": 99
   },
   "prevSlug": "gornji-bukovac-maksimir",
   "nextSlug": "gornji-stenjevec"

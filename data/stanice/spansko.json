@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "1:07",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "115",
@@ -417,9 +414,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 66,
-    "stations45": 204
+    "stations15": 22,
+    "stations30": 110,
+    "stations45": 243
   },
   "prevSlug": "sostarici",
   "nextSlug": "sportski-centar-novi-zagreb-zapad"

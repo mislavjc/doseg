@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "0:40",
-  "peakIntervalMin": [
-    44,
-    51
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "168",
@@ -220,9 +217,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 33,
-    "stations45": 128
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "jezdovecka-16",
   "nextSlug": "jordanovac-maksimir"

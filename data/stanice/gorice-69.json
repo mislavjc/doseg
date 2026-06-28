@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:28",
   "lastDeparture": "22:33",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "207",
@@ -134,9 +134,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 32,
-    "stations45": 109
+    "stations15": 18,
+    "stations30": 60,
+    "stations45": 135
   },
   "prevSlug": "gorice-45",
   "nextSlug": "gorice-korito"

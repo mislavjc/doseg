@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:09",
   "lastDeparture": "23:56",
-  "peakIntervalMin": [
-    6,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -333,8 +330,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 28,
-    "stations45": 91
+    "stations30": 5,
+    "stations45": 7
   },
   "prevSlug": "mrksina",
   "nextSlug": "mrksina-67c"

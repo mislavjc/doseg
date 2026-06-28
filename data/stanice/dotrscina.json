@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:10",
   "lastDeparture": "0:50",
-  "peakIntervalMin": [
-    9,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -324,9 +321,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 44,
-    "stations45": 119
+    "stations15": 17,
+    "stations30": 33,
+    "stations45": 68
   },
   "prevSlug": "dore-pejacevic",
   "nextSlug": "dotrscinska"

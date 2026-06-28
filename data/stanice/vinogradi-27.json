@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:29",
   "lastDeparture": "23:04",
-  "peakIntervalMin": [
-    30,
-    38
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "141",
@@ -608,9 +605,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 141,
-    "stations45": 386
+    "stations15": 20,
+    "stations30": 87,
+    "stations45": 231
   },
   "prevSlug": "vinogradi-24-b",
   "nextSlug": "vinogradi-okretiste"

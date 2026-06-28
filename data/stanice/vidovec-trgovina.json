@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "23:30",
-  "peakIntervalMin": [
-    10,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -292,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 72
+    "stations15": 6,
+    "stations30": 14,
+    "stations45": 54
   },
   "prevSlug": "vidovec-skola",
   "nextSlug": "viii-jazbinski-odv"

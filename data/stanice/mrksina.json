@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:09",
   "lastDeparture": "23:56",
-  "peakIntervalMin": [
-    5,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -313,8 +310,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 57,
-    "stations45": 195
+    "stations30": 18,
+    "stations45": 99
   },
   "prevSlug": "most-mladosti",
   "nextSlug": "mrksina-65-crkva"

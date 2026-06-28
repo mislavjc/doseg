@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "214",
@@ -1924,9 +1921,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 54,
-    "stations45": 166
+    "stations15": 12,
+    "stations30": 38,
+    "stations45": 141
   },
   "prevSlug": "vukomerec-okretiste",
   "nextSlug": "vukomeric-i"

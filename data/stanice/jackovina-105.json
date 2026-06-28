@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:40",
   "lastDeparture": "22:40",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "142",
@@ -535,8 +535,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 25,
-    "stations45": 121
+    "stations30": 38,
+    "stations45": 85
   },
   "prevSlug": "jablanovac",
   "nextSlug": "jackovina-46"

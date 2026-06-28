@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    18,
-    30
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "166",
@@ -531,8 +528,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 20,
-    "stations45": 60
+    "stations30": 9,
+    "stations45": 31
   },
   "prevSlug": "odra-svetog-izidora",
   "nextSlug": "odranski-obrez"

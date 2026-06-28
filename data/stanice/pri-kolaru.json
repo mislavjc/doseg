@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "0:47",
-  "peakIntervalMin": [
-    4,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -422,9 +419,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 14,
-    "stations45": 15
+    "stations15": 5,
+    "stations30": 5,
+    "stations45": 9
   },
   "prevSlug": "prevende",
   "nextSlug": "pri-mlinu"

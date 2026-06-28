@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:42",
   "lastDeparture": "23:07",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "310",
@@ -310,9 +310,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 14,
-    "stations45": 18
+    "stations15": 8,
+    "stations30": 8,
+    "stations45": 8
   },
   "prevSlug": "gradici-k-tomis-46",
   "nextSlug": "gradici-k-tomis-85"

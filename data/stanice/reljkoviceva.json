@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "5:08",
   "lastDeparture": "23:45",
-  "peakIntervalMin": [
-    4,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "139",
@@ -1511,9 +1508,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 192,
-    "stations45": 489
+    "stations15": 55,
+    "stations30": 212,
+    "stations45": 444
   },
   "prevSlug": "rebro-5",
   "nextSlug": "remete-128"

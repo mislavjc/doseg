@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    15,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "132",
@@ -418,7 +415,7 @@
   "reach": {
     "stations15": 8,
     "stations30": 20,
-    "stations45": 58
+    "stations45": 54
   },
   "prevSlug": "demerje-skola",
   "nextSlug": "derdici"

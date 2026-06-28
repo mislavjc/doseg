@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:49",
   "lastDeparture": "22:19",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -1344,7 +1344,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 3,
-    "stations45": 3
+    "stations45": 4
   },
   "prevSlug": "slovenska",
   "nextSlug": "snjeznicke-stube"

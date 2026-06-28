@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    5,
-    19
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "107",
@@ -277,9 +274,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 138,
-    "stations45": 372
+    "stations15": 11,
+    "stations30": 69,
+    "stations45": 198
   },
   "prevSlug": "tomislavova",
   "nextSlug": "tr-savica-trnje-2"

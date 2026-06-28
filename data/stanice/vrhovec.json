@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "149",
@@ -76,9 +73,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 58,
-    "stations45": 164
+    "stations15": 9,
+    "stations30": 39,
+    "stations45": 103
   },
   "prevSlug": "vrbik",
   "nextSlug": "vrhovec-196"

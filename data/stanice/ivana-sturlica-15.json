@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:14",
   "lastDeparture": "20:19",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "283",
@@ -558,9 +558,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 101,
-    "stations45": 223
+    "stations15": 24,
+    "stations30": 43,
+    "stations45": 125
   },
   "prevSlug": "ivana-pavla-ii",
   "nextSlug": "ivanec-centar"

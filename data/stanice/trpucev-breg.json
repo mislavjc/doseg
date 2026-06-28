@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    3,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -376,9 +373,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 37,
-    "stations45": 183
+    "stations15": 15,
+    "stations30": 45,
+    "stations45": 180
   },
   "prevSlug": "trnsko",
   "nextSlug": "trsje"

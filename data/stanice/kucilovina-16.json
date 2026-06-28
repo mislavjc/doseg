@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    19,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "262",
@@ -484,9 +481,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 14,
-    "stations45": 42
+    "stations15": 5,
+    "stations30": 8,
+    "stations45": 24
   },
   "prevSlug": "krvaric",
   "nextSlug": "kucilovina-38"

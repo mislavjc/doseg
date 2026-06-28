@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:34",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "106",
@@ -1847,9 +1844,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 130,
-    "stations45": 381
+    "stations15": 26,
+    "stations30": 90,
+    "stations45": 218
   },
   "prevSlug": "bidrovecka-36",
   "nextSlug": "bijenicka-134"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    5,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -336,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 100,
-    "stations45": 332
+    "stations15": 8,
+    "stations30": 37,
+    "stations45": 100
   },
   "prevSlug": "bukoscak",
   "nextSlug": "bukovac-vodovod"

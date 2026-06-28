@@ -14,7 +14,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "22:11",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "311",
@@ -264,9 +264,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 47,
-    "stations45": 143
+    "stations15": 7,
+    "stations30": 27,
+    "stations45": 99
   },
   "prevSlug": "hrasce-centar",
   "nextSlug": "hrasce-turopolj"

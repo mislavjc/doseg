@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    16,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -229,9 +226,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 42
+    "stations15": 2,
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "demerska-3",
   "nextSlug": "desinicka"

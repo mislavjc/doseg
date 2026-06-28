@@ -19,10 +19,7 @@
   "busLines": [],
   "firstDeparture": "4:13",
   "lastDeparture": "1:07",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "3",
@@ -1420,9 +1417,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 234,
-    "stations45": 574
+    "stations15": 36,
+    "stations30": 184,
+    "stations45": 420
   },
   "prevSlug": "studeni-ii",
   "nextSlug": "studentski-grad"

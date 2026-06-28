@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "23:46",
-  "peakIntervalMin": [
-    5,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "102",
@@ -381,8 +378,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 98,
-    "stations45": 251
+    "stations30": 59,
+    "stations45": 134
   },
   "prevSlug": "gornje-padine",
   "nextSlug": "gornje-vrapce"

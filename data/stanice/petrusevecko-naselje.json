@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:30",
-  "peakIntervalMin": [
-    5,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "217",
@@ -185,8 +182,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 14,
-    "stations45": 63
+    "stations30": 6,
+    "stations45": 29
   },
   "prevSlug": "petrusevec-i-odv-v",
   "nextSlug": "pilati"

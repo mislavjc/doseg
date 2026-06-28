@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    13,
-    25
-  ],
+  "directionGroups": 0,
   "lines": [
     {
       "broj": "277",
@@ -124,9 +121,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 78,
-    "stations45": 208
+    "stations15": 12,
+    "stations30": 38,
+    "stations45": 121
   },
   "prevSlug": "sesvete-izlaz-sesvete",
   "nextSlug": "sesvete-ukrcaj-sesvete"

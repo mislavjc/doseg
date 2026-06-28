@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:36",
-  "peakIntervalMin": [
-    7,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -381,8 +378,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 27,
-    "stations45": 92
+    "stations30": 17,
+    "stations45": 54
   },
   "prevSlug": "markusev-trnava-56",
   "nextSlug": "markusevec"

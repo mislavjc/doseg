@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:46",
   "lastDeparture": "1:04",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "2",
@@ -1672,9 +1669,9 @@
     ]
   },
   "reach": {
-    "stations15": 55,
-    "stations30": 272,
-    "stations45": 530
+    "stations15": 57,
+    "stations30": 212,
+    "stations45": 444
   },
   "prevSlug": "trg-bana-j-jelacica",
   "nextSlug": "trg-dr-tudmana"

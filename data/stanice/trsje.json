@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:28",
-  "peakIntervalMin": [
-    8,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -508,9 +505,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 57,
-    "stations45": 191
+    "stations15": 12,
+    "stations30": 56,
+    "stations45": 188
   },
   "prevSlug": "trpucev-breg",
   "nextSlug": "trstenik"

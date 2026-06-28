@@ -20,10 +20,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "1:09",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -1601,9 +1598,9 @@
     ]
   },
   "reach": {
-    "stations15": 47,
-    "stations30": 294,
-    "stations45": 560
+    "stations15": 41,
+    "stations30": 200,
+    "stations45": 420
   },
   "prevSlug": "svarcanska",
   "nextSlug": "svetice-maksimir"

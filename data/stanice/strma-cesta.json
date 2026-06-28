@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:27",
-  "peakIntervalMin": [
-    3,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "127",
@@ -384,9 +381,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 119,
-    "stations45": 324
+    "stations15": 11,
+    "stations30": 91,
+    "stations45": 214
   },
   "prevSlug": "stenjevecka",
   "nextSlug": "strmec-bukevski"

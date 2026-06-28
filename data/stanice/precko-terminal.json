@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:10",
   "lastDeparture": "0:30",
-  "peakIntervalMin": [
-    3,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "114",
@@ -501,9 +498,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 135,
-    "stations45": 392
+    "stations15": 19,
+    "stations30": 70,
+    "stations45": 201
   },
   "prevSlug": "precko",
   "nextSlug": "predsjednicki-dvori"

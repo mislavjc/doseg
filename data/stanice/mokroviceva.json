@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:09",
   "lastDeparture": "0:28",
-  "peakIntervalMin": [
-    30,
-    47
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "119",
@@ -213,9 +210,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 99,
-    "stations45": 245
+    "stations15": 25,
+    "stations30": 76,
+    "stations45": 191
   },
   "prevSlug": "mokricka",
   "nextSlug": "moravce-benkova"

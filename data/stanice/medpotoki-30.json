@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:03",
   "lastDeparture": "23:03",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "143",
@@ -350,9 +350,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 78,
-    "stations45": 208
+    "stations15": 28,
+    "stations30": 80,
+    "stations45": 213
   },
   "prevSlug": "medpotoki",
   "nextSlug": "medvescak"

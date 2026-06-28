@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "0:46",
-  "peakIntervalMin": [
-    4,
-    14
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "125",
@@ -906,9 +903,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 92,
-    "stations45": 226
+    "stations15": 9,
+    "stations30": 86,
+    "stations45": 225
   },
   "prevSlug": "mandalicina",
   "nextSlug": "manterovcak-46"

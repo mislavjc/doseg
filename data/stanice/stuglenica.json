@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "23:48",
-  "peakIntervalMin": [
-    45,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "224",
@@ -541,8 +538,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 11,
-    "stations45": 21
+    "stations30": 7,
+    "stations45": 10
   },
   "prevSlug": "studentski-grad",
   "nextSlug": "stupnicki-obrez"

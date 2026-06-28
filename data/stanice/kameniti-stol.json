@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:24",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -461,9 +458,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 58,
-    "stations45": 241
+    "stations15": 10,
+    "stations30": 32,
+    "stations45": 98
   },
   "prevSlug": "kamenita-vrata",
   "nextSlug": "kameniti-stol-14"

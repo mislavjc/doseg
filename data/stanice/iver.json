@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "1:00",
-  "peakIntervalMin": [
-    6,
-    10
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "269",
@@ -153,8 +150,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 12,
-    "stations45": 54
+    "stations30": 3,
+    "stations45": 10
   },
   "prevSlug": "ive-dulcica",
   "nextSlug": "ivice-lovincica"

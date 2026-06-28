@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "23:53",
-  "peakIntervalMin": [
-    10,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "131",
@@ -328,9 +325,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 56,
-    "stations45": 184
+    "stations15": 10,
+    "stations30": 40,
+    "stations45": 127
   },
   "prevSlug": "buhini",
   "nextSlug": "bukovac-115"

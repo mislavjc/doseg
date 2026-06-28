@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:56",
   "lastDeparture": "23:11",
-  "peakIntervalMin": [
-    11,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "112",
@@ -653,9 +650,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 77,
-    "stations45": 253
+    "stations15": 10,
+    "stations30": 27,
+    "stations45": 128
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad",
   "nextSlug": "arena-zagreb"

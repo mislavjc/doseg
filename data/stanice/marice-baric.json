@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    4,
-    15
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "113",
@@ -301,9 +298,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 111,
-    "stations45": 376
+    "stations15": 26,
+    "stations30": 141,
+    "stations45": 312
   },
   "prevSlug": "margalici",
   "nextSlug": "marijane-radev"

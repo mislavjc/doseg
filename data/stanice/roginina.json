@@ -24,10 +24,7 @@
   ],
   "firstDeparture": "4:15",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "119",
@@ -2889,9 +2886,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 170,
-    "stations45": 377
+    "stations15": 36,
+    "stations30": 99,
+    "stations45": 231
   },
   "prevSlug": "rockefellerova",
   "nextSlug": "rosandiceva"

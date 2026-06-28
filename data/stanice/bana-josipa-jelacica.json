@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:01",
   "lastDeparture": "23:51",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "177",
@@ -244,7 +244,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 5,
-    "stations45": 10
+    "stations45": 9
   },
   "prevSlug": "bahlenova",
   "nextSlug": "barutanski-jarak-48"

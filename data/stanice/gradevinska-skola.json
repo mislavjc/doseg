@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "0:40",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "166",
@@ -1127,9 +1124,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 145,
-    "stations45": 361
+    "stations15": 22,
+    "stations30": 95,
+    "stations45": 254
   },
   "prevSlug": "gradek",
   "nextSlug": "gradici-drustveni-d"

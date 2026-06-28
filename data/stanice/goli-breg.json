@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:45",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "132",
@@ -413,8 +410,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 31,
-    "stations45": 79
+    "stations30": 23,
+    "stations45": 71
   },
   "prevSlug": "glavnicica",
   "nextSlug": "goli-breg-groblje"

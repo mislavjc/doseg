@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:12",
   "lastDeparture": "1:15",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -672,9 +669,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 115,
-    "stations45": 373
+    "stations15": 21,
+    "stations30": 83,
+    "stations45": 218
   },
   "prevSlug": "savska-metro",
   "nextSlug": "savski-gaj"

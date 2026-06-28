@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:17",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    9,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "224",
@@ -987,9 +984,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 91,
-    "stations45": 207
+    "stations15": 21,
+    "stations30": 43,
+    "stations45": 125
   },
   "prevSlug": "aleja-tisine",
   "nextSlug": "ante-starcevica-45-a"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:35",
-  "peakIntervalMin": [
-    10,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "273",
@@ -135,7 +132,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 2,
-    "stations45": 9
+    "stations45": 2
   },
   "prevSlug": "luzan",
   "nextSlug": "m-polje-istocni-ulaz"

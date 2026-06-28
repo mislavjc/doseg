@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "23:40",
-  "peakIntervalMin": [
-    5,
-    40
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "219",
@@ -224,9 +221,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 102,
-    "stations45": 301
+    "stations15": 22,
+    "stations30": 78,
+    "stations45": 225
   },
   "prevSlug": "sljemenska",
   "nextSlug": "slovenska"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:52",
   "lastDeparture": "23:24",
-  "peakIntervalMin": [
-    7,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -476,8 +473,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 1,
-    "stations45": 1
+    "stations30": 2,
+    "stations45": 12
   },
   "prevSlug": "scitarjevo-ii",
   "nextSlug": "sel-pudak-kate-okr"

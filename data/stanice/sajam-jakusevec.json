@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "23:05",
-  "peakIntervalMin": [
-    23,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "295",
@@ -100,9 +97,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 31,
-    "stations45": 125
+    "stations15": 1,
+    "stations30": 11,
+    "stations45": 45
   },
   "prevSlug": "safrani",
   "nextSlug": "samoborska"

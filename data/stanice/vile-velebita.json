@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:07",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -1335,9 +1332,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 128,
-    "stations45": 354
+    "stations15": 30,
+    "stations30": 97,
+    "stations45": 193
   },
   "prevSlug": "viktora-vide",
   "nextSlug": "vinec"

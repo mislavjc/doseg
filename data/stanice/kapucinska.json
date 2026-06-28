@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:39",
   "lastDeparture": "0:58",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -787,9 +784,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 140,
-    "stations45": 420
+    "stations15": 18,
+    "stations30": 92,
+    "stations45": 243
   },
   "prevSlug": "kaptol-centar",
   "nextSlug": "karaznik"

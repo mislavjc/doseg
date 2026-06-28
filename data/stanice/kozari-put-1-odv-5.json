@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    18,
-    36
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "237",
@@ -292,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 77,
-    "stations45": 275
+    "stations15": 26,
+    "stations30": 67,
+    "stations45": 180
   },
   "prevSlug": "kozari-bok",
   "nextSlug": "kozari-putevi"

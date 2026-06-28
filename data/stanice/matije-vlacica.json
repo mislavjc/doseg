@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "1:06",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "115",
@@ -509,9 +506,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 138,
-    "stations45": 300
+    "stations15": 27,
+    "stations30": 116,
+    "stations45": 274
   },
   "prevSlug": "matije-gupca",
   "nextSlug": "mavracici"

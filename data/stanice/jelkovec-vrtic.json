@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    3,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "279",
@@ -238,9 +235,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 72,
-    "stations45": 273
+    "stations15": 9,
+    "stations30": 10,
+    "stations45": 28
   },
   "prevSlug": "jelkovec-trznica",
   "nextSlug": "jelkovecka"

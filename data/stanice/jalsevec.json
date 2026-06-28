@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "23:35",
-  "peakIntervalMin": [
-    9,
-    21
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "213",
@@ -282,7 +279,7 @@
   "reach": {
     "stations15": 1,
     "stations30": 1,
-    "stations45": 13
+    "stations45": 1
   },
   "prevSlug": "jakusevec-skola",
   "nextSlug": "jalsina"

@@ -14,7 +14,7 @@
   "busLines": [],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -896,9 +896,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 189,
-    "stations45": 490
+    "stations15": 27,
+    "stations30": 111,
+    "stations45": 276
   },
   "prevSlug": "tuskanac",
   "nextSlug": "ucit-fakultet"

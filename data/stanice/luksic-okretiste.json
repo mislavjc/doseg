@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:20",
-  "peakIntervalMin": [
-    6,
-    9
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "128",
@@ -268,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 37,
-    "stations45": 183
+    "stations15": 4,
+    "stations30": 5,
+    "stations45": 16
   },
   "prevSlug": "luksic",
   "nextSlug": "luzan"

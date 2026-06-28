@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "23:49",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "177",
@@ -248,7 +248,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 5,
-    "stations45": 11
+    "stations45": 9
   },
   "prevSlug": "kotoripska",
   "nextSlug": "kovinska-stenjevec"

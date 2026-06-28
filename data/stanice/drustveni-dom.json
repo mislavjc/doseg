@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    7,
-    23
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "160",
@@ -676,8 +673,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 17,
-    "stations45": 50
+    "stations30": 14,
+    "stations45": 17
   },
   "prevSlug": "dreznik",
   "nextSlug": "drziceva"

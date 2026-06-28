@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:09",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -269,8 +266,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 29,
-    "stations45": 83
+    "stations30": 7,
+    "stations45": 21
   },
   "prevSlug": "hudobicka-36",
   "nextSlug": "hudobicka-iv-odvojak"

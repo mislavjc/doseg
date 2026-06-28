@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "0:16",
-  "peakIntervalMin": [
-    2,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -232,9 +229,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 116,
-    "stations45": 334
+    "stations15": 17,
+    "stations30": 73,
+    "stations45": 199
   },
   "prevSlug": "prilesje",
   "nextSlug": "prisavlje-tresnjevka-jug"

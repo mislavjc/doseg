@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:06",
   "lastDeparture": "1:51",
-  "peakIntervalMin": [
-    11,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "116",
@@ -282,9 +279,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 83,
-    "stations45": 222
+    "stations15": 21,
+    "stations30": 76,
+    "stations45": 204
   },
   "prevSlug": "zerjavinec",
   "nextSlug": "zg-velesajam"

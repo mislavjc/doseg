@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "1:03",
-  "peakIntervalMin": [
-    4,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "115",
@@ -228,9 +225,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 88,
-    "stations45": 240
+    "stations15": 20,
+    "stations30": 72,
+    "stations45": 199
   },
   "prevSlug": "antolkovici",
   "nextSlug": "arbanasova-44"

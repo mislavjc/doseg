@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:44",
   "lastDeparture": "1:01",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -652,8 +649,8 @@
   },
   "reach": {
     "stations15": 23,
-    "stations30": 97,
-    "stations45": 295
+    "stations30": 66,
+    "stations45": 185
   },
   "prevSlug": "mudifaji-sesvete",
   "nextSlug": "mup"

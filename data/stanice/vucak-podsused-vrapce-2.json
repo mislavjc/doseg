@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:07",
   "lastDeparture": "1:52",
-  "peakIntervalMin": [
-    27,
-    36
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -299,8 +296,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 94,
-    "stations45": 245
+    "stations30": 63,
+    "stations45": 191
   },
   "prevSlug": "vucak-podsused-vrapce",
   "nextSlug": "vugrovec-d-groblje"

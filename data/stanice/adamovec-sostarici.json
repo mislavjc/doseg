@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    5,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "264",
@@ -785,9 +782,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 12,
+    "stations30": 22,
+    "stations45": 63
   },
   "prevSlug": "adamovec-centar",
   "nextSlug": "agrokoka"

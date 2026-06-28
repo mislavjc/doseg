@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:28",
   "lastDeparture": "23:28",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "204",
@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 91,
-    "stations45": 336
+    "stations15": 25,
+    "stations30": 78,
+    "stations45": 210
   },
   "prevSlug": "vocarska-drustveni-d",
   "nextSlug": "vodnikova"

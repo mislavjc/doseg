@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "0:42",
-  "peakIntervalMin": [
-    14,
-    36
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "168",
@@ -205,8 +202,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 5,
-    "stations45": 8
+    "stations30": 17,
+    "stations45": 53
   },
   "prevSlug": "stubicka-i-odvojak",
   "nextSlug": "studentski-centar"

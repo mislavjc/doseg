@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "23:07",
-  "peakIntervalMin": [
-    3,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -172,9 +169,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 159,
-    "stations45": 421
+    "stations15": 17,
+    "stations30": 112,
+    "stations45": 281
   },
   "prevSlug": "ucit-fakultet",
   "nextSlug": "ukrajinska"

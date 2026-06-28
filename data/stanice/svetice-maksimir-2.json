@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:36",
-  "peakIntervalMin": [
-    2,
-    4
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "203",
@@ -1167,9 +1164,9 @@
     ]
   },
   "reach": {
-    "stations15": 51,
-    "stations30": 229,
-    "stations45": 517
+    "stations15": 21,
+    "stations30": 112,
+    "stations45": 257
   },
   "prevSlug": "svetice-maksimir",
   "nextSlug": "svetosimunska"

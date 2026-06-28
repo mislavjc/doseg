@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:15",
-  "peakIntervalMin": [
-    14,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "310",
@@ -340,9 +337,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 18,
-    "stations45": 22
+    "stations15": 4,
+    "stations30": 5,
+    "stations45": 5
   },
   "prevSlug": "lomnica-dom-zdravlja",
   "nextSlug": "lomnica-sljuncara"

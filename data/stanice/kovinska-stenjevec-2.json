@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "1:55",
-  "peakIntervalMin": [
-    12,
-    24
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -570,8 +567,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 37,
-    "stations45": 163
+    "stations30": 38,
+    "stations45": 147
   },
   "prevSlug": "kovinska-stenjevec",
   "nextSlug": "kozari-bok"

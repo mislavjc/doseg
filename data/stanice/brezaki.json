@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "23:45",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "177",
@@ -236,7 +236,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 3,
-    "stations45": 12
+    "stations45": 3
   },
   "prevSlug": "brez-pod-kestenima",
   "nextSlug": "brezje"

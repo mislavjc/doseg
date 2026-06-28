@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    4,
-    10
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "264",
@@ -729,9 +726,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 8,
-    "stations45": 10
+    "stations15": 14,
+    "stations30": 24,
+    "stations45": 65
   },
   "prevSlug": "abramoviceva",
   "nextSlug": "adamovec-sostarici"

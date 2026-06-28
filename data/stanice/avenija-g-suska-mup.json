@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:08",
   "lastDeparture": "0:53",
-  "peakIntervalMin": [
-    6,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -670,8 +667,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 56,
-    "stations45": 155
+    "stations30": 33,
+    "stations45": 99
   },
   "prevSlug": "autobusni-kol",
   "nextSlug": "bacun"

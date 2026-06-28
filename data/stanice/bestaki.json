@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "23:38",
-  "peakIntervalMin": [
-    15,
-    49
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "264",
@@ -277,9 +274,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 15,
+    "stations30": 25,
+    "stations45": 66
   },
   "prevSlug": "bengezi",
   "nextSlug": "bidrovec-brana"

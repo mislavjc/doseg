@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:58",
   "lastDeparture": "23:33",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "109",
@@ -373,9 +370,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 232,
-    "stations45": 477
+    "stations15": 22,
+    "stations30": 160,
+    "stations45": 320
   },
   "prevSlug": "potocko",
   "nextSlug": "prajzov-brijeg"

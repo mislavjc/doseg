@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    15,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -301,8 +298,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 86,
-    "stations45": 268
+    "stations30": 61,
+    "stations45": 146
   },
   "prevSlug": "sjeverna",
   "nextSlug": "skocilovici"

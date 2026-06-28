@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "0:41",
-  "peakIntervalMin": [
-    15,
-    35
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "168",
@@ -232,9 +229,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 34,
-    "stations45": 128
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "vugrovecka-vukasi",
   "nextSlug": "vukomerec-okretiste"

@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:26",
   "lastDeparture": "23:26",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "204",
@@ -558,9 +558,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 95,
-    "stations45": 308
+    "stations15": 24,
+    "stations30": 82,
+    "stations45": 209
   },
   "prevSlug": "horvatovac-40",
   "nextSlug": "horvatovac-trgovina"

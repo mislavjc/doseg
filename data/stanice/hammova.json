@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "23:12",
-  "peakIntervalMin": [
-    8,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "206",
@@ -244,9 +241,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 55,
-    "stations45": 224
+    "stations15": 18,
+    "stations30": 63,
+    "stations45": 169
   },
   "prevSlug": "habdeliceva",
   "nextSlug": "hanamanova"

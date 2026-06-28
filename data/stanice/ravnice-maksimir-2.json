@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "0:21",
-  "peakIntervalMin": [
-    13,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "231",
@@ -277,9 +274,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 43,
-    "stations45": 252
+    "stations15": 8,
+    "stations30": 50,
+    "stations45": 210
   },
   "prevSlug": "ravnice-maksimir",
   "nextSlug": "reber-habeki"

@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    7,
-    17
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "275",
@@ -402,9 +399,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 86,
-    "stations45": 208
+    "stations15": 17,
+    "stations30": 42,
+    "stations45": 124
   },
   "prevSlug": "ljubljanica",
   "nextSlug": "lomnica-deveric-4"

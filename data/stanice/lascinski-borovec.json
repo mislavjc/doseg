@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "6:05",
   "lastDeparture": "22:22",
-  "peakIntervalMin": [
-    8,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "207",
@@ -635,8 +632,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 92,
-    "stations45": 287
+    "stations30": 84,
+    "stations45": 208
   },
   "prevSlug": "laniste",
   "nextSlug": "laskocica-2"

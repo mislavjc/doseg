@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "0:50",
-  "peakIntervalMin": [
-    12,
-    18
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "217",
@@ -321,9 +318,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 76,
-    "stations45": 275
+    "stations15": 19,
+    "stations30": 60,
+    "stations45": 170
   },
   "prevSlug": "radic-setaliste",
   "nextSlug": "radnicka-182"

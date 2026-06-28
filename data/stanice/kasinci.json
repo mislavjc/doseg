@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:06",
   "lastDeparture": "23:56",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -344,9 +341,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 85
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 20
   },
   "prevSlug": "kasina-okretiste",
   "nextSlug": "kasinska-rasadnik"

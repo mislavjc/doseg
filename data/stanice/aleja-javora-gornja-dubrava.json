@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:33",
   "lastDeparture": "1:02",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -783,9 +780,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 130,
-    "stations45": 359
+    "stations15": 30,
+    "stations30": 103,
+    "stations45": 243
   },
   "prevSlug": "aleja-javora-donja-dubrava",
   "nextSlug": "aleja-mira"

@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:28",
   "lastDeparture": "21:58",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -815,8 +815,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 28,
-    "stations45": 80
+    "stations30": 4,
+    "stations45": 28
   },
   "prevSlug": "bijenik-crkva",
   "nextSlug": "bistricka-o-s"

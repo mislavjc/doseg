@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "23:04",
-  "peakIntervalMin": [
-    10,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "218",
@@ -464,9 +461,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 112,
-    "stations45": 364
+    "stations15": 14,
+    "stations30": 49,
+    "stations45": 148
   },
   "prevSlug": "laskocica-42",
   "nextSlug": "lastovska-skola"

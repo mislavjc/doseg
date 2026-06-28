@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "23:00",
-  "peakIntervalMin": [
-    23,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "295",
@@ -64,9 +61,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 134,
-    "stations45": 389
+    "stations15": 6,
+    "stations30": 43,
+    "stations45": 140
   },
   "prevSlug": "zaprude-novi-zagreb-istok",
   "nextSlug": "zarka-dolinara"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    7,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "126",
@@ -400,9 +397,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 32,
-    "stations45": 186
+    "stations15": 8,
+    "stations30": 12,
+    "stations45": 18
   },
   "prevSlug": "kustosijanska",
   "nextSlug": "kvaternikov-trg"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:45",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -505,9 +502,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 65,
-    "stations45": 183
+    "stations15": 10,
+    "stations30": 36,
+    "stations45": 110
   },
   "prevSlug": "sestin-dol-odvojak",
   "nextSlug": "sestinski-dol"

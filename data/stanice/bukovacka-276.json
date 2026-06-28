@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "0:28",
-  "peakIntervalMin": [
-    1,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -513,8 +510,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 45,
-    "stations45": 175
+    "stations30": 15,
+    "stations45": 71
   },
   "prevSlug": "bukovacka-23",
   "nextSlug": "bukovacka-68"

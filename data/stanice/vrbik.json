@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:18",
   "lastDeparture": "0:55",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "3",
@@ -840,9 +837,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 189,
-    "stations45": 522
+    "stations15": 31,
+    "stations30": 158,
+    "stations45": 398
   },
   "prevSlug": "vrbani",
   "nextSlug": "vrhovec"

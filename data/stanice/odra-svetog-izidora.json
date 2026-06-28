@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:49",
   "lastDeparture": "23:20",
-  "peakIntervalMin": [
-    8,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "229",
@@ -619,8 +616,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 11,
-    "stations45": 12
+    "stations30": 5,
+    "stations45": 5
   },
   "prevSlug": "odra-novi-zagreb-istok-2",
   "nextSlug": "odranska-dacka"

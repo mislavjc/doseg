@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    4,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -387,8 +384,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 11,
-    "stations45": 60
+    "stations30": 13,
+    "stations45": 49
   },
   "prevSlug": "hrasce-turopolj",
   "nextSlug": "hrelicka"

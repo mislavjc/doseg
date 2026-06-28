@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:22",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -320,9 +317,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 74,
-    "stations45": 261
+    "stations15": 16,
+    "stations30": 53,
+    "stations45": 202
   },
   "prevSlug": "lukoranska-novi-zagreb-zapad-2",
   "nextSlug": "luksic-okretiste"

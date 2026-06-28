@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "275",
@@ -266,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 51,
-    "stations45": 156
+    "stations15": 8,
+    "stations30": 32,
+    "stations45": 123
   },
   "prevSlug": "solici",
   "nextSlug": "sopnicka-kod-10d"

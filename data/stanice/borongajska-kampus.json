@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:08",
-  "peakIntervalMin": [
-    2,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "215",
@@ -761,9 +758,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 77,
-    "stations45": 248
+    "stations15": 14,
+    "stations30": 40,
+    "stations45": 143
   },
   "prevSlug": "borongaj-jug",
   "nextSlug": "borovina"

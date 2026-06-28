@@ -22,10 +22,7 @@
   "busLines": [],
   "firstDeparture": "4:16",
   "lastDeparture": "1:01",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "1",
@@ -3129,9 +3126,9 @@
     ]
   },
   "reach": {
-    "stations15": 61,
-    "stations30": 255,
-    "stations45": 595
+    "stations15": 35,
+    "stations30": 120,
+    "stations45": 337
   },
   "prevSlug": "franje-malnara",
   "nextSlug": "fraterscica"

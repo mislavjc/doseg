@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "22:45",
-  "peakIntervalMin": [
-    10,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "182",
@@ -149,8 +146,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 8,
-    "stations45": 21
+    "stations30": 5,
+    "stations45": 5
   },
   "prevSlug": "sheraton",
   "nextSlug": "sijavrh"

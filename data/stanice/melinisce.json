@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    2,
-    11
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "227",
@@ -986,8 +983,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 31,
-    "stations45": 101
+    "stations30": 25,
+    "stations45": 51
   },
   "prevSlug": "meglajci",
   "nextSlug": "mercatone"

@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:38",
   "lastDeparture": "0:56",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -940,9 +937,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 96,
-    "stations45": 250
+    "stations15": 25,
+    "stations30": 84,
+    "stations45": 230
   },
   "prevSlug": "getaldiceva-gospica",
   "nextSlug": "getaldiceva-pescenica-zitnjak-2"

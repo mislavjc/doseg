@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:06",
   "lastDeparture": "23:01",
-  "peakIntervalMin": [
-    31,
-    39
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -369,9 +366,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 35,
-    "stations45": 62
+    "stations15": 6,
+    "stations30": 11,
+    "stations45": 29
   },
   "prevSlug": "kupljenovo-centar",
   "nextSlug": "kusevacka"

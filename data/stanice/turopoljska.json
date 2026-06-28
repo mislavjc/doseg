@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    1,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "215",
@@ -364,9 +361,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 101,
-    "stations45": 337
+    "stations15": 15,
+    "stations30": 95,
+    "stations45": 285
   },
   "prevSlug": "turopolj-markulini",
   "nextSlug": "tuskanac"

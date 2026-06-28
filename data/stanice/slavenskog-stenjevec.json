@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:10",
   "lastDeparture": "1:12",
-  "peakIntervalMin": [
-    2,
-    13
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "107",
@@ -600,9 +597,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 117,
-    "stations45": 373
+    "stations15": 20,
+    "stations30": 70,
+    "stations45": 201
   },
   "prevSlug": "slatinska",
   "nextSlug": "slavenskog-tresnjevka-jug"

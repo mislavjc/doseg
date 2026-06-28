@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    35,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "132",
@@ -393,8 +390,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 31,
-    "stations45": 79
+    "stations30": 22,
+    "stations45": 71
   },
   "prevSlug": "pakracka",
   "nextSlug": "paljetkova"

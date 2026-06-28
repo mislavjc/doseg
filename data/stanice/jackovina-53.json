@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:42",
   "lastDeparture": "22:42",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "142",
@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 81,
-    "stations45": 206
+    "stations15": 11,
+    "stations30": 51,
+    "stations45": 154
   },
   "prevSlug": "jackovina-46",
   "nextSlug": "jagiceva"

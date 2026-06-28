@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:04",
   "lastDeparture": "21:49",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "148",
@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 133,
-    "stations45": 381
+    "stations15": 25,
+    "stations30": 101,
+    "stations45": 271
   },
   "prevSlug": "bundek",
   "nextSlug": "buzin-novi-zagreb-istok"

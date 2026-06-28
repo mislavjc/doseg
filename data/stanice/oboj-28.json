@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    3,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -624,9 +621,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 100,
-    "stations45": 333
+    "stations15": 11,
+    "stations30": 52,
+    "stations45": 146
   },
   "prevSlug": "novoselecki-put-83",
   "nextSlug": "oboj-jurja-ves"

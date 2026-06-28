@@ -30,10 +30,7 @@
   ],
   "firstDeparture": "0:39",
   "lastDeparture": "1:52",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "7",
@@ -2784,9 +2781,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 179,
-    "stations45": 460
+    "stations15": 30,
+    "stations30": 138,
+    "stations45": 307
   },
   "prevSlug": "muzej-grada-zagreba",
   "nextSlug": "n-s-knjiznica"

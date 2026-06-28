@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:57",
   "lastDeparture": "23:07",
-  "peakIntervalMin": [
-    23,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "295",
@@ -92,9 +89,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 33,
-    "stations45": 125
+    "stations15": 5,
+    "stations30": 8,
+    "stations45": 45
   },
   "prevSlug": "tisinska",
   "nextSlug": "tomislavov-dom"

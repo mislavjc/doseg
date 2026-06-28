@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:07",
   "lastDeparture": "23:32",
-  "peakIntervalMin": [
-    23,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "139",
@@ -744,9 +741,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 125,
-    "stations45": 376
+    "stations15": 29,
+    "stations30": 93,
+    "stations45": 230
   },
   "prevSlug": "kosirnikova-9",
   "nextSlug": "kosirnikova-src-jel"

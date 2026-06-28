@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    6,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "121",
@@ -902,9 +899,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 103,
-    "stations45": 251
+    "stations15": 40,
+    "stations30": 86,
+    "stations45": 220
   },
   "prevSlug": "ciglanska",
   "nextSlug": "cileanska-peruanska"

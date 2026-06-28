@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "0:16",
-  "peakIntervalMin": [
-    13,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -476,8 +473,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 20,
-    "stations45": 119
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "sarajev-vatikanska",
   "nextSlug": "sasi-okretiste"

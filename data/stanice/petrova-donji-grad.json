@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:24",
   "lastDeparture": "0:53",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -1244,9 +1241,9 @@
     ]
   },
   "reach": {
-    "stations15": 50,
-    "stations30": 254,
-    "stations45": 616
+    "stations15": 33,
+    "stations30": 145,
+    "stations45": 339
   },
   "prevSlug": "petrova-47",
   "nextSlug": "petrova-maksimir"

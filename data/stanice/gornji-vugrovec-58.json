@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:33",
-  "peakIntervalMin": [
-    18,
-    38
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "261",
@@ -276,9 +273,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 16,
-    "stations45": 38
+    "stations15": 5,
+    "stations30": 9,
+    "stations45": 26
   },
   "prevSlug": "gornji-stenjevec",
   "nextSlug": "gornjodemerska"

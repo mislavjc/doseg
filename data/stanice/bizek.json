@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    13,
-    17
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "131",
@@ -340,9 +337,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 54,
-    "stations45": 159
+    "stations15": 5,
+    "stations30": 13,
+    "stations45": 29
   },
   "prevSlug": "bistricka-zagrebacka",
   "nextSlug": "bizek-i"

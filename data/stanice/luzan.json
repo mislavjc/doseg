@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "23:39",
-  "peakIntervalMin": [
-    18,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "273",
@@ -158,8 +155,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 2,
-    "stations45": 9
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "luksic-okretiste",
   "nextSlug": "luzan-zeleni-vijenac"

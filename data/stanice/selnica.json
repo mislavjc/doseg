@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    18,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -424,8 +421,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 4,
-    "stations45": 7
+    "stations30": 8,
+    "stations45": 12
   },
   "prevSlug": "seljacke-bune",
   "nextSlug": "selnica-put-za-bapce"

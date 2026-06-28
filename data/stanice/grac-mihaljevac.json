@@ -13,10 +13,7 @@
   "busLines": [],
   "firstDeparture": "4:31",
   "lastDeparture": "23:36",
-  "peakIntervalMin": [
-    1,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "15",
@@ -212,9 +209,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 51,
-    "stations45": 195
+    "stations15": 6,
+    "stations30": 6,
+    "stations45": 7
   },
   "prevSlug": "graberje-okretiste",
   "nextSlug": "gracani"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    1,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "215",
@@ -552,9 +549,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 106,
-    "stations45": 299
+    "stations15": 14,
+    "stations30": 38,
+    "stations45": 141
   },
   "prevSlug": "vukasi",
   "nextSlug": "vukomerecka-40"

@@ -23,10 +23,7 @@
   ],
   "firstDeparture": "4:05",
   "lastDeparture": "1:00",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "4",
@@ -2861,9 +2858,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 146,
-    "stations45": 369
+    "stations15": 36,
+    "stations30": 114,
+    "stations45": 256
   },
   "prevSlug": "dacka-nova",
   "nextSlug": "davor"

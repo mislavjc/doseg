@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    4,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -468,9 +465,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 44,
-    "stations45": 190
+    "stations15": 14,
+    "stations30": 54,
+    "stations45": 191
   },
   "prevSlug": "cerovski-skola",
   "nextSlug": "ciglanska"

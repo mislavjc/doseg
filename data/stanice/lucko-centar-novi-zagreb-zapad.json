@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    19,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "112",
@@ -413,8 +410,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 12,
-    "stations45": 61
+    "stations30": 14,
+    "stations45": 50
   },
   "prevSlug": "lucko",
   "nextSlug": "lucko-centar-novi-zagreb-zapad-2"

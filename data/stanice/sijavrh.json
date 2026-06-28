@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    13,
-    29
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "274",
@@ -251,7 +248,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 3,
-    "stations45": 16
+    "stations45": 8
   },
   "prevSlug": "sibice-dom",
   "nextSlug": "siletici"

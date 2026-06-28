@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    13,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "123",
@@ -548,9 +545,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 83,
-    "stations45": 222
+    "stations15": 4,
+    "stations30": 5,
+    "stations45": 29
   },
   "prevSlug": "sunekova-172",
   "nextSlug": "sv-ivana-d-grubera"

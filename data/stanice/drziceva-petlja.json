@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:21",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "6",
@@ -1208,9 +1205,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 150,
-    "stations45": 432
+    "stations15": 14,
+    "stations30": 54,
+    "stations45": 186
   },
   "prevSlug": "drziceva",
   "nextSlug": "dubec"

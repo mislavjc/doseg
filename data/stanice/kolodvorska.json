@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "0:55",
   "lastDeparture": "0:30",
-  "peakIntervalMin": [
-    2,
-    10
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "268",
@@ -579,8 +576,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 23,
-    "stations45": 57
+    "stations30": 17,
+    "stations45": 37
   },
   "prevSlug": "koledovcina",
   "nextSlug": "komari"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "22:44",
-  "peakIntervalMin": [
-    19,
-    24
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "112",
@@ -783,8 +780,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 77,
-    "stations45": 253
+    "stations30": 69,
+    "stations45": 230
   },
   "prevSlug": "arbanasova-44",
   "nextSlug": "arena-centar-novi-zagreb-zapad-2"

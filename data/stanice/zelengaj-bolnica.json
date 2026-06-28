@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:24",
   "lastDeparture": "22:24",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "138",
@@ -536,9 +533,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 45,
-    "stations45": 178
+    "stations15": 16,
+    "stations30": 44,
+    "stations45": 108
   },
   "prevSlug": "zelengaj-65",
   "nextSlug": "zelengaj-gornji-grad-medvescak"

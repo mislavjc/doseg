@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "0:56",
   "lastDeparture": "0:31",
-  "peakIntervalMin": [
-    2,
-    10
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "268",
@@ -539,8 +536,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 21,
-    "stations45": 55
+    "stations30": 15,
+    "stations45": 35
   },
   "prevSlug": "galijska",
   "nextSlug": "garaza-tuskanac"

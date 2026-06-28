@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:34",
-  "peakIntervalMin": [
-    17,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "135",
@@ -304,9 +301,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 79,
-    "stations45": 207
+    "stations15": 8,
+    "stations30": 72,
+    "stations45": 195
   },
   "prevSlug": "sulekova",
   "nextSlug": "sumarske-jaslice"

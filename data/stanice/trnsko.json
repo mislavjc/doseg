@@ -19,10 +19,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "0:59",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "7",
@@ -1603,9 +1600,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 143,
-    "stations45": 427
+    "stations15": 31,
+    "stations30": 124,
+    "stations45": 300
   },
   "prevSlug": "trnovcica-117",
   "nextSlug": "trpucev-breg"

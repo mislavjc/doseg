@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    5,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "264",
@@ -633,9 +630,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 11,
-    "stations45": 18
+    "stations15": 12,
+    "stations30": 22,
+    "stations45": 63
   },
   "prevSlug": "mo-n-brestje",
   "nextSlug": "mokroviceva"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    5,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -537,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 86,
-    "stations45": 292
+    "stations15": 11,
+    "stations30": 51,
+    "stations45": 127
   },
   "prevSlug": "kameniti-stol",
   "nextSlug": "kamenolom-podsused-vrapce"

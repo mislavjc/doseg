@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -485,8 +482,8 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 60,
-    "stations45": 194
+    "stations30": 52,
+    "stations45": 184
   },
   "prevSlug": "bijenicka-bocaliste",
   "nextSlug": "bikceviceva-staza"

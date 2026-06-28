@@ -40,10 +40,7 @@
   ],
   "firstDeparture": "4:17",
   "lastDeparture": "1:35",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "2",
@@ -4084,9 +4081,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 227,
-    "stations45": 471
+    "stations15": 30,
+    "stations30": 185,
+    "stations45": 359
   },
   "prevSlug": "crnkovecka-pescenica-zitnjak-2",
   "nextSlug": "cucerje"

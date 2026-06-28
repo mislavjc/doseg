@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "0:46",
   "lastDeparture": "0:21",
-  "peakIntervalMin": [
-    5,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "166",
@@ -1070,9 +1067,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 104,
-    "stations45": 301
+    "stations15": 3,
+    "stations30": 25,
+    "stations45": 97
   },
   "prevSlug": "odra-nadvoznjak",
   "nextSlug": "odra-novi-zagreb-istok-2"

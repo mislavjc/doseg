@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:37",
   "lastDeparture": "22:37",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "142",
@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 45,
-    "stations45": 146
+    "stations15": 11,
+    "stations30": 46,
+    "stations45": 126
   },
   "prevSlug": "manterovcak-46",
   "nextSlug": "manterovcak-78"

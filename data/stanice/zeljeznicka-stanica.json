@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:12",
   "lastDeparture": "1:37",
-  "peakIntervalMin": [
-    10,
-    10
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "172",
@@ -240,9 +237,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 67,
-    "stations45": 189
+    "stations15": 4,
+    "stations30": 12,
+    "stations45": 23
   },
   "prevSlug": "zelengaj-gornji-grad-medvescak",
   "nextSlug": "zeljeznicka-stanica-2"

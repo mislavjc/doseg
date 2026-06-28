@@ -13,10 +13,7 @@
   "busLines": [],
   "firstDeparture": "4:57",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -540,9 +537,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 233,
-    "stations45": 540
+    "stations15": 40,
+    "stations30": 198,
+    "stations45": 433
   },
   "prevSlug": "hladnjaca",
   "nextSlug": "hnk2-adzijina"

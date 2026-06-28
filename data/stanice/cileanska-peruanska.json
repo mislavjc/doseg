@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "23:51",
-  "peakIntervalMin": [
-    15,
-    18
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "121",
@@ -296,9 +293,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 101,
-    "stations45": 251
+    "stations15": 39,
+    "stations30": 85,
+    "stations45": 220
   },
   "prevSlug": "cileanska",
   "nextSlug": "cimermanova"

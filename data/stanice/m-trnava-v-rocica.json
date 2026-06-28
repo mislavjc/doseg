@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "0:38",
-  "peakIntervalMin": [
-    11,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -476,9 +473,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 27,
-    "stations45": 92
+    "stations15": 9,
+    "stations30": 17,
+    "stations45": 54
   },
   "prevSlug": "m-polje-parkiraliste",
   "nextSlug": "maksimirska-naselja"

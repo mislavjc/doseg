@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:47",
-  "peakIntervalMin": [
-    5,
-    22
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "112",
@@ -461,8 +458,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 12,
-    "stations45": 61
+    "stations30": 15,
+    "stations45": 50
   },
   "prevSlug": "lucko-centar-novi-zagreb-zapad",
   "nextSlug": "lucmanova"

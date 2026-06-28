@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:46",
   "lastDeparture": "0:43",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "6",
@@ -1385,9 +1382,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 236,
-    "stations45": 582
+    "stations15": 38,
+    "stations30": 175,
+    "stations45": 406
   },
   "prevSlug": "zrak-tehnicka-skola",
   "nextSlug": "zukciceva-19"

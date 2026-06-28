@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "1:32",
-  "peakIntervalMin": [
-    3,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "231",
@@ -720,9 +717,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 108,
-    "stations45": 307
+    "stations15": 11,
+    "stations30": 46,
+    "stations45": 157
   },
   "prevSlug": "staro-okretiste-brezovica-2",
   "nextSlug": "stefanovec-114"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:52",
-  "peakIntervalMin": [
-    6,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "102",
@@ -553,9 +550,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 175,
-    "stations45": 484
+    "stations15": 13,
+    "stations30": 90,
+    "stations45": 266
   },
   "prevSlug": "zagrepcanka",
   "nextSlug": "zapadni-kolodvor"

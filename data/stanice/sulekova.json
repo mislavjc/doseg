@@ -14,7 +14,7 @@
   "busLines": [],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -808,9 +808,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 168,
-    "stations45": 457
+    "stations15": 20,
+    "stations30": 108,
+    "stations45": 236
   },
   "prevSlug": "subiceva",
   "nextSlug": "suma-grmoscica"

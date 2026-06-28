@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:40",
   "lastDeparture": "22:10",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -1651,8 +1651,8 @@
   },
   "reach": {
     "stations15": 0,
-    "stations30": 0,
-    "stations45": 0
+    "stations30": 2,
+    "stations45": 4
   },
   "prevSlug": "p-d-graficar",
   "nextSlug": "pakracka"

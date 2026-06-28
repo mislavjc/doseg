@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "23:35",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -344,9 +341,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 64,
-    "stations45": 180
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "mirosevecka-137",
   "nextSlug": "mirosevecka-218"

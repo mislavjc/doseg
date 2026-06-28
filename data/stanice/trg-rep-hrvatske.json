@@ -19,10 +19,7 @@
   "busLines": [],
   "firstDeparture": "4:14",
   "lastDeparture": "0:42",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -2005,9 +2002,9 @@
     ]
   },
   "reach": {
-    "stations15": 48,
-    "stations30": 254,
-    "stations45": 582
+    "stations15": 35,
+    "stations30": 159,
+    "stations45": 400
   },
   "prevSlug": "trg-p-kresimira",
   "nextSlug": "trg-s-severa"

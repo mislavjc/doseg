@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "1:55",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "172",
@@ -412,8 +409,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 94,
-    "stations45": 227
+    "stations30": 76,
+    "stations45": 204
   },
   "prevSlug": "podfuscak",
   "nextSlug": "podsused-centar"

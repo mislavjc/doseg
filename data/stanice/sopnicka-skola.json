@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "275",
@@ -170,9 +170,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 49,
-    "stations45": 155
+    "stations15": 13,
+    "stations30": 41,
+    "stations45": 124
   },
   "prevSlug": "sopnicka-kod-10d",
   "nextSlug": "sopot"

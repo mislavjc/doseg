@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    7,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "122",
@@ -579,8 +576,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 94,
-    "stations45": 227
+    "stations30": 76,
+    "stations45": 204
   },
   "prevSlug": "podsused",
   "nextSlug": "podsused-most"

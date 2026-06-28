@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:01",
   "lastDeparture": "23:55",
-  "peakIntervalMin": [
-    7,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -294,8 +291,8 @@
   },
   "reach": {
     "stations15": 25,
-    "stations30": 141,
-    "stations45": 426
+    "stations30": 93,
+    "stations45": 270
   },
   "prevSlug": "pavlici",
   "nextSlug": "pekarska"

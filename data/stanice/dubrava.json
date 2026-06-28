@@ -28,10 +28,7 @@
   ],
   "firstDeparture": "3:57",
   "lastDeparture": "1:04",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "4",
@@ -2297,9 +2294,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 157,
-    "stations45": 450
+    "stations15": 14,
+    "stations30": 96,
+    "stations45": 255
   },
   "prevSlug": "dubranec-vikend-nas",
   "nextSlug": "dubravica"

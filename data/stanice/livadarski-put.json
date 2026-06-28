@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    5,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "215",
@@ -265,8 +262,8 @@
   },
   "reach": {
     "stations15": 23,
-    "stations30": 120,
-    "stations45": 389
+    "stations30": 103,
+    "stations45": 284
   },
   "prevSlug": "lisinski",
   "nextSlug": "lj-posav-rimski-put"

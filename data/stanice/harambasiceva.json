@@ -14,7 +14,7 @@
   "busLines": [],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -616,9 +616,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 156,
-    "stations45": 472
+    "stations15": 20,
+    "stations30": 99,
+    "stations45": 236
   },
   "prevSlug": "harabajsi",
   "nextSlug": "hatzeova"

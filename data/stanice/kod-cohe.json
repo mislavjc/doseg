@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:58",
-  "peakIntervalMin": [
-    2,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -439,8 +436,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 3,
-    "stations45": 12
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "kod-benzinske",
   "nextSlug": "kod-ilenica"

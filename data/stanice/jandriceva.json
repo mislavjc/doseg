@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:41",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "8",
@@ -933,9 +930,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 112,
-    "stations45": 288
+    "stations15": 15,
+    "stations30": 62,
+    "stations45": 135
   },
   "prevSlug": "jalsina",
   "nextSlug": "jankomir"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "23:12",
-  "peakIntervalMin": [
-    9,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "310",
@@ -224,9 +221,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 13,
-    "stations45": 17
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 7
   },
   "prevSlug": "gradevinska-skola",
   "nextSlug": "gradici-k-tomis-46"

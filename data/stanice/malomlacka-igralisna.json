@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "23:15",
-  "peakIntervalMin": [
-    5,
-    29
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "229",
@@ -579,8 +576,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 14,
-    "stations45": 14
+    "stations30": 4,
+    "stations45": 4
   },
   "prevSlug": "malomlacka-30",
   "nextSlug": "mandalicina"

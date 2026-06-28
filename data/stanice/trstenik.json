@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    4,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "209",
@@ -694,9 +691,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 30,
-    "stations45": 81
+    "stations15": 5,
+    "stations30": 21,
+    "stations45": 53
   },
   "prevSlug": "trsje",
   "nextSlug": "trznica-jarun"

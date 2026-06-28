@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:06",
   "lastDeparture": "23:31",
-  "peakIntervalMin": [
-    23,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "139",
@@ -736,9 +733,9 @@
     ]
   },
   "reach": {
-    "stations15": 41,
-    "stations30": 132,
-    "stations45": 386
+    "stations15": 43,
+    "stations30": 165,
+    "stations45": 325
   },
   "prevSlug": "kosirnikova",
   "nextSlug": "kosirnikova-9"

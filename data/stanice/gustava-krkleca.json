@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "1:02",
-  "peakIntervalMin": [
-    5,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "115",
@@ -236,9 +233,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 117,
-    "stations45": 373
+    "stations15": 21,
+    "stations30": 70,
+    "stations45": 201
   },
   "prevSlug": "gupceva-zvijezda",
   "nextSlug": "habdeliceva"

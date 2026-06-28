@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "7:09",
   "lastDeparture": "22:40",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -423,8 +423,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 2,
-    "stations45": 2
+    "stations30": 3,
+    "stations45": 5
   },
   "prevSlug": "tisinska-ul-iii-odv",
   "nextSlug": "tomislavova"

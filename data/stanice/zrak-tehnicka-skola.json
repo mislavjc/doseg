@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:27",
-  "peakIntervalMin": [
-    7,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "290",
@@ -278,7 +275,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 18,
-    "stations45": 63
+    "stations45": 47
   },
   "prevSlug": "zracna-luka",
   "nextSlug": "zrinjevac"

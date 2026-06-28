@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "1:41",
-  "peakIntervalMin": [
-    1,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "233",
@@ -416,9 +413,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 80,
-    "stations45": 232
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 26
   },
   "prevSlug": "jazbina-71",
   "nextSlug": "jelenovac-38d"

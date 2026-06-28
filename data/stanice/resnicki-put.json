@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "0:02",
-  "peakIntervalMin": [
-    2,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "214",
@@ -1961,8 +1958,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 65,
-    "stations45": 211
+    "stations30": 37,
+    "stations45": 165
   },
   "prevSlug": "resnicki-gaj",
   "nextSlug": "resnik-104"

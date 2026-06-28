@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:43",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "129",
@@ -261,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 194,
-    "stations45": 427
+    "stations15": 22,
+    "stations30": 110,
+    "stations45": 248
   },
   "prevSlug": "kulturni-centar",
   "nextSlug": "kup-kraljevec-skola"

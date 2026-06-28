@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:52",
   "lastDeparture": "0:37",
-  "peakIntervalMin": [
-    35,
-    35
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "290",
@@ -146,7 +143,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 7,
-    "stations45": 37
+    "stations45": 35
   },
   "prevSlug": "pesteri",
   "nextSlug": "petlja-izlaz-novi-zagreb-zapad"

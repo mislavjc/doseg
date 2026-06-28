@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:03",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    6,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -589,9 +586,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 118,
-    "stations45": 347
+    "stations15": 33,
+    "stations30": 79,
+    "stations45": 219
   },
   "prevSlug": "oreskoviceva-novi-zagreb-istok-2",
   "nextSlug": "osjecka"

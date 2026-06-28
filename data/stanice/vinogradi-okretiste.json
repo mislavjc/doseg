@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:29",
   "lastDeparture": "23:04",
-  "peakIntervalMin": [
-    30,
-    38
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "141",
@@ -592,9 +589,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 108,
-    "stations45": 365
+    "stations15": 14,
+    "stations30": 45,
+    "stations45": 103
   },
   "prevSlug": "vinogradi-27",
   "nextSlug": "vinogradska-3"

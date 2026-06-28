@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:25",
   "lastDeparture": "20:50",
-  "peakIntervalMin": [
-    23,
-    27
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "278",
@@ -150,8 +147,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 10,
-    "stations45": 59
+    "stations30": 5,
+    "stations45": 14
   },
   "prevSlug": "letnicka",
   "nextSlug": "lipnica"

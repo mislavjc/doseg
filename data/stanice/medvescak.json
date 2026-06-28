@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:36",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "106",
@@ -681,9 +678,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 215,
-    "stations45": 547
+    "stations15": 32,
+    "stations30": 129,
+    "stations45": 303
   },
   "prevSlug": "medpotoki-30",
   "nextSlug": "meglajci"

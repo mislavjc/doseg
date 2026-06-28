@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:36",
-  "peakIntervalMin": [
-    2,
-    10
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "210",
@@ -1157,9 +1154,9 @@
     ]
   },
   "reach": {
-    "stations15": 45,
-    "stations30": 146,
-    "stations45": 369
+    "stations15": 36,
+    "stations30": 114,
+    "stations45": 256
   },
   "prevSlug": "kolareva",
   "nextSlug": "koledinecka-skola"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:15",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    28,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "114",
@@ -246,9 +243,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 73,
-    "stations45": 229
+    "stations15": 16,
+    "stations30": 69,
+    "stations45": 201
   },
   "prevSlug": "durdekovec",
   "nextSlug": "dvorac-luznica"

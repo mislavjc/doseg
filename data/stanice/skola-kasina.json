@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    2,
-    20
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "263",
@@ -342,9 +339,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 48,
-    "stations45": 123
+    "stations15": 10,
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "skocilovici",
   "nextSlug": "skola-vugrovec"

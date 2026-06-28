@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "23:36",
-  "peakIntervalMin": [
-    41,
-    44
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "243",
@@ -264,9 +261,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 73,
-    "stations45": 274
+    "stations15": 11,
+    "stations30": 81,
+    "stations45": 253
   },
   "prevSlug": "jurjevska-77",
   "nextSlug": "k-brijegi-iiiodvojak"

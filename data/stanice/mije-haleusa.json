@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    14,
-    29
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "216",
@@ -855,9 +852,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 42,
-    "stations45": 162
+    "stations15": 5,
+    "stations30": 19,
+    "stations45": 67
   },
   "prevSlug": "mihovci",
   "nextSlug": "mikulici"

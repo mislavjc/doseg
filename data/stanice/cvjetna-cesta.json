@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    3,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "263",
@@ -302,9 +299,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 48,
-    "stations45": 123
+    "stations15": 8,
+    "stations30": 8,
+    "stations45": 19
   },
   "prevSlug": "culinecka-119",
   "nextSlug": "cvjetna-ulica"

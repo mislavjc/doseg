@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:15",
   "lastDeparture": "0:31",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "210",
@@ -2215,9 +2212,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 99,
-    "stations45": 279
+    "stations15": 42,
+    "stations30": 120,
+    "stations45": 232
   },
   "prevSlug": "ulica-kaktusa",
   "nextSlug": "ulica-rudolfa-fizira"

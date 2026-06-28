@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    44,
-    47
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "163",
@@ -434,8 +431,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 16,
-    "stations45": 50
+    "stations30": 13,
+    "stations45": 16
   },
   "prevSlug": "odranska-dacka",
   "nextSlug": "odvojak-reber"

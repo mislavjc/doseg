@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "3:42",
   "lastDeparture": "0:25",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "212",
@@ -976,9 +973,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 70,
-    "stations45": 182
+    "stations15": 9,
+    "stations30": 23,
+    "stations45": 108
   },
   "prevSlug": "valturska",
   "nextSlug": "varoska"

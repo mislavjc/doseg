@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "9:00",
   "lastDeparture": "12:10",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "144",
@@ -382,9 +382,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 128,
-    "stations45": 329
+    "stations15": 16,
+    "stations30": 107,
+    "stations45": 236
   },
   "prevSlug": "dom-sportova",
   "nextSlug": "dom-zdravlja"

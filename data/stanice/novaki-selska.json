@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:00",
   "lastDeparture": "23:50",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "177",
@@ -252,7 +252,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 4,
-    "stations45": 10
+    "stations45": 8
   },
   "prevSlug": "novaki-gornja-dubrava-2",
   "nextSlug": "novoselci"

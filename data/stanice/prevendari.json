@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:09",
-  "peakIntervalMin": [
-    20,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -269,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 20,
-    "stations45": 40
+    "stations15": 2,
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "prekvrsje-skola",
   "nextSlug": "prevende"

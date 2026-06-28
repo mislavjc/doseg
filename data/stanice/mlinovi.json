@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "23:37",
-  "peakIntervalMin": [
-    14,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "102",
@@ -604,9 +601,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 79,
-    "stations45": 215
+    "stations15": 12,
+    "stations30": 32,
+    "stations45": 79
   },
   "prevSlug": "mlinarska",
   "nextSlug": "mlinovi-gornji"

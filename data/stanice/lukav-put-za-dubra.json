@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "23:07",
-  "peakIntervalMin": [
-    9,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "315",
@@ -146,7 +143,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 4,
-    "stations45": 10
+    "stations45": 4
   },
   "prevSlug": "lucmanova",
   "nextSlug": "lukav-skolska-luzec"

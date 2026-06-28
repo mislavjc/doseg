@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "0:21",
-  "peakIntervalMin": [
-    4,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "161",
@@ -119,8 +116,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 33,
-    "stations45": 81
+    "stations30": 28,
+    "stations45": 73
   },
   "prevSlug": "brezovicka-80",
   "nextSlug": "brezovicka-ekonomija"

@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "1:46",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "109",
@@ -1324,9 +1321,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 137,
-    "stations45": 359
+    "stations15": 24,
+    "stations30": 78,
+    "stations45": 225
   },
   "prevSlug": "varoska",
   "nextSlug": "vatikanska-sv-mateja"

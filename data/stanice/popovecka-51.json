@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:32",
   "lastDeparture": "20:52",
-  "peakIntervalMin": [
-    50,
-    50
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "278",
@@ -84,9 +81,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 17,
-    "stations45": 59
+    "stations15": 4,
+    "stations30": 5,
+    "stations45": 14
   },
   "prevSlug": "popovec-gostiona",
   "nextSlug": "popovecka-leskovec"

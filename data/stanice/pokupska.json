@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:15",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    1,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "217",
@@ -333,9 +330,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 152,
-    "stations45": 388
+    "stations15": 19,
+    "stations30": 66,
+    "stations45": 181
   },
   "prevSlug": "pojatno-centar",
   "nextSlug": "polj-kod-skole"

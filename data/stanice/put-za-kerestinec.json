@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:18",
-  "peakIntervalMin": [
-    12,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -109,9 +106,9 @@
     ]
   },
   "reach": {
-    "stations15": 0,
-    "stations30": 9,
-    "stations45": 29
+    "stations15": 11,
+    "stations30": 13,
+    "stations45": 22
   },
   "prevSlug": "put-za-kasinu",
   "nextSlug": "put-za-leskovac"

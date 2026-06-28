@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    3,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "134",
@@ -88,9 +85,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 149,
-    "stations45": 376
+    "stations15": 32,
+    "stations30": 142,
+    "stations45": 267
   },
   "prevSlug": "sobolski-put",
   "nextSlug": "solici"

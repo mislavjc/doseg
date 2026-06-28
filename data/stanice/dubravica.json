@@ -19,10 +19,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "1:46",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "120",
@@ -1168,9 +1165,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 112,
-    "stations45": 271
+    "stations15": 39,
+    "stations30": 122,
+    "stations45": 261
   },
   "prevSlug": "dubrava",
   "nextSlug": "dudovec"

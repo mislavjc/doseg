@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "23:47",
-  "peakIntervalMin": [
-    20,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "276",
@@ -273,9 +270,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 29,
-    "stations45": 90
+    "stations15": 3,
+    "stations30": 3,
+    "stations45": 3
   },
   "prevSlug": "rakusina",
   "nextSlug": "ratarska"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    23,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "262",
@@ -472,9 +469,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 13,
-    "stations45": 42
+    "stations15": 6,
+    "stations30": 9,
+    "stations45": 24
   },
   "prevSlug": "golobreska-1-odvojak",
   "nextSlug": "goranec"

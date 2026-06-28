@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:09",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    7,
-    10
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "205",
@@ -646,8 +643,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 55,
-    "stations45": 154
+    "stations30": 32,
+    "stations45": 99
   },
   "prevSlug": "svetice-maksimir-2",
   "nextSlug": "svetosimunska-trgov"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    23,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "263",
@@ -288,9 +285,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 48,
-    "stations45": 123
+    "stations15": 10,
+    "stations30": 10,
+    "stations45": 23
   },
   "prevSlug": "kasina-179",
   "nextSlug": "kasina-okretiste"

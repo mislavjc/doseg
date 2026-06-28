@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "23:56",
-  "peakIntervalMin": [
-    5,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "160",
@@ -688,8 +685,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 15,
-    "stations45": 50
+    "stations30": 11,
+    "stations45": 14
   },
   "prevSlug": "brezaki",
   "nextSlug": "brezovica-skola"

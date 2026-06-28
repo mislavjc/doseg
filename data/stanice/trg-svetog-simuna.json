@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "1:55",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "205",
@@ -649,9 +646,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 30,
-    "stations45": 90
+    "stations15": 12,
+    "stations30": 14,
+    "stations45": 54
   },
   "prevSlug": "trg-s-severa",
   "nextSlug": "trg-volovcica"

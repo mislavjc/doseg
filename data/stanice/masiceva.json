@@ -18,10 +18,7 @@
   "busLines": [],
   "firstDeparture": "4:06",
   "lastDeparture": "1:17",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -1458,9 +1455,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 191,
-    "stations45": 507
+    "stations15": 23,
+    "stations30": 112,
+    "stations45": 242
   },
   "prevSlug": "marohniceva",
   "nextSlug": "mate-lovraka"

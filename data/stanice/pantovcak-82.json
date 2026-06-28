@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:02",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    7,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -313,9 +310,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 102,
-    "stations45": 321
+    "stations15": 23,
+    "stations30": 76,
+    "stations45": 219
   },
   "prevSlug": "pantovcak-241",
   "nextSlug": "park-101-brigade"

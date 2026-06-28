@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    3,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "279",
@@ -211,8 +208,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 26,
-    "stations45": 109
+    "stations30": 9,
+    "stations45": 28
   },
   "prevSlug": "rim-60",
   "nextSlug": "rimski-put-bazen"

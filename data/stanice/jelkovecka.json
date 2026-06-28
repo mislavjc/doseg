@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "23:45",
-  "peakIntervalMin": [
-    19,
-    22
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "277",
@@ -127,9 +124,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 57,
-    "stations45": 170
+    "stations15": 5,
+    "stations30": 12,
+    "stations45": 68
   },
   "prevSlug": "jelkovec-vrtic",
   "nextSlug": "jerebic"

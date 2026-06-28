@@ -17,10 +17,7 @@
   "busLines": [],
   "firstDeparture": "4:39",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "2",
@@ -1309,9 +1306,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 243,
-    "stations45": 590
+    "stations15": 22,
+    "stations30": 87,
+    "stations45": 245
   },
   "prevSlug": "branim-skrnjugova",
   "nextSlug": "branim-zagrebacka"

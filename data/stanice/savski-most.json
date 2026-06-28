@@ -30,10 +30,7 @@
   ],
   "firstDeparture": "4:10",
   "lastDeparture": "1:32",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "4",
@@ -2679,9 +2676,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 237,
-    "stations45": 525
+    "stations15": 33,
+    "stations30": 146,
+    "stations45": 298
   },
   "prevSlug": "savski-gaj-xii",
   "nextSlug": "savudrijska"

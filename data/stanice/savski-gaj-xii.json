@@ -26,10 +26,7 @@
   ],
   "firstDeparture": "4:14",
   "lastDeparture": "1:26",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "110",
@@ -3487,9 +3484,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 162,
-    "stations45": 418
+    "stations15": 35,
+    "stations30": 122,
+    "stations45": 303
   },
   "prevSlug": "savski-gaj-rotor",
   "nextSlug": "savski-most"

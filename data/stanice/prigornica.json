@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "1:50",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "122",
@@ -1447,9 +1444,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 112,
-    "stations45": 271
+    "stations15": 30,
+    "stations30": 110,
+    "stations45": 261
   },
   "prevSlug": "pri-spoljaru",
   "nextSlug": "prigornica-sjever"

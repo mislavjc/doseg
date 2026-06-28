@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    18,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -249,9 +246,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 15,
-    "stations45": 35
+    "stations15": 9,
+    "stations30": 11,
+    "stations45": 22
   },
   "prevSlug": "pintariceva",
   "nextSlug": "pirinova"

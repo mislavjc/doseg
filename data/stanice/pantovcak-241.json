@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:08",
   "lastDeparture": "23:49",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -96,9 +93,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 51,
-    "stations45": 155
+    "stations15": 9,
+    "stations30": 37,
+    "stations45": 79
   },
   "prevSlug": "pantovcak-180",
   "nextSlug": "pantovcak-82"

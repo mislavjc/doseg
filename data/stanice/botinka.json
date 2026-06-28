@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "23:32",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "111",
@@ -242,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 19,
-    "stations45": 60
+    "stations15": 2,
+    "stations30": 2,
+    "stations45": 9
   },
   "prevSlug": "botinec",
   "nextSlug": "bozidara-magovca"

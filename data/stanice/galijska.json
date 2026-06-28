@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    20,
-    50
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "241",
@@ -206,8 +203,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 19,
-    "stations45": 56
+    "stations30": 13,
+    "stations45": 35
   },
   "prevSlug": "gajnicki-vidikovac",
   "nextSlug": "galzenica"

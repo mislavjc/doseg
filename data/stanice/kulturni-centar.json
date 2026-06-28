@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    5,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -248,9 +245,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 6,
-    "stations45": 12
+    "stations15": 3,
+    "stations30": 3,
+    "stations45": 3
   },
   "prevSlug": "kudekov-put",
   "nextSlug": "kuniscak"

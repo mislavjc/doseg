@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:25",
-  "peakIntervalMin": [
-    7,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "161",
@@ -124,8 +121,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 10,
-    "stations45": 40
+    "stations30": 2,
+    "stations45": 16
   },
   "prevSlug": "grana",
   "nextSlug": "granesina-groblje"

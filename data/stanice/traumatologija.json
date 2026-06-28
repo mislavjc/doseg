@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:56",
   "lastDeparture": "0:55",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -1509,9 +1506,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 256,
-    "stations45": 627
+    "stations15": 26,
+    "stations30": 145,
+    "stations45": 404
   },
   "prevSlug": "trakoscanska-selcina",
   "nextSlug": "trdice-52"

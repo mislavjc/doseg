@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:49",
   "lastDeparture": "23:46",
-  "peakIntervalMin": [
-    5,
-    8
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "102",
@@ -677,9 +674,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 98,
-    "stations45": 251
+    "stations15": 15,
+    "stations30": 59,
+    "stations45": 134
   },
   "prevSlug": "cimermanova",
   "nextSlug": "co-prekrizje"

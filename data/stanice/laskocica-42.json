@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:58",
   "lastDeparture": "23:18",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "229",
@@ -431,8 +431,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 14,
-    "stations45": 14
+    "stations30": 6,
+    "stations45": 6
   },
   "prevSlug": "laskocica-2",
   "nextSlug": "lastovska"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:29",
-  "peakIntervalMin": [
-    6,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -488,9 +485,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 60,
-    "stations45": 194
+    "stations15": 15,
+    "stations30": 61,
+    "stations45": 191
   },
   "prevSlug": "cugovec",
   "nextSlug": "culinecka"

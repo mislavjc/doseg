@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    3,
-    23
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "271",
@@ -495,9 +492,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 8,
+    "stations30": 13,
+    "stations45": 23
   },
   "prevSlug": "put-za-medvedgrad",
   "nextSlug": "put-za-tumbre"

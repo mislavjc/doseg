@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "23:13",
-  "peakIntervalMin": [
-    35,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "310",
@@ -212,9 +209,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 13,
-    "stations45": 17
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 7
   },
   "prevSlug": "gradicka-4",
   "nextSlug": "gradska-malomlacka"

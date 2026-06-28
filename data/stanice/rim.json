@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:20",
-  "peakIntervalMin": [
-    12,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "226",
@@ -88,9 +85,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 69,
-    "stations45": 241
+    "stations15": 20,
+    "stations30": 41,
+    "stations45": 101
   },
   "prevSlug": "resnik-silos",
   "nextSlug": "rim-14a"

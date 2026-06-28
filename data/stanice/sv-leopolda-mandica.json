@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:51",
-  "peakIntervalMin": [
-    14,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "210",
@@ -244,9 +241,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 102,
-    "stations45": 324
+    "stations15": 24,
+    "stations30": 80,
+    "stations45": 232
   },
   "prevSlug": "sv-ivana-d-grubera",
   "nextSlug": "svarcanska"

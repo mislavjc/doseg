@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "214",
@@ -1840,9 +1837,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 95,
-    "stations45": 244
+    "stations15": 10,
+    "stations30": 41,
+    "stations45": 166
   },
   "prevSlug": "trg-zrt-fasizma",
   "nextSlug": "trnava-i-trgovina"

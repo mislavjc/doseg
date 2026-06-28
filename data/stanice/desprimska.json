@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:22",
-  "peakIntervalMin": [
-    5,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "132",
@@ -329,8 +326,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 12,
-    "stations45": 43
+    "stations30": 8,
+    "stations45": 19
   },
   "prevSlug": "desinicka",
   "nextSlug": "desprimska-34"

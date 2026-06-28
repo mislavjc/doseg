@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "0:53",
   "lastDeparture": "0:28",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "268",
@@ -482,9 +479,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 42,
-    "stations45": 137
+    "stations15": 16,
+    "stations30": 33,
+    "stations45": 100
   },
   "prevSlug": "zagorska",
   "nextSlug": "zagrebacka-103"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "23:49",
-  "peakIntervalMin": [
-    45,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "224",
@@ -493,8 +490,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 11,
-    "stations45": 21
+    "stations30": 7,
+    "stations45": 10
   },
   "prevSlug": "senscak-i-odvojak",
   "nextSlug": "sercerova-31"

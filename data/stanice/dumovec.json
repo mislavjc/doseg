@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "23:42",
-  "peakIntervalMin": [
-    13,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "276",
@@ -185,9 +182,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 32,
-    "stations45": 93
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "dudovec",
   "nextSlug": "dumovec-okretiste"

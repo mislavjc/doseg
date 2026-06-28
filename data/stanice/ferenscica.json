@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:37",
   "lastDeparture": "0:55",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -872,9 +869,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 96,
-    "stations45": 250
+    "stations15": 14,
+    "stations30": 78,
+    "stations45": 228
   },
   "prevSlug": "ferde-kocha",
   "nextSlug": "ferki"

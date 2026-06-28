@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -1348,9 +1345,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 8,
-    "stations45": 60
+    "stations15": 2,
+    "stations30": 7,
+    "stations45": 46
   },
   "prevSlug": "karaznik",
   "nextSlug": "karlovacka-18"

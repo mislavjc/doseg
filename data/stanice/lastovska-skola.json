@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "23:08",
-  "peakIntervalMin": [
-    4,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "218",
@@ -328,9 +325,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 112,
-    "stations45": 364
+    "stations15": 13,
+    "stations30": 52,
+    "stations45": 177
   },
   "prevSlug": "lastovska",
   "nextSlug": "lekneno-i"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:08",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    5,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -345,8 +342,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 28,
-    "stations45": 91
+    "stations30": 6,
+    "stations45": 8
   },
   "prevSlug": "caviceva-pescenica-zitnjak-2",
   "nextSlug": "cehi-buliceva"

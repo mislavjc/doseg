@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:19",
   "lastDeparture": "0:56",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "3",
@@ -880,9 +877,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 221,
-    "stations45": 560
+    "stations15": 27,
+    "stations30": 143,
+    "stations45": 369
   },
   "prevSlug": "svetosimunska-trgov",
   "nextSlug": "svilkovici-stenjevec"

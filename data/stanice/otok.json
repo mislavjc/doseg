@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "0:42",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    1,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "268",
@@ -300,9 +297,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 126,
-    "stations45": 329
+    "stations15": 14,
+    "stations30": 78,
+    "stations45": 226
   },
   "prevSlug": "osjecka",
   "nextSlug": "otok-neziceva"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    9,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "123",
@@ -444,9 +441,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 83,
-    "stations45": 222
+    "stations15": 10,
+    "stations30": 50,
+    "stations45": 172
   },
   "prevSlug": "selisce",
   "nextSlug": "selnica"

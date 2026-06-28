@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "107",
@@ -853,9 +850,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 117,
-    "stations45": 373
+    "stations15": 21,
+    "stations30": 70,
+    "stations45": 201
   },
   "prevSlug": "slavenskog-stenjevec",
   "nextSlug": "slavenskoga-jug"

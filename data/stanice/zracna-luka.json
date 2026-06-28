@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:32",
-  "peakIntervalMin": [
-    1,
-    34
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "290",
@@ -254,7 +251,7 @@
   "reach": {
     "stations15": 1,
     "stations30": 18,
-    "stations45": 63
+    "stations45": 47
   },
   "prevSlug": "znikina",
   "nextSlug": "zrak-tehnicka-skola"

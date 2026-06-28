@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "0:53",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -1432,9 +1429,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 9,
-    "stations45": 60
+    "stations15": 3,
+    "stations30": 7,
+    "stations45": 47
   },
   "prevSlug": "karlovacka-18",
   "nextSlug": "kasina-110"

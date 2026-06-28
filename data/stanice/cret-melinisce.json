@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    4,
-    14
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "227",
@@ -1301,9 +1298,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 56,
-    "stations45": 148
+    "stations15": 10,
+    "stations30": 22,
+    "stations45": 49
   },
   "prevSlug": "cret-27",
   "nextSlug": "crkva"

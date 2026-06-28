@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:38",
   "lastDeparture": "0:38",
-  "peakIntervalMin": [
-    15,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "176",
@@ -462,9 +459,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 68,
-    "stations45": 189
+    "stations15": 3,
+    "stations30": 14,
+    "stations45": 36
   },
   "prevSlug": "strpet-okretiste",
   "nextSlug": "stubicka-i-odvojak"

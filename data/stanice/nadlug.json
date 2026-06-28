@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:54",
   "lastDeparture": "22:49",
-  "peakIntervalMin": [
-    21,
-    35
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -225,9 +222,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 10,
-    "stations45": 13
+    "stations15": 5,
+    "stations30": 14,
+    "stations45": 32
   },
   "prevSlug": "nabrezje",
   "nextSlug": "naletiliceva-104"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:37",
-  "peakIntervalMin": [
-    9,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -452,9 +449,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 27,
-    "stations45": 92
+    "stations15": 8,
+    "stations30": 17,
+    "stations45": 54
   },
   "prevSlug": "markusev-popovec-62",
   "nextSlug": "markusev-trnava-84"

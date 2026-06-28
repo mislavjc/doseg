@@ -18,10 +18,7 @@
   "busLines": [],
   "firstDeparture": "4:17",
   "lastDeparture": "1:05",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -1878,9 +1875,9 @@
     ]
   },
   "reach": {
-    "stations15": 40,
-    "stations30": 224,
-    "stations45": 527
+    "stations15": 15,
+    "stations30": 67,
+    "stations45": 224
   },
   "prevSlug": "augusta-piazze",
   "nextSlug": "avenija-g-suska-mup"

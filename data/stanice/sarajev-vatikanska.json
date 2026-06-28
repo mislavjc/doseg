@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:17",
-  "peakIntervalMin": [
-    11,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -451,9 +448,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 67,
-    "stations45": 251
+    "stations15": 17,
+    "stations30": 46,
+    "stations45": 158
   },
   "prevSlug": "sarajev-ukrajinska",
   "nextSlug": "sarajevska-hrelic"

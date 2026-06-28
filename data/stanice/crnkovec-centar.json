@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "23:55",
-  "peakIntervalMin": [
-    29,
-    76
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -206,8 +203,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 3,
-    "stations45": 4
+    "stations30": 7,
+    "stations45": 14
   },
   "prevSlug": "crnkovec",
   "nextSlug": "crnkovecka-pescenica-zitnjak"

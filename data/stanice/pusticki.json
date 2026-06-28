@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "23:38",
-  "peakIntervalMin": [
-    19,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "270",
@@ -85,9 +82,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 7,
-    "stations45": 28
+    "stations15": 5,
+    "stations30": 5,
+    "stations45": 20
   },
   "prevSlug": "puskariceva-skola",
   "nextSlug": "put-za-aspergere"

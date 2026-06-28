@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "1:20",
-  "peakIntervalMin": [
-    4,
-    21
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -618,8 +615,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 37,
-    "stations45": 163
+    "stations30": 38,
+    "stations45": 147
   },
   "prevSlug": "kovaceviceva",
   "nextSlug": "kovinska-stenjevec-2"

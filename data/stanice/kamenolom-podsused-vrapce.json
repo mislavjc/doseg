@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "123",
@@ -532,9 +529,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 83,
-    "stations45": 222
+    "stations15": 4,
+    "stations30": 10,
+    "stations45": 44
   },
   "prevSlug": "kameniti-stol-14",
   "nextSlug": "kamenolom-sesvete"

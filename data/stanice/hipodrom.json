@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "23:23",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "243",
@@ -319,8 +319,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 70,
-    "stations45": 274
+    "stations30": 78,
+    "stations45": 241
   },
   "prevSlug": "hercegovacka-21",
   "nextSlug": "hladnjaca"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:58",
   "lastDeparture": "0:48",
-  "peakIntervalMin": [
-    3,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -502,9 +499,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 44,
-    "stations45": 165
+    "stations15": 3,
+    "stations30": 4,
+    "stations45": 23
   },
   "prevSlug": "pilati",
   "nextSlug": "pipici"

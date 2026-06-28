@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:09",
-  "peakIntervalMin": [
-    19,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "271",
@@ -290,8 +287,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 2,
-    "stations45": 4
+    "stations30": 7,
+    "stations45": 17
   },
   "prevSlug": "petrusevecko-naselje",
   "nextSlug": "pintariceva"

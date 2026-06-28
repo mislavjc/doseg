@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    13,
-    32
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "224",
@@ -558,8 +555,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 45,
-    "stations45": 140
+    "stations30": 23,
+    "stations45": 101
   },
   "prevSlug": "brestovecka-100",
   "nextSlug": "brestovecka-d-dom"

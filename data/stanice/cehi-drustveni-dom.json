@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:00",
   "lastDeparture": "23:51",
-  "peakIntervalMin": [
-    6,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -519,8 +516,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 18,
-    "stations45": 29
+    "stations30": 4,
+    "stations45": 4
   },
   "prevSlug": "cehi-buliceva",
   "nextSlug": "cehi-nadvoznjak"

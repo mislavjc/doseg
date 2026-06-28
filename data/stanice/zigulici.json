@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "23:37",
-  "peakIntervalMin": [
-    7,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -316,9 +313,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 59,
-    "stations45": 164
+    "stations15": 5,
+    "stations30": 14,
+    "stations45": 20
   },
   "prevSlug": "zidaki",
   "nextSlug": "zitnjacka"

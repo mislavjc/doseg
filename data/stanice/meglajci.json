@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:35",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -283,8 +283,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 11,
-    "stations45": 52
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "medvescak",
   "nextSlug": "melinisce"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "23:55",
-  "peakIntervalMin": [
-    10,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "132",
@@ -237,8 +234,8 @@
   },
   "reach": {
     "stations15": 15,
-    "stations30": 32,
-    "stations45": 81
+    "stations30": 27,
+    "stations45": 72
   },
   "prevSlug": "brezje",
   "nextSlug": "brezovicka-28"

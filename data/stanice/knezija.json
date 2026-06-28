@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "5:02",
   "lastDeparture": "1:01",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "5",
@@ -833,9 +830,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 221,
-    "stations45": 518
+    "stations15": 29,
+    "stations30": 162,
+    "stations45": 358
   },
   "prevSlug": "klin-koledinecka",
   "nextSlug": "kobiljak-69"

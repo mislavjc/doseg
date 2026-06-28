@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "23:41",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "284",
@@ -75,8 +75,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 17,
-    "stations45": 69
+    "stations30": 8,
+    "stations45": 30
   },
   "prevSlug": "savska",
   "nextSlug": "savska-opatovina"

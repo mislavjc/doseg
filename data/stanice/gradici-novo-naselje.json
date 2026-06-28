@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:11",
-  "peakIntervalMin": [
-    8,
-    27
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "310",
@@ -204,9 +201,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 12,
-    "stations45": 16
+    "stations15": 5,
+    "stations30": 5,
+    "stations45": 5
   },
   "prevSlug": "gradici-k-tomis-85",
   "nextSlug": "gradicka-4"

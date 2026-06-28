@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "0:08",
-  "peakIntervalMin": [
-    2,
-    25
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "111",
@@ -363,8 +360,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 14,
-    "stations45": 61
+    "stations30": 16,
+    "stations45": 52
   },
   "prevSlug": "put-za-kerestinec",
   "nextSlug": "put-za-medvedgrad"

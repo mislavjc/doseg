@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:56",
   "lastDeparture": "23:10",
-  "peakIntervalMin": [
-    6,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -377,9 +374,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 150,
-    "stations45": 393
+    "stations15": 13,
+    "stations30": 119,
+    "stations45": 306
   },
   "prevSlug": "markusevecka-trnava",
   "nextSlug": "masiceva"

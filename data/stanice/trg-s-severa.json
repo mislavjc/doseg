@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:10",
   "lastDeparture": "0:30",
-  "peakIntervalMin": [
-    1,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "125",
@@ -769,9 +766,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 29,
-    "stations45": 123
+    "stations15": 13,
+    "stations30": 51,
+    "stations45": 133
   },
   "prevSlug": "trg-rep-hrvatske",
   "nextSlug": "trg-svetog-simuna"

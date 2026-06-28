@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    19,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -467,9 +464,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 34,
-    "stations45": 123
+    "stations15": 2,
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "micevec-centar",
   "nextSlug": "mihaljevac"

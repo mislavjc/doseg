@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:30",
-  "peakIntervalMin": [
-    11,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "261",
@@ -162,8 +159,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 17,
-    "stations45": 39
+    "stations30": 9,
+    "stations45": 26
   },
   "prevSlug": "gor-prekvrsje-p-i-t",
   "nextSlug": "goranska"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    35,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "132",
@@ -373,8 +370,8 @@
   },
   "reach": {
     "stations15": 13,
-    "stations30": 32,
-    "stations45": 80
+    "stations30": 25,
+    "stations45": 72
   },
   "prevSlug": "golobreska",
   "nextSlug": "gor-prekvrsje-p-i-t"

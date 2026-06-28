@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:31",
   "lastDeparture": "20:51",
-  "peakIntervalMin": [
-    50,
-    50
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "278",
@@ -90,7 +87,7 @@
   "reach": {
     "stations15": 7,
     "stations30": 17,
-    "stations45": 59
+    "stations45": 69
   },
   "prevSlug": "lesce",
   "nextSlug": "letnicka"

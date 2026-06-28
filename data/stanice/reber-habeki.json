@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:17",
-  "peakIntervalMin": [
-    3,
-    12
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "262",
@@ -463,9 +460,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 50,
-    "stations45": 125
+    "stations15": 15,
+    "stations30": 16,
+    "stations45": 32
   },
   "prevSlug": "ravnice-maksimir-2",
   "nextSlug": "rebro-5"

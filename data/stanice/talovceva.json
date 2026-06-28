@@ -13,10 +13,7 @@
   "busLines": [],
   "firstDeparture": "4:55",
   "lastDeparture": "0:27",
-  "peakIntervalMin": [
-    10,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "2",
@@ -480,9 +477,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 212,
-    "stations45": 516
+    "stations15": 48,
+    "stations30": 209,
+    "stations45": 439
   },
   "prevSlug": "talani",
   "nextSlug": "tehnicki-muzej"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "0:32",
-  "peakIntervalMin": [
-    6,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -272,9 +269,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 77,
-    "stations45": 249
+    "stations15": 17,
+    "stations30": 32,
+    "stations45": 102
   },
   "prevSlug": "bukovacka-8",
   "nextSlug": "bukovje-mihanoviceva"

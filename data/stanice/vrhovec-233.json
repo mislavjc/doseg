@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:31",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "149",
@@ -84,9 +81,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
+    "stations15": 8,
     "stations30": 9,
-    "stations45": 48
+    "stations45": 29
   },
   "prevSlug": "vrhovec-196",
   "nextSlug": "vrhovec-62"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "23:49",
-  "peakIntervalMin": [
-    1,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "102",
@@ -629,9 +626,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 171,
-    "stations45": 473
+    "stations15": 31,
+    "stations30": 110,
+    "stations45": 278
   },
   "prevSlug": "turopoljska",
   "nextSlug": "tuskanova"

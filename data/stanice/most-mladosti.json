@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:25",
   "lastDeparture": "0:56",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "6",
@@ -1232,9 +1229,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 135,
-    "stations45": 389
+    "stations15": 9,
+    "stations30": 48,
+    "stations45": 140
   },
   "prevSlug": "moravce-benkova",
   "nextSlug": "mrksina"

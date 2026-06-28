@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    5,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "113",
@@ -285,9 +282,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 105,
-    "stations45": 334
+    "stations15": 17,
+    "stations30": 108,
+    "stations45": 294
   },
   "prevSlug": "crkva",
   "nextSlug": "crnko-put-za-strmec"

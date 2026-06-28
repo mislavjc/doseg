@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:04",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -320,9 +317,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 85
+    "stations15": 5,
+    "stations30": 5,
+    "stations45": 18
   },
   "prevSlug": "vukomeric-okretiste",
   "nextSlug": "zadvorska-54"

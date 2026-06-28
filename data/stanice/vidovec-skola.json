@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "23:30",
-  "peakIntervalMin": [
-    8,
-    22
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "208",
@@ -260,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 72
+    "stations15": 5,
+    "stations30": 14,
+    "stations45": 54
   },
   "prevSlug": "vidovcica-i",
   "nextSlug": "vidovec-trgovina"

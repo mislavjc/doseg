@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:05",
   "lastDeparture": "23:00",
-  "peakIntervalMin": [
-    33,
-    37
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -369,9 +366,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 16,
-    "stations45": 16
+    "stations15": 2,
+    "stations30": 7,
+    "stations45": 25
   },
   "prevSlug": "ilirski-trg",
   "nextSlug": "inst-r-boskovic"

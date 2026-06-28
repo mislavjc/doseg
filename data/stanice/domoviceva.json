@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:22",
-  "peakIntervalMin": [
-    13,
-    31
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -102,8 +99,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 18,
-    "stations45": 59
+    "stations30": 5,
+    "stations45": 10
   },
   "prevSlug": "dominika-mandica",
   "nextSlug": "donje-prekrizje"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "23:32",
-  "peakIntervalMin": [
-    13,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "135",
@@ -305,8 +302,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 27,
-    "stations45": 178
+    "stations30": 10,
+    "stations45": 16
   },
   "prevSlug": "kostanjevec",
   "nextSlug": "kovaceviceva"

@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "1:48",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "109",
@@ -366,9 +363,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 17,
+    "stations30": 45,
+    "stations45": 157
   },
   "prevSlug": "katarinin-trg",
   "nextSlug": "kazaliste-tresnja"

@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    16,
-    27
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "166",
@@ -647,8 +644,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 7,
-    "stations45": 9
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "antuna-soljana",
   "nextSlug": "arena-centar-novi-zagreb-zapad"

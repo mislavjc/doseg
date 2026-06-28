@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "20:51",
-  "peakIntervalMin": [
-    16,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "283",
@@ -601,9 +598,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 88,
-    "stations45": 207
+    "stations15": 17,
+    "stations30": 36,
+    "stations45": 106
   },
   "prevSlug": "mlinovi-gornji",
   "nextSlug": "mokricka"

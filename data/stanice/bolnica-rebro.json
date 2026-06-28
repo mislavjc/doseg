@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:20",
   "lastDeparture": "20:57",
-  "peakIntervalMin": [
-    7,
-    8
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "228",
@@ -880,9 +877,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 129,
-    "stations45": 362
+    "stations15": 17,
+    "stations30": 69,
+    "stations45": 186
   },
   "prevSlug": "bolnica-goljak",
   "nextSlug": "bolnica-srebrnjak"

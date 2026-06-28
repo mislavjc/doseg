@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "23:36",
-  "peakIntervalMin": [
-    14,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "273",
@@ -139,7 +136,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 2,
-    "stations45": 9
+    "stations45": 2
   },
   "prevSlug": "grebenscica",
   "nextSlug": "grizanska"

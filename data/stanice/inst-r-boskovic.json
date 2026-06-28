@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:32",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "106",
@@ -1309,9 +1306,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 105,
-    "stations45": 303
+    "stations15": 22,
+    "stations30": 95,
+    "stations45": 223
   },
   "prevSlug": "inker",
   "nextSlug": "institut-za-bilje"

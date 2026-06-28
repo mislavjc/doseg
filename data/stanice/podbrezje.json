@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "0:41",
   "lastDeparture": "0:56",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "242",
@@ -390,9 +387,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 108,
-    "stations45": 315
+    "stations15": 23,
+    "stations30": 95,
+    "stations45": 254
   },
   "prevSlug": "pliva",
   "nextSlug": "podbrezje-okretiste"

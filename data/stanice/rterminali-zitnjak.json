@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    1,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -1035,8 +1032,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 55,
-    "stations45": 200
+    "stations30": 51,
+    "stations45": 151
   },
   "prevSlug": "rt-jankomir",
   "nextSlug": "rudeska"

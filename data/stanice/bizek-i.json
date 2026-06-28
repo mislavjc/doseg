@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "23:51",
-  "peakIntervalMin": [
-    13,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "131",
@@ -329,8 +326,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 38,
-    "stations45": 154
+    "stations30": 11,
+    "stations45": 42
   },
   "prevSlug": "bizek",
   "nextSlug": "bizek-iii"

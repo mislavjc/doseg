@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:17",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "214",
@@ -1677,9 +1674,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 52,
-    "stations45": 171
+    "stations15": 14,
+    "stations30": 45,
+    "stations45": 151
   },
   "prevSlug": "culinecka",
   "nextSlug": "cvjetna-cesta"

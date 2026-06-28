@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    5,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "295",
@@ -452,9 +449,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 32,
-    "stations45": 124
+    "stations15": 5,
+    "stations30": 9,
+    "stations45": 46
   },
   "prevSlug": "jagiceva",
   "nextSlug": "jakusevec-groblje"

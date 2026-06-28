@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "1:08",
-  "peakIntervalMin": [
-    4,
-    12
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "107",
@@ -572,9 +569,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 135,
-    "stations45": 392
+    "stations15": 22,
+    "stations30": 123,
+    "stations45": 270
   },
   "prevSlug": "hrvatskog-sokola-tresnjevka-jug",
   "nextSlug": "hudobicka-1"

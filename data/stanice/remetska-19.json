@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:28",
-  "peakIntervalMin": [
-    2,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "106",
@@ -698,9 +695,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 84,
-    "stations45": 264
+    "stations15": 17,
+    "stations30": 62,
+    "stations45": 135
   },
   "prevSlug": "remetineckih-zrtava",
   "nextSlug": "resnicki-gaj"

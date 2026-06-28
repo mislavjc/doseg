@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:56",
   "lastDeparture": "0:31",
-  "peakIntervalMin": [
-    15,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "128",
@@ -384,9 +381,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 183,
-    "stations45": 406
+    "stations15": 17,
+    "stations30": 99,
+    "stations45": 223
   },
   "prevSlug": "ivice-lovincica",
   "nextSlug": "jackovina-105"

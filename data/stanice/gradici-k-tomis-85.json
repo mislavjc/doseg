@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "23:14",
-  "peakIntervalMin": [
-    12,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "310",
@@ -288,9 +285,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 14,
-    "stations45": 18
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 7
   },
   "prevSlug": "gradici-k-tomis-57",
   "nextSlug": "gradici-novo-naselje"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "23:20",
-  "peakIntervalMin": [
-    12,
-    45
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "280",
@@ -147,7 +144,7 @@
   "reach": {
     "stations15": 1,
     "stations30": 1,
-    "stations45": 2
+    "stations45": 12
   },
   "prevSlug": "siletici",
   "nextSlug": "sinbuk"

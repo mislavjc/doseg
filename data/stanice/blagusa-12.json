@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "23:37",
-  "peakIntervalMin": [
-    16,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "270",
@@ -77,9 +74,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 14
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "blage-zadre",
   "nextSlug": "blagusa-centar"

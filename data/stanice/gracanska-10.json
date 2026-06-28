@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "1:36",
-  "peakIntervalMin": [
-    7,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "233",
@@ -300,9 +297,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 88,
-    "stations45": 264
+    "stations15": 12,
+    "stations30": 62,
+    "stations45": 144
   },
   "prevSlug": "gracani",
   "nextSlug": "gracanska-48"

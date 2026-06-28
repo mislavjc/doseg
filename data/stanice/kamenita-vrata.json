@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:07",
   "lastDeparture": "22:16",
-  "peakIntervalMin": [
-    10,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "150",
@@ -340,9 +337,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 198,
-    "stations45": 549
+    "stations15": 32,
+    "stations30": 133,
+    "stations45": 362
   },
   "prevSlug": "kamenarski-breg",
   "nextSlug": "kameniti-stol"

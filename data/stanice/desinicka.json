@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:58",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "118",
@@ -280,9 +277,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 136,
-    "stations45": 430
+    "stations15": 29,
+    "stations30": 165,
+    "stations45": 400
   },
   "prevSlug": "derdici",
   "nextSlug": "desprimska"

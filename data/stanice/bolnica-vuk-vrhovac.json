@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "23:24",
-  "peakIntervalMin": [
-    7,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "201",
@@ -377,9 +374,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 135,
-    "stations45": 380
+    "stations15": 23,
+    "stations30": 104,
+    "stations45": 248
   },
   "prevSlug": "bolnica-vrapce",
   "nextSlug": "bolnicka-gospodska"

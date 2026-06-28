@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    10,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "160",
@@ -744,8 +741,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 14,
-    "stations45": 50
+    "stations30": 13,
+    "stations45": 16
   },
   "prevSlug": "milace",
   "nextSlug": "millerova"

@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:18",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -1528,9 +1525,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 77,
-    "stations45": 253
+    "stations15": 5,
+    "stations30": 19,
+    "stations45": 63
   },
   "prevSlug": "karlovacka-157",
   "nextSlug": "karlovacka-97"

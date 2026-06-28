@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "5:00",
   "lastDeparture": "1:03",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "5",
@@ -635,9 +632,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 160,
-    "stations45": 418
+    "stations15": 25,
+    "stations30": 126,
+    "stations45": 315
   },
   "prevSlug": "sredisce",
   "nextSlug": "sruki"

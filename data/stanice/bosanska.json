@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:03",
   "lastDeparture": "21:48",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "148",
@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 126,
-    "stations45": 371
+    "stations15": 34,
+    "stations30": 106,
+    "stations45": 275
   },
   "prevSlug": "borovje-trnje",
   "nextSlug": "botanicki-vrt"

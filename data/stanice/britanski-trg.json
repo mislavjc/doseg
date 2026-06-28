@@ -21,10 +21,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "1:02",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "6",
@@ -2177,9 +2174,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 195,
-    "stations45": 499
+    "stations15": 39,
+    "stations30": 174,
+    "stations45": 382
   },
   "prevSlug": "brezovicka-ekonomija",
   "nextSlug": "brod-kunticeva"

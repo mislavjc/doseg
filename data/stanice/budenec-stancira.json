@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    16,
-    27
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "274",
@@ -229,9 +226,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 16
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 14
   },
   "prevSlug": "budeki-kapelica",
   "nextSlug": "budenecka-14"

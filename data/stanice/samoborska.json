@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:07",
   "lastDeparture": "1:53",
-  "peakIntervalMin": [
-    2,
-    12
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "116",
@@ -563,9 +560,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 58,
-    "stations45": 195
+    "stations15": 5,
+    "stations30": 44,
+    "stations45": 166
   },
   "prevSlug": "sajam-jakusevec",
   "nextSlug": "sarajev-jakusevecka"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "22:54",
-  "peakIntervalMin": [
-    33,
-    37
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -301,9 +298,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 13,
-    "stations45": 13
+    "stations15": 2,
+    "stations30": 10,
+    "stations45": 28
   },
   "prevSlug": "cvjetna-cesta",
   "nextSlug": "d-bistra-centar"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:10",
   "lastDeparture": "22:48",
-  "peakIntervalMin": [
-    8,
-    40
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "214",
@@ -451,9 +448,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 98,
-    "stations45": 278
+    "stations15": 23,
+    "stations30": 81,
+    "stations45": 180
   },
   "prevSlug": "koledinecka",
   "nextSlug": "koledovcina"

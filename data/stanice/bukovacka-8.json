@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "0:34",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -269,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 148,
-    "stations45": 370
+    "stations15": 13,
+    "stations30": 61,
+    "stations45": 186
   },
   "prevSlug": "bukovacka-68",
   "nextSlug": "bukovacka-jurja-ves"

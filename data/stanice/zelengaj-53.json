@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:23",
   "lastDeparture": "22:23",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "138",
@@ -452,9 +449,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 35,
-    "stations45": 147
+    "stations15": 21,
+    "stations30": 74,
+    "stations45": 163
   },
   "prevSlug": "zelengaj",
   "nextSlug": "zelengaj-65"

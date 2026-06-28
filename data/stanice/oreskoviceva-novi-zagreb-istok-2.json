@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "0:43",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "268",
@@ -296,9 +293,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 102,
-    "stations45": 301
+    "stations15": 15,
+    "stations30": 75,
+    "stations45": 225
   },
   "prevSlug": "oreskoviceva-novi-zagreb-istok",
   "nextSlug": "os-pantovcak"

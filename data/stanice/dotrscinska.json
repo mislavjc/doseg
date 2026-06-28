@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:50",
-  "peakIntervalMin": [
-    5,
-    31
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "230",
@@ -316,9 +313,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 46,
-    "stations45": 150
+    "stations15": 5,
+    "stations30": 17,
+    "stations45": 42
   },
   "prevSlug": "dotrscina",
   "nextSlug": "dragonozec-kapela"

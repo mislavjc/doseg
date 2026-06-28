@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    17,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "132",
@@ -426,7 +423,7 @@
   "reach": {
     "stations15": 9,
     "stations30": 21,
-    "stations45": 58
+    "stations45": 55
   },
   "prevSlug": "goli-breg",
   "nextSlug": "golis"

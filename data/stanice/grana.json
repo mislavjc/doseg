@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:07",
   "lastDeparture": "0:48",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -994,9 +991,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 128,
-    "stations45": 354
+    "stations15": 22,
+    "stations30": 78,
+    "stations45": 182
   },
   "prevSlug": "grahovec",
   "nextSlug": "grancarska-22"

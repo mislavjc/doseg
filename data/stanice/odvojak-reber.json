@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    3,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "263",
@@ -310,9 +307,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 48,
-    "stations45": 123
+    "stations15": 10,
+    "stations30": 10,
+    "stations45": 21
   },
   "prevSlug": "odranski-obrez",
   "nextSlug": "okt-miletica-stenjevec"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "0:46",
-  "peakIntervalMin": [
-    5,
-    19
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "164",
@@ -251,8 +248,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 6,
-    "stations45": 26
+    "stations30": 12,
+    "stations45": 48
   },
   "prevSlug": "jezdovec-vojarna",
   "nextSlug": "jezdovecka-110"

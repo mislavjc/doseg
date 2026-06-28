@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:30",
-  "peakIntervalMin": [
-    2,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "106",
@@ -638,9 +635,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 116,
-    "stations45": 294
+    "stations15": 29,
+    "stations30": 100,
+    "stations45": 218
   },
   "prevSlug": "miramarska",
   "nextSlug": "mirogoj-arkade"

@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "202",
@@ -1507,9 +1504,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 129,
-    "stations45": 374
+    "stations15": 24,
+    "stations30": 85,
+    "stations45": 209
   },
   "prevSlug": "jordanovac-maksimir",
   "nextSlug": "josipa-loncara"

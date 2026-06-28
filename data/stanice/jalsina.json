@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:44",
-  "peakIntervalMin": [
-    9,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "125",
@@ -428,9 +425,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 60,
-    "stations45": 183
+    "stations15": 12,
+    "stations30": 45,
+    "stations45": 125
   },
   "prevSlug": "jalsevec",
   "nextSlug": "jandriceva"

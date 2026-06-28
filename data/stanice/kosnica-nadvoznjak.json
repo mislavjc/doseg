@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    19,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -427,9 +424,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 43,
-    "stations45": 137
+    "stations15": 4,
+    "stations30": 8,
+    "stations45": 31
   },
   "prevSlug": "kosnica-izbjeg-nas",
   "nextSlug": "kosnica-petina"

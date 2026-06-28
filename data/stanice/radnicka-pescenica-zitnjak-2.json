@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    7,
-    12
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "216",
@@ -897,9 +894,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 176,
-    "stations45": 420
+    "stations15": 24,
+    "stations30": 96,
+    "stations45": 249
   },
   "prevSlug": "radnicka-pescenica-zitnjak",
   "nextSlug": "radnicka-trnje"

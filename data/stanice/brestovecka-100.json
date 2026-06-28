@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    14,
-    31
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "224",
@@ -542,8 +539,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 45,
-    "stations45": 140
+    "stations30": 23,
+    "stations45": 101
   },
   "prevSlug": "brestovecka",
   "nextSlug": "brestovecka-128"

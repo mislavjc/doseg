@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "23:46",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -577,9 +574,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 54,
-    "stations45": 163
+    "stations15": 11,
+    "stations30": 35,
+    "stations45": 103
   },
   "prevSlug": "sestinski-lagvic",
   "nextSlug": "sestinski-vrh"

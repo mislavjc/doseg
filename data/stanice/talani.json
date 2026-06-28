@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:20",
-  "peakIntervalMin": [
-    10,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "127",
@@ -401,8 +398,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 19,
-    "stations45": 54
+    "stations30": 4,
+    "stations45": 16
   },
   "prevSlug": "svilkovici-tresnjevka-jug",
   "nextSlug": "talovceva"

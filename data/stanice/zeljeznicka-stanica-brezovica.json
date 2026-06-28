@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    20,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -250,8 +247,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 18,
-    "stations45": 38
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "zeljeznicka-stanica-2",
   "nextSlug": "zenki"

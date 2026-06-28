@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "0:41",
-  "peakIntervalMin": [
-    9,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "209",
@@ -352,9 +349,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 30,
-    "stations45": 81
+    "stations15": 4,
+    "stations30": 18,
+    "stations45": 53
   },
   "prevSlug": "grskoviceva",
   "nextSlug": "gupceva-zvijezda"

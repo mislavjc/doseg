@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "221",
@@ -364,9 +361,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 137,
-    "stations45": 359
+    "stations15": 15,
+    "stations30": 44,
+    "stations45": 156
   },
   "prevSlug": "fallerovo-tresnjevka-jug-2",
   "nextSlug": "farkasicka"

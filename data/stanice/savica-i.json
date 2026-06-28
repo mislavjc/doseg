@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "22:54",
-  "peakIntervalMin": [
-    25,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "218",
@@ -380,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 83,
-    "stations45": 276
+    "stations15": 18,
+    "stations30": 71,
+    "stations45": 186
   },
   "prevSlug": "sasinovec-vatr-dom",
   "nextSlug": "savisce"

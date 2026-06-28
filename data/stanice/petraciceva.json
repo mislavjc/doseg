@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:53",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "118",
@@ -252,9 +249,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 134,
-    "stations45": 411
+    "stations15": 38,
+    "stations30": 192,
+    "stations45": 432
   },
   "prevSlug": "petlja-ulaz",
   "nextSlug": "petrova-116"

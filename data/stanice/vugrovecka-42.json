@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    2,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "261",
@@ -941,9 +938,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 31,
-    "stations45": 116
+    "stations15": 18,
+    "stations30": 33,
+    "stations45": 114
   },
   "prevSlug": "vugrovecka-21",
   "nextSlug": "vugrovecka-70"

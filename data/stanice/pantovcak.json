@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "23:48",
-  "peakIntervalMin": [
-    2,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -658,8 +655,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 53,
-    "stations45": 162
+    "stations30": 39,
+    "stations45": 102
   },
   "prevSlug": "pandaki",
   "nextSlug": "pantovcak-156"

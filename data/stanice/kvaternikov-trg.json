@@ -30,10 +30,7 @@
   ],
   "firstDeparture": "4:05",
   "lastDeparture": "1:00",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "4",
@@ -2642,9 +2639,9 @@
     ]
   },
   "reach": {
-    "stations15": 55,
-    "stations30": 235,
-    "stations45": 572
+    "stations15": 38,
+    "stations30": 133,
+    "stations45": 310
   },
   "prevSlug": "kustosijski-venec",
   "nextSlug": "labudovac"

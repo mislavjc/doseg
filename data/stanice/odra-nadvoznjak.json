@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "0:47",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    1,
-    8
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "166",
@@ -1218,9 +1215,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 103,
-    "stations45": 301
+    "stations15": 13,
+    "stations30": 29,
+    "stations45": 97
   },
   "prevSlug": "odra-malomlacka",
   "nextSlug": "odra-novi-zagreb-istok"

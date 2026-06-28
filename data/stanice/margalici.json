@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:43",
-  "peakIntervalMin": [
-    11,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "125",
@@ -413,8 +410,8 @@
   },
   "reach": {
     "stations15": 11,
-    "stations30": 25,
-    "stations45": 119
+    "stations30": 46,
+    "stations45": 129
   },
   "prevSlug": "manterovcak-78",
   "nextSlug": "marice-baric"

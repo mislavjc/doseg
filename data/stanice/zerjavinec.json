@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:16",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "264",
@@ -483,8 +480,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 13,
-    "stations45": 28
+    "stations30": 11,
+    "stations45": 52
   },
   "prevSlug": "zensko-sedlo",
   "nextSlug": "zet-garaza-pod"

@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    5,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -590,9 +587,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 147,
-    "stations45": 388
+    "stations15": 21,
+    "stations30": 87,
+    "stations45": 232
   },
   "prevSlug": "prigornica-sjever",
   "nextSlug": "prilesje-suma"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    11,
-    31
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "216",
@@ -971,9 +968,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 28,
-    "stations45": 89
+    "stations15": 5,
+    "stations30": 18,
+    "stations45": 66
   },
   "prevSlug": "resnicki-put",
   "nextSlug": "resnik-i-crkva"

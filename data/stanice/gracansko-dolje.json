@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "1:40",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "15",
@@ -1181,9 +1178,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 76,
-    "stations45": 220
+    "stations15": 9,
+    "stations30": 24,
+    "stations45": 81
   },
   "prevSlug": "gracanske-stube",
   "nextSlug": "grad-mladih"

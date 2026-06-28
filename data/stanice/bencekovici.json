@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    18,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -241,9 +238,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 17,
-    "stations45": 37
+    "stations15": 8,
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "belovar",
   "nextSlug": "bengezi"

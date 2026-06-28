@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:52",
-  "peakIntervalMin": [
-    5,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "103",
@@ -453,9 +450,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 109,
-    "stations45": 343
+    "stations15": 21,
+    "stations30": 72,
+    "stations45": 193
   },
   "prevSlug": "boln-jordanovac",
   "nextSlug": "bolnica-rebro"

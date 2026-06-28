@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "1:23",
-  "peakIntervalMin": [
-    20,
-    35
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -310,9 +307,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 94,
-    "stations45": 245
+    "stations15": 21,
+    "stations30": 76,
+    "stations45": 204
   },
   "prevSlug": "vrhovec-62",
   "nextSlug": "vucak-podsused-vrapce-2"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "1:54",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "172",
@@ -312,9 +309,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 34,
-    "stations45": 102
+    "stations15": 8,
+    "stations30": 13,
+    "stations45": 27
   },
   "prevSlug": "dom-svetog-josipa",
   "nextSlug": "dominika-mandica"

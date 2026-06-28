@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    20,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -198,8 +195,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 18,
-    "stations45": 38
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "staro-okretiste-brezovica",
   "nextSlug": "stefanov-stud-kamp"

@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:50",
   "lastDeparture": "0:33",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "8",
@@ -1131,9 +1128,9 @@
     ]
   },
   "reach": {
-    "stations15": 43,
-    "stations30": 215,
-    "stations45": 547
+    "stations15": 31,
+    "stations30": 128,
+    "stations45": 303
   },
   "prevSlug": "grizanska",
   "nextSlug": "gumerec"

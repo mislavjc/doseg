@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:07",
-  "peakIntervalMin": [
-    3,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "216",
@@ -1440,8 +1437,8 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 42,
+    "stations15": 16,
+    "stations30": 60,
     "stations45": 162
   },
   "prevSlug": "resnik-104",

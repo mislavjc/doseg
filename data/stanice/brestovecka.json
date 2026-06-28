@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "3:34",
   "lastDeparture": "0:19",
-  "peakIntervalMin": [
-    1,
-    7
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "212",
@@ -1632,9 +1629,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 101,
-    "stations45": 223
+    "stations15": 23,
+    "stations30": 43,
+    "stations45": 125
   },
   "prevSlug": "branovecka-143",
   "nextSlug": "brestovecka-100"

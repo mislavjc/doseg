@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    5,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -300,9 +297,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 21,
-    "stations45": 72
+    "stations15": 6,
+    "stations30": 13,
+    "stations45": 54
   },
   "prevSlug": "bidrovec-brana",
   "nextSlug": "bijenicka"

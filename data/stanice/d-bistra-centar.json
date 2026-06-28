@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:51",
-  "peakIntervalMin": [
-    9,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -228,9 +225,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 8,
-    "stations45": 12
+    "stations15": 2,
+    "stations30": 2,
+    "stations45": 3
   },
   "prevSlug": "cvjetna-ulica",
   "nextSlug": "dacka-nova"

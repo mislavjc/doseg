@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    6,
-    14
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "126",
@@ -256,9 +253,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 28,
-    "stations45": 182
+    "stations15": 3,
+    "stations30": 3,
+    "stations45": 14
   },
   "prevSlug": "kruzna-ulica",
   "nextSlug": "kucilovina-16"

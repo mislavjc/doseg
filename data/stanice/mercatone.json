@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "23:39",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -224,7 +224,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 11,
-    "stations45": 60
+    "stations45": 45
   },
   "prevSlug": "melinisce",
   "nextSlug": "mesekov-put"

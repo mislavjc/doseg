@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    6,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "279",
@@ -201,9 +198,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 69,
-    "stations45": 273
+    "stations15": 6,
+    "stations30": 8,
+    "stations45": 27
   },
   "prevSlug": "slavenskoga-jug",
   "nextSlug": "slavonska-culinecka-pescenica-zitnjak"

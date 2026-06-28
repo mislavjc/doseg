@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    22,
-    49
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "241",
@@ -205,9 +202,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 37,
-    "stations45": 136
+    "stations15": 5,
+    "stations30": 26,
+    "stations45": 98
   },
   "prevSlug": "goranec",
   "nextSlug": "gorenci"

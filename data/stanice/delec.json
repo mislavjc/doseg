@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:10",
   "lastDeparture": "20:44",
-  "peakIntervalMin": [
-    26,
-    33
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "283",
@@ -557,9 +554,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 67,
-    "stations45": 191
+    "stations15": 12,
+    "stations30": 35,
+    "stations45": 105
   },
   "prevSlug": "davor",
   "nextSlug": "demerje-skola"

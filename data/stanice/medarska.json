@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    1,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "134",
@@ -89,8 +86,8 @@
   },
   "reach": {
     "stations15": 31,
-    "stations30": 178,
-    "stations45": 408
+    "stations30": 141,
+    "stations45": 267
   },
   "prevSlug": "mazuraniceva",
   "nextSlug": "medasni-klanac"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "23:55",
-  "peakIntervalMin": [
-    9,
-    36
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "224",
@@ -602,7 +599,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 5,
-    "stations45": 7
+    "stations45": 8
   },
   "prevSlug": "zrinjevac",
   "nextSlug": "zuzic-brdo"

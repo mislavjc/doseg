@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "23:31",
-  "peakIntervalMin": [
-    11,
-    35
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "135",
@@ -281,8 +278,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 27,
-    "stations45": 178
+    "stations30": 10,
+    "stations45": 16
   },
   "prevSlug": "milekanska-orsagi",
   "nextSlug": "miramarska"

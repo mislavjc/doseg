@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "0:42",
-  "peakIntervalMin": [
-    11,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "125",
@@ -380,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 17,
-    "stations45": 117
+    "stations15": 9,
+    "stations30": 42,
+    "stations45": 121
   },
   "prevSlug": "horvati-i",
   "nextSlug": "horvatovac-40"

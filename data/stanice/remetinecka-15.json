@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "23:35",
-  "peakIntervalMin": [
-    9,
-    32
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "243",
@@ -217,9 +214,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 148,
-    "stations45": 411
+    "stations15": 21,
+    "stations30": 115,
+    "stations45": 285
   },
   "prevSlug": "remetinec",
   "nextSlug": "remetinecka-os-skola"

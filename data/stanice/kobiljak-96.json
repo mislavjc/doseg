@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:14",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    15,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "269",
@@ -161,8 +158,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 55,
-    "stations45": 158
+    "stations30": 20,
+    "stations45": 65
   },
   "prevSlug": "kobiljak-69",
   "nextSlug": "kobiljak-trgovina"

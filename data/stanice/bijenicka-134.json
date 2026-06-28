@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:21",
   "lastDeparture": "22:26",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "207",
@@ -150,9 +150,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 97,
-    "stations45": 287
+    "stations15": 26,
+    "stations30": 87,
+    "stations45": 208
   },
   "prevSlug": "bijenicka",
   "nextSlug": "bijenicka-bocaliste"

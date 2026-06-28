@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    4,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "124",
@@ -745,9 +742,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 97,
-    "stations45": 245
+    "stations15": 37,
+    "stations30": 86,
+    "stations45": 220
   },
   "prevSlug": "stara-oporovecka",
   "nextSlug": "stari-savski-most"

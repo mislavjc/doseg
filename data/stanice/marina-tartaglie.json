@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "146",
@@ -416,9 +413,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 86,
-    "stations45": 226
+    "stations15": 15,
+    "stations30": 50,
+    "stations45": 148
   },
   "prevSlug": "marijane-radev",
   "nextSlug": "mark-polje-raskrizje"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    4,
-    19
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "211",
@@ -801,9 +798,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 93,
-    "stations45": 261
+    "stations15": 9,
+    "stations30": 36,
+    "stations45": 119
   },
   "prevSlug": "dubec",
   "nextSlug": "dubecka-94"

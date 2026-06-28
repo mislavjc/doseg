@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "23:24",
-  "peakIntervalMin": [
-    9,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -492,8 +489,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 2,
-    "stations45": 2
+    "stations30": 3,
+    "stations45": 12
   },
   "prevSlug": "scitarjevo-i",
   "nextSlug": "scitarjevo-iii"

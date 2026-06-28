@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:51",
-  "peakIntervalMin": [
-    6,
-    29
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -360,9 +357,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 48,
-    "stations45": 150
+    "stations15": 9,
+    "stations30": 21,
+    "stations45": 44
   },
   "prevSlug": "bliznec",
   "nextSlug": "bocarski-dom"

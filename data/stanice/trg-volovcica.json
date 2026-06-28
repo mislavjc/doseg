@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:12",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "215",
@@ -300,9 +297,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 102,
-    "stations45": 337
+    "stations15": 29,
+    "stations30": 116,
+    "stations45": 300
   },
   "prevSlug": "trg-svetog-simuna",
   "nextSlug": "trg-zrt-fasizma"

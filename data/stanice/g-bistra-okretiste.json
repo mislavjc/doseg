@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "1:00",
-  "peakIntervalMin": [
-    6,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "176",
@@ -324,7 +321,7 @@
   "reach": {
     "stations15": 0,
     "stations30": 0,
-    "stations45": 12
+    "stations45": 0
   },
   "prevSlug": "furdini",
   "nextSlug": "g-trpuci-okretiste"

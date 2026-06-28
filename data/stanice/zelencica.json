@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    10,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -436,9 +433,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 20,
-    "stations45": 90
+    "stations15": 6,
+    "stations30": 7,
+    "stations45": 12
   },
   "prevSlug": "zelena-trznica",
   "nextSlug": "zelengaj"

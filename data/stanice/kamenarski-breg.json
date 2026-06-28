@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "1:58",
-  "peakIntervalMin": [
-    5,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "233",
@@ -388,9 +385,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 30,
-    "stations45": 90
+    "stations15": 5,
+    "stations30": 11,
+    "stations45": 49
   },
   "prevSlug": "kalamiri",
   "nextSlug": "kamenita-vrata"

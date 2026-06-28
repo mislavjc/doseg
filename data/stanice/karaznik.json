@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "0:34",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "121",
@@ -830,9 +827,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 81,
-    "stations45": 208
+    "stations15": 30,
+    "stations30": 80,
+    "stations45": 213
   },
   "prevSlug": "kapucinska",
   "nextSlug": "karlovacka-157"

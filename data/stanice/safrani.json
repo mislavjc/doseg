@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:29",
   "lastDeparture": "16:54",
-  "peakIntervalMin": [
-    5,
-    28
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "239",
@@ -451,7 +448,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 10,
-    "stations45": 48
+    "stations45": 21
   },
   "prevSlug": "s-bukevski-okret",
   "nextSlug": "sajam-jakusevec"

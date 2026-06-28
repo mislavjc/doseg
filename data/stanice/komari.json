@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    14,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "164",
@@ -181,9 +178,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 42
+    "stations15": 1,
+    "stations30": 10,
+    "stations45": 22
   },
   "prevSlug": "kolodvorska",
   "nextSlug": "koncar"

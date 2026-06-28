@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:17",
-  "peakIntervalMin": [
-    11,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "129",
@@ -284,9 +281,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 116,
-    "stations45": 365
+    "stations15": 28,
+    "stations30": 107,
+    "stations45": 247
   },
   "prevSlug": "kb-dubrava",
   "nextSlug": "king-cross"

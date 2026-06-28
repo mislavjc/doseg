@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "22:52",
-  "peakIntervalMin": [
-    25,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "218",
@@ -397,8 +394,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 24,
-    "stations45": 140
+    "stations30": 10,
+    "stations45": 10
   },
   "prevSlug": "kupljenska",
   "nextSlug": "kustosijanska"

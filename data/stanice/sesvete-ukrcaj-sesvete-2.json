@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    11,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "277",
@@ -156,9 +153,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 79,
-    "stations45": 209
+    "stations15": 14,
+    "stations30": 39,
+    "stations45": 122
   },
   "prevSlug": "sesvete-ukrcaj-sesvete",
   "nextSlug": "sesvetska-sela"

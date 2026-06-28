@@ -19,10 +19,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "1:48",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "109",
@@ -1769,9 +1766,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 137,
-    "stations45": 359
+    "stations15": 20,
+    "stations30": 64,
+    "stations45": 217
   },
   "prevSlug": "institut-za-bilje",
   "nextSlug": "ivana-grande-6"

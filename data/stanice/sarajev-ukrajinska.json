@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "0:18",
-  "peakIntervalMin": [
-    10,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -388,8 +385,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 87,
-    "stations45": 289
+    "stations30": 50,
+    "stations45": 161
   },
   "prevSlug": "sarajev-jakusevecka",
   "nextSlug": "sarajev-vatikanska"

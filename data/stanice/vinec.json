@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    5,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "203",
@@ -444,9 +441,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 58,
-    "stations45": 241
+    "stations15": 10,
+    "stations30": 31,
+    "stations45": 98
   },
   "prevSlug": "vile-velebita",
   "nextSlug": "vinogorska-49"

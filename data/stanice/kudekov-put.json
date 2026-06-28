@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:46",
-  "peakIntervalMin": [
-    11,
-    20
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "124",
@@ -352,9 +349,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 66,
-    "stations45": 186
+    "stations15": 16,
+    "stations30": 59,
+    "stations45": 152
   },
   "prevSlug": "kucilovina-38",
   "nextSlug": "kulturni-centar"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:11",
   "lastDeparture": "0:24",
-  "peakIntervalMin": [
-    30,
-    41
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "119",
@@ -322,8 +319,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 116,
-    "stations45": 271
+    "stations30": 89,
+    "stations45": 226
   },
   "prevSlug": "getaldiceva-pescenica-zitnjak-2",
   "nextSlug": "glavna"

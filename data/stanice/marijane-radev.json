@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:49",
   "lastDeparture": "1:14",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "5",
@@ -515,9 +512,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 67,
-    "stations45": 227
+    "stations15": 16,
+    "stations30": 69,
+    "stations45": 201
   },
   "prevSlug": "marice-baric",
   "nextSlug": "marina-tartaglie"

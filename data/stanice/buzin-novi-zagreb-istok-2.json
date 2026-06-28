@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "1:15",
   "lastDeparture": "0:50",
-  "peakIntervalMin": [
-    9,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "166",
@@ -846,9 +843,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 102,
-    "stations45": 301
+    "stations15": 10,
+    "stations30": 73,
+    "stations45": 225
   },
   "prevSlug": "buzin-novi-zagreb-istok",
   "nextSlug": "cakovica"

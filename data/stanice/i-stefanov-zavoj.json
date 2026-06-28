@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "1:34",
-  "peakIntervalMin": [
-    2,
-    9
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "231",
@@ -624,9 +621,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 82,
-    "stations45": 276
+    "stations15": 9,
+    "stations30": 56,
+    "stations45": 168
   },
   "prevSlug": "i-gardijske-brigade",
   "nextSlug": "ii-kraljevec"

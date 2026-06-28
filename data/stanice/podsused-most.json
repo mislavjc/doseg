@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:05",
   "lastDeparture": "1:50",
-  "peakIntervalMin": [
-    9,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -195,8 +192,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 94,
-    "stations45": 227
+    "stations30": 76,
+    "stations45": 204
   },
   "prevSlug": "podsused-centar",
   "nextSlug": "podsusedsko-dolje"

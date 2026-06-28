@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "23:34",
-  "peakIntervalMin": [
-    14,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -380,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 64,
-    "stations45": 180
+    "stations15": 11,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "markusevecka-18",
   "nextSlug": "marohniceva"

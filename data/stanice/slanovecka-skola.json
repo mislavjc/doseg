@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "7:36",
   "lastDeparture": "16:56",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "239",
@@ -498,9 +498,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 30,
-    "stations45": 81
+    "stations15": 5,
+    "stations30": 19,
+    "stations45": 54
   },
   "prevSlug": "slanovecka-cesta",
   "nextSlug": "slatinska"

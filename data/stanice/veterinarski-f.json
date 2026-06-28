@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:09",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "215",
@@ -768,9 +765,9 @@
     ]
   },
   "reach": {
-    "stations15": 55,
-    "stations30": 254,
-    "stations45": 573
+    "stations15": 34,
+    "stations30": 116,
+    "stations45": 277
   },
   "prevSlug": "veslacka",
   "nextSlug": "vg-groblje"

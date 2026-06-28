@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    15,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "166",
@@ -539,8 +536,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 4,
-    "stations45": 9
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "put-za-franje",
   "nextSlug": "put-za-kasinu"

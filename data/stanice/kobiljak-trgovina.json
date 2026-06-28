@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "1:08",
-  "peakIntervalMin": [
-    4,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "269",
@@ -184,9 +181,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 57,
-    "stations45": 158
+    "stations15": 10,
+    "stations30": 22,
+    "stations45": 67
   },
   "prevSlug": "kobiljak-96",
   "nextSlug": "kockica"

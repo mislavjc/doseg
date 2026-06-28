@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "1:29",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "231",
@@ -1124,9 +1121,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 105,
-    "stations45": 289
+    "stations15": 16,
+    "stations30": 61,
+    "stations45": 179
   },
   "prevSlug": "os-pantovcak",
   "nextSlug": "otok"

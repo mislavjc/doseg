@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    5,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "159",
@@ -578,7 +575,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 14,
-    "stations45": 51
+    "stations45": 17
   },
   "prevSlug": "oborovo-brezinska",
   "nextSlug": "odra-malomlacka"

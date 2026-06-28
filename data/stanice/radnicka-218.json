@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:18",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    6,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "217",
@@ -313,9 +310,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 75,
-    "stations45": 275
+    "stations15": 10,
+    "stations30": 58,
+    "stations45": 170
   },
   "prevSlug": "radnicka-182",
   "nextSlug": "radnicka-ina"

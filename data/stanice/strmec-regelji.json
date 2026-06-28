@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    2,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -165,8 +162,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 16,
-    "stations45": 56
+    "stations30": 1,
+    "stations45": 1
   },
   "prevSlug": "strmec-centar",
   "nextSlug": "strojarska"

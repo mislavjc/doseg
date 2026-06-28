@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "1:15",
-  "peakIntervalMin": [
-    4,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "269",
@@ -370,9 +367,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 80,
-    "stations45": 207
+    "stations15": 19,
+    "stations30": 36,
+    "stations45": 110
   },
   "prevSlug": "vjesnik",
   "nextSlug": "vocarska-47"

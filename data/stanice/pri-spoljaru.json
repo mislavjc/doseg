@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:56",
   "lastDeparture": "22:51",
-  "peakIntervalMin": [
-    23,
-    35
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -261,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 11,
-    "stations45": 13
+    "stations15": 5,
+    "stations30": 14,
+    "stations45": 32
   },
   "prevSlug": "pri-skoli",
   "nextSlug": "prigornica"

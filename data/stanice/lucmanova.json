@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:59",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    7,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -463,8 +460,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 17,
-    "stations45": 29
+    "stations30": 3,
+    "stations45": 3
   },
   "prevSlug": "lucko-centar-novi-zagreb-zapad-2",
   "nextSlug": "lukav-put-za-dubra"

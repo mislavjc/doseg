@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "1:51",
-  "peakIntervalMin": [
-    1,
-    9
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "172",
@@ -534,9 +531,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 51,
-    "stations45": 119
+    "stations15": 10,
+    "stations30": 12,
+    "stations45": 29
   },
   "prevSlug": "trg-dr-f-tudmana",
   "nextSlug": "trg-hr-velikana"

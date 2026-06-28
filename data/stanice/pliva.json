@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "23:55",
-  "peakIntervalMin": [
-    4,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "117",
@@ -125,9 +122,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 180,
-    "stations45": 401
+    "stations15": 42,
+    "stations30": 173,
+    "stations45": 309
   },
   "prevSlug": "planinska-20",
   "nextSlug": "podbrezje"

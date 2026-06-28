@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "0:51",
   "lastDeparture": "0:45",
-  "peakIntervalMin": [
-    3,
-    8
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "268",
@@ -309,9 +306,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 56,
-    "stations45": 152
+    "stations15": 9,
+    "stations30": 29,
+    "stations45": 97
   },
   "prevSlug": "velika-kosnica",
   "nextSlug": "veliki-dol-30"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "0:53",
-  "peakIntervalMin": [
-    12,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -460,9 +457,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 36,
-    "stations45": 128
+    "stations15": 12,
+    "stations30": 22,
+    "stations45": 32
   },
   "prevSlug": "persinovec-72",
   "nextSlug": "petina"

@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "5:23",
   "lastDeparture": "23:23",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "204",
@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 154,
-    "stations45": 423
+    "stations15": 27,
+    "stations30": 105,
+    "stations45": 248
   },
   "prevSlug": "horvatnica",
   "nextSlug": "horvatovac-pmf"

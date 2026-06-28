@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "23:22",
-  "peakIntervalMin": [
-    17,
-    45
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "280",
@@ -189,9 +186,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
+    "stations15": 2,
     "stations30": 2,
-    "stations45": 2
+    "stations45": 12
   },
   "prevSlug": "mudifaji-gornja-dubrava",
   "nextSlug": "munja"

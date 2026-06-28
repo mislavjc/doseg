@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    18,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "263",
@@ -242,7 +239,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 3,
-    "stations45": 21
+    "stations45": 19
   },
   "prevSlug": "kasina-128",
   "nextSlug": "kasina-centar"

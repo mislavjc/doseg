@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:26",
   "lastDeparture": "23:06",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "277",
@@ -70,9 +70,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 64,
-    "stations45": 170
+    "stations15": 7,
+    "stations30": 15,
+    "stations45": 68
   },
   "prevSlug": "iver",
   "nextSlug": "jablanovac"

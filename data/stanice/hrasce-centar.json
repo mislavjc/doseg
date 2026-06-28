@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "0:05",
-  "peakIntervalMin": [
-    17,
-    29
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "166",
@@ -758,9 +755,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 45,
-    "stations45": 142
+    "stations15": 7,
+    "stations30": 29,
+    "stations45": 101
   },
   "prevSlug": "horvatovac-zelenjak",
   "nextSlug": "hrasce-mljekara"

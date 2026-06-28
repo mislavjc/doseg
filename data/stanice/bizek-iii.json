@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    15,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "131",
@@ -324,9 +321,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 38,
-    "stations45": 154
+    "stations15": 3,
+    "stations30": 3,
+    "stations45": 3
   },
   "prevSlug": "bizek-i",
   "nextSlug": "blage-zadre"

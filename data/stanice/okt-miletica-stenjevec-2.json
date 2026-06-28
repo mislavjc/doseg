@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "1:56",
-  "peakIntervalMin": [
-    8,
-    23
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -498,8 +495,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 27,
-    "stations45": 131
+    "stations30": 33,
+    "stations45": 147
   },
   "prevSlug": "okt-miletica-stenjevec",
   "nextSlug": "olipska"

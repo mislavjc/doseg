@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "23:47",
-  "peakIntervalMin": [
-    2,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -606,8 +603,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 53,
-    "stations45": 162
+    "stations30": 35,
+    "stations45": 102
   },
   "prevSlug": "sestinski-vijenac",
   "nextSlug": "sesvete-izlaz-sesvete"

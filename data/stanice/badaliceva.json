@@ -17,10 +17,7 @@
   "busLines": [],
   "firstDeparture": "4:08",
   "lastDeparture": "0:45",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -1114,9 +1111,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 202,
-    "stations45": 537
+    "stations15": 34,
+    "stations30": 159,
+    "stations45": 404
   },
   "prevSlug": "bacun",
   "nextSlug": "bahlenova"

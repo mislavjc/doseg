@@ -19,10 +19,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "1:14",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "4",
@@ -1015,9 +1012,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 222,
-    "stations45": 518
+    "stations15": 50,
+    "stations30": 187,
+    "stations45": 406
   },
   "prevSlug": "veliko-polje",
   "nextSlug": "veterinarski-f"

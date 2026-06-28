@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "23:47",
-  "peakIntervalMin": [
-    38,
-    43
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "132",
@@ -385,8 +382,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 31,
-    "stations45": 79
+    "stations30": 24,
+    "stations45": 71
   },
   "prevSlug": "desprimska",
   "nextSlug": "devciceva"

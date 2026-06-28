@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    7,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "295",
@@ -509,8 +506,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 38,
-    "stations45": 140
+    "stations30": 16,
+    "stations45": 56
   },
   "prevSlug": "samoborska",
   "nextSlug": "sarajev-ukrajinska"

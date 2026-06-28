@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:07",
-  "peakIntervalMin": [
-    12,
-    31
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "132",
@@ -242,7 +239,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 12,
-    "stations45": 57
+    "stations45": 46
   },
   "prevSlug": "zarka-dolinara",
   "nextSlug": "zastavnice-1"

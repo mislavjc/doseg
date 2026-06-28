@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "1:02",
-  "peakIntervalMin": [
-    1,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "117",
@@ -325,9 +322,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 108,
-    "stations45": 394
+    "stations15": 14,
+    "stations30": 89,
+    "stations45": 209
   },
   "prevSlug": "hammova",
   "nextSlug": "harabajsi"

@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:52",
   "lastDeparture": "0:27",
-  "peakIntervalMin": [
-    11,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "161",
@@ -111,8 +108,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 23,
-    "stations45": 79
+    "stations30": 8,
+    "stations45": 48
   },
   "prevSlug": "brezovicka-28",
   "nextSlug": "brezovicka-ambulanta"

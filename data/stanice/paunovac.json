@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:48",
-  "peakIntervalMin": [
-    2,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "102",
@@ -1073,9 +1070,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 111,
-    "stations45": 291
+    "stations15": 24,
+    "stations30": 81,
+    "stations45": 183
   },
   "prevSlug": "park-zelengaj",
   "nextSlug": "pavlici"

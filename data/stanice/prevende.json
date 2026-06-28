@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:16",
   "lastDeparture": "23:39",
-  "peakIntervalMin": [
-    12,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "213",
@@ -456,9 +453,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 40,
-    "stations45": 142
+    "stations15": 17,
+    "stations30": 70,
+    "stations45": 178
   },
   "prevSlug": "prevendari",
   "nextSlug": "pri-kolaru"

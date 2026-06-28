@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "0:22",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -1483,9 +1480,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 215,
-    "stations45": 465
+    "stations15": 38,
+    "stations30": 119,
+    "stations45": 284
   },
   "prevSlug": "komari",
   "nextSlug": "konzum"

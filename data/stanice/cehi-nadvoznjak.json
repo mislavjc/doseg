@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:02",
   "lastDeparture": "23:53",
-  "peakIntervalMin": [
-    6,
-    13
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "133",
@@ -602,9 +599,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 42,
-    "stations45": 105
+    "stations15": 7,
+    "stations30": 8,
+    "stations45": 8
   },
   "prevSlug": "cehi-drustveni-dom",
   "nextSlug": "celici"

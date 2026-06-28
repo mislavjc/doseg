@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:42",
   "lastDeparture": "0:47",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "1",
@@ -953,9 +950,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 229,
-    "stations45": 583
+    "stations15": 25,
+    "stations30": 147,
+    "stations45": 382
   },
   "prevSlug": "trg-volovcica",
   "nextSlug": "trnava"

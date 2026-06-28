@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    6,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "161",
@@ -123,9 +120,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 29,
-    "stations45": 83
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 19
   },
   "prevSlug": "pavlinoviceva",
   "nextSlug": "perjavica"

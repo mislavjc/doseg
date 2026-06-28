@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:21",
   "lastDeparture": "0:43",
-  "peakIntervalMin": [
-    9,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "209",
@@ -356,9 +353,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 33,
-    "stations45": 81
+    "stations15": 6,
+    "stations30": 20,
+    "stations45": 56
   },
   "prevSlug": "sunekova-12",
   "nextSlug": "sutinska-vrela"

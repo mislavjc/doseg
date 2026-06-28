@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    31,
-    77
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -218,8 +215,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 3,
-    "stations45": 5
+    "stations30": 7,
+    "stations45": 13
   },
   "prevSlug": "crkva-s-mati-slobode",
   "nextSlug": "crnkovec"

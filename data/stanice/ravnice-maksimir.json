@@ -17,10 +17,7 @@
   "busLines": [],
   "firstDeparture": "3:59",
   "lastDeparture": "1:00",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -829,9 +826,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 154,
-    "stations45": 450
+    "stations15": 13,
+    "stations30": 97,
+    "stations45": 255
   },
   "prevSlug": "ratarska",
   "nextSlug": "ravnice-maksimir-2"

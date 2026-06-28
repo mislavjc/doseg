@@ -25,10 +25,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "1:41",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "120",
@@ -2364,9 +2361,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 117,
-    "stations45": 271
+    "stations15": 37,
+    "stations30": 99,
+    "stations45": 227
   },
   "prevSlug": "vrapcanska-269",
   "nextSlug": "vrapce-zelj-stanica"

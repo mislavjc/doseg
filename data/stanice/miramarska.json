@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:21",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "3",
@@ -884,9 +881,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 174,
-    "stations45": 479
+    "stations15": 16,
+    "stations30": 123,
+    "stations45": 316
   },
   "prevSlug": "millerova",
   "nextSlug": "mirogoj"

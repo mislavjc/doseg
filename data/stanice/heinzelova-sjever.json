@@ -14,7 +14,7 @@
   "busLines": [],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -848,9 +848,9 @@
     ]
   },
   "reach": {
-    "stations15": 40,
-    "stations30": 195,
-    "stations45": 490
+    "stations15": 36,
+    "stations30": 127,
+    "stations45": 304
   },
   "prevSlug": "heinzelova-mup",
   "nextSlug": "hercegov-gaj"

@@ -15,7 +15,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "23:58",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "166",
@@ -315,8 +315,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 3,
-    "stations45": 10
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "lukav-skolska-luzec",
   "nextSlug": "lukavec-dolens-d-d"

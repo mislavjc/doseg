@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:12",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    10,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "133",
@@ -380,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 42,
-    "stations45": 105
+    "stations15": 7,
+    "stations30": 7,
+    "stations45": 7
   },
   "prevSlug": "mrksina-67c",
   "nextSlug": "mudifaji-gornja-dubrava"

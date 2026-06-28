@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    9,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "290",
@@ -298,7 +295,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 18,
-    "stations45": 63
+    "stations45": 47
   },
   "prevSlug": "stari-savski-most",
   "nextSlug": "staro-okretiste-brezovica"

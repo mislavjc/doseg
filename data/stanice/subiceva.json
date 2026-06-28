@@ -17,10 +17,7 @@
   "busLines": [],
   "firstDeparture": "4:13",
   "lastDeparture": "1:10",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "1",
@@ -1514,9 +1511,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 194,
-    "stations45": 490
+    "stations15": 25,
+    "stations30": 96,
+    "stations45": 237
   },
   "prevSlug": "stupnik-skola",
   "nextSlug": "sulekova"

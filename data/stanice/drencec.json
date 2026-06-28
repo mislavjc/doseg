@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:00",
-  "peakIntervalMin": [
-    19,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "274",
@@ -165,9 +162,9 @@
     ]
   },
   "reach": {
-    "stations15": 0,
-    "stations30": 4,
-    "stations45": 17
+    "stations15": 2,
+    "stations30": 2,
+    "stations45": 14
   },
   "prevSlug": "draskoviceva",
   "nextSlug": "dreznik"

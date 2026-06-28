@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:30",
   "lastDeparture": "1:50",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "172",
@@ -196,9 +193,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 36,
-    "stations45": 104
+    "stations15": 7,
+    "stations30": 11,
+    "stations45": 29
   },
   "prevSlug": "zelencica",
   "nextSlug": "zelengaj-53"

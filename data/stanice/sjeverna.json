@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:55",
-  "peakIntervalMin": [
-    14,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -405,8 +402,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 52,
-    "stations45": 216
+    "stations30": 39,
+    "stations45": 117
   },
   "prevSlug": "sisiceva",
   "nextSlug": "skabrnjska"

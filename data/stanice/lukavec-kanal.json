@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    13,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "166",
@@ -479,8 +476,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 5,
-    "stations45": 10
+    "stations30": 4,
+    "stations45": 4
   },
   "prevSlug": "lukavec-dolens-d-d",
   "nextSlug": "lukoranska-novi-zagreb-zapad"

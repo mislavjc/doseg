@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "23:23",
-  "peakIntervalMin": [
-    34,
-    56
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "280",
@@ -209,9 +206,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
+    "stations15": 2,
     "stations30": 2,
-    "stations45": 2
+    "stations45": 12
   },
   "prevSlug": "sijavrh",
   "nextSlug": "simuncevec-drus-dom"

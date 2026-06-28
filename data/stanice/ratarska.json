@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:04",
-  "peakIntervalMin": [
-    3,
-    22
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "134",
@@ -96,9 +93,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 185,
-    "stations45": 408
+    "stations15": 29,
+    "stations30": 140,
+    "stations45": 267
   },
   "prevSlug": "ranci",
   "nextSlug": "ravnice-maksimir"

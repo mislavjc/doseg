@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:13",
   "lastDeparture": "0:32",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "210",
@@ -1118,9 +1115,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 98,
-    "stations45": 278
+    "stations15": 34,
+    "stations30": 111,
+    "stations45": 232
   },
   "prevSlug": "ulica-badema",
   "nextSlug": "ulica-crnomerec-46"

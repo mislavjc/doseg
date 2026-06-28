@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:01",
-  "peakIntervalMin": [
-    24,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "218",
@@ -288,9 +285,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 97,
-    "stations45": 315
+    "stations15": 14,
+    "stations30": 37,
+    "stations45": 141
   },
   "prevSlug": "ulica-crnomerec-46",
   "nextSlug": "ulica-kaktusa"

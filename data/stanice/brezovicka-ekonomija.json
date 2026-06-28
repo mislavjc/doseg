@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:51",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    7,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "161",
@@ -111,8 +108,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 10,
-    "stations45": 40
+    "stations30": 1,
+    "stations45": 16
   },
   "prevSlug": "brezovicka-ambulanta",
   "nextSlug": "britanski-trg"

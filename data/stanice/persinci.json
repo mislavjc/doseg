@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:32",
   "lastDeparture": "19:32",
-  "peakIntervalMin": [
-    23,
-    28
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "151",
@@ -345,8 +342,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 32,
-    "stations45": 186
+    "stations30": 10,
+    "stations45": 20
   },
   "prevSlug": "perjavica",
   "nextSlug": "persinovec"

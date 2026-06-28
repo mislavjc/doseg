@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:09",
   "lastDeparture": "0:46",
-  "peakIntervalMin": [
-    1,
-    6
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -1030,8 +1027,8 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 91,
+    "stations15": 20,
+    "stations30": 80,
     "stations45": 184
   },
   "prevSlug": "sumarske-jaslice",

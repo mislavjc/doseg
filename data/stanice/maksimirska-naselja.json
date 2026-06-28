@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    9,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "231",
@@ -249,9 +246,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
+    "stations15": 10,
     "stations30": 76,
-    "stations45": 324
+    "stations45": 222
   },
   "prevSlug": "m-trnava-v-rocica",
   "nextSlug": "malekova"

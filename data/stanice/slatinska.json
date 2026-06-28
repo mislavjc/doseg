@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    11,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "277",
@@ -152,9 +149,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 89,
-    "stations45": 211
+    "stations15": 17,
+    "stations30": 42,
+    "stations45": 125
   },
   "prevSlug": "slanovecka-skola",
   "nextSlug": "slavenskog-stenjevec"

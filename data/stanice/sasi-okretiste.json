@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "23:27",
-  "peakIntervalMin": [
-    3,
-    33
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "307",
@@ -373,7 +370,7 @@
   "reach": {
     "stations15": 0,
     "stations30": 0,
-    "stations45": 0
+    "stations45": 12
   },
   "prevSlug": "sarajevska-hrelic",
   "nextSlug": "sasinovec"

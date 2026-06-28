@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    10,
-    12
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "221",
@@ -368,9 +365,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 21,
+    "stations30": 64,
+    "stations45": 217
   },
   "prevSlug": "botinka",
   "nextSlug": "bozidara-magovca-111"

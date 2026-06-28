@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:18",
   "lastDeparture": "0:08",
-  "peakIntervalMin": [
-    3,
-    7
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "214",
@@ -1841,9 +1838,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 38,
-    "stations45": 138
+    "stations15": 9,
+    "stations30": 36,
+    "stations45": 136
   },
   "prevSlug": "remetska-19",
   "nextSlug": "resnicki-put"

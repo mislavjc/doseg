@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "1:56",
-  "peakIntervalMin": [
-    10,
-    11
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "233",
@@ -260,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 30,
-    "stations45": 90
+    "stations15": 12,
+    "stations30": 16,
+    "stations45": 54
   },
   "prevSlug": "markusevecka-106",
   "nextSlug": "markusevecka-18"

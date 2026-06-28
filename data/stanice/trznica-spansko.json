@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "1:05",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "115",
@@ -509,9 +506,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 138,
-    "stations45": 300
+    "stations15": 25,
+    "stations30": 116,
+    "stations45": 274
   },
   "prevSlug": "trznica-kvatric-donji-grad-2",
   "nextSlug": "tumbri"

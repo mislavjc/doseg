@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "1:07",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -1466,9 +1463,9 @@
     ]
   },
   "reach": {
-    "stations15": 45,
-    "stations30": 271,
-    "stations45": 530
+    "stations15": 33,
+    "stations30": 176,
+    "stations45": 382
   },
   "prevSlug": "malomlacka-igralisna",
   "nextSlug": "manterovcak"

@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:31",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -776,9 +773,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 128,
-    "stations45": 338
+    "stations15": 14,
+    "stations30": 80,
+    "stations45": 229
   },
   "prevSlug": "radnicka-pescenica-zitnjak-2",
   "nextSlug": "radnicka-trnje-2"

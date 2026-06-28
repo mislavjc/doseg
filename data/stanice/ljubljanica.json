@@ -22,10 +22,7 @@
   ],
   "firstDeparture": "4:00",
   "lastDeparture": "1:05",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -1168,9 +1165,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 173,
-    "stations45": 468
+    "stations15": 23,
+    "stations30": 155,
+    "stations45": 321
   },
   "prevSlug": "ljubijska-hrv-prolj",
   "nextSlug": "ljudevita-posavskog"

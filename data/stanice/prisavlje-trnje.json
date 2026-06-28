@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "23:06",
-  "peakIntervalMin": [
-    7,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "218",
@@ -336,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 97,
-    "stations45": 315
+    "stations15": 9,
+    "stations30": 32,
+    "stations45": 141
   },
   "prevSlug": "prisavlje-tresnjevka-jug",
   "nextSlug": "prsaki-ambulanta"

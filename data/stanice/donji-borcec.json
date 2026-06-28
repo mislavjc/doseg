@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "23:05",
-  "peakIntervalMin": [
-    5,
-    25
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "137",
@@ -282,8 +279,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 33,
-    "stations45": 91
+    "stations30": 5,
+    "stations45": 18
   },
   "prevSlug": "donje-svetice",
   "nextSlug": "donji-trpuci"

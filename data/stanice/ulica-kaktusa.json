@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "3:32",
   "lastDeparture": "0:20",
-  "peakIntervalMin": [
-    2,
-    8
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "212",
@@ -986,9 +983,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 89,
-    "stations45": 192
+    "stations15": 17,
+    "stations30": 52,
+    "stations45": 131
   },
   "prevSlug": "ulica-grada-chicaga",
   "nextSlug": "ulica-platana"

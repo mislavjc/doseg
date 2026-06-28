@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:29",
   "lastDeparture": "0:56",
-  "peakIntervalMin": [
-    18,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "230",
@@ -349,8 +346,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 82,
-    "stations45": 259
+    "stations30": 53,
+    "stations45": 138
   },
   "prevSlug": "utrina",
   "nextSlug": "varazdinska-selcina"

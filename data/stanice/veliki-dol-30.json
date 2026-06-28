@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:24",
   "lastDeparture": "22:29",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "207",
@@ -150,9 +150,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 106,
-    "stations45": 329
+    "stations15": 24,
+    "stations30": 85,
+    "stations45": 207
   },
   "prevSlug": "velika-mlaka",
   "nextSlug": "veliki-vrh"

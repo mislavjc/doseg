@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:04",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    35,
-    35
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "202",
@@ -324,9 +321,9 @@
     ]
   },
   "reach": {
-    "stations15": 46,
-    "stations30": 185,
-    "stations45": 474
+    "stations15": 36,
+    "stations30": 130,
+    "stations45": 284
   },
   "prevSlug": "petrova-116",
   "nextSlug": "petrova-donji-grad"

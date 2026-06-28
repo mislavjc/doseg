@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "0:45",
   "lastDeparture": "0:20",
-  "peakIntervalMin": [
-    5,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "166",
@@ -950,9 +947,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 105,
-    "stations45": 301
+    "stations15": 1,
+    "stations30": 24,
+    "stations45": 97
   },
   "prevSlug": "bunticeva",
   "nextSlug": "buzin-novi-zagreb-istok-2"

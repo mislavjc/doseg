@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "1:45",
-  "peakIntervalMin": [
-    13,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "220",
@@ -296,9 +293,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 24,
+    "stations30": 80,
+    "stations45": 227
   },
   "prevSlug": "hrgovici",
   "nextSlug": "hruscica"

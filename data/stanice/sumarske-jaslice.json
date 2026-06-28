@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:47",
   "lastDeparture": "22:17",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -508,7 +508,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 2,
-    "stations45": 2
+    "stations45": 4
   },
   "prevSlug": "suma-grmoscica",
   "nextSlug": "sunekova-12"

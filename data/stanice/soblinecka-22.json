@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "23:23",
-  "peakIntervalMin": [
-    51,
-    54
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "270",
@@ -88,9 +85,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 13,
-    "stations45": 28
+    "stations15": 10,
+    "stations30": 10,
+    "stations45": 23
   },
   "prevSlug": "soblinec-rask-skola",
   "nextSlug": "sobolski-put"

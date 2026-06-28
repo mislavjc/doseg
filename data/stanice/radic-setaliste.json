@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:44",
   "lastDeparture": "0:39",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "8",
@@ -879,9 +876,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 90,
-    "stations45": 286
+    "stations15": 19,
+    "stations30": 65,
+    "stations45": 175
   },
   "prevSlug": "r-terminali-jankomir-stenjevec-2",
   "nextSlug": "radnicka-173"

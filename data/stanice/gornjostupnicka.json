@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "0:21",
-  "peakIntervalMin": [
-    7,
-    15
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "111",
@@ -336,8 +333,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 19,
-    "stations45": 60
+    "stations30": 3,
+    "stations45": 10
   },
   "prevSlug": "gornjodrag-spomenik",
   "nextSlug": "gospodska"

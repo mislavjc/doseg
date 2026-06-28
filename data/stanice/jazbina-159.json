@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    16,
-    17
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "227",
@@ -436,9 +433,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 45,
-    "stations45": 136
+    "stations15": 7,
+    "stations30": 8,
+    "stations45": 26
   },
   "prevSlug": "jazbina-120",
   "nextSlug": "jazbina-166"

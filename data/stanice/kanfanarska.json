@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:06",
-  "peakIntervalMin": [
-    11,
-    12
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "215",
@@ -564,9 +561,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 76,
-    "stations45": 248
+    "stations15": 8,
+    "stations30": 33,
+    "stations45": 94
   },
   "prevSlug": "kancelak",
   "nextSlug": "kaptol"

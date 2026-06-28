@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "1:14",
   "lastDeparture": "0:49",
-  "peakIntervalMin": [
-    9,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "166",
@@ -822,9 +819,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 101,
-    "stations45": 301
+    "stations15": 3,
+    "stations30": 25,
+    "stations45": 97
   },
   "prevSlug": "odra-novi-zagreb-istok",
   "nextSlug": "odra-svetog-izidora"

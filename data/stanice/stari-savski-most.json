@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "23:35",
-  "peakIntervalMin": [
-    11,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "243",
@@ -233,9 +230,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 140,
-    "stations45": 402
+    "stations15": 15,
+    "stations30": 105,
+    "stations45": 283
   },
   "prevSlug": "stare-gajnice",
   "nextSlug": "stari-terminal"

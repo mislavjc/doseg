@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "23:00",
-  "peakIntervalMin": [
-    7,
-    33
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "112",
@@ -162,8 +159,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 4,
-    "stations45": 24
+    "stations30": 11,
+    "stations45": 46
   },
   "prevSlug": "lubenjaki",
   "nextSlug": "lucko-centar-novi-zagreb-zapad"

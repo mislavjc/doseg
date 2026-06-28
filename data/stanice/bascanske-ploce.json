@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:28",
   "lastDeparture": "1:18",
-  "peakIntervalMin": [
-    1,
-    10
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "110",
@@ -331,9 +328,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 39,
-    "stations45": 149
+    "stations15": 23,
+    "stations30": 80,
+    "stations45": 252
   },
   "prevSlug": "barutanski-jarak-96",
   "nextSlug": "bastaliceva-ii"

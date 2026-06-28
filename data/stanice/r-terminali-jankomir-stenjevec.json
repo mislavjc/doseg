@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:13",
   "lastDeparture": "1:17",
-  "peakIntervalMin": [
-    3,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "116",
@@ -759,9 +756,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 60,
-    "stations45": 193
+    "stations15": 9,
+    "stations30": 53,
+    "stations45": 191
   },
   "prevSlug": "put-za-tumbre",
   "nextSlug": "r-terminali-jankomir-stenjevec-2"

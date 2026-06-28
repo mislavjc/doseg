@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "23:50",
-  "peakIntervalMin": [
-    6,
-    24
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "103",
@@ -196,9 +193,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 67,
-    "stations45": 209
+    "stations15": 22,
+    "stations30": 74,
+    "stations45": 163
   },
   "prevSlug": "kralj-brijegi-lojeni",
   "nextSlug": "kraljevecka-cesta"

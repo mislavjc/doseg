@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "6:50",
   "lastDeparture": "22:20",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -1184,7 +1184,7 @@
   "reach": {
     "stations15": 1,
     "stations30": 1,
-    "stations45": 1
+    "stations45": 2
   },
   "prevSlug": "pucki",
   "nextSlug": "puskariceva-skola"

@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:24",
   "lastDeparture": "0:54",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "6",
@@ -1280,9 +1277,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 131,
-    "stations45": 387
+    "stations15": 14,
+    "stations30": 30,
+    "stations45": 82
   },
   "prevSlug": "borovje-pescenica-zitnjak",
   "nextSlug": "bosanska"

@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "23:46",
-  "peakIntervalMin": [
-    5,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "159",
@@ -927,8 +924,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 111,
-    "stations45": 305
+    "stations30": 97,
+    "stations45": 272
   },
   "prevSlug": "naletiliceva-novi-zagreb-zapad",
   "nextSlug": "nehajska"

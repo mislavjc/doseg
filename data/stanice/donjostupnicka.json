@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "23:37",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -227,8 +227,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 9,
-    "stations45": 50
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "donji-trpuci",
   "nextSlug": "dore-pejacevic"

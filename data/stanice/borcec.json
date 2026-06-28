@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:20",
-  "peakIntervalMin": [
-    8,
-    15
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "130",
@@ -193,8 +190,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 33,
-    "stations45": 92
+    "stations30": 16,
+    "stations45": 30
   },
   "prevSlug": "bolsiceva",
   "nextSlug": "borongaj"

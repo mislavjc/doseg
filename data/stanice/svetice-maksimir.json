@@ -14,7 +14,7 @@
   "busLines": [],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "1",
@@ -568,9 +568,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 173,
-    "stations45": 465
+    "stations15": 20,
+    "stations30": 99,
+    "stations45": 236
   },
   "prevSlug": "sveti-duh",
   "nextSlug": "svetice-maksimir-2"

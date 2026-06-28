@@ -26,10 +26,7 @@
   ],
   "firstDeparture": "4:13",
   "lastDeparture": "1:27",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "110",
@@ -3526,9 +3523,9 @@
     ]
   },
   "reach": {
-    "stations15": 43,
-    "stations30": 177,
-    "stations45": 433
+    "stations15": 38,
+    "stations30": 131,
+    "stations45": 304
   },
   "prevSlug": "remetinecka-15",
   "nextSlug": "remetinecki-gaj"

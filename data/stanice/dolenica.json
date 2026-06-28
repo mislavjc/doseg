@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:41",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -215,8 +215,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 14,
-    "stations45": 61
+    "stations30": 13,
+    "stations45": 45
   },
   "prevSlug": "dobrodolska",
   "nextSlug": "dom-ksaver"

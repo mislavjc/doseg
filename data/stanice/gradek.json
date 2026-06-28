@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:48",
   "lastDeparture": "0:23",
-  "peakIntervalMin": [
-    14,
-    31
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -102,8 +99,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 6,
-    "stations45": 26
+    "stations30": 13,
+    "stations45": 49
   },
   "prevSlug": "grad-mladih",
   "nextSlug": "gradevinska-skola"

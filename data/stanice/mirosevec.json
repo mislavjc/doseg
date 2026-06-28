@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:10",
-  "peakIntervalMin": [
-    4,
-    26
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "206",
@@ -197,8 +194,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 56,
-    "stations45": 216
+    "stations30": 61,
+    "stations45": 144
   },
   "prevSlug": "mirogoj-arkade",
   "nextSlug": "mirosevecina"

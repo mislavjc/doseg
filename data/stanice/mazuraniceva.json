@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "1:51",
-  "peakIntervalMin": [
-    2,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "172",
@@ -538,9 +535,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 50,
-    "stations45": 118
+    "stations15": 8,
+    "stations30": 11,
+    "stations45": 28
   },
   "prevSlug": "mavracici",
   "nextSlug": "medarska"

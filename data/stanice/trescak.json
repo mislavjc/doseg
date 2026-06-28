@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:24",
-  "peakIntervalMin": [
-    1,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "128",
@@ -448,9 +445,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 37,
-    "stations45": 183
+    "stations15": 14,
+    "stations30": 48,
+    "stations45": 180
   },
   "prevSlug": "trdice-56",
   "nextSlug": "tresnjevacki-trg"

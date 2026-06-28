@@ -20,10 +20,7 @@
   "busLines": [],
   "firstDeparture": "4:16",
   "lastDeparture": "1:09",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "3",
@@ -1425,9 +1422,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 207,
-    "stations45": 537
+    "stations15": 31,
+    "stations30": 149,
+    "stations45": 397
   },
   "prevSlug": "zagrebacka-tresnjevka-sjever",
   "nextSlug": "zamenhofova"

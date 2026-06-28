@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:19",
   "lastDeparture": "23:10",
-  "peakIntervalMin": [
-    7,
-    26
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "214",
@@ -1507,9 +1504,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 54,
-    "stations45": 175
+    "stations15": 11,
+    "stations30": 47,
+    "stations45": 177
   },
   "prevSlug": "trnava",
   "nextSlug": "trnovcica-117"

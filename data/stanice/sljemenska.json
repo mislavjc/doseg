@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:59",
-  "peakIntervalMin": [
-    4,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -364,7 +361,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 2,
-    "stations45": 12
+    "stations45": 2
   },
   "prevSlug": "slavonska-culinecka-pescenica-zitnjak-2",
   "nextSlug": "slobostina"

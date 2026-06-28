@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "23:36",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "281",
@@ -156,9 +153,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 69,
-    "stations45": 273
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 65
   },
   "prevSlug": "resnik-iii-pescenica-zitnjak",
   "nextSlug": "resnik-silos"

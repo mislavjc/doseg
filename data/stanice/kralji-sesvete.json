@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:16",
-  "peakIntervalMin": [
-    3,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "263",
@@ -282,9 +279,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 48,
-    "stations45": 123
+    "stations15": 9,
+    "stations30": 9,
+    "stations45": 21
   },
   "prevSlug": "kralji-brezovica",
   "nextSlug": "kraljicin-zdenac"

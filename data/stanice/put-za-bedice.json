@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:18",
   "lastDeparture": "23:38",
-  "peakIntervalMin": [
-    5,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -336,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 58,
-    "stations45": 163
+    "stations15": 6,
+    "stations30": 17,
+    "stations45": 22
   },
   "prevSlug": "put-za-aspergere",
   "nextSlug": "put-za-cerje"

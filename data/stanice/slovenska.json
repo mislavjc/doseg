@@ -16,10 +16,7 @@
   "busLines": [],
   "firstDeparture": "4:45",
   "lastDeparture": "1:06",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -1540,9 +1537,9 @@
     ]
   },
   "reach": {
-    "stations15": 49,
-    "stations30": 271,
-    "stations45": 530
+    "stations15": 45,
+    "stations30": 181,
+    "stations45": 387
   },
   "prevSlug": "slobostina",
   "nextSlug": "snjezna-kraljica"

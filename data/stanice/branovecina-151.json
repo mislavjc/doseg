@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:50",
   "lastDeparture": "20:50",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "211",
@@ -493,8 +490,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 18,
-    "stations45": 111
+    "stations30": 26,
+    "stations45": 102
   },
   "prevSlug": "branovec",
   "nextSlug": "branovecka"

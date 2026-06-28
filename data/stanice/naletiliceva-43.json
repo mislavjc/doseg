@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "4:41",
   "lastDeparture": "0:16",
-  "peakIntervalMin": [
-    4,
-    18
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -672,9 +669,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 28,
-    "stations45": 141
+    "stations15": 11,
+    "stations30": 44,
+    "stations45": 148
   },
   "prevSlug": "naletiliceva-122",
   "nextSlug": "naletiliceva-54"

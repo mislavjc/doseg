@@ -16,10 +16,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    3,
-    8
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "109",
@@ -665,8 +662,8 @@
   },
   "reach": {
     "stations15": 37,
-    "stations30": 226,
-    "stations45": 472
+    "stations30": 186,
+    "stations45": 374
   },
   "prevSlug": "tehnicki-muzej",
   "nextSlug": "terminal"

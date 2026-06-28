@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:39",
   "lastDeparture": "0:14",
-  "peakIntervalMin": [
-    17,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -209,9 +206,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 14,
-    "stations45": 34
+    "stations15": 10,
+    "stations30": 12,
+    "stations45": 22
   },
   "prevSlug": "n-s-knjiznica",
   "nextSlug": "nadlug"

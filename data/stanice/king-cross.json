@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "1:58",
-  "peakIntervalMin": [
-    1,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "116",
@@ -450,8 +447,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 27,
-    "stations45": 131
+    "stations30": 33,
+    "stations45": 147
   },
   "prevSlug": "kestenovac-drage",
   "nextSlug": "klake"

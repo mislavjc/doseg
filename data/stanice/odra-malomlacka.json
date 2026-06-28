@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:50",
   "lastDeparture": "23:19",
-  "peakIntervalMin": [
-    7,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "229",
@@ -595,8 +592,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 14,
-    "stations45": 14
+    "stations30": 7,
+    "stations45": 7
   },
   "prevSlug": "obrez-skola",
   "nextSlug": "odra-nadvoznjak"

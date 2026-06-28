@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "23:31",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -218,9 +218,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 20,
-    "stations45": 61
+    "stations15": 3,
+    "stations30": 3,
+    "stations45": 10
   },
   "prevSlug": "mesekov-put",
   "nextSlug": "micevec-centar"

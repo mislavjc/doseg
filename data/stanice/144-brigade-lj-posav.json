@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:37",
   "lastDeparture": "23:54",
-  "peakIntervalMin": [
-    11,
-    16
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "279",
@@ -130,8 +127,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 22,
-    "stations45": 98
+    "stations30": 10,
+    "stations45": 27
   },
   "prevSlug": null,
   "nextSlug": "abramoviceva"

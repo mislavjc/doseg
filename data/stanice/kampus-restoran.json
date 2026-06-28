@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:00",
   "lastDeparture": "20:00",
-  "peakIntervalMin": [
-    15,
-    20
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "236",
@@ -224,9 +221,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 32,
-    "stations45": 102
+    "stations15": 5,
+    "stations30": 15,
+    "stations45": 79
   },
   "prevSlug": "kampus-fakultet",
   "nextSlug": "kanalski-put"

@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:46",
   "lastDeparture": "0:37",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "8",
@@ -1059,9 +1056,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 146,
-    "stations45": 387
+    "stations15": 25,
+    "stations30": 73,
+    "stations45": 169
   },
   "prevSlug": "gumerec",
   "nextSlug": "gustava-krkleca"

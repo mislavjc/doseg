@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:44",
   "lastDeparture": "23:43",
-  "peakIntervalMin": [
-    21,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "284",
@@ -81,9 +78,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 27,
-    "stations45": 109
+    "stations15": 6,
+    "stations30": 7,
+    "stations45": 28
   },
   "prevSlug": "ninska",
   "nextSlug": "nova-kosnica-66"

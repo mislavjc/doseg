@@ -27,10 +27,7 @@
   ],
   "firstDeparture": "3:46",
   "lastDeparture": "0:33",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "212",
@@ -2875,9 +2872,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 111,
-    "stations45": 229
+    "stations15": 13,
+    "stations30": 38,
+    "stations45": 120
   },
   "prevSlug": "sestinski-vrh",
   "nextSlug": "sesvete-izlaz-sesvete-2"

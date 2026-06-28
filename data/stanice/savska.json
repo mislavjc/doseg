@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "22:48",
-  "peakIntervalMin": [
-    14,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "182",
@@ -184,9 +181,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 36,
-    "stations45": 102
+    "stations15": 9,
+    "stations30": 11,
+    "stations45": 27
   },
   "prevSlug": "savisce",
   "nextSlug": "savska-metro"

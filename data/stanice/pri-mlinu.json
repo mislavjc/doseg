@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:58",
   "lastDeparture": "22:53",
-  "peakIntervalMin": [
-    28,
-    35
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "174",
@@ -293,9 +290,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 12,
-    "stations45": 13
+    "stations15": 4,
+    "stations30": 13,
+    "stations45": 31
   },
   "prevSlug": "pri-kolaru",
   "nextSlug": "pri-saicu"

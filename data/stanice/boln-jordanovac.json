@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:24",
   "lastDeparture": "21:01",
-  "peakIntervalMin": [
-    7,
-    8
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "228",
@@ -1262,9 +1259,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 116,
-    "stations45": 362
+    "stations15": 21,
+    "stations30": 63,
+    "stations45": 161
   },
   "prevSlug": "bol-jankomir",
   "nextSlug": "bolnica-goljak"

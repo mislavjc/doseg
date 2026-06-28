@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "22:47",
-  "peakIntervalMin": [
-    14,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "182",
@@ -193,8 +190,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 20,
-    "stations45": 45
+    "stations30": 11,
+    "stations45": 28
   },
   "prevSlug": "koncar",
   "nextSlug": "kosirnikova"

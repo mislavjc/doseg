@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "0:39",
-  "peakIntervalMin": [
-    11,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "205",
@@ -492,9 +489,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 27,
-    "stations45": 92
+    "stations15": 10,
+    "stations30": 18,
+    "stations45": 54
   },
   "prevSlug": "vicebani-mataki",
   "nextSlug": "vidovcica"

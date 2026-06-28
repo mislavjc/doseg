@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:43",
   "lastDeparture": "23:48",
-  "peakIntervalMin": [
-    15,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "124",
@@ -420,9 +417,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 90,
-    "stations45": 232
+    "stations15": 36,
+    "stations30": 88,
+    "stations45": 222
   },
   "prevSlug": "mercatone",
   "nextSlug": "micani"

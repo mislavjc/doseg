@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:33",
-  "peakIntervalMin": [
-    6,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "209",
@@ -666,9 +663,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 30,
-    "stations45": 81
+    "stations15": 4,
+    "stations30": 22,
+    "stations45": 53
   },
   "prevSlug": "kamenolom-sesvete",
   "nextSlug": "kampus-fakultet"

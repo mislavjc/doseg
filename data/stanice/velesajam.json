@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "1:01",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "7",
@@ -1106,9 +1103,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 143,
-    "stations45": 427
+    "stations15": 37,
+    "stations30": 136,
+    "stations45": 306
   },
   "prevSlug": "vatrogasni-dom",
   "nextSlug": "velika-gorica"

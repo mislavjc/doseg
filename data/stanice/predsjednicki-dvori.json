@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:07",
   "lastDeparture": "23:49",
-  "peakIntervalMin": [
-    12,
-    18
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "101",
@@ -96,9 +93,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 51,
-    "stations45": 155
+    "stations15": 19,
+    "stations30": 55,
+    "stations45": 119
   },
   "prevSlug": "precko-terminal",
   "nextSlug": "prekvrsje-skola"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:25",
   "lastDeparture": "0:10",
-  "peakIntervalMin": [
-    21,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "271",
@@ -305,9 +302,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 5,
-    "stations45": 7
+    "stations15": 7,
+    "stations30": 13,
+    "stations45": 23
   },
   "prevSlug": "zeljeznicka-stanica-brezovica",
   "nextSlug": "zensko-sedlo"

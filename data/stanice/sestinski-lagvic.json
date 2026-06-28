@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "7:39",
   "lastDeparture": "23:04",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "140",
@@ -418,9 +418,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 52,
-    "stations45": 156
+    "stations15": 8,
+    "stations30": 33,
+    "stations45": 80
   },
   "prevSlug": "sestinski-dol-58",
   "nextSlug": "sestinski-vijenac"

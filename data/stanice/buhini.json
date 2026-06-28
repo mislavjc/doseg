@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "0:07",
-  "peakIntervalMin": [
-    30,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "159",
@@ -229,8 +226,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 14,
-    "stations45": 54
+    "stations30": 2,
+    "stations45": 2
   },
   "prevSlug": "budenecka-34",
   "nextSlug": "bukoscak"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:24",
   "lastDeparture": "0:40",
-  "peakIntervalMin": [
-    6,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "209",
@@ -372,9 +369,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 30,
-    "stations45": 81
+    "stations15": 6,
+    "stations30": 18,
+    "stations45": 53
   },
   "prevSlug": "ivankoviceva",
   "nextSlug": "ive-dulcica"

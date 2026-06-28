@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:49",
   "lastDeparture": "23:19",
-  "peakIntervalMin": [
-    18,
-    23
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "310",
@@ -308,9 +305,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 19,
-    "stations45": 23
+    "stations15": 5,
+    "stations30": 5,
+    "stations45": 5
   },
   "prevSlug": "ljudevita-posavskog",
   "nextSlug": "lomnica-dom-zdravlja"

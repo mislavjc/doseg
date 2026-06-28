@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:57",
   "lastDeparture": "19:46",
-  "peakIntervalMin": [
-    32,
-    78
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "267",
@@ -182,8 +179,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 15,
-    "stations45": 47
+    "stations30": 4,
+    "stations45": 19
   },
   "prevSlug": "luzan-zeleni-vijenac",
   "nextSlug": "m-polje-okretiste"

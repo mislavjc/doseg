@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:48",
   "lastDeparture": "1:15",
-  "peakIntervalMin": [
-    1,
-    4
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "5",
@@ -471,9 +468,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 135,
-    "stations45": 392
+    "stations15": 22,
+    "stations30": 107,
+    "stations45": 268
   },
   "prevSlug": "slavenskog-tresnjevka-jug",
   "nextSlug": "slavon-lj-posavskog"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:38",
   "lastDeparture": "0:03",
-  "peakIntervalMin": [
-    18,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "274",
@@ -197,9 +194,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 16
+    "stations15": 6,
+    "stations30": 6,
+    "stations45": 14
   },
   "prevSlug": "budenecka-14",
   "nextSlug": "buhini"

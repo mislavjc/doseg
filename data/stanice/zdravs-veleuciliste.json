@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:19",
   "lastDeparture": "23:03",
-  "peakIntervalMin": [
-    14,
-    16
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "105",
@@ -668,9 +665,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 146,
-    "stations45": 387
+    "stations15": 28,
+    "stations30": 73,
+    "stations45": 169
   },
   "prevSlug": "zdenacka",
   "nextSlug": "zelena-mag-rusiscak"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:52",
   "lastDeparture": "23:37",
-  "peakIntervalMin": [
-    15,
-    51
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "264",
@@ -257,9 +254,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 15,
+    "stations30": 25,
+    "stations45": 66
   },
   "prevSlug": "jerebic",
   "nextSlug": "jesenovec-okretiste"

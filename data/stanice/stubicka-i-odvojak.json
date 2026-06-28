@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:55",
   "lastDeparture": "0:45",
-  "peakIntervalMin": [
-    3,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "176",
@@ -382,9 +379,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 46,
-    "stations45": 165
+    "stations15": 1,
+    "stations30": 1,
+    "stations45": 9
   },
   "prevSlug": "stubicka-16",
   "nextSlug": "studeni-ii"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "0:11",
-  "peakIntervalMin": [
-    7,
-    9
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "227",
@@ -684,9 +681,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 100,
-    "stations45": 333
+    "stations15": 8,
+    "stations30": 52,
+    "stations45": 146
   },
   "prevSlug": "bukovac-115",
   "nextSlug": "bukovacka-160"

@@ -18,10 +18,7 @@
   ],
   "firstDeparture": "4:47",
   "lastDeparture": "0:26",
-  "peakIntervalMin": [
-    3,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "261",
@@ -1226,9 +1223,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 97,
-    "stations45": 216
+    "stations15": 17,
+    "stations30": 40,
+    "stations45": 122
   },
   "prevSlug": "bikceviceva-staza",
   "nextSlug": "bistricka-zagrebacka"

@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:32",
   "lastDeparture": "0:57",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",
@@ -881,9 +878,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 144,
-    "stations45": 420
+    "stations15": 38,
+    "stations30": 124,
+    "stations45": 266
   },
   "prevSlug": "lj-posavsk-kelekova-sesvete-2",
   "nextSlug": "ljubijska-gornja-dubrava-2"

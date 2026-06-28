@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    13,
-    17
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "123",
@@ -397,8 +394,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 4,
-    "stations45": 20
+    "stations30": 5,
+    "stations45": 29
   },
   "prevSlug": "bencekovici",
   "nextSlug": "bestaki"

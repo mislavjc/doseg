@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:36",
   "lastDeparture": "23:25",
-  "peakIntervalMin": [
-    6,
-    14
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "201",
@@ -221,9 +218,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 181,
-    "stations45": 474
+    "stations15": 34,
+    "stations30": 130,
+    "stations45": 282
   },
   "prevSlug": "srebrnjak",
   "nextSlug": "srebrnjak-131"

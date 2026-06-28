@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:18",
   "lastDeparture": "23:59",
-  "peakIntervalMin": [
-    8,
-    16
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "224",
@@ -1035,9 +1032,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 87,
-    "stations45": 206
+    "stations15": 16,
+    "stations30": 36,
+    "stations45": 105
   },
   "prevSlug": "brestovecka-128",
   "nextSlug": "brez-pod-kestenima"

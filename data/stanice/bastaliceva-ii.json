@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:33",
   "lastDeparture": "23:43",
-  "peakIntervalMin": [
-    33,
-    57
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "272",
@@ -241,9 +238,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 1,
-    "stations45": 1
+    "stations15": 3,
+    "stations30": 4,
+    "stations45": 10
   },
   "prevSlug": "bascanske-ploce",
   "nextSlug": "bastijanova-tresnjevka-sjever"

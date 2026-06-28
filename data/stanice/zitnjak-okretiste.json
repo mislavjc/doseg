@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:35",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    1,
-    7
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "107",
@@ -1194,9 +1191,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 50,
-    "stations45": 169
+    "stations15": 8,
+    "stations30": 51,
+    "stations45": 151
   },
   "prevSlug": "zitnjak",
   "nextSlug": "zlatareva-zlata"

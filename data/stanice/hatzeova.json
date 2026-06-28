@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:13",
   "lastDeparture": "0:08",
-  "peakIntervalMin": [
-    28,
-    30
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "114",
@@ -282,9 +279,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 98,
-    "stations45": 284
+    "stations15": 22,
+    "stations30": 107,
+    "stations45": 268
   },
   "prevSlug": "harambasiceva",
   "nextSlug": "havidic-selo"

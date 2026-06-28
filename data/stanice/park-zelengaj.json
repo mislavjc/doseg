@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:42",
   "lastDeparture": "23:51",
-  "peakIntervalMin": [
-    5,
-    12
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "103",
@@ -477,9 +474,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 99,
-    "stations45": 339
+    "stations15": 17,
+    "stations30": 73,
+    "stations45": 191
   },
   "prevSlug": "park-maksimir",
   "nextSlug": "paunovac"

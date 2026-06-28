@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:27",
   "lastDeparture": "22:56",
-  "peakIntervalMin": [
-    1,
-    29
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "105",
@@ -600,9 +597,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 112,
-    "stations45": 288
+    "stations15": 15,
+    "stations30": 57,
+    "stations45": 134
   },
   "prevSlug": "jurjevska-64",
   "nextSlug": "juzna-obala-4"

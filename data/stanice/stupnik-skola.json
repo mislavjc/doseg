@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:34",
   "lastDeparture": "23:34",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "111",
@@ -287,8 +287,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 18,
-    "stations45": 59
+    "stations30": 4,
+    "stations45": 10
   },
   "prevSlug": "stupnik-crkva",
   "nextSlug": "subiceva"

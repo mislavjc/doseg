@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:49",
   "lastDeparture": "0:34",
-  "peakIntervalMin": [
-    1,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "8",
@@ -1123,9 +1120,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 187,
-    "stations45": 518
+    "stations15": 29,
+    "stations30": 86,
+    "stations45": 227
   },
   "prevSlug": "bedekoviceva",
   "nextSlug": "belovar"

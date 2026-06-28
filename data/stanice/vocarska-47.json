@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:31",
   "lastDeparture": "23:31",
-  "peakIntervalMin": [
-    43,
-    48
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "204",
@@ -600,9 +597,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 172,
-    "stations45": 486
+    "stations15": 23,
+    "stations30": 113,
+    "stations45": 255
   },
   "prevSlug": "vladimira-nazora",
   "nextSlug": "vocarska-baboniceva"

@@ -15,10 +15,7 @@
   ],
   "firstDeparture": "1:04",
   "lastDeparture": "0:39",
-  "peakIntervalMin": [
-    4,
-    11
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "268",
@@ -538,9 +535,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 41,
-    "stations45": 137
+    "stations15": 15,
+    "stations30": 32,
+    "stations45": 100
   },
   "prevSlug": "veterinarski-f",
   "nextSlug": "vicebani-mataki"

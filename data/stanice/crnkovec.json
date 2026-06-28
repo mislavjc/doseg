@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "23:57",
-  "peakIntervalMin": [
-    14,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -404,8 +401,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 3,
-    "stations45": 5
+    "stations30": 7,
+    "stations45": 13
   },
   "prevSlug": "crnko-put-za-strmec",
   "nextSlug": "crnkovec-centar"

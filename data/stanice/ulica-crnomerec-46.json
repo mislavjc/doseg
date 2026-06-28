@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:22",
   "lastDeparture": "0:29",
-  "peakIntervalMin": [
-    7,
-    13
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "127",
@@ -320,9 +317,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 150,
-    "stations45": 349
+    "stations15": 15,
+    "stations30": 113,
+    "stations45": 262
   },
   "prevSlug": "ulica-breza",
   "nextSlug": "ulica-grada-chicaga"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:15",
   "lastDeparture": "23:41",
-  "peakIntervalMin": [
-    1,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -400,9 +397,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 53,
-    "stations45": 160
+    "stations15": 12,
+    "stations30": 36,
+    "stations45": 75
   },
   "prevSlug": "grancarska-22",
   "nextSlug": "granesina-skola"

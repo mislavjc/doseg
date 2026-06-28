@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "0:00",
   "lastDeparture": "0:00",
-  "peakIntervalMin": null,
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "275",
@@ -267,8 +267,8 @@
   },
   "reach": {
     "stations15": 8,
-    "stations30": 22,
-    "stations45": 99
+    "stations30": 12,
+    "stations45": 29
   },
   "prevSlug": "sopnicka-37",
   "nextSlug": "sopnicka-skola"

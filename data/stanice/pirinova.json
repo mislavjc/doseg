@@ -13,7 +13,7 @@
   ],
   "firstDeparture": "4:45",
   "lastDeparture": "23:43",
-  "peakIntervalMin": null,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "284",
@@ -79,8 +79,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 26,
-    "stations45": 109
+    "stations30": 8,
+    "stations45": 29
   },
   "prevSlug": "pipici",
   "nextSlug": "planina-donja"

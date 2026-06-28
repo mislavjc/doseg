@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "7:28",
   "lastDeparture": "16:55",
-  "peakIntervalMin": [
-    7,
-    27
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "239",
@@ -722,8 +719,8 @@
   },
   "reach": {
     "stations15": 4,
-    "stations30": 6,
-    "stations45": 33
+    "stations30": 20,
+    "stations45": 55
   },
   "prevSlug": "sinbuk",
   "nextSlug": "sirkovina"

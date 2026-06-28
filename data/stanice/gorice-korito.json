@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "6:30",
   "lastDeparture": "22:35",
-  "peakIntervalMin": [
-    43,
-    48
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "207",
@@ -148,9 +145,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 88,
-    "stations45": 287
+    "stations15": 23,
+    "stations30": 86,
+    "stations45": 207
   },
   "prevSlug": "gorice-69",
   "nextSlug": "gornja-kustosija"

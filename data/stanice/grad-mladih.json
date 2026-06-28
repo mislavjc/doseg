@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:16",
   "lastDeparture": "23:40",
-  "peakIntervalMin": [
-    1,
-    30
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "208",
@@ -412,9 +409,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 57,
-    "stations45": 161
+    "stations15": 10,
+    "stations30": 35,
+    "stations45": 74
   },
   "prevSlug": "gracansko-dolje",
   "nextSlug": "gradek"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:04",
   "lastDeparture": "0:34",
-  "peakIntervalMin": [
-    31,
-    34
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "210",
@@ -348,9 +345,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 115,
-    "stations45": 332
+    "stations15": 43,
+    "stations30": 137,
+    "stations45": 271
   },
   "prevSlug": "klanjec",
   "nextSlug": "klin-koledinecka"

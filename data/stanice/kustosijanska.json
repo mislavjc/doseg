@@ -24,10 +24,7 @@
   ],
   "firstDeparture": "4:16",
   "lastDeparture": "0:52",
-  "peakIntervalMin": [
-    1,
-    1
-  ],
+  "directionGroups": 3,
   "lines": [
     {
       "broj": "119",
@@ -1973,9 +1970,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 181,
-    "stations45": 402
+    "stations15": 24,
+    "stations30": 130,
+    "stations45": 280
   },
   "prevSlug": "kusevacka",
   "nextSlug": "kustosijski-venec"

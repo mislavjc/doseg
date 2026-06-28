@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "0:15",
-  "peakIntervalMin": [
-    16,
-    24
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "164",
@@ -197,9 +194,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 13,
-    "stations45": 33
+    "stations15": 10,
+    "stations30": 12,
+    "stations45": 22
   },
   "prevSlug": "kraljevecki-novaki",
   "nextSlug": "kralji-sesvete"

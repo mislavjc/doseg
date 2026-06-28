@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "23:07",
-  "peakIntervalMin": [
-    9,
-    25
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "137",
@@ -377,9 +374,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 8,
-    "stations45": 19
+    "stations15": 16,
+    "stations30": 76,
+    "stations45": 219
   },
   "prevSlug": "dom-zdravlja",
   "nextSlug": "domoviceva"

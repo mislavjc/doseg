@@ -25,10 +25,7 @@
   ],
   "firstDeparture": "4:16",
   "lastDeparture": "1:25",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "110",
@@ -2842,9 +2839,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 125,
-    "stations45": 319
+    "stations15": 30,
+    "stations30": 98,
+    "stations45": 273
   },
   "prevSlug": "naletiliceva-88",
   "nextSlug": "naletiliceva-novi-zagreb-zapad-2"

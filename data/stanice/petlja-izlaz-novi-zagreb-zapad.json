@@ -17,10 +17,7 @@
   ],
   "firstDeparture": "4:23",
   "lastDeparture": "0:08",
-  "peakIntervalMin": [
-    10,
-    16
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "111",
@@ -1049,8 +1046,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 9,
-    "stations45": 60
+    "stations30": 11,
+    "stations45": 47
   },
   "prevSlug": "petina",
   "nextSlug": "petlja-izlaz-novi-zagreb-zapad-2"

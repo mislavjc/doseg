@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:27",
   "lastDeparture": "0:35",
-  "peakIntervalMin": [
-    3,
-    22
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "205",
@@ -268,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 72
+    "stations15": 7,
+    "stations30": 14,
+    "stations45": 54
   },
   "prevSlug": "bestaki",
   "nextSlug": "bidrovecka-36"

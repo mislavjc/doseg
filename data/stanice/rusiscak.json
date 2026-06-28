@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:46",
   "lastDeparture": "23:21",
-  "peakIntervalMin": [
-    10,
-    15
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "130",
@@ -321,8 +318,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 29,
-    "stations45": 85
+    "stations30": 5,
+    "stations45": 18
   },
   "prevSlug": "ruscenica",
   "nextSlug": "s-bukevski-okret"

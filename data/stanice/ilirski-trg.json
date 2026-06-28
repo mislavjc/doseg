@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "5:23",
   "lastDeparture": "23:00",
-  "peakIntervalMin": [
-    5,
-    10
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "105",
@@ -749,9 +746,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 156,
-    "stations45": 482
+    "stations15": 24,
+    "stations30": 103,
+    "stations45": 266
   },
   "prevSlug": "ii-kraljevec",
   "nextSlug": "inker"

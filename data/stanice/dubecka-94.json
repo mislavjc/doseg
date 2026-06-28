@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:53",
   "lastDeparture": "0:13",
-  "peakIntervalMin": [
-    9,
-    19
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "211",
@@ -777,9 +774,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 93,
-    "stations45": 261
+    "stations15": 8,
+    "stations30": 36,
+    "stations45": 119
   },
   "prevSlug": "dubecka-89",
   "nextSlug": "dubje"

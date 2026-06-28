@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:40",
   "lastDeparture": "23:58",
-  "peakIntervalMin": [
-    2,
-    5
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "136",
@@ -777,9 +774,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 104,
-    "stations45": 246
+    "stations15": 16,
+    "stations30": 84,
+    "stations45": 220
   },
   "prevSlug": "sv-leopolda-mandica",
   "nextSlug": "sveti-duh"

@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "23:56",
-  "peakIntervalMin": [
-    16,
-    21
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "262",
@@ -496,9 +493,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 14,
-    "stations45": 42
+    "stations15": 4,
+    "stations30": 8,
+    "stations45": 24
   },
   "prevSlug": "kucilovina-16",
   "nextSlug": "kudekov-put"

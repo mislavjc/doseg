@@ -13,10 +13,7 @@
   ],
   "firstDeparture": "5:30",
   "lastDeparture": "23:30",
-  "peakIntervalMin": [
-    43,
-    48
-  ],
+  "directionGroups": 1,
   "lines": [
     {
       "broj": "204",
@@ -600,9 +597,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 127,
-    "stations45": 430
+    "stations15": 20,
+    "stations30": 61,
+    "stations45": 192
   },
   "prevSlug": "vocarska-baboniceva",
   "nextSlug": "vocarska-sjemeniste"

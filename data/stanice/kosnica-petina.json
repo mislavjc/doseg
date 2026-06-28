@@ -14,10 +14,7 @@
   ],
   "firstDeparture": "4:31",
   "lastDeparture": "0:01",
-  "peakIntervalMin": [
-    19,
-    33
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "307",
@@ -457,7 +454,7 @@
   "reach": {
     "stations15": 4,
     "stations30": 9,
-    "stations45": 38
+    "stations45": 35
   },
   "prevSlug": "kosnica-nadvoznjak",
   "nextSlug": "kostanjevec"

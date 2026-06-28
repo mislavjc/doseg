@@ -22,6 +22,18 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The baked reach (areaKm2 / stationsNN) comes from the isochrone's schedule-only
+# reach for "today". On a weekend that's reduced service, which would paste
+# weekend reach onto pages that show WEEKDAY headways — an inconsistent dataset
+# (2026-06-28 Sunday roll: line 6 reach 38.9->16.3 km2 with a byte-identical
+# schedule). The weekly cron runs Monday; refuse any ad-hoc weekend run so a
+# stray dispatch can't bake weekend reach. Override with ALLOW_WEEKEND_REGEN=1.
+DOW="$(date -u +%u)" # 1=Mon .. 7=Sun
+if [ "$DOW" -ge 6 ] && [ "${ALLOW_WEEKEND_REGEN:-0}" != "1" ]; then
+  echo "regen: refusing to run on a weekend (UTC day $DOW) — baked reach would reflect weekend service on weekday pages. Set ALLOW_WEEKEND_REGEN=1 to override." >&2
+  exit 1
+fi
+
 LOCK="${REGEN_LOCK:-/opt/doseg.lock}"
 BRANCH="${REGEN_BRANCH:-update-gtfs-data}"
 ISOCHRONE_HEALTH_URL="${ISOCHRONE_HEALTH_URL:-http://localhost:3001/health}"

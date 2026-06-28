@@ -3,7 +3,7 @@ import { join } from "node:path"
 import type { NextRequest } from "next/server"
 
 import { jsonResponse } from "@/lib/api-response"
-import { getDataDir } from "@/lib/data-dir"
+import { loadScores } from "@/lib/district-scores"
 import { pointInRing, type Ring } from "@/lib/geo"
 
 /**
@@ -31,13 +31,14 @@ function loadDistricts() {
   const geo = JSON.parse(
     readFileSync(join(process.cwd(), "data/districts.geojson"), "utf-8")
   ) as { features: DistrictFeature[] }
-  const scoresFile = JSON.parse(
-    readFileSync(join(getDataDir(), "district-scores.json"), "utf-8")
-  ) as { districts: (DistrictScore & { areaKm2: number })[] }
+  // Day-filtered scores (same as the kvart pages), not the pooled legacy file.
+  const districts = loadScores()?.districts ?? []
   cache = {
     features: geo.features,
-    scores: new Map(scoresFile.districts.map((d) => [d.name, d])),
-    cityAreaKm2: scoresFile.districts.reduce((s, d) => s + d.areaKm2, 0),
+    scores: new Map(
+      districts.map((d) => [d.name, { name: d.name, rank: d.rank, score: d.score }])
+    ),
+    cityAreaKm2: districts.reduce((s, d) => s + d.areaKm2, 0),
   }
   return cache
 }

@@ -13,8 +13,9 @@ import {
   departureTerminals,
   introText,
   plural,
-  serviceDays,
+  serviceStatus,
   terminalChips,
+  vozniRedNote,
 } from "../copy"
 import { LineHero } from "../line-hero"
 import {
@@ -84,9 +85,10 @@ export default async function LinijaPage({
   if (!data) notFound()
   const index = loadLineIndex()
   const stops = data.directions[0].stops.length
-  const days = serviceDays(data)
+  const status = serviceStatus(data)
   const faq = buildFaq(data)
   const frek = frekvencijaCopy(data)
+  const voznickiNote = vozniRedNote(data)
   // Link each stop to its own page; duplicate names resolve by nearest coords.
   const stopSlugs = resolveStopSlugs(data.directions.flatMap((d) => d.stops))
 
@@ -132,28 +134,30 @@ export default async function LinijaPage({
         <DosegLinije data={data} />
       </Section>
 
-      <Section id="frekvencija" width="article" className="pb-0 sm:pb-0">
-        <SectionHeader eyebrow="koliko često vozi" hook={frek.hook}>
-          {frek.body}
-        </SectionHeader>
-        <Frekvencija data={data} />
-      </Section>
+      {frek && (
+        <Section id="frekvencija" width="article" className="pb-0 sm:pb-0">
+          <SectionHeader eyebrow="koliko često vozi" hook={frek.hook}>
+            {frek.body}
+          </SectionHeader>
+          <Frekvencija data={data} />
+        </Section>
+      )}
 
-      <Section id="vozni-red" width="article" className="pb-0 sm:pb-0">
-        <SectionHeader
-          eyebrow="vozni red"
-          hook={data.oneWay ? "Svi polasci." : "Svi polasci, oba smjera."}
-        >
-          Plavi čip je sljedeći polazak.
-          {days.subota || days.nedjelja
-            ? " Polasci za radni dan, subotu i nedjelju."
-            : " Vozi samo radnim danom."}
-        </SectionHeader>
-        <VozniRed
-          timetable={data.timetable}
-          terminals={departureTerminals(data)}
-        />
-      </Section>
+      {status !== "none" && (
+        <Section id="vozni-red" width="article" className="pb-0 sm:pb-0">
+          <SectionHeader
+            eyebrow="vozni red"
+            hook={data.oneWay ? "Svi polasci." : "Svi polasci, oba smjera."}
+          >
+            Plavi čip je sljedeći polazak.
+            {voznickiNote}
+          </SectionHeader>
+          <VozniRed
+            timetable={data.timetable}
+            terminals={departureTerminals(data)}
+          />
+        </Section>
+      )}
 
       <Section width="article" className="pb-0 sm:pb-0">
         <CestaPitanja items={faq} />

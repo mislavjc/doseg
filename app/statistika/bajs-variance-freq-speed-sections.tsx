@@ -567,7 +567,7 @@ export function FrequencySection({
       id="frekvencija"
       className="mt-16 flex flex-col border-t border-slate-100 py-16 sm:mt-20 sm:py-24 dark:border-white/10"
     >
-      <FrequencyHeader />
+      <FrequencyHeader freq={freq} />
       <CollapsibleContent expandLabel="Prikaži frekvenciju" collapseLabel="Suzi prikaz">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
           <FrequencyChart freq={freq} />
@@ -578,15 +578,17 @@ export function FrequencySection({
   )
 }
 
-function FrequencyHeader() {
+function FrequencyHeader({ freq }: { freq: FreqInsights }) {
+  const minHw = Math.round(freq.freqRanked[0]?.medianHeadwayMin ?? 0)
+  const maxHw = Math.round(freq.maxHeadway)
   return (
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Frekvencija prijevoza</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Prosječni interval dolaska vozila po kvartu. Kvartovi s intervalom od
-          1-2 minute uglavnom imaju gustu mrežu tramvaja ili autobusa; 3+ minute
-          znači oslanjanje na rjeđe autobusne linije.
+          Medijan intervala dolaska vozila po kvartu, radnim danom. Raspon ide od
+          ~{minHw} min u najpovezanijim kvartovima do ~{maxHw} min u rubnima koji
+          ovise o rjeđim autobusnim linijama.
         </p>
       </div>
     </div>
@@ -629,11 +631,11 @@ function FrequencyBar({
   const headway = d.medianHeadwayMin
   const barPct = maxHeadway > 0 ? (headway / maxHeadway) * 100 : 0
   const barColor =
-    headway <= 1
+    headway <= 10
       ? "bg-emerald-500"
-      : headway <= 2
+      : headway <= 15
         ? "bg-cyan-500"
-        : headway <= 3
+        : headway <= 25
           ? "bg-blue-500"
           : "bg-indigo-500"
   return (
@@ -676,14 +678,13 @@ function FrequencyInterpretation({
           Jaz u frekvenciji
         </h3>
         <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Kvartovi s intervalom od{" "}
+          Najpovezaniji kvart ima medijan razmaka od{" "}
           <strong className="font-medium text-slate-900 dark:text-slate-100">
-            1 minute
-          </strong>{" "}
-          uglavnom imaju gustu mrežu s više linija koje se preklapaju (svakih
-          7-10 min po liniji, ali efektivno češće). Rubni kvartovi s intervalom
-          od 3-4 minute ovise o rijetkim autobusnim linijama - čekanje od 15-30
-          minuta značajno umanjuje praktičnu dostupnost.
+            ~{Math.round(freq.freqRanked[0]?.medianHeadwayMin ?? 0)} min
+          </strong>
+          , a najrjeđi ~{Math.round(freq.maxHeadway)} min. Rubni kvartovi ovise o
+          rijetkim autobusnim linijama — to čekanje značajno umanjuje praktičnu
+          dostupnost.
         </p>
       </div>
       <div className="mt-4 border-l-2 border-slate-300 py-2 pl-6">
@@ -999,8 +1000,8 @@ function LineSpeedInterpretationText() {
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           frekvenciji
         </strong>
-        . Tramvajska linija dolazi svakih 7-10 minuta, a na stanicama s više
-        linija čekanje pada na 2-3 min. Autobus često vozi svakih 15-30 minuta.
+        . Tramvajska linija dolazi svakih 7-10 minuta, a na koridorima s više
+        linija u istom smjeru i češće. Autobus često vozi svakih 15-30 minuta.
       </p>
       <p>
         U 30-minutnom budžetu, putnik autobusom prosječno čeka{" "}

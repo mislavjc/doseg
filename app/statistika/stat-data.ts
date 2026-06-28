@@ -13,14 +13,9 @@ export type { DistrictScore, ScoreData, RouteStats, RouteInfo }
 
 export type DistrictEmblems = Record<string, string>
 
-export function loadScores(): ScoreData | null {
-  const scorePath = join(getDataDir(), "district-scores.json")
-  try {
-    return JSON.parse(readFileSync(scorePath, "utf-8"))
-  } catch {
-    return null
-  }
-}
+// Canonical day-filtered loader lives in lib/district-scores so the OG cards and
+// /api/district-context share it without importing this whole insights module.
+export { loadScores } from "@/lib/district-scores"
 
 export function loadDistrictEmblems(): DistrictEmblems {
   try {

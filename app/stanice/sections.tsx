@@ -11,15 +11,19 @@ import {
 } from "@/app/statistika/editorial/blocks"
 import { type FaqItem } from "@/app/statistika/editorial/faq"
 import { Body, PageTitle } from "@/app/statistika/editorial/primitives"
+import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
+import type { SiblingStop } from "@/lib/stop-data"
 
 import {
+  directionLabel,
+  directionNote,
   dosegCopy,
   introText,
   lineHeadway,
   lineListProse,
   lineModeNoun,
-  rangeText,
+  mostFrequentLine,
   subtitle,
 } from "./copy"
 import { numberWord, plural } from "../linije/copy"
@@ -53,7 +57,7 @@ export function Naslov({ data }: { data: StopPageData }) {
 // ── Činjenice ───────────────────────────────────────────────────────────────
 
 export function Cinjenice({ data }: { data: StopPageData }) {
-  const interval = data.peakIntervalMin
+  const mf = mostFrequentLine(data)
   return (
     <div>
       <FactRow label="linije koje staju" value={String(data.lineCount)} />
@@ -62,7 +66,7 @@ export function Cinjenice({ data }: { data: StopPageData }) {
         label="prvi i zadnji polazak"
         value={`${data.firstDeparture} · ${data.lastDeparture}`}
       />
-      {interval && <FactRow label="interval u špici" value={`${rangeText(interval)} min`} />}
+      {mf && <FactRow label="najčešća linija" value={`${mf.line.broj} · ${mf.headway}`} />}
     </div>
   )
 }
@@ -98,11 +102,12 @@ function LinijaRow({ line }: { line: StopPageData["lines"][number] }) {
 
 export function LinijeKojeStaju({ data }: { data: StopPageData }) {
   const n = data.lineCount
+  const dir = directionLabel(data)
   return (
     <div>
       <SectionHeader
         eyebrow="linije koje ovdje staju"
-        hook={`${numberWord(n).charAt(0).toUpperCase() + numberWord(n).slice(1)} ${plural(n, "linija", "linije", "linija")}${data.bothDirections ? ", oba smjera." : "."}`}
+        hook={`${numberWord(n).charAt(0).toUpperCase() + numberWord(n).slice(1)} ${plural(n, "linija", "linije", "linija")}${dir ? `, ${dir}.` : "."}`}
       >
         Svaka linija vodi na svoju stranicu s punim voznim redom. Brojke su
         tipičan razmak vozila radnim danom u špici.
@@ -178,6 +183,40 @@ export function SusjedneStanice({ data }: { data: StopPageData }) {
   )
 }
 
+// ── Istoimene stanice (same-name disambiguation) ────────────────────────────
+
+function fmtDist(m: number): string {
+  return m < 950 ? `${m} m` : `${fmtHR(m / 1000, 1)} km`
+}
+
+export function IstoimeneStanice({
+  name,
+  siblings,
+}: {
+  name: string
+  siblings: SiblingStop[]
+}) {
+  if (siblings.length === 0) return null
+  const n = siblings.length
+  const count =
+    n === 1 ? "jedna stanica" : `${numberWord(n)} ${plural(n, "stanica", "stanice", "stanica")}`
+  return (
+    <div>
+      <SectionHeader eyebrow="istoimene stanice" hook={`Postoji još ${count} imena ${name}.`}>
+        Različite lokacije s istim imenom. Provjeri kvart i udaljenost da ne
+        zamijeniš stanicu.
+      </SectionHeader>
+      <div className="flex flex-wrap gap-2.5">
+        {siblings.map((s) => (
+          <PillLink key={s.slug} href={`/stanice/${s.slug}`}>
+            {s.kvart ?? "Zagreb"} · {fmtDist(s.distM)}
+          </PillLink>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── Prev / next ─────────────────────────────────────────────────────────────
 
 export function PrevNext({ data }: { data: StopPageData }) {
@@ -205,9 +244,7 @@ export function buildFaq(data: StopPageData): FaqItem[] {
 
   items.push({
     q: `Koje linije staju na stanici ${data.name}?`,
-    a: `${lineListProse(data)}. Ukupno ${numberWord(n)} ${plural(n, "linija", "linije", "linija")}${
-      data.bothDirections ? ", u oba smjera" : ""
-    }.`,
+    a: `${lineListProse(data)}. Ukupno ${numberWord(n)} ${plural(n, "linija", "linije", "linija")}${directionNote(data)}.`,
   })
 
   const nearest = data.neighbors.slice(0, 2).map((x) => x.name)
@@ -221,11 +258,15 @@ export function buildFaq(data: StopPageData): FaqItem[] {
     items.push({ q: `Gdje se nalazi stanica ${data.name}?`, a: locParts.join(" ") })
   }
 
-  const interval = data.peakIntervalMin
-  const peak = interval ? ` U špici vozilo naiđe svakih ${rangeText(interval, " do ")} min.` : ""
+  const mf = mostFrequentLine(data)
+  const freq = mf
+    ? ` Najčešća linija (${lineModeNoun(mf.line)} ${mf.line.broj}) ${
+        mf.inPeak ? "u špici " : ""
+      }vozi ${mf.headway}.`
+    : ""
   items.push({
     q: `Kada vozi prvi i zadnji polazak sa stanice ${data.name}?`,
-    a: `Prvi polazak sa stanice je u ${data.firstDeparture}, a zadnji u ${data.lastDeparture}.${peak}`,
+    a: `Prvi polazak sa stanice je u ${data.firstDeparture}, a zadnji u ${data.lastDeparture}.${freq}`,
   })
 
   return items

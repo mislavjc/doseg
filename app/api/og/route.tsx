@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { loadScores } from "@/lib/district-scores"
 import { loadLineData } from "@/lib/line-data"
 import { loadStopData, loadStopHeroMeta } from "@/lib/stop-data"
 
@@ -10,27 +11,13 @@ import { renderStopOgCard } from "./stop-card"
 
 export const runtime = "nodejs"
 
-type District = {
-  name: string
-  score: number
-  rank: number
-  population: number
-  tramLines: string[]
-  busLines: string[]
-}
-
 type DistrictFeature = {
   type: "Feature"
   properties: { name: string; osmId: number; population: number }
   geometry: { type: "Polygon"; coordinates: number[][][] }
 }
 
-type DistrictScores = {
-  districts: District[]
-}
-
 let cachedGeoJSON: DistrictFeature[] | null = null
-let cachedScores: DistrictScores | null = null
 
 function getDistrictGeoJSON(): DistrictFeature[] {
   if (cachedGeoJSON) return cachedGeoJSON
@@ -43,14 +30,10 @@ function getDistrictGeoJSON(): DistrictFeature[] {
   return cachedGeoJSON
 }
 
-function getDistrictScores(): DistrictScores {
-  if (cachedScores) return cachedScores
-  const raw = readFileSync(
-    join(process.cwd(), "data/district-scores.json"),
-    "utf8"
-  )
-  cachedScores = JSON.parse(raw) as DistrictScores
-  return cachedScores
+// Same day-filtered scores the kvart pages render (not the pooled legacy file),
+// so a district's OG card and its page agree on score/rank.
+function getDistrictScores() {
+  return loadScores()?.districts ?? []
 }
 
 function pointInPolygon(
@@ -77,12 +60,12 @@ function findDistrict(
   lon: number
 ): { name: string; score: number; rank: number } | null {
   const features = getDistrictGeoJSON()
-  const scores = getDistrictScores()
+  const districts = getDistrictScores()
 
   for (const feature of features) {
     const ring = feature.geometry.coordinates[0]
     if (pointInPolygon(lat, lon, ring)) {
-      const districtScore = scores.districts.find(
+      const districtScore = districts.find(
         (d) => d.name === feature.properties.name
       )
       if (districtScore) {

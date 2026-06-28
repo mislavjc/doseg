@@ -15,7 +15,13 @@ bothDirections: boolean, lineCount: number, tramLines: Array<string>, busLines: 
  */
 firstDeparture: string, lastDeparture: string, 
 /**
- * Combined peak gap range across every calling line & direction [low, high],
- * minutes — the "vozilo naiđe svakih 3–5 min" figure.
+ * Distinct outbound compass directions the calling lines leave on (bearings
+ * clustered within 45°): 1 = one-way, 2 = two-way, 3+ = multi-corridor. The
+ * raw count only — the display label ("oba smjera" / "više smjerova" /
+ * "čvorište", the last gated on line count) is chosen in the frontend
+ * (app/stanice/copy.ts `directionLabel`). Replaces the old pooled cross-line
+ * "interval" headline, which summed every line × both directions into a
+ * frequency no single rider experienced — at Elka 11 lines averaging
+ * 20–80 min collapsed into a fake "1–3 min".
  */
-peakIntervalMin: [number, number] | null, lines: Array<StopLine>, neighbors: Array<StopNeighbor>, hero: StopHeroGeom, reach?: StopReach, prevSlug: string | null, nextSlug: string | null, };
+directionGroups: number, lines: Array<StopLine>, neighbors: Array<StopNeighbor>, hero: StopHeroGeom, reach?: StopReach, prevSlug: string | null, nextSlug: string | null, };

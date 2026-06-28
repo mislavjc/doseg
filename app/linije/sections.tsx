@@ -22,10 +22,11 @@ import {
   introText,
   modeNoun,
   numberWord,
-  peakHourly,
   peakRange,
   plural,
-  serviceDays,
+  serviceHistogram,
+  serviceStatus,
+  weekendKind,
 } from "./copy"
 
 /**
@@ -77,21 +78,36 @@ function FactGroup({ label, first = false }: { label: string; first?: boolean })
 
 export function Cinjenice({ data }: { data: LinePageData }) {
   const range = peakRange(data)
+  const status = serviceStatus(data)
   const km = data.stats.distanceKm.toLocaleString("hr-HR", {
     maximumFractionDigits: 1,
   })
   return (
     <div>
       <FactGroup label="usluga" first />
-      {range && <FactRow label="razmak u špici" value={`${range[0]} min`} />}
-      <FactRow
-        label="polazaka radnim danom"
-        value={String(data.stats.dailyDepartures)}
-      />
-      <FactRow
-        label="prvi i zadnji polazak"
-        value={`${clockTime(data.stats.firstDeparture)} · ${clockTime(data.stats.lastDeparture)}`}
-      />
+      {status === "weekday" ? (
+        <>
+          {range && (
+            <FactRow
+              label="razmak u špici"
+              value={range[0] === range[1] ? `${range[0]} min` : `${range[0]}–${range[1]} min`}
+            />
+          )}
+          <FactRow
+            label="polazaka radnim danom"
+            value={String(data.stats.dailyDepartures)}
+          />
+          <FactRow
+            label="prvi i zadnji polazak"
+            value={`${clockTime(data.stats.firstDeparture)} · ${clockTime(data.stats.lastDeparture)}`}
+          />
+        </>
+      ) : (
+        <FactRow
+          label="status"
+          value={status === "weekendOnly" ? "vozi samo vikendom" : "trenutno ne vozi"}
+        />
+      )}
       <FactGroup label="trasa" />
       <FactRow
         label="broj stanica"
@@ -109,15 +125,16 @@ export function Cinjenice({ data }: { data: LinePageData }) {
 // ── Koliko često vozi (histogram) ───────────────────────────────────────────
 
 export function Frekvencija({ data }: { data: LinePageData }) {
-  const hasNight = data.histogram.slice(0, 4).some((c) => c > 0)
+  const hist = serviceHistogram(data)
+  const hasNight = hist.slice(0, 4).some((c) => c > 0)
   const hours = hasNight
     ? Array.from({ length: 24 }, (_, h) => h)
     : Array.from({ length: 20 }, (_, i) => i + 4)
-  const max = Math.max(...data.histogram, 1)
+  const max = Math.max(...hist, 1)
   return (
     <div className="flex items-end justify-between gap-px">
       {hours.map((h) => {
-        const count = data.histogram[h]
+        const count = hist[h]
         const height = count > 0 ? Math.max((count / max) * 84, 6) : 2
         return (
           <div key={h} className="flex w-full max-w-5 flex-col items-center gap-1">
@@ -139,15 +156,18 @@ export function Frekvencija({ data }: { data: LinePageData }) {
 export function frekvencijaCopy(data: LinePageData): {
   hook: string
   body: string
-} {
-  const peak = peakHourly(data)
+} | null {
+  const status = serviceStatus(data)
+  if (status === "none") return null
+  const hist = serviceHistogram(data)
+  const peak = Math.max(...hist, 0)
   const word = numberWord(peak)
   const hook = `${word.charAt(0).toUpperCase()}${word.slice(1)} ${plural(peak, "polazak", "polaska", "polazaka")} na sat u špici.`
-  const maxHours = data.histogram
-    .map((c, h) => ({ c, h }))
-    .filter(({ c }) => c === peak)
-    .map(({ h }) => h)
-  const body = `Polasci radnim danom po satu, oba smjera. Najgušće vozi oko ${maxHours[0]} h.`
+  const maxHour = hist.indexOf(peak)
+  const dayLabel = status === "weekendOnly" ? "vikendom" : "radnim danom"
+  // Single busier direction (the number a rider experiences), not both summed —
+  // so no "oba smjera" claim here.
+  const body = `Polasci ${dayLabel} po satu, u jednom smjeru. Najgušće vozi oko ${maxHour} h.`
   return { hook, body }
 }
 
@@ -184,11 +204,43 @@ export function DosegLinije({ data }: { data: LinePageData }) {
 
 // ── Česta pitanja: FAQ copy builder (rendering = shared CestaPitanja) ────────
 
+// Suspended / weekend-only lines: answer honestly instead of "0 polazaka radnim
+// danom" + a "00:00" night claim.
+function suspendedFaq(
+  data: LinePageData,
+  status: ReturnType<typeof serviceStatus>
+): FaqItem[] {
+  const weekendSentence = {
+    both: "Vozi subotom i nedjeljom.",
+    saturday: "Vozi samo subotom.",
+    sunday: "Vozi samo nedjeljom.",
+    none: "",
+  }[weekendKind(data)]
+  const items: FaqItem[] = [
+    {
+      q: `Koliko često vozi linija ${data.broj}?`,
+      a:
+        status === "weekendOnly"
+          ? `Linija ${data.broj} radnim danom ne vozi. ${weekendSentence}`
+          : `Linija ${data.broj} trenutno ne prometuje — u aktualnom voznom redu nema polazaka.`,
+    },
+  ]
+  if (data.oneWay) {
+    items.push({
+      q: `Zašto linija ${data.broj} ima samo jedan smjer?`,
+      a: `Linija ${data.broj} vozi kružno: ${modeNoun(data.mode)} kreće s terminala ${data.terminals[0]} i istom se trasom vraća bez zasebnog povratnog smjera.`,
+    })
+  }
+  return items
+}
+
 export function buildFaq(data: LinePageData): FaqItem[] {
+  const status = serviceStatus(data)
+  if (status !== "weekday") return suspendedFaq(data, status)
+
   const items: FaqItem[] = []
   const noun = modeNoun(data.mode)
   const range = peakRange(data)
-  const days = serviceDays(data)
 
   const freqParts: string[] = []
   if (range) {
@@ -207,14 +259,12 @@ export function buildFaq(data: LinePageData): FaqItem[] {
       `${data.stats.dailyDepartures} ${plural(data.stats.dailyDepartures, "polazak", "polaska", "polazaka")} radnim danom`
     )
   }
-  const weekend =
-    days.subota && days.nedjelja
-      ? "Vozi i subotom i nedjeljom."
-      : days.subota
-        ? "Subotom vozi, nedjeljom ne."
-        : days.nedjelja
-          ? "Nedjeljom vozi, subotom ne."
-          : "Vikendom ne vozi."
+  const weekend = {
+    both: "Vozi i subotom i nedjeljom.",
+    saturday: "Subotom vozi, nedjeljom ne.",
+    sunday: "Nedjeljom vozi, subotom ne.",
+    none: "Vikendom ne vozi.",
+  }[weekendKind(data)]
   items.push({
     q: `Koliko često vozi linija ${data.broj}?`,
     a: `${freqParts.join(", ")}. ${weekend}`,

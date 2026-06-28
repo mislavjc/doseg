@@ -64,6 +64,9 @@ export async function generateMetadata({
       title,
       description,
       type: "article",
+      url: `/linije/${data.broj}`,
+      siteName: "Doseg",
+      locale: "hr_HR",
       images: [
         {
           url: `/api/og?linija=${data.broj}&v=${ogVersion}`,

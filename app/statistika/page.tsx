@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description:
       "Koji su najbolje povezani kvartovi u Zagrebu? Koliko grada dosegneš iz svakog od 17 kvartova u 30 minuta javnim prijevozom.",
     type: "article",
+    url: "/statistika",
+    siteName: "Doseg",
+    locale: "hr_HR",
   },
 }
 

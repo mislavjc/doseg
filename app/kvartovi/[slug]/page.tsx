@@ -47,6 +47,9 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
+      url: `/kvartovi/${data.slug}`,
+      siteName: "Doseg",
+      locale: "hr_HR",
       images: [{ url: "/og.jpg", width: 1200, height: 630 }],
     },
   }

@@ -15,10 +15,7 @@
   "busLines": [],
   "firstDeparture": "4:39",
   "lastDeparture": "0:58",
-  "peakIntervalMin": [
-    1,
-    3
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "4",

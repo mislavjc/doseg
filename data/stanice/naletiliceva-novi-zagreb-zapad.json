@@ -25,10 +25,7 @@
   ],
   "firstDeparture": "4:16",
   "lastDeparture": "1:25",
-  "peakIntervalMin": [
-    1,
-    2
-  ],
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "110",

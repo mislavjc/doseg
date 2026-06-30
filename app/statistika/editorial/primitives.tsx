@@ -14,12 +14,19 @@ import { cn } from "@/lib/utils"
 
 // ── Layout ──────────────────────────────────────────────────────────────────
 
-/** Full-bleed white page frame for the editorial statistika page. */
+/** Full-bleed white page frame for the editorial statistika page. Renders the
+ * page's `<main>` landmark and the `#main-content` skip-link target (the global
+ * skip link in app/layout.tsx points here); `tabIndex={-1}` lets the skip link
+ * move focus, not just scroll. */
 export function EditorialShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-svh bg-ground font-heros text-ink-2 antialiased selection:bg-zg-blue/15">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="min-h-svh bg-ground font-heros text-ink-2 antialiased outline-none selection:bg-zg-blue/15"
+    >
       {children}
-    </div>
+    </main>
   )
 }
 

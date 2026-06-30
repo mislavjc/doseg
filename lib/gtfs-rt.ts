@@ -106,7 +106,7 @@ function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
 
 async function refresh(): Promise<void> {
   try {
-    const res = await fetch(ZET_RT_URL)
+    const res = await fetch(ZET_RT_URL, { signal: AbortSignal.timeout(5000) })
     if (!res.ok) throw new Error(`GTFS-RT fetch failed: ${res.status}`)
 
     const buf = await res.arrayBuffer()

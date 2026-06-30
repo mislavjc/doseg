@@ -97,7 +97,7 @@ function factsText(data: StopPageData): string {
   if (data.reach) {
     return `${lines} · ${data.reach.stations30} ${plural(data.reach.stations30, "stanica", "stanice", "stanica")} za 30 min`
   }
-  return `${lines} · ${data.firstDeparture}–${data.lastDeparture}`
+  return `${lines} · ${data.firstDeparture}-${data.lastDeparture}`
 }
 
 /** White info band: breadcrumb, headline, facts (Paper "OG stanica — V1"). */

@@ -61,64 +61,74 @@ export async function GET(req: NextRequest) {
 }
 
 async function reversePhoton(lat: number, lon: number): Promise<string | null> {
-  const params = new URLSearchParams({
-    lat: String(lat),
-    lon: String(lon),
-    lang: "default",
-  })
-  const res = await fetch(`${PHOTON_REVERSE}?${params}`, {
-    next: { revalidate: 300 },
-  })
-  if (!res.ok) return null
-  const data = await res.json()
-  const f = data.features?.[0] as PhotonFeature | undefined
-  if (!f) return null
-  const [flon, flat] = f.geometry.coordinates
-  if (!isNearby(flat, flon)) return null
-  const label = photonLabel(f.properties)
-  return label || null
+  try {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lon: String(lon),
+      lang: "default",
+    })
+    const res = await fetch(`${PHOTON_REVERSE}?${params}`, {
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(4000),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const f = data.features?.[0] as PhotonFeature | undefined
+    if (!f) return null
+    const [flon, flat] = f.geometry.coordinates
+    if (!isNearby(flat, flon)) return null
+    const label = photonLabel(f.properties)
+    return label || null
+  } catch {
+    return null
+  }
 }
 
 async function reverseNominatim(lat: number, lon: number): Promise<string | null> {
-  const params = new URLSearchParams({
-    lat: String(lat),
-    lon: String(lon),
-    format: "jsonv2",
-    "accept-language": "hr",
-    zoom: "18",
-    addressdetails: "1",
-  })
-  const res = await fetch(`${NOMINATIM_REVERSE}?${params}`, {
-    headers: { "User-Agent": "Doseg/1.0 (https://doseg.hr)" },
-    next: { revalidate: 300 },
-  })
-  if (!res.ok) return null
-  const item: {
-    display_name?: string
-    lat?: string
-    lon?: string
-    address?: {
-      road?: string
-      house_number?: string
-      city?: string
-      town?: string
-      village?: string
-      suburb?: string
+  try {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lon: String(lon),
+      format: "jsonv2",
+      "accept-language": "hr",
+      zoom: "18",
+      addressdetails: "1",
+    })
+    const res = await fetch(`${NOMINATIM_REVERSE}?${params}`, {
+      headers: { "User-Agent": "Doseg/1.0 (https://doseg.hr)" },
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(4000),
+    })
+    if (!res.ok) return null
+    const item: {
+      display_name?: string
+      lat?: string
+      lon?: string
+      address?: {
+        road?: string
+        house_number?: string
+        city?: string
+        town?: string
+        village?: string
+        suburb?: string
+      }
+    } = await res.json()
+    if (item.lat && item.lon) {
+      const la = parseFloat(item.lat)
+      const lo = parseFloat(item.lon)
+      if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo))
+        return null
     }
-  } = await res.json()
-  if (item.lat && item.lon) {
-    const la = parseFloat(item.lat)
-    const lo = parseFloat(item.lon)
-    if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo))
-      return null
+    // Prefer the structured street (+number) over the full POI-led display_name.
+    const a = item.address
+    if (a?.road) {
+      const parts = [a.house_number ? `${a.road} ${a.house_number}` : a.road]
+      const area = a.city ?? a.town ?? a.village ?? a.suburb
+      if (area) parts.push(area)
+      return parts.join(", ")
+    }
+    return item.display_name ?? null
+  } catch {
+    return null
   }
-  // Prefer the structured street (+number) over the full POI-led display_name.
-  const a = item.address
-  if (a?.road) {
-    const parts = [a.house_number ? `${a.road} ${a.house_number}` : a.road]
-    const area = a.city ?? a.town ?? a.village ?? a.suburb
-    if (area) parts.push(area)
-    return parts.join(", ")
-  }
-  return item.display_name ?? null
 }

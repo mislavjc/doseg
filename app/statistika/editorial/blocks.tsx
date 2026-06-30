@@ -47,10 +47,13 @@ export function SectionHeader({
 export function FactRow({
   label,
   value,
+  href,
   divided = false,
 }: {
   label: string
   value: string
+  /** Links the value (e.g. a stop's kvart → the kvart page). */
+  href?: string
   /** Bottom hairline per row (drops on the last) — for bordered fact lists. */
   divided?: boolean
 }) {
@@ -63,7 +66,16 @@ export function FactRow({
     >
       <span className="shrink-0 font-heros text-body text-ink-muted">{label}</span>
       <span className="h-[13px] min-w-0 flex-1 border-b border-dotted border-hairline-strong" />
-      <span className="shrink-0 font-mono text-body text-ink">{value}</span>
+      {href ? (
+        <Link
+          href={href}
+          className="shrink-0 font-mono text-body text-zg-blue transition-colors hover:text-navy"
+        >
+          {value}
+        </Link>
+      ) : (
+        <span className="shrink-0 font-mono text-body text-ink">{value}</span>
+      )}
     </div>
   )
 }

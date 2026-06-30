@@ -2,8 +2,8 @@
 
 import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { IconCircleBanSign } from "@central-icons-react/square-outlined-radius-0-stroke-2"
-import { LazyDiffMap } from "./diff-map"
 import {
   INK, MUTE, FAINT, OLD, BLUE, HAIR, DOT, HEROS, MONO,
   type Stat, type Geom, type Source, type Successor,
@@ -11,6 +11,18 @@ import {
   type LineItem, type TimelineModel,
   num, dateLabel, monthLabel, expandStop, TAG, TALLY, norm,
 } from "./lib"
+
+// Code-split maplibre-gl out of the initial /promjene bundle; the diff map sits
+// below the fold and LazyDiffMap still defers WebGL init until it scrolls in.
+const LazyDiffMap = dynamic(
+  () => import("./diff-map").then((m) => m.LazyDiffMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ width: "100%", height: "clamp(360px, 44vw, 580px)" }} />
+    ),
+  }
+)
 
 /** Top-right "open in new tab" glyph, reused by every external link. */
 const ARROW = (

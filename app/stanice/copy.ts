@@ -1,7 +1,7 @@
 import type { StopLine } from "@/lib/generated/StopLine"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 
-import { numberWord, plural } from "../linije/copy"
+import { numberWordF, plural } from "../linije/copy"
 
 /**
  * Croatian copy templating for the /stanice/[slug] pages. Stop names stay in the
@@ -32,7 +32,7 @@ export function lineListProse(data: StopPageData): string {
 
 /** "5" when lo == hi, else "5–8". The shared equal-vs-range branch. */
 export function rangeText([lo, hi]: [number, number]): string {
-  return lo === hi ? `${lo}` : `${lo}–${hi}`
+  return lo === hi ? `${lo}` : `${lo}-${hi}`
 }
 
 /**
@@ -118,7 +118,7 @@ export function directionNote(data: StopPageData): string {
 /** Lede paragraph under the title. */
 export function introText(data: StopPageData): string {
   const n = data.lineCount
-  const linije = `${numberWord(n)} ${plural(n, "linija", "linije", "linija")}`
+  const linije = `${numberWordF(n)} ${plural(n, "linija", "linije", "linija")}`
   const parts = [`Ovdje staje ${linije}: ${lineListProse(data)}.`]
   const mf = mostFrequentLine(data)
   if (mf) {

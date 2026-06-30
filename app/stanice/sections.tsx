@@ -13,6 +13,7 @@ import { type FaqItem } from "@/app/statistika/editorial/faq"
 import { Body, PageTitle } from "@/app/statistika/editorial/primitives"
 import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
+import { kvartSlug } from "@/lib/kvart-slug"
 import type { SiblingStop } from "@/lib/stop-data"
 
 import {
@@ -26,7 +27,7 @@ import {
   mostFrequentLine,
   subtitle,
 } from "./copy"
-import { numberWord, plural } from "../linije/copy"
+import { numberWordF, plural } from "../linije/copy"
 
 /**
  * Server sections of the /stanice/[slug] page (Paper "Stanica Reljkovićeva —
@@ -43,7 +44,9 @@ export function Naslov({ data }: { data: StopPageData }) {
       <Breadcrumb
         trail={[
           { label: "sve stanice", href: "/stanice" },
-          ...(data.kvart ? [{ label: data.kvart }] : []),
+          ...(data.kvart
+            ? [{ label: data.kvart, href: `/kvartovi/${kvartSlug(data.kvart)}` }]
+            : []),
           { label: data.name.toLowerCase() },
         ]}
       />
@@ -61,7 +64,13 @@ export function Cinjenice({ data }: { data: StopPageData }) {
   return (
     <div>
       <FactRow label="linije koje staju" value={String(data.lineCount)} />
-      {data.kvart && <FactRow label="kvart" value={data.kvart} />}
+      {data.kvart && (
+        <FactRow
+          label="kvart"
+          value={data.kvart}
+          href={`/kvartovi/${kvartSlug(data.kvart)}`}
+        />
+      )}
       <FactRow
         label="prvi i zadnji polazak"
         value={`${data.firstDeparture} · ${data.lastDeparture}`}
@@ -107,7 +116,7 @@ export function LinijeKojeStaju({ data }: { data: StopPageData }) {
     <div>
       <SectionHeader
         eyebrow="linije koje ovdje staju"
-        hook={`${numberWord(n).charAt(0).toUpperCase() + numberWord(n).slice(1)} ${plural(n, "linija", "linije", "linija")}${dir ? `, ${dir}.` : "."}`}
+        hook={`${numberWordF(n).charAt(0).toUpperCase() + numberWordF(n).slice(1)} ${plural(n, "linija", "linije", "linija")}${dir ? `, ${dir}.` : "."}`}
       >
         Svaka linija vodi na svoju stranicu s punim voznim redom. Brojke su
         tipičan razmak vozila radnim danom u špici.
@@ -198,11 +207,11 @@ export function IstoimeneStanice({
 }) {
   if (siblings.length === 0) return null
   const n = siblings.length
-  const count =
-    n === 1 ? "jedna stanica" : `${numberWord(n)} ${plural(n, "stanica", "stanice", "stanica")}`
+  const count = `${numberWordF(n)} ${plural(n, "stanica", "stanice", "stanica")}`
+  const verb = n === 1 ? "Postoji" : "Postoje"
   return (
     <div>
-      <SectionHeader eyebrow="istoimene stanice" hook={`Postoji još ${count} imena ${name}.`}>
+      <SectionHeader eyebrow="istoimene stanice" hook={`${verb} još ${count} imena ${name}.`}>
         Različite lokacije s istim imenom. Provjeri kvart i udaljenost da ne
         zamijeniš stanicu.
       </SectionHeader>
@@ -244,7 +253,7 @@ export function buildFaq(data: StopPageData): FaqItem[] {
 
   items.push({
     q: `Koje linije staju na stanici ${data.name}?`,
-    a: `${lineListProse(data)}. Ukupno ${numberWord(n)} ${plural(n, "linija", "linije", "linija")}${directionNote(data)}.`,
+    a: `${lineListProse(data)}. Ukupno ${numberWordF(n)} ${plural(n, "linija", "linije", "linija")}${directionNote(data)}.`,
   })
 
   const nearest = data.neighbors.slice(0, 2).map((x) => x.name)

@@ -203,11 +203,13 @@ function MapChrome({
         <LayersControl {...layersProps} />
       </div>
 
-      {/* Mobile: top search bar + polazak/layers controls (spec §9) */}
-      <div className="absolute inset-x-3.5 top-4 z-30 bg-ground shadow-map md:hidden">
+      {/* Mobile: top search bar + polazak/layers controls (spec §9). Offsets add
+          env(safe-area-inset-top) so the chrome clears the iOS status bar under
+          viewport-fit:cover. */}
+      <div className="absolute inset-x-3.5 top-[calc(env(safe-area-inset-top)_+_1rem)] z-30 bg-ground shadow-map md:hidden">
         <SearchFields {...searchProps} />
       </div>
-      <div className="absolute top-[114px] right-3.5 z-20 flex items-start gap-2 md:hidden">
+      <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-20 flex items-start gap-2 md:hidden">
         <PolazakControl departTime={departTime} onChange={onTimeChange} compact />
         <LayersControl {...layersProps} variant="icon" />
       </div>
@@ -291,10 +293,12 @@ function ClientInner() {
   }
 
   return (
-    <main id="main-content" className="relative h-dvh overflow-hidden">
+    <main id="main-content" tabIndex={-1} className="relative h-dvh overflow-hidden outline-none">
       <h1 className="sr-only">Doseg: karta dosega javnog prijevoza</h1>
       <nav aria-label="Navigacija" className="sr-only">
         <Link href="/linije">Sve ZET linije: vozni red i stanice</Link>
+        <Link href="/stanice">Sve ZET stanice po imenu</Link>
+        <Link href="/kvartovi">Zagrebački kvartovi po povezanosti</Link>
         <Link href="/statistika">Statistika dostupnosti javnog prijevoza</Link>
         <Link href="/promjene">Promjene i izmjene ZET linija</Link>
         <Link href="/o-projektu">O projektu</Link>

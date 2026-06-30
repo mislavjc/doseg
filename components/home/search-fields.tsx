@@ -272,6 +272,12 @@ function SearchRow({
       <input
         ref={inputRef}
         type="text"
+        inputMode="search"
+        enterKeyHint="search"
+        autoComplete="off"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onFocus={onFocus}
@@ -558,7 +564,7 @@ function FieldRows({
             {...rowProps("dest")}
             onKeyNav={onKeyNav}
             icon={<DestSquare active={destName != null} />}
-            placeholder="Odredište — traži ili klikni kartu"
+            placeholder="Odredište · traži ili klikni kartu"
             trailing={
               hasDest && resting ? (
                 <ClearValueButton

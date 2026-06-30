@@ -90,7 +90,7 @@ export function Cinjenice({ data }: { data: LinePageData }) {
           {range && (
             <FactRow
               label="razmak u špici"
-              value={range[0] === range[1] ? `${range[0]} min` : `${range[0]}–${range[1]} min`}
+              value={range[0] === range[1] ? `${range[0]} min` : `${range[0]}-${range[1]} min`}
             />
           )}
           <FactRow
@@ -222,7 +222,7 @@ function suspendedFaq(
       a:
         status === "weekendOnly"
           ? `Linija ${data.broj} radnim danom ne vozi. ${weekendSentence}`
-          : `Linija ${data.broj} trenutno ne prometuje — u aktualnom voznom redu nema polazaka.`,
+          : `Linija ${data.broj} trenutno ne prometuje. U aktualnom voznom redu nema polazaka.`,
     },
   ]
   if (data.oneWay) {

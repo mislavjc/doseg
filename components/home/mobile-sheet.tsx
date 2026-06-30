@@ -216,7 +216,7 @@ export function MobileSheet(props: PanelContentProps) {
           aria-describedby={undefined}
           className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex h-full flex-col outline-none md:hidden"
         >
-          <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
+          <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
             <Drawer.Title className="sr-only">Doseg</Drawer.Title>
             <button
               type="button"

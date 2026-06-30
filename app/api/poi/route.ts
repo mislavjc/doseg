@@ -17,16 +17,27 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl
     const categoriesParam = searchParams.get("categories")
-    const categories: POICategory[] = categoriesParam
-      ? (categoriesParam.split(",").filter(Boolean) as POICategory[])
-      : ALL_CATEGORIES
+    // Validate against the allow-list: an unknown category would otherwise build
+    // a malformed Overpass query (OSM_TAGS[bogus] === undefined).
+    let categories: POICategory[]
+    if (categoriesParam) {
+      const requested = new Set(categoriesParam.split(",").filter(Boolean))
+      categories = ALL_CATEGORIES.filter((c) => requested.has(c))
+    } else {
+      categories = ALL_CATEGORIES
+    }
+
+    if (categories.length === 0) {
+      const { response } = jsonResponse([], request, "public, max-age=86400")
+      return response
+    }
 
     const pois = await fetchPOIs(categories)
 
     const { response } = jsonResponse(pois, request, "public, max-age=86400")
     return response
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Internal error"
-    return Response.json({ error: message }, { status: 500 })
+    console.error("POI fetch failed:", err)
+    return Response.json({ error: "Internal error" }, { status: 500 })
   }
 }

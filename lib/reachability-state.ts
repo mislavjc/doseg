@@ -23,11 +23,26 @@ export interface ReachabilityState {
 }
 
 const CACHE_TTL_MS = 30_000
+const MAX_CACHE_ENTRIES = 256
 
 const cache = new Map<
   string,
   { expiresAt: number; value: Promise<ReachabilityState> }
 >()
+
+/** Drop expired entries (they are otherwise never re-read) and hard-cap the
+ * total so a burst of distinct origins can't grow the cache without bound on
+ * the 1.5 GB box. Map iterates in insertion order, so the oldest keys go first. */
+function pruneCache(now: number): void {
+  for (const [key, entry] of cache) {
+    if (entry.expiresAt <= now) cache.delete(key)
+  }
+  while (cache.size > MAX_CACHE_ENTRIES) {
+    const oldest = cache.keys().next().value
+    if (oldest === undefined) break
+    cache.delete(oldest)
+  }
+}
 
 function makeKey(params: {
   originLat: number
@@ -106,12 +121,18 @@ export async function getReachabilityState(params: {
     return cached.value
   }
 
-  const value = computeState(key, params)
+  const value = computeState(key, params).catch((err) => {
+    // A transient OTP/BAJS failure must not stay cached and replay its
+    // rejection to every caller for the full TTL.
+    cache.delete(key)
+    throw err
+  })
 
   cache.set(key, {
     expiresAt: now + CACHE_TTL_MS,
     value,
   })
+  pruneCache(now)
 
   return value
 }

@@ -186,7 +186,7 @@ function PanelBody({
       </div>
       <div className="m-3 bg-note-bg px-[14px] py-3">
         <p className="font-heros text-[14px] leading-[19px] text-note-ink">
-          Doseg se mijenja kroz dan — navečer istok grada gubi gotovo trećinu.
+          Doseg se mijenja kroz dan, navečer istok grada gubi gotovo trećinu.
         </p>
       </div>
     </DropdownPanel>

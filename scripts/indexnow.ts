@@ -12,6 +12,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { kvartSlug } from "../lib/kvart-slug"
+
 const HOST = "doseg.hr"
 const BASE = `https://${HOST}`
 const KEY = "761c62e2daf49843b64800df4f51c7c5"
@@ -24,19 +26,34 @@ const STATIC_PATHS = [
   "/statistika/podaci",
   "/promjene",
   "/linije",
+  "/stanice",
+  "/kvartovi",
+  "/karta-tramvaja",
 ]
 
 interface LineIndex {
   lines: { broj: string }[]
 }
+interface StopIndex {
+  stops: { slug: string }[]
+}
+interface DistrictScores {
+  districts: { name: string }[]
+}
+
+function readData<T>(...parts: string[]): T {
+  return JSON.parse(readFileSync(join(process.cwd(), "data", ...parts), "utf8"))
+}
 
 function urlList(): string[] {
-  const index: LineIndex = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "linije", "index.json"), "utf8")
-  )
+  const lines = readData<LineIndex>("linije", "index.json")
+  const stops = readData<StopIndex>("stanice", "index.json")
+  const scores = readData<DistrictScores>("district-scores.json")
   return [
     ...STATIC_PATHS.map((p) => `${BASE}${p}`),
-    ...index.lines.map((l) => `${BASE}/linije/${l.broj}`),
+    ...lines.lines.map((l) => `${BASE}/linije/${l.broj}`),
+    ...stops.stops.map((s) => `${BASE}/stanice/${s.slug}`),
+    ...scores.districts.map((d) => `${BASE}/kvartovi/${kvartSlug(d.name)}`),
   ]
 }
 

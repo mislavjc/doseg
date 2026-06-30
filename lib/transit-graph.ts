@@ -248,6 +248,7 @@ async function fetchOtpPatterns(serviceDate?: string) {
     body: JSON.stringify({
       query: `{ patterns { route { mode shortName longName } patternGeometry { points } stops { name lat lon } ${tripsField} } }`,
     }),
+    signal: AbortSignal.timeout(15000),
   })
 
   if (!res.ok) {

@@ -17,7 +17,7 @@ import { scoreColor } from "@/lib/score-color"
 export const metadata: Metadata = {
   title: "Zagrebački kvartovi po povezanosti javnog prijevoza | Doseg",
   description:
-    "Svih 17 zagrebačkih kvartova rangirano po dosegu javnog prijevoza — od najbolje povezanog do prometne pustinje. Za svaki kvart: linije, doseg i susjedne stanice.",
+    "Svih 17 zagrebačkih kvartova rangirano po dosegu javnog prijevoza, od najbolje povezanog do prometne pustinje. Za svaki kvart: linije, doseg i susjedne stanice.",
   alternates: { canonical: "/kvartovi" },
   openGraph: {
     type: "website",

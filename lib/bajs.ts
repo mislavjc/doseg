@@ -81,7 +81,10 @@ function clampTtl(ttl: number | undefined): number {
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, { cache: "no-store" })
+  const response = await fetch(url, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(5000),
+  })
   if (!response.ok) {
     throw new Error(`BAJS feed request failed: ${response.status}`)
   }
@@ -165,7 +168,14 @@ export async function getBajsData(): Promise<BajsData> {
       })
   }
 
-  return pendingLoad
+  try {
+    return await pendingLoad
+  } catch (err) {
+    // Serve the last-good snapshot if the feed is briefly unreachable rather
+    // than failing the request outright.
+    if (cachedData) return cachedData
+    throw err
+  }
 }
 
 export function buildBajsFeatureCollection(

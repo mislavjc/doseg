@@ -1,4 +1,5 @@
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
+import { HeroPicture } from "@/components/hero-picture"
 import { mercatorX, mercatorY } from "@/lib/geo"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
@@ -75,11 +76,13 @@ function StopHeroVariant({
   data,
   crop,
   src,
+  variant,
   className,
 }: {
   data: StopPageData
   crop: LineHeroCrop
   src: string | null
+  variant: "desktop" | "mobile"
   className?: string
 }) {
   const viewW = crop.width / 2
@@ -94,8 +97,11 @@ function StopHeroVariant({
       style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "#fff" }}
     >
       {src && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={`Karta stanice ${data.name} u Zagrebu`} className="absolute inset-0 h-full w-full object-cover" />
+        <HeroPicture
+          src={src}
+          alt={`Karta stanice ${data.name} u Zagrebu`}
+          variant={variant}
+        />
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -171,9 +177,9 @@ export function StopHero({
 
   return (
     <header className="relative bg-white">
-      <StopHeroVariant data={data} crop={desktopCrop} src={desktopSrc} className="hidden sm:block" />
-      <StopHeroVariant data={data} crop={mobileCrop} src={mobileSrc} className="sm:hidden" />
-      <div className="absolute inset-x-0 top-[18px] z-10 flex w-full justify-center px-4 sm:px-16">
+      <StopHeroVariant data={data} crop={desktopCrop} src={desktopSrc} variant="desktop" className="hidden sm:block" />
+      <StopHeroVariant data={data} crop={mobileCrop} src={mobileSrc} variant="mobile" className="sm:hidden" />
+      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
         <SiteNav active="stanice" />
       </div>
     </header>

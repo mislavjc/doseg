@@ -54,9 +54,11 @@ interface OverpassResponse {
   elements: OverpassElement[]
 }
 
-let cachedPOIs: POI[] | null = null
-let cacheExpiresAt = 0
-let pendingFetch: Promise<POI[]> | null = null
+// Keyed by the sorted category set — a narrow request (e.g. ?categories=park)
+// must not poison the cache for a later broader one. The key space is bounded
+// (at most 2^5 category combinations), so the Map can't grow without bound.
+const poiCache = new Map<string, { pois: POI[]; expiresAt: number }>()
+const pendingFetches = new Map<string, Promise<POI[]>>()
 
 function buildQuery(categories: POICategory[]): string {
   const { south, west, north, east } = ZAGREB_BBOX
@@ -171,6 +173,9 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `data=${encodeURIComponent(query)}`,
+        // Overpass QL caps itself at [timeout:30]; give the socket a little
+        // more before we abort a genuinely-hung connection.
+        signal: AbortSignal.timeout(35000),
       })
       if (!response.ok) {
         lastError = new Error(`Overpass API request failed: ${response.status}`)
@@ -219,23 +224,24 @@ function withPhotos(pois: POI[]): POI[] {
   })
 }
 
-export async function fetchPOIs(
-  categories: POICategory[]
-): Promise<POI[]> {
-  if (cachedPOIs && Date.now() < cacheExpiresAt) return cachedPOIs
+export async function fetchPOIs(categories: POICategory[]): Promise<POI[]> {
+  const key = [...categories].sort().join(",")
+  const cached = poiCache.get(key)
+  if (cached && Date.now() < cached.expiresAt) return cached.pois
 
-  if (!pendingFetch) {
-    pendingFetch = loadPOIs(categories)
+  let pending = pendingFetches.get(key)
+  if (!pending) {
+    pending = loadPOIs(categories)
       .then(withPhotos)
       .then((pois) => {
-        cachedPOIs = pois
-        cacheExpiresAt = Date.now() + CACHE_TTL_MS
+        poiCache.set(key, { pois, expiresAt: Date.now() + CACHE_TTL_MS })
         return pois
       })
       .finally(() => {
-        pendingFetch = null
+        pendingFetches.delete(key)
       })
+    pendingFetches.set(key, pending)
   }
 
-  return pendingFetch
+  return pending
 }

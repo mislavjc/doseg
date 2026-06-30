@@ -10,6 +10,7 @@ import {
   Breadcrumb,
   FactRow,
   LineBadge,
+  PillLink,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
 import { faqJsonLd, type FaqItem } from "@/app/statistika/editorial/faq"
@@ -19,11 +20,14 @@ import {
 } from "@/app/statistika/editorial/json-ld"
 import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
+import { HeroPicture } from "@/components/hero-picture"
 import { mercatorY } from "@/lib/geo"
 import type { LineHeroCrop } from "@/lib/line-data"
 import { scoreColor, scoreTextColor } from "@/lib/score-color"
 import { cn } from "@/lib/utils"
 import type { KvartData } from "@/lib/kvart-data"
+
+import { plural } from "../linije/copy"
 
 /**
  * Kvart scorecard sections. Visual language is the statistika editorial kit
@@ -48,11 +52,13 @@ function KvartHeroVariant({
   data,
   crop,
   src,
+  variant,
   className,
 }: {
   data: KvartData
   crop: LineHeroCrop
   src: string
+  variant: "desktop" | "mobile"
   className?: string
 }) {
   const viewW = crop.width / 2
@@ -73,8 +79,11 @@ function KvartHeroVariant({
       className={cn("relative w-full overflow-clip", className)}
       style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={`Karta kvarta ${data.name} u Zagrebu`} className="absolute inset-0 h-full w-full object-cover" />
+      <HeroPicture
+        src={src}
+        alt={`Karta kvarta ${data.name} u Zagrebu`}
+        variant={variant}
+      />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/hero-cloud.png"
@@ -118,19 +127,21 @@ export function KvartHero({ data }: { data: KvartData }) {
             data={data}
             crop={data.hero.desktop}
             src={`/kvart/hero-${data.slug}.png`}
+            variant="desktop"
             className="hidden sm:block"
           />
           <KvartHeroVariant
             data={data}
             crop={data.hero.mobile}
             src={`/kvart/hero-${data.slug}-m.png`}
+            variant="mobile"
             className="sm:hidden"
           />
         </>
       ) : (
         <div className="h-[180px]" />
       )}
-      <div className="absolute inset-x-0 top-[18px] z-10 flex w-full justify-center px-4 sm:px-16">
+      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
         <SiteNav active="kvartovi" />
       </div>
     </header>
@@ -300,7 +311,7 @@ export function Cinjenice({ data }: { data: KvartData }) {
       <FactRow divided label="tramvajske / autobusne linije" value={`${data.tramCount} / ${data.busCount}`} />
       <FactRow divided label="stanica u kvartu" value={String(data.stops)} />
       <FactRow divided label="prometna pustinja (>500 m od stanice)" value={`${data.desertPct}%`} />
-      <FactRow divided label="javni bicikli (BAJS)" value={`${data.bajs.stations} stanica`} />
+      <FactRow divided label="javni bicikli (BAJS)" value={`${data.bajs.stations} ${plural(data.bajs.stations, "stanica", "stanice", "stanica")}`} />
     </div>
   )
 }
@@ -310,7 +321,7 @@ export function Cinjenice({ data }: { data: KvartData }) {
 export function Linije({ data }: { data: KvartData }) {
   return (
     <>
-      <SectionHeader eyebrow="linije kroz kvart" hook={`${data.lines.length} linija.`}>
+      <SectionHeader eyebrow="linije kroz kvart" hook={`${data.lines.length} ${plural(data.lines.length, "linija", "linije", "linija")}.`}>
         {data.tramCount} tramvajskih i {data.busCount} autobusnih. Svaka vodi na
         svoju stranicu s voznim redom.
       </SectionHeader>
@@ -327,6 +338,29 @@ export function Linije({ data }: { data: KvartData }) {
       <MonoLabel className="mt-2.5 block text-[12px]">
         ispunjeno plavo: tramvaj · obrub: autobus
       </MonoLabel>
+    </>
+  )
+}
+
+// ── Stanice u kvartu ─────────────────────────────────────────────────────────
+
+export type KvartStop = { name: string; slug: string; lineCount: number }
+
+export function StaniceUKvartu({ stops }: { stops: KvartStop[] }) {
+  if (stops.length === 0) return null
+  return (
+    <>
+      <SectionHeader eyebrow="stanice u kvartu" hook="Najprometnije stanice.">
+        Stanice s najviše linija u kvartu. Svaka vodi na svoju stranicu s voznim
+        redom i dosegom.
+      </SectionHeader>
+      <div className="flex flex-wrap gap-1.5">
+        {stops.map((s) => (
+          <PillLink key={s.slug} href={`/stanice/${s.slug}`}>
+            {s.name}
+          </PillLink>
+        ))}
+      </div>
     </>
   )
 }
@@ -482,14 +516,26 @@ export function Promjene({ data }: { data: KvartData }) {
 
 export function buildFaq(data: KvartData): FaqItem[] {
   const top = data.commute[0]
+  const tram = data.lines.filter((l) => l.mode === "tram").map((l) => l.broj)
+  const bus = data.lines.filter((l) => l.mode === "bus").map((l) => l.broj)
+  // Only name the modes the kvart actually has — gluing an empty list left a
+  // dangling "te autobusi —." (broken Croatian + a forbidden em-dash).
+  const lineParts: string[] = []
+  if (tram.length) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
+  if (bus.length) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
+  const joined = lineParts.join(" te ")
+  const linesAnswer = joined
+    ? `${joined.charAt(0).toUpperCase()}${joined.slice(1)}.`
+    : "Kroz kvart trenutno ne vozi nijedna linija."
+  const n = data.lines.length
   return [
     {
       q: `Koliko je ${data.name} dobro povezan?`,
-      a: `${data.rank}. je od ${data.total} kvartova po indeksu dosega. Kroz kvart vozi ${data.lines.length} linija (${data.tramCount} tramvajskih, ${data.busCount} autobusnih).`,
+      a: `${data.rank}. je od ${data.total} kvartova po indeksu dosega. Kroz kvart vozi ${n} ${plural(n, "linija", "linije", "linija")} (${data.tramCount} ${plural(data.tramCount, "tramvajska", "tramvajske", "tramvajskih")}, ${data.busCount} ${plural(data.busCount, "autobusna", "autobusne", "autobusnih")}).`,
     },
     {
       q: `Koje linije voze kroz kvart ${data.name}?`,
-      a: `Tramvaji ${data.lines.filter((l) => l.mode === "tram").map((l) => l.broj).join(", ") || "—"} te autobusi ${data.lines.filter((l) => l.mode === "bus").map((l) => l.broj).join(", ") || "—"}.`,
+      a: linesAnswer,
     },
     ...(top
       ? [

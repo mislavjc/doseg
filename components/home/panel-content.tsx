@@ -1,6 +1,7 @@
 "use client"
 
 import { IconLocation } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import Link from "next/link"
 
 import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
 import type { Itinerary, Leg } from "@/lib/otp"
@@ -440,7 +441,7 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
     <div className="mt-auto flex flex-col gap-[11px] border-t border-hairline pt-4">
       <MonoLabel>tvoj kvart na ljestvici</MonoLabel>
       {district ? (
-        <a
+        <Link
           href="/statistika"
           className="group -mx-1.5 flex items-center justify-between px-1.5 py-0.5 transition-colors duration-150 hover:bg-row-tint"
         >
@@ -450,7 +451,7 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
           <span className="font-mono text-label text-zg-blue">
             #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
           </span>
-        </a>
+        </Link>
       ) : (
         <p className="font-heros text-[16px] leading-5 text-ink-faint">
           Klikni kartu za svoj kvart
@@ -459,7 +460,7 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
       <RankRamp score={district?.score} />
       {district && (
         <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
-          ocjena dosega · 0–100
+          ocjena dosega · 0-100
         </span>
       )}
       <div className="flex items-center justify-between">
@@ -477,14 +478,14 @@ export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
   return (
     <div className="flex items-center justify-between gap-3 border-t border-hairline pt-3.5">
       {district ? (
-        <a href="/statistika" className="flex flex-col">
+        <Link href="/statistika" className="flex flex-col">
           <span className="font-heros text-[16px] leading-5 text-ink">
             {district.name}
           </span>
           <span className="font-mono text-[11px] leading-[14px] text-zg-blue">
             #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
           </span>
-        </a>
+        </Link>
       ) : (
         <span className="font-heros text-[16px] leading-5 text-ink">
           Tvoj kvart na ljestvici

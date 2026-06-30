@@ -40,7 +40,7 @@ function EmptyContent({ onUseMyLocation }: { onUseMyLocation: () => void }) {
         <NumberedStep
           n="2"
           title="Klikni odredište unutar dosega"
-          sub="dobiješ rutu — tramvaj, bus, vlak"
+          sub="dobiješ rutu: tramvaj, bus, vlak"
         />
       </div>
     </>

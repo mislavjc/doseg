@@ -1,4 +1,5 @@
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
+import { HeroPicture } from "@/components/hero-picture"
 import { mercatorY } from "@/lib/geo"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
@@ -256,11 +257,13 @@ function HeroVariant({
   data,
   crop,
   src,
+  variant,
   className,
 }: {
   data: LinePageData
   crop: LineHeroCrop
   src: string
+  variant: "desktop" | "mobile"
   className?: string
 }) {
   // SVG units = css pixels of the 1x band (asset is @2x).
@@ -273,11 +276,10 @@ function HeroVariant({
       className={cn("relative w-full overflow-clip", className)}
       style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <HeroPicture
         src={src}
         alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
-        className="absolute inset-0 h-full w-full object-cover"
+        variant={variant}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -351,19 +353,21 @@ export function LineHero({
             data={data}
             crop={meta.desktop}
             src={`/linije/hero-${data.broj}.png`}
+            variant="desktop"
             className="hidden sm:block"
           />
           <HeroVariant
             data={data}
             crop={meta.mobile}
             src={`/linije/hero-${data.broj}-m.png`}
+            variant="mobile"
             className="sm:hidden"
           />
         </>
       ) : (
         <div className="h-[180px]" />
       )}
-      <div className="absolute inset-x-0 top-[18px] z-10 flex w-full justify-center px-4 sm:px-16">
+      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
         <SiteNav active="linije" />
       </div>
     </header>

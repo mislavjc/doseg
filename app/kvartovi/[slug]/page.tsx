@@ -6,12 +6,14 @@ import { Footer } from "@/app/statistika/editorial/footer"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadScores } from "@/app/statistika/stat-data"
 import { loadKvart, loadKvartIndex } from "@/lib/kvart-data"
+import { loadStopIndex } from "@/lib/stop-data"
 
 import {
   Blizina,
   Cinjenice,
   DosegLink,
   IzvanSpice,
+  type KvartStop,
   KvartHero,
   KvartJsonLd,
   Linije,
@@ -20,8 +22,26 @@ import {
   OvisiOAdresi,
   Promjene,
   Scorecard,
+  StaniceUKvartu,
   buildFaq,
 } from "../sections"
+
+/** Busiest stops physically in this kvart, deduped by name (a stop name can
+ * repeat per direction), for the kvart → stop internal links. Built from the
+ * committed stop index, so no Rust regen is needed. */
+function notableStopsInKvart(kvart: string): KvartStop[] {
+  const byName = new Map<string, KvartStop>()
+  for (const s of loadStopIndex().stops) {
+    if (s.kvart !== kvart) continue
+    const prev = byName.get(s.name)
+    if (!prev || s.lineCount > prev.lineCount) {
+      byName.set(s.name, { name: s.name, slug: s.slug, lineCount: s.lineCount })
+    }
+  }
+  return [...byName.values()]
+    .sort((a, b) => b.lineCount - a.lineCount)
+    .slice(0, 12)
+}
 
 export const dynamicParams = false
 
@@ -65,6 +85,7 @@ export default async function KvartPage({
   if (!data) notFound()
   const faq = buildFaq(data)
   const updated = loadScores()?.generatedAt ?? ""
+  const stopsInKvart = notableStopsInKvart(data.name)
 
   return (
     <EditorialShell>
@@ -89,6 +110,11 @@ export default async function KvartPage({
       <Section width="article" className="pb-0 sm:pb-0">
         <Linije data={data} />
       </Section>
+      {stopsInKvart.length > 0 && (
+        <Section width="article" className="pb-0 sm:pb-0">
+          <StaniceUKvartu stops={stopsInKvart} />
+        </Section>
+      )}
       <Section width="article" className="pb-0 sm:pb-0">
         <OvisiOAdresi data={data} />
       </Section>

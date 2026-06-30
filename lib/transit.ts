@@ -11,31 +11,6 @@ export const TRANSIT_MODES = {
 
 export type TransitMode = keyof typeof TRANSIT_MODES
 
-/** Isochrone band colors — time ramp for map layers and OG images. */
-export const ISOCHRONE_COLORS = [
-  "#1a7a52",
-  "#16949e",
-  "#2d7ec4",
-  "#7b68b8",
-] as const
-
-/** District score → color for maps and OG images. */
-export function scoreColor(score: number): string {
-  if (score >= 80) return "#22c55e"
-  if (score >= 60) return "#84cc16"
-  if (score >= 40) return "#eab308"
-  if (score >= 20) return "#f97316"
-  return "#ef4444"
-}
-
-export function modeColor(mode: string): string {
-  return TRANSIT_MODES[mode as TransitMode]?.color ?? "#64748b"
-}
-
 export function modeSpeed(mode: string): number {
   return TRANSIT_MODES[mode as TransitMode]?.speed ?? 16
-}
-
-export function modeLabel(mode: string): string {
-  return TRANSIT_MODES[mode as TransitMode]?.label ?? mode
 }

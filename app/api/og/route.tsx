@@ -87,7 +87,36 @@ function findDistrict(
  * a per-process buffer cache (warm after one hit per line, ~60MB ceiling for
  * all 154) and CDN cache headers so the edge serves repeat crawls instantly.
  */
-const lineCardCache = new Map<string, ArrayBuffer>()
+/**
+ * Minimal LRU for rendered OG card buffers. The valid slug set bounds the key
+ * space (154 lines, 604 stops), but holding every card forever pins hundreds of
+ * MB on the 1.5 GB box, so cap each cache and evict least-recently-used.
+ */
+class LruCache<V> {
+  private map = new Map<string, V>()
+  constructor(private readonly max: number) {}
+  get(key: string): V | undefined {
+    const value = this.map.get(key)
+    if (value !== undefined) {
+      this.map.delete(key)
+      this.map.set(key, value)
+    }
+    return value
+  }
+  set(key: string, value: V): void {
+    this.map.delete(key)
+    this.map.set(key, value)
+    while (this.map.size > this.max) {
+      const oldest = this.map.keys().next().value
+      if (oldest === undefined) break
+      this.map.delete(oldest)
+    }
+  }
+}
+
+// 160 keeps all 154 line cards warm (~60 MB); stops cap far below their 604
+// count since crawlers only touch a handful at a time.
+const lineCardCache = new LruCache<ArrayBuffer>(160)
 
 const LINE_CARD_HEADERS = {
   "Content-Type": "image/png",
@@ -108,7 +137,8 @@ async function lineCardResponse(linija: string): Promise<Response | null> {
   return new Response(body, { headers: LINE_CARD_HEADERS })
 }
 
-const stopCardCache = new Map<string, ArrayBuffer>()
+const stopCardCache = new LruCache<ArrayBuffer>(64)
+const coordCardCache = new LruCache<ArrayBuffer>(32)
 
 async function stopCardResponse(stanica: string): Promise<Response | null> {
   const cached = stopCardCache.get(stanica)
@@ -167,11 +197,21 @@ export async function GET(request: Request) {
 
   const district = hasCoords ? findDistrict(lat, lon) : null
 
-  return renderOgCard({
+  // The card output depends only on the district (18 distinct outputs), so key
+  // the cache by district name. Without this, varying lat/lon forces a fresh
+  // 3-6s satori render on every request.
+  const cacheKey = district ? `d:${district.name}` : "generic"
+  const cached = coordCardCache.get(cacheKey)
+  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+
+  const card = renderOgCard({
     headline: district ? district.name : "Koliko grada stigneš?",
     sub:
       district && district.score > 0
         ? `${district.score}/100 · #${district.rank} od 17 kvartova`
         : undefined,
   })
+  const body = await card.arrayBuffer()
+  coordCardCache.set(cacheKey, body)
+  return new Response(body, { headers: LINE_CARD_HEADERS })
 }

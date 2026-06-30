@@ -40,7 +40,7 @@ function SenderLine() {
 function Signature() {
   return (
     <div className="flex flex-col gap-1 pt-10">
-      <p className="font-heros text-body font-bold text-ink">— Mislav</p>
+      <p className="font-heros text-body font-bold text-ink">- Mislav</p>
       <a
         href="https://mislavjc.com"
         className="w-fit font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink"

@@ -19,7 +19,7 @@ const datasetJsonLd = {
   "@type": "Dataset",
   name: "Doseg: ocjene povezanosti zagrebačkih kvartova",
   description:
-    "Ocjene dostupnosti javnog prijevoza za 17 zagrebačkih kvartova (gradskih četvrti): doseg u 30 minuta, rang, linije i metodologija. Izračunato iz ZET GTFS voznog reda.",
+    "Ocjene dostupnosti javnog prijevoza za 17 zagrebačkih kvartova: doseg u 30 minuta, rang, linije i metodologija. Izračunato iz ZET GTFS voznog reda.",
   url: "https://doseg.hr/statistika/podaci",
   inLanguage: "hr",
   license: "https://opendatacommons.org/licenses/odbl/1-0/",
@@ -30,7 +30,6 @@ const datasetJsonLd = {
     "ZET",
     "dostupnost",
     "izohrone",
-    "gradske četvrti",
     "public transport accessibility",
   ],
   spatialCoverage: { "@type": "Place", name: "Zagreb, Hrvatska" },

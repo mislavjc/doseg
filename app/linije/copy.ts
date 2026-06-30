@@ -67,9 +67,21 @@ const NUMBER_WORDS = [
   "dvadeset",
 ]
 
-/** 7 → "sedam"; falls back to digits above 20. */
+/** 7 → "sedam"; falls back to digits above 20. Masculine ("jedan", "dva") —
+ *  use for masculine nouns like "polazak". */
 export function numberWord(n: number): string {
   return NUMBER_WORDS[n] ?? String(n)
+}
+
+/** Feminine cardinals diverge from the masculine list only at 1 and 2. */
+const NUMBER_WORDS_F = NUMBER_WORDS.map((w, i) =>
+  i === 1 ? "jedna" : i === 2 ? "dvije" : w
+)
+
+/** Feminine "jedna"/"dvije"/... — use for feminine nouns like "linija" and
+ *  "stanica" (gluing the masculine "jedan linija"/"dva linije" reads broken). */
+export function numberWordF(n: number): string {
+  return NUMBER_WORDS_F[n] ?? String(n)
 }
 
 /** All weekday departure minutes-of-day for one direction, sorted. */
@@ -223,7 +235,7 @@ export function introText(data: LinePageData): string {
   const status = serviceStatus(data)
 
   if (status === "none") {
-    return `Linija ${data.broj} trenutno ne prometuje — u aktualnom voznom redu nema nijednog polaska. Trasa je duga ${km} km ${krozStanica}.`
+    return `Linija ${data.broj} trenutno ne prometuje. U aktualnom voznom redu nema nijednog polaska. Trasa je duga ${km} km ${krozStanica}.`
   }
   if (status === "weekendOnly") {
     const fl = firstLastOfRows([...data.timetable.subota, ...data.timetable.nedjelja])

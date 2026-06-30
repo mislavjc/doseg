@@ -20,7 +20,7 @@ import { plural } from "../linije/copy"
  */
 
 export const metadata: Metadata = {
-  title: "Sve ZET stanice po imenu (A–Ž): linije i doseg | Doseg",
+  title: "Sve ZET stanice po imenu (A-Ž): linije i doseg | Doseg",
   description:
     "Sve veće stanice ZET-a po abecedi: koje linije staju, razmak u špici i dokle stigneš. Pronađi stanicu po imenu. Podaci iz službenog GTFS feeda.",
   alternates: { canonical: "/stanice" },
@@ -49,7 +49,7 @@ function letterId(letter: string): string {
 function firstLetter(name: string): string {
   const c = [...name.trim()][0]?.toUpperCase() ?? "#"
   if ((HR_LETTERS as readonly string[]).includes(c)) return c
-  if (/[0-9]/.test(c)) return "0–9"
+  if (/[0-9]/.test(c)) return "0-9"
   return c
 }
 
@@ -140,7 +140,7 @@ export default function StaniceIndexPage() {
         <Body className="mt-1 text-ink-muted">koje linije staju, razmak u špici i doseg</Body>
         <Body className="mt-5 max-w-[520px]">
           Svaka veća stanica ima svoju stranicu: linije koje ovdje staju, koliko
-          često voze i dokle stigneš odavde. Pronađi je po imenu — kvart je
+          često voze i dokle stigneš odavde. Pronađi je po imenu, kvart je
           naveden uz svaku. Podaci iz službenog GTFS feeda, osvježavaju se
           automatski.
         </Body>

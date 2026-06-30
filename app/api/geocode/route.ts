@@ -85,51 +85,61 @@ function isNearby(lat: number, lon: number) {
 }
 
 async function searchPhoton(q: string): Promise<Result[]> {
-  const params = new URLSearchParams({ q, lat: String(ZAGREB_CENTER.lat), lon: String(ZAGREB_CENTER.lon), limit: "15", lang: "default" })
-  const res = await fetch(`${PHOTON_URL}?${params}`, { next: { revalidate: 300 } })
-  if (!res.ok) return []
-  const data = await res.json()
-  return (data.features ?? [])
-    .filter((f: PhotonFeature) => { const [lon, lat] = f.geometry.coordinates; return isNearby(lat, lon) })
-    .map((f: PhotonFeature) => {
-      const p = f.properties
-      const [lon, lat] = f.geometry.coordinates
-      const parts: string[] = []
-      if (p.name) parts.push(p.name)
-      if (p.street && p.street !== p.name) parts.push(p.street)
-      if (p.housenumber) parts[parts.length - 1] += ` ${p.housenumber}`
-      if (p.city) parts.push(p.city)
-      const kind = p.housenumber
-        ? "address"
-        : kindFromOsm(p.osm_key, p.osm_value, p.type)
-      return { display_name: parts.join(", "), lat, lon, kind }
-    })
-    .slice(0, 5)
+  try {
+    const params = new URLSearchParams({ q, lat: String(ZAGREB_CENTER.lat), lon: String(ZAGREB_CENTER.lon), limit: "15", lang: "default" })
+    const res = await fetch(`${PHOTON_URL}?${params}`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(4000) })
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.features ?? [])
+      .filter((f: PhotonFeature) => { const [lon, lat] = f.geometry.coordinates; return isNearby(lat, lon) })
+      .map((f: PhotonFeature) => {
+        const p = f.properties
+        const [lon, lat] = f.geometry.coordinates
+        const parts: string[] = []
+        if (p.name) parts.push(p.name)
+        if (p.street && p.street !== p.name) parts.push(p.street)
+        if (p.housenumber) parts[parts.length - 1] += ` ${p.housenumber}`
+        if (p.city) parts.push(p.city)
+        const kind = p.housenumber
+          ? "address"
+          : kindFromOsm(p.osm_key, p.osm_value, p.type)
+        return { display_name: parts.join(", "), lat, lon, kind }
+      })
+      .slice(0, 5)
+  } catch {
+    return []
+  }
 }
 
 async function searchNominatim(q: string): Promise<Result[]> {
-  const params = new URLSearchParams({
-    q, format: "jsonv2", limit: "10", countrycodes: "hr",
-    viewbox: "15.82,45.90,16.14,45.72", bounded: "0", "accept-language": "hr",
-  })
-  const res = await fetch(`${NOMINATIM_URL}?${params}`, {
-    headers: { "User-Agent": "Doseg/1.0 (https://doseg.hr)" },
-    next: { revalidate: 300 },
-  })
-  if (!res.ok) return []
-  const data = await res.json()
-  return data
-    .filter((item: NominatimResult) => isNearby(parseFloat(item.lat), parseFloat(item.lon)))
-    .map((item: NominatimResult) => ({
-      display_name: item.display_name,
-      lat: parseFloat(item.lat),
-      lon: parseFloat(item.lon),
-      kind: kindFromOsm(
-        item.category,
-        item.type,
-        item.addresstype === "road" ? "street" : undefined
-      ),
-    }))
+  try {
+    const params = new URLSearchParams({
+      q, format: "jsonv2", limit: "10", countrycodes: "hr",
+      viewbox: "15.82,45.90,16.14,45.72", bounded: "0", "accept-language": "hr",
+    })
+    const res = await fetch(`${NOMINATIM_URL}?${params}`, {
+      headers: { "User-Agent": "Doseg/1.0 (https://doseg.hr)" },
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(4000),
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    if (!Array.isArray(data)) return []
+    return data
+      .filter((item: NominatimResult) => isNearby(parseFloat(item.lat), parseFloat(item.lon)))
+      .map((item: NominatimResult) => ({
+        display_name: item.display_name,
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+        kind: kindFromOsm(
+          item.category,
+          item.type,
+          item.addresstype === "road" ? "street" : undefined
+        ),
+      }))
+  } catch {
+    return []
+  }
 }
 
 type PhotonFeature = {

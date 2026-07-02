@@ -83,16 +83,41 @@ across many articles, especially with "make it stick" tactics, is exactly what g
 
 ## 2. Off-Wikipedia link levers (durable, no journalist needed): do these first
 
-These are the highest-ROI, lowest-risk links, and they directly help the **bus** near-wins.
-You already serve `district-scores.json` with Dataset / DataDownload JSON-LD.
+Researched 26 Jun. Only the channels that actually fit a derived-analysis tool (doseg is NOT
+a GTFS feed) are kept; the rest are flagged as non-fits so nobody wastes effort.
 
-- **Open-data registries:** submit the dataset to **data.gov.hr**, the **Mobility Database**
-  and **transit.land** (as a Zagreb GTFS-derived source). High-DA, topically exact.
-- **GitHub awesome-lists:** PR doseg into `awesome-transit`, `awesome-gtfs`, `awesome-croatia`.
-- **OpenStreetMap:** add `website=https://doseg.hr/linije/N` (and/or a Wikidata link) on the
-  ZET route relations for 124 / 149 / 208 / 241. Reaches the exact entities behind those queries.
-- **Google Dataset Search:** make sure the Dataset JSON-LD qualifies so the open-data file is
-  discoverable.
+**DO these:**
+- **awesome-transit (MobilityData):** the canonical list, `https://github.com/MobilityData/awesome-transit`.
+  doseg fits the **Visualization** section (alongside BusGraphs / GTFS City, same access-analysis
+  genre). Open a PR adding, alphabetically in that section:
+  ```
+  - [Doseg](https://doseg.hr) - Public-transport accessibility analysis for Zagreb: 30-minute
+    isochrone reach scored per district, line/stop pages, and an interactive reach map. (Croatian)
+  ```
+- **Google Dataset Search:** now eligible. The Dataset JSON-LD on `/statistika/podaci` was
+  enriched 26 Jun with `license` (ODbL), `keywords`, `spatialCoverage` and `isBasedOn` (ZET +
+  OSM), the fields Dataset Search requires. Passive discovery, no submission; just keep it valid.
+- **Croatian civic / dev lists:** look for an `awesome-croatia` (and r/croatia / dev.hr style
+  resource pages) and add doseg as a local civic-data tool. Lower DA than awesome-transit but
+  topically Croatian.
+
+**SKIP (do not fit / would backfire):**
+- **Mobility Database / transit.land:** catalogs of GTFS *feeds*. doseg publishes a derived
+  JSON, not a feed, so it has no entry to claim there. Not applicable.
+- **OpenStreetMap `website=` on route relations:** that tag is for the *operator's official*
+  route page (zet.hr), not a third-party tool. Adding doseg there is the same COI/spam problem
+  as self-adding to Wikipedia and would be reverted. Don't.
+- **data.gov.hr:** primarily for tijela javne vlasti (public authorities). A private project
+  most likely cannot self-register without a public-body sponsor. Low probability; only pursue
+  if a city/ZET contact will host it.
+
+### ZET GTFS licence: CONFIRMED (precondition cleared)
+ZET publishes its GTFS (static + realtime) under **"Otvorena dozvola / Open Licence - Republic
+of Croatia"**, attribution required to **"Zagrebački električni tramvaj d.o.o."**
+(source: zet.hr/odredbe/datoteke-u-gtfs-formatu/669). So it is safe to state the licence.
+- Footer + Dataset JSON-LD now credit ZET (linked to the GTFS terms page) + OSM (ODbL) + DZS.
+- **Press-kit / methodology attribution line:** *Podaci: ZET GTFS (Otvorena dozvola RH) +
+  OpenStreetMap (ODbL) + DZS 2021; obrada: Doseg.*
 
 ---
 
@@ -192,13 +217,13 @@ refreshed). You cannot get impressions for an unindexed URL.
 
 **Conclusion:** the near-win bus pages are indexed + serving but stuck at **position 6-9**
 (124 @ 7.9, 149 @ 7.0, 208 @ 7.2, 241 @ 7.1). For these pages the wall is **position, so
-authority/links is the correct lever** — the outreach focus is validated. The broader indexing
+authority/links is the correct lever**; the outreach focus is validated. The broader indexing
 wall still applies to the long tail (~21 crawled-not-indexed + thin stops); content depth
 (section 4) is its lever, not links.
 
 Caveats worth noting before pitching:
 - **`/linije/284` is the current top page** (6 clicks, CTR 5.3%, pos 6.3).
-- **`/statistika` is NOT zero-search-volume** (162 imp, 4 clicks, pos 7.7) — it earns links AND
+- **`/statistika` is NOT zero-search-volume** (162 imp, 4 clicks, pos 7.7); it earns links AND
   some direct traffic; don't dismiss it as pure link-bait.
 - Trust **Performance → Pages** for indexing state, not the Pages report (which lags ~2 weeks).
 

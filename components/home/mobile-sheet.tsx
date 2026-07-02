@@ -1,7 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { AnimatePresence, m, useReducedMotion } from "motion/react"
 import { Drawer } from "vaul"
+import {
+  IconChevronTop,
+  IconLocation,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { NAV_LINKS, NavLink } from "@/app/statistika/editorial/site-nav"
 import { legLineColors } from "@/lib/mode-colors"
@@ -21,28 +26,32 @@ import {
   RouteSummary,
   RouteTooFar,
   type PanelContentProps,
+  type ReachStats,
 } from "./panel-content"
+import type { PanelState } from "./reach-state"
 import { BlueAction, Eyebrow, ReachRamp } from "./ui"
 
 /**
- * Mobile bottom sheet (spec §9): peek (summary only) · half (readout/route
- * glance) · full (everything, scrollable). Same blocks as the desktop sidebar.
+ * Mobile bottom sheet: at rest it is just a 56px answer bar (km² + chevron) so
+ * the map stays ~95% visible; tap or drag it up to the 0.62 open state for the
+ * full detail (same shared blocks as the desktop sidebar). One predictable bar.
  */
 
-const SNAP_PEEK = "158px"
-const SNAP_HALF = 0.52
-/** Full stops short of the top search bar (2 rows + margin ≈ 132px). */
-function fullSnap(): number {
-  const vh = typeof window === "undefined" ? 800 : window.innerHeight
-  return Math.min(0.88, 1 - 132 / vh)
-}
+// Open keeps the map (and the isochrone you just drew) on screen. Peek is only
+// the answer-bar height plus the home-indicator inset, measured once so the bar
+// always clears the safe area without a calc() vaul can't parse.
+const ANSWER_BAR_PX = 56
+const SNAP_OPEN = 0.62
 
-/** Estimated leg-list overflow at the half snap — drives the "povuci" hint. */
-function legsOverflowAtHalf(itinerary: Itinerary): boolean {
-  const vh = typeof window === "undefined" ? 800 : window.innerHeight
-  const chromeAboveLegs = 175 // handle + summary + strip + action row + gaps
-  const legRow = 62
-  return itinerary.legs.length * legRow > SNAP_HALF * vh - chromeAboveLegs
+function peekSnap(): string {
+  if (typeof document === "undefined") return `${ANSWER_BAR_PX}px`
+  const probe = document.createElement("div")
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
+  document.body.appendChild(probe)
+  const inset = parseFloat(getComputedStyle(probe).paddingBottom) || 0
+  probe.remove()
+  return `${ANSWER_BAR_PX + inset}px`
 }
 
 /** Site nav for the phone — lives at the bottom of the (expanded) sheet
@@ -69,8 +78,8 @@ function EmptyPeek({ onUseMyLocation }: { onUseMyLocation: () => void }) {
           vidiš dokle stigneš za 30 minuta
         </p>
       </div>
-      <ReachRamp rightLabel="30 min daleko" />
       <GeoButton onUse={onUseMyLocation} />
+      <ReachRamp rightLabel="30 min daleko" />
     </>
   )
 }
@@ -78,48 +87,56 @@ function EmptyPeek({ onUseMyLocation }: { onUseMyLocation: () => void }) {
 function RouteSheetContent({
   itinerary,
   departedAt,
-  peek,
-  full,
+  open,
   onBackToReach,
 }: {
   itinerary: Itinerary
   departedAt: Date | null
-  peek: boolean
-  full: boolean
+  open: boolean
   onBackToReach: () => void
 }) {
+  const reduce = useReducedMotion()
   if (isRouteTooFar(itinerary)) {
     return (
       <>
-        <RouteTooFar />
-        {!peek && (
-          <BlueAction onClick={onBackToReach} className="self-start">
-            ← Natrag na doseg
+        <RouteTooFar hideHeadline />
+        {open && (
+          <BlueAction onClick={onBackToReach} back className="self-start">
+            Natrag na doseg
           </BlueAction>
         )}
       </>
     )
   }
-  const showMore = !full && legsOverflowAtHalf(itinerary)
-  const colors = legLineColors(itinerary.legs)
+  // Only the open timeline needs leg colors; while closed the collapsed strip
+  // (MiniRoute) owns that compute, so skip it here rather than run it twice.
+  const colors = open ? legLineColors(itinerary.legs) : []
+  // The full timeline unfurls upward with a soft spring when the route opens;
+  // the leg rows then cascade in via their own CSS stagger (leg-stagger).
   return (
-    <>
-      <RouteSummary itinerary={itinerary} departedAt={departedAt} />
-      <JourneyStrip legs={itinerary.legs} colors={colors} />
-      {!peek && (
-        <>
-          <div className="flex items-center justify-between">
-            <BlueAction onClick={onBackToReach}>← Natrag na doseg</BlueAction>
-            {showMore && (
-              <span className="font-mono text-label text-ink-faint">
-                povuci za sve korake ↑
-              </span>
-            )}
-          </div>
+    <AnimatePresence initial={false}>
+      {open && (
+        <m.div
+          key="route-timeline"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={
+            reduce
+              ? { opacity: 0 }
+              : { opacity: 0, y: 8, transition: { duration: 0.15 } }
+          }
+          transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
+          className="flex min-h-0 flex-col gap-[14px]"
+        >
+          <RouteSummary itinerary={itinerary} departedAt={departedAt} hideHeadline />
+          <JourneyStrip legs={itinerary.legs} colors={colors} />
+          <BlueAction onClick={onBackToReach} back className="self-start">
+            Natrag na doseg
+          </BlueAction>
           <LegList itinerary={itinerary} colors={colors} />
-        </>
+        </m.div>
       )}
-    </>
+    </AnimatePresence>
   )
 }
 
@@ -136,14 +153,13 @@ function SheetBody({
   onBackToReach,
   onRetry,
   onUseMyLocation,
-  peek,
-  full,
-}: PanelContentProps & { peek: boolean; full: boolean }) {
+  open,
+}: PanelContentProps & { open: boolean }) {
   const mode = panel.mode
   return (
     <div
       className={`flex min-h-0 flex-1 flex-col px-5 pb-6 ${
-        full ? "scroll-fade overflow-y-auto" : "overflow-hidden"
+        open ? "scroll-fade overflow-y-auto" : "overflow-hidden"
       }`}
     >
       {/* keyed by mode → enter cross-fade on state change (spec §10) */}
@@ -153,7 +169,7 @@ function SheetBody({
         {mode === "error" && <ErrorContent onRetry={onRetry} />}
         {mode === "reach" && (
           <>
-            <ReachReadout minutes={minutes} stats={stats} />
+            <ReachReadout minutes={minutes} stats={stats} hideHeadline />
             <ReachRamp rightLabel={`${minutes} min daleko`} />
             <MinutesRow minutes={minutes} onChange={onMinutesChange} />
             <PoiList
@@ -169,8 +185,7 @@ function SheetBody({
           <RouteSheetContent
             itinerary={panel.itinerary}
             departedAt={departedAt}
-            peek={peek}
-            full={full}
+            open={open}
             onBackToReach={onBackToReach}
           />
         )}
@@ -180,27 +195,169 @@ function SheetBody({
   )
 }
 
+// One-line bar copy for the muted, non-reach modes. AnswerBar only falls here
+// for a route when it is too far (normal routes render via MiniRoute).
+const BAR_LINE: Record<Exclude<PanelState["mode"], "reach">, string> = {
+  empty: "Klikni kartu da vidiš doseg",
+  loading: "računam doseg…",
+  error: "Greška pri izračunu",
+  "route-loading": "tražim rutu…",
+  route: "Predaleko za javni prijevoz",
+}
+
+/** The reach answer condensed to one line, per panel mode. 16/12 only. */
+function AnswerLine({
+  panel,
+  minutes,
+  stats,
+}: {
+  panel: PanelState
+  minutes: number
+  stats: ReachStats | null
+}) {
+  const cls = "font-heros text-[16px] leading-5"
+  if (panel.mode === "reach") {
+    return (
+      <span className={cls}>
+        <span className="font-bold text-ink">
+          {stats ? `${Math.round(stats.km2)} km²` : "—"}
+        </span>
+        {stats && <span className="text-ink-muted"> za {minutes} min</span>}
+      </span>
+    )
+  }
+  return <span className={`${cls} text-ink-muted`}>{BAR_LINE[panel.mode]}</span>
+}
+
+/** Route summary on the collapsed bar: total time + the mini leg strip, which
+ * crossfades out as the full timeline springs up (the small to big hand-off). */
+function MiniRoute({
+  itinerary,
+  open,
+}: {
+  itinerary: Itinerary
+  open: boolean
+}) {
+  const reduce = useReducedMotion()
+  return (
+    <div className="flex min-w-0 grow items-center gap-2.5">
+      <span className="shrink-0 font-heros text-[16px] leading-5 font-bold text-ink">
+        {Math.round(itinerary.duration / 60)} min
+      </span>
+      <AnimatePresence initial={false}>
+        {!open && (
+          <m.div
+            key="mini-journey"
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+            className="min-w-0 grow"
+          >
+            <JourneyStrip
+              legs={itinerary.legs}
+              colors={legLineColors(itinerary.legs)}
+              compact
+            />
+          </m.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/**
+ * The 56px resting bar: a one-line answer that rides the top of the sheet.
+ * Tapping the line or the chevron toggles open/closed; in the empty state the
+ * right slot is a one-tap location button instead of the chevron (sibling
+ * buttons, never nested, so the markup stays valid).
+ */
+function AnswerBar({
+  panel,
+  minutes,
+  stats,
+  open,
+  onToggle,
+  onUseMyLocation,
+}: {
+  panel: PanelState
+  minutes: number
+  stats: ReachStats | null
+  open: boolean
+  onToggle: () => void
+  onUseMyLocation: () => void
+}) {
+  return (
+    <div
+      className="relative w-full shrink-0"
+      style={{ height: ANSWER_BAR_PX }}
+    >
+      <span className="absolute top-2 left-1/2 h-1 w-[38px] -translate-x-1/2 bg-ink-faint" />
+      <div className="flex h-full items-center gap-3 px-5">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={open ? "Sakrij detalje dosega" : "Prikaži detalje dosega"}
+          aria-expanded={open}
+          className="flex min-w-0 grow items-center gap-3 self-stretch text-left transition-colors duration-150 active:bg-row-tint"
+        >
+          <div
+            key={panel.mode}
+            className="panel-swap flex min-w-0 grow items-center"
+          >
+            {panel.mode === "route" && !isRouteTooFar(panel.itinerary) ? (
+              <MiniRoute itinerary={panel.itinerary} open={open} />
+            ) : (
+              <span className="min-w-0 truncate">
+                <AnswerLine panel={panel} minutes={minutes} stats={stats} />
+              </span>
+            )}
+          </div>
+          {panel.mode !== "empty" && (
+            <IconChevronTop
+              size={16}
+              aria-hidden
+              className={`shrink-0 text-ink-faint transition-transform duration-200 ease-[var(--ease-out-strong)] ${
+                open ? "rotate-180" : ""
+              }`}
+            />
+          )}
+        </button>
+        {panel.mode === "empty" && (
+          <button
+            type="button"
+            aria-label="Koristi moju lokaciju"
+            onClick={onUseMyLocation}
+            className="shrink-0 border border-hairline-strong p-2 transition-transform duration-150 ease-out active:scale-[0.97]"
+          >
+            <IconLocation size={16} className="text-zg-blue" />
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function MobileSheet(props: PanelContentProps) {
-  const { panel } = props
-  const [snaps] = useState<(number | string)[]>(() => [
-    SNAP_PEEK,
-    SNAP_HALF,
-    fullSnap(),
-  ])
-  const [snap, setSnap] = useState<number | string | null>(SNAP_PEEK)
+  const { panel, minutes, stats, onUseMyLocation } = props
+  const [peekPx] = useState(peekSnap)
+  const [snaps] = useState<(number | string)[]>(() => [peekPx, SNAP_OPEN])
+  const [snap, setSnap] = useState<number | string | null>(peekPx)
   const mode = panel.mode
   const isRoute = mode === "route" || mode === "route-loading"
+  // A route (journey strip) or an error (retry button) opens the sheet so its
+  // key action clears the bar; a plain reach answer rides the bar at peek.
+  const wantsOpen = isRoute || mode === "error"
 
-  // Route opens at half so the journey strip shows; otherwise peek.
-  // (Derived-state-during-render pattern — not an effect.)
-  const [prevIsRoute, setPrevIsRoute] = useState(isRoute)
-  if (prevIsRoute !== isRoute) {
-    setPrevIsRoute(isRoute)
-    setSnap(isRoute ? SNAP_HALF : SNAP_PEEK)
+  // Derived-state-during-render (not an effect): fires only on the transition,
+  // so a user who drags the sheet back down afterwards is not overridden.
+  const [prevWantsOpen, setPrevWantsOpen] = useState(wantsOpen)
+  if (prevWantsOpen !== wantsOpen) {
+    setPrevWantsOpen(wantsOpen)
+    setSnap(wantsOpen ? SNAP_OPEN : peekPx)
   }
 
-  const peek = snap === SNAP_PEEK
-  const full = snap === snaps[2]
+  const open = snap === SNAP_OPEN
 
   return (
     <Drawer.Root
@@ -218,17 +375,15 @@ export function MobileSheet(props: PanelContentProps) {
         >
           <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
             <Drawer.Title className="sr-only">Doseg</Drawer.Title>
-            <button
-              type="button"
-              aria-label="Povuci ili dodirni za više"
-              onClick={() =>
-                setSnap(snap === SNAP_PEEK ? SNAP_HALF : SNAP_PEEK)
-              }
-              className="flex w-full shrink-0 items-center justify-center pt-3.5 pb-3"
-            >
-              <span className="h-1 w-[38px] bg-ink-faint/40" />
-            </button>
-            <SheetBody {...props} peek={peek} full={full} />
+            <AnswerBar
+              panel={panel}
+              minutes={minutes}
+              stats={stats}
+              open={open}
+              onToggle={() => setSnap(open ? peekPx : SNAP_OPEN)}
+              onUseMyLocation={onUseMyLocation}
+            />
+            <SheetBody {...props} open={open} />
           </div>
         </Drawer.Content>
       </Drawer.Portal>

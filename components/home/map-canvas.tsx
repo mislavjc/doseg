@@ -658,8 +658,15 @@ function usePoiInteractions(
 
 /** Sidebar-aware on desktop, sheet-aware on mobile (spec §9). */
 function fitPadding(map: maplibregl.Map, forRoute: boolean) {
-  const mobile = map.getContainer().clientWidth < MD_BREAKPOINT_PX
-  if (mobile) return { left: 30, right: 30, top: 100, bottom: 240 }
+  const c = map.getContainer()
+  const mobile = c.clientWidth < MD_BREAKPOINT_PX
+  if (mobile) {
+    // Reach rests behind only the 56px answer bar, so frame it into the lower
+    // screen; a route auto-opens the sheet to ~0.62, so clear that instead.
+    return forRoute
+      ? { left: 30, right: 30, top: 90, bottom: Math.round(c.clientHeight * 0.6) }
+      : { left: 30, right: 30, top: 100, bottom: 132 }
+  }
   return forRoute
     ? { left: 440, top: 80, right: 80, bottom: 80 }
     : { left: 420, top: 60, right: 60, bottom: 60 }
@@ -787,7 +794,12 @@ export function MapCanvas({
     <>
       {/* NB: not `absolute inset-0` — maplibre's stylesheet forces
           `.maplibregl-map { position: relative }`, which would zero the height. */}
-      <div ref={containerRef} className="h-full w-full" />
+      <div
+        ref={containerRef}
+        className="h-full w-full"
+        role="region"
+        aria-label="Interaktivna karta dosega javnog prijevoza"
+      />
       <ZoomControl mapRef={mapRef} />
     </>
   )

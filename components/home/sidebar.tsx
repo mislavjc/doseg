@@ -104,8 +104,8 @@ export function Sidebar({
         )}
 
         {isRoute ? (
-          <BlueAction onClick={onBackToReach} className="mt-auto shrink-0 self-start">
-            ← Natrag na doseg
+          <BlueAction onClick={onBackToReach} back className="mt-auto shrink-0 self-start">
+            Natrag na doseg
           </BlueAction>
         ) : (
           <LjestvicaBlock ctx={mode === "empty" ? null : districtCtx} />

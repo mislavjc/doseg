@@ -1,6 +1,9 @@
 "use client"
 
-import { IconLocation } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import {
+  IconArrowRight,
+  IconLocation,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
 
 import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
@@ -108,9 +111,10 @@ export function ErrorContent({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="w-fit pt-1 font-mono text-[16px] leading-6 text-zg-blue transition-colors duration-150 hover:text-navy"
+        className="inline-flex w-fit items-center gap-1 pt-1 font-mono text-[16px] leading-6 text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97]"
       >
-        pokušaj ponovno →
+        pokušaj ponovno
+        <IconArrowRight size={14} className="shrink-0" />
       </button>
     </div>
   )
@@ -121,14 +125,19 @@ export function ErrorContent({ onRetry }: { onRetry: () => void }) {
 export function ReachReadout({
   minutes,
   stats,
+  hideHeadline = false,
 }: {
   minutes: number
   stats: ReachStats | null
+  /** Mobile: the answer bar already shows the km² headline, so skip it here. */
+  hideHeadline?: boolean
 }) {
   return (
     <div className="flex flex-col gap-[5px]">
       <MonoLabel>doseg · {minutes} min</MonoLabel>
-      <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "—"}</Hook>
+      {!hideHeadline && (
+        <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "—"}</Hook>
+      )}
       <p className="font-heros text-[16px] leading-[22px] text-ink-muted">
         {stats?.pctCity != null && `${stats.pctCity}% površine grada`}
         {stats?.districtsInReach != null &&
@@ -139,12 +148,11 @@ export function ReachReadout({
   )
 }
 
-// Server caps the isochrone at 30 min for now — 45 ships later. The inline
-// "uskoro" note reads on touch too (title tooltips never show there).
+// Server caps the isochrone at 30 min for now, so the selector stays a clean
+// 15/30 toggle. No disabled "45" stub cluttering the one control that matters.
 const MINUTE_OPTIONS = [
   { value: 15, label: "15" },
   { value: 30, label: "30" },
-  { value: 45, label: "45", disabled: true, note: "uskoro" },
 ]
 
 export function MinutesRow({
@@ -194,7 +202,7 @@ export function PoiList({
             type="button"
             aria-pressed={on}
             onClick={() => onToggle(row.key)}
-            className="-mx-1.5 flex items-center justify-between rounded-none px-1.5 py-0.5 text-left transition-colors duration-150 hover:bg-row-tint"
+            className="-mx-1.5 flex items-center justify-between rounded-none px-1.5 py-2.5 text-left transition-colors duration-150 hover:bg-row-tint"
           >
             <span className="flex items-center gap-2.5">
               <span className={on ? "" : "opacity-30"}>
@@ -255,12 +263,19 @@ function legTitle(leg: Leg): string {
 export function JourneyStrip({
   legs,
   colors,
+  compact = false,
 }: {
   legs: Leg[]
   colors: string[]
+  /** Mini variant for the collapsed answer bar — shorter, tighter corners. */
+  compact?: boolean
 }) {
   return (
-    <div className="flex h-8 shrink-0 gap-0.5 overflow-clip rounded-[5px]">
+    <div
+      className={`flex shrink-0 gap-0.5 overflow-clip ${
+        compact ? "h-5 rounded-[3px]" : "h-8 rounded-[5px]"
+      }`}
+    >
       {legs.map((leg, i) => {
         const walk = isWalkMode(leg.mode)
         return (
@@ -328,9 +343,12 @@ function LegRow({
 export function RouteSummary({
   itinerary,
   departedAt,
+  hideHeadline = false,
 }: {
   itinerary: Itinerary
   departedAt: Date | null
+  /** Mobile: the answer bar already shows the total-time headline, so skip it. */
+  hideHeadline?: boolean
 }) {
   const minutes = Math.round(itinerary.duration / 60)
   const arrival = departedAt
@@ -338,9 +356,11 @@ export function RouteSummary({
     : null
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-heros text-[16px] leading-5 font-bold text-ink">
-        {minutes} min
-      </p>
+      {!hideHeadline && (
+        <p className="font-heros text-[16px] leading-5 font-bold text-ink">
+          {minutes} min
+        </p>
+      )}
       <p className="font-heros text-[14px] leading-[18px] text-ink-muted">
         {departedAt && arrival
           ? `Polazak ${formatClock(departedAt)}, dolazak ${formatClock(arrival)} · `
@@ -398,10 +418,15 @@ export function isRouteTooFar(itinerary: Itinerary): boolean {
   return itinerary.duration / 60 > MAX_SANE_ROUTE_MIN
 }
 
-export function RouteTooFar() {
+export function RouteTooFar({
+  hideHeadline = false,
+}: {
+  /** Mobile: the answer bar already shows the too-far headline, so skip it. */
+  hideHeadline?: boolean
+} = {}) {
   return (
     <div className="flex flex-col gap-[5px]">
-      <Hook>Predaleko za javni prijevoz</Hook>
+      {!hideHeadline && <Hook>Predaleko za javni prijevoz</Hook>}
       <p className="font-heros text-[14px] leading-[18px] text-ink-muted">
         Do ovog odredišta nema razumne ZET veze. Probaj odredište bliže gradu.
       </p>
@@ -465,7 +490,7 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
       )}
       <div className="flex items-center justify-between">
         <BlueLink href="/o-projektu">O projektu</BlueLink>
-        <BlueLink href="/statistika">Cijela statistika →</BlueLink>
+        <BlueLink href="/statistika" arrow>Cijela statistika</BlueLink>
       </div>
     </div>
   )
@@ -491,7 +516,7 @@ export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
           Tvoj kvart na ljestvici
         </span>
       )}
-      <BlueLink href="/statistika">Cijela statistika →</BlueLink>
+      <BlueLink href="/statistika" arrow>Cijela statistika</BlueLink>
     </div>
   )
 }

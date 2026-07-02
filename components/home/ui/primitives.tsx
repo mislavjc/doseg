@@ -1,4 +1,8 @@
 import Link from "next/link"
+import {
+  IconArrowLeft,
+  IconArrowRight,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 /**
  * Map-redesign component library (docs/map-redesign-spec.md §4).
@@ -36,40 +40,46 @@ export function Hook({ children }: { children: React.ReactNode }) {
   )
 }
 
-/** zg-blue Heros link (internal) — `Cijela statistika →`. */
+/** zg-blue Heros link (internal). Pass `arrow` for a trailing forward arrow. */
 export function BlueLink({
   href,
   children,
+  arrow = false,
 }: {
   href: string
   children: React.ReactNode
+  arrow?: boolean
 }) {
   return (
     <Link
       href={href}
-      className="font-heros text-[16px] leading-5 text-zg-blue transition-colors duration-150 hover:text-navy"
+      className="inline-flex items-center gap-1 font-heros text-[16px] leading-5 text-zg-blue transition-colors duration-150 hover:text-navy"
     >
       {children}
+      {arrow && <IconArrowRight size={14} className="shrink-0" />}
     </Link>
   )
 }
 
-/** zg-blue Heros action — `← natrag na doseg`. */
+/** zg-blue Heros action. Pass `back` for a leading back arrow. */
 export function BlueAction({
   onClick,
   className = "",
+  back = false,
   children,
 }: {
   onClick: () => void
   className?: string
+  back?: boolean
   children: React.ReactNode
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`font-heros text-[14px] leading-[18px] text-zg-blue transition-colors duration-150 hover:text-navy ${className}`}
+      className={`inline-flex items-center gap-1 font-heros text-[14px] leading-[18px] text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97] ${className}`}
     >
+      {back && <IconArrowLeft size={14} className="shrink-0" />}
       {children}
     </button>
   )

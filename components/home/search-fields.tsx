@@ -289,7 +289,7 @@ function SearchRow({
         placeholder={placeholder}
         aria-label={kind === "origin" ? "Polazište" : "Odredište"}
         title={value || undefined}
-        className="w-full bg-transparent font-heros text-[16px] leading-5 text-ink outline-none placeholder:text-ink-faint"
+        className="w-full bg-transparent font-heros text-[16px] leading-5 text-ink outline-none placeholder:text-ink-muted"
       />
       {showClear ? (
         <button
@@ -297,7 +297,7 @@ function SearchRow({
           aria-label="Očisti unos"
           onPointerDown={(e) => e.preventDefault()}
           onClick={onClear}
-          className="-my-2 -mr-2 flex size-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
+          className="-my-2 -mr-2 flex size-11 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink-muted active:scale-[0.97]"
         >
           <IconCrossLarge size={15} />
         </button>

@@ -28,9 +28,10 @@ export function Segmented<T extends string | number>({
             key={String(opt.value)}
             type="button"
             disabled={opt.disabled}
+            aria-pressed={selected}
             onClick={() => onChange(opt.value)}
             title={opt.title}
-            className={`flex grow basis-0 flex-col items-center justify-center gap-px py-2 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
+            className={`flex grow basis-0 flex-col items-center justify-center gap-px py-3 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
               i > 0 ? "border-l border-hairline-strong" : ""
             } ${
               selected

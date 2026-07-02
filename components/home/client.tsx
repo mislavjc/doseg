@@ -209,7 +209,7 @@ function MapChrome({
       <div className="absolute inset-x-3.5 top-[calc(env(safe-area-inset-top)_+_1rem)] z-30 bg-ground shadow-map md:hidden">
         <SearchFields {...searchProps} />
       </div>
-      <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-20 flex items-start gap-2 md:hidden">
+      <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-40 flex items-start gap-2 md:hidden">
         <PolazakControl departTime={departTime} onChange={onTimeChange} compact />
         <LayersControl {...layersProps} variant="icon" />
       </div>

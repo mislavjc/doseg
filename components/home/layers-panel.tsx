@@ -131,7 +131,7 @@ function PanelBody({
       ? "mixed"
       : "off"
   return (
-    <DropdownPanel className="origin-top-right top-full right-0 mt-1.5 w-[272px] pb-1.5">
+    <DropdownPanel className="origin-top-right top-full right-0 mt-1.5 max-h-[calc(100dvh-env(safe-area-inset-top)-180px)] w-[272px] overflow-y-auto pb-1.5">
       <DropdownSection label="slojevi karte" />
       <LayerRow
         state={layers.doseg ? "on" : "off"}
@@ -172,12 +172,6 @@ function PanelBody({
         label="BAJS stanice"
         meta={bajsCount ?? undefined}
         onToggle={() => onChange({ ...layers, bajs: !layers.bajs })}
-      />
-      <LayerRow
-        state="off"
-        label="Vozila uživo"
-        meta="uskoro"
-        onToggle={() => {}}
       />
     </DropdownPanel>
   )

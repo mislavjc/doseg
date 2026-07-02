@@ -13,7 +13,8 @@ export type LatLon = { lat: number; lon: number }
 export function requestMyLocation(onLocate: (p: LatLon) => void): void {
   navigator.geolocation?.getCurrentPosition(
     (pos) => onLocate({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-    () => {}
+    () => {},
+    { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
   )
 }
 

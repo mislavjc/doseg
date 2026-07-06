@@ -157,6 +157,7 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
       </div>
       <Link
         href={`/?lat=${data.lat}&lon=${data.lon}`}
+        rel="nofollow"
         className="mt-5 inline-flex items-center gap-1.5 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
       >
         otvori kartu dosega odavde

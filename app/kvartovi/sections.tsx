@@ -418,6 +418,7 @@ export function DosegLink({ data }: { data: KvartData }) {
       </SectionHeader>
       <Link
         href={`/?lat=${lat}&lon=${lon}`}
+        rel="nofollow"
         className="inline-flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
       >
         otvori kartu dosega odavde

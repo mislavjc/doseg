@@ -739,11 +739,7 @@ fn main() {
         }
 
         headways.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        let median_hw = if !headways.is_empty() {
-            headways[headways.len() / 2]
-        } else {
-            0.0
-        };
+        let median_hw = median(&headways);
 
         let mut tram_vec: Vec<String> = tram_routes.into_iter().collect();
         tram_vec.sort_by_key(|a| a.parse::<i32>().unwrap_or(999));
@@ -1413,4 +1409,41 @@ pub fn chrono_now_iso() -> String {
 
 fn is_leap(y: i64) -> bool {
     (y % 4 == 0 && y % 100 != 0) || y % 400 == 0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── median ────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn median_empty_returns_zero() {
+        assert_eq!(median(&[]), 0.0);
+    }
+
+    #[test]
+    fn median_odd_length() {
+        assert_eq!(median(&[1.0, 2.0, 3.0]), 2.0);
+    }
+
+    /// Regression: the old district-headway code took `sorted[len/2]` (the
+    /// upper element) instead of interpolating. For `[1,2,3,4]` that gives 3.0
+    /// rather than the correct 2.5.
+    #[test]
+    fn median_even_length_interpolates() {
+        assert_eq!(median(&[1.0, 2.0, 3.0, 4.0]), 2.5);
+    }
+
+    // ── percentile ────────────────────────────────────────────────────────────
+
+    #[test]
+    fn percentile_p100_returns_max() {
+        assert_eq!(percentile(&[1.0, 2.0, 3.0], 100.0), 3.0);
+    }
+
+    #[test]
+    fn percentile_p50_median() {
+        assert_eq!(percentile(&[1.0, 2.0, 3.0], 50.0), 2.0);
+    }
 }

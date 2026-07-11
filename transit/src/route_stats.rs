@@ -440,6 +440,14 @@ fn find_stop_name(graph: &TransitGraphJson, si: usize) -> &str {
     }
 }
 
+/// Compute the mean headway (in minutes) between departures inside an optional
+/// time window `[start_sec, end_sec]`.
+///
+/// Returns `None` when fewer than 2 departures fall inside the window.
+/// This is the expected source of `peakHeadwayMin: null` values published on
+/// stop and line pages: sparse lines and services that don't run during the
+/// peak window produce no gap data, and the frontend renders `null` as an
+/// explicit "no data" placeholder (see `app/stanice/copy.ts` `lineHeadway`).
 pub(crate) fn compute_headway(
     departures: &[f64],
     start_sec: Option<f64>,
@@ -473,4 +481,33 @@ pub(crate) fn round1(v: f64) -> f64 {
 
 pub(crate) fn round2(v: f64) -> f64 {
     (v * 100.0).round() / 100.0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── compute_headway ───────────────────────────────────────────────────────
+
+    #[test]
+    fn headway_fewer_than_2_departures_returns_none() {
+        // A single departure in the window: no gap to measure.
+        assert_eq!(compute_headway(&[500.0], Some(0.0), Some(3600.0)), None);
+    }
+
+    #[test]
+    fn headway_no_departures_in_window_returns_none() {
+        // Departures exist but none fall inside the window.
+        assert_eq!(
+            compute_headway(&[100.0, 200.0], Some(1000.0), Some(2000.0)),
+            None
+        );
+    }
+
+    #[test]
+    fn headway_three_departures_no_window_returns_10_minutes() {
+        // 0s, 600s, 1200s → two gaps of 600s each → mean gap 600s = 10 min.
+        let result = compute_headway(&[0.0, 600.0, 1200.0], None, None);
+        assert_eq!(result, Some(10.0));
+    }
 }

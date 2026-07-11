@@ -1427,7 +1427,10 @@ fn compute_pulse_scheduling(graph: &TransitGraphJson) -> Vec<PulseHub> {
             }
         }
 
-        // Replace NaN with -1 for JSON serialization
+        // Replace NaN with -1.0 for JSON serialization: JSON has no NaN, and
+        // -1.0 encodes "no arrivals this hour" (the hub had no service in that
+        // slot). Consumers must filter out negative values before aggregating
+        // (e.g. computing an average wait across hours).
         let hourly_wait_json: Vec<f64> = hourly_wait
             .iter()
             .map(|&v| if v.is_nan() { -1.0 } else { v })

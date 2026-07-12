@@ -101,9 +101,9 @@ function LinijaRow({ line }: { line: StopPageData["lines"][number] }) {
           </span>
         </span>
         <span className="h-3 min-w-3 flex-1 border-b border-dotted border-hairline-strong" />
-        {hw && (
-          <span className="shrink-0 font-mono text-label text-ink-muted">{hw}</span>
-        )}
+        <span className={`shrink-0 font-mono text-label ${hw ? "text-ink-muted" : "text-ink-faint"}`}>
+          {hw ?? "bez podataka o intervalu"}
+        </span>
       </Link>
     </li>
   )

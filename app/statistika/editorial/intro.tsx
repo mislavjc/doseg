@@ -19,10 +19,13 @@ const SECTIONS = [
 export function Intro({
   maxMinutes = 30,
   districtCount = 17,
+  departureWindow = "07:30-08:30",
 }: {
   maxMinutes?: number
   districtCount?: number
+  departureWindow?: string
 }) {
+  const windowLabel = departureWindow.replace("-", " do ")
   return (
     <Section>
       <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "statistika" }]} />
@@ -38,8 +41,8 @@ export function Intro({
       <Hook className="mt-8">Što znači bod</Hook>
       <Body className="mt-4.5">
         Svakom kvartu dodjeljujemo bod od 0 do 100 prema udjelu površine grada
-        dostupnom u {maxMinutes} minuta, s polaskom radnim danom u 08:00. Veći
-        bod znači da je iz tog kvarta dostupno više grada.
+        dostupnom u {maxMinutes} minuta, s polascima radnim danom u prozoru od{" "}
+        {windowLabel}. Veći bod znači da je iz tog kvarta dostupno više grada.
       </Body>
       <Body className="mt-4.5">
         Razlika među kvartovima je golema: iz najbolje povezanih dosegnete

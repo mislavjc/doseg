@@ -47,7 +47,7 @@ export default function StatistikaPage() {
   return (
     <EditorialShell>
       <Hero active="statistika" />
-      <Intro maxMinutes={data?.maxMinutes} districtCount={data?.districts.length} />
+      <Intro maxMinutes={data?.maxMinutes} districtCount={data?.districts.length} departureWindow={data?.departureWindow} />
 
       {pov && <Povezanost data={pov} />}
       {facts && <Nejednakost facts={facts} />}
@@ -62,7 +62,7 @@ export default function StatistikaPage() {
       {data && <Jutro rows={computeEvening(data)} />}
       {facts && <Sesvete facts={facts} />}
       <Zakljucak districtCount={facts?.districtCount} />
-      <Metodologija />
+      <Metodologija departureWindow={data?.departureWindow} />
       <Footer updated={pov?.updated ?? ""} />
     </EditorialShell>
   )

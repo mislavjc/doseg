@@ -5,21 +5,24 @@ import { Body, BodyMuted, Chip, Eyebrow, Hook, MonoLabel, Section } from "./prim
  * chips, and the "uz oprez" caveats. Downloads + deep-dive link live in the footer.
  */
 
-const CHIPS = [
-  "30 min",
-  "raster 200 m",
-  "radni dan 08:00",
-  "OSM + GTFS",
-  "ZET + HŽPP",
-  "0–100",
-]
-
 const CAVEATS = [
-  "bod je relativan: Donji grad je 100 po definiciji, ostali se mjere prema njemu.",
-  "jedan snimak: radni dan, jutarnji špic oko 8 h; navečer i vikendom slika je drukčija.",
+  "bod je relativan: najbolje povezani kvart (danas Donji grad) je 100, ostali se mjere prema njemu.",
+  "jedan snimak: radni dan, jutarnji špic (07:30-08:30); navečer i vikendom slika je drukčija.",
 ]
 
-export function Metodologija() {
+export function Metodologija({
+  departureWindow = "07:30-08:30",
+}: {
+  departureWindow?: string
+}) {
+  const chips = [
+    "30 min",
+    "raster 200 m",
+    `radni dan ${departureWindow}`,
+    "OSM + GTFS",
+    "ZET + HŽPP",
+    "0–100",
+  ]
   return (
     <Section id="metodologija">
       <div className="flex flex-col gap-5">
@@ -31,7 +34,7 @@ export function Metodologija() {
         </Body>
 
         <div className="flex flex-wrap gap-1.75 pt-0.5">
-          {CHIPS.map((c) => (
+          {chips.map((c) => (
             <Chip key={c}>{c}</Chip>
           ))}
         </div>

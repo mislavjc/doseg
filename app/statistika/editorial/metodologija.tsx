@@ -5,16 +5,15 @@ import { Body, BodyMuted, Chip, Eyebrow, Hook, MonoLabel, Section } from "./prim
  * chips, and the "uz oprez" caveats. Downloads + deep-dive link live in the footer.
  */
 
-const CAVEATS = [
-  "bod je relativan: najbolje povezani kvart (danas Donji grad) je 100, ostali se mjere prema njemu.",
-  "jedan snimak: radni dan, jutarnji špic (07:30-08:30); navečer i vikendom slika je drukčija.",
-]
-
 export function Metodologija({
   departureWindow = "07:30-08:30",
 }: {
   departureWindow?: string
 }) {
+  const caveats = [
+    "bod je relativan: najbolje povezani kvart (danas Donji grad) je 100, ostali se mjere prema njemu.",
+    `jedan snimak: radni dan, jutarnji špic (${departureWindow}); navečer i vikendom slika je drukčija.`,
+  ]
   const chips = [
     "30 min",
     "raster 200 m",
@@ -41,7 +40,7 @@ export function Metodologija({
 
         <div className="mt-2 flex flex-col gap-2.25">
           <MonoLabel className="text-[11px]">uz oprez</MonoLabel>
-          {CAVEATS.map((c) => (
+          {caveats.map((c) => (
             <div key={c} className="flex items-baseline gap-2.5">
               <span className="shrink-0 font-mono text-label text-zg-blue">·</span>
               <BodyMuted>{c}</BodyMuted>

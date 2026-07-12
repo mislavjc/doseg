@@ -7,37 +7,20 @@ import { fmtDelaySec, fmtHR, pickPreferredRoute } from "./format"
 // ---------------------------------------------------------------------------
 
 describe("fmtDelaySec()", () => {
-  it("positive seconds under 60 → 's' unit", () => {
-    expect(fmtDelaySec(30)).toBe("30 s")
-  })
-
-  it("exactly 60 seconds → '1 min'", () => {
-    expect(fmtDelaySec(60)).toBe("1 min")
-  })
-
-  it("seconds above 60 → minutes", () => {
-    expect(fmtDelaySec(120)).toBe("2 min")
-  })
-
-  it("rounds partial minutes", () => {
-    expect(fmtDelaySec(90)).toBe("2 min")
-    expect(fmtDelaySec(89)).toBe("1 min")
-  })
-
-  it("zero → '0 s'", () => {
-    expect(fmtDelaySec(0)).toBe("0 s")
-  })
-
-  it("negative value under -60 → '-1 min'", () => {
-    expect(fmtDelaySec(-60)).toBe("-1 min")
-  })
-
-  it("negative value above -60 → '-30 s'", () => {
-    expect(fmtDelaySec(-30)).toBe("-30 s")
-  })
-
-  it("large value → minutes", () => {
-    expect(fmtDelaySec(3600)).toBe("60 min")
+  // Seconds under a minute keep the 's' unit; from 60 s up it rounds to
+  // whole minutes; negatives mirror the same rules.
+  it.each([
+    [30, "30 s"],
+    [60, "1 min"],
+    [89, "1 min"],
+    [90, "2 min"],
+    [120, "2 min"],
+    [0, "0 s"],
+    [-30, "-30 s"],
+    [-60, "-1 min"],
+    [3600, "60 min"],
+  ])("fmtDelaySec(%i) → %s", (input, expected) => {
+    expect(fmtDelaySec(input)).toBe(expected)
   })
 })
 

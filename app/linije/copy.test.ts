@@ -15,56 +15,32 @@ import {
 
 describe("plural()", () => {
   describe("with 'minuta/minute/minuta'", () => {
-    it("0 → genitive plural", () => {
-      expect(plural(0, "minuta", "minute", "minuta")).toBe("minuta")
+    // Singular (last digit 1), paucal (2-4), genitive plural (0, 5+),
+    // with the 11-14 exception and its recurrence at 111-114.
+    it.each([
+      [0, "minuta"],
+      [1, "minuta"],
+      [2, "minute"],
+      [3, "minute"],
+      [4, "minute"],
+      [5, "minuta"],
+      [6, "minuta"],
+      [12, "minuta"],
+      [13, "minuta"],
+      [14, "minuta"],
+      [21, "minuta"],
+      [22, "minute"],
+      [101, "minuta"],
+      [102, "minute"],
+      [111, "minuta"],
+    ])("%i minuta → %s", (n, expected) => {
+      expect(plural(n, "minuta", "minute", "minuta")).toBe(expected)
     })
-    it("1 → singular", () => {
-      expect(plural(1, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("2 → paucal", () => {
-      expect(plural(2, "minuta", "minute", "minuta")).toBe("minute")
-    })
-    it("3 → paucal", () => {
-      expect(plural(3, "minuta", "minute", "minuta")).toBe("minute")
-    })
-    it("4 → paucal", () => {
-      expect(plural(4, "minuta", "minute", "minuta")).toBe("minute")
-    })
-    it("5 → genitive plural", () => {
-      expect(plural(5, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("6 → genitive plural", () => {
-      expect(plural(6, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    // 11–14 exception: NOT paucal even though last digit is 1–4
-    it("11 → genitive plural (not singular)", () => {
+
+    // The regression sentinel, kept as a named test: 11 must NOT take the
+    // singular even though its last digit is 1.
+    it("11 → genitive plural (11-14 exception)", () => {
       expect(plural(11, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("12 → genitive plural (not paucal)", () => {
-      expect(plural(12, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("13 → genitive plural (not paucal)", () => {
-      expect(plural(13, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("14 → genitive plural (not paucal)", () => {
-      expect(plural(14, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    // Back to normal after 14
-    it("21 → singular (last digit 1, not in 11-14)", () => {
-      expect(plural(21, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("22 → paucal (last digit 2, not in 11-14)", () => {
-      expect(plural(22, "minuta", "minute", "minuta")).toBe("minute")
-    })
-    // Three-digit values
-    it("101 → singular", () => {
-      expect(plural(101, "minuta", "minute", "minuta")).toBe("minuta")
-    })
-    it("102 → paucal", () => {
-      expect(plural(102, "minuta", "minute", "minuta")).toBe("minute")
-    })
-    it("111 → genitive plural (11-14 exception at three digits)", () => {
-      expect(plural(111, "minuta", "minute", "minuta")).toBe("minuta")
     })
   })
 

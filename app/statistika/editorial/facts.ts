@@ -90,8 +90,9 @@ export function computePovezanost(data: ScoreData) {
     ds.reduce((s, d) => s + d.score * (d.population ?? 0), 0) /
       Math.max(totalPop, 1)
   )
-  // hr-HR already renders the year with a trailing period ("ožujak 2026.").
+  // hr-HR renders day-month-year with trailing periods, e.g. "20. ožujka 2026.".
   const updated = new Date(data.generatedAt).toLocaleDateString("hr-HR", {
+    day: "numeric",
     month: "long",
     year: "numeric",
   })

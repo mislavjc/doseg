@@ -23,7 +23,14 @@ export function loadScores(): ScoreData | null {
   const dir = getDataDir()
   const day = readJsonCached<ScoreData>(join(dir, "district-scores-wednesday.json"))
   const base = readJsonCached<ScoreData>(join(dir, "district-scores.json"))
-  if (!day) return base
+  if (!day) {
+    if (base) {
+      console.error(
+        "district-scores: day-filtered build missing; serving LEGACY POOLED data with known-fake headways. Fix the data files."
+      )
+    }
+    return base
+  }
   if (base) {
     day.bajsStopCoveragePct ??= base.bajsStopCoveragePct
     day.bajsCoveredStops ??= base.bajsCoveredStops

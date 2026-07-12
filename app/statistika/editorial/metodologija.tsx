@@ -39,7 +39,7 @@ export function Metodologija({
         </div>
 
         <div className="mt-2 flex flex-col gap-2.25">
-          <MonoLabel className="text-[11px]">uz oprez</MonoLabel>
+          <MonoLabel>uz oprez</MonoLabel>
           {caveats.map((c) => (
             <div key={c} className="flex items-baseline gap-2.5">
               <span className="shrink-0 font-mono text-label text-zg-blue">·</span>

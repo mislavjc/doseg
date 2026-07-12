@@ -233,8 +233,8 @@ export function Matrica({ data }: { data: KvartData }) {
       </SectionHeader>
       <div>
         <div className="flex items-center justify-between px-3 pb-1.5">
-          <MonoLabel className="text-[11px]">do kvarta</MonoLabel>
-          <MonoLabel className="text-[11px]">min</MonoLabel>
+          <MonoLabel>do kvarta</MonoLabel>
+          <MonoLabel>min</MonoLabel>
         </div>
         <div className="flex items-center gap-3 bg-ink px-3 py-1.5">
           <span className="grow font-heros text-label text-ground">{data.name}</span>
@@ -247,19 +247,19 @@ export function Matrica({ data }: { data: KvartData }) {
             className="flex items-center gap-3 px-3 py-1.5"
             style={tint(r.min)}
           >
-            <span className="w-5 shrink-0 font-mono text-[11px] tabular-nums opacity-60">
+            <span className="w-5 shrink-0 font-mono text-label tabular-nums opacity-60">
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="grow font-heros text-label">{r.name}</span>
             {r.transfer && (
-              <span className="font-mono text-[11px] opacity-70">presj.</span>
+              <span className="font-mono text-label opacity-70">presj.</span>
             )}
             <span className="w-7 shrink-0 text-right font-mono text-label tabular-nums">
               {r.min}
             </span>
           </Link>
         ))}
-        <MonoLabel className="mt-2.5 block text-[11px]">
+        <MonoLabel className="mt-2.5 block">
           tamnije = bliže · iz najpovezanije točke kvarta
         </MonoLabel>
       </div>
@@ -491,8 +491,8 @@ export function Promjene({ data }: { data: KvartData }) {
         {data.promjene.map((p) => (
           <div key={p.id} className="flex flex-col gap-1.5 border-t border-hairline py-3.5">
             <div className="flex items-center gap-3">
-              <MonoLabel className="text-[12px]">{p.date}</MonoLabel>
-              <span className="inline-flex items-center border border-zg-blue px-[7px] py-0.5 font-mono text-[11px] text-zg-blue">
+              <MonoLabel>{p.date}</MonoLabel>
+              <span className="inline-flex items-center border border-zg-blue px-[7px] py-0.5 font-mono text-label text-zg-blue">
                 {p.kind}
               </span>
             </div>

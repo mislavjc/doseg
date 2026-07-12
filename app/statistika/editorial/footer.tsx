@@ -42,7 +42,7 @@ const COLUMNS: Column[] = [
 ]
 
 function ColumnItem({ item }: { item: Item }) {
-  const cls = "font-mono text-xs leading-5"
+  const cls = "font-mono text-label leading-5"
   if (!item.href)
     return <span className={`${cls} text-ink-faint`}>{item.t}</span>
   const linkCls = `${cls} text-zg-blue transition-colors hover:text-navy`
@@ -81,7 +81,7 @@ export function Footer({ updated }: { updated: string }) {
             ))}
             <div className="flex flex-col gap-1.5">
               <MonoLabel className="text-ink">ažurirano</MonoLabel>
-              <span className="font-mono text-xs leading-5 text-ink-faint">
+              <span className="font-mono text-label leading-5 text-ink-faint">
                 {updated}
               </span>
             </div>
@@ -95,11 +95,11 @@ export function Footer({ updated }: { updated: string }) {
               height={25}
               className="h-[25px] w-[34px] object-contain"
             />
-            <span className="font-mono text-sm font-medium leading-tight tracking-[-0.01em]">
+            <span className="font-mono text-label font-medium">
               <span className="text-ink">doseg</span>
               <span className="text-zg-blue">.hr</span>
             </span>
-            <span className="font-heros text-xs leading-4 text-ink-faint">
+            <span className="text-label font-mono text-ink-faint">
               · statistika dostupnosti zagrebačkog javnog prijevoza
             </span>
           </div>

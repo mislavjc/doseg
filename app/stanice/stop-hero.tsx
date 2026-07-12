@@ -142,12 +142,12 @@ function StopHeroVariant({
         ))}
         {/* The stop itself — blue bullseye */}
         <circle cx={sx} cy={sy} r={13} fill="none" stroke="var(--zg-blue)" strokeWidth={2.5} />
-        <circle cx={sx} cy={sy} r={8.5} fill="var(--zg-blue)" stroke="#fff" strokeWidth={3.5} />
+        <circle cx={sx} cy={sy} r={8.5} fill="var(--zg-blue)" stroke="var(--ground)" strokeWidth={3.5} />
       </svg>
 
       {/* Stop name label, anchored above the marker */}
       <span
-        className="absolute z-[1] bg-zg-blue px-3 py-1 font-mono text-[15px] leading-5 text-white"
+        className="absolute z-[1] bg-zg-blue px-3 py-1 font-mono text-label text-white"
         style={{
           left: `${(sx / viewW) * 100}%`,
           top: `${(sy / viewH) * 100}%`,

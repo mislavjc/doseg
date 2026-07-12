@@ -71,9 +71,9 @@ echo "==> Regenerating stop pages (data/stanice)"
 scorer --stop-pages
 
 # Heavier district/network/route + per-day scores need OSM + walk-graph (present
-# on the server). Off by default until the exact multi-day recipe is confirmed in
-# a dry-run; enable with REGEN_DISTRICTS=1.
-if [ "${REGEN_DISTRICTS:-0}" = "1" ]; then
+# on the server). On by default since the 2026-07-12 dry run validated the
+# multi-day recipe (all passes + gate green); disable with REGEN_DISTRICTS=0.
+if [ "${REGEN_DISTRICTS:-1}" = "1" ]; then
   echo "==> Regenerating district/network/route stats + centrality"
   scorer --centrality
   for d in monday wednesday saturday; do

@@ -174,7 +174,8 @@ function parseQuery(q: string): { street: string; house?: string } {
 }
 
 async function searchDGU(q: string): Promise<Result[]> {
-  const { street, house } = parseQuery(q)
+  const { street: rawStreet, house } = parseQuery(q)
+  const street = rawStreet.replace(/[%_]/g, " ")
   const escaped = street.replace(/'/g, "''")
   const wildcard = toWildcardPattern(street)
   // Try exact match first; fall back to diacritics-wildcard only if different

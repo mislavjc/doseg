@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server"
 
-import { jsonResponse } from "@/lib/api-response"
+import { apiErrorResponse, jsonResponse } from "@/lib/api-response"
 import { buildBajsFeatureCollection, getBajsData } from "@/lib/bajs"
 
 export async function GET(request: NextRequest) {
@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     )
     return response
   } catch (err) {
-    console.error("bajs route error:", err)
-    return Response.json({ error: "Upstream service unavailable" }, { status: 502 })
+    return apiErrorResponse("bajs route error", err, 502)
   }
 }

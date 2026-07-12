@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server"
 
-import { jsonResponse } from "@/lib/api-response"
+import { apiErrorResponse, jsonResponse } from "@/lib/api-response"
 import { buildAccurateItinerary } from "@/lib/accurate-itinerary"
 import { getReachabilityState } from "@/lib/reachability-state"
 import { secondsOfDay } from "@/lib/zagreb-time"
@@ -57,7 +57,6 @@ export async function GET(request: NextRequest) {
     const { response } = jsonResponse(itinerary, request, "private, max-age=5")
     return response
   } catch (err) {
-    console.error("route route error:", err)
-    return Response.json({ error: "Upstream service unavailable" }, { status: 502 })
+    return apiErrorResponse("route route error", err, 502)
   }
 }

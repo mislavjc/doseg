@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     const { response } = jsonResponse(itinerary, request, "private, max-age=5")
     return response
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Internal error"
-    return Response.json({ error: message }, { status: 502 })
+    console.error("route route error:", err)
+    return Response.json({ error: "Upstream service unavailable" }, { status: 502 })
   }
 }

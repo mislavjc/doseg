@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     )
     return response
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Internal error"
-    return Response.json({ error: message }, { status: 502 })
+    console.error("bajs route error:", err)
+    return Response.json({ error: "Upstream service unavailable" }, { status: 502 })
   }
 }

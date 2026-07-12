@@ -6,6 +6,7 @@ import { Footer } from "@/app/statistika/editorial/footer"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadScores } from "@/app/statistika/stat-data"
 import { loadKvart, loadKvartIndex } from "@/lib/kvart-data"
+import { pseoMetadata } from "@/lib/pseo-metadata"
 import { loadStopIndex } from "@/lib/stop-data"
 
 import {
@@ -59,20 +60,13 @@ export async function generateMetadata({
   if (!data) return {}
   const title = `${data.name}: javni prijevoz i povezanost | Doseg`
   const description = `${data.name} je ${data.rank}. od ${data.total} zagrebačkih kvartova po povezanosti javnim prijevozom. ${data.tramCount} tramvajskih i ${data.busCount} autobusnih linija; ${data.within30} kvartova nadohvat za 30 minuta.`
-  return {
+  return pseoMetadata({
     title,
     description,
-    alternates: { canonical: `/kvartovi/${data.slug}` },
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url: `/kvartovi/${data.slug}`,
-      siteName: "Doseg",
-      locale: "hr_HR",
-      images: [{ url: "/og.jpg", width: 1200, height: 630 }],
-    },
-  }
+    path: `/kvartovi/${data.slug}`,
+    ogType: "website",
+    ogImage: "/og.jpg",
+  })
 }
 
 export default async function KvartPage({

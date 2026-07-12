@@ -6,6 +6,7 @@ import { CestaPitanja, faqJsonLd } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
+import { pseoMetadata } from "@/lib/pseo-metadata"
 import { loadStopData, loadStopHeroMeta, loadStopIndex, siblingStops } from "@/lib/stop-data"
 
 import { introText, stopTitle } from "../copy"
@@ -40,20 +41,13 @@ export async function generateMetadata({
   const description = introText(data)
   // The v param busts X/Telegram per-URL caches when the feed rolls.
   const ogVersion = loadStopIndex().serviceDates.radniDan
-  return {
+  return pseoMetadata({
     title,
     description,
-    alternates: { canonical: `/stanice/${data.slug}` },
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      url: `/stanice/${data.slug}`,
-      siteName: "Doseg",
-      locale: "hr_HR",
-      images: [{ url: `/api/og?stanica=${data.slug}&v=${ogVersion}`, width: 1200, height: 630 }],
-    },
-  }
+    path: `/stanice/${data.slug}`,
+    ogType: "article",
+    ogImage: `/api/og?stanica=${data.slug}&v=${ogVersion}`,
+  })
 }
 
 export default async function StanicaPage({

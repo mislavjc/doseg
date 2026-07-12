@@ -7,6 +7,7 @@ import { Footer } from "@/app/statistika/editorial/footer"
 import { JsonLd, breadcrumbJsonLd, lineStopsJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { loadHeroMeta, loadLineData, loadLineIndex } from "@/lib/line-data"
+import { pseoMetadata } from "@/lib/pseo-metadata"
 import { resolveStopSlugs } from "@/lib/stop-data"
 
 import {
@@ -56,26 +57,13 @@ export async function generateMetadata({
   const description = introText(data)
   // The v param busts X/Telegram per-URL caches when the feed rolls.
   const ogVersion = loadLineIndex().serviceDates.radniDan
-  return {
+  return pseoMetadata({
     title,
     description,
-    alternates: { canonical: `/linije/${data.broj}` },
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      url: `/linije/${data.broj}`,
-      siteName: "Doseg",
-      locale: "hr_HR",
-      images: [
-        {
-          url: `/api/og?linija=${data.broj}&v=${ogVersion}`,
-          width: 1200,
-          height: 630,
-        },
-      ],
-    },
-  }
+    path: `/linije/${data.broj}`,
+    ogType: "article",
+    ogImage: `/api/og?linija=${data.broj}&v=${ogVersion}`,
+  })
 }
 
 export default async function LinijaPage({

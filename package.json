@@ -14,7 +14,8 @@
     "build:walk-graph": "bun scripts/build-walk-graph.ts",
     "build:bike-graph": "bun scripts/build-bike-graph.ts",
     "build:poi-photos": "bun scripts/build-poi-photos.ts",
-    "indexnow": "bun scripts/indexnow.ts"
+    "indexnow": "bun scripts/indexnow.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

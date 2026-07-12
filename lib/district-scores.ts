@@ -24,11 +24,11 @@ export function loadScores(): ScoreData | null {
   const day = readJsonCached<ScoreData>(join(dir, "district-scores-wednesday.json"))
   const base = readJsonCached<ScoreData>(join(dir, "district-scores.json"))
   if (!day) {
-    if (base) {
-      console.error(
-        "district-scores: day-filtered build missing; serving LEGACY POOLED data with known-fake headways. Fix the data files."
-      )
-    }
+    console.error(
+      base
+        ? "district-scores: day-filtered build missing; serving LEGACY POOLED data with known-fake headways. Fix the data files."
+        : "district-scores: no district data files found; district surfaces will render empty."
+    )
     return base
   }
   if (base) {

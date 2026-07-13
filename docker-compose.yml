@@ -5,7 +5,10 @@ services:
       - ./data:/var/opentripplanner
     command: --build --serve
     environment:
-      - JAVA_TOOL_OPTIONS=-Xmx1024m
+      # 1024m OOMed at 34% of trip-pattern generation on ZET's 2026-07 feed
+      # (143k trips, service through Dec) - two Monday rolls failed silently.
+      # 2048m builds it in ~60s; keep ~1GB headroom over the observed need.
+      - JAVA_TOOL_OPTIONS=-Xmx2048m
     healthcheck:
       test: ["CMD-SHELL", "exec wget -qO- http://localhost:8080/otp/ || exit 1"]
       interval: 30s
@@ -16,7 +19,7 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 2G
+          memory: 3G
     restart: unless-stopped
 
   isochrone:

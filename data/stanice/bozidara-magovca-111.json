@@ -23,12 +23,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 13.8,
       "peakRangeMin": [
-        10,
-        12
+        13,
+        14
       ],
-      "allDayHeadwayMin": 13.2
+      "allDayHeadwayMin": 15.7
     },
     {
       "broj": "295",
@@ -346,9 +346,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 17,
+    "stations30": 60,
+    "stations45": 223
   },
   "prevSlug": "bozidara-magovca",
   "nextSlug": "branim-culinecka"

@@ -13,7 +13,7 @@
     "315"
   ],
   "firstDeparture": "4:55",
-  "lastDeparture": "23:15",
+  "lastDeparture": "23:10",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,9 +23,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 85.0,
+      "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 84.6
+      "allDayHeadwayMin": 84.2
     },
     {
       "broj": "315",

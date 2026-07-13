@@ -52,10 +52,10 @@
       "headsign": "Sloboština",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 47.5,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        46,
-        49
+        45,
+        45
       ],
       "allDayHeadwayMin": 45.2
     },
@@ -66,12 +66,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.3,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
+        15,
         15
       ],
-      "allDayHeadwayMin": 15.2
+      "allDayHeadwayMin": 16.8
     },
     {
       "broj": "229",
@@ -80,7 +80,7 @@
       "headsign": "Mala Mlaka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 80.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 83.8
     },
@@ -1321,9 +1321,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 137,
-    "stations45": 359
+    "stations15": 31,
+    "stations30": 119,
+    "stations45": 348
   },
   "prevSlug": "varoska",
   "nextSlug": "vatikanska-sv-mateja"

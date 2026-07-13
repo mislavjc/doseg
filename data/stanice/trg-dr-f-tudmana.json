@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.6,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     },
     {
       "broj": "6",
@@ -39,12 +39,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        9,
-        9
+        8,
+        8
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.5
     },
     {
       "broj": "11",
@@ -1669,9 +1669,9 @@
     ]
   },
   "reach": {
-    "stations15": 55,
-    "stations30": 272,
-    "stations45": 530
+    "stations15": 50,
+    "stations30": 266,
+    "stations45": 541
   },
   "prevSlug": "trg-bana-j-jelacica",
   "nextSlug": "trg-dr-tudmana"

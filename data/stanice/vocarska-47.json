@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "5:31",
-  "lastDeparture": "23:31",
+  "firstDeparture": "7:41",
+  "lastDeparture": "13:41",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
-      "peakRangeMin": [
-        43,
-        48
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 45.0
     }
   ],
@@ -598,8 +595,8 @@
   },
   "reach": {
     "stations15": 28,
-    "stations30": 172,
-    "stations45": 486
+    "stations30": 175,
+    "stations45": 474
   },
   "prevSlug": "vladimira-nazora",
   "nextSlug": "vocarska-baboniceva"

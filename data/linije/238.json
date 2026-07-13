@@ -907,19 +907,19 @@
     0,
     3,
     3,
+    0,
+    0,
+    0,
+    0,
     1,
-    3,
-    2,
-    3,
-    2,
     2,
     3,
     2,
     3,
-    2,
-    2,
-    2,
     1,
+    0,
+    0,
+    0,
     0,
     0,
     0
@@ -941,31 +941,6 @@
           ]
         },
         {
-          "hour": 9,
-          "minutes": [
-            0,
-            50
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            20
-          ]
-        },
-        {
           "hour": 13,
           "minutes": [
             10
@@ -994,24 +969,6 @@
           "hour": 17,
           "minutes": [
             20
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            25
           ]
         }
       ],
@@ -1030,31 +987,6 @@
           ]
         },
         {
-          "hour": 8,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            25
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            15
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            5,
-            55
-          ]
-        },
-        {
           "hour": 12,
           "minutes": [
             45
@@ -1083,24 +1015,6 @@
           "minutes": [
             5,
             55
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            45
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            30
           ]
         }
       ]
@@ -1167,17 +1081,17 @@
   "prevBroj": "237",
   "nextBroj": "239",
   "reach": {
-    "areaKm2": 13.7,
+    "areaKm2": 13.6,
     "stopName": "Lašćinski Borovec",
     "lat": 45.83022,
     "lon": 15.99406
   },
   "stats": {
-    "dailyDepartures": 34,
+    "dailyDepartures": 18,
     "firstDeparture": "06:30",
-    "lastDeparture": "20:25",
-    "peakHeadwayMin": 52.5,
-    "avgHeadwayMin": 52.2,
+    "lastDeparture": "17:20",
+    "peakHeadwayMin": 40.0,
+    "avgHeadwayMin": 81.3,
     "travelTimeMin": 13.0,
     "distanceKm": 5.1
   }

@@ -896,9 +896,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 189,
-    "stations45": 490
+    "stations15": 29,
+    "stations30": 184,
+    "stations45": 477
   },
   "prevSlug": "tuskanac",
   "nextSlug": "ucit-fakultet"

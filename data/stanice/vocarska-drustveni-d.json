@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "5:30",
-  "lastDeparture": "23:30",
+  "firstDeparture": "7:40",
+  "lastDeparture": "13:40",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,11 +22,8 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
-      "peakRangeMin": [
-        43,
-        48
-      ],
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
       "allDayHeadwayMin": 45.0
     }
   ],
@@ -598,8 +595,8 @@
   },
   "reach": {
     "stations15": 21,
-    "stations30": 127,
-    "stations45": 430
+    "stations30": 128,
+    "stations45": 419
   },
   "prevSlug": "vocarska-baboniceva",
   "nextSlug": "vocarska-sjemeniste"

@@ -499,31 +499,13 @@
         "terminal": "Sesvete"
       },
       {
-        "broj": "277",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Sesvete"
-      },
-      {
         "broj": "278",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
       },
       {
-        "broj": "282",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Sesvete"
-      },
-      {
         "broj": "283",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Sesvete"
-      },
-      {
-        "broj": "284",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
@@ -534,7 +516,7 @@
   "prevBroj": "274",
   "nextBroj": "276",
   "reach": {
-    "areaKm2": 15.7,
+    "areaKm2": 15.6,
     "stopName": "Ante Starčevića 45 A",
     "lat": 45.82454,
     "lon": 16.09697

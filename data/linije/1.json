@@ -7,8 +7,8 @@
     "Borongaj"
   ],
   "via": [
-    "Tehnički muzej",
-    "Trg bana J. Jelačića"
+    "Vodnikova",
+    "Trg hr. velikana"
   ],
   "oneWay": false,
   "directions": [
@@ -67,6 +67,7 @@
           "tramInterchange": [
             "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -81,7 +82,9 @@
           "offsetMin": 0,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -136,6 +139,8 @@
           "offsetMin": 0,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8",
             "17"
           ]
@@ -147,6 +152,7 @@
           "offsetMin": 0,
           "tramInterchange": [
             "9",
+            "13",
             "17"
           ]
         },
@@ -156,8 +162,6 @@
           "lon": 15.99429,
           "offsetMin": 0,
           "tramInterchange": [
-            "5",
-            "7",
             "13"
           ]
         },
@@ -926,8 +930,6 @@
           "lon": 15.99228,
           "offsetMin": 0,
           "tramInterchange": [
-            "5",
-            "7",
             "13"
           ]
         },
@@ -938,6 +940,7 @@
           "offsetMin": 0,
           "tramInterchange": [
             "9",
+            "13",
             "17"
           ]
         },
@@ -948,6 +951,8 @@
           "offsetMin": 0,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8",
             "11",
             "12",
@@ -1002,7 +1007,9 @@
           "offsetMin": 0,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -1018,6 +1025,7 @@
           "tramInterchange": [
             "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -1749,7 +1757,7 @@
       },
       {
         "broj": "5",
-        "stopName": "Šubićeva"
+        "stopName": "Tehnički muzej"
       },
       {
         "broj": "6",
@@ -1757,7 +1765,7 @@
       },
       {
         "broj": "7",
-        "stopName": "Šubićeva"
+        "stopName": "Trg hr. velikana"
       },
       {
         "broj": "8",
@@ -1792,7 +1800,7 @@
   "prevBroj": null,
   "nextBroj": "2",
   "reach": {
-    "areaKm2": 34.4,
+    "areaKm2": 34.2,
     "stopName": "Trg hr. velikana",
     "lat": 45.81152,
     "lon": 15.98447

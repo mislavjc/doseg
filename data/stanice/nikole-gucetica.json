@@ -23,12 +23,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     },
     {
       "broj": "146",
@@ -750,9 +750,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 105,
-    "stations45": 246
+    "stations15": 16,
+    "stations30": 87,
+    "stations45": 214
   },
   "prevSlug": "nehajska",
   "nextSlug": "ninska"

@@ -23,12 +23,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     },
     {
       "broj": "232",
@@ -666,9 +666,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 66,
-    "stations45": 183
+    "stations15": 10,
+    "stations30": 48,
+    "stations45": 145
   },
   "prevSlug": "svetosimunska",
   "nextSlug": "sveucilisna-al"

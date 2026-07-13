@@ -90,8 +90,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 33,
-    "stations45": 125
+    "stations30": 25,
+    "stations45": 110
   },
   "prevSlug": "tisinska",
   "nextSlug": "tomislavov-dom"

@@ -70,9 +70,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 97,
-    "stations45": 334
+    "stations15": 12,
+    "stations30": 81,
+    "stations45": 303
   },
   "prevSlug": "aspergeri",
   "nextSlug": "autobusni-kol"

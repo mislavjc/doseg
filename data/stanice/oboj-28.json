@@ -22,12 +22,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.4,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     }
   ],
   "neighbors": [
@@ -621,9 +621,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 100,
-    "stations45": 333
+    "stations15": 18,
+    "stations30": 95,
+    "stations45": 321
   },
   "prevSlug": "novoselecki-put-83",
   "nextSlug": "oboj-jurja-ves"

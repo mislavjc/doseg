@@ -266,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 51,
-    "stations45": 156
+    "stations15": 11,
+    "stations30": 54,
+    "stations45": 168
   },
   "prevSlug": "solici",
   "nextSlug": "sopnicka-kod-10d"

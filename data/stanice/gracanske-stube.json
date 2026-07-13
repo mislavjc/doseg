@@ -11,7 +11,7 @@
     "15"
   ],
   "busLines": [],
-  "firstDeparture": "4:30",
+  "firstDeparture": "4:41",
   "lastDeparture": "23:37",
   "directionGroups": 2,
   "lines": [
@@ -210,8 +210,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 51,
-    "stations45": 195
+    "stations30": 41,
+    "stations45": 185
   },
   "prevSlug": "gracanska-60",
   "nextSlug": "gracansko-dolje"

@@ -54,7 +54,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -1505,8 +1505,8 @@
   },
   "reach": {
     "stations15": 31,
-    "stations30": 129,
-    "stations45": 374
+    "stations30": 126,
+    "stations45": 394
   },
   "prevSlug": "jordanovac-maksimir",
   "nextSlug": "josipa-loncara"

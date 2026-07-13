@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 2,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -720,8 +718,6 @@
           "lon": 15.97956,
           "offsetMin": 24,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -2017,11 +2013,7 @@
       },
       {
         "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
+        "stopName": "Elka"
       },
       {
         "broj": "13",
@@ -2032,7 +2024,7 @@
   "prevBroj": "280",
   "nextBroj": "282",
   "reach": {
-    "areaKm2": 31.0,
+    "areaKm2": 26.9,
     "stopName": "Elka",
     "lat": 45.79745,
     "lon": 16.03877

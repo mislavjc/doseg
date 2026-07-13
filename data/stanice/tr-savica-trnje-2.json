@@ -38,12 +38,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 23.3,
-      "peakRangeMin": [
-        23,
-        25
-      ],
-      "allDayHeadwayMin": 28.9
+      "peakHeadwayMin": 45.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
     },
     {
       "broj": "281",
@@ -603,9 +600,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 146,
-    "stations45": 380
+    "stations15": 14,
+    "stations30": 137,
+    "stations45": 365
   },
   "prevSlug": "tr-savica-trnje",
   "nextSlug": "trafostanica"

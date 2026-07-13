@@ -741,9 +741,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 125,
-    "stations45": 376
+    "stations15": 30,
+    "stations30": 124,
+    "stations45": 367
   },
   "prevSlug": "kosirnikova-9",
   "nextSlug": "kosirnikova-src-jel"

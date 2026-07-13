@@ -54,7 +54,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -921,8 +921,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 124,
-    "stations45": 362
+    "stations30": 121,
+    "stations45": 377
   },
   "prevSlug": "vodnikova",
   "nextSlug": "vodovodna"

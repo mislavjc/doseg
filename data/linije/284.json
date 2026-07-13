@@ -14,23 +14,23 @@
       "stops": [
         {
           "name": "Sesvete-ukrcaj",
-          "lat": 45.82439,
-          "lon": 16.10546,
+          "lat": 45.82441,
+          "lon": 16.10548,
           "offsetMin": 0,
           "tramInterchange": []
         },
         {
           "name": "Slatinska",
           "lat": 45.82477,
-          "lon": 16.10099,
-          "offsetMin": 0,
+          "lon": 16.10097,
+          "offsetMin": 1,
           "tramInterchange": []
         },
         {
           "name": "Ljudevita Posavskog",
           "lat": 45.82111,
           "lon": 16.10334,
-          "offsetMin": 0,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
@@ -78,11 +78,11 @@
       ],
       "shape": [
         [
-          16.10546,
-          45.82439
+          16.10548,
+          45.82441
         ],
         [
-          16.10099,
+          16.10097,
           45.82477
         ],
         [
@@ -162,8 +162,8 @@
         },
         {
           "name": "Sesvete-izlaz",
-          "lat": 45.82458,
-          "lon": 16.10594,
+          "lat": 45.82451,
+          "lon": 16.10589,
           "offsetMin": 8,
           "tramInterchange": []
         }
@@ -194,14 +194,14 @@
           45.81952
         ],
         [
-          16.10594,
-          45.82458
+          16.10589,
+          45.82451
         ]
       ]
     }
   ],
   "bbox": [
-    16.10099,
+    16.10097,
     45.79782,
     16.11957,
     45.82477

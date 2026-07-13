@@ -2,8 +2,8 @@
   "slug": "precko-terminal",
   "name": "Prečko-terminal",
   "kvart": "Trešnjevka - jug",
-  "lat": 45.79496,
-  "lon": 15.89968,
+  "lat": 45.79495,
+  "lon": 15.89967,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 4,
@@ -85,10 +85,10 @@
   ],
   "hero": {
     "bbox": [
-      15.89761,
-      45.79352,
+      15.8976,
+      45.79351,
       15.90174,
-      45.79641
+      45.79639
     ],
     "lines": [
       {
@@ -498,9 +498,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 135,
-    "stations45": 392
+    "stations15": 30,
+    "stations30": 134,
+    "stations45": 399
   },
   "prevSlug": "precko",
   "nextSlug": "predsjednicki-dvori"

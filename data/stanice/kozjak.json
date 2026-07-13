@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -704,8 +704,8 @@
   },
   "reach": {
     "stations15": 25,
-    "stations30": 99,
-    "stations45": 329
+    "stations30": 96,
+    "stations45": 322
   },
   "prevSlug": "kozincev-put",
   "nextSlug": "kral-brijegi-starjak"

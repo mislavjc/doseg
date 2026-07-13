@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -913,8 +911,6 @@
           "lon": 15.97956,
           "offsetMin": 27,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -925,7 +921,9 @@
           "offsetMin": 29,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "9",
             "13"
@@ -1602,10 +1600,10 @@
     1,
     1,
     2,
-    2,
-    1,
     1,
     2,
+    2,
+    1,
     1,
     2,
     1,
@@ -1618,85 +1616,85 @@
         {
           "hour": 4,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            35
+            30
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            50
+            45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            10
+            5
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            35
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            5
+            0
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            35
+            30
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0
+            5
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15
+            20
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            45
+            40
           ]
         },
         {
-          "hour": 18,
-          "minutes": [
-            5
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 20,
+          "hour": 17,
           "minutes": [
             55
           ]
         },
         {
+          "hour": 19,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            45
+          ]
+        },
+        {
           "hour": 22,
           "minutes": [
-            35
+            30
           ]
         }
       ],
@@ -1710,7 +1708,7 @@
         {
           "hour": 6,
           "minutes": [
-            10
+            5
           ]
         },
         {
@@ -1722,67 +1720,67 @@
         {
           "hour": 8,
           "minutes": [
-            50
+            45
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15
+            10
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            45
+            40
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15
+            10
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            35
+            40
           ]
         },
         {
-          "hour": 15,
+          "hour": 16,
           "minutes": [
-            55
+            5
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            25
+            15
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            45
+            30
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            10
+            0
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            35
+            25
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            15
+            10
           ]
         }
       ]
@@ -2189,14 +2187,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "6",
         "stopName": "Sopot"
       },
@@ -2217,15 +2207,15 @@
   "prevBroj": "228",
   "nextBroj": "230",
   "reach": {
-    "areaKm2": 29.7,
+    "areaKm2": 28.4,
     "stopName": "Bolšićeva",
     "lat": 45.76352,
     "lon": 15.99061
   },
   "stats": {
     "dailyDepartures": 28,
-    "firstDeparture": "04:25",
-    "lastDeparture": "22:35",
+    "firstDeparture": "04:20",
+    "lastDeparture": "22:30",
     "peakHeadwayMin": null,
     "avgHeadwayMin": 83.8,
     "travelTimeMin": 27.2,

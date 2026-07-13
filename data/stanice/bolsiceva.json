@@ -51,10 +51,10 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 47.5,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        46,
-        49
+        45,
+        45
       ],
       "allDayHeadwayMin": 45.2
     },
@@ -65,7 +65,7 @@
       "headsign": "Mala Mlaka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 80.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 83.8
     },
@@ -1020,9 +1020,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 110,
-    "stations45": 315
+    "stations15": 25,
+    "stations30": 103,
+    "stations45": 328
   },
   "prevSlug": "bolnicka-gospodska",
   "nextSlug": "borcec"

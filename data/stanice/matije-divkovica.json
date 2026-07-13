@@ -12,7 +12,7 @@
     "136"
   ],
   "firstDeparture": "5:06",
-  "lastDeparture": "0:01",
+  "lastDeparture": "23:41",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 16.6,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     }
   ],
   "neighbors": [
@@ -329,9 +329,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 127,
-    "stations45": 274
+    "stations15": 21,
+    "stations30": 108,
+    "stations45": 238
   },
   "prevSlug": "maticki",
   "nextSlug": "matije-gupca"

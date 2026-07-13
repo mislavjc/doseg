@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-24T00:00:00.000Z",
+  "generatedAt": "2026-07-13T00:00:00.000Z",
   "serviceDates": {
-    "radniDan": "2026-06-30",
-    "subota": "2026-07-04",
-    "nedjelja": "2026-07-05"
+    "radniDan": "2026-07-14",
+    "subota": "2026-07-18",
+    "nedjelja": "2026-07-19"
   },
   "lines": [
     {
@@ -26,9 +26,9 @@
         "Črnomerec",
         "Savišće"
       ],
-      "dailyDepartures": 199,
-      "peakHeadwayMin": 10.4,
-      "avgHeadwayMin": 11.6
+      "dailyDepartures": 236,
+      "peakHeadwayMin": 8.6,
+      "avgHeadwayMin": 10.0
     },
     {
       "broj": "3",
@@ -38,9 +38,9 @@
         "Ljubljanica",
         "Savišće"
       ],
-      "dailyDepartures": 136,
-      "peakHeadwayMin": 16.6,
-      "avgHeadwayMin": 17.3
+      "dailyDepartures": 130,
+      "peakHeadwayMin": 17.5,
+      "avgHeadwayMin": 18.1
     },
     {
       "broj": "4",
@@ -62,9 +62,9 @@
         "Prečko",
         "Park Maksimir"
       ],
-      "dailyDepartures": 194,
-      "peakHeadwayMin": 11.3,
-      "avgHeadwayMin": 12.3
+      "dailyDepartures": 204,
+      "peakHeadwayMin": 11.2,
+      "avgHeadwayMin": 11.6
     },
     {
       "broj": "6",
@@ -74,9 +74,9 @@
         "Črnomerec",
         "Sopot"
       ],
-      "dailyDepartures": 230,
-      "peakHeadwayMin": 9.0,
-      "avgHeadwayMin": 10.3
+      "dailyDepartures": 277,
+      "peakHeadwayMin": 7.7,
+      "avgHeadwayMin": 8.5
     },
     {
       "broj": "7",
@@ -86,9 +86,9 @@
         "Savski most",
         "Dubrava"
       ],
-      "dailyDepartures": 220,
-      "peakHeadwayMin": 9.4,
-      "avgHeadwayMin": 10.7
+      "dailyDepartures": 208,
+      "peakHeadwayMin": 10.1,
+      "avgHeadwayMin": 11.3
     },
     {
       "broj": "8",
@@ -144,11 +144,11 @@
       "isNight": false,
       "terminals": [
         "Žitnjak",
-        "Kvat. trg"
+        "Spr.Dubrava"
       ],
-      "dailyDepartures": 161,
-      "peakHeadwayMin": 13.1,
-      "avgHeadwayMin": 14.2
+      "dailyDepartures": 0,
+      "peakHeadwayMin": null,
+      "avgHeadwayMin": null
     },
     {
       "broj": "14",
@@ -158,7 +158,7 @@
         "Mihaljevac",
         "Zapruđe"
       ],
-      "dailyDepartures": 219,
+      "dailyDepartures": 217,
       "peakHeadwayMin": 9.9,
       "avgHeadwayMin": 10.7
     },
@@ -170,7 +170,7 @@
         "Mihaljevac",
         "Grač. dolje"
       ],
-      "dailyDepartures": 200,
+      "dailyDepartures": 198,
       "peakHeadwayMin": 11.5,
       "avgHeadwayMin": 11.5
     },
@@ -626,9 +626,9 @@
         "Savski most",
         "Čehi"
       ],
-      "dailyDepartures": 66,
-      "peakHeadwayMin": 24.0,
-      "avgHeadwayMin": 27.6
+      "dailyDepartures": 59,
+      "peakHeadwayMin": 26.7,
+      "avgHeadwayMin": 31.3
     },
     {
       "broj": "134",
@@ -662,9 +662,9 @@
         "Črnomerec",
         "Špansko"
       ],
-      "dailyDepartures": 140,
-      "peakHeadwayMin": 16.7,
-      "avgHeadwayMin": 16.4
+      "dailyDepartures": 100,
+      "peakHeadwayMin": 22.5,
+      "avgHeadwayMin": 22.8
     },
     {
       "broj": "137",
@@ -1022,7 +1022,7 @@
         "Kvaternikov trg",
         "Kvat. trg"
       ],
-      "dailyDepartures": 25,
+      "dailyDepartures": 9,
       "peakHeadwayMin": 50.0,
       "avgHeadwayMin": 45.0
     },
@@ -1190,9 +1190,9 @@
         "Gl.kolodvor",
         "Borovje"
       ],
-      "dailyDepartures": 78,
-      "peakHeadwayMin": 25.0,
-      "avgHeadwayMin": 28.9
+      "dailyDepartures": 46,
+      "peakHeadwayMin": 50.0,
+      "avgHeadwayMin": 50.0
     },
     {
       "broj": "219",
@@ -1214,9 +1214,9 @@
         "Gl.kolodvor",
         "Dugave"
       ],
-      "dailyDepartures": 168,
-      "peakHeadwayMin": 14.1,
-      "avgHeadwayMin": 15.3
+      "dailyDepartures": 152,
+      "peakHeadwayMin": 15.0,
+      "avgHeadwayMin": 17.0
     },
     {
       "broj": "221",
@@ -1226,9 +1226,9 @@
         "Gl.kolodvor",
         "Travno"
       ],
-      "dailyDepartures": 178,
-      "peakHeadwayMin": 11.1,
-      "avgHeadwayMin": 13.2
+      "dailyDepartures": 150,
+      "peakHeadwayMin": 14.0,
+      "avgHeadwayMin": 15.7
     },
     {
       "broj": "222",
@@ -1298,9 +1298,9 @@
         "Svetice",
         "Grač. dolje"
       ],
-      "dailyDepartures": 130,
-      "peakHeadwayMin": 16.5,
-      "avgHeadwayMin": 18.2
+      "dailyDepartures": 108,
+      "peakHeadwayMin": 22.0,
+      "avgHeadwayMin": 22.0
     },
     {
       "broj": "228",
@@ -1430,9 +1430,9 @@
         "Kaptol",
         "Kozjak"
       ],
-      "dailyDepartures": 34,
-      "peakHeadwayMin": 52.5,
-      "avgHeadwayMin": 52.2
+      "dailyDepartures": 18,
+      "peakHeadwayMin": 40.0,
+      "avgHeadwayMin": 81.3
     },
     {
       "broj": "239",
@@ -1562,9 +1562,9 @@
         "Borongaj",
         "Ses.Kraljev."
       ],
-      "dailyDepartures": 136,
-      "peakHeadwayMin": 15.4,
-      "avgHeadwayMin": 17.5
+      "dailyDepartures": 113,
+      "peakHeadwayMin": 20.6,
+      "avgHeadwayMin": 20.8
     },
     {
       "broj": "270",

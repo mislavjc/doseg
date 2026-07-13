@@ -36,9 +36,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 84.6
+      "allDayHeadwayMin": 84.2
     },
     {
       "broj": "241",
@@ -844,8 +844,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 102,
-    "stations45": 301
+    "stations30": 93,
+    "stations45": 314
   },
   "prevSlug": "buzin-novi-zagreb-istok",
   "nextSlug": "cakovica"

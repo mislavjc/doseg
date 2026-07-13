@@ -13,7 +13,7 @@
     "315"
   ],
   "firstDeparture": "5:02",
-  "lastDeparture": "23:53",
+  "lastDeparture": "23:54",
   "directionGroups": 1,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.8,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
         20,
-        26
+        30
       ],
-      "allDayHeadwayMin": 27.6
+      "allDayHeadwayMin": 31.3
     },
     {
       "broj": "315",
@@ -600,8 +600,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 42,
-    "stations45": 105
+    "stations30": 24,
+    "stations45": 31
   },
   "prevSlug": "cehi-drustveni-dom",
   "nextSlug": "celici"

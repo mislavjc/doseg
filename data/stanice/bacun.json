@@ -405,9 +405,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 42,
-    "stations45": 110
+    "stations15": 10,
+    "stations30": 32,
+    "stations45": 91
   },
   "prevSlug": "avenija-g-suska-mup",
   "nextSlug": "badaliceva"

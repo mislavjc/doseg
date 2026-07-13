@@ -38,12 +38,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.3,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
+        15,
         15
       ],
-      "allDayHeadwayMin": 15.2
+      "allDayHeadwayMin": 16.8
     },
     {
       "broj": "295",
@@ -363,9 +363,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 14,
+    "stations30": 50,
+    "stations45": 192
   },
   "prevSlug": "katarinin-trg",
   "nextSlug": "kazaliste-tresnja"

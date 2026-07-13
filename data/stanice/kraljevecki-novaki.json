@@ -12,8 +12,8 @@
     "269",
     "278"
   ],
-  "firstDeparture": "4:40",
-  "lastDeparture": "1:10",
+  "firstDeparture": "4:36",
+  "lastDeparture": "1:11",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "278",
@@ -230,9 +230,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 58,
-    "stations45": 158
+    "stations15": 6,
+    "stations30": 30,
+    "stations45": 102
   },
   "prevSlug": "kraljevecka-cesta",
   "nextSlug": "kralji-brezovica"

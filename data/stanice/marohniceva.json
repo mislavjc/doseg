@@ -374,9 +374,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 150,
-    "stations45": 393
+    "stations15": 13,
+    "stations30": 143,
+    "stations45": 380
   },
   "prevSlug": "markusevecka-trnava",
   "nextSlug": "masiceva"

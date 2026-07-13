@@ -23,12 +23,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     },
     {
       "broj": "146",
@@ -762,9 +762,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 120,
-    "stations45": 271
+    "stations15": 23,
+    "stations30": 157,
+    "stations45": 360
   },
   "prevSlug": "hunjka",
   "nextSlug": "i-gardijske-brigade"

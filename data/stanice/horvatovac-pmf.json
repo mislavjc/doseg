@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "5:26",
-  "lastDeparture": "23:26",
+  "firstDeparture": "7:36",
+  "lastDeparture": "13:36",
   "directionGroups": 1,
   "lines": [
     {
@@ -559,8 +559,8 @@
   },
   "reach": {
     "stations15": 23,
-    "stations30": 95,
-    "stations45": 308
+    "stations30": 96,
+    "stations45": 298
   },
   "prevSlug": "horvatovac-40",
   "nextSlug": "horvatovac-trgovina"

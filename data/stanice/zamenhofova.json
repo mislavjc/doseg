@@ -550,9 +550,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 175,
-    "stations45": 484
+    "stations15": 16,
+    "stations30": 148,
+    "stations45": 465
   },
   "prevSlug": "zagrepcanka",
   "nextSlug": "zapadni-kolodvor"

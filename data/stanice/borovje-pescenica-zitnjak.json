@@ -22,12 +22,9 @@
       "headsign": "Glavni kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
-      "peakRangeMin": [
-        25,
-        25
-      ],
-      "allDayHeadwayMin": 28.9
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
     }
   ],
   "neighbors": [
@@ -441,9 +438,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 94,
-    "stations45": 315
+    "stations15": 14,
+    "stations30": 87,
+    "stations45": 312
   },
   "prevSlug": "borovina",
   "nextSlug": "borovje-trnje"

@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -899,8 +897,6 @@
           "lon": 15.97956,
           "offsetMin": 22,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -2387,14 +2383,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "7",
         "stopName": "Žarka Dolinara"
       },
@@ -2411,7 +2399,7 @@
   "prevBroj": "233",
   "nextBroj": "235",
   "reach": {
-    "areaKm2": 38.7,
+    "areaKm2": 39.2,
     "stopName": "Trnsko",
     "lat": 45.77733,
     "lon": 15.96449

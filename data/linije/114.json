@@ -17,8 +17,8 @@
       "stops": [
         {
           "name": "Ljubljanica",
-          "lat": 45.79618,
-          "lon": 15.93669,
+          "lat": 45.79616,
+          "lon": 15.93677,
           "offsetMin": 0,
           "tramInterchange": [
             "1",
@@ -106,8 +106,8 @@
       ],
       "shape": [
         [
-          15.93668,
-          45.79618
+          15.93669,
+          45.79615
         ],
         [
           15.93686,
@@ -336,8 +336,8 @@
       "stops": [
         {
           "name": "Prečko-terminal",
-          "lat": 45.79499,
-          "lon": 15.89969,
+          "lat": 45.79488,
+          "lon": 15.89965,
           "offsetMin": 0,
           "tramInterchange": [
             "5",
@@ -394,8 +394,8 @@
       ],
       "shape": [
         [
-          15.89967,
-          45.79499
+          15.89971,
+          45.79511
         ],
         [
           15.89977,
@@ -709,7 +709,7 @@
   "prevBroj": "113",
   "nextBroj": "115",
   "reach": {
-    "areaKm2": 28.2,
+    "areaKm2": 28.0,
     "stopName": "Zagrebačka",
     "lat": 45.79555,
     "lon": 15.90809

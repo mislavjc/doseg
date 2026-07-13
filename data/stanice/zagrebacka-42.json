@@ -449,12 +449,8 @@
         "mode": "bus",
         "shape": [
           [
-            16.07727,
-            45.71162
-          ],
-          [
-            16.07718,
-            45.71178
+            16.07757,
+            45.71231
           ],
           [
             16.07777,
@@ -530,8 +526,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 39,
-    "stations45": 135
+    "stations30": 37,
+    "stations45": 126
   },
   "prevSlug": "zagrebacka-103",
   "nextSlug": "zagrebacka-94"

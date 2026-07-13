@@ -22,12 +22,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     }
   ],
   "neighbors": [
@@ -638,8 +638,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 44,
-    "stations45": 119
+    "stations30": 38,
+    "stations45": 96
   },
   "prevSlug": "cret",
   "nextSlug": "cret-melinisce"

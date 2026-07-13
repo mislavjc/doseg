@@ -32,8 +32,8 @@
   ],
   "neighbors": [
     {
-      "name": "HNK2 - Adžijina",
-      "slug": "hnk2-adzijina"
+      "name": "HNK 2 - Adžijina",
+      "slug": "hnk-2-adzijina"
     }
   ],
   "hero": {
@@ -166,8 +166,8 @@
   },
   "reach": {
     "stations15": 39,
-    "stations30": 233,
-    "stations45": 561
+    "stations30": 232,
+    "stations45": 555
   },
   "prevSlug": "trg-lovre-matacica",
   "nextSlug": "trg-p-kresimira"

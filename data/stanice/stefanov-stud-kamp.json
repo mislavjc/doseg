@@ -14,7 +14,7 @@
     "269"
   ],
   "firstDeparture": "4:47",
-  "lastDeparture": "1:32",
+  "lastDeparture": "1:34",
   "directionGroups": 2,
   "lines": [
     {
@@ -46,12 +46,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -718,8 +718,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 108,
-    "stations45": 307
+    "stations30": 73,
+    "stations45": 273
   },
   "prevSlug": "staro-okretiste-brezovica-2",
   "nextSlug": "stefanovec-114"

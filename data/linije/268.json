@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 4,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -171,8 +169,8 @@
         },
         {
           "name": "Velika Gorica",
-          "lat": 45.71142,
-          "lon": 16.07693,
+          "lat": 45.7123,
+          "lon": 16.0776,
           "offsetMin": 31,
           "tramInterchange": []
         }
@@ -697,6 +695,22 @@
         [
           16.07724,
           45.71146
+        ],
+        [
+          16.07723,
+          45.71152
+        ],
+        [
+          16.07722,
+          45.71157
+        ],
+        [
+          16.07722,
+          45.71163
+        ],
+        [
+          16.07723,
+          45.71169
         ]
       ]
     },
@@ -852,8 +866,6 @@
           "lon": 15.97956,
           "offsetMin": 27,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -2998,14 +3010,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "7",
         "stopName": "Muzej suv.umjetnosti"
       },
@@ -3022,7 +3026,7 @@
   "prevBroj": "267",
   "nextBroj": "269",
   "reach": {
-    "areaKm2": 36.7,
+    "areaKm2": 35.5,
     "stopName": "Odra",
     "lat": 45.74277,
     "lon": 15.99972

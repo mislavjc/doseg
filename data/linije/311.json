@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1016,8 +1014,6 @@
           "lon": 15.97956,
           "offsetMin": 42,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1028,7 +1024,9 @@
           "offsetMin": 44,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "9",
             "13"
@@ -2031,14 +2029,6 @@
       }
     ],
     "tramCrossings": [
-      {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
       {
         "broj": "7",
         "stopName": "Muzej suv.umjetnosti"

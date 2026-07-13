@@ -1508,9 +1508,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 192,
-    "stations45": 489
+    "stations15": 43,
+    "stations30": 265,
+    "stations45": 541
   },
   "prevSlug": "rebro-5",
   "nextSlug": "remete-128"

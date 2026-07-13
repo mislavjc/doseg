@@ -2,8 +2,8 @@
   "slug": "velika-gorica",
   "name": "Velika Gorica",
   "kvart": null,
-  "lat": 45.71146,
-  "lon": 16.07706,
+  "lat": 45.71194,
+  "lon": 16.0774,
   "mode": "bus",
   "bothDirections": true,
   "lineCount": 4,
@@ -84,10 +84,10 @@
   ],
   "hero": {
     "bbox": [
-      16.075,
-      45.71002,
-      16.07913,
-      45.71291
+      16.07533,
+      45.7105,
+      16.07946,
+      45.71338
     ],
     "lines": [
       {
@@ -487,6 +487,22 @@
           [
             16.07724,
             45.71146
+          ],
+          [
+            16.07723,
+            45.71152
+          ],
+          [
+            16.07722,
+            45.71157
+          ],
+          [
+            16.07722,
+            45.71163
+          ],
+          [
+            16.07723,
+            45.71169
           ]
         ]
       }
@@ -495,7 +511,7 @@
   "reach": {
     "stations15": 5,
     "stations30": 21,
-    "stations45": 55
+    "stations45": 50
   },
   "prevSlug": "velesajam",
   "nextSlug": "velika-kosnica"

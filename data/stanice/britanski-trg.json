@@ -30,12 +30,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        9,
-        9
+        8,
+        8
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.5
     },
     {
       "broj": "11",
@@ -2174,9 +2174,9 @@
     ]
   },
   "reach": {
-    "stations15": 42,
-    "stations30": 195,
-    "stations45": 499
+    "stations15": 41,
+    "stations30": 235,
+    "stations45": 522
   },
   "prevSlug": "brezovicka-ekonomija",
   "nextSlug": "brod-kunticeva"

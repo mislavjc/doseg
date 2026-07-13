@@ -23,12 +23,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.8,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
         20,
-        26
+        30
       ],
-      "allDayHeadwayMin": 27.6
+      "allDayHeadwayMin": 31.3
     },
     {
       "broj": "315",
@@ -461,7 +461,7 @@
   "reach": {
     "stations15": 3,
     "stations30": 17,
-    "stations45": 29
+    "stations45": 17
   },
   "prevSlug": "lucko-centar-novi-zagreb-zapad-2",
   "nextSlug": "lukav-put-za-dubra"

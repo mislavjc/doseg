@@ -327,8 +327,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 42,
-    "stations45": 137
+    "stations30": 40,
+    "stations45": 128
   },
   "prevSlug": "ulica-platana",
   "nextSlug": "utrina"

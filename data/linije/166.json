@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1134,8 +1132,6 @@
           "lon": 15.97956,
           "offsetMin": 35,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1146,7 +1142,9 @@
           "offsetMin": 37,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "9",
             "13"
@@ -2300,14 +2298,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "7",
         "stopName": "Muzej suv.umjetnosti"
       },
@@ -2324,7 +2314,7 @@
   "prevBroj": "164",
   "nextBroj": "168",
   "reach": {
-    "areaKm2": 36.5,
+    "areaKm2": 35.2,
     "stopName": "Odra-nadvožnjak",
     "lat": 45.73941,
     "lon": 16.00595

@@ -11,8 +11,8 @@
     "2"
   ],
   "busLines": [],
-  "firstDeparture": "4:55",
-  "lastDeparture": "0:27",
+  "firstDeparture": "4:51",
+  "lastDeparture": "0:36",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     }
   ],
   "neighbors": [
@@ -477,9 +477,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 212,
-    "stations45": 516
+    "stations15": 45,
+    "stations30": 269,
+    "stations45": 561
   },
   "prevSlug": "talani",
   "nextSlug": "tehnicki-muzej"

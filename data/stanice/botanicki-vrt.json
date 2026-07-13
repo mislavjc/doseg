@@ -6,15 +6,17 @@
   "lon": 15.97391,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 6,
   "tramLines": [
     "2",
+    "3",
     "4",
+    "5",
     "9",
     "33"
   ],
   "busLines": [],
-  "firstDeparture": "4:35",
+  "firstDeparture": "4:19",
   "lastDeparture": "1:02",
   "directionGroups": 2,
   "lines": [
@@ -25,12 +27,26 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
+    },
+    {
+      "broj": "3",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Savišće",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 17.6,
+      "peakRangeMin": [
+        18,
+        18
+      ],
+      "allDayHeadwayMin": 18.1
     },
     {
       "broj": "4",
@@ -45,6 +61,20 @@
         11
       ],
       "allDayHeadwayMin": 12.3
+    },
+    {
+      "broj": "5",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Park Maksimir",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 10.8,
+      "peakRangeMin": [
+        11,
+        11
+      ],
+      "allDayHeadwayMin": 11.6
     },
     {
       "broj": "9",
@@ -529,6 +559,44 @@
         ]
       },
       {
+        "broj": "3",
+        "mode": "tram",
+        "shape": [
+          [
+            15.95931,
+            45.8017
+          ],
+          [
+            15.96431,
+            45.80333
+          ],
+          [
+            15.96764,
+            45.80536
+          ],
+          [
+            15.97366,
+            45.80562
+          ],
+          [
+            15.97928,
+            45.80521
+          ],
+          [
+            15.98377,
+            45.80544
+          ],
+          [
+            15.99198,
+            45.80614
+          ],
+          [
+            15.99392,
+            45.80373
+          ]
+        ]
+      },
+      {
         "broj": "4",
         "mode": "tram",
         "shape": [
@@ -823,6 +891,56 @@
           [
             15.95993,
             45.79612
+          ]
+        ]
+      },
+      {
+        "broj": "5",
+        "mode": "tram",
+        "shape": [
+          [
+            15.96088,
+            45.79734
+          ],
+          [
+            15.96284,
+            45.8001
+          ],
+          [
+            15.96468,
+            45.80295
+          ],
+          [
+            15.96764,
+            45.80536
+          ],
+          [
+            15.97366,
+            45.80562
+          ],
+          [
+            15.97928,
+            45.80521
+          ],
+          [
+            15.98377,
+            45.80544
+          ],
+          [
+            15.98373,
+            45.80822
+          ],
+          [
+            15.98373,
+            45.81041
+          ],
+          [
+            15.9835,
+            45.81335
+          ],
+          [
+            15.98676,
+            45.81373
           ]
         ]
       },
@@ -1261,9 +1379,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 204,
-    "stations45": 527
+    "stations15": 44,
+    "stations30": 241,
+    "stations45": 568
   },
   "prevSlug": "bosanska",
   "nextSlug": "botinec"

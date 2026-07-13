@@ -488,7 +488,8 @@
             "4",
             "7",
             "11",
-            "12"
+            "12",
+            "13"
           ]
         }
       ],
@@ -1485,6 +1486,12 @@
         "terminal": "Dubrava"
       },
       {
+        "broj": "13",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Dubrava"
+      },
+      {
         "broj": "205",
         "mode": "bus",
         "isNight": false,
@@ -1544,7 +1551,7 @@
   "prevBroj": "231",
   "nextBroj": "233",
   "reach": {
-    "areaKm2": 14.3,
+    "areaKm2": 15.1,
     "stopName": "Avenija G.Šuška-MUP",
     "lat": 45.83916,
     "lon": 16.0319

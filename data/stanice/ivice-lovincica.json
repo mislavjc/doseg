@@ -70,9 +70,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 64,
-    "stations45": 170
+    "stations15": 9,
+    "stations30": 36,
+    "stations45": 114
   },
   "prevSlug": "iver",
   "nextSlug": "jablanovac"

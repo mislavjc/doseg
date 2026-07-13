@@ -22,10 +22,10 @@
       "headsign": "Glavni kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 47.5,
+      "peakHeadwayMin": 45.0,
       "peakRangeMin": [
-        46,
-        49
+        45,
+        45
       ],
       "allDayHeadwayMin": 45.2
     }
@@ -222,8 +222,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 102,
-    "stations45": 301
+    "stations30": 93,
+    "stations45": 314
   },
   "prevSlug": "sljemenska",
   "nextSlug": "slovenska"

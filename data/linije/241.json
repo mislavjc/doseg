@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -766,8 +764,6 @@
           "lon": 15.97956,
           "offsetMin": 23,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -2104,14 +2100,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "7",
         "stopName": "Muzej suv.umjetnosti"
       },
@@ -2128,7 +2116,7 @@
   "prevBroj": "239",
   "nextBroj": "242",
   "reach": {
-    "areaKm2": 29.7,
+    "areaKm2": 28.4,
     "stopName": "Bolšićeva",
     "lat": 45.76352,
     "lon": 15.99061

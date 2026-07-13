@@ -20,8 +20,6 @@
           "lon": 15.99828,
           "offsetMin": 0,
           "tramInterchange": [
-            "5",
-            "7",
             "13"
           ]
         },
@@ -659,11 +657,8 @@
     0,
     0,
     0,
-    1,
-    2,
-    1,
-    1,
-    2,
+    0,
+    0,
     1,
     1,
     2,
@@ -671,30 +666,20 @@
     1,
     2,
     1,
-    1,
-    2,
-    1,
-    1,
-    2,
-    1,
-    1
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   ],
   "timetable": {
     "radniDan": [
       [
-        {
-          "hour": 5,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            5,
-            50
-          ]
-        },
         {
           "hour": 7,
           "minutes": [
@@ -737,69 +722,6 @@
           "hour": 13,
           "minutes": [
             30
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            5,
-            50
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            5,
-            50
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            5,
-            50
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            35
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            20
           ]
         }
       ]
@@ -928,15 +850,15 @@
   "prevBroj": "203",
   "nextBroj": "205",
   "reach": {
-    "areaKm2": 15.0,
+    "areaKm2": 15.6,
     "stopName": "Bijenička",
     "lat": 45.82461,
     "lon": 15.98491
   },
   "stats": {
-    "dailyDepartures": 25,
-    "firstDeparture": "05:20",
-    "lastDeparture": "23:20",
+    "dailyDepartures": 9,
+    "firstDeparture": "07:30",
+    "lastDeparture": "13:30",
     "peakHeadwayMin": 50.0,
     "avgHeadwayMin": 45.0,
     "travelTimeMin": 18.5,

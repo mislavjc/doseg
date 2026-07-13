@@ -709,9 +709,9 @@
     ]
   },
   "reach": {
-    "stations15": 40,
-    "stations30": 143,
-    "stations45": 397
+    "stations15": 36,
+    "stations30": 132,
+    "stations45": 374
   },
   "prevSlug": "senscak-ii-odvojak",
   "nextSlug": "sercerova-84"

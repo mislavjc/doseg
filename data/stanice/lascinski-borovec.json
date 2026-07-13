@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -632,8 +632,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 92,
-    "stations45": 287
+    "stations30": 90,
+    "stations45": 294
   },
   "prevSlug": "laniste",
   "nextSlug": "laskocica-2"

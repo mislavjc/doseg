@@ -85,9 +85,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 120,
-    "stations45": 365
+    "stations15": 25,
+    "stations30": 126,
+    "stations45": 386
   },
   "prevSlug": "vrhovec-233",
   "nextSlug": "vucak-podsused-vrapce"

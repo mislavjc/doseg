@@ -37,12 +37,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.6,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        13,
+        15,
         15
       ],
-      "allDayHeadwayMin": 15.3
+      "allDayHeadwayMin": 17.0
     }
   ],
   "neighbors": [
@@ -410,9 +410,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 102,
-    "stations45": 301
+    "stations15": 22,
+    "stations30": 93,
+    "stations45": 314
   },
   "prevSlug": "144-brigade-lj-posav",
   "nextSlug": "adamovec-centar"

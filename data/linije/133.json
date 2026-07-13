@@ -777,98 +777,98 @@
           "name": "Čehi - društveni dom",
           "lat": 45.74265,
           "lon": 15.95767,
-          "offsetMin": 1,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
           "name": "Čorova",
           "lat": 45.74634,
           "lon": 15.9602,
-          "offsetMin": 2,
+          "offsetMin": 3,
           "tramInterchange": []
         },
         {
           "name": "Remetinečkih žrtava",
           "lat": 45.75077,
           "lon": 15.96028,
-          "offsetMin": 3,
+          "offsetMin": 4,
           "tramInterchange": []
         },
         {
           "name": "Čehi-nadvožnjak",
           "lat": 45.74968,
           "lon": 15.966,
-          "offsetMin": 3,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Mrkšina-raskrižje",
           "lat": 45.75496,
           "lon": 15.96283,
-          "offsetMin": 5,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Mrkšina 67C",
           "lat": 45.75416,
           "lon": 15.96788,
-          "offsetMin": 5,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Mrkšina 65-crkva",
           "lat": 45.75607,
           "lon": 15.97023,
-          "offsetMin": 6,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Mrkšina",
           "lat": 45.75844,
           "lon": 15.9728,
-          "offsetMin": 7,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Čavoglavska",
           "lat": 45.76226,
           "lon": 15.96774,
-          "offsetMin": 9,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Franje Malnara",
           "lat": 45.76513,
           "lon": 15.96315,
-          "offsetMin": 10,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Lukoranska",
           "lat": 45.76764,
           "lon": 15.95602,
-          "offsetMin": 11,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Savski gaj XII.",
           "lat": 45.77208,
           "lon": 15.9516,
-          "offsetMin": 13,
+          "offsetMin": 16,
           "tramInterchange": []
         },
         {
           "name": "Remetinečka os.škola",
           "lat": 45.7749,
           "lon": 15.95331,
-          "offsetMin": 14,
+          "offsetMin": 17,
           "tramInterchange": []
         },
         {
           "name": "Savski most",
           "lat": 45.78585,
           "lon": 15.95284,
-          "offsetMin": 18,
+          "offsetMin": 22,
           "tramInterchange": [
             "4",
             "5",
@@ -1402,25 +1402,25 @@
     0,
     0,
     0,
-    3,
-    6,
+    2,
     5,
+    4,
+    2,
+    2,
     3,
+    3,
+    5,
     4,
     3,
     3,
     3,
     4,
-    5,
-    5,
-    5,
-    3,
-    3,
-    3,
+    4,
+    4,
     2,
     2,
-    1,
-    3
+    2,
+    2
   ],
   "timetable": {
     "radniDan": [
@@ -1428,8 +1428,8 @@
         {
           "hour": 5,
           "minutes": [
-            0,
-            45
+            5,
+            40
           ]
         },
         {
@@ -1437,26 +1437,45 @@
           "minutes": [
             0,
             20,
-            40
+            50
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            25,
-            45
+            10,
+            40
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            5,
-            35
+            0,
+            30
           ]
         },
         {
           "hour": 9,
+          "minutes": [
+            30
+          ]
+        },
+        {
+          "hour": 10,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 12,
           "minutes": [
             0,
             30,
@@ -1464,89 +1483,65 @@
           ]
         },
         {
-          "hour": 10,
-          "minutes": [
-            25,
-            50
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            15,
-            45
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            15,
-            40
-          ]
-        },
-        {
           "hour": 13,
           "minutes": [
-            5,
-            35,
+            25,
             50
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5,
-            25,
-            50
+            10,
+            40
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            25,
-            45
+            10,
+            35
           ]
         },
         {
           "hour": 16,
           "minutes": [
             0,
-            25,
-            45
+            30
           ]
         },
         {
           "hour": 17,
           "minutes": [
             0,
-            35
+            35,
+            50
           ]
         },
         {
           "hour": 18,
           "minutes": [
             0,
-            35
+            40
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15,
-            55
+            10,
+            45
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            45
+            35
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            40
+            25
           ]
         },
         {
@@ -1558,87 +1553,73 @@
         {
           "hour": 23,
           "minutes": [
-            25
+            20
           ]
         }
       ],
       [
         {
-          "hour": 5,
-          "minutes": [
-            35
-          ]
-        },
-        {
           "hour": 6,
           "minutes": [
-            15,
-            30,
+            25,
             45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            5,
-            25
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            30
+            10,
+            35
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            25
+            0
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            20
+            0
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            45
+            0
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            40
+            0,
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            30
+            0,
+            50
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            30
+            40
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            30
+            35
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
-            30
+            55
           ]
         },
         {
@@ -1650,31 +1631,38 @@
         {
           "hour": 18,
           "minutes": [
+            0,
             25
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            40
+            10,
+            35
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            20
+            10
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            10
+            0
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            55
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            0,
             50
           ]
         }
@@ -2205,17 +2193,17 @@
   "prevBroj": "132",
   "nextBroj": "134",
   "reach": {
-    "areaKm2": 14.2,
+    "areaKm2": 26.3,
     "stopName": "Mrkšina 67C",
     "lat": 45.75371,
     "lon": 15.96718
   },
   "stats": {
-    "dailyDepartures": 66,
-    "firstDeparture": "05:00",
-    "lastDeparture": "23:25",
-    "peakHeadwayMin": 24.0,
-    "avgHeadwayMin": 27.6,
+    "dailyDepartures": 59,
+    "firstDeparture": "05:05",
+    "lastDeparture": "23:20",
+    "peakHeadwayMin": 26.7,
+    "avgHeadwayMin": 31.3,
     "travelTimeMin": 18.2,
     "distanceKm": 9.2
   }

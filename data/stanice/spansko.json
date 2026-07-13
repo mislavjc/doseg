@@ -37,12 +37,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.6,
+      "peakHeadwayMin": 22.4,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     }
   ],
   "neighbors": [
@@ -416,7 +416,7 @@
   "reach": {
     "stations15": 20,
     "stations30": 66,
-    "stations45": 204
+    "stations45": 197
   },
   "prevSlug": "sostarici",
   "nextSlug": "sportski-centar-novi-zagreb-zapad"

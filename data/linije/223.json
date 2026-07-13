@@ -1910,6 +1910,12 @@
         "terminal": "Dubrava"
       },
       {
+        "broj": "13",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Dubrava"
+      },
+      {
         "broj": "34",
         "mode": "tram",
         "isNight": true,

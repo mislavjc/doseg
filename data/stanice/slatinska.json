@@ -3,7 +3,7 @@
   "name": "Slatinska",
   "kvart": "Sesvete",
   "lat": 45.82477,
-  "lon": 16.10099,
+  "lon": 16.10097,
   "mode": "bus",
   "bothDirections": false,
   "lineCount": 3,
@@ -13,7 +13,7 @@
     "282",
     "284"
   ],
-  "firstDeparture": "4:40",
+  "firstDeparture": "4:41",
   "lastDeparture": "23:50",
   "directionGroups": 1,
   "lines": [
@@ -66,9 +66,9 @@
   ],
   "hero": {
     "bbox": [
-      16.09892,
+      16.0989,
       45.82333,
-      16.10306,
+      16.10304,
       45.82621
     ],
     "lines": [
@@ -77,11 +77,11 @@
         "mode": "bus",
         "shape": [
           [
-            16.10546,
-            45.82439
+            16.10548,
+            45.82441
           ],
           [
-            16.10099,
+            16.10097,
             45.82477
           ],
           [
@@ -99,11 +99,11 @@
         "mode": "bus",
         "shape": [
           [
-            16.10546,
-            45.82439
+            16.10548,
+            45.82441
           ],
           [
-            16.10099,
+            16.10097,
             45.82477
           ],
           [
@@ -129,11 +129,11 @@
         "mode": "bus",
         "shape": [
           [
-            16.10546,
-            45.82439
+            16.10548,
+            45.82441
           ],
           [
-            16.10099,
+            16.10097,
             45.82477
           ],
           [
@@ -149,9 +149,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 89,
-    "stations45": 211
+    "stations15": 23,
+    "stations30": 74,
+    "stations45": 204
   },
   "prevSlug": "slanovecka-skola",
   "nextSlug": "slavenskog-stenjevec"

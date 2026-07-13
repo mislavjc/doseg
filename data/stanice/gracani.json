@@ -11,7 +11,7 @@
     "15"
   ],
   "busLines": [],
-  "firstDeparture": "4:32",
+  "firstDeparture": "4:44",
   "lastDeparture": "23:34",
   "directionGroups": 2,
   "lines": [
@@ -202,8 +202,8 @@
   },
   "reach": {
     "stations15": 9,
-    "stations30": 51,
-    "stations45": 195
+    "stations30": 41,
+    "stations45": 185
   },
   "prevSlug": "grac-mihaljevac",
   "nextSlug": "gracanska-10"

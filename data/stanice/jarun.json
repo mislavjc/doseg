@@ -258,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 96,
-    "stations45": 333
+    "stations15": 12,
+    "stations30": 80,
+    "stations45": 302
   },
   "prevSlug": "jarek",
   "nextSlug": "jarun-zapad"

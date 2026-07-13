@@ -1391,6 +1391,12 @@
         "terminal": "Dubrava"
       },
       {
+        "broj": "13",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Dubrava"
+      },
+      {
         "broj": "205",
         "mode": "bus",
         "isNight": false,

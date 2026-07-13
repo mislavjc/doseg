@@ -12,7 +12,7 @@
     "166",
     "229"
   ],
-  "firstDeparture": "4:47",
+  "firstDeparture": "4:42",
   "lastDeparture": "0:07",
   "directionGroups": 2,
   "lines": [
@@ -758,7 +758,7 @@
   "reach": {
     "stations15": 8,
     "stations30": 27,
-    "stations45": 62
+    "stations45": 61
   },
   "prevSlug": "d-bistra-centar",
   "nextSlug": "dankovecka"

@@ -7,7 +7,7 @@
     "Trg žrt.fašizma"
   ],
   "via": [
-    "Tehnički muzej",
+    "Vodnikova",
     "Branimir centar"
   ],
   "oneWay": false,
@@ -79,6 +79,7 @@
             "1",
             "3",
             "4",
+            "5",
             "12",
             "13",
             "14",
@@ -93,7 +94,9 @@
           "tramInterchange": [
             "1",
             "2",
+            "3",
             "4",
+            "5",
             "12",
             "13",
             "14",
@@ -107,7 +110,9 @@
           "offsetMin": 15,
           "tramInterchange": [
             "2",
-            "4"
+            "3",
+            "4",
+            "5"
           ]
         },
         {
@@ -117,7 +122,9 @@
           "offsetMin": 18,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "13"
           ]
@@ -129,8 +136,11 @@
           "offsetMin": 19,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
+            "7",
             "8",
             "13"
           ]
@@ -142,7 +152,10 @@
           "offsetMin": 22,
           "tramInterchange": [
             "4",
-            "8"
+            "5",
+            "7",
+            "8",
+            "13"
           ]
         },
         {
@@ -152,6 +165,7 @@
           "offsetMin": 23,
           "tramInterchange": [
             "1",
+            "13",
             "17"
           ]
         }
@@ -217,6 +231,7 @@
           "offsetMin": 0,
           "tramInterchange": [
             "1",
+            "13",
             "17"
           ]
         },
@@ -227,7 +242,10 @@
           "offsetMin": 3,
           "tramInterchange": [
             "4",
-            "8"
+            "5",
+            "7",
+            "8",
+            "13"
           ]
         },
         {
@@ -237,7 +255,9 @@
           "offsetMin": 6,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "13"
           ]
@@ -249,7 +269,9 @@
           "offsetMin": 9,
           "tramInterchange": [
             "2",
-            "4"
+            "3",
+            "4",
+            "5"
           ]
         },
         {
@@ -260,7 +282,9 @@
           "tramInterchange": [
             "1",
             "2",
+            "3",
             "4",
+            "5",
             "12",
             "13",
             "14",
@@ -276,6 +300,7 @@
             "1",
             "3",
             "4",
+            "5",
             "12",
             "13",
             "14",
@@ -1800,8 +1825,16 @@
         "stopName": "Tehnički muzej"
       },
       {
+        "broj": "5",
+        "stopName": "Tehnički muzej"
+      },
+      {
         "broj": "6",
         "stopName": "Glavni kolodvor"
+      },
+      {
+        "broj": "7",
+        "stopName": "Branimir centar"
       },
       {
         "broj": "8",
@@ -1828,7 +1861,7 @@
   "prevBroj": "8",
   "nextBroj": "11",
   "reach": {
-    "areaKm2": 42.1,
+    "areaKm2": 42.2,
     "stopName": "Vodnikova",
     "lat": 45.80536,
     "lon": 15.96764

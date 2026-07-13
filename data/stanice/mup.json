@@ -153,12 +153,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     },
     {
       "broj": "137",
@@ -2746,9 +2746,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 176,
-    "stations45": 381
+    "stations15": 42,
+    "stations30": 182,
+    "stations45": 382
   },
   "prevSlug": "munja",
   "nextSlug": "muzej-grada-zagreba"

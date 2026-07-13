@@ -153,12 +153,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        23
       ],
-      "allDayHeadwayMin": 16.4
+      "allDayHeadwayMin": 22.8
     },
     {
       "broj": "137",
@@ -1971,8 +1971,8 @@
   },
   "reach": {
     "stations15": 26,
-    "stations30": 181,
-    "stations45": 402
+    "stations30": 175,
+    "stations45": 394
   },
   "prevSlug": "kusevacka",
   "nextSlug": "kustosijski-venec"

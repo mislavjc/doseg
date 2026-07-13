@@ -22,12 +22,9 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
-      "peakRangeMin": [
-        25,
-        25
-      ],
-      "allDayHeadwayMin": 28.9
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
     }
   ],
   "neighbors": [
@@ -325,9 +322,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 112,
-    "stations45": 364
+    "stations15": 17,
+    "stations30": 105,
+    "stations45": 360
   },
   "prevSlug": "lastovska",
   "nextSlug": "lekneno-i"

@@ -22,12 +22,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     }
   ],
   "neighbors": [
@@ -417,9 +417,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 45,
-    "stations45": 136
+    "stations15": 8,
+    "stations30": 25,
+    "stations45": 78
   },
   "prevSlug": "vidovec-trgovina",
   "nextSlug": "vijenac"

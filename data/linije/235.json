@@ -24,7 +24,8 @@
             "4",
             "7",
             "11",
-            "12"
+            "12",
+            "13"
           ]
         },
         {
@@ -1008,7 +1009,8 @@
             "4",
             "7",
             "11",
-            "12"
+            "12",
+            "13"
           ]
         }
       ],
@@ -2275,6 +2277,12 @@
         "terminal": "Dubrava"
       },
       {
+        "broj": "13",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Dubrava"
+      },
+      {
         "broj": "205",
         "mode": "bus",
         "isNight": false,
@@ -2363,7 +2371,7 @@
   "prevBroj": "234",
   "nextBroj": "236",
   "reach": {
-    "areaKm2": 7.6,
+    "areaKm2": 7.7,
     "stopName": "Čulinečka 119",
     "lat": 45.81396,
     "lon": 16.06615

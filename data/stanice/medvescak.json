@@ -84,7 +84,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -678,9 +678,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 215,
-    "stations45": 547
+    "stations15": 43,
+    "stations30": 223,
+    "stations45": 563
   },
   "prevSlug": "medpotoki-30",
   "nextSlug": "meglajci"

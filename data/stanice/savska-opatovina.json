@@ -669,9 +669,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 115,
-    "stations45": 373
+    "stations15": 23,
+    "stations30": 114,
+    "stations45": 380
   },
   "prevSlug": "savska-metro",
   "nextSlug": "savski-gaj"

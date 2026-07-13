@@ -12,7 +12,7 @@
     "269"
   ],
   "firstDeparture": "5:19",
-  "lastDeparture": "23:59",
+  "lastDeparture": "23:44",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Ses.Kraljev.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 18.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.5
+      "allDayHeadwayMin": 20.8
     }
   ],
   "neighbors": [
@@ -146,8 +146,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 12,
-    "stations45": 54
+    "stations30": 8,
+    "stations45": 19
   },
   "prevSlug": "misevecka",
   "nextSlug": "mlinarska"

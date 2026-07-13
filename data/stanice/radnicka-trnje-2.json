@@ -455,9 +455,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 201,
-    "stations45": 450
+    "stations15": 29,
+    "stations30": 205,
+    "stations45": 453
   },
   "prevSlug": "radnicka-trnje",
   "nextSlug": "rakusina"

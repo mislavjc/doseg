@@ -689,14 +689,14 @@
           "name": "Sesvetski Kraljevec",
           "lat": 45.81841,
           "lon": 16.16916,
-          "offsetMin": 5,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
           "name": "Kobiljak 69",
           "lat": 45.82238,
           "lon": 16.15954,
-          "offsetMin": 7,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
@@ -710,7 +710,7 @@
           "name": "Kraljevečki Novaki",
           "lat": 45.82571,
           "lon": 16.14341,
-          "offsetMin": 10,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
@@ -724,14 +724,14 @@
           "name": "Blage Zadre",
           "lat": 45.82398,
           "lon": 16.12472,
-          "offsetMin": 14,
+          "offsetMin": 15,
           "tramInterchange": []
         },
         {
           "name": "Vladimira Nazora",
           "lat": 45.82508,
           "lon": 16.11644,
-          "offsetMin": 16,
+          "offsetMin": 17,
           "tramInterchange": []
         },
         {
@@ -755,14 +755,14 @@
           "name": "Osječka",
           "lat": 45.8196,
           "lon": 16.05399,
-          "offsetMin": 30,
+          "offsetMin": 33,
           "tramInterchange": []
         },
         {
           "name": "Štefanov.-Stud.kamp.",
           "lat": 45.81849,
           "lon": 16.0475,
-          "offsetMin": 33,
+          "offsetMin": 34,
           "tramInterchange": []
         },
         {
@@ -1369,29 +1369,29 @@
     45.82832
   ],
   "histogram": [
-    1,
+    0,
     1,
     0,
     0,
     2,
-    6,
-    8,
-    8,
+    7,
+    7,
+    7,
+    5,
+    4,
+    4,
+    5,
+    7,
+    7,
+    7,
+    7,
     8,
     7,
     6,
+    4,
     6,
-    6,
-    8,
-    9,
-    8,
-    8,
-    8,
-    8,
-    7,
-    6,
-    6,
-    6,
+    5,
+    4,
     3
   ],
   "timetable": {
@@ -1406,160 +1406,149 @@
         {
           "hour": 5,
           "minutes": [
-            30,
-            50
+            20,
+            37,
+            54
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            11,
+            28,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            2,
+            19,
+            36,
+            53
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            5,
-            20,
-            35,
-            53
+            15,
+            45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            13,
-            33,
-            54
+            15,
+            45
           ]
         },
         {
           "hour": 10,
           "minutes": [
             15,
-            35,
-            55
+            46
           ]
         },
         {
           "hour": 11,
           "minutes": [
             15,
-            35,
-            55
+            45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            30,
-            45
+            2,
+            18,
+            35,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            7,
+            24,
+            40,
+            57
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            1,
-            17,
-            31,
-            45,
-            59
+            12,
+            29,
+            46
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            12,
-            23,
-            35,
-            50
+            2,
+            19,
+            34,
+            51
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            8,
+            25,
+            45,
+            56
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            13,
+            30,
+            46
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            5,
-            20,
-            35,
-            52
+            10,
+            32,
+            54
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            10,
-            30,
-            50
+            16,
+            38
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            10,
-            30,
-            50
+            0,
+            22,
+            45
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            10,
-            30,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            10,
-            30,
-            50
+            15,
+            35
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            30
+            15
           ]
         }
       ],
@@ -1567,7 +1556,7 @@
         {
           "hour": 4,
           "minutes": [
-            30
+            25
           ]
         },
         {
@@ -1582,161 +1571,144 @@
         {
           "hour": 6,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            2,
+            19,
+            36,
+            53
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            10,
+            27,
+            44
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            1,
+            18,
+            35
           ]
         },
         {
           "hour": 9,
           "minutes": [
             0,
-            15,
-            33,
-            53
+            30
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            13,
-            34,
-            55
+            0,
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            35,
+            0,
+            30,
             55
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            35,
-            53
+            25,
+            43,
+            59
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            7,
-            23,
-            40,
-            55
+            16,
+            31,
+            48
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            10,
-            25,
-            40,
-            56
+            5,
+            21,
+            38,
+            53
           ]
         },
         {
           "hour": 15,
           "minutes": [
             10,
-            25,
-            40,
-            55
+            27,
+            43
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            10,
-            25,
-            40,
-            55
+            0,
+            15,
+            32,
+            49
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            10,
+            5,
             25,
-            40,
-            55
+            37,
+            54
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            10,
-            25,
-            40,
-            52
+            11,
+            30,
+            54
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            5,
-            18,
-            33,
-            52
+            16,
+            38
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            10,
-            30,
-            50
+            0,
+            22,
+            44
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            10,
+            6,
             30,
-            50
+            55
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            10,
             30,
-            50
+            55
           ]
         },
         {
           "hour": 23,
           "minutes": [
             10,
-            35
-          ]
-        },
-        {
-          "hour": 24,
-          "minutes": [
-            5
+            55
           ]
         },
         {
@@ -2350,17 +2322,17 @@
   "prevBroj": "268",
   "nextBroj": "270",
   "reach": {
-    "areaKm2": 13.7,
+    "areaKm2": 9.8,
     "stopName": "Sesvetska Sela",
     "lat": 45.82372,
     "lon": 16.13189
   },
   "stats": {
-    "dailyDepartures": 136,
+    "dailyDepartures": 113,
     "firstDeparture": "04:50",
-    "lastDeparture": "23:30",
-    "peakHeadwayMin": 15.4,
-    "avgHeadwayMin": 17.5,
+    "lastDeparture": "23:15",
+    "peakHeadwayMin": 20.6,
+    "avgHeadwayMin": 20.8,
     "travelTimeMin": 30.5,
     "distanceKm": 14.9
   }

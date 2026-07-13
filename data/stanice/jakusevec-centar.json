@@ -450,8 +450,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 32,
-    "stations45": 124
+    "stations30": 24,
+    "stations45": 109
   },
   "prevSlug": "jagiceva",
   "nextSlug": "jakusevec-groblje"

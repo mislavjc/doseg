@@ -22,12 +22,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     }
   ],
   "neighbors": [
@@ -662,8 +662,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 31,
-    "stations45": 101
+    "stations30": 25,
+    "stations45": 78
   },
   "prevSlug": "jazbina-166",
   "nextSlug": "jazbina-71"

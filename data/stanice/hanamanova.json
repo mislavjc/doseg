@@ -322,9 +322,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 108,
-    "stations45": 394
+    "stations15": 22,
+    "stations30": 100,
+    "stations45": 395
   },
   "prevSlug": "hammova",
   "nextSlug": "harabajsi"

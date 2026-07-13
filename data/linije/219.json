@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -483,8 +481,6 @@
           "lon": 15.97956,
           "offsetMin": 12,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -822,8 +818,6 @@
     2,
     2,
     3,
-    2,
-    3,
     3,
     2,
     3,
@@ -833,9 +827,11 @@
     3,
     2,
     3,
+    2,
     3,
     3,
     2,
+    3,
     3,
     3,
     2
@@ -865,45 +861,45 @@
         {
           "hour": 7,
           "minutes": [
-            40
+            35
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            10,
-            55
+            5,
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            40
+            35
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            10,
-            55
+            5,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            40
+            35
           ]
         },
         {
@@ -915,7 +911,7 @@
         {
           "hour": 15,
           "minutes": [
-            5,
+            10,
             50
           ]
         },
@@ -934,20 +930,20 @@
         {
           "hour": 18,
           "minutes": [
-            5,
-            50
+            10,
+            55
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            35
+            40
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            20
+            25
           ]
         },
         {
@@ -992,58 +988,58 @@
         {
           "hour": 7,
           "minutes": [
-            10
+            10,
+            55
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
-            45
+            40
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15
+            10,
+            55
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            0,
-            45
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15
+            10,
+            55
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            25
+            30
           ]
         },
         {
@@ -1056,26 +1052,26 @@
           "hour": 17,
           "minutes": [
             0,
-            40
+            45
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            25
+            30
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            10,
-            55
+            15
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            40
+            0,
+            45
           ]
         },
         {
@@ -1209,14 +1205,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "6",
         "stopName": "Sopot"
       },
@@ -1237,7 +1225,7 @@
   "prevBroj": "218",
   "nextBroj": "220",
   "reach": {
-    "areaKm2": 33.3,
+    "areaKm2": 32.5,
     "stopName": "Sopot",
     "lat": 45.77762,
     "lon": 15.98654

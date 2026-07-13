@@ -12,8 +12,8 @@
     "269",
     "278"
   ],
-  "firstDeparture": "4:43",
-  "lastDeparture": "1:13",
+  "firstDeparture": "4:39",
+  "lastDeparture": "1:14",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "278",
@@ -242,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 57,
-    "stations45": 162
+    "stations15": 8,
+    "stations30": 29,
+    "stations45": 106
   },
   "prevSlug": "sesvete-ukrcaj-sesvete-2",
   "nextSlug": "sesvetski-kraljevec"

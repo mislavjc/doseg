@@ -52,12 +52,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     }
   ],
   "neighbors": [
@@ -587,9 +587,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 147,
-    "stations45": 388
+    "stations15": 24,
+    "stations30": 126,
+    "stations45": 402
   },
   "prevSlug": "prigornica-sjever",
   "nextSlug": "prilesje-suma"

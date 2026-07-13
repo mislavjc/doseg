@@ -74,12 +74,9 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
-      "peakRangeMin": [
-        25,
-        25
-      ],
-      "allDayHeadwayMin": 28.9
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
     },
     {
       "broj": "219",
@@ -99,12 +96,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.9,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        12,
-        14
+        15,
+        15
       ],
-      "allDayHeadwayMin": 15.2
+      "allDayHeadwayMin": 16.8
     },
     {
       "broj": "221",
@@ -113,12 +110,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.1,
+      "peakHeadwayMin": 13.9,
       "peakRangeMin": [
-        10,
-        12
+        13,
+        15
       ],
-      "allDayHeadwayMin": 13.2
+      "allDayHeadwayMin": 15.7
     },
     {
       "broj": "229",
@@ -2182,9 +2179,9 @@
     ]
   },
   "reach": {
-    "stations15": 47,
-    "stations30": 211,
-    "stations45": 531
+    "stations15": 36,
+    "stations30": 197,
+    "stations45": 496
   },
   "prevSlug": "muzej-suv-umjetnosti",
   "nextSlug": "nabrezje"

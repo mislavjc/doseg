@@ -266,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 22,
-    "stations45": 99
+    "stations15": 10,
+    "stations30": 28,
+    "stations45": 105
   },
   "prevSlug": "sopnicka-37",
   "nextSlug": "sopnicka-skola"

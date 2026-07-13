@@ -261,9 +261,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 120,
-    "stations45": 389
+    "stations15": 21,
+    "stations30": 114,
+    "stations45": 396
   },
   "prevSlug": "lisinski",
   "nextSlug": "lj-posav-rimski-put"

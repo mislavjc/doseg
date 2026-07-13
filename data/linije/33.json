@@ -84,6 +84,8 @@
           "tramInterchange": [
             "1",
             "4",
+            "5",
+            "7",
             "8",
             "11",
             "12",
@@ -98,6 +100,8 @@
           "offsetMin": 12,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8"
           ]
         },
@@ -108,8 +112,11 @@
           "offsetMin": 13,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8",
-            "9"
+            "9",
+            "13"
           ]
         },
         {
@@ -119,7 +126,9 @@
           "offsetMin": 15,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "9",
             "13"
@@ -132,7 +141,9 @@
           "offsetMin": 16,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "9"
           ]
         },
@@ -144,7 +155,9 @@
           "tramInterchange": [
             "1",
             "2",
+            "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -161,6 +174,7 @@
             "1",
             "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -174,7 +188,6 @@
           "lon": 15.96322,
           "offsetMin": 20,
           "tramInterchange": [
-            "3",
             "4",
             "5",
             "13",
@@ -188,8 +201,6 @@
           "lon": 15.96766,
           "offsetMin": 21,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -199,8 +210,6 @@
           "lon": 15.97116,
           "offsetMin": 22,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -210,8 +219,6 @@
           "lon": 15.97546,
           "offsetMin": 23,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -221,8 +228,6 @@
           "lon": 15.98015,
           "offsetMin": 24,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -232,8 +237,6 @@
           "lon": 15.98493,
           "offsetMin": 26,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -243,8 +246,6 @@
           "lon": 15.98889,
           "offsetMin": 27,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -256,7 +257,6 @@
           "tramInterchange": [
             "2",
             "3",
-            "5",
             "6",
             "7",
             "8",
@@ -1152,7 +1152,6 @@
           "tramInterchange": [
             "2",
             "3",
-            "5",
             "6",
             "7",
             "8",
@@ -1165,8 +1164,6 @@
           "lon": 15.98958,
           "offsetMin": 16,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1176,8 +1173,6 @@
           "lon": 15.98542,
           "offsetMin": 17,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1187,8 +1182,6 @@
           "lon": 15.97787,
           "offsetMin": 19,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1198,8 +1191,6 @@
           "lon": 15.97372,
           "offsetMin": 20,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1209,8 +1200,6 @@
           "lon": 15.96935,
           "offsetMin": 21,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1220,7 +1209,6 @@
           "lon": 15.96284,
           "offsetMin": 23,
           "tramInterchange": [
-            "3",
             "4",
             "5",
             "13",
@@ -1237,6 +1225,7 @@
             "1",
             "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -1252,7 +1241,9 @@
           "tramInterchange": [
             "1",
             "2",
+            "3",
             "4",
+            "5",
             "9",
             "12",
             "13",
@@ -1267,7 +1258,9 @@
           "offsetMin": 27,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "9"
           ]
         },
@@ -1278,7 +1271,9 @@
           "offsetMin": 29,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
             "9",
             "13"
@@ -1291,8 +1286,11 @@
           "offsetMin": 30,
           "tramInterchange": [
             "2",
+            "3",
             "4",
+            "5",
             "6",
+            "7",
             "8",
             "9",
             "13"
@@ -1305,8 +1303,11 @@
           "offsetMin": 31,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8",
-            "9"
+            "9",
+            "13"
           ]
         },
         {
@@ -1317,6 +1318,8 @@
           "tramInterchange": [
             "1",
             "4",
+            "5",
+            "7",
             "8",
             "17"
           ]
@@ -1328,6 +1331,8 @@
           "offsetMin": 33,
           "tramInterchange": [
             "4",
+            "5",
+            "7",
             "8",
             "11",
             "12",
@@ -2334,7 +2339,7 @@
       },
       {
         "broj": "3",
-        "stopName": "Studentski centar"
+        "stopName": "Glavni kolodvor"
       },
       {
         "broj": "4",
@@ -2342,7 +2347,7 @@
       },
       {
         "broj": "5",
-        "stopName": "Zagrepčanka"
+        "stopName": "Draškovićeva"
       },
       {
         "broj": "6",
@@ -2350,7 +2355,7 @@
       },
       {
         "broj": "7",
-        "stopName": "Držićeva"
+        "stopName": "Draškovićeva"
       },
       {
         "broj": "8",
@@ -2370,7 +2375,7 @@
       },
       {
         "broj": "13",
-        "stopName": "Glavni kolodvor"
+        "stopName": "Sheraton"
       },
       {
         "broj": "14",
@@ -2385,7 +2390,7 @@
   "prevBroj": "32",
   "nextBroj": "34",
   "reach": {
-    "areaKm2": 42.0,
+    "areaKm2": 34.9,
     "stopName": "Lisinski",
     "lat": 45.80029,
     "lon": 15.98015

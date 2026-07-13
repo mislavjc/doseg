@@ -96,7 +96,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -1845,8 +1845,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 130,
-    "stations45": 381
+    "stations30": 138,
+    "stations45": 421
   },
   "prevSlug": "bidrovecka-36",
   "nextSlug": "bijenicka-134"

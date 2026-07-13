@@ -14,7 +14,7 @@
     "269"
   ],
   "firstDeparture": "4:46",
-  "lastDeparture": "1:29",
+  "lastDeparture": "1:32",
   "directionGroups": 2,
   "lines": [
     {
@@ -46,12 +46,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -1122,8 +1122,8 @@
   },
   "reach": {
     "stations15": 12,
-    "stations30": 105,
-    "stations45": 289
+    "stations30": 70,
+    "stations45": 253
   },
   "prevSlug": "os-pantovcak",
   "nextSlug": "otok"

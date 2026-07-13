@@ -22,12 +22,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 23.8,
+      "peakHeadwayMin": 47.5,
       "peakRangeMin": [
-        24,
-        25
+        46,
+        49
       ],
-      "allDayHeadwayMin": 28.9
+      "allDayHeadwayMin": 50.0
     }
   ],
   "neighbors": [
@@ -285,9 +285,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 97,
-    "stations45": 315
+    "stations15": 21,
+    "stations30": 95,
+    "stations45": 314
   },
   "prevSlug": "ulica-crnomerec-46",
   "nextSlug": "ulica-kaktusa"

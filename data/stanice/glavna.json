@@ -166,9 +166,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 57,
-    "stations45": 162
+    "stations15": 8,
+    "stations30": 29,
+    "stations45": 106
   },
   "prevSlug": "gimn-l-vranjanin",
   "nextSlug": "glavni-kolodvor"

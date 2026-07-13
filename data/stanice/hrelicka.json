@@ -37,12 +37,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.6,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        13,
+        15,
         15
       ],
-      "allDayHeadwayMin": 15.3
+      "allDayHeadwayMin": 17.0
     }
   ],
   "neighbors": [
@@ -406,9 +406,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 102,
-    "stations45": 313
+    "stations15": 14,
+    "stations30": 55,
+    "stations45": 199
   },
   "prevSlug": "hrastovicka",
   "nextSlug": "hrgovici"

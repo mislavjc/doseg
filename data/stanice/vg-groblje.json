@@ -447,12 +447,8 @@
         "mode": "bus",
         "shape": [
           [
-            16.07727,
-            45.71162
-          ],
-          [
-            16.07718,
-            45.71178
+            16.07757,
+            45.71231
           ],
           [
             16.07777,
@@ -536,8 +532,8 @@
   },
   "reach": {
     "stations15": 18,
-    "stations30": 41,
-    "stations45": 137
+    "stations30": 39,
+    "stations45": 128
   },
   "prevSlug": "veterinarski-f",
   "nextSlug": "vicebani-mataki"

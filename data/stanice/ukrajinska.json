@@ -22,12 +22,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 13.8,
       "peakRangeMin": [
-        10,
-        12
+        13,
+        14
       ],
-      "allDayHeadwayMin": 13.2
+      "allDayHeadwayMin": 15.7
     }
   ],
   "neighbors": [
@@ -289,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 87,
-    "stations45": 289
+    "stations15": 24,
+    "stations30": 116,
+    "stations45": 338
   },
   "prevSlug": "ujeviceva",
   "nextSlug": "ul-kaktusa-34"

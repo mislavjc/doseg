@@ -21,7 +21,8 @@
             "4",
             "7",
             "11",
-            "12"
+            "12",
+            "13"
           ]
         },
         {
@@ -650,7 +651,8 @@
             "4",
             "7",
             "11",
-            "12"
+            "12",
+            "13"
           ]
         }
       ],
@@ -1923,6 +1925,12 @@
       },
       {
         "broj": "12",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Dubrava"
+      },
+      {
+        "broj": "13",
         "mode": "tram",
         "isNight": false,
         "terminal": "Dubrava"

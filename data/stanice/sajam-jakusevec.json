@@ -98,8 +98,8 @@
   },
   "reach": {
     "stations15": 5,
-    "stations30": 31,
-    "stations45": 125
+    "stations30": 25,
+    "stations45": 110
   },
   "prevSlug": "safrani",
   "nextSlug": "samoborska"

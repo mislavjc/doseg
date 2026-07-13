@@ -3,21 +3,23 @@
   "name": "Branim. tržnica",
   "kvart": "Donji grad",
   "lat": 45.80614,
-  "lon": 15.99171,
+  "lon": 15.99169,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 5,
+  "lineCount": 7,
   "tramLines": [
     "2",
+    "3",
     "6",
+    "7",
     "8",
     "13",
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:39",
-  "lastDeparture": "0:49",
-  "directionGroups": 3,
+  "firstDeparture": "4:16",
+  "lastDeparture": "0:51",
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "2",
@@ -26,12 +28,26 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
+    },
+    {
+      "broj": "3",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Savišće",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 17.7,
+      "peakRangeMin": [
+        18,
+        18
+      ],
+      "allDayHeadwayMin": 18.1
     },
     {
       "broj": "6",
@@ -40,12 +56,26 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.1,
+      "peakHeadwayMin": 7.8,
       "peakRangeMin": [
-        9,
-        9
+        8,
+        8
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.5
+    },
+    {
+      "broj": "7",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Dubrava",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 10.1,
+      "peakRangeMin": [
+        10,
+        10
+      ],
+      "allDayHeadwayMin": 11.3
     },
     {
       "broj": "8",
@@ -65,15 +95,12 @@
       "broj": "13",
       "mode": "tram",
       "isNight": false,
-      "headsign": "Kvat. trg",
+      "headsign": "Žitnjak",
       "isLoop": false,
-      "bothDirections": true,
-      "peakHeadwayMin": 13.8,
-      "peakRangeMin": [
-        13,
-        14
-      ],
-      "allDayHeadwayMin": 14.2
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": null
     },
     {
       "broj": "31",
@@ -107,9 +134,9 @@
   ],
   "hero": {
     "bbox": [
-      15.98964,
+      15.98962,
       45.80469,
-      15.99378,
+      15.99376,
       45.80758
     ],
     "lines": [
@@ -428,6 +455,48 @@
         ]
       },
       {
+        "broj": "3",
+        "mode": "tram",
+        "shape": [
+          [
+            15.97366,
+            45.80562
+          ],
+          [
+            15.97928,
+            45.80521
+          ],
+          [
+            15.98377,
+            45.80544
+          ],
+          [
+            15.99198,
+            45.80614
+          ],
+          [
+            15.99392,
+            45.80373
+          ],
+          [
+            15.99643,
+            45.80113
+          ],
+          [
+            15.99984,
+            45.80132
+          ],
+          [
+            16.00393,
+            45.80152
+          ],
+          [
+            16.01051,
+            45.80231
+          ]
+        ]
+      },
+      {
         "broj": "6",
         "mode": "tram",
         "shape": [
@@ -722,6 +791,60 @@
         ]
       },
       {
+        "broj": "7",
+        "mode": "tram",
+        "shape": [
+          [
+            15.99889,
+            45.79662
+          ],
+          [
+            15.99496,
+            45.80197
+          ],
+          [
+            15.99364,
+            45.80439
+          ],
+          [
+            15.99144,
+            45.80613
+          ],
+          [
+            15.98445,
+            45.80557
+          ],
+          [
+            15.98373,
+            45.80822
+          ],
+          [
+            15.98373,
+            45.81041
+          ],
+          [
+            15.9835,
+            45.81335
+          ],
+          [
+            15.98676,
+            45.81373
+          ],
+          [
+            15.9917,
+            45.81384
+          ],
+          [
+            15.99592,
+            45.81458
+          ],
+          [
+            16.00354,
+            45.81659
+          ]
+        ]
+      },
+      {
         "broj": "8",
         "mode": "tram",
         "shape": [
@@ -972,40 +1095,40 @@
         "mode": "tram",
         "shape": [
           [
-            15.97727,
-            45.81286
+            15.99643,
+            45.81472
           ],
           [
-            15.97765,
-            45.80951
+            15.99479,
+            45.81227
           ],
           [
-            15.97928,
-            45.80521
-          ],
-          [
-            15.98377,
-            45.80544
-          ],
-          [
-            15.99198,
-            45.80614
+            15.99297,
+            45.81002
           ],
           [
             15.9917,
-            45.80811
+            45.80759
           ],
           [
-            15.99386,
-            45.81092
+            15.99144,
+            45.80613
           ],
           [
-            15.99653,
-            45.81406
+            15.98445,
+            45.80557
           ],
           [
-            15.99666,
-            45.81486
+            15.97846,
+            45.80524
+          ],
+          [
+            15.97783,
+            45.80917
+          ],
+          [
+            15.97653,
+            45.81307
           ]
         ]
       },
@@ -1307,8 +1430,8 @@
   },
   "reach": {
     "stations15": 44,
-    "stations30": 243,
-    "stations45": 590
+    "stations30": 233,
+    "stations45": 576
   },
   "prevSlug": "branim-skrnjugova",
   "nextSlug": "branim-zagrebacka"

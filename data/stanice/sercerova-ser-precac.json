@@ -709,9 +709,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 117,
-    "stations45": 371
+    "stations15": 22,
+    "stations30": 106,
+    "stations45": 355
   },
   "prevSlug": "sercerova-84",
   "nextSlug": "servisna-ina"

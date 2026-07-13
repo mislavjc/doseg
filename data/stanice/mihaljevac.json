@@ -19,7 +19,7 @@
     "140",
     "233"
   ],
-  "firstDeparture": "4:28",
+  "firstDeparture": "4:39",
   "lastDeparture": "1:35",
   "directionGroups": 2,
   "lines": [
@@ -1272,8 +1272,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 122,
-    "stations45": 303
+    "stations30": 116,
+    "stations45": 302
   },
   "prevSlug": "micevec-nadvoznjak",
   "nextSlug": "mihovci"

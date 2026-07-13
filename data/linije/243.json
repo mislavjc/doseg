@@ -28,8 +28,6 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -460,8 +458,6 @@
           "lon": 15.97956,
           "offsetMin": 8,
           "tramInterchange": [
-            "3",
-            "5",
             "13"
           ]
         },
@@ -1358,14 +1354,6 @@
     ],
     "tramCrossings": [
       {
-        "broj": "3",
-        "stopName": "Lisinski"
-      },
-      {
-        "broj": "5",
-        "stopName": "Lisinski"
-      },
-      {
         "broj": "13",
         "stopName": "Lisinski"
       }
@@ -1374,7 +1362,7 @@
   "prevBroj": "242",
   "nextBroj": "261",
   "reach": {
-    "areaKm2": 23.2,
+    "areaKm2": 24.0,
     "stopName": "Sportski centar",
     "lat": 45.78332,
     "lon": 15.97053

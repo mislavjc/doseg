@@ -28,7 +28,7 @@
     "283"
   ],
   "firstDeparture": "3:37",
-  "lastDeparture": "1:19",
+  "lastDeparture": "1:20",
   "directionGroups": 4,
   "lines": [
     {
@@ -121,12 +121,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "270",
@@ -3395,9 +3395,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 98,
-    "stations45": 217
+    "stations15": 34,
+    "stations30": 114,
+    "stations45": 234
   },
   "prevSlug": "bistricka-o-s",
   "nextSlug": "bizek"

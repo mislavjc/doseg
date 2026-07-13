@@ -473,8 +473,8 @@
   },
   "reach": {
     "stations15": 1,
-    "stations30": 20,
-    "stations45": 119
+    "stations30": 16,
+    "stations45": 108
   },
   "prevSlug": "sarajev-vatikanska",
   "nextSlug": "sasi-okretiste"

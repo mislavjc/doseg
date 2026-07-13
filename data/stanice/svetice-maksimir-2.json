@@ -53,12 +53,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        16,
-        17
+        22,
+        22
       ],
-      "allDayHeadwayMin": 18.2
+      "allDayHeadwayMin": 22.0
     },
     {
       "broj": "228",
@@ -1164,9 +1164,9 @@
     ]
   },
   "reach": {
-    "stations15": 51,
-    "stations30": 229,
-    "stations45": 517
+    "stations15": 46,
+    "stations30": 212,
+    "stations45": 518
   },
   "prevSlug": "svetice-maksimir",
   "nextSlug": "svetosimunska"

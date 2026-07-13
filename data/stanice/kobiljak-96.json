@@ -12,7 +12,7 @@
     "269"
   ],
   "firstDeparture": "5:14",
-  "lastDeparture": "23:54",
+  "lastDeparture": "23:39",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Ses.Kraljev.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 18.0,
       "peakRangeMin": [
-        15,
-        15
+        17,
+        17
       ],
-      "allDayHeadwayMin": 17.5
+      "allDayHeadwayMin": 20.8
     }
   ],
   "neighbors": [
@@ -157,9 +157,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 55,
-    "stations45": 158
+    "stations15": 5,
+    "stations30": 27,
+    "stations45": 102
   },
   "prevSlug": "kobiljak-69",
   "nextSlug": "kobiljak-trgovina"

@@ -84,7 +84,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 52.2
+      "allDayHeadwayMin": 81.3
     }
   ],
   "neighbors": [
@@ -1091,8 +1091,8 @@
   },
   "reach": {
     "stations15": 28,
-    "stations30": 129,
-    "stations45": 382
+    "stations30": 137,
+    "stations45": 434
   },
   "prevSlug": "rimski-put-bazen",
   "nextSlug": "roginina"

@@ -22,12 +22,9 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 25.0,
-      "peakRangeMin": [
-        25,
-        25
-      ],
-      "allDayHeadwayMin": 28.9
+      "peakHeadwayMin": 50.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 50.0
     }
   ],
   "neighbors": [
@@ -394,8 +391,8 @@
   },
   "reach": {
     "stations15": 7,
-    "stations30": 51,
-    "stations45": 222
+    "stations30": 61,
+    "stations45": 250
   },
   "prevSlug": "i-brlic-mazuranic",
   "nextSlug": "i-stefanov-zavoj"

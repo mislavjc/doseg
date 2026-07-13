@@ -70,9 +70,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 17,
-    "stations45": 71
+    "stations15": 8,
+    "stations30": 36,
+    "stations45": 114
   },
   "prevSlug": "farkasicka",
   "nextSlug": "ferenscica"

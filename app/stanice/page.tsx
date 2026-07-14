@@ -10,6 +10,8 @@ import type { StopIndexEntry } from "@/lib/generated/StopIndexEntry"
 import { loadStopIndex } from "@/lib/stop-data"
 
 import { plural } from "../linije/copy"
+import { LetterStrip } from "./letter-strip"
+import { firstLetter, HR_LETTERS, letterId, MIN_LINES } from "./letters"
 
 /**
  * /stanice — the hub for the stop pages, as an A–Ž directory (Paper "Imenik —
@@ -30,28 +32,6 @@ export const metadata: Metadata = {
   },
 }
 
-/** Stops below this many lines have pages but aren't promoted on the hub. */
-const MIN_LINES = 3
-
-/** Croatian collation order for the A–Ž buckets and strip. */
-const HR_LETTERS = [
-  "A", "B", "C", "Č", "Ć", "D", "Đ", "E", "F", "G", "H", "I", "J", "K", "L",
-  "M", "N", "O", "P", "R", "S", "Š", "T", "U", "V", "Z", "Ž",
-] as const
-
-/** ASCII anchor id for a (possibly diacritic) bucket letter. */
-const LETTER_SLUG: Record<string, string> = { "Č": "cc", "Ć": "cy", "Đ": "dj", "Š": "sh", "Ž": "zh" }
-function letterId(letter: string): string {
-  return `slovo-${LETTER_SLUG[letter] ?? (/^[A-Za-z]$/.test(letter) ? letter.toLowerCase() : "broj")}`
-}
-
-/** Bucket key for a stop name's first character (Croatian letters keep their own). */
-function firstLetter(name: string): string {
-  const c = [...name.trim()][0]?.toUpperCase() ?? "#"
-  if ((HR_LETTERS as readonly string[]).includes(c)) return c
-  if (/[0-9]/.test(c)) return "0-9"
-  return c
-}
 
 function StopRow({ stop }: { stop: StopIndexEntry }) {
   return (
@@ -149,23 +129,7 @@ export default function StaniceIndexPage() {
       <Section width="article" className="pb-0 sm:pb-0">
         <Eyebrow>sve stanice · {promoted.length}</Eyebrow>
         <Hook className="mt-4">Cijeli grad, po abecedi.</Hook>
-        <div className="mt-5 flex flex-wrap gap-x-3 gap-y-2">
-          {HR_LETTERS.map((L) =>
-            groups.has(L) ? (
-              <Link
-                key={L}
-                href={`#${letterId(L)}`}
-                className="font-mono text-label text-zg-blue transition-colors hover:text-navy"
-              >
-                {L}
-              </Link>
-            ) : (
-              <span key={L} className="font-mono text-label text-ink-ghost">
-                {L}
-              </span>
-            )
-          )}
-        </div>
+        <LetterStrip present={groups} className="mt-5" />
       </Section>
 
       <Section width="article" className="pt-4">

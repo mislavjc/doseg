@@ -3,9 +3,8 @@ import {
   IconArrowUp,
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import type { Metadata } from "next"
-import Link from "next/link"
 
-import { Breadcrumb, LineBadge } from "@/app/statistika/editorial/blocks"
+import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { Hero } from "@/app/statistika/editorial/hero"
 import { JsonLd } from "@/app/statistika/editorial/json-ld"
@@ -21,6 +20,7 @@ import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 import { loadLineIndex } from "@/lib/line-data"
 
 import { plural } from "./copy"
+import { LineRow } from "./line-row"
 
 export const metadata: Metadata = {
   title: "Sve ZET linije na jednom mjestu: vozni redovi i stanice | Doseg",
@@ -31,33 +31,6 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "/og.jpg", width: 1200, height: 630 }],
   },
-}
-
-/** Right-column fact for a row: peak headway, or daily departures. */
-function rowFact(line: LineIndexEntry): string {
-  const peak = line.peakHeadwayMin
-  if (peak && peak <= 60) return `svakih ${Math.round(peak)} min`
-  return `${line.dailyDepartures} pol. dnevno`
-}
-
-function LineRow({ line }: { line: LineIndexEntry }) {
-  return (
-    <li>
-      <Link
-        href={`/linije/${line.broj}`}
-        className="group flex items-center gap-3.5 border-b border-hairline py-2.5"
-      >
-        <LineBadge broj={line.broj} />
-        <span className="min-w-0 truncate font-heros text-[16px] leading-6 text-ink transition-colors group-hover:text-zg-blue">
-          {line.terminals[0]} - {line.terminals[1]}
-        </span>
-        <span className="h-3 min-w-3 flex-1 border-b border-dotted border-hairline-strong" />
-        <span className="shrink-0 font-mono text-label text-ink-muted">
-          {rowFact(line)}
-        </span>
-      </Link>
-    </li>
-  )
 }
 
 function LineGroup({

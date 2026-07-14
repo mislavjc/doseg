@@ -33,7 +33,7 @@ const COLUMNS: Column[] = [
   {
     label: "doseg",
     items: [
-      { t: "karta", href: "/" },
+      { t: "karta", href: "/karta" },
       { t: "podaci", href: "/statistika/podaci" },
       { t: "o projektu", href: "/o-projektu" },
       { t: "github", href: GITHUB, external: true },

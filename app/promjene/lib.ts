@@ -99,5 +99,4 @@ export const TALLY: Record<string, { label: string; one: string; color: string; 
   stajalište: { label: "stajališta", one: "stajalište", color: MUTE, order: 5 },
 }
 
-/** Diacritic-insensitive lowercase for the finder's substring match. */
-export const norm = (s: string) => s.toLowerCase().replace(/\u0111/g, "d").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+export { norm } from "@/lib/normalize"

@@ -417,7 +417,7 @@ export function DosegLink({ data }: { data: KvartData }) {
         tramvajem, busom i pješice u 15, 30 ili 45 minuta.
       </SectionHeader>
       <Link
-        href={`/?lat=${lat}&lon=${lon}`}
+        href={`/karta?lat=${lat}&lon=${lon}`}
         rel="nofollow"
         className="inline-flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
       >

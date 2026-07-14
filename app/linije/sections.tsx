@@ -176,7 +176,7 @@ export function frekvencijaCopy(data: LinePageData): {
 export function DosegLinije({ data }: { data: LinePageData }) {
   const reach = data.reach
   const stops = data.directions[0].stops.length
-  const mapHref = reach ? `/?lat=${reach.lat}&lon=${reach.lon}` : "/"
+  const mapHref = reach ? `/karta?lat=${reach.lat}&lon=${reach.lon}` : "/karta"
   return (
     <div>
       <SectionHeader

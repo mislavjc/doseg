@@ -426,7 +426,7 @@ export function ScoreRing({
 export function BackLink() {
   return (
     <Link
-      href="/"
+      href="/karta"
       className="mb-16 inline-flex items-center gap-2 text-[13px] font-medium text-[#a3a3a3] lowercase transition-colors duration-150 hover:text-[#171717]"
     >
       <svg

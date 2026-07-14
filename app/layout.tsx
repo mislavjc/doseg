@@ -72,7 +72,7 @@ const websiteJsonLd = {
   alternateName: "doseg.hr",
   url: "https://doseg.hr",
   description:
-    "Interaktivna karta dosega javnog prijevoza u Zagrebu. Pogledaj dokle možeš stići tramvajem i busom u 15, 30 ili 45 minuta.",
+    "Vozni red svake ZET linije, imenik svih stanica i dostupnost po kvartu. Uz interaktivnu kartu dosega javnog prijevoza u Zagrebu.",
   inLanguage: "hr",
 }
 

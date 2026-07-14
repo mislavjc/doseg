@@ -96,7 +96,7 @@ function TravelList({
         <span className="grow font-heros text-xs leading-4 text-ground">
           · &nbsp;{origin}
         </span>
-        <span className="font-mono text-xs text-ground/70">ovdje si</span>
+        <span className="font-mono text-xs text-ground/70">ovdje ste</span>
       </div>
       {dest.map((t, i) => {
         const active = hover === t.name
@@ -169,7 +169,7 @@ function Choropleth({
         })}
       </svg>
       <MonoLabel className="mt-2 block text-[11px]">
-        tamnije = bliže · ○ ovdje si
+        tamnije = bliže · ○ ovdje ste
       </MonoLabel>
     </div>
   )
@@ -217,7 +217,7 @@ export function Matrica({
     <Section id="matrica" width="wide">
       <div className="flex flex-col gap-6">
         <Eyebrow>matrica putovanja</Eyebrow>
-        <Hook>Koliko grada ti je nadohvat iz tvog kvarta?</Hook>
+        <Hook>Koliko grada vam je nadohvat iz vašeg kvarta?</Hook>
         <OriginPicker value={origin} options={districts} onChange={setOrigin} />
         <div className="flex flex-col gap-8 md:flex-row md:items-start">
           <TravelList

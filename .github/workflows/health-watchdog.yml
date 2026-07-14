@@ -1,0 +1,75 @@
+name: Health watchdog
+
+# Catches the two failure modes that have gone silent before:
+#  - a wedged GTFS-RT refresh loop (staleSec grew to ~5 days in Jul 2026
+#    with zero symptoms elsewhere), and
+#  - a rotting feed (runway shrinking because weekly rolls fail, e.g. the
+#    Jul 2026 OTP heap OOM that failed two Monday rolls in a row).
+# On any breach it fails the run AND opens/refreshes a GitHub issue, which
+# generates a notification even when Actions failure emails go unnoticed.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *" # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe isochrone health on server
+        id: probe
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 3m
+          script: |
+            set -euo pipefail
+            cd /opt/doseg
+            H="$(docker compose exec -T isochrone curl -sf --max-time 10 http://localhost:3001/health)"
+            echo "health: $H"
+            python3 - "$H" <<'PY'
+            import json, sys
+            h = json.loads(sys.argv[1])
+            errs = []
+            if h.get("status") != "ok":
+                errs.append(f"status={h.get('status')}")
+            feed = h.get("feed", {})
+            if feed.get("fallback"):
+                errs.append("isochrone is on the walk-only stale-feed fallback")
+            if (feed.get("runwayDays") or 0) < 14:
+                errs.append(f"feed runway {feed.get('runwayDays')}d < 14d - weekly rolls are probably failing")
+            rt = h.get("gtfsRt", {})
+            if (rt.get("staleSec") or 0) > 3600:
+                errs.append(f"GTFS-RT snapshot stale for {rt.get('staleSec')}s - refresh loop likely wedged (restart isochrone)")
+            if errs:
+                print("WATCHDOG BREACH: " + "; ".join(errs))
+                sys.exit(1)
+            print("watchdog: all green")
+            PY
+
+      - name: Probe public app health
+        run: |
+          curl -sf --max-time 15 https://doseg.hr/api/health | grep -q '"status":"ok"' \
+            || { echo "public /api/health not ok"; exit 1; }
+
+      - name: Open or refresh alert issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="Health watchdog: doseg.hr degraded"
+          BODY="Watchdog run failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Check the run log for which threshold tripped (RT staleness > 1h, feed runway < 14d, walk-only fallback, or public health check). Playbook: docker compose restart isochrone for a wedged RT loop; see .github/workflows/update-data.yml runs for failed feed rolls."
+          EXISTING=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$TITLE\" in:title" --json number -q '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body "$BODY"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
+          fi

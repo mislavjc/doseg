@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   update-gtfs:
@@ -163,3 +164,18 @@ jobs:
             --title "Refresh transit data (${{ steps.diff.outputs.date }})" \
             --body "Regenerated pSEO page data from the refreshed GTFS feed (last service ${{ steps.validate.outputs.last_date }}, ${{ steps.validate.outputs.trips }} trips). Validated by \`scripts/regen-data-gate.py\` (count floors + reach coverage). Review the diff, then merge to deploy." \
             || echo "No new commits to PR (schedule unchanged), or a PR is already open — skipping."
+
+      # Failed rolls have gone unnoticed for weeks (Jul 2026: two silent OTP
+      # OOMs). An issue generates a notification even when Actions failure
+      # emails are missed; the health watchdog catches the downstream symptom
+      # (shrinking runway), this catches the cause on the day it happens.
+      - name: Open issue on failed roll
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="Weekly data roll failed (${{ steps.diff.outputs.date || 'date unknown' }})"
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" \
+            --body "update-data run failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          The live site keeps serving the previous feed (refresh-gtfs.sh rolls back), but committed page data stops refreshing until this is fixed. Note: the rollback's stderr does not surface in the ssh-action log - 'containers Healthy then exit 1' means the FIRST compose up failed and what you see is the rollback succeeding."

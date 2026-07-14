@@ -1,4 +1,3 @@
-import Link from "next/link"
 import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import type { DistrictEmblems, computeBaseInsights, computeBajsInsights, computeBands } from "./stat-data"
 import { StatModuleTitle } from "./stat-typography"
@@ -34,7 +33,7 @@ export function DistrictBandsSection({
                 bandColor={band.color}
                 cityAvg={base.cityAvg}
                 bestDistrict={base.best.name}
-                mapLink={`/?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=08:00${d.bajsStations > 0 ? "&bajs=1" : ""}`}
+                mapLink={`/karta?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=08:00${d.bajsStations > 0 ? "&bajs=1" : ""}`}
               />
             ))}
           </div>

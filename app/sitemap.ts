@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // every build — blanket "modified today" reads as freshness spam on a
     // low-trust domain and wastes crawl budget on unchanged pages.
     { url: "https://doseg.hr", lastModified: linesUpdated },
+    { url: "https://doseg.hr/karta", lastModified: linesUpdated },
     { url: "https://doseg.hr/o-projektu", lastModified: linesUpdated },
     { url: "https://doseg.hr/statistika", lastModified: linesUpdated },
     { url: "https://doseg.hr/statistika/podaci", lastModified: linesUpdated },

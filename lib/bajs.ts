@@ -91,6 +91,18 @@ async function fetchJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>
 }
 
+/** The GBFS feed shouts station names ("TRATINSKA UL. - SAVSKA UL."); the
+ *  design system bans all-caps, so normalize once here for every consumer.
+ *  Capitalize words, keep abbreviations like "ul." lowercase, preserve
+ *  single-letter person initials ("R. Kolaka"). */
+function unshout(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[\p{L}\p{M}]+\.?/gu, (w) =>
+      w.length === 3 && w.endsWith(".") ? w : w[0].toUpperCase() + w.slice(1)
+    )
+}
+
 function bajsStationKey(stationId: string): string {
   return `bajs:${stationId}`
 }
@@ -127,7 +139,7 @@ async function loadBajsData(): Promise<BajsData> {
       key: bajsStationKey(stationInfo.station_id),
       stationId: stationInfo.station_id,
       shortName: stationInfo.short_name ?? "",
-      name: stationInfo.name,
+      name: unshout(stationInfo.name),
       lat: stationInfo.lat,
       lon: stationInfo.lon,
       capacity:

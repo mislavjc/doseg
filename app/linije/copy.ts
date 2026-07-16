@@ -78,6 +78,11 @@ const NUMBER_WORDS_F = NUMBER_WORDS.map((w, i) =>
   i === 1 ? "jedna" : i === 2 ? "dvije" : w
 )
 
+/** Capitalize the first letter — pairs with numberWordF at sentence starts. */
+export function cap(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 /** Feminine "jedna"/"dvije"/... — use for feminine nouns like "linija" and
  *  "stanica" (gluing the masculine "jedan linija"/"dva linije" reads broken). */
 export function numberWordF(n: number): string {

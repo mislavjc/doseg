@@ -1,3 +1,5 @@
+import { formatHrDate } from "@/lib/hr-date"
+
 import type { DistrictScore, ScoreData } from "../stat-data"
 import { fmtHR, fmtPop } from "../stat-data"
 
@@ -90,12 +92,7 @@ export function computePovezanost(data: ScoreData) {
     ds.reduce((s, d) => s + d.score * (d.population ?? 0), 0) /
       Math.max(totalPop, 1)
   )
-  // hr-HR renders day-month-year with trailing periods, e.g. "20. ožujka 2026.".
-  const updated = new Date(data.generatedAt).toLocaleDateString("hr-HR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  })
+  const updated = formatHrDate(data.generatedAt)
 
   return {
     rows,

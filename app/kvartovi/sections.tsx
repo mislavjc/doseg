@@ -1,9 +1,4 @@
-import {
-  IconArrowUpRight,
-  IconMedicalCross,
-  IconPark,
-  IconSchool,
-} from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import { IconArrowUpRight } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
 
 import {
@@ -18,6 +13,7 @@ import {
   JsonLd,
   breadcrumbJsonLd,
 } from "@/app/statistika/editorial/json-ld"
+import { PoiRow } from "@/app/statistika/editorial/poi"
 import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { HeroPicture } from "@/components/hero-picture"
@@ -436,18 +432,6 @@ const POI_LABEL: Record<KvartData["poi"][number]["key"], string> = {
   park: "Parkovi",
 }
 
-// Central icons (square-outlined-radius-0-stroke-2) match the locked icon system.
-const POI_ICON: Record<KvartData["poi"][number]["key"], typeof IconPark> = {
-  hospital: IconMedicalCross,
-  school: IconSchool,
-  park: IconPark,
-}
-
-function PoiIcon({ k }: { k: KvartData["poi"][number]["key"] }) {
-  const Icon = POI_ICON[k]
-  return <Icon size={22} className="shrink-0 text-zg-blue" />
-}
-
 export function Blizina({ data }: { data: KvartData }) {
   return (
     <>
@@ -456,22 +440,17 @@ export function Blizina({ data }: { data: KvartData }) {
       </SectionHeader>
       <div className="flex flex-col">
         {data.poi.map((c) => (
-          <div
+          <PoiRow
             key={c.key}
-            className="flex items-center gap-3.5 border-b border-hairline py-[13px] first:border-t first:border-hairline"
-          >
-            <PoiIcon k={c.key} />
-            <div className="flex min-w-0 grow flex-col gap-0.5">
-              <span className="font-heros text-body text-ink">{POI_LABEL[c.key]}</span>
-              {c.nearestName && (
-                <span className="truncate font-mono text-label text-ink-muted">
-                  najbliža/i {c.nearestName}
-                  {c.nearestKm != null ? ` · ${c.nearestKm.toLocaleString("hr")} km` : ""}
-                </span>
-              )}
-            </div>
-            <span className="shrink-0 font-mono text-body text-ink">{c.count}</span>
-          </div>
+            k={c.key}
+            title={POI_LABEL[c.key]}
+            detail={
+              c.nearestName
+                ? `najbliža/i ${c.nearestName}${c.nearestKm != null ? ` · ${c.nearestKm.toLocaleString("hr")} km` : ""}`
+                : null
+            }
+            value={c.count}
+          />
         ))}
       </div>
     </>

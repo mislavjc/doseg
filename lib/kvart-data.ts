@@ -52,8 +52,10 @@ export interface KvartLine {
   headwayMin: number | null
 }
 
+export type PoiKey = "hospital" | "school" | "park"
+
 export interface PoiCat {
-  key: "hospital" | "school" | "park"
+  key: PoiKey
   count: number
   nearestName: string | null
   nearestKm: number | null
@@ -117,13 +119,14 @@ function loadGeo(): GeoFeature[] {
   )?.features ?? []
 }
 
-interface Poi {
+export interface Poi {
   name: string
   lat: number
   lon: number
   category: string
 }
-function loadPois(): Poi[] {
+/** Baked OSM POI snapshot (schools/parks/hospitals) — shared with /adresa. */
+export function loadPois(): Poi[] {
   return readJsonCached<{ pois: Poi[] }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
 }
 

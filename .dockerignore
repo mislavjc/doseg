@@ -14,6 +14,7 @@ data/*
 !data/poi-snapshot.json
 !data/districts.geojson
 !data/home-hero.json
+!data/adrese.json
 !data/promjene
 !data/kvart
 !data/stanice

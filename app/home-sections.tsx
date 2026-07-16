@@ -10,7 +10,9 @@ import {
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
+import { loadScores, reachKm2 } from "@/lib/district-scores"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
+import { Fact, Row } from "@/components/doseg-readout"
 import { HomeSearch } from "@/components/home-search"
 
 import { plural } from "./linije/copy"
@@ -24,12 +26,15 @@ import { LetterStrip } from "./stanice/letter-strip"
  * ledger on mobile.
  */
 
-/** GSC-sourced quick links under the search box (top queries, 28d). */
-const QUICK_LINES = ["107", "269", "241", "15"] as const
-const QUICK_STOPS = [
-  { label: "kvaternikov trg", slug: "kvaternikov-trg" },
-  { label: "heinzelova", slug: "heinzelova" },
+/** Probaj chips under the search box: addresses first (the headline product),
+ *  then a stop and the top GSC lines. Address chips are nofollow — the
+ *  /adresa pages are noindex and shouldn't cost crawl budget. */
+const QUICK_ADDRESSES = [
+  { label: "Savska cesta 25", slug: "savska-cesta-25" },
+  { label: "Ilica 5", slug: "ilica-5" },
 ] as const
+const QUICK_LINES = ["107", "15"] as const
+const QUICK_STOPS = [{ label: "kvaternikov trg", slug: "kvaternikov-trg" }] as const
 
 /** Real search phrases people land with (GSC, 28d) → the page that answers. */
 const TRAZENO = [
@@ -68,30 +73,71 @@ function ArrowLabel({ children }: { children: ReactNode }) {
 
 export function HeroIntro() {
   // The dither banner above already breathes; keep the intro close to its fade.
+  // Doseg-first positioning (Paper "Home v3.0 — doseg-first"): the name is the
+  // thesis, the address is the entry point, the imenik is demoted below.
   return (
     <Section width="article" className="pb-0 pt-6 sm:pb-0 sm:pt-8">
-      <Eyebrow>doseg.hr · vozni redovi i doseg zet mreže</Eyebrow>
+      <Eyebrow>doseg.hr · dostupnost javnog prijevoza u zagrebu</Eyebrow>
       <PageTitle className="mt-4">
-        Svaka ZET linija, stanica i kvart na jednom mjestu.
+        Doseg: koliko grada dosežeš javnim prijevozom.
       </PageTitle>
       <Body className="mt-3 max-w-[520px]">
-        Polasci po satu, popis stanica u oba smjera i koliko grada dosežeš
-        javnim prijevozom za 30 minuta.
+        Upiši svoju adresu i vidi dokle stižeš za 30 minuta: tramvajem,
+        autobusom, vlakom i Bajsom. Ocjena povezanosti za svaki kvart, svaku
+        liniju i svako stajalište.
       </Body>
     </Section>
   )
 }
 
-export function SearchBlock({ stopSlugs }: { stopSlugs: Set<string> }) {
+/** Doseg-first counters under the search (Paper "Brojači · doseg prvi"). */
+function BrojaciLedger({
+  dayLineCount,
+  stopCount,
+}: {
+  dayLineCount: number
+  stopCount: number
+}) {
+  const rows = [
+    { label: "doseg s bilo koje adrese", value: "30 min", blue: true },
+    { label: "kvartova s ocjenom dosega", value: "17" },
+    { label: `dnevnih ${plural(dayLineCount, "linija", "linije", "linija")}`, value: String(dayLineCount) },
+    { label: "stajališta sa stranicom", value: String(stopCount) },
+  ]
+  return (
+    <div className="mt-8 hidden flex-col gap-2 sm:flex">
+      {rows.map((r) => (
+        <Row key={r.label} label={r.label}>
+          <Fact className={r.blue ? "text-zg-blue" : undefined}>{r.value}</Fact>
+        </Row>
+      ))}
+    </div>
+  )
+}
+
+export function SearchBlock({
+  stopSlugs,
+  dayLineCount,
+  stopCount,
+}: {
+  stopSlugs: Set<string>
+  dayLineCount: number
+  stopCount: number
+}) {
   return (
     <Section width="article" className="pb-0 pt-8 sm:pb-0 sm:pt-10">
       <HomeSearch />
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="font-mono text-label text-ink-muted">
-          brzi linkovi:
-        </span>
-        {QUICK_LINES.map((broj) => (
-          <LineBadge key={broj} broj={broj} href={`/linije/${broj}`} />
+        <span className="font-mono text-label text-ink-muted">probaj:</span>
+        {QUICK_ADDRESSES.map((a) => (
+          <Link
+            key={a.slug}
+            href={`/adresa/${a.slug}`}
+            rel="nofollow"
+            className="flex h-6 items-center border border-hairline-strong px-2 font-mono text-label text-ink transition-colors hover:border-zg-blue hover:text-zg-blue"
+          >
+            {a.label}
+          </Link>
         ))}
         {QUICK_STOPS.filter((s) => stopSlugs.has(s.slug)).map((s) => (
           <Link
@@ -102,6 +148,52 @@ export function SearchBlock({ stopSlugs }: { stopSlugs: Set<string> }) {
             {s.label}
           </Link>
         ))}
+        {QUICK_LINES.map((broj) => (
+          <LineBadge key={broj} broj={broj} href={`/linije/${broj}`} />
+        ))}
+      </div>
+      <BrojaciLedger dayLineCount={dayLineCount} stopCount={stopCount} />
+    </Section>
+  )
+}
+
+/** Frames the directory below as the source data of the doseg, answering
+ *  "kome je namijenjen taj miks" — timetables are one product's inputs. */
+export function ImenikIntro() {
+  return (
+    <Section width="article" className="pb-0 sm:pb-0">
+      <Eyebrow>imenik · podaci iza dosega</Eyebrow>
+      <Hook className="mt-4">
+        Svaka linija, stanica i kvart ima svoju stranicu.
+      </Hook>
+      <Body className="mt-3 max-w-[520px]">
+        Polasci po satu, prvi i zadnji polazak, interval u špici. Isti podaci
+        iz kojih se računa doseg.
+      </Body>
+    </Section>
+  )
+}
+
+/** Teaser into /statistika with the live best/worst kvart reach numbers. */
+export function StatistikaTeaser() {
+  const scores = loadScores()
+  const ranked = scores
+    ? [...scores.districts].sort((a, b) => a.rank - b.rank)
+    : []
+  const best = ranked[0]
+  const worst = ranked[ranked.length - 1]
+  return (
+    <Section width="article" className="pb-0 sm:pb-0">
+      <Eyebrow>statistika · 17 kvartova</Eyebrow>
+      <Hook className="mt-4">Gdje mreža radi, a gdje staje.</Hook>
+      <Body className="mt-3 max-w-[520px]">
+        {scores && best && worst
+          ? `${best.name} dosegne ${reachKm2(scores, best.avgReachableCells)} km², ${worst.name} ${reachKm2(scores, worst.avgReachableCells)}. `
+          : ""}
+        Analiza povezanosti po kvartu, dobu dana i udaljenosti do stanice.
+      </Body>
+      <div>
+        <MoreLink href="/statistika">cijela analiza</MoreLink>
       </div>
     </Section>
   )

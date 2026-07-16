@@ -26,6 +26,25 @@ export function fastDistKm(
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
+/** Geographic bounds of a baked hero crop (subset of LineHeroCrop). */
+export interface CropBounds {
+  west: number
+  east: number
+  north: number
+  south: number
+}
+
+/** lon/lat → hero-crop viewBox coordinates (Mercator-true vertically) — the
+ *  shared projector behind every baked-hero overlay (line/stop/home heroes). */
+export function projector(crop: CropBounds, viewW: number, viewH: number) {
+  const yTop = mercatorY(crop.north)
+  const yBottom = mercatorY(crop.south)
+  return (lon: number, lat: number): [number, number] => [
+    ((lon - crop.west) / (crop.east - crop.west)) * viewW,
+    ((mercatorY(lat) - yTop) / (yBottom - yTop)) * viewH,
+  ]
+}
+
 /** A linear ring of [lon, lat] positions (GeoJSON order, closed or not). */
 export type Ring = [number, number][]
 

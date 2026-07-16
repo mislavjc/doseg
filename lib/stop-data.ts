@@ -26,6 +26,17 @@ export function loadStopIndex(): StopPagesIndex {
   return index
 }
 
+/** First/last departure as a display window. 19 stops carry a degenerate
+ *  "0:00"/"0:00" pair (transit-crate aggregation bug on stops whose night
+ *  line wraps midnight) — treat those as unknown rather than printing
+ *  "0:00 → 0:00". Fix in the generator on the next feed roll. */
+export function serviceWindow(
+  data: StopPageData
+): { first: string; last: string } | null {
+  if (data.firstDeparture === "0:00" && data.lastDeparture === "0:00") return null
+  return { first: data.firstDeparture, last: data.lastDeparture }
+}
+
 export function loadStopData(slug: string): StopPageData | null {
   // slug comes from the URL — keep it from escaping the data directory.
   if (!/^[a-z0-9-]+$/.test(slug)) return null

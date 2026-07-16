@@ -13,6 +13,7 @@ data/*
 !data/poi-photos.json
 !data/poi-snapshot.json
 !data/districts.geojson
+!data/home-hero.json
 !data/promjene
 !data/kvart
 !data/stanice

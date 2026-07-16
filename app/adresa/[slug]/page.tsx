@@ -173,7 +173,9 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
         key: "polasci",
         icon: IconMoon,
         value: `${data.firstDeparture} → ${data.lastDeparture}`,
-        label: "prvi i zadnji polazak",
+        label: data.windowStop
+          ? `prvi i zadnji polazak · ${data.windowStop}`
+          : "prvi i zadnji polazak",
       },
     lineParts.length > 0 && {
       key: "linije",

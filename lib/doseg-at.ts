@@ -1,7 +1,7 @@
 import { join } from "node:path"
 
 import { loadScores, reachKm2 } from "@/lib/district-scores"
-import { fastDistKm, pointInRing, type Ring } from "@/lib/geo"
+import { fastDistKm, pointInRing, walkMin, type Ring } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
 import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopIndex } from "@/lib/stop-data"
@@ -16,7 +16,6 @@ import { loadStopData, loadStopIndex } from "@/lib/stop-data"
  * on the /adresa/[slug] page.
  */
 
-const WALK_M_PER_MIN = 75 // ~4.5 km/h
 const NEARBY_MAX = 3
 const NEARBY_RADIUS_KM = 0.8
 /** Lines are aggregated over stops within this radius (~5 min walk). */
@@ -54,6 +53,11 @@ export interface NearbyLine {
   broj: string
   mode: "tram" | "bus"
   isNight: boolean
+  /** Best (smallest) peak headway among nearby stops, minutes; null when the
+   *  feed has no headway for this line (known gap on central hubs). */
+  peakMin: number | null
+  /** Headsign at the stop that provided peakMin — "prema X" in the UI. */
+  headsign: string | null
 }
 
 export interface DosegAtPayload {
@@ -72,16 +76,20 @@ export interface DosegAtPayload {
   nearby?: NearbyStop[]
   /** Distinct lines calling within LINES_RADIUS_KM, trams first. */
   lines?: NearbyLine[]
-  /** Stops reachable in 30 min transit from the nearest stop (its page data). */
-  stations30?: number | null
+  /** First/last departure at the nearest stop ("4:10" / "0:49"). */
+  firstDeparture?: string | null
+  lastDeparture?: string | null
 }
 
-function nearbyBlock(lon: number, lat: number): Pick<DosegAtPayload, "nearby" | "lines" | "stations30"> {
+function nearbyBlock(
+  lon: number,
+  lat: number
+): Pick<DosegAtPayload, "nearby" | "lines" | "firstDeparture" | "lastDeparture"> {
   let stops
   try {
     stops = loadStopIndex().stops
   } catch {
-    return { nearby: [], lines: [], stations30: null }
+    return { nearby: [], lines: [] }
   }
 
   const inRange = stops
@@ -101,7 +109,7 @@ function nearbyBlock(lon: number, lat: number): Pick<DosegAtPayload, "nearby" | 
       name: s.name,
       kvart: s.kvart,
       distM,
-      walkMin: Math.max(1, Math.round(distM / WALK_M_PER_MIN)),
+      walkMin: walkMin(distM),
       lineCount: s.lineCount,
     })
     if (nearby.length >= NEARBY_MAX) break
@@ -109,13 +117,27 @@ function nearbyBlock(lon: number, lat: number): Pick<DosegAtPayload, "nearby" | 
 
   // Union of calling lines over ALL stops within the walk radius (platform
   // pairs included — directions can differ), from the per-stop page files.
+  // Each line keeps its best peak headway across those stops.
   const lineMap = new Map<string, NearbyLine>()
   for (const { s, km } of inRange) {
     if (km > LINES_RADIUS_KM) break
     const data = loadStopData(s.slug)
-    for (const l of data?.lines ?? [])
-      if (!lineMap.has(l.broj))
-        lineMap.set(l.broj, { broj: l.broj, mode: l.mode, isNight: l.isNight })
+    for (const l of data?.lines ?? []) {
+      const seen = lineMap.get(l.broj)
+      const peakMin = l.peakHeadwayMin ?? null
+      if (!seen) {
+        lineMap.set(l.broj, {
+          broj: l.broj,
+          mode: l.mode,
+          isNight: l.isNight,
+          peakMin,
+          headsign: l.headsign ?? null,
+        })
+      } else if (peakMin !== null && (seen.peakMin === null || peakMin < seen.peakMin)) {
+        seen.peakMin = peakMin
+        seen.headsign = l.headsign ?? seen.headsign
+      }
+    }
   }
   const lines = [...lineMap.values()].sort(
     (a, b) =>
@@ -123,11 +145,13 @@ function nearbyBlock(lon: number, lat: number): Pick<DosegAtPayload, "nearby" | 
       Number(a.broj) - Number(b.broj)
   )
 
-  const stations30 = nearby[0]
-    ? (loadStopData(nearby[0].slug)?.reach?.stations30 ?? null)
-    : null
-
-  return { nearby, lines, stations30 }
+  const nearestData = nearby[0] ? loadStopData(nearby[0].slug) : null
+  return {
+    nearby,
+    lines,
+    firstDeparture: nearestData?.firstDeparture ?? null,
+    lastDeparture: nearestData?.lastDeparture ?? null,
+  }
 }
 
 export function dosegAt(lon: number, lat: number): DosegAtPayload {

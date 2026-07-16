@@ -13,7 +13,9 @@ import { cn } from "@/lib/utils"
  * polygon never ships to the client.
  */
 
-const FOCUS_SCALE = 4.5
+/** Zoom applied about the focused address — shared with the /adresa karta
+ *  banner thumb so "same map, same zoom" stays true by construction. */
+export const FOCUS_SCALE = 4.5
 
 /** A geocoded point the banner is zoomed to (the /adresa page's address). */
 export interface HeroFocus {

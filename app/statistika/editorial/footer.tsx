@@ -1,5 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
+import { formatHrDate } from "@/lib/hr-date"
+
 import { MonoLabel, Section } from "./primitives"
 
 /**
@@ -70,6 +72,13 @@ function FooterColumn({ label, items }: Column) {
   )
 }
 
+/** Callers pass whatever their data file carries — an ISO timestamp, a plain
+ *  date, or already-formatted Croatian ("13. srpnja 2026."). Normalize the
+ *  parseable ones so no page prints a raw "2026-07-13T00:00:00.000Z". */
+function formatUpdated(updated: string): string {
+  return Number.isNaN(Date.parse(updated)) ? updated : formatHrDate(updated)
+}
+
 export function Footer({ updated }: { updated: string }) {
   return (
     <footer>
@@ -82,7 +91,7 @@ export function Footer({ updated }: { updated: string }) {
             <div className="flex flex-col gap-1.5">
               <MonoLabel className="text-ink">ažurirano</MonoLabel>
               <span className="font-mono text-label leading-5 text-ink-faint">
-                {updated}
+                {formatUpdated(updated)}
               </span>
             </div>
           </div>

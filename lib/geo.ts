@@ -103,3 +103,11 @@ export function multiPolygonAreaKm2(coordinates: Ring[][]): number {
   }
   return Math.max(0, area)
 }
+
+/** Shared walking pace (~4.5 km/h) for "N min hoda" copy across surfaces. */
+export const WALK_M_PER_MIN = 75
+
+/** Straight-line metres → whole walking minutes, never less than 1. */
+export function walkMin(distM: number): number {
+  return Math.max(1, Math.round(distM / WALK_M_PER_MIN))
+}

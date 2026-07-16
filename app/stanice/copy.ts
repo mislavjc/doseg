@@ -1,5 +1,6 @@
 import type { StopLine } from "@/lib/generated/StopLine"
 import type { StopPageData } from "@/lib/generated/StopPageData"
+import { serviceWindow } from "@/lib/stop-data"
 
 import { numberWordF, plural } from "../linije/copy"
 
@@ -128,7 +129,8 @@ export function introText(data: StopPageData): string {
       }vozi ${mf.headway}.`
     )
   }
-  parts.push(`Prvi polazak je u ${data.firstDeparture}, zadnji u ${data.lastDeparture}.`)
+  const window = serviceWindow(data)
+  if (window) parts.push(`Prvi polazak je u ${window.first}, zadnji u ${window.last}.`)
   return parts.join(" ")
 }
 

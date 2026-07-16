@@ -14,6 +14,7 @@ import { Body, PageTitle } from "@/app/statistika/editorial/primitives"
 import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import { kvartSlug } from "@/lib/kvart-slug"
+import { serviceWindow } from "@/lib/stop-data"
 import type { SiblingStop } from "@/lib/stop-data"
 
 import {
@@ -61,6 +62,7 @@ export function Naslov({ data }: { data: StopPageData }) {
 
 export function Cinjenice({ data }: { data: StopPageData }) {
   const mf = mostFrequentLine(data)
+  const window = serviceWindow(data)
   return (
     <div>
       <FactRow label="linije koje staju" value={String(data.lineCount)} />
@@ -71,10 +73,12 @@ export function Cinjenice({ data }: { data: StopPageData }) {
           href={`/kvartovi/${kvartSlug(data.kvart)}`}
         />
       )}
-      <FactRow
-        label="prvi i zadnji polazak"
-        value={`${data.firstDeparture} · ${data.lastDeparture}`}
-      />
+      {window && (
+        <FactRow
+          label="prvi i zadnji polazak"
+          value={`${window.first} · ${window.last}`}
+        />
+      )}
       {mf && <FactRow label="najčešća linija" value={`${mf.line.broj} · ${mf.headway}`} />}
     </div>
   )
@@ -274,10 +278,12 @@ export function buildFaq(data: StopPageData): FaqItem[] {
         mf.inPeak ? "u špici " : ""
       }vozi ${mf.headway}.`
     : ""
-  items.push({
-    q: `Kada vozi prvi i zadnji polazak sa stanice ${data.name}?`,
-    a: `Prvi polazak sa stanice je u ${data.firstDeparture}, a zadnji u ${data.lastDeparture}.${freq}`,
-  })
+  const window = serviceWindow(data)
+  if (window)
+    items.push({
+      q: `Kada vozi prvi i zadnji polazak sa stanice ${data.name}?`,
+      a: `Prvi polazak sa stanice je u ${window.first}, a zadnji u ${window.last}.${freq}`,
+    })
 
   return items
 }

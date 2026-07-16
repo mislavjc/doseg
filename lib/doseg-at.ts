@@ -4,7 +4,7 @@ import { loadScores, reachKm2 } from "@/lib/district-scores"
 import { fastDistKm, pointInRing, walkMin, type Ring } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
 import { readJsonCached } from "@/lib/page-data"
-import { loadStopData, loadStopIndex } from "@/lib/stop-data"
+import { loadStopData, loadStopIndex, serviceWindow } from "@/lib/stop-data"
 
 /**
  * Doseg readout for a geocoded point: the kvart the point falls in (with its
@@ -146,11 +146,12 @@ function nearbyBlock(
   )
 
   const nearestData = nearby[0] ? loadStopData(nearby[0].slug) : null
+  const window = nearestData ? serviceWindow(nearestData) : null
   return {
     nearby,
     lines,
-    firstDeparture: nearestData?.firstDeparture ?? null,
-    lastDeparture: nearestData?.lastDeparture ?? null,
+    firstDeparture: window?.first ?? null,
+    lastDeparture: window?.last ?? null,
   }
 }
 

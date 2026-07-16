@@ -76,15 +76,21 @@ export interface DosegAtPayload {
   nearby?: NearbyStop[]
   /** Distinct lines calling within LINES_RADIUS_KM, trams first. */
   lines?: NearbyLine[]
-  /** First/last departure at the nearest stop ("4:10" / "0:49"). */
+  /** First/last departure ("4:10" / "0:49") — from the nearest stop with a
+   *  usable service window (a few stops carry degenerate data). */
   firstDeparture?: string | null
   lastDeparture?: string | null
+  /** Stop the window came from, when it is NOT the nearest stop. */
+  windowStop?: string | null
 }
 
 function nearbyBlock(
   lon: number,
   lat: number
-): Pick<DosegAtPayload, "nearby" | "lines" | "firstDeparture" | "lastDeparture"> {
+): Pick<
+  DosegAtPayload,
+  "nearby" | "lines" | "firstDeparture" | "lastDeparture" | "windowStop"
+> {
   let stops
   try {
     stops = loadStopIndex().stops
@@ -145,13 +151,25 @@ function nearbyBlock(
       Number(a.broj) - Number(b.broj)
   )
 
-  const nearestData = nearby[0] ? loadStopData(nearby[0].slug) : null
-  const window = nearestData ? serviceWindow(nearestData) : null
+  // First/last departure: the nearest stop's window when it's usable, else
+  // walk outward through the other nearby stops (all a few minutes away)
+  // rather than showing nothing — a handful of stops carry degenerate data.
+  let window: { first: string; last: string } | null = null
+  let windowStop: string | null = null
+  for (const stop of nearby) {
+    const data = loadStopData(stop.slug)
+    window = data ? serviceWindow(data) : null
+    if (window) {
+      windowStop = stop === nearby[0] ? null : stop.name
+      break
+    }
+  }
   return {
     nearby,
     lines,
     firstDeparture: window?.first ?? null,
     lastDeparture: window?.last ?? null,
+    windowStop,
   }
 }
 

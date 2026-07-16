@@ -2,10 +2,12 @@ import type { Metadata } from "next"
 
 import { Footer } from "@/app/statistika/editorial/footer"
 import { EditorialShell } from "@/app/statistika/editorial/primitives"
-import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
+import { loadHomeHero } from "@/lib/home-hero"
 import { loadLineIndex } from "@/lib/line-data"
 import { loadStopIndex } from "@/lib/stop-data"
+
+import { HomeHero } from "./home-hero"
 
 import {
   DesktopLineSection,
@@ -23,10 +25,11 @@ import { plural } from "./linije/copy"
 import { firstLetter, MIN_LINES } from "./stanice/letters"
 
 /**
- * Homepage — the imenik (Paper "Home v1.1 — Imenik + traženo"): search-first
- * directory of the ZET network. The interactive map lives at /karta; here it
- * gets a teaser. Desktop shows tram/bus sections + the A–Ž strip; mobile
- * collapses them into one linije group + an index ledger (Paper mobile board).
+ * Homepage — the imenik (Paper "Home v2.0 — banner, cijela stranica"):
+ * search-first directory of the ZET network under the whole-Zagreb dither
+ * banner. The interactive map lives at /karta; here it gets a teaser. Desktop
+ * shows tram/bus sections + the A–Ž strip; mobile collapses them into one
+ * linije group + an index ledger (Paper mobile board).
  */
 
 export const metadata: Metadata = pseoMetadata({
@@ -68,9 +71,7 @@ export default function HomePage() {
 
   return (
     <EditorialShell>
-      <header className="flex justify-center bg-white px-4 pt-8 sm:px-16 sm:pt-14">
-        <SiteNav />
-      </header>
+      <HomeHero hero={loadHomeHero()} />
 
       <HeroIntro />
       <SearchBlock stopSlugs={stopSlugs} />

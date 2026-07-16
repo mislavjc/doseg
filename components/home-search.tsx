@@ -1,8 +1,12 @@
 "use client"
 
 import { Autocomplete } from "@base-ui/react/autocomplete"
-import { IconMagnifyingGlass } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import {
+  IconArrowRight,
+  IconMagnifyingGlass,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 
 import type { SearchIndexPayload } from "@/app/api/search-index/route"
@@ -154,6 +158,7 @@ const renderResult = (r: Result) => (
 )
 
 export function HomeSearch() {
+  const router = useRouter()
   // Memoized in-flight fetch: keystrokes that land mid-load await the same
   // promise; a failed fetch resolves null and search degrades to the
   // brzi-linkovi chips below (no error UI).
@@ -196,7 +201,7 @@ export function HomeSearch() {
       <Autocomplete.InputGroup
         onPointerEnter={() => void loadIndex()}
         onTouchStart={() => void loadIndex()}
-        className="flex h-14 w-full items-center gap-3.5 border-2 border-ink bg-white px-4"
+        className="flex h-14 w-full items-center gap-3.5 border-2 border-ink bg-white pl-4"
       >
         <IconMagnifyingGlass size={16} className="shrink-0 text-ink" aria-hidden />
         <Autocomplete.Input
@@ -206,6 +211,24 @@ export function HomeSearch() {
           aria-label="Pretraži linije i stanice"
           className="h-full w-full min-w-0 bg-transparent font-heros text-body text-ink outline-none placeholder:text-ink-muted [&::-webkit-search-cancel-button]:hidden"
         />
+        {/* Paper "Traži gumb · varijanta d": flush blue square, arrow only.
+            Enter already navigates via the auto-highlighted result; the button
+            mirrors that for mouse users (top result), else refocuses input. */}
+        <button
+          type="button"
+          aria-label="Traži"
+          onClick={(e) => {
+            if (results[0]) router.push(results[0].href)
+            else
+              e.currentTarget
+                .closest("div")
+                ?.querySelector("input")
+                ?.focus()
+          }}
+          className="flex w-14 shrink-0 items-center justify-center self-stretch bg-zg-blue text-white transition duration-150 hover:bg-navy active:scale-[0.97]"
+        >
+          <IconArrowRight size={16} aria-hidden />
+        </button>
       </Autocomplete.InputGroup>
       <Autocomplete.Portal>
         <Autocomplete.Positioner className="z-50 w-(--anchor-width) data-[empty]:hidden">

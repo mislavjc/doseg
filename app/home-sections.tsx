@@ -67,8 +67,9 @@ function ArrowLabel({ children }: { children: ReactNode }) {
 }
 
 export function HeroIntro() {
+  // The dither banner above already breathes; keep the intro close to its fade.
   return (
-    <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-16">
+    <Section width="article" className="pb-0 pt-6 sm:pb-0 sm:pt-8">
       <Eyebrow>doseg.hr · vozni redovi i doseg zet mreže</Eyebrow>
       <PageTitle className="mt-4">
         Svaka ZET linija, stanica i kvart na jednom mjestu.

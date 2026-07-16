@@ -1,6 +1,6 @@
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { HeroPicture } from "@/components/hero-picture"
-import { mercatorX, mercatorY } from "@/lib/geo"
+import { mercatorX, mercatorY, projector } from "@/lib/geo"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
 
@@ -58,14 +58,6 @@ function cropFromBbox(
   }
 }
 
-function projector(crop: LineHeroCrop, viewW: number, viewH: number) {
-  const yTop = mercatorY(crop.north)
-  const yBottom = mercatorY(crop.south)
-  return (lon: number, lat: number): [number, number] => [
-    ((lon - crop.west) / (crop.east - crop.west)) * viewW,
-    ((mercatorY(lat) - yTop) / (yBottom - yTop)) * viewH,
-  ]
-}
 
 function path(shape: [number, number][], project: (lon: number, lat: number) => [number, number]): string {
   const pts = shape.map(([lon, lat]) => project(lon, lat))

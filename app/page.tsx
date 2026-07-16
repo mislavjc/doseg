@@ -12,11 +12,13 @@ import { HomeHero } from "./home-hero"
 import {
   DesktopLineSection,
   HeroIntro,
+  ImenikIntro,
   KartaTeaser,
   MobileLedger,
   MobileLineGroup,
   SearchBlock,
   StaniceSection,
+  StatistikaTeaser,
   TrazenoSection,
 } from "./home-sections"
 import { pseoMetadata } from "@/lib/pseo-metadata"
@@ -74,8 +76,13 @@ export default function HomePage() {
       <HomeHero hero={loadHomeHero()} />
 
       <HeroIntro />
-      <SearchBlock stopSlugs={stopSlugs} />
+      <SearchBlock
+        stopSlugs={stopSlugs}
+        dayLineCount={dayTrams.length + buses.length}
+        stopCount={stopCount}
+      />
 
+      <ImenikIntro />
       <DesktopLineSection
         eyebrow={`tramvaji · ${dayTrams.length} ${plural(dayTrams.length, "dnevna linija", "dnevne linije", "dnevnih linija")}`}
         hook="Tramvajska mreža."
@@ -94,6 +101,7 @@ export default function HomePage() {
       <MobileLedger stopCount={stopCount} />
 
       <TrazenoSection stopSlugs={stopSlugs} />
+      <StatistikaTeaser />
       <KartaTeaser />
 
       <Footer updated={index.generatedAt} />

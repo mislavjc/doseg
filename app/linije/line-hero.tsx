@@ -1,6 +1,6 @@
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { HeroPicture } from "@/components/hero-picture"
-import { mercatorY } from "@/lib/geo"
+import { projector } from "@/lib/geo"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
 import { cn } from "@/lib/utils"
@@ -16,14 +16,6 @@ import { cn } from "@/lib/utils"
  * visible at any viewport.
  */
 
-function projector(crop: LineHeroCrop, viewW: number, viewH: number) {
-  const yTop = mercatorY(crop.north)
-  const yBottom = mercatorY(crop.south)
-  return (lon: number, lat: number): [number, number] => [
-    ((lon - crop.west) / (crop.east - crop.west)) * viewW,
-    ((mercatorY(lat) - yTop) / (yBottom - yTop)) * viewH,
-  ]
-}
 
 /**
  * Shorten a polyline by `trim` units at each end so the route line (and its

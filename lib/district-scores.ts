@@ -19,6 +19,11 @@ import { readJsonCached } from "@/lib/page-data"
  * readJsonCached and the `??=` backfill is idempotent, so the repeated merge is
  * cheap.
  */
+/** Reachable grid cells → km², rounded (one cell = gridSpacingM² of city). */
+export function reachKm2(scores: ScoreData, cells: number): number {
+  return Math.round(cells * (scores.gridSpacingM / 1000) ** 2)
+}
+
 export function loadScores(): ScoreData | null {
   const dir = getDataDir()
   const day = readJsonCached<ScoreData>(join(dir, "district-scores-wednesday.json"))

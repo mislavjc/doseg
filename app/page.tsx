@@ -13,7 +13,7 @@ import {
   DesktopLineSection,
   HeroIntro,
   ImenikIntro,
-  KartaTeaser,
+  KartaBanner,
   MobileLedger,
   MobileLineGroup,
   SearchBlock,
@@ -29,9 +29,10 @@ import { firstLetter, MIN_LINES } from "./stanice/letters"
 /**
  * Homepage — the imenik (Paper "Home v2.0 — banner, cijela stranica"):
  * search-first directory of the ZET network under the whole-Zagreb dither
- * banner. The interactive map lives at /karta; here it gets a teaser. Desktop
- * shows tram/bus sections + the A–Ž strip; mobile collapses them into one
- * linije group + an index ledger (Paper mobile board).
+ * banner. The interactive map lives at /karta; its banner sits right under
+ * the search (Paper "Karta banner · CTA redak"). Desktop shows tram/bus
+ * sections + the A–Ž strip; mobile collapses them into one linije group + an
+ * index ledger (Paper mobile board).
  */
 
 export const metadata: Metadata = pseoMetadata({
@@ -40,7 +41,7 @@ export const metadata: Metadata = pseoMetadata({
     "Vozni red svake ZET linije, imenik svih stanica i dostupnost po kvartu. Uz kartu koja pokazuje koliko grada dosežeš javnim prijevozom za 30 minuta.",
   path: "/",
   ogType: "website",
-  ogImage: "/og.jpg",
+  ogImage: "/api/og?naslovnica",
 })
 
 /** Busiest lines first — the rows a first-time visitor most likely wants. */
@@ -76,11 +77,9 @@ export default function HomePage() {
       <HomeHero hero={loadHomeHero()} />
 
       <HeroIntro />
-      <SearchBlock
-        stopSlugs={stopSlugs}
-        dayLineCount={dayTrams.length + buses.length}
-        stopCount={stopCount}
-      />
+      <SearchBlock stopSlugs={stopSlugs} />
+
+      <KartaBanner />
 
       <ImenikIntro />
       <DesktopLineSection
@@ -102,7 +101,6 @@ export default function HomePage() {
 
       <TrazenoSection stopSlugs={stopSlugs} />
       <StatistikaTeaser />
-      <KartaTeaser />
 
       <Footer updated={index.generatedAt} />
     </EditorialShell>

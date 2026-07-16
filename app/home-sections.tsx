@@ -10,9 +10,9 @@ import {
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
+import { resolveAdresaSlug } from "@/lib/adresa"
 import { loadScores, reachKm2 } from "@/lib/district-scores"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
-import { Fact, Row } from "@/components/doseg-readout"
 import { HomeSearch } from "@/components/home-search"
 
 import { plural } from "./linije/copy"
@@ -90,40 +90,7 @@ export function HeroIntro() {
   )
 }
 
-/** Doseg-first counters under the search (Paper "Brojači · doseg prvi"). */
-function BrojaciLedger({
-  dayLineCount,
-  stopCount,
-}: {
-  dayLineCount: number
-  stopCount: number
-}) {
-  const rows = [
-    { label: "doseg s bilo koje adrese", value: "30 min", blue: true },
-    { label: "kvartova s ocjenom dosega", value: "17" },
-    { label: `dnevnih ${plural(dayLineCount, "linija", "linije", "linija")}`, value: String(dayLineCount) },
-    { label: "stajališta sa stranicom", value: String(stopCount) },
-  ]
-  return (
-    <div className="mt-8 hidden flex-col gap-2 sm:flex">
-      {rows.map((r) => (
-        <Row key={r.label} label={r.label}>
-          <Fact className={r.blue ? "text-zg-blue" : undefined}>{r.value}</Fact>
-        </Row>
-      ))}
-    </div>
-  )
-}
-
-export function SearchBlock({
-  stopSlugs,
-  dayLineCount,
-  stopCount,
-}: {
-  stopSlugs: Set<string>
-  dayLineCount: number
-  stopCount: number
-}) {
+export function SearchBlock({ stopSlugs }: { stopSlugs: Set<string> }) {
   return (
     <Section width="article" className="pb-0 pt-8 sm:pb-0 sm:pt-10">
       <HomeSearch />
@@ -152,7 +119,6 @@ export function SearchBlock({
           <LineBadge key={broj} broj={broj} href={`/linije/${broj}`} />
         ))}
       </div>
-      <BrojaciLedger dayLineCount={dayLineCount} stopCount={stopCount} />
     </Section>
   )
 }
@@ -183,7 +149,7 @@ export function StatistikaTeaser() {
   const best = ranked[0]
   const worst = ranked[ranked.length - 1]
   return (
-    <Section width="article" className="pb-0 sm:pb-0">
+    <Section width="article" className="pb-4 sm:pb-6">
       <Eyebrow>statistika · 17 kvartova</Eyebrow>
       <Hook className="mt-4">Gdje mreža radi, a gdje staje.</Hook>
       <Body className="mt-3 max-w-[520px]">
@@ -346,36 +312,64 @@ export function TrazenoSection({ stopSlugs }: { stopSlugs: Set<string> }) {
   )
 }
 
-/** Teaser into the interactive map at /karta (dither thumbnail + hook). */
-export function KartaTeaser() {
+/** Banner into /karta right under the search (Paper "Karta banner · CTA
+ *  redak", It3): a zoomed dither window with the address marker promises what
+ *  clicking the karta returns, the probaj chip opens the karta centred on a
+ *  seed address (this callout sells the karta, not the /adresa pages). The
+ *  bitmap is the hero bake blown up to the hero's focus scale, so the thumb
+ *  matches what the zoomed hero actually renders. */
+export function KartaBanner() {
+  const proba = resolveAdresaSlug("savska-cesta-25")
+  const probaHref = proba
+    ? `/karta?lat=${proba.lat.toFixed(5)}&lon=${proba.lon.toFixed(5)}`
+    : "/karta"
   return (
-    <Section width="article" className="pb-4 sm:pb-6">
-      <Link href="/karta" className="group flex items-start gap-4 sm:gap-6">
-        <span className="relative block h-24 w-24 shrink-0 overflow-hidden sm:h-[120px] sm:w-[200px]">
+    <Section width="article" className="pb-0 sm:pb-0">
+      <div className="group relative flex gap-4 border border-hairline-strong transition-colors hover:border-zg-blue sm:gap-6">
+        <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/hero-map.png"
+            src="/hero-zagreb.png"
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "center 46%" }}
+            className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated]"
+            style={{ width: 6480 }}
           />
+          <span className="absolute left-1/2 top-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
         </span>
-        <span className="flex min-w-0 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col py-4 pr-4 sm:py-5 sm:pr-6">
           <Eyebrow>karta dosega</Eyebrow>
-          <Hook as="span" className="mt-1.5">
+          <Hook className="mt-1.5 transition-colors group-hover:text-zg-blue">
             Koliko grada dosegneš za 30 minuta?
           </Hook>
-          <Body className="mt-1.5 hidden max-w-[396px] sm:block">
-            Klikni bilo koju adresu i vidi dokle stigneš tramvajem, autobusom,
-            vlakom i BAJS biciklom.
+          <Body className="mt-1.5 hidden sm:block">
+            Klikni bilo koju adresu i vidi točan doseg, ne prosjek kvarta.
           </Body>
-          <span className="mt-2">
-            <ArrowLabel>otvori kartu</ArrowLabel>
-          </span>
-        </span>
-      </Link>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <span className="flex items-center gap-2">
+              <span className="font-mono text-label text-ink-muted">probaj:</span>
+              <Link
+                href={probaHref}
+                rel="nofollow"
+                className="relative z-10 flex h-6 items-center border border-hairline-strong px-2 font-mono text-label text-ink transition-colors hover:border-zg-blue hover:text-zg-blue"
+              >
+                Savska cesta 25
+              </Link>
+            </span>
+            {/* Stretched link: the inset span makes the whole bordered card
+                this link's hit area; the chip above opts out via z-10. */}
+            <Link
+              href="/karta"
+              className="inline-flex items-center gap-1 font-mono text-label text-zg-blue transition-colors hover:text-navy"
+            >
+              <span aria-hidden className="absolute inset-0" />
+              otvori kartu
+              <IconArrowRight size={14} className="shrink-0" />
+            </Link>
+          </div>
+        </div>
+      </div>
     </Section>
   )
 }

@@ -2,10 +2,11 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { loadScores } from "@/lib/district-scores"
-import { loadLineData } from "@/lib/line-data"
-import { loadStopData, loadStopHeroMeta } from "@/lib/stop-data"
+import { loadLineData, loadLineIndex } from "@/lib/line-data"
+import { loadStopData, loadStopHeroMeta, loadStopIndex } from "@/lib/stop-data"
 
 import { renderOgCard } from "./card"
+import { renderHomeOgCard } from "./home-card"
 import { renderLineOgCard } from "./line-card"
 import { renderStopOgCard } from "./stop-card"
 
@@ -140,6 +141,21 @@ async function lineCardResponse(linija: string): Promise<Response | null> {
 const stopCardCache = new LruCache<ArrayBuffer>(64)
 const coordCardCache = new LruCache<ArrayBuffer>(32)
 
+// Single output — one buffer per process is the whole cache.
+let homeCardBuf: ArrayBuffer | null = null
+
+async function homeCardResponse(): Promise<Response | null> {
+  if (homeCardBuf) return new Response(homeCardBuf, { headers: LINE_CARD_HEADERS })
+  const card = renderHomeOgCard({
+    dayLineCount: loadLineIndex().lines.filter((l) => !l.isNight).length,
+    stopCount: loadStopIndex().stops.length,
+    kvartCount: getDistrictScores().length || 17,
+  })
+  if (!card) return null
+  homeCardBuf = await card.arrayBuffer()
+  return new Response(homeCardBuf, { headers: LINE_CARD_HEADERS })
+}
+
 async function stopCardResponse(stanica: string): Promise<Response | null> {
   const cached = stopCardCache.get(stanica)
   if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
@@ -160,6 +176,13 @@ export async function GET(request: Request) {
   const lonStr = searchParams.get("lon")
   const linija = searchParams.get("linija")
   const stanica = searchParams.get("stanica")
+
+  if (searchParams.has("naslovnica")) {
+    const cardResponse = await homeCardResponse()
+    if (cardResponse) return cardResponse
+    // No hero bake (fresh checkout) — generic text card.
+    return renderOgCard({ headline: "Koliko grada dosežeš javnim prijevozom." })
+  }
 
   if (linija) {
     const cardResponse = await lineCardResponse(linija)

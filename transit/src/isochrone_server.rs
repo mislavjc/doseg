@@ -52,10 +52,12 @@ const TRANSIT_SNAP_MAX_KM2: f64 = 0.0064;
 
 /// Grid cell size for edge-rasterized isochrone contours (~100m).
 const WALK_AREA_CELL_SIZE: f64 = 0.001;
-/// Conservative buffer (seconds) subtracted from each threshold to account for
-/// grid discretization, morphological closing, smoothing, and model differences
-/// vs real-time routing.
-const THRESHOLD_BUFFER: f64 = 120.0;
+/// Small buffer (seconds) subtracted from each threshold to account for grid
+/// discretization (~100m cells), morphological closing, and smoothing. Was
+/// 120s to also paper over exact-departure phase noise; now that boarding
+/// uses expected waits (shared with the route panel), a large buffer just
+/// makes the painted edge contradict the panel time at the same spot.
+const THRESHOLD_BUFFER: f64 = 30.0;
 
 const WALK_MAX_KM: f64 = 1.2;
 const MAX_WAIT: f64 = 3600.0;

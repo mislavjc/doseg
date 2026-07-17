@@ -319,7 +319,17 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
  * Find wait time for the next departure of a pattern at a given stop.
  * Returns seconds to wait + index into departures/tripIds, or null if no service.
  */
-function getNextWait(
+/**
+ * Expected boarding wait (headway/2 around the clock time) plus the index of
+ * the next departing trip (kept for the GTFS-RT delay lookup).
+ *
+ * Mirrors get_expected_wait in transit/src/isochrone_server.rs — the route
+ * panel and the isochrone paint must share this model, or clicking at the
+ * painted 30-minute edge shows a panel time far from 30 whenever the exact
+ * timetable happens to be phase-lucky. Returns null past the last departure
+ * of the day (no service).
+ */
+function getExpectedWait(
   departures: number[],
   stopOffset: number,
   clockTime: number
@@ -341,8 +351,14 @@ function getNextWait(
 
   if (lo >= departures.length) return null
 
-  const wait = departures[lo] + stopOffset - clockTime
-  return wait <= MAX_WAIT ? { waitSeconds: wait, tripIndex: lo } : null
+  const headway =
+    lo > 0
+      ? departures[lo] - departures[lo - 1]
+      : lo + 1 < departures.length
+        ? departures[lo + 1] - departures[lo]
+        : 3600
+  const wait = Math.min(Math.min(headway, 1800) / 2, MAX_WAIT)
+  return { waitSeconds: wait, tripIndex: lo }
 }
 
 export function computeTransitLegDuration(
@@ -354,7 +370,7 @@ export function computeTransitLegDuration(
   rtData: Map<string, TripRT>
 ): { durationSeconds: number; delaySeconds?: number } | null {
   const clockTime = departureTime + arrivalSeconds
-  const result = getNextWait(
+  const result = getExpectedWait(
     pattern.departures,
     pattern.stopOffsets[boardIdx],
     clockTime
@@ -521,7 +537,7 @@ function expandTransitStop(
     if (isSameStopTransfer && s.predPattern[nodeIdx] === patternIdx) continue
 
     const pattern = graph.patterns[patternIdx]
-    const result = getNextWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
+    const result = getExpectedWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
     if (result === null) continue
 
     const boardTime = time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)

@@ -44,7 +44,7 @@ function zagrebNow(): string {
  * TTL override, the browser) caches /api/isochrone for hours, so a model
  * change ships instantly only if the URL changes with it. Bump whenever the
  * engine's semantics change. */
-const ISOCHRONE_MODEL_VERSION = "4"
+const ISOCHRONE_MODEL_VERSION = "5"
 
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({

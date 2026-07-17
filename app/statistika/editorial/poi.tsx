@@ -1,16 +1,19 @@
 import {
+  IconArrowRight,
   IconMedicalCross,
   IconPark,
   IconSchool,
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import Link from "next/link"
 
 import type { PoiKey } from "@/lib/kvart-data"
 import { cn } from "@/lib/utils"
 
 /**
  * POI row grammar shared by /kvartovi (Blizina: plural label + count) and
- * /adresa (okolina: singular label + walk distance). One key type, one icon
- * map, one row — adding a POI category means touching this file only.
+ * /adresa (okolina: singular label + walk distance, linked to the karta
+ * route). One key type, one icon map, one row — adding a POI category means
+ * touching this file only.
  */
 
 export type { PoiKey }
@@ -33,23 +36,51 @@ export function PoiRow({
   detail,
   value,
   valueClassName = "text-body",
+  href,
 }: {
   k: PoiKey
   title: string
   detail: string | null
   value: React.ReactNode
   valueClassName?: string
+  href?: string
 }) {
-  return (
-    <div className="flex items-center gap-3.5 border-b border-hairline py-[13px] first:border-t first:border-hairline">
+  const row =
+    "flex items-center gap-3.5 border-b border-hairline py-[13px] first:border-t first:border-hairline"
+  const inner = (
+    <>
       <PoiIcon k={k} />
       <div className="flex min-w-0 grow flex-col gap-0.5">
-        <span className="font-heros text-body text-ink">{title}</span>
+        <span
+          className={cn(
+            "font-heros text-body text-ink",
+            href && "transition-colors group-hover:text-zg-blue"
+          )}
+        >
+          {title}
+        </span>
         {detail && (
           <span className="truncate font-mono text-label text-ink-muted">{detail}</span>
         )}
       </div>
       <span className={cn("shrink-0 font-mono text-ink", valueClassName)}>{value}</span>
-    </div>
+      {/* The arrow is what turns a fact row into a navigable one — without it
+          this reads identically to the static /kvartovi variant. */}
+      {href && (
+        <IconArrowRight
+          size={14}
+          className="shrink-0 text-ink-faint transition-colors group-hover:text-zg-blue"
+        />
+      )}
+    </>
   )
+  if (href)
+    return (
+      // prefetch=false: several per-row map deep links would each trigger
+      // their own speculative /karta fetch the moment they scroll into view.
+      <Link href={href} prefetch={false} className={cn("group", row)}>
+        {inner}
+      </Link>
+    )
+  return <div className={row}>{inner}</div>
 }

@@ -16,6 +16,8 @@ const BAJS_RADIUS_KM = 1.2
 export interface NearestPoi {
   key: PoiKey
   name: string
+  lat: number
+  lon: number
   distM: number
   walkMin: number
 }
@@ -31,6 +33,8 @@ export function nearestPois(lon: number, lat: number): NearestPoi[] {
       best.set(p.category, {
         key: p.category as PoiKey,
         name: p.name,
+        lat: p.lat,
+        lon: p.lon,
         distM,
         walkMin: walkMin(distM),
       })

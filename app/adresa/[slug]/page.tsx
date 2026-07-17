@@ -43,6 +43,7 @@ import {
 } from "@/lib/doseg-at"
 import { projector } from "@/lib/geo"
 import { loadHomeHero } from "@/lib/home-hero"
+import { kartaUrl } from "@/lib/karta-url"
 import { loadLineIndex } from "@/lib/line-data"
 import {
   nearestBajs,
@@ -305,7 +306,13 @@ const POI_TITLE: Record<PoiKey, string> = {
   hospital: "Bolnica",
 }
 
-function OkolinaSection({ pois }: { pois: NearestPoi[] }) {
+function OkolinaSection({
+  pois,
+  origin,
+}: {
+  pois: NearestPoi[]
+  origin: { lat: number; lon: number }
+}) {
   return (
     <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
       <Eyebrow>okolina</Eyebrow>
@@ -319,6 +326,7 @@ function OkolinaSection({ pois }: { pois: NearestPoi[] }) {
             detail={p.name}
             value={`${p.distM} m · ${p.walkMin} min hoda`}
             valueClassName="text-label"
+            href={kartaUrl(origin, p)}
           />
         ))}
       </div>
@@ -392,7 +400,7 @@ export default async function AdresaPage({ params }: Params) {
   if (!adresa) notFound()
 
   const data = dosegAt(adresa.lon, adresa.lat)
-  const karta = `/karta?lat=${adresa.lat.toFixed(5)}&lon=${adresa.lon.toFixed(5)}`
+  const karta = kartaUrl(adresa)
 
   const scores = loadScores()
   const cityAvgM = (scores && computeWalk(scores)?.avg) ?? null
@@ -442,7 +450,7 @@ export default async function AdresaPage({ params }: Params) {
             />
           </Suspense>
 
-          {pois.length > 0 && <OkolinaSection pois={pois} />}
+          {pois.length > 0 && <OkolinaSection pois={pois} origin={adresa} />}
 
           {data.kvart && (
             <Section width="article" className="pb-0 sm:pb-0">

@@ -301,7 +301,22 @@ struct Predecessor {
     alight_idx: Option<usize>,
 }
 
-fn get_next_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<(f64, usize)> {
+/// Expected boarding wait (headway/2 around the clock time) plus the index of
+/// the next departing trip (kept for the GTFS-RT delay lookup).
+///
+/// The graph's minute precision is fake — stop offsets are medians over
+/// sampled trips and transfers carry no buffer — so boarding the *exact* next
+/// departure turns that noise into a lottery: reach swung ±40% between
+/// adjacent 5-minute buckets (07:00 = 53 km², 07:30 = 30 km²) while the real
+/// schedule was flat. Expected wait keeps genuine time-of-day service levels
+/// (night vs peak headways) but makes the isochrone mean "what a typical
+/// departure around HH:MM covers". The point-to-point route panel keeps exact
+/// departures — a concrete itinerary is its product; a typical one is ours.
+fn get_expected_wait(
+    departures: &[f64],
+    stop_offset: f64,
+    clock_time: f64,
+) -> Option<(f64, usize)> {
     if departures.is_empty() {
         return None;
     }
@@ -310,12 +325,15 @@ fn get_next_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Optio
     if lo >= departures.len() {
         return None;
     }
-    let wait = departures[lo] + stop_offset - clock_time;
-    if wait <= MAX_WAIT {
-        Some((wait, lo))
+    let headway = if lo > 0 {
+        departures[lo] - departures[lo - 1]
+    } else if lo + 1 < departures.len() {
+        departures[lo + 1] - departures[lo]
     } else {
-        None
-    }
+        3600.0
+    };
+    let wait = (headway.min(1800.0) / 2.0).min(MAX_WAIT);
+    Some((wait, lo))
 }
 
 struct TravelTimeResult {
@@ -464,7 +482,7 @@ fn compute_travel_times(
                 let pattern = &graph.patterns[sp.pattern_idx];
                 let clock_time = departure_time + time;
 
-                let (wait_seconds, trip_index) = match get_next_wait(
+                let (wait_seconds, trip_index) = match get_expected_wait(
                     &pattern.departures,
                     pattern.stop_offsets[sp.stop_idx],
                     clock_time,

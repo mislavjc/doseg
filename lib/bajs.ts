@@ -165,9 +165,7 @@ async function loadBajsData(): Promise<BajsData> {
   }
 }
 
-export async function getBajsData(): Promise<BajsData> {
-  if (cachedData && Date.now() < cacheExpiresAt) return cachedData
-
+function startRefresh(): Promise<BajsData> {
   if (!pendingLoad) {
     pendingLoad = loadBajsData()
       .then((data) => {
@@ -179,15 +177,19 @@ export async function getBajsData(): Promise<BajsData> {
         pendingLoad = null
       })
   }
+  return pendingLoad
+}
 
-  try {
-    return await pendingLoad
-  } catch (err) {
-    // Serve the last-good snapshot if the feed is briefly unreachable rather
-    // than failing the request outright.
-    if (cachedData) return cachedData
-    throw err
+export async function getBajsData(): Promise<BajsData> {
+  // Same stale-while-revalidate shape as lib/gtfs-rt.ts: an expired snapshot
+  // is served immediately while a deduped refresh lands in the background, so
+  // only the first request of a process lifetime waits on the GBFS feed. A
+  // refresh failure keeps the last-good snapshot in place.
+  if (cachedData) {
+    if (Date.now() >= cacheExpiresAt) startRefresh().catch(() => {})
+    return cachedData
   }
+  return startRefresh()
 }
 
 export function buildBajsFeatureCollection(

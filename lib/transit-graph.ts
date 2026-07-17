@@ -6,6 +6,17 @@ import { modeSpeed, type TransitMode } from "./transit"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_WAIT = 60 * 60
+/** Bounds on the applied RT adjustment (delay at alight minus delay at
+ * boarding). The adjustment is relative, so legitimate values are small even
+ * for badly delayed trips; clamping keeps a single garbage RT entry from
+ * teleporting or stranding an entire pattern. Mirrors RT_ADJUSTMENT_MIN/MAX
+ * in transit/src/isochrone_server.rs. */
+const RT_ADJUSTMENT_MIN = -300
+const RT_ADJUSTMENT_MAX = 900
+
+function clampRtAdjustment(adjustment: number): number {
+  return Math.min(RT_ADJUSTMENT_MAX, Math.max(RT_ADJUSTMENT_MIN, adjustment))
+}
 
 export const WALK_SPEED = 5 // km/h
 const WALK_MAX_KM = 1.2
@@ -348,7 +359,16 @@ export function computeTransitLegDuration(
     pattern.stopOffsets[boardIdx],
     clockTime
   )
-  if (result === null) return null
+
+  // The search already validated this boarding; if the reconstructed clock
+  // drifted past the pattern's last departure (street-path walk legs are
+  // longer than the search's straight-line estimates), fall back to the
+  // schedule-only ride time instead of discarding the whole itinerary.
+  const rideSeconds =
+    pattern.stopOffsets[alightIdx] - pattern.stopOffsets[boardIdx]
+  if (result === null) {
+    return { durationSeconds: Math.round(rideSeconds) }
+  }
 
   let tripRT: TripRT | undefined
   for (
@@ -361,14 +381,15 @@ export function computeTransitLegDuration(
   }
 
   const boardDelay = tripRT ? getStopDelay(tripRT, boardIdx) : 0
-  let durationSeconds =
-    result.waitSeconds +
-    (pattern.stopOffsets[alightIdx] - pattern.stopOffsets[boardIdx])
+  let durationSeconds = result.waitSeconds + rideSeconds
   let delaySeconds: number | undefined
 
   if (tripRT) {
     delaySeconds = getStopDelay(tripRT, alightIdx)
-    durationSeconds += delaySeconds - boardDelay
+    durationSeconds = Math.max(
+      result.waitSeconds,
+      durationSeconds + clampRtAdjustment(delaySeconds - boardDelay)
+    )
   }
 
   return {
@@ -511,7 +532,13 @@ function expandTransitStop(
     for (let i = stopIdx + 1; i < pattern.stopIndices.length; i++) {
       const alightDelay = tripRT ? getStopDelay(tripRT, i) : 0
       let travelTime = boardTime + (pattern.stopOffsets[i] - boardOffset)
-      if (tripRT) travelTime += alightDelay - boardDelay
+      if (tripRT) {
+        // Clamped, and never earlier than the boarding itself.
+        travelTime = Math.max(
+          boardTime,
+          travelTime + clampRtAdjustment(alightDelay - boardDelay)
+        )
+      }
 
       const destIdx = pattern.stopIndices[i]
       if (travelTime < s.best[destIdx]) {

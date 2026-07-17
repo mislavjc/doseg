@@ -68,6 +68,14 @@ let refreshPromise: Promise<void> | null = null
 
 type FeedEntity = GtfsRealtimeBindings.transit_realtime.IFeedEntity
 
+/** Plausibility bounds for RT delay values. ZET's feed intermittently emits
+ * garbage after trip reassignments (observed live: -2846s "early", +5628s
+ * "late"); such values corrupt routing far more than they inform, so
+ * out-of-bounds entries are dropped and the static schedule wins. Mirrors
+ * MIN/MAX_PLAUSIBLE_DELAY in transit/src/gtfs_rt.rs. */
+const MIN_PLAUSIBLE_DELAY = -300
+const MAX_PLAUSIBLE_DELAY = 1800
+
 function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
   const tu = entity.tripUpdate
   if (!tu?.trip?.tripId || !tu.stopTimeUpdate?.length) return
@@ -75,11 +83,13 @@ function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
   const stopTimes: StopTimeRT[] = []
   for (const stu of tu.stopTimeUpdate) {
     const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
+    if (delay < MIN_PLAUSIBLE_DELAY || delay > MAX_PLAUSIBLE_DELAY) continue
     stopTimes.push({
       stopSequence: stu.stopSequence ?? 0,
       arrivalDelay: delay,
     })
   }
+  if (stopTimes.length === 0) return
   stopTimes.sort((a, b) => a.stopSequence - b.stopSequence)
   rt.set(tu.trip.tripId, { stopTimes })
 }

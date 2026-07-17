@@ -7,6 +7,7 @@ import {
   type Predecessor,
   type TransitGraph,
 } from "./transit-graph"
+import { serviceDate } from "./zagreb-time"
 
 export interface ReachabilityState {
   key: string
@@ -67,7 +68,11 @@ async function computeState(
     useBajs: boolean
   }
 ): Promise<ReachabilityState> {
-  const graph = await getGraph()
+  // Filter to today's schedule. Without a service date, OTP's `trips` field
+  // pools every service day in the feed (per-date service ids: ~6 months of
+  // departures merged), which fabricates ~1-minute headways and instant
+  // transfers — routes then contradict the day-filtered isochrone paint.
+  const graph = await getGraph(serviceDate())
   const rtData = getRealtimeData()
   let bajsData: BajsData | null = null
   if (params.useBajs) {

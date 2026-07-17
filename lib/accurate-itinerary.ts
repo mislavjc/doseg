@@ -204,7 +204,8 @@ function buildTransitLeg(
   pred: { fromKey: string; patternIdx?: number; boardIdx?: number; alightIdx?: number },
   fromNode: RouteNode,
   node: RouteNode,
-  elapsedSeconds: number
+  elapsedSeconds: number,
+  firstBoarding: boolean
 ): { leg: Leg; newElapsed: number } | null {
   if (
     pred.patternIdx === undefined ||
@@ -226,7 +227,8 @@ function buildTransitLeg(
     pred.alightIdx,
     state.departureTime,
     elapsedSeconds,
-    state.rtData
+    state.rtData,
+    firstBoarding
   )
   if (!timing) return null
 
@@ -258,7 +260,8 @@ function buildTransitLeg(
 function processChainStep(
   state: ReachabilityState,
   chainKey: string,
-  elapsedSeconds: number
+  elapsedSeconds: number,
+  firstBoarding: boolean
 ): { leg: Leg; newElapsed: number } | null {
   const node = getNode(state, chainKey)
   const pred = state.preds.get(chainKey)
@@ -279,7 +282,7 @@ function processChainStep(
     return { leg, newElapsed: elapsedSeconds + leg.duration }
   }
 
-  const result = buildTransitLeg(state, pred, fromNode, node, elapsedSeconds)
+  const result = buildTransitLeg(state, pred, fromNode, node, elapsedSeconds, firstBoarding)
   if (!result) return null
 
   return { leg: result.leg, newElapsed: result.newElapsed }
@@ -303,11 +306,13 @@ function buildLegsFromChain(
     elapsedSeconds += leg.duration
   }
 
+  let transitUsed = false
   for (let i = 1; i < chain.length; i++) {
-    const step = processChainStep(state, chain[i], elapsedSeconds)
+    const step = processChainStep(state, chain[i], elapsedSeconds, !transitUsed)
     if (!step) return null
     legs.push(step.leg)
     elapsedSeconds = step.newElapsed
+    if (step.leg.mode !== "WALK" && step.leg.mode !== "BIKE") transitUsed = true
   }
 
   return { legs, elapsedSeconds }

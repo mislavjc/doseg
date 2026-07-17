@@ -319,28 +319,19 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
  * Find wait time for the next departure of a pattern at a given stop.
  * Returns seconds to wait + index into departures/tripIds, or null if no service.
  */
-/**
- * Expected boarding wait (headway/2 around the clock time) plus the index of
- * the next departing trip (kept for the GTFS-RT delay lookup).
- *
- * Mirrors get_expected_wait in transit/src/isochrone_server.rs — the route
- * panel and the isochrone paint must share this model, or clicking at the
- * painted 30-minute edge shows a panel time far from 30 whenever the exact
- * timetable happens to be phase-lucky. Returns null past the last departure
- * of the day (no service).
- */
-function getExpectedWait(
+/** Binary search for the first departure index reaching this stop at or after
+ * clockTime, or -1 if the service day is over. */
+function nextDepartureIndex(
   departures: number[],
   stopOffset: number,
   clockTime: number
-): { waitSeconds: number; tripIndex: number } | null {
-  if (departures.length === 0) return null
+): number {
+  if (departures.length === 0) return -1
 
   // A trip departing first stop at time D passes this stop at D + stopOffset.
   // We need D + stopOffset >= clockTime, i.e., D >= clockTime - stopOffset.
   const target = clockTime - stopOffset
 
-  // Binary search for first departure >= target
   let lo = 0
   let hi = departures.length
   while (lo < hi) {
@@ -349,7 +340,53 @@ function getExpectedWait(
     else hi = mid
   }
 
-  if (lo >= departures.length) return null
+  return lo >= departures.length ? -1 : lo
+}
+
+/** A rider times their departure from home to the first vehicle, arriving at
+ * the stop a couple of minutes early — so the first boarding costs at most
+ * this access buffer, regardless of the line's headway. Mirrors
+ * FIRST_BOARDING_WAIT in transit/src/isochrone_server.rs. */
+const FIRST_BOARDING_WAIT = 120
+
+/**
+ * Wait for the FIRST boarding of a journey: the exact next-departure wait,
+ * capped by the access buffer (the rider re-times their departure rather
+ * than stand at the stop). Null when the line has no departure within
+ * MAX_WAIT — a line that isn't running can't be timed.
+ * Mirrors get_first_wait in transit/src/isochrone_server.rs.
+ */
+function getFirstWait(
+  departures: number[],
+  stopOffset: number,
+  clockTime: number
+): { waitSeconds: number; tripIndex: number } | null {
+  const lo = nextDepartureIndex(departures, stopOffset, clockTime)
+  if (lo < 0) return null
+  const wait = departures[lo] + stopOffset - clockTime
+  return wait <= MAX_WAIT
+    ? { waitSeconds: Math.min(wait, FIRST_BOARDING_WAIT), tripIndex: lo }
+    : null
+}
+
+/**
+ * Expected boarding wait (headway/2 around the clock time) plus the index of
+ * the next departing trip (kept for the GTFS-RT delay lookup). Used for
+ * TRANSFER boardings, where the graph's minute precision is fake (median
+ * stop offsets, no connection buffer) and exact waits turn that noise into
+ * phase-lucky fake connections.
+ *
+ * Mirrors get_expected_wait in transit/src/isochrone_server.rs — the route
+ * panel and the isochrone paint must share this model, or clicking at the
+ * painted 30-minute edge shows a panel time far from 30.
+ */
+function getExpectedWait(
+  departures: number[],
+  stopOffset: number,
+  clockTime: number
+): { waitSeconds: number; tripIndex: number } | null {
+  const lo = nextDepartureIndex(departures, stopOffset, clockTime)
+  if (lo < 0) return null
 
   const headway =
     lo > 0
@@ -367,14 +404,17 @@ export function computeTransitLegDuration(
   alightIdx: number,
   departureTime: number,
   arrivalSeconds: number,
-  rtData: Map<string, TripRT>
+  rtData: Map<string, TripRT>,
+  firstBoarding: boolean
 ): { durationSeconds: number; delaySeconds?: number } | null {
   const clockTime = departureTime + arrivalSeconds
-  const result = getExpectedWait(
-    pattern.departures,
-    pattern.stopOffsets[boardIdx],
-    clockTime
-  )
+  const result = firstBoarding
+    ? getFirstWait(pattern.departures, pattern.stopOffsets[boardIdx], clockTime)
+    : getExpectedWait(
+        pattern.departures,
+        pattern.stopOffsets[boardIdx],
+        clockTime
+      )
 
   // The search already validated this boarding; if the reconstructed clock
   // drifted past the pattern's last departure (street-path walk legs are
@@ -530,14 +570,18 @@ function expandTransitStop(
   departureTime: number,
   graph: TransitGraph,
   rtData: Map<string, TripRT>,
-  bajsAdj: IndexedBajsAdjacency | null
+  bajsAdj: IndexedBajsAdjacency | null,
+  seedTimes: Float64Array
 ) {
   const isSameStopTransfer = s.predKind[nodeIdx] === PRED_TRANSIT
+  const firstBoarding = time >= seedTimes[nodeIdx] - 1e-6
   for (const { patternIdx, stopIdx } of stop.patterns) {
     if (isSameStopTransfer && s.predPattern[nodeIdx] === patternIdx) continue
 
     const pattern = graph.patterns[patternIdx]
-    const result = getExpectedWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
+    const result = firstBoarding
+      ? getFirstWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
+      : getExpectedWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
     if (result === null) continue
 
     const boardTime = time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)
@@ -650,13 +694,19 @@ export function computeTravelTimes(
 
   seedTravelTimes(originLat, originLon, stopArray, stopCount, bajsAdj, s.best, s.h)
 
+  // Walk-only seed snapshot: a stop popped at exactly its seed time is still
+  // in the "walked here from the origin" state, so boarding there is the
+  // journey's first (exact timetable wait); anything below the seed came via
+  // transit and boards as a transfer (expected wait). Mirrors the Rust engine.
+  const seedTimes = s.best.slice()
+
   while (s.h.hSize > 0) {
     const { time, nodeIdx } = flatHeapPop(s.h)
     if (time > timeCap) break
     if (time > s.best[nodeIdx]) continue
 
     if (nodeIdx < stopCount) {
-      expandTransitStop(s, stopArray[nodeIdx], nodeIdx, time, departureTime, graph, rtData, bajsAdj)
+      expandTransitStop(s, stopArray[nodeIdx], nodeIdx, time, departureTime, graph, rtData, bajsAdj, seedTimes)
     } else if (bajsAdj) {
       expandBajsStation(s, nodeIdx - stopCount, nodeIdx, time, bajsAdj)
     }

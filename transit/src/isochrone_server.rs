@@ -303,17 +303,46 @@ struct Predecessor {
     alight_idx: Option<usize>,
 }
 
+/// A rider times their departure from home to the first vehicle, arriving at
+/// the stop a couple of minutes early — so the first boarding costs at most
+/// this access buffer, regardless of the line's headway. Charging headway/2
+/// on the first leg gutted sparse-feeder suburbs (Dubec: engine said 36 min
+/// to Vidovec, real timed departure 22), while charging the exact wait made
+/// reach flicker ±50% between 5-minute buckets there.
+const FIRST_BOARDING_WAIT: f64 = 120.0;
+
+/// Wait for the FIRST boarding of a journey: the exact next-departure wait,
+/// capped by the access buffer (the rider re-times their departure rather
+/// than stand at the stop). None when the line has no departure within
+/// MAX_WAIT — a line that isn't running can't be timed.
+fn get_first_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<(f64, usize)> {
+    if departures.is_empty() {
+        return None;
+    }
+    let target = clock_time - stop_offset;
+    let lo = departures.partition_point(|&d| d < target);
+    if lo >= departures.len() {
+        return None;
+    }
+    let wait = departures[lo] + stop_offset - clock_time;
+    if wait <= MAX_WAIT {
+        Some((wait.min(FIRST_BOARDING_WAIT), lo))
+    } else {
+        None
+    }
+}
+
 /// Expected boarding wait (headway/2 around the clock time) plus the index of
-/// the next departing trip (kept for the GTFS-RT delay lookup).
+/// the next departing trip (kept for the GTFS-RT delay lookup). Used for
+/// TRANSFER boardings.
 ///
-/// The graph's minute precision is fake — stop offsets are medians over
-/// sampled trips and transfers carry no buffer — so boarding the *exact* next
-/// departure turns that noise into a lottery: reach swung ±40% between
-/// adjacent 5-minute buckets (07:00 = 53 km², 07:30 = 30 km²) while the real
-/// schedule was flat. Expected wait keeps genuine time-of-day service levels
-/// (night vs peak headways) but makes the isochrone mean "what a typical
-/// departure around HH:MM covers". The point-to-point route panel keeps exact
-/// departures — a concrete itinerary is its product; a typical one is ours.
+/// The graph's minute precision is fake at transfers — stop offsets are
+/// medians over sampled trips and connections carry no buffer — so boarding
+/// the *exact* next departure turned that noise into a lottery: reach swung
+/// ±40% between adjacent 5-minute buckets (07:00 = 53 km², 07:30 = 30 km²)
+/// while the real schedule was flat. Expected wait keeps genuine time-of-day
+/// service levels (night vs peak headways) without the fake-tight-connection
+/// luck. The first boarding of a journey uses get_next_wait instead.
 fn get_expected_wait(
     departures: &[f64],
     stop_offset: f64,
@@ -457,6 +486,14 @@ fn compute_travel_times(
         }
     }
 
+    // Snapshot of the walk-only seed times: a stop popped at exactly its seed
+    // time is still in the "walked here from the origin" state, so boarding
+    // there is the journey's first — it gets the exact timetable wait, while
+    // later (transfer) boardings get the expected wait. If transit reached a
+    // stop faster than walking, its label is below the seed and boarding
+    // counts as a transfer.
+    let seed_times = best.clone();
+
     while !heap.is_empty() {
         let time = heap.peek_time();
         let node_idx = heap.peek_node();
@@ -484,11 +521,23 @@ fn compute_travel_times(
                 let pattern = &graph.patterns[sp.pattern_idx];
                 let clock_time = departure_time + time;
 
-                let (wait_seconds, trip_index) = match get_expected_wait(
-                    &pattern.departures,
-                    pattern.stop_offsets[sp.stop_idx],
-                    clock_time,
-                ) {
+                let first_boarding = seed_times
+                    .get(key.as_str())
+                    .is_some_and(|&seed| time >= seed - 1e-6);
+                let wait_lookup = if first_boarding {
+                    get_first_wait(
+                        &pattern.departures,
+                        pattern.stop_offsets[sp.stop_idx],
+                        clock_time,
+                    )
+                } else {
+                    get_expected_wait(
+                        &pattern.departures,
+                        pattern.stop_offsets[sp.stop_idx],
+                        clock_time,
+                    )
+                };
+                let (wait_seconds, trip_index) = match wait_lookup {
                     Some(r) => r,
                     None => continue,
                 };

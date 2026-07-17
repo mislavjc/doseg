@@ -12,6 +12,14 @@ use prost::Message;
 const ZET_RT_URL: &str = "https://www.zet.hr/gtfs-rt-protobuf";
 const REFRESH_INTERVAL: Duration = Duration::from_secs(30);
 
+/// Plausibility bounds for RT delay values fed to the isochrone. ZET's feed
+/// intermittently emits garbage after trip reassignments (observed live:
+/// -2846s "early", +5628s "late"); such values corrupt travel times far more
+/// than they inform, so out-of-bounds entries are dropped and the static
+/// schedule wins.
+const MIN_PLAUSIBLE_DELAY: i32 = -300;
+const MAX_PLAUSIBLE_DELAY: i32 = 1800;
+
 // --- Minimal GTFS-RT protobuf types (hand-written subset, matches the spec) ---
 
 #[derive(Clone, Message)]
@@ -396,23 +404,28 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
             let mut stop_times: Vec<StopTimeRT> = tu
                 .stop_time_update
                 .iter()
-                .map(|stu| {
+                .filter_map(|stu| {
                     let delay = stu
                         .arrival
                         .as_ref()
                         .and_then(|a| a.delay)
                         .or_else(|| stu.departure.as_ref().and_then(|d| d.delay))
                         .unwrap_or(0);
-                    StopTimeRT {
+                    if !(MIN_PLAUSIBLE_DELAY..=MAX_PLAUSIBLE_DELAY).contains(&delay) {
+                        return None;
+                    }
+                    Some(StopTimeRT {
                         stop_sequence: stu.stop_sequence.unwrap_or(0) as u16,
                         arrival_delay: delay,
-                    }
+                    })
                 })
                 .collect();
             stop_times.sort_by_key(|s| s.stop_sequence);
 
             let raw_id = strip_prefix(trip_id);
-            rt.insert(raw_id.to_string(), TripRT { stop_times });
+            if !stop_times.is_empty() {
+                rt.insert(raw_id.to_string(), TripRT { stop_times });
+            }
 
             // Build snapshot trip
             let route_id = tu

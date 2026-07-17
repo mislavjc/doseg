@@ -1,0 +1,48 @@
+name: Fix CF isochrone cache rule
+# One-shot maintenance: set the /api/isochrone Cache Rule to respect origin
+# cache-control (the rule's 4h Edge/Browser TTL override was pinning
+# transiently-corrupted RT isochrones at the edge), then purge the cache.
+on: workflow_dispatch
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set isochrone cache rule TTLs to respect origin
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          api() {
+            curl -s -H "Authorization: Bearer $CF_TOKEN" -H "Content-Type: application/json" "$@"
+          }
+          check() { # $1 = json, $2 = label
+            if [ "$(echo "$1" | jq -r '.success')" != "true" ]; then
+              echo "$2 failed:"; echo "$1" | jq '.errors'; exit 1
+            fi
+          }
+
+          ZONES=$(api "https://api.cloudflare.com/client/v4/zones?name=doseg.hr")
+          check "$ZONES" "zone lookup (token may lack Zone:Read)"
+          ZONE_ID=$(echo "$ZONES" | jq -r '.result[0].id')
+          echo "zone: $ZONE_ID"
+
+          RS=$(api "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rulesets/phases/http_request_cache_settings/entrypoint")
+          check "$RS" "cache ruleset fetch (token may lack Zone Cache Rules:Edit)"
+          echo "$RS" | jq -r '.result.rules[] | "\(.id) :: \(.expression)"'
+          RS_ID=$(echo "$RS" | jq -r '.result.id')
+
+          BODY=$(echo "$RS" | jq '{rules: (.result.rules | map(
+            del(.version, .last_updated) |
+            if (.expression | test("isochrone")) then
+              .action_parameters.edge_ttl = {mode: "respect_origin"} |
+              .action_parameters.browser_ttl = {mode: "respect_origin"}
+            else . end))}')
+          RES=$(api -X PUT "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rulesets/$RS_ID" --data "$BODY")
+          check "$RES" "ruleset update"
+          echo "isochrone rule now respects origin cache-control"
+
+          # Prefix purge is Enterprise-only; purge everything (static assets recache fast)
+          PURGE=$(api -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/purge_cache" --data '{"purge_everything":true}')
+          check "$PURGE" "cache purge (token may lack Zone Cache Purge)"
+          echo "cache purged"

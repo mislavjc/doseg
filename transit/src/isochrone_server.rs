@@ -59,6 +59,13 @@ const THRESHOLD_BUFFER: f64 = 120.0;
 
 const WALK_MAX_KM: f64 = 1.2;
 const MAX_WAIT: f64 = 3600.0;
+/// Bounds on the applied RT adjustment (delay at destination minus delay at
+/// boarding). The adjustment is relative, so legitimate values are small even
+/// for badly delayed trips; clamping keeps a single garbage RT entry from
+/// teleporting or stranding an entire pattern (see MIN/MAX_PLAUSIBLE_DELAY in
+/// gtfs_rt.rs for the first line of defense).
+const RT_ADJUSTMENT_MIN: f64 = -300.0;
+const RT_ADJUSTMENT_MAX: f64 = 900.0;
 /// Straight-line → road distance multiplier (urban street grid detour).
 const WALK_DETOUR: f64 = 1.35;
 
@@ -494,9 +501,12 @@ fn compute_travel_times(
                     let dest_key = &graph.stops[dest_idx].key;
                     let mut travel_time = board_time + (pattern.stop_offsets[i] - board_offset);
 
-                    // Apply real-time delay adjustment
+                    // Apply real-time delay adjustment; clamped, and never
+                    // earlier than the boarding itself.
                     if let Some(rt) = trip_rt {
-                        travel_time += gtfs_rt::get_stop_delay(rt, i) as f64 - board_delay;
+                        let adjustment = (gtfs_rt::get_stop_delay(rt, i) as f64 - board_delay)
+                            .clamp(RT_ADJUSTMENT_MIN, RT_ADJUSTMENT_MAX);
+                        travel_time = (travel_time + adjustment).max(board_time);
                     }
 
                     let existing = best
@@ -1457,8 +1467,12 @@ async fn handle_isochrone(
             8.0 * 3600.0
         }
     } else {
-        // Default to current Zagreb time (UTC+1/+2)
-        8.0 * 3600.0
+        // No explicit time: use the actual current Zagreb wall clock, so a
+        // time-less request means "now" (it gets snapped to the same 5-minute
+        // buckets as explicit times below). Clients should still send `time`
+        // explicitly — a time-less URL is an ambiguous CDN cache key.
+        let now = unix_now();
+        ((now + zagreb_offset(now)) % 86400) as f64
     };
 
     // Snap coordinates to 3 decimal places (~100m) for Cloudflare cache hits

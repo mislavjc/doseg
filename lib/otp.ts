@@ -28,12 +28,24 @@ function snapTime(time: string): string {
   return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`
 }
 
+/** "Sada" = the actual current Zagreb wall-clock time. Sent explicitly even in
+ * now-mode so the URL is an honest cache key — a time-less URL would pin
+ * whatever "now" the server saw at cache-fill time for the whole CDN TTL. */
+function zagrebNow(): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Zagreb",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date())
+}
+
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({
     lat: params.lat.toFixed(3),
     lon: params.lon.toFixed(3),
   })
-  if (params.time) searchParams.set("time", snapTime(params.time))
+  searchParams.set("time", snapTime(params.time ?? zagrebNow()))
   if (params.bajs) searchParams.set("bajs", "1")
   return searchParams
 }

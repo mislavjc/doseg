@@ -15,12 +15,25 @@ interface IsochroneParams {
 export type IsochroneResponse = RustIsochroneResponse
 type IsochroneRoutingResponse = RoutingOnlyResponse
 
+/** The isochrone server rounds lat/lon to 3 decimals and departure time to
+ * 5-minute buckets before computing, so requests inside the same bucket are
+ * identical. Snap the URL to that grid too — otherwise every click produces a
+ * unique query string and the CDN cache in front of the server never hits. */
+function snapTime(time: string): string {
+  const [h, m] = time.split(":").map(Number)
+  if (Number.isNaN(h) || Number.isNaN(m)) return time
+  const snapped = Math.round((h * 60 + m) / 5) * 5
+  const hh = Math.floor(snapped / 60) % 24
+  const mm = snapped % 60
+  return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`
+}
+
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({
-    lat: String(params.lat),
-    lon: String(params.lon),
+    lat: params.lat.toFixed(3),
+    lon: params.lon.toFixed(3),
   })
-  if (params.time) searchParams.set("time", params.time)
+  if (params.time) searchParams.set("time", snapTime(params.time))
   if (params.bajs) searchParams.set("bajs", "1")
   return searchParams
 }

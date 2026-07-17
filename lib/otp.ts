@@ -40,6 +40,12 @@ function zagrebNow(): string {
   }).format(new Date())
 }
 
+/** Reach-model version, used purely as a cache key. The CDN (and, via its
+ * TTL override, the browser) caches /api/isochrone for hours, so a model
+ * change ships instantly only if the URL changes with it. Bump whenever the
+ * engine's semantics change. */
+const ISOCHRONE_MODEL_VERSION = "4"
+
 function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   const searchParams = new URLSearchParams({
     lat: params.lat.toFixed(3),
@@ -47,6 +53,7 @@ function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
   })
   searchParams.set("time", snapTime(params.time ?? zagrebNow()))
   if (params.bajs) searchParams.set("bajs", "1")
+  searchParams.set("v", ISOCHRONE_MODEL_VERSION)
   return searchParams
 }
 

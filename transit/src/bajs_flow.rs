@@ -37,6 +37,11 @@ pub const MAX_RELIABLE_GAP_SEC: i64 = 180;
 /// came back under a rotated id or left service.
 pub const MAX_TRIP_DURATION_SEC: i64 = 6 * 3600;
 
+/// Shortest gap over which a bike appearing at a different dock, without ever
+/// having left the feed, is believable as a ride. Below this it is a feed
+/// correction reassigning a parked bike, not somebody pedalling.
+pub const MIN_OBSERVABLE_RIDE_SEC: i64 = 120;
+
 /// One docked bike as reported by `free_bike_status`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BikeObservation {
@@ -262,7 +267,12 @@ impl BikeTracker {
                 // Sat still, or already resolved above as flicker or short ride.
                 Some(prev_station) if prev_station == &obs.station_id => continue,
                 Some(prev_station) => {
-                    // Docked somewhere else without ever leaving the feed.
+                    // Docked somewhere else without ever leaving the feed. Over
+                    // a normal poll interval that is the feed correcting where
+                    // a parked bike lives, not a ride nobody could have taken.
+                    if ts - prev_ts < MIN_OBSERVABLE_RIDE_SEC {
+                        continue;
+                    }
                     per_station
                         .entry(obs.station_id.clone())
                         .or_default()
@@ -488,6 +498,30 @@ mod tests {
         assert_eq!(delta.per_station["B"].returns, 1);
         assert_eq!(delta.trips.len(), 1);
         assert_eq!(t.in_flight_count(), 0);
+    }
+
+    #[test]
+    fn a_dock_reassignment_inside_one_poll_is_not_a_ride() {
+        let mut t = BikeTracker::new();
+        t.observe(0, &obs(&[("b1", "A")]), &stations());
+
+        let out = t.observe(60, &obs(&[("b1", "B")]), &stations());
+        let delta = out.delta.unwrap();
+        assert_eq!(delta.starts, 0, "nobody rides A to B in under a minute");
+        assert_eq!(delta.returns, 0);
+        assert!(delta.trips.is_empty());
+    }
+
+    #[test]
+    fn the_same_move_over_a_rideable_gap_counts() {
+        let mut t = BikeTracker::new();
+        t.observe(0, &obs(&[("b1", "A")]), &stations());
+
+        let out = t.observe(600, &obs(&[("b1", "B")]), &stations());
+        let delta = out.delta.unwrap();
+        assert_eq!(delta.starts, 1);
+        assert_eq!(delta.returns, 1);
+        assert_eq!(delta.trips.len(), 1);
     }
 
     #[test]

@@ -526,16 +526,27 @@ struct GbfsFreeBikeStatusData {
 #[derive(serde::Deserialize)]
 struct GbfsFreeBike {
     bike_id: String,
+    /// Present while the bike sits at a station. Bikes out on a ride are
+    /// absent from the feed entirely rather than listed without a station.
+    station_id: Option<String>,
     #[serde(default)]
     is_reserved: bool,
     #[serde(default)]
     is_disabled: bool,
 }
 
+/// One bike currently docked at a station.
+#[allow(dead_code)]
+#[derive(Clone, Debug)]
+pub struct DockedBike {
+    pub bike_id: String,
+    pub station_id: String,
+}
+
 #[allow(dead_code)]
 pub struct FreeBikeSnapshot {
-    /// All bike IDs in the feed (for fleet tracking)
-    pub all_ids: Vec<String>,
+    /// Every bike the feed places at a station, identity included.
+    pub docked: Vec<DockedBike>,
     /// Count of bikes available for rent (!reserved && !disabled)
     pub available_count: usize,
 }
@@ -559,15 +570,21 @@ pub fn fetch_free_bike_status() -> Option<FreeBikeSnapshot> {
     };
     feed.data.and_then(|d| d.bikes).map(|bikes| {
         let mut available_count = 0usize;
-        let mut all_ids = Vec::with_capacity(bikes.len());
+        let mut docked = Vec::with_capacity(bikes.len());
         for b in bikes {
-            if !b.is_reserved && !b.is_disabled {
+            let is_rentable = !b.is_reserved && !b.is_disabled;
+            if is_rentable {
                 available_count += 1;
             }
-            all_ids.push(b.bike_id);
+            if let Some(station_id) = b.station_id {
+                docked.push(DockedBike {
+                    bike_id: b.bike_id,
+                    station_id,
+                });
+            }
         }
         FreeBikeSnapshot {
-            all_ids,
+            docked,
             available_count,
         }
     })

@@ -1,4 +1,5 @@
 mod bajs;
+mod bajs_flow;
 #[allow(dead_code)]
 mod districts;
 mod geo;
@@ -2491,6 +2492,7 @@ struct BajsTaskConfig {
 
 fn spawn_bajs_status_task(config: BajsTaskConfig) {
     tokio::spawn(async move {
+        let mut tracker = bajs_flow::BikeTracker::new();
         loop {
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -2543,9 +2545,87 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
                 );
             }
 
+            track_bajs_bike_flow(&config, &mut tracker, now as i64).await;
+
             tokio::time::sleep(Duration::from_secs(60)).await;
         }
     });
+}
+
+/// Poll the per-bike feed and record measured ride events.
+///
+/// Every bike physically at a station is tracked, including reserved and
+/// out-of-service ones: a bike_id leaves the feed when the bike leaves the
+/// dock, which is the event we want. Rentability only affects the availability
+/// figure, which `bajs_usage` already covers.
+async fn track_bajs_bike_flow(
+    config: &BajsTaskConfig,
+    tracker: &mut bajs_flow::BikeTracker,
+    now: i64,
+) {
+    let snapshot = match tokio::task::spawn_blocking(otp::fetch_free_bike_status).await {
+        Ok(Some(s)) => s,
+        _ => return,
+    };
+
+    let observations: Vec<bajs_flow::BikeObservation> = snapshot
+        .docked
+        .iter()
+        .map(|b| bajs_flow::BikeObservation {
+            bike_id: b.bike_id.clone(),
+            station_id: b.station_id.clone(),
+        })
+        .collect();
+
+    let known_stations: Vec<String> = match config.store.read() {
+        Ok(statuses) => statuses
+            .iter()
+            .filter(|s| s.is_installed)
+            .map(|s| s.station_id.clone())
+            .collect(),
+        Err(_) => Vec::new(),
+    };
+
+    let outcome = tracker.observe(now, &observations, &known_stations);
+
+    let Some(ref db) = config.db_conn else {
+        return;
+    };
+    let Ok(mut conn) = db.lock() else {
+        return;
+    };
+
+    if let Some(ref delta) = outcome.delta {
+        if let Err(e) = rt_store::insert_bajs_flow_minute(&conn, delta) {
+            eprintln!("BAJS flow: minute write failed: {}", e);
+        }
+        if let Err(e) = rt_store::insert_bajs_trips(&mut conn, &delta.trips) {
+            eprintln!("BAJS flow: trip write failed: {}", e);
+        }
+        if delta.starts + delta.returns + delta.bulk_out + delta.bulk_in > 0 {
+            eprintln!(
+                "BAJS flow: {} started, {} returned, {} moved by truck, {} out, {} rentable ({}s gap{})",
+                delta.starts,
+                delta.returns,
+                delta.bulk_out + delta.bulk_in,
+                tracker.in_flight_count(),
+                snapshot.available_count,
+                delta.gap_sec,
+                if delta.is_reliable() {
+                    ""
+                } else {
+                    ", UNRELIABLE"
+                },
+            );
+        }
+    }
+
+    if let Some(ref flush) = outcome.flush {
+        match rt_store::upsert_bajs_station_hourly(&mut conn, flush) {
+            Ok(n) => eprintln!("BAJS flow: wrote hour {} for {} stations", flush.hour_ts, n),
+            Err(e) => eprintln!("BAJS flow: hourly write failed: {}", e),
+        }
+    }
 }
 
 // --- Load scheduled speeds from route-stats.json ---

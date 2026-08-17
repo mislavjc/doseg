@@ -138,6 +138,49 @@ impl RtDb {
                 known_fleet INTEGER NOT NULL
             ) WITHOUT ROWID;
 
+            -- Measured ride events, diffed from per-bike GBFS snapshots.
+            -- starts/returns are counted events, not inferences. gap_sec is
+            -- the distance to the previous poll: rows with a large gap span
+            -- more than their own minute and must be filtered, not read as
+            -- quiet minutes.
+            CREATE TABLE IF NOT EXISTS bajs_flow_minute (
+                ts        INTEGER NOT NULL PRIMARY KEY,
+                starts    INTEGER NOT NULL,
+                returns   INTEGER NOT NULL,
+                bulk_out  INTEGER NOT NULL,
+                bulk_in   INTEGER NOT NULL,
+                docked    INTEGER NOT NULL,
+                -- stations holding at least one bike, not network size
+                stations  INTEGER NOT NULL,
+                gap_sec   INTEGER NOT NULL
+            ) WITHOUT ROWID;
+
+            CREATE TABLE IF NOT EXISTS bajs_station_hourly (
+                hour_ts       INTEGER NOT NULL,
+                station_id    TEXT    NOT NULL,
+                starts        INTEGER NOT NULL,
+                returns       INTEGER NOT NULL,
+                bulk_out      INTEGER NOT NULL,
+                bulk_in       INTEGER NOT NULL,
+                sum_bikes     INTEGER NOT NULL,
+                min_bikes     INTEGER NOT NULL,
+                max_bikes     INTEGER NOT NULL,
+                empty_samples INTEGER NOT NULL,
+                samples       INTEGER NOT NULL,
+                PRIMARY KEY (hour_ts, station_id)
+            ) WITHOUT ROWID;
+
+            -- Rides whose bike kept its id across the trip, so both ends are
+            -- known. A subset of all rides, never a total.
+            CREATE TABLE IF NOT EXISTS bajs_trip (
+                departed_ts  INTEGER NOT NULL,
+                arrived_ts   INTEGER NOT NULL,
+                from_station TEXT    NOT NULL,
+                to_station   TEXT    NOT NULL
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_bajs_station_hour ON bajs_station_hourly(station_id, hour_ts);
+            CREATE INDEX IF NOT EXISTS idx_bajs_trip_arrived ON bajs_trip(arrived_ts);
             CREATE INDEX IF NOT EXISTS idx_snapshots_route ON snapshots(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_stop_delays_route ON stop_delays(route_id, ts);
             CREATE INDEX IF NOT EXISTS idx_alerts_ts ON alerts(first_seen);
@@ -461,6 +504,30 @@ impl RtDb {
             Ok(n) => eprintln!("RT DB: compacted {} old snapshot rows", n),
             Err(e) => eprintln!("RT DB: compaction failed: {}", e),
         }
+
+        // Minute-level bike flow folds into the hourly table, so only the
+        // hourly aggregates and trips are worth keeping for a full year.
+        match self.cleanup_old_bajs_flow(one_year_ago) {
+            Ok(0) => {}
+            Ok(n) => eprintln!("RT DB: cleaned {} old bajs flow rows", n),
+            Err(e) => eprintln!("RT DB: bajs flow cleanup failed: {}", e),
+        }
+    }
+
+    fn cleanup_old_bajs_flow(&self, cutoff: i64) -> rusqlite::Result<usize> {
+        let minutes = self.conn.execute(
+            "DELETE FROM bajs_flow_minute WHERE ts < ?1",
+            params![cutoff],
+        )?;
+        let hourly = self.conn.execute(
+            "DELETE FROM bajs_station_hourly WHERE hour_ts < ?1",
+            params![cutoff],
+        )?;
+        let trips = self.conn.execute(
+            "DELETE FROM bajs_trip WHERE arrived_ts < ?1",
+            params![cutoff],
+        )?;
+        Ok(minutes + hourly + trips)
     }
 }
 
@@ -1031,6 +1098,197 @@ pub fn query_bajs_usage(
     rows.collect()
 }
 
+// --- BAJS measured ride flow ---
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BajsFlowPoint {
+    pub ts: i64,
+    pub starts: i64,
+    pub returns: i64,
+    pub bulk_out: i64,
+    pub bulk_in: i64,
+    pub docked: i64,
+    /// Seconds since the previous poll. Anything well above 60 means this row
+    /// covers more than its own minute.
+    pub gap_sec: i64,
+}
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BajsStationRank {
+    pub station_id: String,
+    pub starts: i64,
+    pub returns: i64,
+    pub bulk_out: i64,
+    pub bulk_in: i64,
+    pub avg_bikes: f64,
+    pub empty_share: f64,
+    pub samples: i64,
+}
+
+pub fn insert_bajs_flow_minute(
+    conn: &Connection,
+    delta: &crate::bajs_flow::PollDelta,
+) -> rusqlite::Result<()> {
+    let ts = delta.ts - delta.ts.rem_euclid(60);
+    conn.execute(
+        "INSERT INTO bajs_flow_minute (ts, starts, returns, bulk_out, bulk_in, docked, stations, gap_sec)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+         ON CONFLICT(ts) DO UPDATE SET
+             starts   = starts + excluded.starts,
+             returns  = returns + excluded.returns,
+             bulk_out = bulk_out + excluded.bulk_out,
+             bulk_in  = bulk_in + excluded.bulk_in,
+             docked   = excluded.docked,
+             stations = excluded.stations,
+             gap_sec  = MAX(gap_sec, excluded.gap_sec)",
+        params![
+            ts,
+            delta.starts,
+            delta.returns,
+            delta.bulk_out,
+            delta.bulk_in,
+            delta.docked,
+            delta.stations,
+            delta.gap_sec,
+        ],
+    )?;
+    Ok(())
+}
+
+/// Write a completed hour. Accumulates on conflict so a restart mid-hour adds
+/// to the partial hour instead of replacing it.
+pub fn upsert_bajs_station_hourly(
+    conn: &mut Connection,
+    flush: &crate::bajs_flow::HourFlush,
+) -> rusqlite::Result<usize> {
+    let tx = conn.transaction()?;
+    {
+        let mut stmt = tx.prepare(
+            "INSERT INTO bajs_station_hourly
+                 (hour_ts, station_id, starts, returns, bulk_out, bulk_in,
+                  sum_bikes, min_bikes, max_bikes, empty_samples, samples)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+             ON CONFLICT(hour_ts, station_id) DO UPDATE SET
+                 starts        = starts + excluded.starts,
+                 returns       = returns + excluded.returns,
+                 bulk_out      = bulk_out + excluded.bulk_out,
+                 bulk_in       = bulk_in + excluded.bulk_in,
+                 sum_bikes     = sum_bikes + excluded.sum_bikes,
+                 min_bikes     = MIN(min_bikes, excluded.min_bikes),
+                 max_bikes     = MAX(max_bikes, excluded.max_bikes),
+                 empty_samples = empty_samples + excluded.empty_samples,
+                 samples       = samples + excluded.samples",
+        )?;
+        for (station_id, hour) in &flush.stations {
+            stmt.execute(params![
+                flush.hour_ts,
+                station_id,
+                hour.starts,
+                hour.returns,
+                hour.bulk_out,
+                hour.bulk_in,
+                hour.sum_bikes,
+                hour.min_bikes,
+                hour.max_bikes,
+                hour.empty_samples,
+                hour.samples,
+            ])?;
+        }
+    }
+    tx.commit()?;
+    Ok(flush.stations.len())
+}
+
+pub fn insert_bajs_trips(
+    conn: &mut Connection,
+    trips: &[crate::bajs_flow::MatchedTrip],
+) -> rusqlite::Result<()> {
+    if trips.is_empty() {
+        return Ok(());
+    }
+    let tx = conn.transaction()?;
+    {
+        let mut stmt = tx.prepare(
+            "INSERT INTO bajs_trip (departed_ts, arrived_ts, from_station, to_station)
+             VALUES (?1, ?2, ?3, ?4)",
+        )?;
+        for trip in trips {
+            stmt.execute(params![
+                trip.departed_ts,
+                trip.arrived_ts,
+                trip.from_station,
+                trip.to_station,
+            ])?;
+        }
+    }
+    tx.commit()?;
+    Ok(())
+}
+
+/// Minute-level ride flow. `max_gap_sec` drops intervals where polling
+/// stalled, so a feed outage reads as missing rather than as zero rides.
+pub fn query_bajs_flow(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+    max_gap_sec: i64,
+) -> rusqlite::Result<Vec<BajsFlowPoint>> {
+    let mut stmt = conn.prepare(
+        "SELECT ts, starts, returns, bulk_out, bulk_in, docked, gap_sec
+         FROM bajs_flow_minute
+         WHERE ts >= ?1 AND ts <= ?2 AND gap_sec <= ?3
+         ORDER BY ts",
+    )?;
+    let rows = stmt.query_map(params![from, to, max_gap_sec], |row| {
+        Ok(BajsFlowPoint {
+            ts: row.get(0)?,
+            starts: row.get(1)?,
+            returns: row.get(2)?,
+            bulk_out: row.get(3)?,
+            bulk_in: row.get(4)?,
+            docked: row.get(5)?,
+            gap_sec: row.get(6)?,
+        })
+    })?;
+    rows.collect()
+}
+
+/// Stations ranked by measured rides started, busiest first.
+pub fn query_bajs_station_ranking(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<BajsStationRank>> {
+    let mut stmt = conn.prepare(
+        "SELECT station_id,
+                SUM(starts), SUM(returns), SUM(bulk_out), SUM(bulk_in),
+                SUM(sum_bikes), SUM(empty_samples), SUM(samples)
+         FROM bajs_station_hourly
+         WHERE hour_ts >= ?1 AND hour_ts <= ?2
+         GROUP BY station_id
+         HAVING SUM(samples) > 0
+         ORDER BY SUM(starts) DESC",
+    )?;
+    let rows = stmt.query_map(params![from, to], |row| {
+        let sum_bikes: i64 = row.get(5)?;
+        let empty_samples: i64 = row.get(6)?;
+        let samples: i64 = row.get(7)?;
+        Ok(BajsStationRank {
+            station_id: row.get(0)?,
+            starts: row.get(1)?,
+            returns: row.get(2)?,
+            bulk_out: row.get(3)?,
+            bulk_in: row.get(4)?,
+            avg_bikes: sum_bikes as f64 / samples as f64,
+            empty_share: empty_samples as f64 / samples as f64,
+            samples,
+        })
+    })?;
+    rows.collect()
+}
+
 /// Spawn a dedicated OS thread that receives snapshots and writes to SQLite.
 pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Receiver<RtSnapshot>) {
     std::thread::spawn(move || {
@@ -1218,5 +1476,129 @@ mod tests {
             .query_row("SELECT COUNT(*) FROM snapshots", [], |r| r.get(0))
             .unwrap();
         assert_eq!(after, 0);
+    }
+
+    fn station_hour(
+        starts: i64,
+        sum_bikes: i64,
+        empty: i64,
+        samples: i64,
+    ) -> crate::bajs_flow::StationHour {
+        crate::bajs_flow::StationHour {
+            starts,
+            returns: starts,
+            sum_bikes,
+            min_bikes: 0,
+            max_bikes: 5,
+            empty_samples: empty,
+            samples,
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn test_bajs_flow_round_trip() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
+        let hour = 1710720000;
+
+        let flush = crate::bajs_flow::HourFlush {
+            hour_ts: hour,
+            stations: vec![
+                ("quiet".to_string(), station_hour(2, 300, 0, 60)),
+                ("busy".to_string(), station_hour(9, 60, 30, 60)),
+            ],
+        };
+        upsert_bajs_station_hourly(&mut db.conn, &flush).unwrap();
+
+        let ranking = query_bajs_station_ranking(&db.conn, hour, hour).unwrap();
+        assert_eq!(ranking.len(), 2);
+        assert_eq!(ranking[0].station_id, "busy", "ranked by measured rides");
+        assert_eq!(ranking[0].starts, 9);
+        assert_eq!(ranking[0].empty_share, 0.5);
+        assert_eq!(ranking[1].avg_bikes, 5.0);
+
+        // A second flush for the same hour accumulates rather than replaces.
+        upsert_bajs_station_hourly(&mut db.conn, &flush).unwrap();
+        let ranking = query_bajs_station_ranking(&db.conn, hour, hour).unwrap();
+        assert_eq!(ranking[0].starts, 18);
+        assert_eq!(ranking[0].samples, 120);
+    }
+
+    #[test]
+    fn test_bajs_flow_minute_filters_stalled_polls() {
+        let dir = tempfile::tempdir().unwrap();
+        let db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
+        let ts = 1710720000;
+
+        let fresh = crate::bajs_flow::PollDelta {
+            ts,
+            gap_sec: 60,
+            starts: 4,
+            returns: 3,
+            docked: 1700,
+            stations: 190,
+            ..Default::default()
+        };
+        let stalled = crate::bajs_flow::PollDelta {
+            ts: ts + 3600,
+            gap_sec: 3600,
+            starts: 240,
+            docked: 1500,
+            stations: 190,
+            ..Default::default()
+        };
+        insert_bajs_flow_minute(&db.conn, &fresh).unwrap();
+        insert_bajs_flow_minute(&db.conn, &stalled).unwrap();
+
+        let all = query_bajs_flow(&db.conn, ts, ts + 7200, 86400).unwrap();
+        assert_eq!(all.len(), 2, "both rows are stored");
+
+        let usable = query_bajs_flow(&db.conn, ts, ts + 7200, 180).unwrap();
+        assert_eq!(usable.len(), 1, "the stalled interval is excluded");
+        assert_eq!(usable[0].starts, 4);
+    }
+
+    #[test]
+    fn test_bajs_retention_drops_old_rows() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
+        let now = 1710720000;
+        let ancient = now - 400 * 86400;
+
+        insert_bajs_flow_minute(
+            &db.conn,
+            &crate::bajs_flow::PollDelta {
+                ts: ancient,
+                gap_sec: 60,
+                starts: 1,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        upsert_bajs_station_hourly(
+            &mut db.conn,
+            &crate::bajs_flow::HourFlush {
+                hour_ts: ancient,
+                stations: vec![("old".to_string(), station_hour(1, 10, 0, 10))],
+            },
+        )
+        .unwrap();
+        insert_bajs_trips(
+            &mut db.conn,
+            &[crate::bajs_flow::MatchedTrip {
+                departed_ts: ancient,
+                arrived_ts: ancient + 600,
+                from_station: "a".into(),
+                to_station: "b".into(),
+            }],
+        )
+        .unwrap();
+
+        assert_eq!(db.cleanup_old_bajs_flow(now - 365 * 86400).unwrap(), 3);
+        assert!(query_bajs_flow(&db.conn, 0, now, 86400).unwrap().is_empty());
+        assert!(query_bajs_station_ranking(&db.conn, 0, now)
+            .unwrap()
+            .is_empty());
     }
 }

@@ -756,9 +756,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 27,
-    "stations45": 61
+    "stations15": 20,
+    "stations30": 81,
+    "stations45": 234
   },
   "prevSlug": "d-bistra-centar",
   "nextSlug": "dankovecka"

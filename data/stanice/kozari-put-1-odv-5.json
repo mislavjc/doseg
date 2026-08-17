@@ -289,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 39,
-    "stations45": 160
+    "stations15": 19,
+    "stations30": 92,
+    "stations45": 266
   },
   "prevSlug": "kozari-bok",
   "nextSlug": "kozari-putevi"

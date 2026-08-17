@@ -134,9 +134,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 2,
-    "stations45": 9
+    "stations15": 8,
+    "stations30": 22,
+    "stations45": 95
   },
   "prevSlug": "grebenscica",
   "nextSlug": "grizanska"

@@ -21,8 +21,7 @@
             "4",
             "7",
             "11",
-            "12",
-            "13"
+            "12"
           ]
         },
         {
@@ -651,8 +650,7 @@
             "4",
             "7",
             "11",
-            "12",
-            "13"
+            "12"
           ]
         }
       ],
@@ -1930,12 +1928,6 @@
         "terminal": "Dubrava"
       },
       {
-        "broj": "13",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Dubrava"
-      },
-      {
         "broj": "205",
         "mode": "bus",
         "isNight": false,
@@ -1995,7 +1987,7 @@
   "prevBroj": "229",
   "nextBroj": "231",
   "reach": {
-    "areaKm2": 14.7,
+    "areaKm2": 25.1,
     "stopName": "Pesteri",
     "lat": 45.848,
     "lon": 16.03779

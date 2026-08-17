@@ -70,19 +70,11 @@
             45.85774
           ],
           [
-            16.12583,
-            45.85775
-          ],
-          [
             16.1254,
             45.85773
           ],
           [
             16.12172,
-            45.85824
-          ],
-          [
-            16.12171,
             45.85824
           ],
           [
@@ -210,9 +202,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 35,
-    "stations45": 130
+    "stations15": 13,
+    "stations30": 54,
+    "stations45": 174
   },
   "prevSlug": "m-polje-okretiste",
   "nextSlug": "m-trnava-v-rocica"

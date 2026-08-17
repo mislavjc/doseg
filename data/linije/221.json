@@ -28,6 +28,8 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -570,6 +572,8 @@
           "lon": 15.97956,
           "offsetMin": 7,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -587,16 +591,20 @@
           45.77306
         ],
         [
-          15.9951,
-          45.77283
+          15.99541,
+          45.77289
+        ],
+        [
+          15.99429,
+          45.77275
         ],
         [
           15.99349,
-          45.77267
+          45.77273
         ],
         [
-          15.99095,
-          45.7726
+          15.99099,
+          45.77265
         ],
         [
           15.99,
@@ -1979,6 +1987,14 @@
     ],
     "tramCrossings": [
       {
+        "broj": "3",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "5",
+        "stopName": "Lisinski"
+      },
+      {
         "broj": "7",
         "stopName": "Muzej suv.umjetnosti"
       },
@@ -1995,7 +2011,7 @@
   "prevBroj": "220",
   "nextBroj": "222",
   "reach": {
-    "areaKm2": 23.3,
+    "areaKm2": 43.6,
     "stopName": "Islandska",
     "lat": 45.77244,
     "lon": 15.98883

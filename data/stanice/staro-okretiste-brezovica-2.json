@@ -194,9 +194,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 18,
-    "stations45": 33
+    "stations15": 12,
+    "stations30": 29,
+    "stations45": 76
   },
   "prevSlug": "staro-okretiste-brezovica",
   "nextSlug": "stefanov-stud-kamp"

@@ -206,9 +206,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 14,
-    "stations45": 29
+    "stations15": 10,
+    "stations30": 32,
+    "stations45": 95
   },
   "prevSlug": "n-s-knjiznica",
   "nextSlug": "nadlug"

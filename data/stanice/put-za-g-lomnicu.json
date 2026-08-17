@@ -535,9 +535,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 4,
-    "stations45": 9
+    "stations15": 4,
+    "stations30": 38,
+    "stations45": 115
   },
   "prevSlug": "put-za-franje",
   "nextSlug": "put-za-kasinu"

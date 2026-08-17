@@ -84,10 +84,6 @@
             45.78429
           ],
           [
-            16.04282,
-            45.78429
-          ],
-          [
             16.04283,
             45.78429
           ],
@@ -121,10 +117,6 @@
           ],
           [
             16.05862,
-            45.77634
-          ],
-          [
-            16.05863,
             45.77634
           ],
           [
@@ -294,9 +286,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 75,
-    "stations45": 283
+    "stations15": 22,
+    "stations30": 70,
+    "stations45": 251
   },
   "prevSlug": "radnicka-218",
   "nextSlug": "radnicka-pescenica-zitnjak"

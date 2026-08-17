@@ -89,8 +89,16 @@
             45.85214
           ],
           [
-            15.80893,
+            15.809,
+            45.85196
+          ],
+          [
+            15.80903,
             45.85154
+          ],
+          [
+            15.80911,
+            45.85126
           ],
           [
             15.80937,
@@ -269,9 +277,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 68,
-    "stations45": 204
+    "stations15": 22,
+    "stations30": 58,
+    "stations45": 228
   },
   "prevSlug": "zeljeznicka-stanica",
   "nextSlug": "zeljeznicka-stanica-brezovica"

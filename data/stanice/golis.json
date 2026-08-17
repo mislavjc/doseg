@@ -1055,9 +1055,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 30,
-    "stations45": 82
+    "stations15": 23,
+    "stations30": 54,
+    "stations45": 127
   },
   "prevSlug": "goli-breg-groblje",
   "nextSlug": "goljacki-put"

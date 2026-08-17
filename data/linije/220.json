@@ -28,6 +28,8 @@
           "lon": 15.97857,
           "offsetMin": 3,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -618,6 +620,8 @@
           "lon": 15.97956,
           "offsetMin": 12,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -2119,6 +2123,14 @@
     ],
     "tramCrossings": [
       {
+        "broj": "3",
+        "stopName": "Lisinski"
+      },
+      {
+        "broj": "5",
+        "stopName": "Lisinski"
+      },
+      {
         "broj": "6",
         "stopName": "Sopot"
       },
@@ -2139,7 +2151,7 @@
   "prevBroj": "219",
   "nextBroj": "221",
   "reach": {
-    "areaKm2": 28.9,
+    "areaKm2": 45.3,
     "stopName": "Središće",
     "lat": 45.77704,
     "lon": 15.99039

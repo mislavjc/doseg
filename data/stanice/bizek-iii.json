@@ -321,9 +321,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 39,
-    "stations45": 168
+    "stations15": 14,
+    "stations30": 54,
+    "stations45": 209
   },
   "prevSlug": "bizek-i",
   "nextSlug": "blage-zadre"

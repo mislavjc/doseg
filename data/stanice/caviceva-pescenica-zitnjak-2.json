@@ -1182,10 +1182,6 @@
             45.80184
           ],
           [
-            16.01132,
-            45.80184
-          ],
-          [
             16.01227,
             45.80105
           ],
@@ -1195,10 +1191,6 @@
           ],
           [
             16.01494,
-            45.79858
-          ],
-          [
-            16.01495,
             45.79858
           ],
           [
@@ -1636,9 +1628,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 173,
-    "stations45": 452
+    "stations15": 54,
+    "stations30": 204,
+    "stations45": 442
   },
   "prevSlug": "caviceva-pescenica-zitnjak",
   "nextSlug": "cavoglavska"

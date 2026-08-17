@@ -218,9 +218,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 20,
-    "stations45": 56
+    "stations15": 10,
+    "stations30": 30,
+    "stations45": 92
   },
   "prevSlug": "mesekov-put",
   "nextSlug": "micevec-centar"

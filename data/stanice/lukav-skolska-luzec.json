@@ -129,9 +129,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 3,
-    "stations45": 10
+    "stations15": 12,
+    "stations30": 36,
+    "stations45": 115
   },
   "prevSlug": "lukav-put-za-dubra",
   "nextSlug": "lukavec-buverke"

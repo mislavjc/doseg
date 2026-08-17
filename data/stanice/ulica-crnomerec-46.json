@@ -317,9 +317,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 144,
-    "stations45": 353
+    "stations15": 25,
+    "stations30": 148,
+    "stations45": 363
   },
   "prevSlug": "ulica-breza",
   "nextSlug": "ulica-grada-chicaga"

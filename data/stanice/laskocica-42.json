@@ -430,9 +430,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 14,
-    "stations45": 14
+    "stations15": 18,
+    "stations30": 77,
+    "stations45": 201
   },
   "prevSlug": "laskocica-2",
   "nextSlug": "lastovska"

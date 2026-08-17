@@ -554,9 +554,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 45,
-    "stations45": 149
+    "stations15": 22,
+    "stations30": 58,
+    "stations45": 136
   },
   "prevSlug": "brestovecka-100",
   "nextSlug": "brestovecka-d-dom"

@@ -313,9 +313,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 46,
-    "stations45": 143
+    "stations15": 20,
+    "stations30": 67,
+    "stations45": 199
   },
   "prevSlug": "dotrscina",
   "nextSlug": "dragonozec-kapela"

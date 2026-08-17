@@ -101,23 +101,15 @@
             45.74983
           ],
           [
-            15.89014,
-            45.74983
-          ],
-          [
             15.88916,
             45.74901
           ],
           [
             15.88849,
-            45.74845
-          ],
-          [
-            15.8885,
             45.74846
           ],
           [
-            15.8885,
+            15.88849,
             45.74845
           ],
           [
@@ -373,9 +365,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 13,
-    "stations45": 61
+    "stations15": 23,
+    "stations30": 49,
+    "stations45": 173
   },
   "prevSlug": "hrusevecka",
   "nextSlug": "hrvatskog-sokola-tresnjevka-jug"

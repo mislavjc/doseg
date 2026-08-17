@@ -133,19 +133,11 @@
             45.89126
           ],
           [
-            16.10098,
-            45.89126
-          ],
-          [
             16.09993,
             45.89141
           ],
           [
             16.09883,
-            45.89172
-          ],
-          [
-            16.09882,
             45.89172
           ],
           [
@@ -273,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 16,
-    "stations45": 38
+    "stations15": 17,
+    "stations30": 39,
+    "stations45": 111
   },
   "prevSlug": "gornji-stenjevec",
   "nextSlug": "gornjodemerska"

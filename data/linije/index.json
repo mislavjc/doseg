@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "generatedAt": "2026-08-17T00:00:00.000Z",
   "serviceDates": {
-    "radniDan": "2026-07-14",
-    "subota": "2026-07-18",
-    "nedjelja": "2026-07-19"
+    "radniDan": "2026-08-18",
+    "subota": "2026-08-22",
+    "nedjelja": "2026-08-23"
   },
   "lines": [
     {
@@ -26,9 +26,9 @@
         "Črnomerec",
         "Savišće"
       ],
-      "dailyDepartures": 236,
-      "peakHeadwayMin": 8.6,
-      "avgHeadwayMin": 10.0
+      "dailyDepartures": 199,
+      "peakHeadwayMin": 10.4,
+      "avgHeadwayMin": 11.6
     },
     {
       "broj": "3",
@@ -38,9 +38,9 @@
         "Ljubljanica",
         "Savišće"
       ],
-      "dailyDepartures": 130,
-      "peakHeadwayMin": 17.5,
-      "avgHeadwayMin": 18.1
+      "dailyDepartures": 136,
+      "peakHeadwayMin": 16.6,
+      "avgHeadwayMin": 17.3
     },
     {
       "broj": "4",
@@ -62,9 +62,9 @@
         "Prečko",
         "Park Maksimir"
       ],
-      "dailyDepartures": 204,
-      "peakHeadwayMin": 11.2,
-      "avgHeadwayMin": 11.6
+      "dailyDepartures": 194,
+      "peakHeadwayMin": 11.3,
+      "avgHeadwayMin": 12.3
     },
     {
       "broj": "6",
@@ -74,9 +74,9 @@
         "Črnomerec",
         "Sopot"
       ],
-      "dailyDepartures": 277,
-      "peakHeadwayMin": 7.7,
-      "avgHeadwayMin": 8.5
+      "dailyDepartures": 230,
+      "peakHeadwayMin": 9.0,
+      "avgHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -86,9 +86,9 @@
         "Savski most",
         "Dubrava"
       ],
-      "dailyDepartures": 208,
-      "peakHeadwayMin": 10.1,
-      "avgHeadwayMin": 11.3
+      "dailyDepartures": 220,
+      "peakHeadwayMin": 9.4,
+      "avgHeadwayMin": 10.7
     },
     {
       "broj": "8",
@@ -144,11 +144,11 @@
       "isNight": false,
       "terminals": [
         "Žitnjak",
-        "Spr.Dubrava"
+        "Kvat. trg"
       ],
-      "dailyDepartures": 0,
-      "peakHeadwayMin": null,
-      "avgHeadwayMin": null
+      "dailyDepartures": 161,
+      "peakHeadwayMin": 13.1,
+      "avgHeadwayMin": 14.2
     },
     {
       "broj": "14",
@@ -158,7 +158,7 @@
         "Mihaljevac",
         "Zapruđe"
       ],
-      "dailyDepartures": 217,
+      "dailyDepartures": 219,
       "peakHeadwayMin": 9.9,
       "avgHeadwayMin": 10.7
     },
@@ -170,7 +170,7 @@
         "Mihaljevac",
         "Grač. dolje"
       ],
-      "dailyDepartures": 198,
+      "dailyDepartures": 200,
       "peakHeadwayMin": 11.5,
       "avgHeadwayMin": 11.5
     },

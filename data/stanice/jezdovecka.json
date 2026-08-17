@@ -90,7 +90,7 @@
           ],
           [
             15.87383,
-            45.76048
+            45.76049
           ],
           [
             15.87383,
@@ -247,9 +247,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 6,
-    "stations45": 21
+    "stations15": 16,
+    "stations30": 60,
+    "stations45": 227
   },
   "prevSlug": "jezdovec-vojarna",
   "nextSlug": "jezdovecka-110"

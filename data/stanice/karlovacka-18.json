@@ -1525,9 +1525,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 77,
-    "stations45": 256
+    "stations15": 31,
+    "stations30": 119,
+    "stations45": 317
   },
   "prevSlug": "karlovacka-157",
   "nextSlug": "karlovacka-97"

@@ -73,8 +73,8 @@
             45.7824
           ],
           [
-            15.95547,
-            45.7825
+            15.9554,
+            45.78252
           ],
           [
             15.95536,
@@ -261,9 +261,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 70,
-    "stations45": 274
+    "stations15": 18,
+    "stations30": 159,
+    "stations45": 390
   },
   "prevSlug": "jurjevska-77",
   "nextSlug": "k-brijegi-iiiodvojak"

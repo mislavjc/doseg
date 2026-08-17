@@ -602,8 +602,8 @@
             45.81364
           ],
           [
-            15.87377,
-            45.81365
+            15.87378,
+            45.81364
           ],
           [
             15.87391,
@@ -614,9 +614,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 38,
-    "stations45": 173
+    "stations15": 30,
+    "stations30": 100,
+    "stations45": 273
   },
   "prevSlug": "kovaceviceva",
   "nextSlug": "kovinska-stenjevec-2"

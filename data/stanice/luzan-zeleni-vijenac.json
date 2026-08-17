@@ -131,8 +131,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 2,
-    "stations45": 9
+    "stations30": 11,
+    "stations45": 48
   },
   "prevSlug": "luzan",
   "nextSlug": "m-polje-istocni-ulaz"

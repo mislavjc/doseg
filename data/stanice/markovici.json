@@ -349,9 +349,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 30,
-    "stations45": 82
+    "stations15": 14,
+    "stations30": 33,
+    "stations45": 92
   },
   "prevSlug": "markov-trg",
   "nextSlug": "markovo-p-mrtvacnica"

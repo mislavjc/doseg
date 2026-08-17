@@ -257,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 39,
-    "stations45": 145
+    "stations15": 18,
+    "stations30": 79,
+    "stations45": 263
   },
   "prevSlug": "botanicki-vrt",
   "nextSlug": "botinka"

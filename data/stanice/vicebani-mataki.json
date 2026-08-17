@@ -428,19 +428,15 @@
           [
             15.93154,
             45.71819
-          ],
-          [
-            15.93154,
-            45.71819
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 16,
-    "stations45": 55
+    "stations15": 8,
+    "stations30": 29,
+    "stations45": 63
   },
   "prevSlug": "vg-groblje",
   "nextSlug": "vida-rocica-117"

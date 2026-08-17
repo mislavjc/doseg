@@ -257,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 72
+    "stations15": 20,
+    "stations30": 56,
+    "stations45": 130
   },
   "prevSlug": "vidovcica-i",
   "nextSlug": "vidovec-trgovina"

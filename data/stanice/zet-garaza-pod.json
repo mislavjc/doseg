@@ -279,9 +279,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 82,
-    "stations45": 214
+    "stations15": 24,
+    "stations30": 99,
+    "stations45": 273
   },
   "prevSlug": "zerjavinec",
   "nextSlug": "zg-velesajam"

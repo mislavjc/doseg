@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 124,
-    "stations45": 367
+    "stations15": 22,
+    "stations30": 133,
+    "stations45": 284
   },
   "prevSlug": "horvatovac-pmf",
   "nextSlug": "horvatovac-zelenjak"

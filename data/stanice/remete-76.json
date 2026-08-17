@@ -105,9 +105,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 54,
-    "stations45": 237
+    "stations15": 26,
+    "stations30": 95,
+    "stations45": 230
   },
   "prevSlug": "remete-128",
   "nextSlug": "remete-8"

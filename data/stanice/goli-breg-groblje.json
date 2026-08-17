@@ -421,9 +421,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 21,
-    "stations45": 62
+    "stations15": 18,
+    "stations30": 40,
+    "stations45": 116
   },
   "prevSlug": "goli-breg",
   "nextSlug": "golis"

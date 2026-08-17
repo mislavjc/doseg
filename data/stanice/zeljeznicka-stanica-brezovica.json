@@ -246,9 +246,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 18,
-    "stations45": 33
+    "stations15": 11,
+    "stations30": 29,
+    "stations45": 75
   },
   "prevSlug": "zeljeznicka-stanica-2",
   "nextSlug": "zenki"

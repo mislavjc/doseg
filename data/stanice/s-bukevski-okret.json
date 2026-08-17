@@ -62,10 +62,6 @@
             45.75036
           ],
           [
-            16.15645,
-            45.75037
-          ],
-          [
             16.15312,
             45.74968
           ],
@@ -86,9 +82,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 1,
-    "stations45": 1
+    "stations15": 10,
+    "stations30": 28,
+    "stations45": 43
   },
   "prevSlug": "rusiscak",
   "nextSlug": "safrani"

@@ -1342,9 +1342,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 3
+    "stations15": 4,
+    "stations30": 5,
+    "stations45": 6
   },
   "prevSlug": "slovenska",
   "nextSlug": "snjeznicke-stube"

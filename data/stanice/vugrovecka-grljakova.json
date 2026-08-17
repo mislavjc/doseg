@@ -161,19 +161,11 @@
             45.89126
           ],
           [
-            16.10098,
-            45.89126
-          ],
-          [
             16.09993,
             45.89141
           ],
           [
             16.09883,
-            45.89172
-          ],
-          [
-            16.09882,
             45.89172
           ],
           [
@@ -265,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 15,
-    "stations45": 37
+    "stations15": 18,
+    "stations30": 43,
+    "stations45": 129
   },
   "prevSlug": "vugrovecka-73",
   "nextSlug": "vugrovecka-vukasi"

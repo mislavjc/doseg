@@ -349,9 +349,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 28,
-    "stations45": 178
+    "stations15": 6,
+    "stations30": 22,
+    "stations45": 100
   },
   "prevSlug": "zavrsje",
   "nextSlug": "zdenacka"

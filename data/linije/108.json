@@ -28,6 +28,8 @@
           "lon": 15.97857,
           "offsetMin": 2,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -284,6 +286,8 @@
           "lon": 15.97956,
           "offsetMin": 9,
           "tramInterchange": [
+            "3",
+            "5",
             "13"
           ]
         },
@@ -775,12 +779,16 @@
     ],
     "tramCrossings": [
       {
+        "broj": "3",
+        "stopName": "Lisinski"
+      },
+      {
         "broj": "4",
         "stopName": "Veslačka"
       },
       {
         "broj": "5",
-        "stopName": "Veslačka"
+        "stopName": "Lisinski"
       },
       {
         "broj": "13",
@@ -799,7 +807,7 @@
   "prevBroj": "107",
   "nextBroj": "109",
   "reach": {
-    "areaKm2": 20.3,
+    "areaKm2": 41.3,
     "stopName": "Kockica",
     "lat": 45.79152,
     "lon": 15.96826

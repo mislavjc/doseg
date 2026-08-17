@@ -485,9 +485,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 60,
-    "stations45": 192
+    "stations15": 26,
+    "stations30": 77,
+    "stations45": 275
   },
   "prevSlug": "cugovec",
   "nextSlug": "culinecka"

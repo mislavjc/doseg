@@ -194,10 +194,6 @@
             45.74502
           ],
           [
-            15.87092,
-            45.74502
-          ],
-          [
             15.87153,
             45.74543
           ],
@@ -226,9 +222,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 9,
-    "stations45": 45
+    "stations15": 8,
+    "stations30": 33,
+    "stations45": 123
   },
   "prevSlug": "donji-trpuci",
   "nextSlug": "dore-pejacevic"

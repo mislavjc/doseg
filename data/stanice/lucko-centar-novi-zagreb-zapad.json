@@ -409,9 +409,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 12,
-    "stations45": 65
+    "stations15": 22,
+    "stations30": 84,
+    "stations45": 222
   },
   "prevSlug": "lucko",
   "nextSlug": "lucko-centar-novi-zagreb-zapad-2"

@@ -277,9 +277,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 1,
-    "stations45": 13
+    "stations15": 10,
+    "stations30": 27,
+    "stations45": 102
   },
   "prevSlug": "jakusevec-skola",
   "nextSlug": "jalsina"

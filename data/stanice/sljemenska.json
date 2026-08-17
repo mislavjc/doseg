@@ -359,9 +359,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 2,
-    "stations45": 12
+    "stations15": 10,
+    "stations30": 33,
+    "stations45": 65
   },
   "prevSlug": "slavonska-culinecka-pescenica-zitnjak-2",
   "nextSlug": "slobostina"

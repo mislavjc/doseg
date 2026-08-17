@@ -494,9 +494,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 27,
-    "stations45": 121
+    "stations15": 29,
+    "stations30": 87,
+    "stations45": 273
   },
   "prevSlug": "okt-miletica-stenjevec",
   "nextSlug": "olipska"

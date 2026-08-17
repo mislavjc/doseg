@@ -660,8 +660,12 @@
             45.80244
           ],
           [
-            16.08761,
-            45.80244
+            16.08764,
+            45.80241
+          ],
+          [
+            16.08809,
+            45.80223
           ],
           [
             16.08838,
@@ -852,9 +856,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 39,
-    "stations45": 155
+    "stations15": 22,
+    "stations30": 81,
+    "stations45": 221
   },
   "prevSlug": "mihovci",
   "nextSlug": "mikulici"

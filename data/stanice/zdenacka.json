@@ -89,7 +89,7 @@
             45.8262
           ],
           [
-            16.04397,
+            16.04396,
             45.82716
           ],
           [
@@ -101,12 +101,8 @@
             45.8297
           ],
           [
-            16.04158,
+            16.04159,
             45.83065
-          ],
-          [
-            16.04158,
-            45.83066
           ],
           [
             16.04158,
@@ -445,9 +441,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 83,
-    "stations45": 266
+    "stations15": 28,
+    "stations30": 84,
+    "stations45": 278
   },
   "prevSlug": "zavrsje-iii-odvojak",
   "nextSlug": "zdravs-veleuciliste"

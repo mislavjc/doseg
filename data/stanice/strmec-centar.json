@@ -241,9 +241,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 13,
-    "stations45": 58
+    "stations15": 14,
+    "stations30": 41,
+    "stations45": 183
   },
   "prevSlug": "strmec-bukevski",
   "nextSlug": "strmec-regelji"

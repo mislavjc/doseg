@@ -173,10 +173,6 @@
             45.81588
           ],
           [
-            15.97483,
-            45.81587
-          ],
-          [
             15.97485,
             45.81602
           ],
@@ -338,8 +334,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 175,
-    "stations45": 496
+    "stations30": 182,
+    "stations45": 471
   },
   "prevSlug": "kasinska-sopnica",
   "nextSlug": "kauzlaricev-prilaz"

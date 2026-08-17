@@ -248,10 +248,6 @@
           [
             15.93154,
             45.71819
-          ],
-          [
-            15.93154,
-            45.71819
           ]
         ]
       },
@@ -674,19 +670,15 @@
           [
             15.93154,
             45.71819
-          ],
-          [
-            15.93154,
-            45.71819
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 15,
-    "stations45": 55
+    "stations15": 24,
+    "stations30": 51,
+    "stations45": 161
   },
   "prevSlug": "brezaki",
   "nextSlug": "brezovica-skola"

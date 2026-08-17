@@ -263,9 +263,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 5,
-    "stations45": 20
+    "stations15": 16,
+    "stations30": 56,
+    "stations45": 204
   },
   "prevSlug": "puntijarka",
   "nextSlug": "pusticki"

@@ -245,9 +245,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 28,
-    "stations45": 87
+    "stations15": 7,
+    "stations30": 46,
+    "stations45": 85
   },
   "prevSlug": "hudobicka-i-odvojak",
   "nextSlug": "hunjka"

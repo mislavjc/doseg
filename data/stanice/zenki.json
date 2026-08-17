@@ -302,9 +302,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 5,
-    "stations45": 7
+    "stations15": 19,
+    "stations30": 36,
+    "stations45": 96
   },
   "prevSlug": "zeljeznicka-stanica-brezovica",
   "nextSlug": "zensko-sedlo"

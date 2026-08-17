@@ -220,11 +220,7 @@
           ],
           [
             16.16131,
-            45.87167
-          ],
-          [
-            16.16131,
-            45.87167
+            45.87168
           ],
           [
             16.16607,
@@ -479,9 +475,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 13,
-    "stations45": 28
+    "stations15": 20,
+    "stations30": 46,
+    "stations45": 141
   },
   "prevSlug": "zensko-sedlo",
   "nextSlug": "zet-garaza-pod"

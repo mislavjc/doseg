@@ -1391,12 +1391,6 @@
         "terminal": "Dubrava"
       },
       {
-        "broj": "13",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Dubrava"
-      },
-      {
         "broj": "205",
         "mode": "bus",
         "isNight": false,
@@ -1465,7 +1459,7 @@
   "prevBroj": "205",
   "nextBroj": "207",
   "reach": {
-    "areaKm2": 13.4,
+    "areaKm2": 30.3,
     "stopName": "Hammova",
     "lat": 45.83594,
     "lon": 16.04889

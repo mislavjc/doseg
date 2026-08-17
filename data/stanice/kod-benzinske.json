@@ -245,9 +245,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 9,
-    "stations45": 12
+    "stations15": 12,
+    "stations30": 49,
+    "stations45": 102
   },
   "prevSlug": "kockica",
   "nextSlug": "kod-cohe"

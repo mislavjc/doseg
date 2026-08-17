@@ -499,9 +499,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 45,
-    "stations45": 179
+    "stations15": 10,
+    "stations30": 43,
+    "stations45": 83
   },
   "prevSlug": "pilati",
   "nextSlug": "pipici"

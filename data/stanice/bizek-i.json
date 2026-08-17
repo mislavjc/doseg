@@ -325,9 +325,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 39,
-    "stations45": 168
+    "stations15": 8,
+    "stations30": 41,
+    "stations45": 173
   },
   "prevSlug": "bizek",
   "nextSlug": "bizek-iii"

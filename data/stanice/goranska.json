@@ -186,10 +186,6 @@
             45.73925
           ],
           [
-            16.01557,
-            45.73925
-          ],
-          [
             16.01481,
             45.74153
           ],
@@ -202,9 +198,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 35,
-    "stations45": 127
+    "stations15": 8,
+    "stations30": 36,
+    "stations45": 144
   },
   "prevSlug": "goranec",
   "nextSlug": "gorenci"

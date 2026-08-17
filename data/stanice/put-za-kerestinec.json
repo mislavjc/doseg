@@ -106,9 +106,9 @@
     ]
   },
   "reach": {
-    "stations15": 0,
-    "stations30": 9,
-    "stations45": 24
+    "stations15": 10,
+    "stations30": 36,
+    "stations45": 136
   },
   "prevSlug": "put-za-kasinu",
   "nextSlug": "put-za-leskovac"

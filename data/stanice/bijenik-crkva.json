@@ -481,9 +481,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 60,
-    "stations45": 192
+    "stations15": 22,
+    "stations30": 80,
+    "stations45": 272
   },
   "prevSlug": "bijenicka-bocaliste",
   "nextSlug": "bikceviceva-staza"

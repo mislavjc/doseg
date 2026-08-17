@@ -181,9 +181,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 38,
-    "stations45": 134
+    "stations15": 16,
+    "stations30": 42,
+    "stations45": 102
   },
   "prevSlug": "savisce",
   "nextSlug": "savska-metro"

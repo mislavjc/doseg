@@ -269,9 +269,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 53,
-    "stations45": 169
+    "stations15": 12,
+    "stations30": 91,
+    "stations45": 277
   },
   "prevSlug": "kozari-put-1-odv-5",
   "nextSlug": "kozincev-put"

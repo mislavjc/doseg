@@ -626,9 +626,9 @@
     ]
   },
   "reach": {
-    "stations15": 34,
-    "stations30": 164,
-    "stations45": 466
+    "stations15": 31,
+    "stations30": 142,
+    "stations45": 384
   },
   "prevSlug": "turopoljska",
   "nextSlug": "tuskanova"

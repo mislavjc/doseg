@@ -927,9 +927,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 30,
-    "stations45": 82
+    "stations15": 28,
+    "stations30": 63,
+    "stations45": 145
   },
   "prevSlug": "skradnicka",
   "nextSlug": "slanovecka-skola"

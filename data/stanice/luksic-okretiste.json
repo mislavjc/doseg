@@ -265,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 37,
-    "stations45": 181
+    "stations15": 15,
+    "stations30": 33,
+    "stations45": 179
   },
   "prevSlug": "luksic",
   "nextSlug": "luzan"

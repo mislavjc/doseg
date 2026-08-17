@@ -425,9 +425,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 30,
-    "stations45": 91
+    "stations15": 18,
+    "stations30": 47,
+    "stations45": 176
   },
   "prevSlug": "stefanovec-37",
   "nextSlug": "stenjevec"

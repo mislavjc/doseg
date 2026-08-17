@@ -79,7 +79,7 @@
           ],
           [
             15.87383,
-            45.76048
+            45.76049
           ],
           [
             15.87383,
@@ -98,9 +98,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 6,
-    "stations45": 21
+    "stations15": 9,
+    "stations30": 42,
+    "stations45": 176
   },
   "prevSlug": "grad-mladih",
   "nextSlug": "gradevinska-skola"

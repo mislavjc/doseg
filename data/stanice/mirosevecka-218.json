@@ -77,20 +77,12 @@
             45.86505
           ],
           [
-            16.03794,
-            45.86505
-          ],
-          [
             16.03761,
             45.86657
           ],
           [
             16.0373,
             45.86769
-          ],
-          [
-            16.0373,
-            45.8677
           ],
           [
             16.0373,
@@ -659,9 +651,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 64,
-    "stations45": 161
+    "stations15": 39,
+    "stations30": 84,
+    "stations45": 174
   },
   "prevSlug": "mirosevecka-190",
   "nextSlug": "miroslava-vaupotica"

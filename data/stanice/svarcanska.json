@@ -774,9 +774,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
+    "stations15": 33,
     "stations30": 142,
-    "stations45": 350
+    "stations45": 326
   },
   "prevSlug": "sv-leopolda-mandica",
   "nextSlug": "sveti-duh"

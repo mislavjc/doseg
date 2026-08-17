@@ -273,9 +273,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 7,
-    "stations45": 12
+    "stations15": 16,
+    "stations30": 42,
+    "stations45": 82
   },
   "prevSlug": "pokupska",
   "nextSlug": "poljaki"

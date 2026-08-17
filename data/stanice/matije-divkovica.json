@@ -329,9 +329,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 108,
-    "stations45": 238
+    "stations15": 30,
+    "stations30": 143,
+    "stations45": 331
   },
   "prevSlug": "maticki",
   "nextSlug": "matije-gupca"

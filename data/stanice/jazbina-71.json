@@ -981,9 +981,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 25,
-    "stations45": 78
+    "stations15": 22,
+    "stations30": 60,
+    "stations45": 173
   },
   "prevSlug": "jazbina-48",
   "nextSlug": "jelencica"

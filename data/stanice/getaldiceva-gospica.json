@@ -129,20 +129,8 @@
             45.80601
           ],
           [
-            16.03492,
-            45.80601
-          ],
-          [
             16.0308,
             45.80716
-          ],
-          [
-            16.03066,
-            45.80712
-          ],
-          [
-            16.03067,
-            45.80712
           ],
           [
             16.03067,
@@ -209,9 +197,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 77,
-    "stations45": 220
+    "stations15": 25,
+    "stations30": 93,
+    "stations45": 284
   },
   "prevSlug": "gata",
   "nextSlug": "getaldiceva-pescenica-zitnjak"

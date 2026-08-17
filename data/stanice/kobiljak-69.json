@@ -177,9 +177,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 27,
-    "stations45": 102
+    "stations15": 12,
+    "stations30": 25,
+    "stations45": 110
   },
   "prevSlug": "knezija",
   "nextSlug": "kobiljak-96"

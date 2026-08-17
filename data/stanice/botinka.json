@@ -242,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 19,
-    "stations45": 55
+    "stations15": 16,
+    "stations30": 35,
+    "stations45": 128
   },
   "prevSlug": "botinec",
   "nextSlug": "bozidara-magovca"

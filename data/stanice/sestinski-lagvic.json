@@ -302,8 +302,8 @@
             45.85577
           ],
           [
-            15.94996,
-            45.85491
+            15.94999,
+            45.85493
           ],
           [
             15.95009,
@@ -418,9 +418,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 52,
-    "stations45": 149
+    "stations15": 16,
+    "stations30": 63,
+    "stations45": 154
   },
   "prevSlug": "sestinski-dol-58",
   "nextSlug": "sestinski-vijenac"

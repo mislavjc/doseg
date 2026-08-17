@@ -293,9 +293,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 84,
-    "stations45": 301
+    "stations15": 31,
+    "stations30": 110,
+    "stations45": 291
   },
   "prevSlug": "hrgovici",
   "nextSlug": "hruscica"

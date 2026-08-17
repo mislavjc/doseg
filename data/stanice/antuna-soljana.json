@@ -205,7 +205,7 @@
             45.80263
           ],
           [
-            15.88424,
+            15.88422,
             45.8029
           ],
           [
@@ -225,9 +225,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 89,
-    "stations45": 251
+    "stations15": 23,
+    "stations30": 107,
+    "stations45": 302
   },
   "prevSlug": "antolkovici",
   "nextSlug": "arbanasova-44"

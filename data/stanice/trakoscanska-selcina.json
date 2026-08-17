@@ -277,9 +277,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 65,
-    "stations45": 178
+    "stations15": 17,
+    "stations30": 125,
+    "stations45": 210
   },
   "prevSlug": "trafostanica",
   "nextSlug": "traumatologija"

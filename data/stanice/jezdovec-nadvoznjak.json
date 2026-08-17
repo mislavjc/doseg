@@ -165,9 +165,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 32,
-    "stations45": 115
+    "stations15": 10,
+    "stations30": 33,
+    "stations45": 148
   },
   "prevSlug": "jesenovecka-29",
   "nextSlug": "jezdovec-vojarna"

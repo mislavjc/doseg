@@ -614,10 +614,6 @@
             45.83638
           ],
           [
-            16.03317,
-            45.83341
-          ],
-          [
             16.03318,
             45.8334
           ],
@@ -666,9 +662,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 48,
-    "stations45": 145
+    "stations15": 31,
+    "stations30": 107,
+    "stations45": 294
   },
   "prevSlug": "svetosimunska",
   "nextSlug": "sveucilisna-al"

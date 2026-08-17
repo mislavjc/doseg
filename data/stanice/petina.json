@@ -141,9 +141,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 7,
-    "stations45": 33
+    "stations15": 6,
+    "stations30": 50,
+    "stations45": 146
   },
   "prevSlug": "pesteri",
   "nextSlug": "petlja-izlaz-novi-zagreb-zapad"

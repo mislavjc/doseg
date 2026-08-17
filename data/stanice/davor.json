@@ -982,9 +982,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 82,
-    "stations45": 239
+    "stations15": 41,
+    "stations30": 121,
+    "stations45": 298
   },
   "prevSlug": "dankovecka",
   "nextSlug": "delec"

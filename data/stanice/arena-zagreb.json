@@ -718,9 +718,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 84,
-    "stations45": 285
+    "stations15": 32,
+    "stations30": 157,
+    "stations45": 362
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad-2",
   "nextSlug": "aspergeri"

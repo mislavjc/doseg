@@ -492,9 +492,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 23,
+    "stations30": 36,
+    "stations45": 96
   },
   "prevSlug": "put-za-medvedgrad",
   "nextSlug": "put-za-tumbre"

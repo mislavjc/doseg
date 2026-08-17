@@ -158,9 +158,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 17,
-    "stations45": 39
+    "stations15": 10,
+    "stations30": 32,
+    "stations45": 93
   },
   "prevSlug": "gor-prekvrsje-p-i-t",
   "nextSlug": "goranska"

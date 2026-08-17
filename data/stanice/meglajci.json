@@ -270,10 +270,6 @@
             45.74502
           ],
           [
-            15.87092,
-            45.74502
-          ],
-          [
             15.87153,
             45.74543
           ]
@@ -282,9 +278,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 11,
-    "stations45": 47
+    "stations15": 8,
+    "stations30": 27,
+    "stations45": 106
   },
   "prevSlug": "medvescak",
   "nextSlug": "melinisce"

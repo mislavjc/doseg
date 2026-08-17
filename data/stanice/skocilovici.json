@@ -333,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 50,
-    "stations45": 189
+    "stations15": 13,
+    "stations30": 113,
+    "stations45": 343
   },
   "prevSlug": "skabrnjska",
   "nextSlug": "skola-kasina"

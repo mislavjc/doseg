@@ -157,16 +157,8 @@
             45.86948
           ],
           [
-            15.79989,
-            45.86948
-          ],
-          [
             15.79927,
             45.86951
-          ],
-          [
-            15.79481,
-            45.86967
           ],
           [
             15.79481,
@@ -193,9 +185,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 36,
-    "stations45": 94
+    "stations15": 16,
+    "stations30": 45,
+    "stations45": 111
   },
   "prevSlug": "zelencica",
   "nextSlug": "zelengaj-53"

@@ -538,9 +538,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 77,
-    "stations45": 199
+    "stations15": 40,
+    "stations30": 91,
+    "stations45": 240
   },
   "prevSlug": "gospodska-108",
   "nextSlug": "gospodska-92"

@@ -107,10 +107,6 @@
           ],
           [
             16.12012,
-            45.85839
-          ],
-          [
-            16.12012,
             45.85838
           ],
           [
@@ -138,9 +134,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 3
+    "stations15": 12,
+    "stations30": 42,
+    "stations45": 162
   },
   "prevSlug": "m-polje-istocni-ulaz",
   "nextSlug": "m-polje-parkiraliste"

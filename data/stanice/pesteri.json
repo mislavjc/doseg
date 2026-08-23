@@ -457,9 +457,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 36,
-    "stations45": 121
+    "stations15": 22,
+    "stations30": 67,
+    "stations45": 223
   },
   "prevSlug": "persinovec-72",
   "nextSlug": "petina"

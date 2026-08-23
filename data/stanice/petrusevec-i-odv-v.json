@@ -57,10 +57,6 @@
             45.78429
           ],
           [
-            16.04282,
-            45.78429
-          ],
-          [
             16.04283,
             45.78429
           ],
@@ -94,10 +90,6 @@
           ],
           [
             16.05862,
-            45.77634
-          ],
-          [
-            16.05863,
             45.77634
           ],
           [
@@ -181,9 +173,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 74,
-    "stations45": 283
+    "stations15": 18,
+    "stations30": 57,
+    "stations45": 222
   },
   "prevSlug": "petrusevec",
   "nextSlug": "petrusevecko-naselje"

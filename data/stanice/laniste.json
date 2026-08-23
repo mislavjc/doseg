@@ -505,9 +505,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 93,
-    "stations45": 299
+    "stations15": 44,
+    "stations30": 184,
+    "stations45": 410
   },
   "prevSlug": "laktec",
   "nextSlug": "lascinski-borovec"

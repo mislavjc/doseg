@@ -235,8 +235,8 @@
   },
   "reach": {
     "stations15": 3,
-    "stations30": 3,
-    "stations45": 12
+    "stations30": 13,
+    "stations45": 34
   },
   "prevSlug": "brez-pod-kestenima",
   "nextSlug": "brezje"

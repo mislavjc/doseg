@@ -161,20 +161,8 @@
             45.80601
           ],
           [
-            16.03492,
-            45.80601
-          ],
-          [
             16.0308,
             45.80716
-          ],
-          [
-            16.03066,
-            45.80712
-          ],
-          [
-            16.03067,
-            45.80712
           ],
           [
             16.03067,
@@ -221,9 +209,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 29,
-    "stations45": 95
+    "stations15": 14,
+    "stations30": 39,
+    "stations45": 147
   },
   "prevSlug": "kampus-fakultet",
   "nextSlug": "kanalski-put"

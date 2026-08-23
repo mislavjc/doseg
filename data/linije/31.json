@@ -7,7 +7,7 @@
     "Savski most"
   ],
   "via": [
-    "Branimir centar",
+    "Trg bana J. Jelačića",
     "St. dom S. Radić"
   ],
   "oneWay": false,
@@ -127,9 +127,7 @@
           "offsetMin": 15,
           "tramInterchange": [
             "2",
-            "3",
             "4",
-            "5",
             "6",
             "9",
             "13"
@@ -142,11 +140,8 @@
           "offsetMin": 16,
           "tramInterchange": [
             "2",
-            "3",
             "4",
-            "5",
             "6",
-            "7",
             "8",
             "9",
             "13"
@@ -159,9 +154,7 @@
           "offsetMin": 19,
           "tramInterchange": [
             "2",
-            "3",
             "6",
-            "7",
             "8",
             "13"
           ]
@@ -173,7 +166,7 @@
           "offsetMin": 20,
           "tramInterchange": [
             "2",
-            "3",
+            "5",
             "6",
             "7",
             "8"
@@ -187,6 +180,7 @@
           "tramInterchange": [
             "2",
             "3",
+            "5",
             "6",
             "7",
             "8",
@@ -1238,6 +1232,7 @@
           "tramInterchange": [
             "2",
             "3",
+            "5",
             "6",
             "7",
             "8",
@@ -1251,7 +1246,7 @@
           "offsetMin": 27,
           "tramInterchange": [
             "2",
-            "3",
+            "5",
             "6",
             "7",
             "8"
@@ -1264,9 +1259,7 @@
           "offsetMin": 28,
           "tramInterchange": [
             "2",
-            "3",
             "6",
-            "7",
             "8",
             "13"
           ]
@@ -1278,11 +1271,8 @@
           "offsetMin": 30,
           "tramInterchange": [
             "2",
-            "3",
             "4",
-            "5",
             "6",
-            "7",
             "8",
             "9",
             "13"
@@ -1295,9 +1285,7 @@
           "offsetMin": 32,
           "tramInterchange": [
             "2",
-            "3",
             "4",
-            "5",
             "6",
             "9",
             "13"
@@ -1539,10 +1527,6 @@
           45.77748
         ],
         [
-          15.97959,
-          45.77753
-        ],
-        [
           15.97958,
           45.77752
         ],
@@ -1551,19 +1535,19 @@
           45.7775
         ],
         [
-          15.98663,
-          45.77768
+          15.9803,
+          45.77751
         ],
         [
-          15.9874,
-          45.77772
+          15.99001,
+          45.77778
         ],
         [
-          15.99163,
-          45.77781
+          15.9913,
+          45.7778
         ],
         [
-          15.99154,
+          15.99155,
           45.77786
         ],
         [
@@ -2253,7 +2237,7 @@
         {
           "hour": 29,
           "minutes": [
-            25
+            26
           ]
         }
       ]
@@ -2587,7 +2571,7 @@
       },
       {
         "broj": "3",
-        "stopName": "Glavni kolodvor"
+        "stopName": "Držićeva"
       },
       {
         "broj": "4",
@@ -2595,7 +2579,7 @@
       },
       {
         "broj": "5",
-        "stopName": "Glavni kolodvor"
+        "stopName": "Autobusni kol."
       },
       {
         "broj": "6",
@@ -2603,7 +2587,7 @@
       },
       {
         "broj": "7",
-        "stopName": "Branimir centar"
+        "stopName": "Autobusni kol."
       },
       {
         "broj": "8",
@@ -2638,7 +2622,7 @@
   "prevBroj": "17",
   "nextBroj": "32",
   "reach": {
-    "areaKm2": 39.3,
+    "areaKm2": 46.9,
     "stopName": "Folnegovićevo",
     "lat": 45.79224,
     "lon": 16.00219

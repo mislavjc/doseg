@@ -377,9 +377,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 27,
-    "stations45": 92
+    "stations15": 16,
+    "stations30": 52,
+    "stations45": 137
   },
   "prevSlug": "markusev-trnava-56",
   "nextSlug": "markusevec"

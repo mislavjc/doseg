@@ -616,9 +616,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 160,
-    "stations45": 496
+    "stations15": 38,
+    "stations30": 228,
+    "stations45": 471
   },
   "prevSlug": "harabajsi",
   "nextSlug": "hatzeova"

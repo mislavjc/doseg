@@ -289,19 +289,11 @@
             45.89126
           ],
           [
-            16.10098,
-            45.89126
-          ],
-          [
             16.09993,
             45.89141
           ],
           [
             16.09883,
-            45.89172
-          ],
-          [
-            16.09882,
             45.89172
           ],
           [
@@ -321,9 +313,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
-    "stations30": 34,
-    "stations45": 128
+    "stations15": 23,
+    "stations30": 66,
+    "stations45": 141
   },
   "prevSlug": "vugrovec-d-groblje",
   "nextSlug": "vugrovecka"

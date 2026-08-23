@@ -695,9 +695,9 @@
     ]
   },
   "reach": {
-    "stations15": 15,
-    "stations30": 83,
-    "stations45": 266
+    "stations15": 29,
+    "stations30": 114,
+    "stations45": 265
   },
   "prevSlug": "remetineckih-zrtava",
   "nextSlug": "resnicki-gaj"

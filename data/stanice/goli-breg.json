@@ -409,9 +409,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 83
+    "stations15": 16,
+    "stations30": 37,
+    "stations45": 97
   },
   "prevSlug": "glavnicica",
   "nextSlug": "goli-breg-groblje"

@@ -185,9 +185,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 14,
-    "stations45": 59
+    "stations15": 12,
+    "stations30": 34,
+    "stations45": 148
   },
   "prevSlug": "cehi-nadvoznjak",
   "nextSlug": "cepelovacki-put"

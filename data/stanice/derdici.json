@@ -226,9 +226,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 22,
-    "stations45": 37
+    "stations15": 13,
+    "stations30": 25,
+    "stations45": 61
   },
   "prevSlug": "demerska-3",
   "nextSlug": "desinicka"

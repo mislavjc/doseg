@@ -382,9 +382,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 122,
-    "stations45": 333
+    "stations15": 28,
+    "stations30": 153,
+    "stations45": 368
   },
   "prevSlug": "dom-sportova",
   "nextSlug": "dom-zdravlja"

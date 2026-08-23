@@ -212,7 +212,7 @@
             45.80263
           ],
           [
-            15.88424,
+            15.88422,
             45.8029
           ],
           [
@@ -228,8 +228,8 @@
             45.80355
           ],
           [
-            15.8818,
-            45.80359
+            15.87937,
+            45.8039
           ]
         ]
       },
@@ -506,9 +506,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 81,
-    "stations45": 238
+    "stations15": 30,
+    "stations30": 129,
+    "stations45": 329
   },
   "prevSlug": "trznica-kvatric-donji-grad-2",
   "nextSlug": "tumbri"

@@ -258,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 21,
-    "stations45": 36
+    "stations15": 12,
+    "stations30": 25,
+    "stations45": 60
   },
   "prevSlug": "matije-vlacica",
   "nextSlug": "mazuraniceva"

@@ -301,9 +301,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 64,
-    "stations45": 193
+    "stations15": 13,
+    "stations30": 116,
+    "stations45": 349
   },
   "prevSlug": "sulekova",
   "nextSlug": "sumarske-jaslice"

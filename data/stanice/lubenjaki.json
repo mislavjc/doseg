@@ -489,9 +489,9 @@
     ]
   },
   "reach": {
-    "stations15": 14,
-    "stations30": 107,
-    "stations45": 326
+    "stations15": 15,
+    "stations30": 70,
+    "stations45": 275
   },
   "prevSlug": "lozaki",
   "nextSlug": "lucko"

@@ -238,9 +238,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 1,
-    "stations45": 1
+    "stations15": 4,
+    "stations30": 13,
+    "stations45": 30
   },
   "prevSlug": "bascanske-ploce",
   "nextSlug": "bastijanova-tresnjevka-sjever"

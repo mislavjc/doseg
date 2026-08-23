@@ -389,7 +389,7 @@
           ],
           [
             15.87341,
-            45.81378
+            45.81377
           ],
           [
             15.87341,
@@ -560,9 +560,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 59,
-    "stations45": 206
+    "stations15": 31,
+    "stations30": 114,
+    "stations45": 282
   },
   "prevSlug": "sajam-jakusevec",
   "nextSlug": "sarajev-jakusevecka"

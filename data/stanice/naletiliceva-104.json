@@ -537,9 +537,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 23,
-    "stations45": 66
+    "stations15": 29,
+    "stations30": 83,
+    "stations45": 262
   },
   "prevSlug": "nadlug",
   "nextSlug": "naletiliceva-122"

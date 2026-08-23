@@ -173,10 +173,6 @@
             45.81588
           ],
           [
-            15.97483,
-            45.81587
-          ],
-          [
             15.97485,
             45.81602
           ],
@@ -337,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 175,
-    "stations45": 496
+    "stations15": 49,
+    "stations30": 195,
+    "stations45": 479
   },
   "prevSlug": "gustava-krkleca",
   "nextSlug": "hammova"

@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 85,
-    "stations45": 289
+    "stations15": 30,
+    "stations30": 101,
+    "stations45": 238
   },
   "prevSlug": "kameniti-stol",
   "nextSlug": "kamenolom-podsused-vrapce"

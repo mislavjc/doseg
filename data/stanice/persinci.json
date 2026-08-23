@@ -341,9 +341,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 32,
-    "stations45": 182
+    "stations15": 15,
+    "stations30": 44,
+    "stations45": 213
   },
   "prevSlug": "perjavica",
   "nextSlug": "persinovec"

@@ -266,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 20,
-    "stations45": 35
+    "stations15": 11,
+    "stations30": 25,
+    "stations45": 63
   },
   "prevSlug": "prekvrsje-skola",
   "nextSlug": "prevende"

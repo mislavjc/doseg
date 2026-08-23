@@ -270,9 +270,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 26,
-    "stations45": 90
+    "stations15": 11,
+    "stations30": 45,
+    "stations45": 144
   },
   "prevSlug": "rakusina",
   "nextSlug": "ratarska"

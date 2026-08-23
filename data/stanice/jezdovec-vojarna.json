@@ -201,9 +201,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 6
+    "stations15": 15,
+    "stations30": 51,
+    "stations45": 213
   },
   "prevSlug": "jezdovec-nadvoznjak",
   "nextSlug": "jezdovecka"

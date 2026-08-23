@@ -358,9 +358,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 11,
-    "stations45": 42
+    "stations15": 17,
+    "stations30": 51,
+    "stations45": 105
   },
   "prevSlug": "polj-kod-skole",
   "nextSlug": "poljanica-zeleni-br"

@@ -186,10 +186,6 @@
             45.73925
           ],
           [
-            16.01557,
-            45.73925
-          ],
-          [
             16.01481,
             45.74153
           ],
@@ -203,8 +199,8 @@
   },
   "reach": {
     "stations15": 2,
-    "stations30": 19,
-    "stations45": 51
+    "stations30": 27,
+    "stations45": 89
   },
   "prevSlug": "gajnicki-vidikovac",
   "nextSlug": "galzenica"

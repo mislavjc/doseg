@@ -161,9 +161,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 16,
-    "stations45": 61
+    "stations15": 9,
+    "stations30": 28,
+    "stations45": 110
   },
   "prevSlug": "strmec-centar",
   "nextSlug": "strojarska"

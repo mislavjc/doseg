@@ -1650,9 +1650,9 @@
     ]
   },
   "reach": {
-    "stations15": 0,
-    "stations30": 0,
-    "stations45": 0
+    "stations15": 3,
+    "stations30": 6,
+    "stations45": 6
   },
   "prevSlug": "p-d-graficar",
   "nextSlug": "pakracka"

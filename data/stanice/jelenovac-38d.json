@@ -701,9 +701,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 113,
-    "stations45": 360
+    "stations15": 28,
+    "stations30": 112,
+    "stations45": 318
   },
   "prevSlug": "jelencica",
   "nextSlug": "jelenovac-8"

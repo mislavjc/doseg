@@ -70,12 +70,12 @@
             45.82826
           ],
           [
-            16.07698,
-            45.82829
+            16.07702,
+            45.8283
           ],
           [
-            16.07674,
-            45.82771
+            16.07676,
+            45.82772
           ],
           [
             16.0768,
@@ -538,9 +538,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 45,
-    "stations45": 149
+    "stations15": 23,
+    "stations30": 59,
+    "stations45": 145
   },
   "prevSlug": "brestovecka",
   "nextSlug": "brestovecka-128"

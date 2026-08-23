@@ -62,10 +62,6 @@
           ],
           [
             16.0373,
-            45.8677
-          ],
-          [
-            16.0373,
             45.86769
           ],
           [
@@ -377,9 +373,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 64,
-    "stations45": 161
+    "stations15": 39,
+    "stations30": 81,
+    "stations45": 166
   },
   "prevSlug": "markusevecka-18",
   "nextSlug": "marohniceva"

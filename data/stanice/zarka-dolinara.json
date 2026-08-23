@@ -141,7 +141,7 @@
             45.78297
           ],
           [
-            15.96689,
+            15.96688,
             45.78314
           ],
           [
@@ -173,8 +173,8 @@
             45.78119
           ],
           [
-            15.96643,
-            45.78103
+            15.96644,
+            45.78104
           ],
           [
             15.96627,
@@ -473,9 +473,9 @@
     ]
   },
   "reach": {
-    "stations15": 23,
-    "stations30": 149,
-    "stations45": 443
+    "stations15": 37,
+    "stations30": 165,
+    "stations45": 478
   },
   "prevSlug": "zaprude-novi-zagreb-istok-2",
   "nextSlug": "zastavn-nadvoznjak"

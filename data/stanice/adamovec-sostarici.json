@@ -82,10 +82,6 @@
             45.90568
           ],
           [
-            16.15813,
-            45.90568
-          ],
-          [
             16.15819,
             45.90556
           ],
@@ -782,9 +778,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 7,
-    "stations45": 9
+    "stations15": 25,
+    "stations30": 41,
+    "stations45": 118
   },
   "prevSlug": "adamovec-centar",
   "nextSlug": "agrokoka"

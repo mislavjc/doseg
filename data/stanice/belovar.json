@@ -272,11 +272,7 @@
           ],
           [
             16.16131,
-            45.87167
-          ],
-          [
-            16.16131,
-            45.87167
+            45.87168
           ],
           [
             16.16607,
@@ -683,9 +679,9 @@
     ]
   },
   "reach": {
-    "stations15": 1,
-    "stations30": 11,
-    "stations45": 18
+    "stations15": 25,
+    "stations30": 42,
+    "stations45": 132
   },
   "prevSlug": "belostenceva",
   "nextSlug": "bencekovici"

@@ -50,6 +50,14 @@
         "mode": "bus",
         "shape": [
           [
+            15.99479,
+            45.79051
+          ],
+          [
+            15.99492,
+            45.79058
+          ],
+          [
             15.9953,
             45.79055
           ],
@@ -391,8 +399,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 37,
-    "stations45": 168
+    "stations30": 33,
+    "stations45": 184
   },
   "prevSlug": "kupljenska",
   "nextSlug": "kustosijanska"

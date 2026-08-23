@@ -381,9 +381,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 178,
-    "stations45": 398
+    "stations15": 35,
+    "stations30": 145,
+    "stations45": 365
   },
   "prevSlug": "ivice-lovincica",
   "nextSlug": "jackovina-105"

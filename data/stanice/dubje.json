@@ -314,9 +314,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 8,
-    "stations45": 19
+    "stations15": 10,
+    "stations30": 59,
+    "stations45": 205
   },
   "prevSlug": "dubecka-94",
   "nextSlug": "dubranec-centar"

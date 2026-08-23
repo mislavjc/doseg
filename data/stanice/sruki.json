@@ -301,9 +301,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
+    "stations15": 13,
     "stations30": 30,
-    "stations45": 82
+    "stations45": 84
   },
   "prevSlug": "srednjaci",
   "nextSlug": "st-dom-s-radic"

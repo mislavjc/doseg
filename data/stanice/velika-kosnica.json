@@ -121,9 +121,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 7,
-    "stations45": 36
+    "stations15": 22,
+    "stations30": 81,
+    "stations45": 233
   },
   "prevSlug": "velika-gorica",
   "nextSlug": "velika-mlaka"

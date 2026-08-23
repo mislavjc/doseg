@@ -976,8 +976,7 @@
             "4",
             "7",
             "11",
-            "12",
-            "13"
+            "12"
           ]
         }
       ],
@@ -1623,8 +1622,8 @@
           45.83638
         ],
         [
-          16.03317,
-          45.83341
+          16.03318,
+          45.8334
         ],
         [
           16.03346,
@@ -2594,12 +2593,6 @@
         "terminal": "Dubrava"
       },
       {
-        "broj": "13",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Dubrava"
-      },
-      {
         "broj": "206",
         "mode": "bus",
         "isNight": false,
@@ -2659,7 +2652,7 @@
   "prevBroj": "204",
   "nextBroj": "206",
   "reach": {
-    "areaKm2": 9.2,
+    "areaKm2": 28.5,
     "stopName": "Štefanovec 114",
     "lat": 45.86988,
     "lon": 16.01689

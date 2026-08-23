@@ -321,9 +321,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 38,
-    "stations45": 96
+    "stations15": 21,
+    "stations30": 91,
+    "stations45": 264
   },
   "prevSlug": "dore-pejacevic",
   "nextSlug": "dotrscinska"

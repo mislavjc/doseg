@@ -20,6 +20,8 @@
           "lon": 15.99828,
           "offsetMin": 0,
           "tramInterchange": [
+            "5",
+            "7",
             "13"
           ]
         },
@@ -850,7 +852,7 @@
   "prevBroj": "203",
   "nextBroj": "205",
   "reach": {
-    "areaKm2": 15.6,
+    "areaKm2": 28.6,
     "stopName": "Bijenička",
     "lat": 45.82461,
     "lon": 15.98491

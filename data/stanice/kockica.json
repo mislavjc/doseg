@@ -205,9 +205,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 90,
-    "stations45": 339
+    "stations15": 12,
+    "stations30": 115,
+    "stations45": 368
   },
   "prevSlug": "kobiljak-trgovina",
   "nextSlug": "kod-benzinske"

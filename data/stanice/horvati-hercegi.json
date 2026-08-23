@@ -294,9 +294,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 19,
-    "stations45": 34
+    "stations15": 11,
+    "stations30": 27,
+    "stations45": 69
   },
   "prevSlug": "horvati",
   "nextSlug": "horvati-i"

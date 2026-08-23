@@ -804,8 +804,12 @@
             45.80244
           ],
           [
-            16.08761,
-            45.80244
+            16.08764,
+            45.80241
+          ],
+          [
+            16.08809,
+            45.80223
           ],
           [
             16.08838,
@@ -968,9 +972,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 25,
-    "stations45": 89
+    "stations15": 16,
+    "stations30": 74,
+    "stations45": 189
   },
   "prevSlug": "resnicki-put",
   "nextSlug": "resnik-i-crkva"

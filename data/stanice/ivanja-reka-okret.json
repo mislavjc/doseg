@@ -770,29 +770,29 @@
         "mode": "bus",
         "shape": [
           [
-            16.11864,
-            45.8101
+            16.11863,
+            45.81009
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11863,
-            45.80183
+            16.11862,
+            45.80182
           ],
           [
-            16.11897,
-            45.79782
+            16.11896,
+            45.79781
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 27,
-    "stations45": 90
+    "stations15": 21,
+    "stations30": 50,
+    "stations45": 180
   },
   "prevSlug": "ivanicgradska",
   "nextSlug": "ivanjorecka-posta"

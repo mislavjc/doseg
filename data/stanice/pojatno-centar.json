@@ -266,9 +266,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 11,
-    "stations45": 13
+    "stations15": 13,
+    "stations30": 23,
+    "stations45": 47
   },
   "prevSlug": "podsusedsko-dolje",
   "nextSlug": "pokupska"

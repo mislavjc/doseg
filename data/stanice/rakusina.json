@@ -803,9 +803,9 @@
     ]
   },
   "reach": {
-    "stations15": 32,
-    "stations30": 201,
-    "stations45": 452
+    "stations15": 22,
+    "stations30": 130,
+    "stations45": 357
   },
   "prevSlug": "radnicka-trnje-2",
   "nextSlug": "ranci"

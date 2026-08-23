@@ -257,9 +257,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 175,
-    "stations45": 487
+    "stations15": 45,
+    "stations30": 190,
+    "stations45": 470
   },
   "prevSlug": "mark-polje-raskrizje",
   "nextSlug": "markovici"

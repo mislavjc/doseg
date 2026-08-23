@@ -290,9 +290,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 12,
-    "stations45": 13
+    "stations15": 19,
+    "stations30": 32,
+    "stations45": 60
   },
   "prevSlug": "pri-kolaru",
   "nextSlug": "pri-saicu"

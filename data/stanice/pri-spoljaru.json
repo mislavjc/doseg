@@ -258,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 11,
-    "stations45": 13
+    "stations15": 17,
+    "stations30": 28,
+    "stations45": 55
   },
   "prevSlug": "pri-skoli",
   "nextSlug": "prigornica"

@@ -289,9 +289,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 81,
-    "stations45": 268
+    "stations15": 9,
+    "stations30": 128,
+    "stations45": 345
   },
   "prevSlug": "lukoranska-novi-zagreb-zapad",
   "nextSlug": "luksic"

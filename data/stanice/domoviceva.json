@@ -54,10 +54,6 @@
             45.75564
           ],
           [
-            15.83794,
-            45.75574
-          ],
-          [
             15.83793,
             45.75574
           ],
@@ -98,9 +94,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 18,
-    "stations45": 54
+    "stations15": 12,
+    "stations30": 51,
+    "stations45": 176
   },
   "prevSlug": "dominika-mandica",
   "nextSlug": "donje-prekrizje"

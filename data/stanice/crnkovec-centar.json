@@ -202,9 +202,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 3,
-    "stations45": 4
+    "stations15": 9,
+    "stations30": 25,
+    "stations45": 40
   },
   "prevSlug": "crnkovec",
   "nextSlug": "crnkovecka-pescenica-zitnjak"

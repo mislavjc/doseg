@@ -317,9 +317,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 90
+    "stations15": 20,
+    "stations30": 72,
+    "stations45": 138
   },
   "prevSlug": "vukomeric-okretiste",
   "nextSlug": "zadvorska-54"

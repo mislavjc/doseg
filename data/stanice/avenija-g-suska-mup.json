@@ -666,9 +666,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 50,
-    "stations45": 146
+    "stations15": 31,
+    "stations30": 99,
+    "stations45": 281
   },
   "prevSlug": "autobusni-kol",
   "nextSlug": "bacun"

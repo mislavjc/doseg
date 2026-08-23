@@ -374,9 +374,9 @@
     ]
   },
   "reach": {
-    "stations15": 7,
-    "stations30": 8,
-    "stations45": 19
+    "stations15": 16,
+    "stations30": 69,
+    "stations45": 220
   },
   "prevSlug": "dom-zdravlja",
   "nextSlug": "domoviceva"

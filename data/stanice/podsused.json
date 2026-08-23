@@ -408,9 +408,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 93,
-    "stations45": 219
+    "stations15": 32,
+    "stations30": 79,
+    "stations45": 243
   },
   "prevSlug": "podfuscak",
   "nextSlug": "podsused-centar"

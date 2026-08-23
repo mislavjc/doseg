@@ -582,9 +582,9 @@
     ]
   },
   "reach": {
-    "stations15": 3,
-    "stations30": 38,
-    "stations45": 173
+    "stations15": 29,
+    "stations30": 98,
+    "stations45": 271
   },
   "prevSlug": "odvojak-reber",
   "nextSlug": "okt-miletica-stenjevec-2"

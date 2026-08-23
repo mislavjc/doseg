@@ -89,7 +89,7 @@
             45.8262
           ],
           [
-            16.04397,
+            16.04396,
             45.82716
           ],
           [
@@ -101,12 +101,8 @@
             45.8297
           ],
           [
-            16.04158,
+            16.04159,
             45.83065
-          ],
-          [
-            16.04158,
-            45.83066
           ],
           [
             16.04158,
@@ -277,9 +273,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 91,
-    "stations45": 307
+    "stations15": 28,
+    "stations30": 87,
+    "stations45": 286
   },
   "prevSlug": "ljubijska-gornja-dubrava",
   "nextSlug": "ljubijska-hrv-prolj"

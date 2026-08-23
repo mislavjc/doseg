@@ -65,10 +65,6 @@
             45.72768
           ],
           [
-            16.05599,
-            45.72768
-          ],
-          [
             16.05686,
             45.72875
           ],
@@ -273,9 +269,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 18,
-    "stations45": 59
+    "stations15": 11,
+    "stations30": 36,
+    "stations45": 102
   },
   "prevSlug": "zracna-luka",
   "nextSlug": "zrinjevac"

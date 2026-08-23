@@ -65,10 +65,6 @@
             45.834
           ],
           [
-            16.01141,
-            45.83399
-          ],
-          [
             16.01109,
             45.83465
           ],
@@ -681,9 +677,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 95,
-    "stations45": 321
+    "stations15": 23,
+    "stations30": 91,
+    "stations45": 255
   },
   "prevSlug": "gornji-bukovac-maksimir",
   "nextSlug": "gornji-stenjevec"

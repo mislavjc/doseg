@@ -650,9 +650,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 77,
-    "stations45": 256
+    "stations15": 28,
+    "stations30": 134,
+    "stations45": 407
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad",
   "nextSlug": "arena-zagreb"

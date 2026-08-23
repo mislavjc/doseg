@@ -983,8 +983,16 @@
             45.7526
           ],
           [
-            15.98896,
-            45.75075
+            15.9888,
+            45.75171
+          ],
+          [
+            15.989,
+            45.75076
+          ],
+          [
+            15.98972,
+            45.75
           ],
           [
             15.99357,
@@ -1067,9 +1075,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 95,
-    "stations45": 314
+    "stations15": 33,
+    "stations30": 98,
+    "stations45": 274
   },
   "prevSlug": "odra-nadvoznjak",
   "nextSlug": "odra-novi-zagreb-istok-2"

@@ -506,9 +506,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 2,
-    "stations45": 2
+    "stations15": 3,
+    "stations30": 5,
+    "stations45": 6
   },
   "prevSlug": "suma-grmoscica",
   "nextSlug": "sunekova-12"

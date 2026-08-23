@@ -150,8 +150,12 @@
             45.79968
           ],
           [
-            16.15581,
-            45.8025
+            16.15368,
+            45.80131
+          ],
+          [
+            16.15585,
+            45.80248
           ],
           [
             16.15654,
@@ -183,8 +187,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 29,
-    "stations45": 93
+    "stations30": 31,
+    "stations45": 106
   },
   "prevSlug": "dudovec",
   "nextSlug": "dumovec-okretiste"

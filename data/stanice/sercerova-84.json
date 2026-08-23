@@ -653,9 +653,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 113,
-    "stations45": 360
+    "stations15": 23,
+    "stations30": 99,
+    "stations45": 290
   },
   "prevSlug": "sercerova-31",
   "nextSlug": "sercerova-ser-precac"

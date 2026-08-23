@@ -365,7 +365,7 @@
             45.82814
           ],
           [
-            16.06296,
+            16.06297,
             45.82814
           ],
           [
@@ -385,9 +385,9 @@
     ]
   },
   "reach": {
-    "stations15": 11,
-    "stations30": 46,
-    "stations45": 180
+    "stations15": 27,
+    "stations30": 75,
+    "stations45": 222
   },
   "prevSlug": "studentski-centar",
   "nextSlug": "stuglenica"

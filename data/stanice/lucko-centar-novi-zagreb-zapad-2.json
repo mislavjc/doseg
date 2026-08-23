@@ -256,7 +256,7 @@
           ],
           [
             15.87383,
-            45.76048
+            45.76049
           ],
           [
             15.87383,
@@ -457,9 +457,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 12,
-    "stations45": 65
+    "stations15": 23,
+    "stations30": 80,
+    "stations45": 226
   },
   "prevSlug": "lucko-centar-novi-zagreb-zapad",
   "nextSlug": "lucmanova"

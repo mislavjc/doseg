@@ -661,9 +661,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
-    "stations30": 40,
-    "stations45": 145
+    "stations15": 32,
+    "stations30": 97,
+    "stations45": 297
   },
   "prevSlug": "inst-r-boskovic",
   "nextSlug": "islandska"

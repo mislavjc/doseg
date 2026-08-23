@@ -262,9 +262,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 7,
-    "stations45": 15
+    "stations15": 7,
+    "stations30": 22,
+    "stations45": 46
   },
   "prevSlug": "kod-cohe",
   "nextSlug": "kod-skalica"

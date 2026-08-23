@@ -341,9 +341,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 90
+    "stations15": 19,
+    "stations30": 62,
+    "stations45": 129
   },
   "prevSlug": "kasina-okretiste",
   "nextSlug": "kasinska-rasadnik"

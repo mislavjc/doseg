@@ -389,9 +389,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 31,
-    "stations45": 83
+    "stations15": 19,
+    "stations30": 51,
+    "stations45": 109
   },
   "prevSlug": "pakracka",
   "nextSlug": "paljetkova"

@@ -293,19 +293,11 @@
             45.84896
           ],
           [
-            16.06328,
-            45.84896
-          ],
-          [
             16.06093,
             45.84828
           ],
           [
             16.05762,
-            45.84739
-          ],
-          [
-            16.05761,
             45.84739
           ],
           [
@@ -489,9 +481,9 @@
     ]
   },
   "reach": {
-    "stations15": 8,
-    "stations30": 39,
-    "stations45": 123
+    "stations15": 19,
+    "stations30": 69,
+    "stations45": 205
   },
   "prevSlug": "novoselecki-put",
   "nextSlug": "novoselecki-put-83"

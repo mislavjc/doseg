@@ -642,9 +642,9 @@
     ]
   },
   "reach": {
-    "stations15": 10,
-    "stations30": 49,
-    "stations45": 145
+    "stations15": 27,
+    "stations30": 101,
+    "stations45": 284
   },
   "prevSlug": "svetice-maksimir-2",
   "nextSlug": "svetosimunska-trgov"

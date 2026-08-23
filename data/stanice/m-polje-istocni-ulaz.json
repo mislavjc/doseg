@@ -147,10 +147,6 @@
           ],
           [
             16.12012,
-            45.85839
-          ],
-          [
-            16.12012,
             45.85838
           ],
           [
@@ -178,9 +174,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 15,
-    "stations45": 47
+    "stations15": 10,
+    "stations30": 36,
+    "stations45": 155
   },
   "prevSlug": "luzan-zeleni-vijenac",
   "nextSlug": "m-polje-okretiste"

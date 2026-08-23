@@ -242,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 5,
-    "stations45": 10
+    "stations15": 14,
+    "stations30": 44,
+    "stations45": 93
   },
   "prevSlug": "bahlenova",
   "nextSlug": "barutanski-jarak-48"

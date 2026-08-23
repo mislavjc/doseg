@@ -468,9 +468,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 16,
-    "stations45": 28
+    "stations15": 23,
+    "stations30": 71,
+    "stations45": 191
   },
   "prevSlug": "poljanice-iv",
   "nextSlug": "popovecka-51"

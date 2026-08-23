@@ -85,9 +85,9 @@
     ]
   },
   "reach": {
-    "stations15": 16,
-    "stations30": 57,
-    "stations45": 237
+    "stations15": 25,
+    "stations30": 103,
+    "stations45": 252
   },
   "prevSlug": "remete-76",
   "nextSlug": "remete-maksimir"

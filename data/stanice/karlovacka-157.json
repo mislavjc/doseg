@@ -1345,9 +1345,9 @@
     ]
   },
   "reach": {
-    "stations15": 4,
-    "stations30": 8,
-    "stations45": 64
+    "stations15": 33,
+    "stations30": 98,
+    "stations45": 280
   },
   "prevSlug": "karaznik",
   "nextSlug": "karlovacka-18"

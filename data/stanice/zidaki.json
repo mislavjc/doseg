@@ -110,19 +110,11 @@
             45.89126
           ],
           [
-            16.10098,
-            45.89126
-          ],
-          [
             16.09993,
             45.89141
           ],
           [
             16.09883,
-            45.89172
-          ],
-          [
-            16.09882,
             45.89172
           ],
           [
@@ -250,9 +242,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 17,
-    "stations45": 39
+    "stations15": 8,
+    "stations30": 35,
+    "stations45": 83
   },
   "prevSlug": "zg-velesajam",
   "nextSlug": "zigulici"

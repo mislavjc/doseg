@@ -385,9 +385,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 19,
-    "stations45": 61
+    "stations15": 19,
+    "stations30": 41,
+    "stations45": 125
   },
   "prevSlug": "delec",
   "nextSlug": "demerska-3"

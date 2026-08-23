@@ -319,9 +319,9 @@
     ]
   },
   "reach": {
-    "stations15": 0,
-    "stations30": 0,
-    "stations45": 12
+    "stations15": 6,
+    "stations30": 22,
+    "stations45": 51
   },
   "prevSlug": "furdini",
   "nextSlug": "g-trpuci-okretiste"

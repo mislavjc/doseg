@@ -405,9 +405,9 @@
     ]
   },
   "reach": {
-    "stations15": 5,
-    "stations30": 25,
-    "stations45": 78
+    "stations15": 15,
+    "stations30": 46,
+    "stations45": 125
   },
   "prevSlug": "jaruscica",
   "nextSlug": "jazbina-159"

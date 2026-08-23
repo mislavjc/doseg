@@ -134,10 +134,6 @@
           ],
           [
             16.01226,
-            45.82982
-          ],
-          [
-            16.01226,
             45.82983
           ],
           [
@@ -151,10 +147,6 @@
           [
             16.0114,
             45.834
-          ],
-          [
-            16.01141,
-            45.83399
           ],
           [
             16.01109,
@@ -229,9 +221,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 116,
-    "stations45": 354
+    "stations15": 29,
+    "stations30": 122,
+    "stations45": 311
   },
   "prevSlug": "prilesje",
   "nextSlug": "prisavlje-tresnjevka-jug"

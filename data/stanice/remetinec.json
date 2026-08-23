@@ -818,9 +818,9 @@
     ]
   },
   "reach": {
-    "stations15": 39,
-    "stations30": 125,
-    "stations45": 316
+    "stations15": 64,
+    "stations30": 231,
+    "stations45": 423
   },
   "prevSlug": "remete-maksimir-2",
   "nextSlug": "remetinecka-15"

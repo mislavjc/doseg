@@ -420,19 +420,15 @@
           [
             15.93154,
             45.71819
-          ],
-          [
-            15.93154,
-            45.71819
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 16,
-    "stations45": 55
+    "stations15": 7,
+    "stations30": 26,
+    "stations45": 61
   },
   "prevSlug": "odranska-dacka",
   "nextSlug": "odvojak-reber"

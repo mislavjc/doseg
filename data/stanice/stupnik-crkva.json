@@ -170,10 +170,6 @@
             45.74502
           ],
           [
-            15.87092,
-            45.74502
-          ],
-          [
             15.87153,
             45.74543
           ],
@@ -208,19 +204,15 @@
           [
             15.88574,
             45.75407
-          ],
-          [
-            15.88574,
-            45.75407
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 9,
-    "stations45": 45
+    "stations15": 10,
+    "stations30": 39,
+    "stations45": 145
   },
   "prevSlug": "stupnicki-obrez",
   "nextSlug": "stupnik-skola"

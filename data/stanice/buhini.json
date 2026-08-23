@@ -225,9 +225,9 @@
     ]
   },
   "reach": {
-    "stations15": 2,
-    "stations30": 14,
-    "stations45": 59
+    "stations15": 14,
+    "stations30": 37,
+    "stations45": 168
   },
   "prevSlug": "budenecka-34",
   "nextSlug": "bukoscak"

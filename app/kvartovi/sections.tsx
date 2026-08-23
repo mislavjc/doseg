@@ -410,7 +410,7 @@ export function DosegLink({ data }: { data: KvartData }) {
     <>
       <SectionHeader eyebrow="doseg odavde" hook="Vidi što stigneš za 30 minuta.">
         Interaktivna karta dosega iz najpovezanije točke kvarta: dokle stigneš
-        tramvajem, busom i pješice u 15, 30 ili 45 minuta.
+        tramvajem, busom i pješice u 15 ili 30 minuta.
       </SectionHeader>
       <Link
         href={`/karta?lat=${lat}&lon=${lon}`}

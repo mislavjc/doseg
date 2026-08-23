@@ -1,15 +1,14 @@
 FROM oven/bun:1 AS deps
 WORKDIR /app
-# node-gyp toolchain for native deps without a prebuilt binary (e.g.
-# better-sqlite3, pulled in by the evalite dev tool). This is a throwaway
-# build stage — the toolchain never reaches the runner image.
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ \
-  && rm -rf /var/lib/apt/lists/*
 COPY package.json bun.lock ./
 # patchedDependencies (vaul) — bun install needs the patch files present
 COPY patches ./patches
-RUN bun install --frozen-lockfile
+# --ignore-scripts: the only native dep is better-sqlite3, pulled in by the
+# evalite dev tool. It is never imported by `bun run build` or by the runner,
+# but bun trusts it by default and compiles it from source. Since oven/bun:1
+# moved to Node 26 that compile fails on a changed v8::External::Value ABI,
+# which broke deploys. Skipping install scripts avoids the build entirely.
+RUN bun install --frozen-lockfile --ignore-scripts
 
 FROM oven/bun:1 AS builder
 WORKDIR /app

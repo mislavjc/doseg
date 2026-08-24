@@ -3,7 +3,10 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::path::Path;
 
-pub const GRID_CELL_SIZE: f64 = 0.002; // ~200m in degrees
+/// Reachability bucket size in DEGREES. Not square on the ground: at Zagreb's
+/// latitude this is 222.6 m north-south but 155.2 m east-west, so one cell is
+/// 0.0346 km² — see reachKm2 in lib/district-scores.ts before converting to area.
+pub const GRID_CELL_SIZE: f64 = 0.002;
 
 /// Walking graph in CSR format, loaded from walk-graph.bin.
 /// All arrays are owned (copied from mmap) so the compiler can prove no aliasing

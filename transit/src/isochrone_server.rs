@@ -1584,7 +1584,6 @@ async fn handle_isochrone(
     // 2. Generate features
     let mut features = Vec::new();
     let mut walk_area_features = Vec::new();
-    let t_walk;
 
     if routing_mode != "only" {
         let transit_features =
@@ -1598,10 +1597,9 @@ async fn handle_isochrone(
             lon,
         );
         features.extend(transit_features);
-        t_walk = Instant::now();
-    } else {
-        t_walk = Instant::now();
     }
+    // Both paths reached this point before, so the mark stays where it was.
+    let t_walk = Instant::now();
 
     // 3. Build routing payload
     let routing = if routing_mode != "0" {
@@ -2871,6 +2869,25 @@ struct BajsStationFlowResponse {
     stations: Vec<BajsStationFlow>,
 }
 
+/// One station's four 24-slot series while folding hours into local time.
+struct HourSlots {
+    starts: Vec<i32>,
+    returns: Vec<i32>,
+    reloc_out: Vec<i32>,
+    reloc_in: Vec<i32>,
+}
+
+impl Default for HourSlots {
+    fn default() -> Self {
+        HourSlots {
+            starts: vec![0; 24],
+            returns: vec![0; 24],
+            reloc_out: vec![0; 24],
+            reloc_in: vec![0; 24],
+        }
+    }
+}
+
 async fn handle_bajs_station_flow(
     State(state): State<Arc<AppState>>,
     Query(params): Query<BajsRidesParams>,
@@ -2906,17 +2923,14 @@ async fn handle_bajs_station_flow(
     // caller can turn totals into per-day rates without assuming the window
     // was fully observed.
     let mut days_seen: Vec<HashSet<String>> = vec![HashSet::new(); 24];
-    let blank = || (vec![0; 24], vec![0; 24], vec![0; 24], vec![0; 24]);
-    let mut by_station: HashMap<String, (Vec<i32>, Vec<i32>, Vec<i32>, Vec<i32>)> = HashMap::new();
+    let mut by_station: HashMap<String, HourSlots> = HashMap::new();
     for row in &rows {
         let (date, hour) = zagreb_hour_bucket(row.hour_ts);
         let slot = hour as usize;
         days_seen[slot].insert(date);
-        let entry = by_station
-            .entry(row.station_id.clone())
-            .or_insert_with(blank);
-        entry.0[slot] += row.starts as i32;
-        entry.1[slot] += row.returns as i32;
+        let entry = by_station.entry(row.station_id.clone()).or_default();
+        entry.starts[slot] += row.starts as i32;
+        entry.returns[slot] += row.returns as i32;
     }
 
     // The van's own moves, so a caller can net them out of the two above. A
@@ -2928,9 +2942,9 @@ async fn handle_bajs_station_flow(
         let (_, in_hour) = zagreb_hour_bucket(m.arrived_ts - m.arrived_ts.rem_euclid(3600));
         by_station
             .entry(m.from_station.clone())
-            .or_insert_with(blank)
-            .2[out_hour as usize] += 1;
-        by_station.entry(m.to_station.clone()).or_insert_with(blank).3[in_hour as usize] += 1;
+            .or_default()
+            .reloc_out[out_hour as usize] += 1;
+        by_station.entry(m.to_station.clone()).or_default().reloc_in[in_hour as usize] += 1;
     }
 
     let info_map: HashMap<&str, &crate::bajs::BajsStation> = state
@@ -2942,7 +2956,7 @@ async fn handle_bajs_station_flow(
 
     let mut stations: Vec<BajsStationFlow> = by_station
         .into_iter()
-        .filter_map(|(station_id, (starts, returns, reloc_out, reloc_in))| {
+        .filter_map(|(station_id, slots)| {
             // Without coordinates a station cannot be placed in a kvart, which
             // is the only thing this endpoint exists to support.
             let info = info_map.get(station_id.as_str())?;
@@ -2951,10 +2965,10 @@ async fn handle_bajs_station_flow(
                 lat: info.lat,
                 lon: info.lon,
                 station_id,
-                starts,
-                returns,
-                reloc_out,
-                reloc_in,
+                starts: slots.starts,
+                returns: slots.returns,
+                reloc_out: slots.reloc_out,
+                reloc_in: slots.reloc_in,
             })
         })
         .collect();

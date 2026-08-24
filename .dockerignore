@@ -13,6 +13,9 @@ data/*
 !data/poi-photos.json
 !data/poi-snapshot.json
 !data/districts.geojson
+# Imported at build time by the /bajs hero map, so it has to be in the context
+# rather than mounted at runtime like the rest of data/.
+!data/bajs-tiles.json
 !data/home-hero.json
 !data/adrese.json
 !data/promjene

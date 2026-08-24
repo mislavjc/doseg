@@ -3106,7 +3106,7 @@ async fn handle_bajs_relocations(
             })
         })
         .collect();
-    corridor_list.sort_by(|a, b| b.moves.cmp(&a.moves));
+    corridor_list.sort_by_key(|c| std::cmp::Reverse(c.moves));
     corridor_list.truncate(10);
 
     let resp = BajsRelocationsResponse {

@@ -2482,6 +2482,652 @@ async fn handle_bajs_usage_history(
     }
 }
 
+// --- BAJS measured rides ---
+
+/// A poll interval longer than this covers more than its own minute, so its
+/// rides cannot be attributed to a clock minute. Mirrors the collector's own
+/// reliability bound in `bajs_flow`.
+const BAJS_MAX_GAP_SEC: i64 = 180;
+
+/// An hour counts toward the hour-of-day profile only if most of it was
+/// actually observed, so a restart mid-hour does not read as a quiet hour.
+const BAJS_MIN_OBSERVED_MINUTES: i64 = 50;
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRideDay {
+    /// Zagreb local date, `YYYY-MM-DD`.
+    date: String,
+    starts: i32,
+    returns: i32,
+    /// Bikes moved by van four or more at a time; excluded from `starts`.
+    bulk_out: i32,
+    /// Smaller van runs, also excluded from `starts`. A bike arriving at
+    /// another station under the id it left with was never rented, since GBFS
+    /// rotates the id on rental, so it was carried rather than ridden.
+    relocations: i32,
+    /// Minutes of this day that were actually observed, out of 1440.
+    minutes: i32,
+    worst_gap_sec: i32,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRideHour {
+    /// Zagreb local hour, 0-23.
+    hour: i32,
+    /// Rides started in this hour per day observed, averaged.
+    avg_starts: f64,
+    avg_returns: f64,
+    /// How many well-observed days went into the average.
+    days: i32,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRidesResponse {
+    /// First and last minute ever measured, as unix seconds. Null before the
+    /// collector has written anything.
+    #[ts(type = "number | null")]
+    measured_from: Option<i64>,
+    #[ts(type = "number | null")]
+    measured_to: Option<i64>,
+    /// Whole days only, oldest first. The current day is included and will be
+    /// partial; check `minutes` before quoting it.
+    days: Vec<BajsRideDay>,
+    hourly: Vec<BajsRideHour>,
+}
+
+#[derive(Deserialize)]
+struct BajsRidesParams {
+    days: Option<i64>,
+}
+
+/// Bucket a UTC hour start into (Zagreb local date string, Zagreb hour 0-23).
+fn zagreb_hour_bucket(hour_ts: i64) -> (String, i32) {
+    let local = hour_ts + zagreb_offset(hour_ts);
+    let (y, m, d) = days_to_ymd(local.div_euclid(86400) as u64);
+    let hour = (local.rem_euclid(86400) / 3600) as i32;
+    (format!("{:04}-{:02}-{:02}", y, m, d), hour)
+}
+
+async fn handle_bajs_rides(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<BajsRidesParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let window_days = params.days.unwrap_or(30).clamp(1, 400);
+    let from = now - window_days * 86400;
+
+    let conn = db.lock().await;
+    let hours = rt_store::query_bajs_hourly_totals(&conn, from, now, BAJS_MAX_GAP_SEC);
+    let moves = rt_store::query_bajs_relocations(&conn, from, now);
+    let span = rt_store::query_bajs_measured_span(&conn);
+    drop(conn);
+
+    let (mut hours, moves) = match (hours, moves) {
+        (Ok(hours), Ok(moves)) => (hours, moves),
+        (Err(e), _) | (_, Err(e)) => {
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"{}"}}"#, e),
+            )
+                .into_response()
+        }
+    };
+
+    let relocations = subtract_relocations(&mut hours, &moves);
+    let (days, hourly) = fold_bajs_rides(&hours, &relocations);
+
+    let resp = BajsRidesResponse {
+        measured_from: span.map(|(from, _)| from),
+        measured_to: span.map(|(_, to)| to),
+        days,
+        hourly,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=300"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+/// Take the van's smaller runs out of the ride counts.
+///
+/// Only moves of four or more bikes at one station in one poll are classified
+/// as bulk upstream, which leaves the ordinary one- and two-bike runs sitting
+/// inside `starts` and `returns` looking exactly like rides. They are not: the
+/// bike kept the id it left with, and GBFS rotates that on rental.
+///
+/// Returns the count removed per hour bucket, so the response can report how
+/// much was taken out rather than quietly shrinking.
+fn subtract_relocations(
+    hours: &mut [rt_store::BajsHourTotals],
+    moves: &[rt_store::BajsRelocation],
+) -> HashMap<i64, i64> {
+    let mut out_by_hour: HashMap<i64, i64> = HashMap::new();
+    let mut in_by_hour: HashMap<i64, i64> = HashMap::new();
+    for m in moves {
+        *out_by_hour
+            .entry(m.departed_ts - m.departed_ts.rem_euclid(3600))
+            .or_insert(0) += 1;
+        *in_by_hour
+            .entry(m.arrived_ts - m.arrived_ts.rem_euclid(3600))
+            .or_insert(0) += 1;
+    }
+
+    let mut removed: HashMap<i64, i64> = HashMap::new();
+    for hour in hours.iter_mut() {
+        // Clamped: an hour the ride query dropped for a poll gap can still
+        // hold relocations, and a negative ride count is worse than an
+        // incomplete subtraction.
+        let outs = out_by_hour.get(&hour.hour_ts).copied().unwrap_or(0);
+        let ins = in_by_hour.get(&hour.hour_ts).copied().unwrap_or(0);
+        let taken = outs.min(hour.starts);
+        hour.starts -= taken;
+        hour.returns -= ins.min(hour.returns);
+        removed.insert(hour.hour_ts, taken);
+    }
+    removed
+}
+
+/// Fold UTC hour buckets two ways: into Zagreb local days, and into a 0-23
+/// profile. The profile counts only hours that were nearly fully observed, so
+/// a restart mid-hour does not read as a quiet hour and drag the average down.
+fn fold_bajs_rides(
+    hours: &[rt_store::BajsHourTotals],
+    relocations: &HashMap<i64, i64>,
+) -> (Vec<BajsRideDay>, Vec<BajsRideHour>) {
+    let mut days: Vec<BajsRideDay> = Vec::new();
+    let mut profile: HashMap<i32, (i64, i64, i32)> = HashMap::new();
+    for hour in hours {
+        let (date, local_hour) = zagreb_hour_bucket(hour.hour_ts);
+        let moved = relocations.get(&hour.hour_ts).copied().unwrap_or(0) as i32;
+        match days.last_mut() {
+            Some(day) if day.date == date => {
+                day.starts += hour.starts as i32;
+                day.returns += hour.returns as i32;
+                day.bulk_out += hour.bulk_out as i32;
+                day.relocations += moved;
+                day.minutes += hour.minutes as i32;
+                day.worst_gap_sec = day.worst_gap_sec.max(hour.worst_gap_sec as i32);
+            }
+            _ => days.push(BajsRideDay {
+                date,
+                starts: hour.starts as i32,
+                returns: hour.returns as i32,
+                bulk_out: hour.bulk_out as i32,
+                relocations: moved,
+                minutes: hour.minutes as i32,
+                worst_gap_sec: hour.worst_gap_sec as i32,
+            }),
+        }
+
+        if hour.minutes >= BAJS_MIN_OBSERVED_MINUTES {
+            let entry = profile.entry(local_hour).or_insert((0, 0, 0));
+            entry.0 += hour.starts;
+            entry.1 += hour.returns;
+            entry.2 += 1;
+        }
+    }
+
+    let mut hourly: Vec<BajsRideHour> = profile
+        .into_iter()
+        .map(|(hour, (starts, returns, count))| BajsRideHour {
+            hour,
+            avg_starts: starts as f64 / count as f64,
+            avg_returns: returns as f64 / count as f64,
+            days: count,
+        })
+        .collect();
+    hourly.sort_by_key(|h| h.hour);
+
+    (days, hourly)
+}
+
+// --- BAJS station ranking ---
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRankedStation {
+    station_id: String,
+    name: String,
+    lat: f64,
+    lon: f64,
+    capacity: i32,
+    /// Measured rides started here over the window.
+    starts: i32,
+    returns: i32,
+    /// Rides started per observed day, so a partial window still compares.
+    starts_per_day: f64,
+    /// Mean bikes docked here across every sample.
+    avg_bikes: f64,
+    /// Share of samples with no bike at all, 0-1.
+    empty_share: f64,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRankingResponse {
+    #[ts(type = "number | null")]
+    measured_from: Option<i64>,
+    #[ts(type = "number | null")]
+    measured_to: Option<i64>,
+    /// Days of measurement behind the ranking. Below ~14 the order is noisy.
+    observed_days: f64,
+    stations: Vec<BajsRankedStation>,
+}
+
+#[derive(Deserialize)]
+struct BajsRankingParams {
+    days: Option<i64>,
+    limit: Option<usize>,
+}
+
+async fn handle_bajs_station_ranking(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<BajsRankingParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let window_days = params.days.unwrap_or(30).clamp(1, 400);
+    let from = now - window_days * 86400;
+
+    let conn = db.lock().await;
+    let ranked = rt_store::query_bajs_station_ranking(&conn, from, now);
+    let span = rt_store::query_bajs_measured_span(&conn);
+    drop(conn);
+
+    let ranked = match ranked {
+        Ok(ranked) => ranked,
+        Err(e) => {
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"{}"}}"#, e),
+            )
+                .into_response()
+        }
+    };
+
+    let info_map: HashMap<&str, &crate::bajs::BajsStation> = state
+        .transit_graph
+        .bajs_stations
+        .iter()
+        .map(|s| (s.station_id.as_str(), s))
+        .collect();
+
+    // Samples are one per minute per station, so this is the observed span in
+    // days regardless of how many stations reported.
+    let observed_days = ranked
+        .iter()
+        .map(|s| s.samples)
+        .max()
+        .map(|samples| samples as f64 / 1440.0)
+        .unwrap_or(0.0);
+
+    let limit = params.limit.unwrap_or(200).clamp(1, 500);
+    // A station can leave the network and still have history on file. Dropping
+    // it beats inventing one: without graph info it has no name to print and
+    // no coordinates, so it would render as a bare id sitting at 0,0.
+    let stations: Vec<BajsRankedStation> = ranked
+        .iter()
+        .filter_map(|s| {
+            let info = info_map.get(s.station_id.as_str())?;
+            Some(BajsRankedStation {
+                station_id: s.station_id.clone(),
+                name: info.name.clone(),
+                lat: info.lat,
+                lon: info.lon,
+                capacity: info.capacity,
+                starts: s.starts as i32,
+                returns: s.returns as i32,
+                starts_per_day: if s.samples > 0 {
+                    s.starts as f64 / (s.samples as f64 / 1440.0)
+                } else {
+                    0.0
+                },
+                avg_bikes: s.avg_bikes,
+                empty_share: s.empty_share,
+            })
+        })
+        // After the filter, so a dropped station does not eat a slot.
+        .take(limit)
+        .collect();
+
+    let resp = BajsRankingResponse {
+        measured_from: span.map(|(from, _)| from),
+        measured_to: span.map(|(_, to)| to),
+        observed_days,
+        stations,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=300"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+// --- BAJS demand direction ---
+
+/// One station's day, folded into Zagreb local hours.
+///
+/// `starts` and `returns` are parallel 24-slot arrays rather than objects: at
+/// ~200 stations the object form triples the payload for nothing.
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsStationFlow {
+    station_id: String,
+    name: String,
+    lat: f64,
+    lon: f64,
+    /// Rides started here, by local hour 0-23.
+    starts: Vec<i32>,
+    /// Rides ended here, by local hour 0-23.
+    returns: Vec<i32>,
+    /// Of those starts, the ones that were a van loading a bike rather than
+    /// somebody riding away. Only bulk moves of four or more are filtered out
+    /// upstream, so smaller van runs sit inside `starts` and have to be taken
+    /// out here to read rider demand on its own.
+    reloc_out: Vec<i32>,
+    /// Likewise for returns: a bike set down by the van, not ridden in.
+    reloc_in: Vec<i32>,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsStationFlowResponse {
+    #[ts(type = "number | null")]
+    measured_from: Option<i64>,
+    #[ts(type = "number | null")]
+    measured_to: Option<i64>,
+    /// Well-observed days behind these totals, per local hour slot.
+    observed_days: Vec<f64>,
+    stations: Vec<BajsStationFlow>,
+}
+
+async fn handle_bajs_station_flow(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<BajsRidesParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let window_days = params.days.unwrap_or(30).clamp(1, 400);
+    let from = now - window_days * 86400;
+
+    let conn = db.lock().await;
+    let rows = rt_store::query_bajs_station_hours(&conn, from, now, BAJS_MIN_OBSERVED_MINUTES);
+    let moves = rt_store::query_bajs_relocations(&conn, from, now);
+    let span = rt_store::query_bajs_measured_span(&conn);
+    drop(conn);
+
+    let (rows, moves) = match (rows, moves) {
+        (Ok(rows), Ok(moves)) => (rows, moves),
+        (Err(e), _) | (_, Err(e)) => {
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"{}"}}"#, e),
+            )
+                .into_response()
+        }
+    };
+
+    // How many distinct days contributed to each local hour slot, so the
+    // caller can turn totals into per-day rates without assuming the window
+    // was fully observed.
+    let mut days_seen: Vec<HashSet<String>> = vec![HashSet::new(); 24];
+    let blank = || (vec![0; 24], vec![0; 24], vec![0; 24], vec![0; 24]);
+    let mut by_station: HashMap<String, (Vec<i32>, Vec<i32>, Vec<i32>, Vec<i32>)> = HashMap::new();
+    for row in &rows {
+        let (date, hour) = zagreb_hour_bucket(row.hour_ts);
+        let slot = hour as usize;
+        days_seen[slot].insert(date);
+        let entry = by_station
+            .entry(row.station_id.clone())
+            .or_insert_with(blank);
+        entry.0[slot] += row.starts as i32;
+        entry.1[slot] += row.returns as i32;
+    }
+
+    // The van's own moves, so a caller can net them out of the two above. A
+    // move leaves in its departure hour and lands in its arrival hour, which
+    // are often not the same: bikes ride the van for the better part of an
+    // hour.
+    for m in &moves {
+        let (_, out_hour) = zagreb_hour_bucket(m.departed_ts - m.departed_ts.rem_euclid(3600));
+        let (_, in_hour) = zagreb_hour_bucket(m.arrived_ts - m.arrived_ts.rem_euclid(3600));
+        by_station
+            .entry(m.from_station.clone())
+            .or_insert_with(blank)
+            .2[out_hour as usize] += 1;
+        by_station.entry(m.to_station.clone()).or_insert_with(blank).3[in_hour as usize] += 1;
+    }
+
+    let info_map: HashMap<&str, &crate::bajs::BajsStation> = state
+        .transit_graph
+        .bajs_stations
+        .iter()
+        .map(|s| (s.station_id.as_str(), s))
+        .collect();
+
+    let mut stations: Vec<BajsStationFlow> = by_station
+        .into_iter()
+        .filter_map(|(station_id, (starts, returns, reloc_out, reloc_in))| {
+            // Without coordinates a station cannot be placed in a kvart, which
+            // is the only thing this endpoint exists to support.
+            let info = info_map.get(station_id.as_str())?;
+            Some(BajsStationFlow {
+                name: info.name.clone(),
+                lat: info.lat,
+                lon: info.lon,
+                station_id,
+                starts,
+                returns,
+                reloc_out,
+                reloc_in,
+            })
+        })
+        .collect();
+    stations.sort_by(|a, b| a.station_id.cmp(&b.station_id));
+
+    let resp = BajsStationFlowResponse {
+        measured_from: span.map(|(from, _)| from),
+        measured_to: span.map(|(_, to)| to),
+        observed_days: days_seen.iter().map(|d| d.len() as f64).collect(),
+        stations,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=300"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
+// --- BAJS relocations (the rebalancing van) ---
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsCorridor {
+    from_name: String,
+    to_name: String,
+    moves: i32,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRelocationDay {
+    date: String,
+    moves: i32,
+}
+
+#[derive(Serialize, TS)]
+#[ts(export, export_to = "../../lib/generated/")]
+#[serde(rename_all = "camelCase")]
+struct BajsRelocationsResponse {
+    #[ts(type = "number | null")]
+    measured_from: Option<i64>,
+    #[ts(type = "number | null")]
+    measured_to: Option<i64>,
+    days: Vec<BajsRelocationDay>,
+    /// Mean moves per local hour 0-23, across the days observed.
+    hourly: Vec<f64>,
+    /// Mean minutes a moved bike is off the network.
+    avg_minutes: f64,
+    corridors: Vec<BajsCorridor>,
+}
+
+async fn handle_bajs_relocations(
+    State(state): State<Arc<AppState>>,
+    Query(params): Query<BajsRidesParams>,
+) -> Response {
+    let db = match require_db(&state) {
+        Ok(db) => db,
+        Err(resp) => return resp,
+    };
+
+    let now = unix_now();
+    let window_days = params.days.unwrap_or(30).clamp(1, 400);
+    let from = now - window_days * 86400;
+
+    let conn = db.lock().await;
+    let moves = rt_store::query_bajs_relocations(&conn, from, now);
+    let span = rt_store::query_bajs_measured_span(&conn);
+    drop(conn);
+
+    let moves = match moves {
+        Ok(moves) => moves,
+        Err(e) => {
+            return (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                [(header::CONTENT_TYPE, "application/json")],
+                format!(r#"{{"error":"{}"}}"#, e),
+            )
+                .into_response()
+        }
+    };
+
+    // Stations leave the network but stay in the move log, so a name is not
+    // guaranteed. Those rows still count toward the totals below; they are
+    // only kept out of the named lists, where a bare id would be printed at a
+    // reader as if it meant something.
+    let names: HashMap<&str, &str> = state
+        .transit_graph
+        .bajs_stations
+        .iter()
+        .map(|s| (s.station_id.as_str(), s.name.as_str()))
+        .collect();
+    let name_of = |id: &str| names.get(id).map(|n| n.to_string());
+
+    let mut days: Vec<BajsRelocationDay> = Vec::new();
+    let mut hour_totals = [0i64; 24];
+    let mut hour_days: Vec<HashSet<String>> = vec![HashSet::new(); 24];
+    let mut minutes_total = 0i64;
+    let mut corridors: HashMap<(String, String), i32> = HashMap::new();
+
+    for m in &moves {
+        let (date, hour) = zagreb_hour_bucket(m.departed_ts - m.departed_ts.rem_euclid(3600));
+        let minutes = (m.arrived_ts - m.departed_ts) / 60;
+        minutes_total += minutes;
+        hour_totals[hour as usize] += 1;
+        hour_days[hour as usize].insert(date.clone());
+
+        match days.last_mut() {
+            Some(day) if day.date == date => day.moves += 1,
+            _ => days.push(BajsRelocationDay {
+                date,
+                moves: 1,
+            }),
+        }
+
+        *corridors
+            .entry((m.from_station.clone(), m.to_station.clone()))
+            .or_insert(0) += 1;
+    }
+
+    days.sort_by(|a, b| a.date.cmp(&b.date));
+
+    let mut corridor_list: Vec<BajsCorridor> = corridors
+        .into_iter()
+        .filter_map(|((from, to), moves)| {
+            Some(BajsCorridor {
+                from_name: name_of(&from)?,
+                to_name: name_of(&to)?,
+                moves,
+            })
+        })
+        .collect();
+    corridor_list.sort_by(|a, b| b.moves.cmp(&a.moves));
+    corridor_list.truncate(10);
+
+    let resp = BajsRelocationsResponse {
+        measured_from: span.map(|(from, _)| from),
+        measured_to: span.map(|(_, to)| to),
+        days,
+        hourly: hour_totals
+            .iter()
+            .zip(&hour_days)
+            .map(|(total, days)| {
+                if days.is_empty() {
+                    0.0
+                } else {
+                    *total as f64 / days.len() as f64
+                }
+            })
+            .collect(),
+        avg_minutes: if moves.is_empty() {
+            0.0
+        } else {
+            minutes_total as f64 / moves.len() as f64
+        },
+        corridors: corridor_list,
+    };
+
+    (
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "public, max-age=300"),
+        ],
+        serde_json::to_string(&resp).unwrap(),
+    )
+        .into_response()
+}
+
 // --- BAJS status polling ---
 
 struct BajsTaskConfig {
@@ -2624,6 +3270,20 @@ async fn track_bajs_bike_flow(
         match rt_store::upsert_bajs_station_hourly(&mut conn, flush) {
             Ok(n) => eprintln!("BAJS flow: wrote hour {} for {} stations", flush.hour_ts, n),
             Err(e) => eprintln!("BAJS flow: hourly write failed: {}", e),
+        }
+    }
+
+    // After the flush: a retraction can target the hour just written, and must
+    // not be undone by it.
+    if let Some(ref delta) = outcome.delta {
+        if !delta.retractions.is_empty() {
+            match rt_store::apply_bajs_start_retractions(&mut conn, &delta.retractions) {
+                Ok(()) => eprintln!(
+                    "BAJS flow: withdrew {} start(s) from bikes that came back to their own dock",
+                    delta.retractions.len()
+                ),
+                Err(e) => eprintln!("BAJS flow: retraction failed: {}", e),
+            }
         }
     }
 }
@@ -3187,6 +3847,13 @@ async fn main() {
         .route("/api/rt/route-health", get(handle_route_health))
         .route("/api/rt/bajs-utilization", get(handle_bajs_utilization))
         .route("/api/rt/bajs-usage-history", get(handle_bajs_usage_history))
+        .route("/api/rt/bajs-rides", get(handle_bajs_rides))
+        .route(
+            "/api/rt/bajs-station-ranking",
+            get(handle_bajs_station_ranking),
+        )
+        .route("/api/rt/bajs-station-flow", get(handle_bajs_station_flow))
+        .route("/api/rt/bajs-relocations", get(handle_bajs_relocations))
         .route("/health", get(handle_health))
         .layer(CompressionLayer::new())
         .with_state(state);
@@ -3201,4 +3868,134 @@ async fn main() {
         });
     println!("Isochrone server listening on port {}", port);
     axum::serve(listener, app).await.unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn hour_totals(hour_ts: i64, starts: i64, minutes: i64) -> rt_store::BajsHourTotals {
+        rt_store::BajsHourTotals {
+            hour_ts,
+            starts,
+            returns: starts,
+            bulk_out: 0,
+            bulk_in: 0,
+            avg_docked: 1500.0,
+            min_docked: 1400,
+            max_docked: 1600,
+            minutes,
+            worst_gap_sec: 60,
+        }
+    }
+
+    #[test]
+    fn zagreb_buckets_shift_utc_hours_into_local_days() {
+        // 2026-08-19 21:00 UTC is 23:00 local (CEST), still the 19th.
+        assert_eq!(
+            zagreb_hour_bucket(1787173200),
+            ("2026-08-19".to_string(), 23)
+        );
+        // One hour later crosses local midnight into the 20th.
+        assert_eq!(
+            zagreb_hour_bucket(1787176800),
+            ("2026-08-20".to_string(), 0)
+        );
+        // In January the offset is +1, so 23:00 UTC is 00:00 the next day.
+        assert_eq!(
+            zagreb_hour_bucket(1767222000),
+            ("2026-01-01".to_string(), 0)
+        );
+    }
+
+    #[test]
+    fn rides_fold_into_local_days_not_utc_days() {
+        // Three consecutive hours straddling local midnight on 19/20 Aug.
+        let hours = vec![
+            hour_totals(1787169600, 10, 60), // 22:00 local, 19 Aug
+            hour_totals(1787173200, 20, 60), // 23:00 local, 19 Aug
+            hour_totals(1787176800, 30, 60), // 00:00 local, 20 Aug
+        ];
+        let (days, _) = fold_bajs_rides(&hours, &HashMap::new());
+
+        assert_eq!(days.len(), 2, "the local day boundary splits them");
+        assert_eq!(days[0].date, "2026-08-19");
+        assert_eq!(days[0].starts, 30, "22h and 23h belong to the 19th");
+        assert_eq!(days[0].minutes, 120);
+        assert_eq!(days[1].date, "2026-08-20");
+        assert_eq!(days[1].starts, 30);
+    }
+
+    #[test]
+    fn the_hour_profile_ignores_barely_observed_hours() {
+        // Same local hour on two days: one fully observed, one a stub from a
+        // restart. Averaging both would halve the hour.
+        let hours = vec![
+            hour_totals(1787173200, 200, 60),
+            hour_totals(1787259600, 4, 2),
+        ];
+        let (_, hourly) = fold_bajs_rides(&hours, &HashMap::new());
+
+        assert_eq!(hourly.len(), 1);
+        assert_eq!(hourly[0].hour, 23);
+        assert_eq!(hourly[0].days, 1, "only the full hour counts");
+        assert_eq!(hourly[0].avg_starts, 200.0);
+    }
+
+    #[test]
+    fn an_empty_window_folds_to_empty_rather_than_dividing_by_zero() {
+        let (days, hourly) = fold_bajs_rides(&[], &HashMap::new());
+        assert!(days.is_empty());
+        assert!(hourly.is_empty());
+    }
+
+    #[test]
+    fn van_runs_come_out_of_the_ride_count() {
+        let hour = 1787173200;
+        let mut hours = vec![hour_totals(hour, 100, 60)];
+        hours[0].returns = 100;
+        let moves = vec![
+            rt_store::BajsRelocation {
+                departed_ts: hour + 120,
+                arrived_ts: hour + 900,
+                from_station: "A".into(),
+                to_station: "B".into(),
+            },
+            rt_store::BajsRelocation {
+                departed_ts: hour + 300,
+                arrived_ts: hour + 1200,
+                from_station: "A".into(),
+                to_station: "C".into(),
+            },
+        ];
+
+        let removed = subtract_relocations(&mut hours, &moves);
+        assert_eq!(hours[0].starts, 98, "two carried bikes are not two rides");
+        assert_eq!(hours[0].returns, 98);
+        assert_eq!(removed[&hour], 2);
+
+        let (days, _) = fold_bajs_rides(&hours, &removed);
+        assert_eq!(days[0].starts, 98);
+        assert_eq!(days[0].relocations, 2, "and are reported, not just dropped");
+    }
+
+    #[test]
+    fn subtracting_van_runs_never_drives_an_hour_negative() {
+        let hour = 1787173200;
+        // The ride query drops hours with a bad poll gap, but the relocations
+        // in that hour are still on file.
+        let mut hours = vec![hour_totals(hour, 1, 60)];
+        let moves: Vec<rt_store::BajsRelocation> = (0..5)
+            .map(|i| rt_store::BajsRelocation {
+                departed_ts: hour + i * 60,
+                arrived_ts: hour + i * 60 + 600,
+                from_station: "A".into(),
+                to_station: "B".into(),
+            })
+            .collect();
+
+        let removed = subtract_relocations(&mut hours, &moves);
+        assert_eq!(hours[0].starts, 0);
+        assert_eq!(removed[&hour], 1, "only what was actually there came out");
+    }
 }

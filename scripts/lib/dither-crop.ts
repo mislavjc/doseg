@@ -240,6 +240,121 @@ async function buildCrop(
   }
 }
 
+export interface TilePyramidOptions {
+  /** Root of the XYZ tree; tiles land at outDir/{z}/{x}/{y}.png. */
+  outDir: string
+  /** [west, south, east, north] — only tiles touching this box are baked. */
+  bbox: number[]
+  minZoom: number
+  maxZoom: number
+  /**
+   * Pixels per baked tile. 512 fills a 256-slot at 2x, which is what keeps the
+   * dither crisp on a retina screen and buys a zoom level of headroom before
+   * MapLibre has to interpolate.
+   */
+  tileSize?: number
+  /** Deepest CARTO zoom to sample. Bounds the fetch, not the output. */
+  sourceZoomMax?: number
+  /** Rebake tiles that already exist on disk. */
+  force?: boolean
+  onZoom?: (z: number, count: number) => void
+}
+
+export interface TilePyramid {
+  minZoom: number
+  maxZoom: number
+  /** Pixels per baked tile; the map declares half this to draw them at 2x. */
+  tileSize: number
+  /** [west, south, east, north] of the baked area, snapped out to tile edges. */
+  bounds: [number, number, number, number]
+}
+
+/**
+ * Bake one XYZ tile of the blue-on-white fabric.
+ *
+ * Sampling mirrors buildCrop: read the tile's extent at a deeper CARTO zoom and
+ * box-average down, so a display pixel turns blue on the share of building under
+ * it rather than on whichever single source pixel it happened to land on.
+ */
+async function buildTile(
+  cfg: Cfg,
+  z: number,
+  x: number,
+  y: number,
+  outPath: string,
+  tileSize: number,
+  sourceZoomMax: number
+): Promise<void> {
+  const zs = Math.min(z + 1 + cfg.oversampleZoom, sourceZoomMax)
+  const native = TILE_SIZE * 2 ** (zs - z)
+  const scale = native / tileSize
+  if (!Number.isInteger(scale) || scale < 1) {
+    throw new Error(
+      `tile z${z}: source zoom ${zs} gives ${native}px for a ${tileSize}px tile; ` +
+        `raise sourceZoomMax to at least ${z + Math.log2(tileSize / TILE_SIZE)}`
+    )
+  }
+
+  const data = await stitchGrayCrop(cfg, zs, x * native, y * native, native, native)
+  const out = thresholdToBlue(cfg, data, tileSize, tileSize, scale)
+
+  mkdirSync(join(outPath, ".."), { recursive: true })
+  await sharp(out, { raw: { width: tileSize, height: tileSize, channels: 3 } })
+    .png({ palette: true, colors: 2, dither: 0 })
+    .toFile(outPath)
+}
+
+/**
+ * Bake a whole XYZ pyramid over a bbox, so the fabric can back a pannable map
+ * instead of a single frozen crop. Existing tiles are left alone unless forced,
+ * which makes a re-run after a network change cheap.
+ */
+async function buildTilePyramid(
+  cfg: Cfg,
+  opts: TilePyramidOptions
+): Promise<TilePyramid> {
+  const tileSize = opts.tileSize ?? 512
+  const sourceZoomMax = opts.sourceZoomMax ?? 16
+  const [west, south, east, north] = opts.bbox
+
+  let bounds: [number, number, number, number] | null = null
+
+  for (let z = opts.minZoom; z <= opts.maxZoom; z++) {
+    const n = 2 ** z
+    const x0 = Math.floor(mercatorX(west) * n)
+    const x1 = Math.floor(mercatorX(east) * n)
+    const y0 = Math.floor(mercatorY(north) * n)
+    const y1 = Math.floor(mercatorY(south) * n)
+
+    const jobs: { x: number; y: number; path: string }[] = []
+    for (let x = x0; x <= x1; x++) {
+      for (let y = y0; y <= y1; y++) {
+        const path = join(opts.outDir, String(z), String(x), `${y}.png`)
+        if (!opts.force && existsSync(path)) continue
+        jobs.push({ x, y, path })
+      }
+    }
+
+    // Deepest zoom wins the reported bounds: its tile grid is the finest, so
+    // snapping out to tile edges overshoots the stations least.
+    const worldPx = TILE_SIZE * n
+    bounds = [
+      invMercX(x0 * TILE_SIZE, worldPx),
+      invMercY((y1 + 1) * TILE_SIZE, worldPx),
+      invMercX((x1 + 1) * TILE_SIZE, worldPx),
+      invMercY(y0 * TILE_SIZE, worldPx),
+    ]
+
+    await mapConcurrent(jobs, Math.max(2, Math.floor(cfg.fetchConcurrency / 4)), (j) =>
+      buildTile(cfg, z, j.x, j.y, j.path, tileSize, sourceZoomMax)
+    )
+    opts.onZoom?.(z, jobs.length)
+  }
+
+  if (!bounds) throw new Error("empty zoom range")
+  return { minZoom: opts.minZoom, maxZoom: opts.maxZoom, tileSize, bounds }
+}
+
 export function createDitherCropper(opts: DitherCropperOptions) {
   const cfg: Cfg = {
     cacheDir: opts.cacheDir,
@@ -256,5 +371,6 @@ export function createDitherCropper(opts: DitherCropperOptions) {
   return {
     buildCrop: (outPng: string, bbox: number[], outW: number, outH: number, pad: number, prev?: HeroCrop) =>
       buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
+    buildTilePyramid: (opts: TilePyramidOptions) => buildTilePyramid(cfg, opts),
   }
 }

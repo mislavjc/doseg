@@ -15,6 +15,18 @@ export type { WalkAreaFeature } from "./WalkAreaFeature"
 export type { WalkAreaGeometry } from "./WalkAreaGeometry"
 export type { WalkAreaResponse } from "./WalkAreaResponse"
 
+// BAJS measured ride flow (/api/rt/bajs-rides, /api/rt/bajs-station-ranking)
+export type { BajsCorridor } from "./BajsCorridor"
+export type { BajsRankedStation } from "./BajsRankedStation"
+export type { BajsRankingResponse } from "./BajsRankingResponse"
+export type { BajsRelocationDay } from "./BajsRelocationDay"
+export type { BajsRelocationsResponse } from "./BajsRelocationsResponse"
+export type { BajsRideDay } from "./BajsRideDay"
+export type { BajsRideHour } from "./BajsRideHour"
+export type { BajsRidesResponse } from "./BajsRidesResponse"
+export type { BajsStationFlow } from "./BajsStationFlow"
+export type { BajsStationFlowResponse } from "./BajsStationFlowResponse"
+
 // District scores types (data/district-scores.json)
 export type { BestPoint } from "./BestPoint"
 export type { District } from "./District"

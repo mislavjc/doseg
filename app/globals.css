@@ -460,6 +460,62 @@
   display: none;
 }
 
+/* /bajs hero map — undo the rounded, blurred control chrome the rest of the
+   app uses, so the map wears the same sharp edges as the page around it. */
+.bajs-hero-map .maplibregl-ctrl-group {
+  border-radius: 0 !important;
+  border: 1px solid var(--hairline-strong) !important;
+  background: var(--ground) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.bajs-hero-map .maplibregl-ctrl-attrib {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.bajs-hero-map .maplibregl-ctrl-attrib a {
+  color: var(--ink-faint) !important;
+}
+.bajs-hero-map .maplibregl-ctrl-group button,
+.bajs-hero-map .maplibregl-ctrl-attrib-button,
+.bajs-hero-map .maplibregl-ctrl-attrib.maplibregl-compact {
+  border-radius: 0 !important;
+}
+/* Cooperative-gesture hint ("use ⌘ + scroll to zoom") — house type, no blur. */
+.bajs-hero-map .maplibregl-cooperative-gesture-screen {
+  background: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* /bajs hero station popup — same sharp, token-driven idiom as .reach-popup */
+.bajs-hero-popup .maplibregl-popup-content {
+  background: var(--ground);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 0;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-dropdown);
+}
+.bajs-hero-popup .maplibregl-popup-content strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.bajs-hero-popup .maplibregl-popup-content span {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.bajs-hero-popup .maplibregl-popup-tip {
+  display: none;
+}
+
 /* ── Skeleton shimmer ── */
 .skeleton-block {
   background: rgba(0, 0, 0, 0.05);

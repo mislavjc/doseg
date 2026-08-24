@@ -8,11 +8,16 @@ import { scoreColor } from "@/lib/score-color"
 import { parseDistrictShapes } from "./district-shapes"
 
 /**
- * Interactive 3D score terrain — clean three.js (no dither). Extrudes districts
- * from public/district-map.svg by score, flat blue caps on a pale→navy ramp,
- * darker walls + edge lines for crisp borders, soft ground shadow, ortho iso
- * camera (recipe from /tmp/render3d.js). Hover raycasts a block → highlights it
- * (bright blue) and links to the ranking board both ways. Render-on-demand.
+ * Interactive 3D terrain — clean three.js (no dither). Extrudes districts from
+ * public/district-map.svg, flat blue caps on a pale→navy ramp, darker walls +
+ * edge lines for crisp borders, soft ground shadow, ortho iso camera (recipe
+ * from /tmp/render3d.js). Hover raycasts a block → highlights it (bright blue)
+ * and links to the ranking board both ways. Render-on-demand.
+ *
+ * Height and colour come from the connectivity score baked into the SVG unless
+ * `values` overrides them, which is how /bajs stands the same city up by rides
+ * per kvart. Either way the number is on the shared 0–100 scale, so both pages
+ * speak the one `scoreColor` ramp.
  */
 
 // Caps coloured by the shared score ramp (same as the board) so neighbouring
@@ -35,16 +40,25 @@ type Block = {
 export function TerrainView({
   hovered,
   onHover,
+  values,
+  ariaLabel = "3D karta zagrebačkih kvartova, visina označava doseg",
 }: {
   hovered: string | null
   onHover: (name: string | null) => void
+  /** Per-kvart 0–100 value driving height and colour; defaults to the SVG score. */
+  values?: Record<string, number>
+  ariaLabel?: string
 }) {
   const mountRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
+  const valuesRef = useRef(values)
   const apiRef = useRef<{ highlight: (name: string | null) => void } | null>(null)
 
   useEffect(() => {
     onHoverRef.current = onHover
+    // Read at build time, which happens once the SVG lands, so a caller passing
+    // a fresh object literal every render does not rebuild the whole scene.
+    valuesRef.current = values
   })
 
   useEffect(() => {
@@ -109,7 +123,8 @@ export function TerrainView({
       if (disposed) return
       const shapes = parseDistrictShapes(svgText)
       const names = shapes.map((s) => s.name)
-      const scores = shapes.map((s) => s.score)
+      const override = valuesRef.current
+      const scores = shapes.map((s) => (override ? (override[s.name] ?? 0) : s.score))
       const maxS = Math.max(...scores, 1)
 
       const data = new SVGLoader().parse(svgText)
@@ -247,7 +262,7 @@ export function TerrainView({
       ref={mountRef}
       className="w-full cursor-pointer [aspect-ratio:1300/980]"
       role="img"
-      aria-label="3D karta zagrebačkih kvartova, visina označava doseg"
+      aria-label={ariaLabel}
     />
   )
 }

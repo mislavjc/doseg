@@ -11,11 +11,15 @@
 //! rental start at its station, a bike_id appearing is one return. Those are
 //! measurements, not estimates.
 //!
-//! Three things still need care and are handled here:
+//! Four things still need care and are handled here:
 //! - Bikes drop out of the feed for a single poll and come back to the same
 //!   dock without having moved. Measured live, that flicker accounted for
 //!   roughly one in six apparent departures, so a departure is only counted
 //!   once a second poll confirms the bike is still gone.
+//! - Some bikes stay missing for several polls and *then* come back to the
+//!   dock they left, under the same id. Two polls of absence already counted
+//!   a departure, so that start has to be withdrawn rather than paired with a
+//!   return. See `StartRetraction`.
 //! - Rebalancing trucks move several bikes at one station within a single
 //!   poll. Those are classified separately (`bulk_out` / `bulk_in`) so they
 //!   never inflate ride counts.
@@ -60,6 +64,35 @@ pub struct MatchedTrip {
     pub to_station: String,
 }
 
+/// A departure that was counted earlier and did not happen.
+///
+/// A bike missing for two consecutive polls is counted as departed. Some of
+/// those bikes are only missing from the feed: they reappear later at the dock
+/// they left, still carrying the id they left with. GBFS rotates `bike_id` on
+/// rental precisely so trips cannot be followed, so a bike that comes back
+/// under its old id was never rented, however long it was gone. The start is
+/// therefore withdrawn instead of being paired with a return.
+///
+/// The correction is dated to `counted_ts`, the poll that recorded the start,
+/// because that is the minute and hour the error was written into. Dropouts
+/// run from three polls to over an hour, so applying it to the current bucket
+/// instead would push some other hour negative.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct StartRetraction {
+    pub station_id: String,
+    pub counted_ts: i64,
+}
+
+/// A bike believed to be out on a ride.
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct InFlight {
+    station_id: String,
+    /// When the bike was last seen docked.
+    departed_ts: i64,
+    /// The poll that counted the start, which is where a retraction lands.
+    counted_ts: i64,
+}
+
 /// What changed at one station between two polls.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct StationDelta {
@@ -86,6 +119,12 @@ pub struct PollDelta {
     pub stations: i64,
     pub per_station: HashMap<String, StationDelta>,
     pub trips: Vec<MatchedTrip>,
+    /// Starts counted at an earlier poll that this poll disproved. Only those
+    /// landing in an hour already handed off are listed; a retraction against
+    /// the hour still accumulating is applied in place. Apply these after
+    /// writing `flush`, so a correction cannot be overwritten by the hour it
+    /// corrects.
+    pub retractions: Vec<StartRetraction>,
 }
 
 impl PollDelta {
@@ -132,8 +171,8 @@ pub struct BikeTracker {
     /// bike_id -> (station, ts it went missing) for bikes absent from exactly
     /// one poll. Held back until a second poll confirms the bike really left.
     pending: HashMap<String, (String, i64)>,
-    /// bike_id -> (origin station, departure ts) for bikes currently out.
-    in_flight: HashMap<String, (String, i64)>,
+    /// bike_id -> where and when it left, for bikes currently out.
+    in_flight: HashMap<String, InFlight>,
     last_poll_ts: Option<i64>,
     hour_ts: i64,
     hour_acc: HashMap<String, StationHour>,
@@ -198,6 +237,10 @@ impl BikeTracker {
                 acc.bulk_in += sd.bulk_in;
             }
         }
+        if let Some(ref mut delta) = outcome.delta {
+            let pending = std::mem::take(&mut delta.retractions);
+            delta.retractions = self.settle_retractions(pending);
+        }
 
         self.docked = observations
             .iter()
@@ -205,9 +248,35 @@ impl BikeTracker {
             .collect();
         self.last_poll_ts = Some(ts);
         self.in_flight
-            .retain(|_, (_, departed)| ts - *departed <= MAX_TRIP_DURATION_SEC);
+            .retain(|_, f| ts - f.departed_ts <= MAX_TRIP_DURATION_SEC);
 
         outcome
+    }
+
+    /// Withdraw disproved starts from the hour still accumulating, and hand
+    /// back only those belonging to an hour already flushed.
+    ///
+    /// Runs after the flush above, so `hour_acc` holds the current hour alone
+    /// and a matching `hour_ts` is proof the start is still in memory.
+    fn settle_retractions(&mut self, retractions: Vec<StartRetraction>) -> Vec<StartRetraction> {
+        retractions
+            .into_iter()
+            .filter(|r| {
+                let hour = r.counted_ts - r.counted_ts.rem_euclid(3600);
+                if hour != self.hour_ts {
+                    return true;
+                }
+                match self.hour_acc.get_mut(&r.station_id) {
+                    Some(acc) if acc.starts > 0 => {
+                        acc.starts -= 1;
+                        false
+                    }
+                    // Reclassified as a bulk move, or lost to a restart. The
+                    // start is not in this bucket, so there is nothing to undo.
+                    _ => false,
+                }
+            })
+            .collect()
     }
 
     fn diff(
@@ -219,6 +288,7 @@ impl BikeTracker {
     ) -> PollDelta {
         let mut per_station: HashMap<String, StationDelta> = HashMap::new();
         let mut trips = Vec::new();
+        let mut retractions = Vec::new();
 
         // Bikes whose absence was settled here, so the arrivals pass below
         // does not count them a second time.
@@ -233,7 +303,14 @@ impl BikeTracker {
                 None => {
                     // Absent twice running: a ride really did start.
                     per_station.entry(station_id.clone()).or_default().starts += 1;
-                    self.in_flight.insert(bike_id, (station_id, missing_since));
+                    self.in_flight.insert(
+                        bike_id,
+                        InFlight {
+                            station_id,
+                            departed_ts: missing_since,
+                            counted_ts: ts,
+                        },
+                    );
                 }
                 Some(&current) if current == station_id => {
                     // Feed flicker. Neither a start nor a return.
@@ -290,15 +367,28 @@ impl BikeTracker {
                     if resolved.contains(&obs.bike_id) {
                         continue;
                     }
+                    let flight = self.in_flight.remove(&obs.bike_id);
+                    // Back at the dock it left, under the id it left with. The
+                    // id would have rotated had anyone rented it, so nothing
+                    // departed and the counted start has to come back off.
+                    if let Some(ref f) = flight {
+                        if f.station_id == obs.station_id {
+                            retractions.push(StartRetraction {
+                                station_id: f.station_id.clone(),
+                                counted_ts: f.counted_ts,
+                            });
+                            continue;
+                        }
+                    }
                     per_station
                         .entry(obs.station_id.clone())
                         .or_default()
                         .returns += 1;
-                    if let Some((from_station, departed_ts)) = self.in_flight.remove(&obs.bike_id) {
+                    if let Some(f) = flight {
                         trips.push(MatchedTrip {
-                            departed_ts,
+                            departed_ts: f.departed_ts,
                             arrived_ts: ts,
-                            from_station,
+                            from_station: f.station_id,
                             to_station: obs.station_id.clone(),
                         });
                     }
@@ -329,6 +419,7 @@ impl BikeTracker {
                 .collect::<HashSet<_>>()
                 .len() as i64,
             trips,
+            retractions,
             ..Default::default()
         };
         for sd in per_station.values() {
@@ -611,6 +702,79 @@ mod tests {
         assert_eq!(b.empty_samples, 3);
         assert_eq!(b.max_bikes, 0);
         assert_eq!(b.min_bikes, 0);
+    }
+
+    #[test]
+    fn a_multi_poll_dropout_takes_its_start_back() {
+        let mut t = BikeTracker::new();
+        t.observe(0, &obs(&[("b1", "A")]), &stations());
+        t.observe(60, &obs(&[]), &stations());
+        // Absent twice running, so a start is counted at t=120.
+        let out = t.observe(120, &obs(&[]), &stations());
+        assert_eq!(out.delta.unwrap().starts, 1);
+
+        // Back at the dock it left, still under its own id: never rented.
+        let out = t.observe(180, &obs(&[("b1", "A")]), &stations());
+        let delta = out.delta.unwrap();
+        assert_eq!(delta.returns, 0, "nothing arrived, so nothing returned");
+        assert!(delta.trips.is_empty(), "A to A is not a ride");
+        assert_eq!(
+            delta.retractions,
+            vec![],
+            "the hour is still open, so it is corrected in place"
+        );
+        assert_eq!(t.in_flight_count(), 0);
+
+        // The hour nets out to nothing having happened at all.
+        let flush = t
+            .observe(3600, &obs(&[("b1", "A")]), &stations())
+            .flush
+            .expect("hour boundary flushes");
+        let by_id: HashMap<_, _> = flush.stations.into_iter().collect();
+        assert_eq!(by_id["A"].starts, 0);
+        assert_eq!(by_id["A"].returns, 0);
+    }
+
+    #[test]
+    fn a_dropout_across_an_hour_boundary_is_retracted_by_date() {
+        let mut t = BikeTracker::new();
+        // Start counted at 3540, inside the first hour.
+        t.observe(3420, &obs(&[("b1", "A")]), &stations());
+        t.observe(3480, &obs(&[]), &stations());
+        let out = t.observe(3540, &obs(&[]), &stations());
+        assert_eq!(out.delta.unwrap().starts, 1);
+
+        // Reappears in the next hour, after the first has been handed off.
+        let out = t.observe(3660, &obs(&[("b1", "A")]), &stations());
+        let delta = out.delta.unwrap();
+        assert!(out.flush.is_some(), "the first hour was flushed here");
+        assert_eq!(
+            delta.retractions,
+            vec![StartRetraction {
+                station_id: "A".into(),
+                counted_ts: 3540,
+            }],
+            "dated to the poll that counted it, not to the poll that caught it"
+        );
+        assert_eq!(delta.returns, 0);
+    }
+
+    #[test]
+    fn a_bike_that_comes_back_elsewhere_is_still_a_ride() {
+        let mut t = BikeTracker::new();
+        t.observe(0, &obs(&[("b1", "A")]), &stations());
+        t.observe(60, &obs(&[]), &stations());
+        t.observe(120, &obs(&[]), &stations());
+
+        let out = t.observe(600, &obs(&[("b1", "B")]), &stations());
+        let delta = out.delta.unwrap();
+        assert_eq!(delta.returns, 1);
+        assert!(
+            delta.retractions.is_empty(),
+            "a different dock is a real trip, not a dropout"
+        );
+        assert_eq!(delta.trips.len(), 1);
+        assert_eq!(delta.trips[0].to_station, "B");
     }
 
     #[test]

@@ -24,6 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://doseg.hr/kvartovi", lastModified: linesUpdated },
     { url: "https://doseg.hr/karta-tramvaja", lastModified: linesUpdated },
     { url: "https://doseg.hr/stanice", lastModified: stopsUpdated },
+    // Rewritten whenever the ride measurement advances, which is daily.
+    { url: "https://doseg.hr/bajs", lastModified: new Date() },
     ...lines.lines.map((l) => ({
       url: `https://doseg.hr/linije/${l.broj}`,
       lastModified: linesUpdated,

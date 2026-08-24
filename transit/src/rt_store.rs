@@ -1201,6 +1201,45 @@ pub fn upsert_bajs_station_hourly(
     Ok(flush.stations.len())
 }
 
+/// Take back starts that a later poll disproved.
+///
+/// Each retraction is dated to the poll that recorded the start, so it lands in
+/// the minute and hour the miscount went into rather than in the current one.
+/// Dropouts run from three polls to over an hour, so correcting the current
+/// bucket instead would leave one hour short and another over.
+///
+/// Only rows already written are touched: `bajs_flow_minute` and the hour
+/// buckets still in memory are handled by the tracker itself. `MAX(0, ...)`
+/// guards the case where the start was reclassified as a bulk move, which
+/// leaves nothing to subtract.
+pub fn apply_bajs_start_retractions(
+    conn: &mut Connection,
+    retractions: &[crate::bajs_flow::StartRetraction],
+) -> rusqlite::Result<()> {
+    if retractions.is_empty() {
+        return Ok(());
+    }
+    let tx = conn.transaction()?;
+    {
+        let mut minute = tx.prepare(
+            "UPDATE bajs_flow_minute SET starts = MAX(0, starts - 1) WHERE ts = ?1",
+        )?;
+        let mut hourly = tx.prepare(
+            "UPDATE bajs_station_hourly SET starts = MAX(0, starts - 1)
+             WHERE hour_ts = ?1 AND station_id = ?2",
+        )?;
+        for r in retractions {
+            minute.execute(params![r.counted_ts - r.counted_ts.rem_euclid(60)])?;
+            hourly.execute(params![
+                r.counted_ts - r.counted_ts.rem_euclid(3600),
+                r.station_id
+            ])?;
+        }
+    }
+    tx.commit()?;
+    Ok(())
+}
+
 pub fn insert_bajs_trips(
     conn: &mut Connection,
     trips: &[crate::bajs_flow::MatchedTrip],
@@ -1255,6 +1294,72 @@ pub fn query_bajs_flow(
     rows.collect()
 }
 
+/// Network-wide ride totals per clock hour, plus how much of each hour was
+/// actually observed. Minutes whose poll gap exceeded `max_gap_sec` are left
+/// out of both the counts and `minutes`, so a feed outage reads as a shorter
+/// observed hour rather than as an hour with few rides.
+///
+/// Hours are UTC buckets. Zagreb is always a whole number of hours off UTC, so
+/// callers can shift these into local hours without re-bucketing.
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BajsHourTotals {
+    pub hour_ts: i64,
+    pub starts: i64,
+    pub returns: i64,
+    pub bulk_out: i64,
+    pub bulk_in: i64,
+    pub avg_docked: f64,
+    pub min_docked: i64,
+    pub max_docked: i64,
+    /// Reliable minutes observed in this hour, out of 60.
+    pub minutes: i64,
+    pub worst_gap_sec: i64,
+}
+
+pub fn query_bajs_hourly_totals(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+    max_gap_sec: i64,
+) -> rusqlite::Result<Vec<BajsHourTotals>> {
+    let mut stmt = conn.prepare(
+        "SELECT (ts / 3600) * 3600 AS h,
+                SUM(starts), SUM(returns), SUM(bulk_out), SUM(bulk_in),
+                AVG(docked), MIN(docked), MAX(docked),
+                COUNT(*), MAX(gap_sec)
+         FROM bajs_flow_minute
+         WHERE ts >= ?1 AND ts <= ?2 AND gap_sec <= ?3
+         GROUP BY h
+         ORDER BY h",
+    )?;
+    let rows = stmt.query_map(params![from, to, max_gap_sec], |row| {
+        Ok(BajsHourTotals {
+            hour_ts: row.get(0)?,
+            starts: row.get(1)?,
+            returns: row.get(2)?,
+            bulk_out: row.get(3)?,
+            bulk_in: row.get(4)?,
+            avg_docked: row.get(5)?,
+            min_docked: row.get(6)?,
+            max_docked: row.get(7)?,
+            minutes: row.get(8)?,
+            worst_gap_sec: row.get(9)?,
+        })
+    })?;
+    rows.collect()
+}
+
+/// First and last minute ever recorded, so a page can state honestly since
+/// when the measurement runs. `None` before the first poll lands.
+pub fn query_bajs_measured_span(conn: &Connection) -> Option<(i64, i64)> {
+    conn.query_row("SELECT MIN(ts), MAX(ts) FROM bajs_flow_minute", [], |row| {
+        Ok((row.get::<_, Option<i64>>(0)?, row.get::<_, Option<i64>>(1)?))
+    })
+    .ok()
+    .and_then(|(min, max)| Some((min?, max?)))
+}
+
 /// Stations ranked by measured rides started, busiest first.
 pub fn query_bajs_station_ranking(
     conn: &Connection,
@@ -1284,6 +1389,79 @@ pub fn query_bajs_station_ranking(
             avg_bikes: sum_bikes as f64 / samples as f64,
             empty_share: empty_samples as f64 / samples as f64,
             samples,
+        })
+    })?;
+    rows.collect()
+}
+
+/// One station's flow in one clock hour, for reading demand direction.
+///
+/// Kept at the stored grain rather than folded here: hours are UTC buckets and
+/// only the caller knows Zagreb's offset on that date.
+pub struct BajsStationHourRow {
+    pub station_id: String,
+    pub hour_ts: i64,
+    pub starts: i64,
+    pub returns: i64,
+}
+
+/// Per-station starts and returns per hour, over well-observed hours only.
+///
+/// `min_samples` drops hours the collector only partly saw, so a restart reads
+/// as a missing hour rather than as an hour when nobody rode.
+pub fn query_bajs_station_hours(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+    min_samples: i64,
+) -> rusqlite::Result<Vec<BajsStationHourRow>> {
+    let mut stmt = conn.prepare(
+        "SELECT station_id, hour_ts, starts, returns
+         FROM bajs_station_hourly
+         WHERE hour_ts >= ?1 AND hour_ts <= ?2 AND samples >= ?3
+         ORDER BY hour_ts",
+    )?;
+    let rows = stmt.query_map(params![from, to, min_samples], |row| {
+        Ok(BajsStationHourRow {
+            station_id: row.get(0)?,
+            hour_ts: row.get(1)?,
+            starts: row.get(2)?,
+            returns: row.get(3)?,
+        })
+    })?;
+    rows.collect()
+}
+
+/// A bike that moved between two stations without its id rotating.
+///
+/// GBFS rotates `bike_id` on rental, so a bike that arrives somewhere else
+/// still carrying the id it left with was never rented: it was carried. These
+/// are the operator's rebalancing moves, not anybody's ride. Same-station rows
+/// are excluded because those are feed dropouts, not moves.
+pub struct BajsRelocation {
+    pub departed_ts: i64,
+    pub arrived_ts: i64,
+    pub from_station: String,
+    pub to_station: String,
+}
+
+pub fn query_bajs_relocations(
+    conn: &Connection,
+    from: i64,
+    to: i64,
+) -> rusqlite::Result<Vec<BajsRelocation>> {
+    let mut stmt = conn.prepare(
+        "SELECT departed_ts, arrived_ts, from_station, to_station
+         FROM bajs_trip
+         WHERE arrived_ts >= ?1 AND arrived_ts <= ?2 AND from_station <> to_station
+         ORDER BY departed_ts",
+    )?;
+    let rows = stmt.query_map(params![from, to], |row| {
+        Ok(BajsRelocation {
+            departed_ts: row.get(0)?,
+            arrived_ts: row.get(1)?,
+            from_station: row.get(2)?,
+            to_station: row.get(3)?,
         })
     })?;
     rows.collect()
@@ -1526,6 +1704,64 @@ mod tests {
     }
 
     #[test]
+    fn test_bajs_start_retraction_lands_on_the_dated_bucket() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
+        let hour = 1710720000;
+        let counted_ts = hour + 1830; // 30 min 30 s into the hour
+
+        insert_bajs_flow_minute(
+            &db.conn,
+            &crate::bajs_flow::PollDelta {
+                ts: counted_ts,
+                gap_sec: 60,
+                starts: 3,
+                returns: 1,
+                docked: 1700,
+                stations: 190,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        upsert_bajs_station_hourly(
+            &mut db.conn,
+            &crate::bajs_flow::HourFlush {
+                hour_ts: hour,
+                stations: vec![
+                    ("busy".to_string(), station_hour(3, 60, 0, 60)),
+                    ("quiet".to_string(), station_hour(1, 60, 0, 60)),
+                ],
+            },
+        )
+        .unwrap();
+
+        let retraction = crate::bajs_flow::StartRetraction {
+            station_id: "busy".to_string(),
+            counted_ts,
+        };
+        apply_bajs_start_retractions(&mut db.conn, std::slice::from_ref(&retraction)).unwrap();
+
+        let flow = query_bajs_flow(&db.conn, hour, hour + 3600, 180).unwrap();
+        assert_eq!(flow[0].starts, 2, "one start came off the minute it went in");
+        assert_eq!(flow[0].returns, 1, "returns are untouched");
+
+        let ranked: HashMap<String, i64> = query_bajs_station_ranking(&db.conn, hour, hour)
+            .unwrap()
+            .into_iter()
+            .map(|s| (s.station_id, s.starts))
+            .collect();
+        assert_eq!(ranked["busy"], 2, "and off the station that recorded it");
+        assert_eq!(ranked["quiet"], 1, "other stations are left alone");
+
+        // A start already reclassified as a bulk move leaves nothing to undo.
+        for _ in 0..5 {
+            apply_bajs_start_retractions(&mut db.conn, std::slice::from_ref(&retraction)).unwrap();
+        }
+        let flow = query_bajs_flow(&db.conn, hour, hour + 3600, 180).unwrap();
+        assert_eq!(flow[0].starts, 0, "never goes negative");
+    }
+
+    #[test]
     fn test_bajs_flow_minute_filters_stalled_polls() {
         let dir = tempfile::tempdir().unwrap();
         let db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
@@ -1557,6 +1793,58 @@ mod tests {
         let usable = query_bajs_flow(&db.conn, ts, ts + 7200, 180).unwrap();
         assert_eq!(usable.len(), 1, "the stalled interval is excluded");
         assert_eq!(usable[0].starts, 4);
+    }
+
+    #[test]
+    fn test_bajs_hourly_totals_report_observed_minutes() {
+        let dir = tempfile::tempdir().unwrap();
+        let db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
+        let hour = 1710720000; // exactly on an hour boundary
+
+        // 40 good minutes in the first hour, one of them stalled.
+        for i in 0..40 {
+            insert_bajs_flow_minute(
+                &db.conn,
+                &crate::bajs_flow::PollDelta {
+                    ts: hour + i * 60,
+                    gap_sec: if i == 7 { 900 } else { 60 },
+                    starts: 2,
+                    returns: 1,
+                    docked: 1000 + i,
+                    stations: 190,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+        }
+        // One minute in the next hour, so bucketing is exercised.
+        insert_bajs_flow_minute(
+            &db.conn,
+            &crate::bajs_flow::PollDelta {
+                ts: hour + 3600,
+                gap_sec: 60,
+                starts: 5,
+                docked: 900,
+                stations: 190,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+        let hours = query_bajs_hourly_totals(&db.conn, hour, hour + 7200, 180).unwrap();
+        assert_eq!(hours.len(), 2, "one bucket per clock hour");
+        assert_eq!(hours[0].hour_ts, hour);
+        assert_eq!(hours[0].minutes, 39, "the stalled minute is not observed");
+        assert_eq!(hours[0].starts, 78, "and its rides are not counted");
+        assert_eq!(hours[0].returns, 39);
+        assert_eq!(hours[0].min_docked, 1000);
+        assert_eq!(hours[1].hour_ts, hour + 3600);
+        assert_eq!(hours[1].starts, 5);
+
+        assert_eq!(
+            query_bajs_measured_span(&db.conn),
+            Some((hour, hour + 3600))
+        );
     }
 
     #[test]

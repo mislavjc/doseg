@@ -73,6 +73,10 @@ services:
       - OTP_URL=http://otp:8080
       - HOSTNAME=0.0.0.0
       - DATA_DIR=/app/data
+      # Server components read measured RT data through this. Without it the
+      # readers fall back to localhost:3002, which is nothing inside this
+      # container, and every RT-backed section renders its unavailable state.
+      - ISOCHRONE_URL=http://isochrone:3001
     volumes:
       - ./data:/app/data
     depends_on:

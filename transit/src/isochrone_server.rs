@@ -3083,10 +3083,7 @@ async fn handle_bajs_relocations(
 
         match days.last_mut() {
             Some(day) if day.date == date => day.moves += 1,
-            _ => days.push(BajsRelocationDay {
-                date,
-                moves: 1,
-            }),
+            _ => days.push(BajsRelocationDay { date, moves: 1 }),
         }
 
         *corridors

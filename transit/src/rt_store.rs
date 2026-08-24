@@ -1221,9 +1221,8 @@ pub fn apply_bajs_start_retractions(
     }
     let tx = conn.transaction()?;
     {
-        let mut minute = tx.prepare(
-            "UPDATE bajs_flow_minute SET starts = MAX(0, starts - 1) WHERE ts = ?1",
-        )?;
+        let mut minute =
+            tx.prepare("UPDATE bajs_flow_minute SET starts = MAX(0, starts - 1) WHERE ts = ?1")?;
         let mut hourly = tx.prepare(
             "UPDATE bajs_station_hourly SET starts = MAX(0, starts - 1)
              WHERE hour_ts = ?1 AND station_id = ?2",
@@ -1742,7 +1741,10 @@ mod tests {
         apply_bajs_start_retractions(&mut db.conn, std::slice::from_ref(&retraction)).unwrap();
 
         let flow = query_bajs_flow(&db.conn, hour, hour + 3600, 180).unwrap();
-        assert_eq!(flow[0].starts, 2, "one start came off the minute it went in");
+        assert_eq!(
+            flow[0].starts, 2,
+            "one start came off the minute it went in"
+        );
         assert_eq!(flow[0].returns, 1, "returns are untouched");
 
         let ranked: HashMap<String, i64> = query_bajs_station_ranking(&db.conn, hour, hour)

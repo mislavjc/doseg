@@ -7,7 +7,10 @@ export default function robots(): MetadataRoute.Robots {
     // instead; /?lat= covers legacy shares until the 301 propagates.
     rules: {
       userAgent: "*",
-      allow: "/",
+      // /api/open-data is a documented download linked from /llms.txt; the
+      // blanket /api/ disallow would otherwise tell agents not to fetch the one
+      // endpoint we actively point them at.
+      allow: ["/", "/api/open-data"],
       disallow: ["/api/", "/?lat=", "/karta?lat="],
     },
     sitemap: "https://doseg.hr/sitemap.xml",

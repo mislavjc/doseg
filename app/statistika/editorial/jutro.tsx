@@ -62,11 +62,21 @@ function LegendDot({ cls, label }: { cls: string; label: string }) {
 }
 
 export function Jutro({ rows }: { rows: EveningRow[] }) {
+  // Rows arrive sorted by drop desc (computeEvening), so the narration reads off
+  // the head and tail. Derived, not written: the March copy claimed "istok gubi
+  // trećinu" and survived a feed roll that inverted the story, contradicting the
+  // chart right below it.
+  const worst = rows.slice(0, 3)
+  const least = rows[rows.length - 1]
   return (
     <Section id="jutro">
       <div className="flex flex-col gap-6">
         <Eyebrow>jutro vs. večer</Eyebrow>
-        <Hook>Kad padne mrak, istok ostaje bez trećine grada.</Hook>
+        <Hook>
+          {worst[0]
+            ? `Kad padne mrak, ${worst[0].name} ostaje bez ${worst[0].drop}% grada.`
+            : "Kad padne mrak, grad se skupi."}
+        </Hook>
         <div className="flex items-center gap-5 pl-[128px]">
           <LegendDot cls="bg-ink" label="jutro 8 h" />
           <LegendDot cls="bg-zg-blue" label="večer 21 h" />
@@ -78,8 +88,8 @@ export function Jutro({ rows }: { rows: EveningRow[] }) {
         </div>
         <BodyMuted>
           Doseg je mjeren u jutarnjem špicu. Navečer se grad skupi, ali ne svuda
-          jednako. Tri istočna kvarta, Novi Zagreb-istok, Peščenica i Donja
-          Dubrava, gube i do trećine; rubni Podsused i Stenjevec gotovo ništa.
+          jednako. Najviše gube {worst.map((r) => r.name).join(", ")} (do{" "}
+          {worst[0]?.drop}%), a najmanje {least?.name} ({least?.drop}%).
         </BodyMuted>
       </div>
     </Section>

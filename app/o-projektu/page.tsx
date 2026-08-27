@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="flex flex-col gap-[22px] pt-11 text-body">
           <p>
             Doseg mjeri koliko je grada stvarno dostupno javnim prijevozom.
-            Klik na kartu vraća izokrone za 15, 30 i 45 minuta, prema stvarnom
+            Klik na kartu vraća doseg za 15 ili 30 minuta, prema stvarnom
             voznom redu i s kašnjenjima koja se osvježavaju svakih trideset
             sekundi.
           </p>

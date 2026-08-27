@@ -17,8 +17,8 @@
  */
 import { writeFileSync, existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
+import { classify, extractLines, fromRss, get, idOf, strip } from "./rss"
 
-const UA = { "User-Agent": "Mozilla/5.0 doseg-promjene" }
 const EARLIEST_FEED = "2025-04-07" // before this we lack a shapes-bearing GTFS feed to illustrate from
 
 // Reasons a change is TEMPORARY (roadworks, races, events, one-off/partial diversions).
@@ -32,19 +32,6 @@ const PERM = /ukidanj|ukida|ukinut|produljen|produžen|produzen|nova linij|nove 
 // Categories that represent a real network change (not pure schedule or grab-bag).
 const LIST_CATEGORIES = new Set(["nova", "ukinuta", "produljena", "skraćena", "trasa", "stajalište"])
 
-/** Classify the change category from text (title preferred, slug fallback). */
-function classify(t: string): string {
-  const s = t.toLowerCase()
-  if (/ukidanj|ukida|ukinut/.test(s)) return "ukinuta"
-  if (/produljen|produžen|produzen/.test(s)) return "produljena"
-  if (/nova linij|nove linij|nova autobusn|uspostavlj|uvodi se|uvode se/.test(s)) return "nova"
-  if (/skrać|skrac/.test(s)) return "skraćena"
-  if (/stajališt|stajalist/.test(s)) return "stajalište"
-  if (/trasu|trase|preusmjer|mijenja tras|izmjena tras|izmijenjen/.test(s)) return "trasa"
-  if (/vozni red/.test(s)) return "vozni red"
-  return "ostalo"
-}
-
 /** Permanence verdict: permanent (strong perm + no temp), temporary, or review. */
 function permanence(t: string): "permanent" | "temporary" | "review" {
   const hasTemp = TEMP.test(t), hasPerm = PERM.test(t)
@@ -53,52 +40,12 @@ function permanence(t: string): "permanent" | "temporary" | "review" {
   return "review" // ambiguous (e.g. a bare "linija X mijenja trasu") — needs a human
 }
 
-/** Pull line numbers that follow a "linij…" token (so dates like "15. lipnja" or
- * the article id don't leak in). Handles "linijama 275, 277, 279, 282 i 284". */
-function extractLines(text: string): string[] {
-  const norm = text.replace(/-/g, " ").toLowerCase()
-  const out = new Set<string>()
-  for (const m of norm.matchAll(/linij\w*\s+([0-9][0-9\s,i]*)/g)) {
-    for (const n of m[1].matchAll(/\d{1,3}[a-d]?/g)) out.add(n[0])
-  }
-  return [...out]
-}
-
 const slugOf = (url: string) => { const m = url.match(/izmjene-u-prometu\/([a-z0-9-]+)\/\d+/i); return m ? m[1] : "" }
-// Article id, shared across both URL schemes: ".../slug/9564" (listing/wayback)
-// and "default.aspx?id=9564" (RSS).
-const idOf = (url: string) => { const m = url.match(/[?&]id=(\d+)/) ?? url.match(/\/(\d+)\/?$/); return m ? m[1] : "" }
 const titleFromSlug = (slug: string) => slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 
 interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; illustratable: boolean }
 
-const strip = (s: string) => s.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ").trim()
-const tag = (block: string, t: string) => { const m = block.match(new RegExp(`<${t}>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${t}>`)); return m ? m[1].trim() : "" }
-const RSS_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-function rssDate(d: string): string | null { const m = d.match(/(\d{1,2}) (\w{3}) (\d{4})/); if (!m) return null; const mo = RSS_MONTHS.indexOf(m[2]); return mo < 0 ? null : `${m[3]}-${String(mo + 1).padStart(2, "0")}-${m[1].padStart(2, "0")}` }
 const tsDate = (ts: string) => `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`
-
-async function get(url: string, timeoutMs = 45000): Promise<string> {
-  const ctrl = new AbortController()
-  const t = setTimeout(() => ctrl.abort(), timeoutMs)
-  try { return await (await fetch(url, { headers: UA, signal: ctrl.signal })).text() } finally { clearTimeout(t) }
-}
-
-const TRANSIT = /linij|stajališt|stajalist|tramvaj|autobus|tras[aeu]|vozni red|terminal|okretišt/i
-async function fromRss(url: string, label: string): Promise<Map<string, { title: string; date: string | null; url: string; body: string }>> {
-  const out = new Map<string, { title: string; date: string | null; url: string; body: string }>()
-  try {
-    const xml = await get(url)
-    for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
-      const it = m[1], link = strip(tag(it, "link")), title = strip(tag(it, "title")), body = strip(tag(it, "description"))
-      const id = idOf(link); if (!id) continue
-      if (!TRANSIT.test(`${title} ${body}`)) continue // rss_novosti carries non-transit news too
-      out.set(id, { title, date: rssDate(tag(it, "pubDate")), url: link, body })
-    }
-    console.error(`  RSS ${label}: ${out.size} transit items`)
-  } catch (e) { console.error(`  RSS ${label} failed: ${(e as Error).message}`) }
-  return out
-}
 
 async function fromLiveListing(): Promise<Map<string, { title: string; url: string }>> {
   const out = new Map<string, { title: string; url: string }>()

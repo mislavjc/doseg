@@ -12,7 +12,7 @@
     "118"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "1:04",
+  "lastDeparture": "0:50",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Trg Mažuranića",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.7
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [

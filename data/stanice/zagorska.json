@@ -13,7 +13,7 @@
     "118"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "0:56",
+  "lastDeparture": "0:42",
   "directionGroups": 4,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "118",
@@ -37,12 +37,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.7
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [

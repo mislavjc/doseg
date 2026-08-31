@@ -11,8 +11,8 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:24",
-  "lastDeparture": "0:40",
+  "firstDeparture": "4:19",
+  "lastDeparture": "0:35",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 16.4,
       "peakRangeMin": [
-        20,
-        25
+        15,
+        18
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 18.6
     }
   ],
   "neighbors": [

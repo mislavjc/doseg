@@ -11,8 +11,8 @@
     "2"
   ],
   "busLines": [],
-  "firstDeparture": "5:24",
-  "lastDeparture": "0:37",
+  "firstDeparture": "5:25",
+  "lastDeparture": "0:39",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 8.3,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 12.0
+      "allDayHeadwayMin": 10.0
     }
   ],
   "neighbors": [

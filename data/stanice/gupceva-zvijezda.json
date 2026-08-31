@@ -14,7 +14,7 @@
   ],
   "busLines": [],
   "firstDeparture": "4:46",
-  "lastDeparture": "0:37",
+  "lastDeparture": "0:41",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 18.3,
+      "peakHeadwayMin": 14.6,
       "peakRangeMin": [
-        18,
-        18
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 15.1
     },
     {
       "broj": "14",
@@ -38,12 +38,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "33",

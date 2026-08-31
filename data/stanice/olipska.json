@@ -15,7 +15,7 @@
   ],
   "busLines": [],
   "firstDeparture": "4:29",
-  "lastDeparture": "0:47",
+  "lastDeparture": "0:56",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     },
     {
       "broj": "3",
@@ -39,12 +39,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.6,
+      "peakHeadwayMin": 14.2,
       "peakRangeMin": [
-        16,
-        17
+        14,
+        14
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 14.7
     },
     {
       "broj": "13",
@@ -53,12 +53,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.2,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
         13,
         13
       ],
-      "allDayHeadwayMin": 14.2
+      "allDayHeadwayMin": 14.9
     },
     {
       "broj": "33",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T00:00:00.000Z",
+  "generatedAt": "2026-08-31T00:00:00.000Z",
   "departureWindow": "07:30-08:30",
   "eveningWindow": "20:30-21:30",
   "departureCount": 5,
@@ -8,7 +8,7 @@
   "totalSamplePoints": 10678,
   "totalGridCells": 18535,
   "bajsTotalStations": 188,
-  "bajsCoveredStops": 726,
+  "bajsCoveredStops": 725,
   "bajsStopCoveragePct": 26,
   "cityDesertPct": 43,
   "districts": [
@@ -44,7 +44,6 @@
       "tramLines": [
         "1",
         "2",
-        "3",
         "4",
         "5",
         "6",
@@ -262,7 +261,7 @@
         "Zagreb Glavni kolodvor - Đurmanec",
         "Čakovec - Zagreb Glavni kolodvor"
       ],
-      "stops": 59,
+      "stops": 58,
       "medianHeadwayMin": 10,
       "rank": 3,
       "score": 72
@@ -422,7 +421,7 @@
       "peakOffpeakDrop": 5,
       "trainAvgReachableCells": 569,
       "trainBoostPct": 0,
-      "bajsAvgReachableCells": 954,
+      "bajsAvgReachableCells": 955,
       "bajsBoostPct": 68,
       "bajsStations": 15,
       "areaKm2": 12.2,
@@ -490,7 +489,7 @@
       "peakOffpeakDrop": 11,
       "trainAvgReachableCells": 568,
       "trainBoostPct": 0,
-      "bajsAvgReachableCells": 1356,
+      "bajsAvgReachableCells": 1357,
       "bajsBoostPct": 139,
       "bajsStations": 19,
       "areaKm2": 9.8,
@@ -1248,5 +1247,5 @@
     }
   ],
   "day": "wednesday",
-  "serviceDate": "2026-08-19"
+  "serviceDate": "2026-09-02"
 }

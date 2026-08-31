@@ -21,7 +21,9 @@
           "lon": 15.99929,
           "offsetMin": 0,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         },
         {
@@ -1021,14 +1023,14 @@
           "name": "Servisna - INA",
           "lat": 45.80204,
           "lon": 16.07497,
-          "offsetMin": 17,
+          "offsetMin": 16,
           "tramInterchange": []
         },
         {
           "name": "DIOKI",
           "lat": 45.80191,
           "lon": 16.06768,
-          "offsetMin": 18,
+          "offsetMin": 17,
           "tramInterchange": []
         },
         {
@@ -1042,28 +1044,28 @@
           "name": "RTerminali Žitnjak",
           "lat": 45.80059,
           "lon": 16.05717,
-          "offsetMin": 20,
+          "offsetMin": 19,
           "tramInterchange": []
         },
         {
           "name": "Zelena tržnica",
           "lat": 45.79983,
           "lon": 16.05253,
-          "offsetMin": 21,
+          "offsetMin": 20,
           "tramInterchange": []
         },
         {
           "name": "Kozari Bok",
           "lat": 45.79835,
           "lon": 16.04317,
-          "offsetMin": 22,
+          "offsetMin": 21,
           "tramInterchange": []
         },
         {
           "name": "Elka",
           "lat": 45.79731,
           "lon": 16.03638,
-          "offsetMin": 24,
+          "offsetMin": 23,
           "tramInterchange": [
             "2",
             "3"
@@ -1073,42 +1075,42 @@
           "name": "Čavićeva",
           "lat": 45.79731,
           "lon": 16.02702,
-          "offsetMin": 27,
+          "offsetMin": 25,
           "tramInterchange": []
         },
         {
           "name": "Končar",
           "lat": 45.79716,
           "lon": 16.02336,
-          "offsetMin": 28,
+          "offsetMin": 26,
           "tramInterchange": []
         },
         {
           "name": "Radnička",
           "lat": 45.79768,
           "lon": 16.01711,
-          "offsetMin": 29,
+          "offsetMin": 27,
           "tramInterchange": []
         },
         {
           "name": "Heinzelova",
           "lat": 45.80387,
           "lon": 16.00952,
-          "offsetMin": 31,
+          "offsetMin": 28,
           "tramInterchange": []
         },
         {
           "name": "Veterinarski f.",
           "lat": 45.80731,
           "lon": 16.00569,
-          "offsetMin": 32,
+          "offsetMin": 29,
           "tramInterchange": []
         },
         {
           "name": "Kvaternikov trg",
           "lat": 45.8134,
           "lon": 15.99864,
-          "offsetMin": 34,
+          "offsetMin": 32,
           "tramInterchange": []
         }
       ],
@@ -1915,8 +1917,8 @@
     0,
     0,
     0,
-    3,
     2,
+    3,
     4,
     2,
     2,
@@ -1927,13 +1929,13 @@
     2,
     4,
     2,
-    3,
-    3,
+    4,
+    2,
     2,
     2,
     4,
-    4,
-    2,
+    3,
+    3,
     3
   ],
   "timetable": {
@@ -1942,21 +1944,21 @@
         {
           "hour": 4,
           "minutes": [
-            20,
+            25,
             50
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 6,
           "minutes": [
             0,
-            40
+            45
           ]
         },
         {
@@ -1993,14 +1995,14 @@
         {
           "hour": 13,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 14,
           "minutes": [
             0,
-            50
+            55
           ]
         },
         {
@@ -2012,13 +2014,13 @@
         {
           "hour": 16,
           "minutes": [
-            10
+            15,
+            50
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            0,
             30
           ]
         },
@@ -2037,21 +2039,21 @@
         {
           "hour": 20,
           "minutes": [
-            5,
-            40
+            10,
+            45
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            20,
+            35,
             55
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            30
+            45
           ]
         },
         {
@@ -2063,14 +2065,9 @@
       ],
       [
         {
-          "hour": 4,
-          "minutes": [
-            55
-          ]
-        },
-        {
           "hour": 5,
           "minutes": [
+            0,
             25
           ]
         },
@@ -2121,27 +2118,27 @@
         {
           "hour": 14,
           "minutes": [
-            10,
+            15,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 16,
           "minutes": [
             15,
-            50
+            55
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            40
+            25
           ]
         },
         {
@@ -2160,27 +2157,27 @@
           "hour": 20,
           "minutes": [
             0,
-            40
+            50
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            20,
-            55
+            20
           ]
         },
         {
           "hour": 22,
           "minutes": [
+            10,
             30
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            0,
-            40
+            20,
+            35
           ]
         }
       ]
@@ -2581,10 +2578,10 @@
   },
   "stats": {
     "dailyDepartures": 52,
-    "firstDeparture": "04:20",
+    "firstDeparture": "04:25",
     "lastDeparture": "23:05",
     "peakHeadwayMin": 80.0,
-    "avgHeadwayMin": 45.0,
+    "avgHeadwayMin": 44.8,
     "travelTimeMin": 30.3,
     "distanceKm": 15.6
   }

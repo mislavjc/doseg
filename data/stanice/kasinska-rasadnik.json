@@ -17,7 +17,7 @@
     "280"
   ],
   "firstDeparture": "4:23",
-  "lastDeparture": "0:25",
+  "lastDeparture": "0:50",
   "directionGroups": 2,
   "lines": [
     {
@@ -49,12 +49,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        26,
+        19,
         29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "267",

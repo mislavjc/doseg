@@ -6,30 +6,18 @@
   "lon": 15.94774,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 5,
+  "lineCount": 4,
   "tramLines": [
-    "1",
     "3",
     "9",
     "12",
     "34"
   ],
   "busLines": [],
-  "firstDeparture": "4:03",
-  "lastDeparture": "0:49",
+  "firstDeparture": "3:58",
+  "lastDeparture": "0:48",
   "directionGroups": 2,
   "lines": [
-    {
-      "broj": "1",
-      "mode": "tram",
-      "isNight": false,
-      "headsign": "Borongaj",
-      "isLoop": false,
-      "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
-    },
     {
       "broj": "3",
       "mode": "tram",
@@ -37,26 +25,26 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.6,
+      "peakHeadwayMin": 14.2,
       "peakRangeMin": [
-        17,
-        17
+        14,
+        14
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 14.7
     },
     {
       "broj": "9",
       "mode": "tram",
       "isNight": false,
-      "headsign": "Trg žrt.fašizma",
+      "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 9.4,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "12",
@@ -65,12 +53,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.6,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 9.9
+      "allDayHeadwayMin": 8.6
     },
     {
       "broj": "34",
@@ -102,168 +90,6 @@
       45.80007
     ],
     "lines": [
-      {
-        "broj": "1",
-        "mode": "tram",
-        "shape": [
-          [
-            15.94409,
-            45.79782
-          ],
-          [
-            15.945,
-            45.79798
-          ],
-          [
-            15.94677,
-            45.79828
-          ],
-          [
-            15.94705,
-            45.79833
-          ],
-          [
-            15.94729,
-            45.7984
-          ],
-          [
-            15.9477,
-            45.79853
-          ],
-          [
-            15.94845,
-            45.79878
-          ],
-          [
-            15.94844,
-            45.79883
-          ],
-          [
-            15.94844,
-            45.79884
-          ],
-          [
-            15.94845,
-            45.7988
-          ],
-          [
-            15.94974,
-            45.79919
-          ],
-          [
-            15.95029,
-            45.79931
-          ],
-          [
-            15.95084,
-            45.79942
-          ],
-          [
-            15.9511,
-            45.79946
-          ],
-          [
-            15.95207,
-            45.79961
-          ],
-          [
-            15.95343,
-            45.79982
-          ],
-          [
-            15.95379,
-            45.79987
-          ],
-          [
-            15.95425,
-            45.79994
-          ],
-          [
-            15.95464,
-            45.80003
-          ],
-          [
-            15.95483,
-            45.80004
-          ],
-          [
-            15.95495,
-            45.80009
-          ],
-          [
-            15.95568,
-            45.80026
-          ],
-          [
-            15.95619,
-            45.8004
-          ],
-          [
-            15.95687,
-            45.80061
-          ],
-          [
-            15.95736,
-            45.80078
-          ],
-          [
-            15.9591,
-            45.80161
-          ],
-          [
-            15.95921,
-            45.80166
-          ],
-          [
-            15.9593,
-            45.8017
-          ],
-          [
-            15.9593,
-            45.8017
-          ],
-          [
-            15.95943,
-            45.80176
-          ],
-          [
-            15.96273,
-            45.80333
-          ],
-          [
-            15.96286,
-            45.80337
-          ],
-          [
-            15.96298,
-            45.80337
-          ],
-          [
-            15.96409,
-            45.80329
-          ],
-          [
-            15.9643,
-            45.80327
-          ],
-          [
-            15.9643,
-            45.80332
-          ],
-          [
-            15.96437,
-            45.80327
-          ],
-          [
-            15.96479,
-            45.80325
-          ],
-          [
-            15.96494,
-            45.80331
-          ]
-        ]
-      },
       {
         "broj": "3",
         "mode": "tram",

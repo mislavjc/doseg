@@ -14,8 +14,8 @@
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:24",
-  "lastDeparture": "0:54",
+  "firstDeparture": "4:25",
+  "lastDeparture": "0:49",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.1,
+      "peakHeadwayMin": 6.7,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.0
     },
     {
       "broj": "7",
@@ -39,12 +39,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.3,
+      "peakHeadwayMin": 7.0,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.2
     },
     {
       "broj": "8",
@@ -53,12 +53,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 18.4,
+      "peakHeadwayMin": 14.6,
       "peakRangeMin": [
-        18,
-        18
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 15.1
     },
     {
       "broj": "31",

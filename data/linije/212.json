@@ -1938,6 +1938,12 @@
         "terminal": "Sesvete"
       },
       {
+        "broj": "277",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "278",
         "mode": "bus",
         "isNight": false,
@@ -1956,10 +1962,22 @@
         "terminal": "Dubec"
       },
       {
+        "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "283",
         "mode": "bus",
         "isNight": false,
         "terminal": "Dubec"
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
       }
     ],
     "tramCrossings": []

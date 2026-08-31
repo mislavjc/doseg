@@ -34,12 +34,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "121",
@@ -92,7 +92,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "130",
@@ -140,9 +140,12 @@
       "headsign": "Manterovčak 78",
       "isLoop": true,
       "bothDirections": false,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 30.0
     },
     {
       "broj": "143",
@@ -151,12 +154,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
+      "peakHeadwayMin": 26.3,
       "peakRangeMin": [
-        60,
-        60
+        24,
+        28
       ],
-      "allDayHeadwayMin": 60.0
+      "allDayHeadwayMin": 32.8
     },
     {
       "broj": "172",
@@ -165,12 +168,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
-        8,
-        13
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     },
     {
       "broj": "176",

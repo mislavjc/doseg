@@ -34,12 +34,12 @@
       "headsign": "Botinec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.6,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.4
     },
     {
       "broj": "111",
@@ -103,7 +103,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -178,7 +178,7 @@
         20,
         20
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     },
     {
       "broj": "315",

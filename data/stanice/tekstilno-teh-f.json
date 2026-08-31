@@ -25,12 +25,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        9,
-        14
+        8,
+        12
       ],
-      "allDayHeadwayMin": 11.8
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "117",
@@ -50,12 +50,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 26.7,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        25,
-        28
+        20,
+        21
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.4
     },
     {
       "broj": "146",
@@ -64,12 +64,12 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 24.3,
       "peakRangeMin": [
-        30,
-        30
+        24,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     }
   ],
   "neighbors": [

@@ -20,7 +20,9 @@
           "lon": 16.01838,
           "offsetMin": 0,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         },
         {
@@ -648,7 +650,9 @@
           "lon": 16.01865,
           "offsetMin": 20,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         }
       ],
@@ -1912,10 +1916,22 @@
         "terminal": "Dubec"
       },
       {
+        "broj": "9",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Borongaj"
+      },
+      {
         "broj": "11",
         "mode": "tram",
         "isNight": false,
         "terminal": "Dubec"
+      },
+      {
+        "broj": "17",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Borongaj"
       },
       {
         "broj": "32",

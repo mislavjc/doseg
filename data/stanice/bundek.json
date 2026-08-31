@@ -53,12 +53,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
-        15,
+        12,
         15
       ],
-      "allDayHeadwayMin": 16.8
+      "allDayHeadwayMin": 15.2
     },
     {
       "broj": "221",
@@ -67,12 +67,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.8,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        13,
-        14
+        10,
+        12
       ],
-      "allDayHeadwayMin": 15.7
+      "allDayHeadwayMin": 13.2
     },
     {
       "broj": "229",
@@ -97,7 +97,7 @@
         20,
         25
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     },
     {
       "broj": "241",

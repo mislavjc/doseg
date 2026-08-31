@@ -12,7 +12,7 @@
     "143"
   ],
   "firstDeparture": "5:03",
-  "lastDeparture": "23:03",
+  "lastDeparture": "22:33",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,9 +22,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 26.3,
+      "peakRangeMin": [
+        24,
+        28
+      ],
+      "allDayHeadwayMin": 32.8
     }
   ],
   "neighbors": [

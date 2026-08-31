@@ -759,12 +759,6 @@
         "terminal": "Gl.kolodvor"
       },
       {
-        "broj": "313",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Gl.kolodvor"
-      },
-      {
         "broj": "315",
         "mode": "bus",
         "isNight": false,

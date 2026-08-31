@@ -13,7 +13,7 @@
     "136"
   ],
   "firstDeparture": "4:34",
-  "lastDeparture": "1:05",
+  "lastDeparture": "1:02",
   "directionGroups": 3,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.4,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        12,
-        12
+        11,
+        11
       ],
-      "allDayHeadwayMin": 15.0
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "136",
@@ -37,12 +37,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.4,
+      "peakHeadwayMin": 16.6,
       "peakRangeMin": [
-        22,
-        23
+        16,
+        17
       ],
-      "allDayHeadwayMin": 22.8
+      "allDayHeadwayMin": 16.4
     }
   ],
   "neighbors": [

@@ -108,6 +108,7 @@
           "lon": 15.95592,
           "offsetMin": 9,
           "tramInterchange": [
+            "1",
             "2",
             "6",
             "11"
@@ -1168,6 +1169,10 @@
       }
     ],
     "tramCrossings": [
+      {
+        "broj": "1",
+        "stopName": "Vinogradska 3"
+      },
       {
         "broj": "2",
         "stopName": "Vinogradska 3"

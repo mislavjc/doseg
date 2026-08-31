@@ -11,8 +11,8 @@
   "busLines": [
     "128"
   ],
-  "firstDeparture": "4:39",
-  "lastDeparture": "0:25",
+  "firstDeparture": "4:41",
+  "lastDeparture": "0:15",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 10.1,
       "peakRangeMin": [
-        15,
-        15
+        10,
+        12
       ],
-      "allDayHeadwayMin": 16.5
+      "allDayHeadwayMin": 14.0
     }
   ],
   "neighbors": [

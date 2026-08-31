@@ -12,7 +12,7 @@
     "134"
   ],
   "firstDeparture": "4:41",
-  "lastDeparture": "0:04",
+  "lastDeparture": "23:39",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [

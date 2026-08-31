@@ -12,7 +12,7 @@
     "201",
     "207"
   ],
-  "firstDeparture": "4:38",
+  "firstDeparture": "4:23",
   "lastDeparture": "23:23",
   "directionGroups": 2,
   "lines": [
@@ -23,12 +23,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        35,
-        35
+        25,
+        25
       ],
-      "allDayHeadwayMin": 35.5
+      "allDayHeadwayMin": 27.2
     },
     {
       "broj": "207",
@@ -37,10 +37,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        43,
-        48
+        38,
+        43
       ],
       "allDayHeadwayMin": 42.0
     }

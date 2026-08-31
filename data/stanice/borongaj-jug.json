@@ -34,12 +34,12 @@
       "headsign": "Ses.Kraljev.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.6,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
-        17,
-        22
+        12,
+        12
       ],
-      "allDayHeadwayMin": 20.8
+      "allDayHeadwayMin": 16.7
     }
   ],
   "neighbors": [

@@ -21,7 +21,9 @@
           "lon": 15.99929,
           "offsetMin": 0,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         },
         {
@@ -1786,33 +1788,45 @@
     0,
     0,
     1,
-    0,
-    0,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
     0,
     2,
     1,
     2,
     1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
     2,
-    0,
-    0,
-    0,
-    0,
+    3,
+    2,
+    1,
+    2,
+    2,
     1
   ],
   "timetable": {
     "radniDan": [
       [
         {
+          "hour": 5,
+          "minutes": [
+            15
+          ]
+        },
+        {
+          "hour": 6,
+          "minutes": [
+            25
+          ]
+        },
+        {
           "hour": 8,
           "minutes": [
-            0
+            5
           ]
         },
         {
@@ -1828,7 +1842,50 @@
           ]
         },
         {
+          "hour": 13,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            5
+          ]
+        },
+        {
           "hour": 18,
+          "minutes": [
+            0,
+            20
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            10
+          ]
+        },
+        {
+          "hour": 22,
           "minutes": [
             20
           ]
@@ -1848,9 +1905,21 @@
           ]
         },
         {
+          "hour": 5,
+          "minutes": [
+            50
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            0
+          ]
+        },
+        {
           "hour": 8,
           "minutes": [
-            40
+            45
           ]
         },
         {
@@ -1866,9 +1935,57 @@
           ]
         },
         {
-          "hour": 18,
+          "hour": 13,
           "minutes": [
             50
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            5
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            25
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            40
+          ]
+        },
+        {
+          "hour": 19,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 20,
+          "minutes": [
+            20
+          ]
+        },
+        {
+          "hour": 21,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            55
           ]
         },
         {
@@ -2199,11 +2316,11 @@
     "lon": 16.0576
   },
   "stats": {
-    "dailyDepartures": 11,
-    "firstDeparture": "08:00",
+    "dailyDepartures": 31,
+    "firstDeparture": "05:15",
     "lastDeparture": "23:30",
     "peakHeadwayMin": null,
-    "avgHeadwayMin": 232.5,
+    "avgHeadwayMin": 78.2,
     "travelTimeMin": 27.2,
     "distanceKm": 11.5
   }

@@ -13,7 +13,7 @@
     "146"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "1:09",
+  "lastDeparture": "1:05",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 12.4,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        12,
-        12
+        11,
+        11
       ],
-      "allDayHeadwayMin": 15.0
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "146",
@@ -37,12 +37,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 23.3,
       "peakRangeMin": [
-        30,
-        30
+        23,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     }
   ],
   "neighbors": [

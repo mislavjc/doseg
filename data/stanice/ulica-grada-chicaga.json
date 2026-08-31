@@ -22,12 +22,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 47.5,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        46,
-        49
+        24,
+        25
       ],
-      "allDayHeadwayMin": 50.0
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [

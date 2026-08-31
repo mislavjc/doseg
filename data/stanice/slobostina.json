@@ -22,10 +22,10 @@
       "headsign": "Glavni kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 47.5,
       "peakRangeMin": [
-        45,
-        45
+        46,
+        49
       ],
       "allDayHeadwayMin": 45.2
     }

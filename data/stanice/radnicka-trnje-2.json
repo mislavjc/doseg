@@ -13,7 +13,7 @@
     "222",
     "281"
   ],
-  "firstDeparture": "4:48",
+  "firstDeparture": "4:51",
   "lastDeparture": "23:46",
   "directionGroups": 1,
   "lines": [
@@ -24,12 +24,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.8,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        18,
-        23
+        15,
+        15
       ],
-      "allDayHeadwayMin": 26.2
+      "allDayHeadwayMin": 22.7
     },
     {
       "broj": "222",

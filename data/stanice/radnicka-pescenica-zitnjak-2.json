@@ -28,7 +28,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "217",
@@ -70,7 +70,7 @@
         41,
         44
       ],
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.6
     },
     {
       "broj": "290",

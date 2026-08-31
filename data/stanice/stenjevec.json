@@ -23,9 +23,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     },
     {
       "broj": "146",
@@ -34,12 +37,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 23.3,
       "peakRangeMin": [
-        30,
-        30
+        23,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     }
   ],
   "neighbors": [

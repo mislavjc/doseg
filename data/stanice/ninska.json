@@ -6,7 +6,7 @@
   "lon": 16.11077,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 15,
+  "lineCount": 18,
   "tramLines": [],
   "busLines": [
     "212",
@@ -21,12 +21,15 @@
     "273",
     "274",
     "275",
+    "277",
     "278",
     "280",
-    "283"
+    "282",
+    "283",
+    "284"
   ],
   "firstDeparture": "3:45",
-  "lastDeparture": "0:32",
+  "lastDeparture": "0:57",
   "directionGroups": 1,
   "lines": [
     {
@@ -83,12 +86,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        28,
-        35
+        19,
+        29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "264",
@@ -174,7 +177,18 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
+    },
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 101.8
     },
     {
       "broj": "278",
@@ -183,12 +197,12 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        50,
-        50
+        15,
+        35
       ],
-      "allDayHeadwayMin": 46.0
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "280",
@@ -202,6 +216,20 @@
       "allDayHeadwayMin": 79.3
     },
     {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        20,
+        30
+      ],
+      "allDayHeadwayMin": 38.7
+    },
+    {
       "broj": "283",
       "mode": "bus",
       "isNight": false,
@@ -211,6 +239,17 @@
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 64.6
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 124.4
     }
   ],
   "neighbors": [
@@ -220,7 +259,7 @@
     },
     {
       "name": "Sesvete-izlaz",
-      "slug": "sesvete-izlaz-sesvete"
+      "slug": "sesvete-izlaz"
     },
     {
       "name": "Bistrička-Zagrebačka",
@@ -244,7 +283,7 @@
       16.1087,
       45.82519,
       16.11284,
-      45.82807
+      45.82808
     ],
     "lines": [
       {
@@ -2080,6 +2119,36 @@
         ]
       },
       {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.12588,
+            45.81898
+          ],
+          [
+            16.11684,
+            45.81952
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
+      },
+      {
         "broj": "278",
         "mode": "bus",
         "shape": [
@@ -2412,6 +2481,32 @@
           [
             16.10942,
             45.83842
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10196,
+            45.81768
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -2838,6 +2933,36 @@
           [
             16.11,
             45.82533
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11916,
+            45.81355
+          ],
+          [
+            16.11684,
+            45.81952
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
           ],
           [
             16.10951,

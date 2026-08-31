@@ -6,7 +6,9 @@
     "Sesvete",
     "Ivanja Reka"
   ],
-  "via": [],
+  "via": [
+    "Bistrička-Zagrebačka"
+  ],
   "oneWay": false,
   "directions": [
     {
@@ -14,15 +16,15 @@
       "stops": [
         {
           "name": "Sesvete-ukrcaj",
-          "lat": 45.82441,
-          "lon": 16.10548,
+          "lat": 45.82563,
+          "lon": 16.1074,
           "offsetMin": 0,
           "tramInterchange": []
         },
         {
-          "name": "Slatinska",
-          "lat": 45.82477,
-          "lon": 16.10097,
+          "name": "Bistrička-Zagrebačka",
+          "lat": 45.82781,
+          "lon": 16.10555,
           "offsetMin": 1,
           "tramInterchange": []
         },
@@ -30,60 +32,60 @@
           "name": "Ljudevita Posavskog",
           "lat": 45.82111,
           "lon": 16.10334,
-          "offsetMin": 2,
+          "offsetMin": 4,
           "tramInterchange": []
         },
         {
           "name": "Jelkovečka",
           "lat": 45.81947,
           "lon": 16.11748,
-          "offsetMin": 3,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Nova cesta",
           "lat": 45.81435,
           "lon": 16.11926,
-          "offsetMin": 5,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Pirinova",
           "lat": 45.8101,
           "lon": 16.11864,
-          "offsetMin": 6,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Savska - Metro",
           "lat": 45.8052,
           "lon": 16.11957,
-          "offsetMin": 7,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Sv. Ivana-D.Grubera",
           "lat": 45.80183,
           "lon": 16.11863,
-          "offsetMin": 8,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Ivanja Reka-okret.",
           "lat": 45.79782,
           "lon": 16.11897,
-          "offsetMin": 9,
+          "offsetMin": 13,
           "tramInterchange": []
         }
       ],
       "shape": [
         [
-          16.10548,
-          45.8244
+          16.1074,
+          45.82563
         ],
         [
-          16.10096,
-          45.82476
+          16.10554,
+          45.82781
         ],
         [
           16.10333,
@@ -161,10 +163,31 @@
           "tramInterchange": []
         },
         {
-          "name": "Sesvete-izlaz",
-          "lat": 45.82451,
-          "lon": 16.10589,
+          "name": "Ljudevita Posavskog",
+          "lat": 45.82204,
+          "lon": 16.10114,
           "offsetMin": 8,
+          "tramInterchange": []
+        },
+        {
+          "name": "Bistrička-Zagrebačka",
+          "lat": 45.8275,
+          "lon": 16.10777,
+          "offsetMin": 12,
+          "tramInterchange": []
+        },
+        {
+          "name": "Ninska",
+          "lat": 45.82666,
+          "lon": 16.11075,
+          "offsetMin": 14,
+          "tramInterchange": []
+        },
+        {
+          "name": "Sesvete-izlaz",
+          "lat": 45.82544,
+          "lon": 16.10951,
+          "offsetMin": 15,
           "tramInterchange": []
         }
       ],
@@ -194,17 +217,29 @@
           45.81952
         ],
         [
-          16.10589,
-          45.82451
+          16.10114,
+          45.82204
+        ],
+        [
+          16.10776,
+          45.82749
+        ],
+        [
+          16.11075,
+          45.82666
+        ],
+        [
+          16.10951,
+          45.82544
         ]
       ]
     }
   ],
   "bbox": [
-    16.10096,
+    16.10114,
     45.79781,
     16.11957,
-    45.82477
+    45.82781
   ],
   "histogram": [
     0,
@@ -391,110 +426,7 @@
       ]
     ],
     "subota": [
-      [
-        {
-          "hour": 4,
-          "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 5,
-          "minutes": [
-            50
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            0
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 10,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            50
-          ]
-        },
-        {
-          "hour": 14,
-          "minutes": [
-            0
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 18,
-          "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 19,
-          "minutes": [
-            50
-          ]
-        },
-        {
-          "hour": 21,
-          "minutes": [
-            0
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            20
-          ]
-        }
-      ],
+      [],
       [
         {
           "hour": 5,
@@ -601,44 +533,7 @@
       ]
     ],
     "nedjelja": [
-      [
-        {
-          "hour": 10,
-          "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 11,
-          "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 12,
-          "minutes": [
-            40
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 20,
-          "minutes": [
-            10
-          ]
-        },
-        {
-          "hour": 22,
-          "minutes": [
-            30
-          ]
-        }
-      ],
+      [],
       [
         {
           "hour": 10,
@@ -682,13 +577,43 @@
   "related": {
     "sharedTerminal": [
       {
+        "broj": "212",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "225",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "275",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "277",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
       },
       {
+        "broj": "278",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "283",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
@@ -710,7 +635,7 @@
     "lastDeparture": "23:20",
     "peakHeadwayMin": 45.0,
     "avgHeadwayMin": 74.7,
-    "travelTimeMin": 9.2,
-    "distanceKm": 4.4
+    "travelTimeMin": 12.7,
+    "distanceKm": 4.6
   }
 }

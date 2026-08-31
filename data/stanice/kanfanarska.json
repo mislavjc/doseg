@@ -22,12 +22,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 11.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        12
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.1
     }
   ],
   "neighbors": [

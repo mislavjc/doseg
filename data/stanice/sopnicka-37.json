@@ -11,8 +11,8 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "0:00",
-  "lastDeparture": "0:00",
+  "firstDeparture": "5:26",
+  "lastDeparture": "16:31",
   "directionGroups": 1,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
     }
   ],
   "neighbors": [

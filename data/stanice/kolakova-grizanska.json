@@ -13,7 +13,7 @@
     "210"
   ],
   "firstDeparture": "4:43",
-  "lastDeparture": "0:47",
+  "lastDeparture": "0:52",
   "directionGroups": 3,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 20.0
     },
     {
       "broj": "210",
@@ -37,12 +37,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        33
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [

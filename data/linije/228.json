@@ -21,7 +21,9 @@
           "lon": 16.01792,
           "offsetMin": 0,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         },
         {
@@ -98,7 +100,9 @@
           "lon": 16.01865,
           "offsetMin": 21,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         }
       ],
@@ -1111,6 +1115,18 @@
     "sharedTerminal": [
       {
         "broj": "1",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Borongaj"
+      },
+      {
+        "broj": "9",
+        "mode": "tram",
+        "isNight": false,
+        "terminal": "Borongaj"
+      },
+      {
+        "broj": "17",
         "mode": "tram",
         "isNight": false,
         "terminal": "Borongaj"

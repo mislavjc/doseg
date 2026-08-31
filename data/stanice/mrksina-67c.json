@@ -11,8 +11,8 @@
   "busLines": [
     "133"
   ],
-  "firstDeparture": "5:15",
-  "lastDeparture": "23:57",
+  "firstDeparture": "5:10",
+  "lastDeparture": "23:55",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        20,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     }
   ],
   "neighbors": [

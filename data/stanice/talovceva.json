@@ -6,15 +6,30 @@
   "lon": 15.95709,
   "mode": "tram",
   "bothDirections": false,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [
+    "1",
     "2"
   ],
   "busLines": [],
-  "firstDeparture": "4:55",
-  "lastDeparture": "0:27",
-  "directionGroups": 1,
+  "firstDeparture": "4:51",
+  "lastDeparture": "0:36",
+  "directionGroups": 2,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Z. kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 12.3,
+      "peakRangeMin": [
+        12,
+        13
+      ],
+      "allDayHeadwayMin": 14.6
+    },
     {
       "broj": "2",
       "mode": "tram",
@@ -22,18 +37,22 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     }
   ],
   "neighbors": [
     {
       "name": "Trg dr. F. Tuđmana",
       "slug": "trg-dr-f-tudmana"
+    },
+    {
+      "name": "Zapadni kolodvor",
+      "slug": "zapadni-kolodvor"
     },
     {
       "name": "HNK 2 - Adžijina",
@@ -48,6 +67,36 @@
       45.81111
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.97653,
+            45.81306
+          ],
+          [
+            15.96862,
+            45.8133
+          ],
+          [
+            15.96473,
+            45.81241
+          ],
+          [
+            15.95778,
+            45.81316
+          ],
+          [
+            15.95709,
+            45.80966
+          ],
+          [
+            15.95482,
+            45.80948
+          ]
+        ]
+      },
       {
         "broj": "2",
         "mode": "tram",

@@ -24,12 +24,12 @@
       "headsign": "Kozjak",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        35,
-        35
+        25,
+        25
       ],
-      "allDayHeadwayMin": 35.5
+      "allDayHeadwayMin": 27.0
     },
     {
       "broj": "228",
@@ -54,7 +54,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 81.3
+      "allDayHeadwayMin": 52.2
     }
   ],
   "neighbors": [

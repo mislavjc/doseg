@@ -23,12 +23,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 8.3,
       "peakRangeMin": [
-        9,
-        9
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.8
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "220",
@@ -37,12 +37,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 13.3,
       "peakRangeMin": [
-        15,
+        12,
         15
       ],
-      "allDayHeadwayMin": 16.8
+      "allDayHeadwayMin": 15.2
     }
   ],
   "neighbors": [

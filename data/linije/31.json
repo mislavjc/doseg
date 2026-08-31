@@ -65,6 +65,7 @@
           "lon": 15.95682,
           "offsetMin": 6,
           "tramInterchange": [
+            "1",
             "2",
             "6",
             "11"
@@ -76,6 +77,7 @@
           "lon": 15.96309,
           "offsetMin": 8,
           "tramInterchange": [
+            "1",
             "6",
             "11"
           ]
@@ -155,8 +157,7 @@
           "tramInterchange": [
             "2",
             "6",
-            "8",
-            "13"
+            "8"
           ]
         },
         {
@@ -1260,8 +1261,7 @@
           "tramInterchange": [
             "2",
             "6",
-            "8",
-            "13"
+            "8"
           ]
         },
         {
@@ -1337,6 +1337,7 @@
           "lon": 15.96473,
           "offsetMin": 38,
           "tramInterchange": [
+            "1",
             "6",
             "11"
           ]
@@ -1347,6 +1348,7 @@
           "lon": 15.95779,
           "offsetMin": 40,
           "tramInterchange": [
+            "1",
             "2",
             "6",
             "11"
@@ -2563,7 +2565,7 @@
     "tramCrossings": [
       {
         "broj": "1",
-        "stopName": "Frankopanska"
+        "stopName": "Trg dr. F. Tuđmana"
       },
       {
         "broj": "2",

@@ -1618,10 +1618,10 @@
     1,
     1,
     2,
-    1,
-    2,
     2,
     1,
+    1,
+    2,
     1,
     2,
     1,
@@ -1634,85 +1634,85 @@
         {
           "hour": 4,
           "minutes": [
-            20
+            25
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            45
+            50
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            5
+            10
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            0
+            5
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            30
+            35
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5
+            0
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            20
+            15
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            40
+            45
           ]
         },
         {
-          "hour": 17,
+          "hour": 18,
           "minutes": [
-            55
+            5
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            20
+            30
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            45
+            55
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            30
+            35
           ]
         }
       ],
@@ -1726,7 +1726,7 @@
         {
           "hour": 6,
           "minutes": [
-            5
+            10
           ]
         },
         {
@@ -1738,67 +1738,67 @@
         {
           "hour": 8,
           "minutes": [
-            45
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            10
+            15
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            40
+            45
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            10
+            15
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            40
+            35
           ]
         },
         {
-          "hour": 16,
+          "hour": 15,
           "minutes": [
-            5
+            55
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            15
+            25
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            30
+            45
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            0
+            10
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            25
+            35
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            10
+            15
           ]
         }
       ]
@@ -2191,12 +2191,6 @@
         "terminal": "Gl.kolodvor"
       },
       {
-        "broj": "313",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Gl.kolodvor"
-      },
-      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2240,8 +2234,8 @@
   },
   "stats": {
     "dailyDepartures": 28,
-    "firstDeparture": "04:20",
-    "lastDeparture": "22:30",
+    "firstDeparture": "04:25",
+    "lastDeparture": "22:35",
     "peakHeadwayMin": null,
     "avgHeadwayMin": 83.8,
     "travelTimeMin": 27.2,

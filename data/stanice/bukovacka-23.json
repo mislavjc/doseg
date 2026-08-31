@@ -53,12 +53,12 @@
       "headsign": "Svetice",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
-        22,
-        22
+        13,
+        13
       ],
-      "allDayHeadwayMin": 22.0
+      "allDayHeadwayMin": 16.9
     },
     {
       "broj": "228",

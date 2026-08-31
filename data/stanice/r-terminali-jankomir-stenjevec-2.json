@@ -38,12 +38,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 38.3,
       "peakRangeMin": [
-        25,
-        25
+        38,
+        40
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "168",

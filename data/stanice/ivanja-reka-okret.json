@@ -24,9 +24,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 105.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "276",
@@ -37,7 +37,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.6
     },
     {
       "broj": "284",

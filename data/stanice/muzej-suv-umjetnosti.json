@@ -2,11 +2,11 @@
   "slug": "muzej-suv-umjetnosti",
   "name": "Muzej suv.umjetnosti",
   "kvart": "Novi Zagreb - zapad",
-  "lat": 45.77768,
+  "lat": 45.77765,
   "lon": 15.98042,
   "mode": "both",
   "bothDirections": true,
-  "lineCount": 17,
+  "lineCount": 16,
   "tramLines": [
     "7",
     "14",
@@ -25,7 +25,6 @@
     "268",
     "310",
     "311",
-    "313",
     "330"
   ],
   "firstDeparture": "0:39",
@@ -39,12 +38,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.3,
+      "peakHeadwayMin": 7.0,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.2
     },
     {
       "broj": "14",
@@ -53,12 +52,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        8
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "31",
@@ -78,12 +77,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.7,
+      "peakHeadwayMin": 7.6,
       "peakRangeMin": [
-        8,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "166",
@@ -114,12 +113,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 13.3,
       "peakRangeMin": [
-        15,
+        12,
         15
       ],
-      "allDayHeadwayMin": 16.8
+      "allDayHeadwayMin": 15.2
     },
     {
       "broj": "221",
@@ -128,12 +127,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.8,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        13,
-        14
+        10,
+        12
       ],
-      "allDayHeadwayMin": 15.7
+      "allDayHeadwayMin": 13.2
     },
     {
       "broj": "222",
@@ -225,17 +224,6 @@
       "allDayHeadwayMin": 174.2
     },
     {
-      "broj": "313",
-      "mode": "bus",
-      "isNight": false,
-      "headsign": "Gl.kolodvor",
-      "isLoop": false,
-      "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 610.0
-    },
-    {
       "broj": "330",
       "mode": "bus",
       "isNight": false,
@@ -294,10 +282,10 @@
   ],
   "hero": {
     "bbox": [
-      15.97836,
-      45.77624,
-      15.98249,
-      45.77912
+      15.97835,
+      45.77621,
+      15.98248,
+      45.77909
     ],
     "lines": [
       {
@@ -2546,64 +2534,6 @@
       },
       {
         "broj": "311",
-        "mode": "bus",
-        "shape": [
-          [
-            15.98089,
-            45.76531
-          ],
-          [
-            15.98062,
-            45.76878
-          ],
-          [
-            15.98044,
-            45.77222
-          ],
-          [
-            15.9804,
-            45.77357
-          ],
-          [
-            15.98067,
-            45.77593
-          ],
-          [
-            15.98066,
-            45.77861
-          ],
-          [
-            15.98066,
-            45.77861
-          ],
-          [
-            15.98023,
-            45.78027
-          ],
-          [
-            15.97999,
-            45.78455
-          ],
-          [
-            15.97983,
-            45.78653
-          ],
-          [
-            15.9797,
-            45.78766
-          ],
-          [
-            15.97958,
-            45.78996
-          ],
-          [
-            15.9795,
-            45.79138
-          ]
-        ]
-      },
-      {
-        "broj": "313",
         "mode": "bus",
         "shape": [
           [

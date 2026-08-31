@@ -44,12 +44,12 @@
       "broj": "313",
       "mode": "bus",
       "isNight": false,
-      "headsign": "Gl.kolodvor",
+      "headsign": "V. Gorica",
       "isLoop": false,
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 610.0
+      "allDayHeadwayMin": 305.0
     },
     {
       "broj": "315",
@@ -449,20 +449,16 @@
             45.73562
           ],
           [
+            16.00382,
+            45.73697
+          ],
+          [
             16.00242,
             45.73744
           ],
           [
-            16.00391,
-            45.73955
-          ],
-          [
-            16.00425,
-            45.73983
-          ],
-          [
-            16.00426,
-            45.73983
+            16.004,
+            45.73978
           ]
         ]
       },

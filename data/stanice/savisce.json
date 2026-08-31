@@ -17,7 +17,7 @@
     "290"
   ],
   "firstDeparture": "4:17",
-  "lastDeparture": "1:03",
+  "lastDeparture": "1:12",
   "directionGroups": 3,
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.5,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     },
     {
       "broj": "3",
@@ -41,12 +41,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 13.9,
       "peakRangeMin": [
-        16,
-        17
+        14,
+        14
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 14.7
     },
     {
       "broj": "33",

@@ -24,9 +24,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 105.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "225",
@@ -49,9 +49,12 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 80.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "peakHeadwayMin": 57.5,
+      "peakRangeMin": [
+        46,
+        69
+      ],
+      "allDayHeadwayMin": 44.8
     }
   ],
   "neighbors": [

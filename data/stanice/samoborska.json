@@ -38,9 +38,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     },
     {
       "broj": "120",
@@ -49,12 +52,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     }
   ],
   "neighbors": [

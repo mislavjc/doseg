@@ -13,7 +13,7 @@
     "130"
   ],
   "firstDeparture": "4:45",
-  "lastDeparture": "23:50",
+  "lastDeparture": "23:40",
   "directionGroups": 2,
   "lines": [
     {
@@ -28,7 +28,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "130",

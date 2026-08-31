@@ -23,12 +23,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 23.0,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        18,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "281",

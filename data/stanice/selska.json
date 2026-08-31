@@ -2,13 +2,12 @@
   "slug": "selska",
   "name": "Selska",
   "kvart": "Trešnjevka - sjever",
-  "lat": 45.79794,
-  "lon": 15.94317,
+  "lat": 45.79797,
+  "lon": 15.94316,
   "mode": "both",
   "bothDirections": true,
-  "lineCount": 6,
+  "lineCount": 5,
   "tramLines": [
-    "1",
     "3",
     "9",
     "12",
@@ -17,21 +16,10 @@
   "busLines": [
     "109"
   ],
-  "firstDeparture": "4:02",
-  "lastDeparture": "0:52",
+  "firstDeparture": "3:57",
+  "lastDeparture": "0:51",
   "directionGroups": 4,
   "lines": [
-    {
-      "broj": "1",
-      "mode": "tram",
-      "isNight": false,
-      "headsign": "Borongaj",
-      "isLoop": false,
-      "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
-    },
     {
       "broj": "3",
       "mode": "tram",
@@ -39,26 +27,26 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.6,
+      "peakHeadwayMin": 14.2,
       "peakRangeMin": [
-        17,
-        17
+        14,
+        14
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 14.7
     },
     {
       "broj": "9",
       "mode": "tram",
       "isNight": false,
-      "headsign": "Trg žrt.fašizma",
+      "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 9.4,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "12",
@@ -67,12 +55,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.6,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 9.9
+      "allDayHeadwayMin": 8.6
     },
     {
       "broj": "34",
@@ -92,22 +80,22 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     }
   ],
   "neighbors": [
     {
-      "name": "Nehajska",
-      "slug": "nehajska"
-    },
-    {
       "name": "Ljubljanica",
       "slug": "ljubljanica"
+    },
+    {
+      "name": "Nehajska",
+      "slug": "nehajska"
     },
     {
       "name": "Baštijanova",
@@ -124,138 +112,12 @@
   ],
   "hero": {
     "bbox": [
-      15.9411,
-      45.79649,
+      15.94109,
+      45.79653,
       15.94523,
-      45.79938
+      45.79941
     ],
     "lines": [
-      {
-        "broj": "1",
-        "mode": "tram",
-        "shape": [
-          [
-            15.94409,
-            45.79782
-          ],
-          [
-            15.945,
-            45.79798
-          ],
-          [
-            15.94677,
-            45.79828
-          ],
-          [
-            15.94705,
-            45.79833
-          ],
-          [
-            15.94729,
-            45.7984
-          ],
-          [
-            15.9477,
-            45.79853
-          ],
-          [
-            15.94845,
-            45.79878
-          ],
-          [
-            15.94844,
-            45.79883
-          ],
-          [
-            15.94844,
-            45.79884
-          ],
-          [
-            15.94845,
-            45.7988
-          ],
-          [
-            15.94974,
-            45.79919
-          ],
-          [
-            15.95029,
-            45.79931
-          ],
-          [
-            15.95084,
-            45.79942
-          ],
-          [
-            15.9511,
-            45.79946
-          ],
-          [
-            15.95207,
-            45.79961
-          ],
-          [
-            15.95343,
-            45.79982
-          ],
-          [
-            15.95379,
-            45.79987
-          ],
-          [
-            15.95425,
-            45.79994
-          ],
-          [
-            15.95464,
-            45.80003
-          ],
-          [
-            15.95483,
-            45.80004
-          ],
-          [
-            15.95495,
-            45.80009
-          ],
-          [
-            15.95568,
-            45.80026
-          ],
-          [
-            15.95619,
-            45.8004
-          ],
-          [
-            15.95687,
-            45.80061
-          ],
-          [
-            15.95736,
-            45.80078
-          ],
-          [
-            15.9591,
-            45.80161
-          ],
-          [
-            15.95921,
-            45.80166
-          ],
-          [
-            15.9593,
-            45.8017
-          ],
-          [
-            15.9593,
-            45.8017
-          ],
-          [
-            15.95943,
-            45.80176
-          ]
-        ]
-      },
       {
         "broj": "3",
         "mode": "tram",

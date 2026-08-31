@@ -23,12 +23,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.7,
+      "peakHeadwayMin": 9.4,
       "peakRangeMin": [
-        9,
-        13
+        8,
+        12
       ],
-      "allDayHeadwayMin": 11.8
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "146",
@@ -37,12 +37,12 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 24.3,
       "peakRangeMin": [
-        30,
-        30
+        24,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     }
   ],
   "neighbors": [

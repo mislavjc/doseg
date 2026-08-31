@@ -16,7 +16,7 @@
     "104"
   ],
   "firstDeparture": "4:42",
-  "lastDeparture": "0:41",
+  "lastDeparture": "0:46",
   "directionGroups": 2,
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 18.3,
+      "peakHeadwayMin": 14.6,
       "peakRangeMin": [
-        18,
-        18
+        15,
+        15
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 15.1
     },
     {
       "broj": "14",
@@ -40,12 +40,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.9,
+      "peakHeadwayMin": 7.6,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        8
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "33",

@@ -13,7 +13,7 @@
     "315"
   ],
   "firstDeparture": "5:01",
-  "lastDeparture": "23:53",
+  "lastDeparture": "23:52",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        20,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     },
     {
       "broj": "315",

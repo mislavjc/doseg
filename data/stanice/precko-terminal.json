@@ -15,7 +15,7 @@
     "168"
   ],
   "firstDeparture": "4:10",
-  "lastDeparture": "0:30",
+  "lastDeparture": "0:43",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,9 +25,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "120",
@@ -36,12 +39,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 38.3,
       "peakRangeMin": [
-        25,
-        25
+        38,
+        40
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "134",
@@ -50,12 +53,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        28,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "168",

@@ -22,12 +22,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.0,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     }
   ],
   "neighbors": [

@@ -64,9 +64,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 26.3,
+      "peakRangeMin": [
+        24,
+        28
+      ],
+      "allDayHeadwayMin": 32.8
     }
   ],
   "neighbors": [

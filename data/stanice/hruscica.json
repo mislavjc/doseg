@@ -11,8 +11,8 @@
   "busLines": [
     "276"
   ],
-  "firstDeparture": "4:46",
-  "lastDeparture": "23:44",
+  "firstDeparture": "4:51",
+  "lastDeparture": "23:39",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,9 +22,9 @@
       "headsign": "Dumovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.8
     }
   ],
   "neighbors": [

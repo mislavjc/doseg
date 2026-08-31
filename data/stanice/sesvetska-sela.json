@@ -23,12 +23,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.1,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     },
     {
       "broj": "278",
@@ -37,12 +37,12 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        50,
-        50
+        15,
+        35
       ],
-      "allDayHeadwayMin": 46.0
+      "allDayHeadwayMin": 40.0
     }
   ],
   "neighbors": [
@@ -586,6 +586,6 @@
     "stations30": 71,
     "stations45": 199
   },
-  "prevSlug": "sesvete-ukrcaj-sesvete-2",
+  "prevSlug": "sesvete-ukrcaj",
   "nextSlug": "sesvetski-kraljevec"
 }

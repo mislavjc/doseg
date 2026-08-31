@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-17T00:00:00.000Z",
+  "generatedAt": "2026-08-31T00:00:00.000Z",
   "serviceDates": {
-    "radniDan": "2026-08-18",
-    "subota": "2026-08-22",
-    "nedjelja": "2026-08-23"
+    "radniDan": "2026-09-08",
+    "subota": "2026-09-12",
+    "nedjelja": "2026-09-13"
   },
   "stops": [
     {
@@ -209,7 +209,7 @@
       "name": "Badalićeva",
       "kvart": "Trešnjevka - sjever",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.80183,
       "lon": 15.95949
     },
@@ -425,9 +425,9 @@
       "name": "Bistrička-Zagrebačka",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 17,
-      "lat": 45.82782,
-      "lon": 16.10688
+      "lineCount": 20,
+      "lat": 45.82778,
+      "lon": 16.10683
     },
     {
       "slug": "bizek",
@@ -641,9 +641,9 @@
       "name": "Borongaj",
       "kvart": "Maksimir",
       "mode": "both",
-      "lineCount": 5,
-      "lat": 45.81459,
-      "lon": 16.01851
+      "lineCount": 7,
+      "lat": 45.81453,
+      "lon": 16.01854
     },
     {
       "slug": "borongaj-jug",
@@ -767,7 +767,7 @@
       "name": "Branim. tržnica",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.80614,
       "lon": 15.99171
     },
@@ -786,8 +786,8 @@
       "kvart": "Donji grad",
       "mode": "tram",
       "lineCount": 9,
-      "lat": 45.80549,
-      "lon": 15.98403
+      "lat": 45.80548,
+      "lon": 15.98399
     },
     {
       "slug": "branimirova-a-javora",
@@ -839,7 +839,7 @@
       "name": "Brestovečka",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 5,
+      "lineCount": 6,
       "lat": 45.82761,
       "lon": 16.0977
     },
@@ -947,9 +947,9 @@
       "name": "Britanski trg",
       "kvart": "Gornji grad - Medveščak",
       "mode": "both",
-      "lineCount": 8,
-      "lat": 45.81334,
-      "lon": 15.96404
+      "lineCount": 9,
+      "lat": 45.81323,
+      "lon": 15.96403
     },
     {
       "slug": "brod-kunticeva",
@@ -1478,16 +1478,16 @@
       "name": "Čulinečka",
       "kvart": "Donja Dubrava",
       "mode": "both",
-      "lineCount": 8,
-      "lat": 45.82832,
-      "lon": 16.063
+      "lineCount": 7,
+      "lat": 45.82837,
+      "lon": 16.06299
     },
     {
       "slug": "culinecka-119",
       "name": "Čulinečka 119",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 4,
+      "lineCount": 3,
       "lat": 45.81452,
       "lon": 16.06609
     },
@@ -2163,8 +2163,8 @@
       "kvart": "Donji grad",
       "mode": "tram",
       "lineCount": 10,
-      "lat": 45.81273,
-      "lon": 15.96938
+      "lat": 45.81281,
+      "lon": 15.96933
     },
     {
       "slug": "fraterscica",
@@ -2252,7 +2252,7 @@
       "name": "Galženica",
       "kvart": null,
       "mode": "bus",
-      "lineCount": 3,
+      "lineCount": 4,
       "lat": 45.71275,
       "lon": 16.06748
     },
@@ -2324,9 +2324,9 @@
       "name": "Glavni kolodvor",
       "kvart": "Trnje",
       "mode": "both",
-      "lineCount": 25,
+      "lineCount": 24,
       "lat": 45.80403,
-      "lon": 15.9782
+      "lon": 15.97819
     },
     {
       "slug": "glavnica-donja-okr",
@@ -2963,7 +2963,7 @@
       "name": "Harambašićeva",
       "kvart": "Maksimir",
       "mode": "tram",
-      "lineCount": 2,
+      "lineCount": 4,
       "lat": 45.81486,
       "lon": 16.00833
     },
@@ -3017,7 +3017,7 @@
       "name": "Heinzelova-sjever",
       "kvart": "Maksimir",
       "mode": "tram",
-      "lineCount": 2,
+      "lineCount": 4,
       "lat": 45.8118,
       "lon": 16.00031
     },
@@ -5024,9 +5024,9 @@
       "name": "Lisinski",
       "kvart": "Trnje",
       "mode": "both",
-      "lineCount": 20,
-      "lat": 45.79955,
-      "lon": 15.97906
+      "lineCount": 19,
+      "lat": 45.79956,
+      "lon": 15.97905
     },
     {
       "slug": "livadarski-put",
@@ -5051,7 +5051,7 @@
       "name": "Lj.Posavsk.-Kelekova",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 2,
+      "lineCount": 3,
       "lat": 45.81769,
       "lon": 16.10196
     },
@@ -5060,7 +5060,7 @@
       "name": "Lj.Posavsk.-Kelekova",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 1,
+      "lineCount": 2,
       "lat": 45.82057,
       "lon": 16.10129
     },
@@ -5096,18 +5096,18 @@
       "name": "Ljubljanica",
       "kvart": "Trešnjevka - sjever",
       "mode": "both",
-      "lineCount": 9,
-      "lat": 45.79689,
-      "lon": 15.93748
+      "lineCount": 8,
+      "lat": 45.79686,
+      "lon": 15.93747
     },
     {
       "slug": "ljudevita-posavskog",
       "name": "Ljudevita Posavskog",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 4,
-      "lat": 45.82146,
-      "lon": 16.10245
+      "lineCount": 5,
+      "lat": 45.82182,
+      "lon": 16.10162
     },
     {
       "slug": "lomnica-deveric-4",
@@ -6086,8 +6086,8 @@
       "name": "Muzej suv.umjetnosti",
       "kvart": "Novi Zagreb - zapad",
       "mode": "both",
-      "lineCount": 17,
-      "lat": 45.77768,
+      "lineCount": 16,
+      "lat": 45.77765,
       "lon": 15.98042
     },
     {
@@ -6185,7 +6185,7 @@
       "name": "Nehajska",
       "kvart": "Trešnjevka - sjever",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.79863,
       "lon": 15.94774
     },
@@ -6203,7 +6203,7 @@
       "name": "Ninska",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 15,
+      "lineCount": 18,
       "lat": 45.82663,
       "lon": 16.11077
     },
@@ -6366,8 +6366,8 @@
       "kvart": "Novi Zagreb - istok",
       "mode": "bus",
       "lineCount": 6,
-      "lat": 45.73944,
-      "lon": 16.0051
+      "lat": 45.73931,
+      "lon": 16.00523
     },
     {
       "slug": "odra-novi-zagreb-istok",
@@ -7769,9 +7769,9 @@
       "name": "Resnički gaj",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 4,
-      "lat": 45.80959,
-      "lon": 16.06474
+      "lineCount": 3,
+      "lat": 45.80965,
+      "lon": 16.0647
     },
     {
       "slug": "resnicki-put",
@@ -7832,7 +7832,7 @@
       "name": "Resnik silos",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 2,
+      "lineCount": 1,
       "lat": 45.8058,
       "lon": 16.07231
     },
@@ -8237,9 +8237,9 @@
       "name": "Selska",
       "kvart": "Trešnjevka - sjever",
       "mode": "both",
-      "lineCount": 6,
-      "lat": 45.79794,
-      "lon": 15.94317
+      "lineCount": 5,
+      "lat": 45.79797,
+      "lon": 15.94316
     },
     {
       "slug": "senscak-i-odvojak",
@@ -8359,40 +8359,22 @@
       "lon": 15.95534
     },
     {
-      "slug": "sesvete-izlaz-sesvete",
+      "slug": "sesvete-izlaz",
       "name": "Sesvete-izlaz",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 15,
+      "lineCount": 18,
       "lat": 45.82544,
       "lon": 16.10951
     },
     {
-      "slug": "sesvete-izlaz-sesvete-2",
-      "name": "Sesvete-izlaz",
-      "kvart": "Sesvete",
-      "mode": "bus",
-      "lineCount": 3,
-      "lat": 45.82451,
-      "lon": 16.10589
-    },
-    {
-      "slug": "sesvete-ukrcaj-sesvete",
+      "slug": "sesvete-ukrcaj",
       "name": "Sesvete-ukrcaj",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 10,
-      "lat": 45.82595,
-      "lon": 16.10781
-    },
-    {
-      "slug": "sesvete-ukrcaj-sesvete-2",
-      "name": "Sesvete-ukrcaj",
-      "kvart": "Sesvete",
-      "mode": "bus",
-      "lineCount": 3,
-      "lat": 45.82441,
-      "lon": 16.10548
+      "lineCount": 13,
+      "lat": 45.82589,
+      "lon": 16.10774
     },
     {
       "slug": "sesvetska-sela",
@@ -8417,9 +8399,9 @@
       "name": "Sheraton",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 5,
-      "lat": 45.80753,
-      "lon": 15.98382
+      "lineCount": 6,
+      "lat": 45.80752,
+      "lon": 15.98386
     },
     {
       "slug": "sibice-dom",
@@ -8584,15 +8566,6 @@
       "lon": 16.05438
     },
     {
-      "slug": "slatinska",
-      "name": "Slatinska",
-      "kvart": "Sesvete",
-      "mode": "bus",
-      "lineCount": 3,
-      "lat": 45.82477,
-      "lon": 16.10097
-    },
-    {
       "slug": "slavenskog-stenjevec",
       "name": "Slavenskog",
       "kvart": "Stenjevec",
@@ -8624,7 +8597,7 @@
       "name": "Slavon.-Lj.Posavskog",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 2,
+      "lineCount": 1,
       "lat": 45.80724,
       "lon": 16.10024
     },
@@ -8633,7 +8606,7 @@
       "name": "Slavonska-Čulinečka",
       "kvart": "Peščenica - Žitnjak",
       "mode": "bus",
-      "lineCount": 2,
+      "lineCount": 1,
       "lat": 45.80381,
       "lon": 16.07683
     },
@@ -9155,16 +9128,16 @@
       "name": "Šubićeva",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 7,
       "lat": 45.81044,
-      "lon": 15.99336
+      "lon": 15.99329
     },
     {
       "slug": "sulekova",
       "name": "Šulekova",
       "kvart": "Maksimir",
       "mode": "tram",
-      "lineCount": 2,
+      "lineCount": 4,
       "lat": 45.81328,
       "lon": 16.00465
     },
@@ -9254,7 +9227,7 @@
       "name": "Svetice",
       "kvart": "Maksimir",
       "mode": "tram",
-      "lineCount": 2,
+      "lineCount": 4,
       "lat": 45.81541,
       "lon": 16.01306
     },
@@ -9326,7 +9299,7 @@
       "name": "Talovčeva",
       "kvart": "Črnomerec",
       "mode": "tram",
-      "lineCount": 1,
+      "lineCount": 2,
       "lat": 45.80967,
       "lon": 15.95709
     },
@@ -9335,7 +9308,7 @@
       "name": "Tehnički muzej",
       "kvart": "Trešnjevka - sjever",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.80336,
       "lon": 15.96391
     },
@@ -9470,7 +9443,7 @@
       "name": "Trešnjevački trg",
       "kvart": "Trešnjevka - sjever",
       "mode": "tram",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.80007,
       "lon": 15.95466
     },
@@ -9488,9 +9461,9 @@
       "name": "Trg dr. F. Tuđmana",
       "kvart": "Črnomerec",
       "mode": "tram",
-      "lineCount": 4,
-      "lat": 45.81309,
-      "lon": 15.95726
+      "lineCount": 5,
+      "lat": 45.81307,
+      "lon": 15.95734
     },
     {
       "slug": "trg-dr-tudmana",
@@ -9533,7 +9506,7 @@
       "name": "Trg P. Krešimira",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 3,
+      "lineCount": 2,
       "lat": 45.80785,
       "lon": 15.9917
     },
@@ -9542,7 +9515,7 @@
       "name": "Trg Rep. Hrvatske",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 7,
+      "lineCount": 6,
       "lat": 45.80861,
       "lon": 15.9685
     },
@@ -9578,9 +9551,9 @@
       "name": "Trg žrt. fašizma",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 4,
-      "lat": 45.80959,
-      "lon": 15.98782
+      "lineCount": 5,
+      "lat": 45.80973,
+      "lon": 15.988
     },
     {
       "slug": "trnava",
@@ -9722,7 +9695,7 @@
       "name": "Tuškanova",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 2,
+      "lineCount": 4,
       "lat": 45.81107,
       "lon": 15.99762
     },
@@ -9776,7 +9749,7 @@
       "name": "Ulica Badema",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 4,
+      "lineCount": 3,
       "lat": 45.81821,
       "lon": 16.0646
     },
@@ -9785,7 +9758,7 @@
       "name": "Ulica Breza",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 5,
+      "lineCount": 4,
       "lat": 45.82515,
       "lon": 16.06368
     },
@@ -9812,7 +9785,7 @@
       "name": "Ulica Kaktusa",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 4,
+      "lineCount": 5,
       "lat": 45.82638,
       "lon": 16.08521
     },
@@ -9821,9 +9794,9 @@
       "name": "Ulica Platana",
       "kvart": "Donja Dubrava",
       "mode": "bus",
-      "lineCount": 6,
-      "lat": 45.82281,
-      "lon": 16.06424
+      "lineCount": 5,
+      "lat": 45.82282,
+      "lon": 16.06427
     },
     {
       "slug": "ulica-rudolfa-fizira",
@@ -9912,8 +9885,8 @@
       "kvart": null,
       "mode": "bus",
       "lineCount": 4,
-      "lat": 45.71194,
-      "lon": 16.0774
+      "lat": 45.71188,
+      "lon": 16.07741
     },
     {
       "slug": "velika-kosnica",
@@ -10235,9 +10208,9 @@
       "name": "Vodnikova",
       "kvart": "Donji grad",
       "mode": "tram",
-      "lineCount": 11,
-      "lat": 45.80586,
-      "lon": 15.96699
+      "lineCount": 10,
+      "lat": 45.80583,
+      "lon": 15.96702
     },
     {
       "slug": "vodosprema-lascina",
@@ -10559,7 +10532,7 @@
       "name": "Zagrebačka 103",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 4,
+      "lineCount": 5,
       "lat": 45.82617,
       "lon": 16.08998
     },
@@ -10577,7 +10550,7 @@
       "name": "Zagrebačka 94",
       "kvart": "Sesvete",
       "mode": "bus",
-      "lineCount": 4,
+      "lineCount": 5,
       "lat": 45.82647,
       "lon": 16.09076
     },
@@ -10612,10 +10585,10 @@
       "slug": "zapadni-kolodvor",
       "name": "Zapadni kolodvor",
       "kvart": "Črnomerec",
-      "mode": "bus",
-      "lineCount": 1,
-      "lat": 45.80949,
-      "lon": 15.95393
+      "mode": "both",
+      "lineCount": 2,
+      "lat": 45.80944,
+      "lon": 15.95485
     },
     {
       "slug": "zapci",

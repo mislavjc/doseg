@@ -11,8 +11,8 @@
   "busLines": [
     "107"
   ],
-  "firstDeparture": "4:47",
-  "lastDeparture": "22:55",
+  "firstDeparture": "4:45",
+  "lastDeparture": "23:10",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.5,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        20,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [

@@ -12,7 +12,7 @@
     "172"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "1:58",
+  "lastDeparture": "1:48",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 11.0,
+      "peakHeadwayMin": 8.2,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        9
       ],
-      "allDayHeadwayMin": 14.4
+      "allDayHeadwayMin": 12.6
     }
   ],
   "neighbors": [

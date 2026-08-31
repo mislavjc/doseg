@@ -12,8 +12,8 @@
     "117",
     "118"
   ],
-  "firstDeparture": "4:30",
-  "lastDeparture": "1:03",
+  "firstDeparture": "4:31",
+  "lastDeparture": "0:49",
   "directionGroups": 3,
   "lines": [
     {
@@ -37,12 +37,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.7
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [

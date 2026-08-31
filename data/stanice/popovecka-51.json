@@ -22,12 +22,12 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        50,
-        50
+        15,
+        35
       ],
-      "allDayHeadwayMin": 46.0
+      "allDayHeadwayMin": 40.0
     }
   ],
   "neighbors": [

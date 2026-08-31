@@ -320,7 +320,6 @@
           "lon": 15.93697,
           "offsetMin": 6,
           "tramInterchange": [
-            "1",
             "3",
             "9",
             "12"
@@ -1372,12 +1371,6 @@
   },
   "related": {
     "sharedTerminal": [
-      {
-        "broj": "1",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Ljubljanica"
-      },
       {
         "broj": "3",
         "mode": "tram",

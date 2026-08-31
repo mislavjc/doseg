@@ -11,8 +11,8 @@
   "busLines": [
     "172"
   ],
-  "firstDeparture": "5:15",
-  "lastDeparture": "1:40",
+  "firstDeparture": "5:11",
+  "lastDeparture": "1:36",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 9.5,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     }
   ],
   "neighbors": [

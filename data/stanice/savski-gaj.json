@@ -18,7 +18,7 @@
     "234"
   ],
   "firstDeparture": "4:35",
-  "lastDeparture": "0:57",
+  "lastDeparture": "1:00",
   "directionGroups": 4,
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.3,
+      "peakHeadwayMin": 7.0,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.2
     },
     {
       "broj": "14",
@@ -42,12 +42,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        8
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "31",
@@ -67,12 +67,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.7,
+      "peakHeadwayMin": 7.6,
       "peakRangeMin": [
-        8,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "222",
@@ -100,7 +100,7 @@
         19,
         21
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     }
   ],
   "neighbors": [

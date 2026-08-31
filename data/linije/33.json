@@ -109,7 +109,8 @@
           "tramInterchange": [
             "4",
             "8",
-            "9"
+            "9",
+            "13"
           ]
         },
         {
@@ -142,7 +143,6 @@
           "lon": 15.96711,
           "offsetMin": 18,
           "tramInterchange": [
-            "1",
             "2",
             "4",
             "9",
@@ -158,7 +158,6 @@
           "lon": 15.96421,
           "offsetMin": 19,
           "tramInterchange": [
-            "1",
             "3",
             "4",
             "9",
@@ -1234,7 +1233,6 @@
           "lon": 15.96468,
           "offsetMin": 24,
           "tramInterchange": [
-            "1",
             "3",
             "4",
             "9",
@@ -1250,7 +1248,6 @@
           "lon": 15.96764,
           "offsetMin": 26,
           "tramInterchange": [
-            "1",
             "2",
             "4",
             "9",
@@ -1306,7 +1303,8 @@
           "tramInterchange": [
             "4",
             "8",
-            "9"
+            "9",
+            "13"
           ]
         },
         {
@@ -2378,7 +2376,7 @@
       },
       {
         "broj": "13",
-        "stopName": "Glavni kolodvor"
+        "stopName": "Sheraton"
       },
       {
         "broj": "14",

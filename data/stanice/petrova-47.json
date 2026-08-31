@@ -11,7 +11,7 @@
   "busLines": [
     "202"
   ],
-  "firstDeparture": "5:04",
+  "firstDeparture": "4:59",
   "lastDeparture": "23:59",
   "directionGroups": 1,
   "lines": [
@@ -22,12 +22,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        35,
-        35
+        25,
+        25
       ],
-      "allDayHeadwayMin": 35.5
+      "allDayHeadwayMin": 27.1
     }
   ],
   "neighbors": [

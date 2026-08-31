@@ -25,91 +25,91 @@
           "name": "Veterinarski f.",
           "lat": 45.80699,
           "lon": 16.00688,
-          "offsetMin": 4,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
           "name": "Livadarski put",
           "lat": 45.80826,
           "lon": 16.01027,
-          "offsetMin": 5,
+          "offsetMin": 3,
           "tramInterchange": []
         },
         {
           "name": "Trg Volovčica",
           "lat": 45.81027,
           "lon": 16.01706,
-          "offsetMin": 6,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Turopoljska",
           "lat": 45.81053,
           "lon": 16.02186,
-          "offsetMin": 8,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
           "name": "Kolareva",
           "lat": 45.80855,
           "lon": 16.02523,
-          "offsetMin": 8,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Getaldićeva",
           "lat": 45.80737,
           "lon": 16.02963,
-          "offsetMin": 9,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Borongajska Kampus",
           "lat": 45.80593,
           "lon": 16.03525,
-          "offsetMin": 10,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Savudrijska",
           "lat": 45.80792,
           "lon": 16.04229,
-          "offsetMin": 12,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Vukomerec-okretište",
           "lat": 45.80642,
           "lon": 16.04632,
-          "offsetMin": 13,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Sobolski put",
           "lat": 45.80695,
           "lon": 16.04983,
-          "offsetMin": 14,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Vukomerečka 40",
           "lat": 45.8103,
           "lon": 16.05259,
-          "offsetMin": 15,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Resnički put",
           "lat": 45.8136,
           "lon": 16.05535,
-          "offsetMin": 16,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Trnava",
           "lat": 45.8141,
           "lon": 16.05962,
-          "offsetMin": 17,
+          "offsetMin": 15,
           "tramInterchange": []
         }
       ],
@@ -529,28 +529,28 @@
           "name": "Vukomerečka 40",
           "lat": 45.81009,
           "lon": 16.0525,
-          "offsetMin": 3,
+          "offsetMin": 2,
           "tramInterchange": []
         },
         {
           "name": "Sobolski put",
           "lat": 45.807,
           "lon": 16.04984,
-          "offsetMin": 4,
+          "offsetMin": 3,
           "tramInterchange": []
         },
         {
           "name": "Vukomerec-okretište",
           "lat": 45.80662,
           "lon": 16.0462,
-          "offsetMin": 5,
+          "offsetMin": 4,
           "tramInterchange": []
         },
         {
           "name": "Kanfanarska",
           "lat": 45.80756,
           "lon": 16.04083,
-          "offsetMin": 6,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
@@ -564,14 +564,14 @@
           "name": "Getaldićeva",
           "lat": 45.80713,
           "lon": 16.03067,
-          "offsetMin": 8,
+          "offsetMin": 7,
           "tramInterchange": []
         },
         {
           "name": "Kolareva",
           "lat": 45.80845,
           "lon": 16.02563,
-          "offsetMin": 9,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
@@ -592,21 +592,21 @@
           "name": "Livadarski put",
           "lat": 45.80829,
           "lon": 16.01038,
-          "offsetMin": 13,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Veterinarski f.",
           "lat": 45.80731,
           "lon": 16.00569,
-          "offsetMin": 15,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Kvaternikov trg",
           "lat": 45.8134,
           "lon": 15.99864,
-          "offsetMin": 18,
+          "offsetMin": 15,
           "tramInterchange": []
         }
       ],
@@ -1251,22 +1251,22 @@
     0,
     4,
     8,
-    9,
     11,
-    11,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
     10,
-    11,
-    11,
     10,
-    11,
-    11,
-    10,
-    11,
     8,
     8,
-    8,
-    8,
-    8,
+    7,
     6,
     4
   ],
@@ -1293,157 +1293,166 @@
           "hour": 6,
           "minutes": [
             0,
-            15,
+            10,
+            20,
             30,
-            41,
-            52
+            40,
+            50
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            4,
-            15,
-            26,
-            37,
-            49
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 8,
           "minutes": [
             0,
-            11,
-            22,
-            34,
-            45,
-            56
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            7,
-            19,
+            0,
+            10,
+            20,
             30,
-            41,
-            52
+            40,
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            4,
-            15,
-            26,
-            37,
-            49
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 11,
           "minutes": [
             0,
-            11,
-            22,
-            34,
-            45,
-            56
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            7,
-            19,
+            0,
+            10,
+            20,
             30,
-            41,
-            52
+            40,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            4,
-            15,
-            26,
-            37,
-            49
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 14,
           "minutes": [
             0,
-            11,
-            22,
-            34,
-            45,
-            56
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            7,
-            19,
+            0,
+            10,
+            20,
             30,
-            41,
-            52
+            40,
+            50
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            4,
-            15,
-            26,
-            37,
-            49
+            0,
+            10,
+            20,
+            30,
+            40,
+            50
           ]
         },
         {
           "hour": 17,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            13,
+            25,
+            38,
+            50
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0,
+            3,
             15,
-            30,
-            45
+            28,
+            40,
+            55
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            10,
+            25,
+            40,
+            55
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            10,
+            25,
+            40,
+            55
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            0,
-            15,
-            30,
+            10,
+            25,
             45
           ]
         },
@@ -1486,156 +1495,165 @@
             5,
             20,
             35,
-            50
+            45,
+            55
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            1,
-            12,
-            24,
+            5,
+            15,
+            25,
             35,
-            46,
-            57
+            45,
+            55
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            9,
-            20,
-            31,
-            42,
-            54
+            5,
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 9,
           "minutes": [
             5,
-            16,
-            27,
-            39,
-            50
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            1,
-            12,
-            24,
+            5,
+            15,
+            25,
             35,
-            46,
-            57
+            45,
+            55
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            9,
-            20,
-            31,
-            42,
-            54
+            5,
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 12,
           "minutes": [
             5,
-            16,
-            27,
-            39,
-            50
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            1,
-            12,
-            24,
+            5,
+            15,
+            25,
             35,
-            46,
-            57
+            45,
+            55
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            9,
-            20,
-            31,
-            42,
-            54
+            5,
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 15,
           "minutes": [
             5,
-            16,
-            27,
-            39,
-            50
+            15,
+            25,
+            35,
+            45,
+            55
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            1,
-            12,
-            24,
+            5,
+            15,
+            25,
             35,
-            46,
-            57
+            45,
+            55
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            9,
-            20,
-            35,
-            52
+            5,
+            15,
+            25,
+            38,
+            50
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            3,
+            15,
+            28,
+            40,
+            53
           ]
         },
         {
           "hour": 19,
           "minutes": [
             5,
-            20,
-            35,
-            50
+            18,
+            30,
+            45
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
@@ -2371,12 +2389,12 @@
     "lon": 16.03525
   },
   "stats": {
-    "dailyDepartures": 179,
+    "dailyDepartures": 197,
     "firstDeparture": "04:25",
     "lastDeparture": "23:40",
-    "peakHeadwayMin": 11.2,
-    "avgHeadwayMin": 13.1,
-    "travelTimeMin": 17.0,
+    "peakHeadwayMin": 10.0,
+    "avgHeadwayMin": 11.9,
+    "travelTimeMin": 15.0,
     "distanceKm": 6.2
   }
 }

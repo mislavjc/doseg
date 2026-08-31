@@ -12,7 +12,7 @@
     "210"
   ],
   "firstDeparture": "4:41",
-  "lastDeparture": "0:48",
+  "lastDeparture": "0:53",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        33
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [

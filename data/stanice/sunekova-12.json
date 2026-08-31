@@ -14,7 +14,7 @@
     "213"
   ],
   "firstDeparture": "4:09",
-  "lastDeparture": "0:46",
+  "lastDeparture": "0:41",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     },
     {
       "broj": "209",
@@ -38,12 +38,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.3,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        20,
-        21
+        15,
+        19
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 18.6
     },
     {
       "broj": "213",

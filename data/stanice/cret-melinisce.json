@@ -12,7 +12,7 @@
     "227",
     "232"
   ],
-  "firstDeparture": "4:40",
+  "firstDeparture": "4:39",
   "lastDeparture": "0:04",
   "directionGroups": 1,
   "lines": [
@@ -23,12 +23,12 @@
       "headsign": "Svetice",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
-        22,
-        22
+        13,
+        13
       ],
-      "allDayHeadwayMin": 22.0
+      "allDayHeadwayMin": 16.9
     },
     {
       "broj": "232",

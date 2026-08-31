@@ -35,12 +35,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.0,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        18,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "108",
@@ -74,9 +74,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     },
     {
       "broj": "219",
@@ -96,12 +99,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 12.9,
       "peakRangeMin": [
-        15,
-        15
+        12,
+        14
       ],
-      "allDayHeadwayMin": 16.8
+      "allDayHeadwayMin": 15.2
     },
     {
       "broj": "221",
@@ -110,12 +113,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.9,
+      "peakHeadwayMin": 11.1,
       "peakRangeMin": [
-        13,
-        15
+        10,
+        12
       ],
-      "allDayHeadwayMin": 15.7
+      "allDayHeadwayMin": 13.2
     },
     {
       "broj": "229",
@@ -140,7 +143,7 @@
         19,
         26
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     },
     {
       "broj": "241",

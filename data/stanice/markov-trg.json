@@ -22,12 +22,12 @@
       "headsign": "G. Tuškanac",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 20.9
     }
   ],
   "neighbors": [

@@ -13,7 +13,7 @@
     "226",
     "227"
   ],
-  "firstDeparture": "4:27",
+  "firstDeparture": "4:32",
   "lastDeparture": "0:12",
   "directionGroups": 2,
   "lines": [
@@ -52,12 +52,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 13.9,
       "peakRangeMin": [
-        22,
-        22
+        13,
+        14
       ],
-      "allDayHeadwayMin": 22.0
+      "allDayHeadwayMin": 17.1
     }
   ],
   "neighbors": [

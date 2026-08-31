@@ -11,8 +11,8 @@
   "busLines": [
     "276"
   ],
-  "firstDeparture": "4:48",
-  "lastDeparture": "23:42",
+  "firstDeparture": "4:53",
+  "lastDeparture": "23:37",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,9 +22,9 @@
       "headsign": "Kvaternikov trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 35.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.8
     }
   ],
   "neighbors": [

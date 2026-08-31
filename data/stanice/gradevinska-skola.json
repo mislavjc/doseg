@@ -37,12 +37,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.8,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        13,
-        14
+        10,
+        12
       ],
-      "allDayHeadwayMin": 15.7
+      "allDayHeadwayMin": 13.2
     },
     {
       "broj": "241",

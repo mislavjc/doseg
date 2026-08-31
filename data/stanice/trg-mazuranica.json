@@ -11,8 +11,8 @@
   "busLines": [
     "118"
   ],
-  "firstDeparture": "4:44",
-  "lastDeparture": "0:50",
+  "firstDeparture": "4:45",
+  "lastDeparture": "0:35",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.7
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [

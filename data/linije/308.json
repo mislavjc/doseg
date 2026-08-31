@@ -1811,7 +1811,7 @@
     0,
     1,
     2,
-    2,
+    3,
     2,
     2,
     0,
@@ -1827,8 +1827,8 @@
     2,
     1,
     1,
-    2,
-    1
+    3,
+    0
   ],
   "timetable": {
     "radniDan": [
@@ -1842,7 +1842,8 @@
         {
           "hour": 6,
           "minutes": [
-            15
+            15,
+            40
           ]
         },
         {
@@ -1964,13 +1965,8 @@
         {
           "hour": 22,
           "minutes": [
-            20
-          ]
-        },
-        {
-          "hour": 23,
-          "minutes": [
-            0
+            20,
+            50
           ]
         }
       ]
@@ -2152,11 +2148,11 @@
     "lon": 16.07251
   },
   "stats": {
-    "dailyDepartures": 23,
+    "dailyDepartures": 24,
     "firstDeparture": "05:25",
     "lastDeparture": "22:20",
     "peakHeadwayMin": 65.0,
-    "avgHeadwayMin": 101.5,
+    "avgHeadwayMin": 92.3,
     "travelTimeMin": 27.2,
     "distanceKm": 16.1
   }

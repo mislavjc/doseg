@@ -2,21 +2,22 @@
   "slug": "ljudevita-posavskog",
   "name": "Ljudevita Posavskog",
   "kvart": "Sesvete",
-  "lat": 45.82146,
-  "lon": 16.10245,
+  "lat": 45.82182,
+  "lon": 16.10162,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "275",
     "277",
+    "279",
     "282",
     "284"
   ],
-  "firstDeparture": "4:42",
-  "lastDeparture": "0:14",
-  "directionGroups": 3,
+  "firstDeparture": "4:26",
+  "lastDeparture": "0:15",
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "275",
@@ -27,18 +28,32 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
     },
     {
       "broj": "277",
       "mode": "bus",
       "isNight": false,
-      "headsign": "Ses.Selnica",
+      "headsign": "Sesvete",
       "isLoop": false,
-      "bothDirections": false,
+      "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 105.0
+      "allDayHeadwayMin": 101.8
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "282",
@@ -49,8 +64,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        25,
-        28
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.7
     },
@@ -60,7 +75,7 @@
       "isNight": false,
       "headsign": "Ivanja Reka",
       "isLoop": false,
-      "bothDirections": false,
+      "bothDirections": true,
       "peakHeadwayMin": 45.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 74.7
@@ -76,24 +91,20 @@
       "slug": "bistricka-zagrebacka"
     },
     {
-      "name": "Slatinska",
-      "slug": "slatinska"
-    },
-    {
       "name": "Jelkovečka",
       "slug": "jelkovecka"
     },
     {
-      "name": "Sesvete-izlaz",
-      "slug": "sesvete-izlaz-sesvete-2"
+      "name": "Brestovečka",
+      "slug": "brestovecka"
     }
   ],
   "hero": {
     "bbox": [
-      16.10038,
-      45.82002,
-      16.10452,
-      45.82291
+      16.09955,
+      45.82037,
+      16.10369,
+      45.82326
     ],
     "lines": [
       {
@@ -139,20 +150,194 @@
         "mode": "bus",
         "shape": [
           [
-            16.10548,
-            45.8244
+            16.11684,
+            45.81952
           ],
           [
-            16.10096,
-            45.82476
+            16.10114,
+            45.82204
           ],
           [
-            16.10333,
-            45.8211
+            16.10776,
+            45.82749
           ],
           [
-            16.11748,
-            45.81947
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.08466,
+            45.82645
+          ],
+          [
+            16.08456,
+            45.82642
+          ],
+          [
+            16.08466,
+            45.82645
+          ],
+          [
+            16.08512,
+            45.8264
+          ],
+          [
+            16.08598,
+            45.8262
+          ],
+          [
+            16.08686,
+            45.826
+          ],
+          [
+            16.08763,
+            45.82594
+          ],
+          [
+            16.08858,
+            45.82597
+          ],
+          [
+            16.08946,
+            45.8261
+          ],
+          [
+            16.08987,
+            45.82617
+          ],
+          [
+            16.08997,
+            45.82616
+          ],
+          [
+            16.08998,
+            45.82616
+          ],
+          [
+            16.09011,
+            45.82623
+          ],
+          [
+            16.0912,
+            45.82645
+          ],
+          [
+            16.09261,
+            45.82667
+          ],
+          [
+            16.09362,
+            45.82681
+          ],
+          [
+            16.09489,
+            45.82699
+          ],
+          [
+            16.09572,
+            45.82714
+          ],
+          [
+            16.0979,
+            45.82757
+          ],
+          [
+            16.0979,
+            45.82756
+          ],
+          [
+            16.10108,
+            45.82196
+          ],
+          [
+            16.10108,
+            45.82196
+          ],
+          [
+            16.10127,
+            45.82114
+          ],
+          [
+            16.10128,
+            45.82057
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10141,
+            45.8205
+          ],
+          [
+            16.10176,
+            45.81835
+          ],
+          [
+            16.10187,
+            45.8174
+          ],
+          [
+            16.1019,
+            45.81596
+          ],
+          [
+            16.10185,
+            45.81459
+          ],
+          [
+            16.10169,
+            45.81286
+          ],
+          [
+            16.10293,
+            45.81285
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10567,
+            45.81283
+          ],
+          [
+            16.1089,
+            45.81279
+          ],
+          [
+            16.10891,
+            45.81279
+          ],
+          [
+            16.11164,
+            45.8128
+          ],
+          [
+            16.11446,
+            45.8128
+          ],
+          [
+            16.11475,
+            45.81279
+          ],
+          [
+            16.11485,
+            45.81266
+          ],
+          [
+            16.1148,
+            45.81227
           ]
         ]
       },
@@ -181,12 +366,20 @@
             45.81768
           ],
           [
-            16.10333,
-            45.8211
+            16.10114,
+            45.82204
           ],
           [
-            16.10589,
-            45.82451
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -195,12 +388,12 @@
         "mode": "bus",
         "shape": [
           [
-            16.10548,
-            45.8244
+            16.1074,
+            45.82563
           ],
           [
-            16.10096,
-            45.82476
+            16.10554,
+            45.82781
           ],
           [
             16.10333,
@@ -209,19 +402,15 @@
           [
             16.11748,
             45.81947
-          ],
-          [
-            16.11925,
-            45.81435
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 84,
-    "stations45": 215
+    "stations15": 27,
+    "stations30": 78,
+    "stations45": 195
   },
   "prevSlug": "ljubljanica",
   "nextSlug": "lomnica-deveric-4"

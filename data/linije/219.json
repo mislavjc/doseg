@@ -818,7 +818,6 @@
     2,
     2,
     3,
-    3,
     2,
     3,
     3,
@@ -827,11 +826,12 @@
     3,
     2,
     3,
-    2,
-    3,
     3,
     2,
     3,
+    3,
+    3,
+    2,
     3,
     3,
     2
@@ -861,45 +861,45 @@
         {
           "hour": 7,
           "minutes": [
-            35
+            40
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            20
+            25
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            5,
-            50
+            10,
+            55
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            35
+            40
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            20
+            25
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            5,
-            50
+            10,
+            55
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            35
+            40
           ]
         },
         {
@@ -911,7 +911,7 @@
         {
           "hour": 15,
           "minutes": [
-            10,
+            5,
             50
           ]
         },
@@ -930,20 +930,20 @@
         {
           "hour": 18,
           "minutes": [
-            10,
-            55
+            5,
+            50
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            40
+            35
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            25
+            20
           ]
         },
         {
@@ -988,58 +988,58 @@
         {
           "hour": 7,
           "minutes": [
-            10,
-            55
+            10
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            40
+            0,
+            45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            25
+            30
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            10,
-            55
+            15
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            40
+            0,
+            45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            25
+            30
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            10,
-            55
+            15
           ]
         },
         {
           "hour": 14,
           "minutes": [
+            0,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            30
+            25
           ]
         },
         {
@@ -1052,26 +1052,26 @@
           "hour": 17,
           "minutes": [
             0,
-            45
+            40
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15
+            10,
+            55
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            0,
-            45
+            40
           ]
         },
         {
@@ -1186,12 +1186,6 @@
       },
       {
         "broj": "311",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Gl.kolodvor"
-      },
-      {
-        "broj": "313",
         "mode": "bus",
         "isNight": false,
         "terminal": "Gl.kolodvor"

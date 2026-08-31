@@ -27,84 +27,84 @@
           "name": "Bolnica Sveti Duh",
           "lat": 45.81986,
           "lon": 15.93788,
-          "offsetMin": 2,
+          "offsetMin": 3,
           "tramInterchange": []
         },
         {
           "name": "Orahovac",
           "lat": 45.82346,
           "lon": 15.93851,
-          "offsetMin": 4,
+          "offsetMin": 5,
           "tramInterchange": []
         },
         {
           "name": "Čukovići",
           "lat": 45.82702,
           "lon": 15.93803,
-          "offsetMin": 5,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
           "name": "Trsje",
           "lat": 45.83083,
           "lon": 15.93895,
-          "offsetMin": 6,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Bijenik - crkva",
           "lat": 45.83327,
           "lon": 15.93857,
-          "offsetMin": 7,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Čičkovina",
           "lat": 45.83464,
           "lon": 15.93729,
-          "offsetMin": 7,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
           "name": "Viktora Vide",
           "lat": 45.8386,
           "lon": 15.9358,
-          "offsetMin": 9,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Treščak",
           "lat": 45.84135,
           "lon": 15.93596,
-          "offsetMin": 10,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Selišće",
           "lat": 45.84393,
           "lon": 15.93638,
-          "offsetMin": 10,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Trpučev breg",
           "lat": 45.84741,
           "lon": 15.93879,
-          "offsetMin": 11,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Lukšić",
           "lat": 45.85019,
           "lon": 15.9386,
-          "offsetMin": 12,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Lukšić-okretište",
           "lat": 45.85305,
           "lon": 15.93521,
-          "offsetMin": 14,
+          "offsetMin": 16,
           "tramInterchange": []
         }
       ],
@@ -1400,30 +1400,30 @@
     45.85305
   ],
   "histogram": [
-    2,
+    1,
     0,
     0,
     0,
     3,
-    6,
+    9,
+    11,
+    11,
+    12,
+    9,
     8,
     8,
     8,
+    11,
+    10,
+    10,
+    11,
     8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    6,
     6,
     6,
     6,
-    5
+    6,
+    6,
+    8
   ],
   "timetable": {
     "radniDan": [
@@ -1432,32 +1432,37 @@
           "hour": 4,
           "minutes": [
             30,
-            50
+            45
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            10,
+            0,
+            15,
             30,
-            50
+            42,
+            53
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
+            4,
             15,
-            30,
-            45
+            27,
+            38,
+            49
           ]
         },
         {
           "hour": 7,
           "minutes": [
             0,
-            15,
-            30,
+            10,
+            22,
+            35,
+            40,
             45
           ]
         },
@@ -1465,9 +1470,11 @@
           "hour": 8,
           "minutes": [
             0,
-            15,
+            10,
+            20,
             30,
-            45
+            40,
+            50
           ]
         },
         {
@@ -1493,8 +1500,8 @@
           "minutes": [
             0,
             15,
-            30,
-            45
+            25,
+            40
           ]
         },
         {
@@ -1503,42 +1510,47 @@
             0,
             15,
             30,
-            40
+            45
           ]
         },
         {
           "hour": 13,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            14,
+            25,
+            36,
+            47,
+            59
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            10,
+            21,
+            32,
+            44,
+            55
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            0,
-            15,
-            30,
-            45
+            6,
+            17,
+            29,
+            40,
+            51
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            0,
-            15,
-            30,
+            2,
+            12,
+            22,
+            32,
             45
           ]
         },
@@ -1555,9 +1567,8 @@
           "hour": 18,
           "minutes": [
             0,
-            15,
-            30,
-            45
+            20,
+            40
           ]
         },
         {
@@ -1596,13 +1607,9 @@
           "hour": 23,
           "minutes": [
             0,
-            30
-          ]
-        },
-        {
-          "hour": 24,
-          "minutes": [
-            0
+            20,
+            35,
+            55
           ]
         }
       ],
@@ -1616,42 +1623,49 @@
         {
           "hour": 5,
           "minutes": [
-            10,
-            30,
+            5,
+            20,
+            35,
             50
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            5,
-            20,
+            2,
+            13,
+            24,
             35,
-            50
+            47,
+            58
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            5,
+            9,
             20,
-            35,
-            50
+            30,
+            40,
+            55
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            5,
+            0,
+            10,
             20,
-            35,
+            30,
+            40,
             50
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            5,
+            0,
+            10,
             20,
             35,
             50
@@ -1689,35 +1703,40 @@
           "minutes": [
             5,
             20,
-            35,
-            50
+            34,
+            45,
+            56
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            7,
+            19,
+            30,
+            41,
+            52
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            4,
+            15,
+            26,
+            37,
+            49
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            5,
-            20,
-            35,
-            50
+            0,
+            11,
+            22,
+            32,
+            42,
+            52
           ]
         },
         {
@@ -1734,14 +1753,13 @@
           "minutes": [
             5,
             20,
-            35,
-            50
+            40
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            5,
+            0,
             20,
             40
           ]
@@ -1774,14 +1792,15 @@
           "hour": 23,
           "minutes": [
             0,
-            20,
-            50
+            15,
+            35,
+            55
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            20
+            10
           ]
         }
       ]
@@ -2511,12 +2530,12 @@
     "lon": 15.93729
   },
   "stats": {
-    "dailyDepartures": 144,
+    "dailyDepartures": 168,
     "firstDeparture": "04:30",
-    "lastDeparture": "24:00",
-    "peakHeadwayMin": 15.0,
-    "avgHeadwayMin": 16.5,
-    "travelTimeMin": 14.0,
+    "lastDeparture": "23:55",
+    "peakHeadwayMin": 10.0,
+    "avgHeadwayMin": 14.0,
+    "travelTimeMin": 16.3,
     "distanceKm": 5.1
   }
 }

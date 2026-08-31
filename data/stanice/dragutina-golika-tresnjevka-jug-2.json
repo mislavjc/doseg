@@ -25,12 +25,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 21.8,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        18,
-        24
+        15,
+        15
       ],
-      "allDayHeadwayMin": 26.2
+      "allDayHeadwayMin": 22.7
     },
     {
       "broj": "114",
@@ -39,9 +39,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "115",
@@ -50,12 +53,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 12.9,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        12,
-        12
+        10,
+        11
       ],
-      "allDayHeadwayMin": 15.0
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "116",

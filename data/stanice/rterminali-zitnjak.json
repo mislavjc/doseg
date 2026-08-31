@@ -15,7 +15,7 @@
     "225",
     "276"
   ],
-  "firstDeparture": "4:34",
+  "firstDeparture": "4:38",
   "lastDeparture": "0:14",
   "directionGroups": 2,
   "lines": [
@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        18,
-        23
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "216",
@@ -40,9 +40,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 105.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "222",
@@ -81,7 +81,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.8
     }
   ],
   "neighbors": [

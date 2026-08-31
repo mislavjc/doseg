@@ -31,6 +31,7 @@
           "lon": 15.95676,
           "offsetMin": 2,
           "tramInterchange": [
+            "1",
             "2",
             "6",
             "11"
@@ -916,6 +917,10 @@
       }
     ],
     "tramCrossings": [
+      {
+        "broj": "1",
+        "stopName": "Hercegovačka 21"
+      },
       {
         "broj": "2",
         "stopName": "Hercegovačka 21"

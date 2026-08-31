@@ -25,12 +25,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 21.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        18,
-        23
+        15,
+        15
       ],
-      "allDayHeadwayMin": 26.2
+      "allDayHeadwayMin": 22.7
     },
     {
       "broj": "116",
@@ -53,12 +53,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 26.7,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        28
+        36,
+        39
       ],
-      "allDayHeadwayMin": 30.5
+      "allDayHeadwayMin": 34.2
     },
     {
       "broj": "168",

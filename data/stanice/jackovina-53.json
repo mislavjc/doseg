@@ -11,8 +11,8 @@
   "busLines": [
     "142"
   ],
-  "firstDeparture": "5:42",
-  "lastDeparture": "22:42",
+  "firstDeparture": "5:12",
+  "lastDeparture": "23:12",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,9 +22,12 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 28.8,
+      "peakRangeMin": [
+        29,
+        30
+      ],
+      "allDayHeadwayMin": 30.0
     }
   ],
   "neighbors": [

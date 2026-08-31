@@ -15,7 +15,7 @@
   ],
   "busLines": [],
   "firstDeparture": "4:18",
-  "lastDeparture": "0:55",
+  "lastDeparture": "0:50",
   "directionGroups": 1,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 16.5,
+      "peakHeadwayMin": 14.2,
       "peakRangeMin": [
-        16,
-        17
+        14,
+        14
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 14.7
     },
     {
       "broj": "5",
@@ -39,12 +39,12 @@
       "headsign": "Park Maksimir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.9,
+      "peakHeadwayMin": 10.1,
       "peakRangeMin": [
-        11,
-        11
+        10,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 11.5
     },
     {
       "broj": "13",
@@ -53,12 +53,12 @@
       "headsign": "Žitnjak",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.0,
+      "peakHeadwayMin": 13.4,
       "peakRangeMin": [
         13,
         13
       ],
-      "allDayHeadwayMin": 14.3
+      "allDayHeadwayMin": 15.2
     },
     {
       "broj": "33",

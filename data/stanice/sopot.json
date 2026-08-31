@@ -20,7 +20,7 @@
     "222",
     "229"
   ],
-  "firstDeparture": "4:28",
+  "firstDeparture": "4:31",
   "lastDeparture": "1:51",
   "directionGroups": 2,
   "lines": [
@@ -31,12 +31,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.1,
+      "peakHeadwayMin": 6.9,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.0
     },
     {
       "broj": "7",
@@ -45,12 +45,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.2,
+      "peakHeadwayMin": 7.0,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.2
     },
     {
       "broj": "14",
@@ -59,12 +59,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 7.7,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        8
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "31",
@@ -84,12 +84,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.7,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
         8,
-        9
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "219",
@@ -109,12 +109,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 13.3,
       "peakRangeMin": [
-        15,
+        12,
         15
       ],
-      "allDayHeadwayMin": 16.8
+      "allDayHeadwayMin": 15.2
     },
     {
       "broj": "222",

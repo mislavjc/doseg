@@ -13,7 +13,7 @@
     "281",
     "282"
   ],
-  "firstDeparture": "4:35",
+  "firstDeparture": "4:29",
   "lastDeparture": "0:05",
   "directionGroups": 2,
   "lines": [
@@ -24,12 +24,12 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 34.0
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "281",
@@ -52,10 +52,10 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        25,
-        33
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.7
     }
@@ -83,12 +83,48 @@
         "mode": "bus",
         "shape": [
           [
-            16.10106,
-            45.80791
+            16.10108,
+            45.82196
           ],
           [
-            16.10293,
-            45.81285
+            16.10108,
+            45.82196
+          ],
+          [
+            16.10127,
+            45.82114
+          ],
+          [
+            16.10128,
+            45.82057
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10141,
+            45.8205
+          ],
+          [
+            16.10176,
+            45.81835
+          ],
+          [
+            16.10187,
+            45.8174
+          ],
+          [
+            16.1019,
+            45.81596
+          ],
+          [
+            16.10185,
+            45.81459
+          ],
+          [
+            16.10169,
+            45.81286
           ],
           [
             16.10293,
@@ -259,12 +295,8 @@
             45.81768
           ],
           [
-            16.10333,
-            45.8211
-          ],
-          [
-            16.10589,
-            45.82451
+            16.10114,
+            45.82204
           ]
         ]
       }

@@ -25,7 +25,7 @@
     "172"
   ],
   "firstDeparture": "4:13",
-  "lastDeparture": "1:24",
+  "lastDeparture": "1:26",
   "directionGroups": 4,
   "lines": [
     {
@@ -35,9 +35,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     },
     {
       "broj": "120",
@@ -46,12 +49,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "121",
@@ -104,7 +107,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "125",
@@ -155,12 +158,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.5,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        22,
-        23
+        16,
+        17
       ],
-      "allDayHeadwayMin": 22.8
+      "allDayHeadwayMin": 16.4
     },
     {
       "broj": "137",
@@ -183,17 +186,6 @@
       "headsign": "Vrapčanska aleja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
-    },
-    {
-      "broj": "146",
-      "mode": "bus",
-      "isNight": false,
-      "headsign": "Jankomir",
-      "isLoop": false,
-      "bothDirections": true,
       "peakHeadwayMin": 30.0,
       "peakRangeMin": [
         30,
@@ -202,18 +194,32 @@
       "allDayHeadwayMin": 30.0
     },
     {
+      "broj": "146",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Jankomir",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 23.3,
+      "peakRangeMin": [
+        23,
+        24
+      ],
+      "allDayHeadwayMin": 22.2
+    },
+    {
       "broj": "172",
       "mode": "bus",
       "isNight": false,
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.5,
+      "peakHeadwayMin": 8.1,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        9
       ],
-      "allDayHeadwayMin": 14.4
+      "allDayHeadwayMin": 12.6
     }
   ],
   "neighbors": [

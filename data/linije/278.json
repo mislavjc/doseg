@@ -659,16 +659,16 @@
     0,
     2,
     3,
-    3,
-    2,
-    2,
-    2,
-    2,
-    3,
-    2,
-    3,
     4,
+    3,
     2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
     2,
     2,
     4,
@@ -733,20 +733,20 @@
         {
           "hour": 13,
           "minutes": [
-            20
+            15
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            45
+            5,
+            50
           ]
         },
         {
@@ -758,7 +758,7 @@
         {
           "hour": 17,
           "minutes": [
-            25
+            20
           ]
         },
         {
@@ -799,12 +799,14 @@
           "hour": 7,
           "minutes": [
             0,
+            35,
             50
           ]
         },
         {
           "hour": 8,
           "minutes": [
+            25,
             40
           ]
         },
@@ -835,27 +837,28 @@
         {
           "hour": 13,
           "minutes": [
-            5
+            10,
+            35
           ]
         },
         {
           "hour": 14,
           "minutes": [
             5,
-            50
+            40
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            25,
-            55
+            25
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            45
+            10,
+            55
           ]
         },
         {
@@ -916,7 +919,25 @@
         "terminal": "Sesvete"
       },
       {
+        "broj": "277",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "283",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "284",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
@@ -933,7 +954,7 @@
     "lon": 16.12644
   },
   "stats": {
-    "dailyDepartures": 42,
+    "dailyDepartures": 45,
     "firstDeparture": "05:20",
     "lastDeparture": "20:40",
     "peakHeadwayMin": 55.0,

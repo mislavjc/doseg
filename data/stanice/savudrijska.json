@@ -11,8 +11,8 @@
   "busLines": [
     "215"
   ],
-  "firstDeparture": "4:36",
-  "lastDeparture": "23:51",
+  "firstDeparture": "4:34",
+  "lastDeparture": "23:49",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Trnava",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 11.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        12
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.1
+      "allDayHeadwayMin": 11.9
     }
   ],
   "neighbors": [

@@ -2,11 +2,11 @@
   "slug": "bistricka-zagrebacka",
   "name": "Bistrička-Zagrebačka",
   "kvart": "Sesvete",
-  "lat": 45.82782,
-  "lon": 16.10688,
+  "lat": 45.82778,
+  "lon": 16.10683,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 17,
+  "lineCount": 20,
   "tramLines": [],
   "busLines": [
     "212",
@@ -23,9 +23,12 @@
     "273",
     "274",
     "275",
+    "277",
     "278",
     "280",
-    "283"
+    "282",
+    "283",
+    "284"
   ],
   "firstDeparture": "3:37",
   "lastDeparture": "1:20",
@@ -85,12 +88,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        26,
+        19,
         29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "264",
@@ -121,12 +124,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.1,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     },
     {
       "broj": "270",
@@ -187,12 +190,23 @@
       "broj": "275",
       "mode": "bus",
       "isNight": false,
-      "headsign": "Sopnica-škola",
+      "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
+    },
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 101.8
     },
     {
       "broj": "278",
@@ -217,6 +231,20 @@
       "allDayHeadwayMin": 79.3
     },
     {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        20,
+        30
+      ],
+      "allDayHeadwayMin": 38.7
+    },
+    {
       "broj": "283",
       "mode": "bus",
       "isNight": false,
@@ -226,6 +254,17 @@
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 64.6
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ivanja Reka",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 45.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 74.7
     }
   ],
   "neighbors": [
@@ -239,7 +278,7 @@
     },
     {
       "name": "Sesvete-ukrcaj",
-      "slug": "sesvete-ukrcaj-sesvete"
+      "slug": "sesvete-ukrcaj"
     },
     {
       "name": "Ninska",
@@ -284,10 +323,10 @@
   ],
   "hero": {
     "bbox": [
-      16.10481,
-      45.82638,
-      16.10895,
-      45.82926
+      16.10477,
+      45.82634,
+      16.1089,
+      45.82922
     ],
     "lines": [
       {
@@ -2423,6 +2462,10 @@
         "mode": "bus",
         "shape": [
           [
+            16.0864,
+            45.82609
+          ],
+          [
             16.08749,
             45.82593
           ],
@@ -2545,20 +2588,62 @@
         "mode": "bus",
         "shape": [
           [
-            16.10717,
-            45.82609
-          ],
-          [
-            16.10554,
-            45.82781
-          ],
-          [
-            16.09697,
-            45.82454
-          ],
-          [
             16.09298,
             45.82184
+          ],
+          [
+            16.09571,
+            45.81928
+          ],
+          [
+            16.09918,
+            45.81705
+          ],
+          [
+            16.10196,
+            45.81768
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
+      },
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11684,
+            45.81952
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -2871,6 +2956,32 @@
           [
             16.10909,
             45.84175
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10196,
+            45.81768
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -3341,6 +3452,28 @@
           [
             16.10951,
             45.82544
+          ]
+        ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1074,
+            45.82563
+          ],
+          [
+            16.10554,
+            45.82781
+          ],
+          [
+            16.10333,
+            45.8211
+          ],
+          [
+            16.11748,
+            45.81947
           ]
         ]
       }

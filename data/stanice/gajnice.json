@@ -18,7 +18,7 @@
     "177"
   ],
   "firstDeparture": "4:37",
-  "lastDeparture": "1:45",
+  "lastDeparture": "1:59",
   "directionGroups": 2,
   "lines": [
     {
@@ -28,12 +28,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "122",
@@ -81,12 +81,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.5,
+      "peakHeadwayMin": 8.4,
       "peakRangeMin": [
-        10,
-        13
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     },
     {
       "broj": "176",

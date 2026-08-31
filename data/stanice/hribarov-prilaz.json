@@ -22,12 +22,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 13.6,
       "peakRangeMin": [
-        15,
+        13,
         15
       ],
-      "allDayHeadwayMin": 17.0
+      "allDayHeadwayMin": 15.3
     }
   ],
   "neighbors": [

@@ -12,7 +12,7 @@
     "206"
   ],
   "firstDeparture": "4:41",
-  "lastDeparture": "23:10",
+  "lastDeparture": "23:45",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [

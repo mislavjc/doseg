@@ -990,14 +990,14 @@
         {
           "hour": 8,
           "minutes": [
-            10,
-            50
+            5,
+            40
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            25
+            20
           ]
         },
         {
@@ -1258,7 +1258,7 @@
     "dailyDepartures": 24,
     "firstDeparture": "06:10",
     "lastDeparture": "22:15",
-    "peakHeadwayMin": 45.0,
+    "peakHeadwayMin": 40.0,
     "avgHeadwayMin": 42.0,
     "travelTimeMin": 32.5,
     "distanceKm": 11.3

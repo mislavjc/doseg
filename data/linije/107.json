@@ -1616,26 +1616,26 @@
     0,
     0,
     0,
-    3,
+    2,
+    5,
+    8,
+    8,
+    7,
+    4,
+    6,
+    4,
+    4,
+    8,
+    8,
+    8,
     7,
     6,
-    5,
-    5,
+    2,
     4,
-    6,
-    4,
-    6,
-    5,
-    6,
-    5,
-    6,
-    5,
-    3,
     2,
     2,
     2,
-    3,
-    0
+    1
   ],
   "timetable": {
     "radniDan": [
@@ -1643,140 +1643,152 @@
         {
           "hour": 4,
           "minutes": [
-            47
-          ]
-        },
-        {
-          "hour": 5,
-          "minutes": [
-            5,
-            23,
-            41,
-            59
-          ]
-        },
-        {
-          "hour": 6,
-          "minutes": [
-            17,
-            35,
-            53
-          ]
-        },
-        {
-          "hour": 7,
-          "minutes": [
-            11,
-            29
-          ]
-        },
-        {
-          "hour": 8,
-          "minutes": [
-            2,
-            25,
             45
           ]
         },
         {
-          "hour": 9,
+          "hour": 5,
           "minutes": [
             10,
             35
           ]
         },
         {
-          "hour": 10,
+          "hour": 6,
           "minutes": [
             0,
-            25,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 7,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            0,
+            20,
+            35,
             50
           ]
         },
         {
-          "hour": 11,
+          "hour": 9,
           "minutes": [
             15,
             40
           ]
         },
         {
-          "hour": 12,
+          "hour": 10,
           "minutes": [
             5,
             30,
-            53
+            55
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            20,
+            45
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            10,
+            35
           ]
         },
         {
           "hour": 13,
           "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 15,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 16,
+          "minutes": [
+            0,
+            15,
+            30,
+            45
+          ]
+        },
+        {
+          "hour": 17,
+          "minutes": [
+            0,
             15,
             30,
             50
           ]
         },
         {
-          "hour": 14,
-          "minutes": [
-            10,
-            32,
-            57
-          ]
-        },
-        {
-          "hour": 15,
-          "minutes": [
-            20,
-            42
-          ]
-        },
-        {
-          "hour": 16,
-          "minutes": [
-            4,
-            26,
-            50
-          ]
-        },
-        {
-          "hour": 17,
-          "minutes": [
-            12,
-            25,
-            56
-          ]
-        },
-        {
           "hour": 18,
           "minutes": [
-            10,
-            45
+            10
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            35
+            0,
+            50
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            25
+            40
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            15
+            30
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            5,
-            55
+            20
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            10
           ]
         }
       ],
@@ -1784,50 +1796,37 @@
         {
           "hour": 4,
           "minutes": [
-            38,
-            56
+            55
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            14,
-            32,
-            50
+            10,
+            30,
+            45
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            8,
-            26,
-            44
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            12,
-            35,
-            53
+            0,
+            15,
+            30,
+            45
           ]
         },
         {
           "hour": 8,
-          "minutes": [
-            11,
-            35
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            10,
-            35
-          ]
-        },
-        {
-          "hour": 10,
           "minutes": [
             0,
             25,
@@ -1835,14 +1834,14 @@
           ]
         },
         {
-          "hour": 11,
+          "hour": 9,
           "minutes": [
             15,
             40
           ]
         },
         {
-          "hour": 12,
+          "hour": 10,
           "minutes": [
             5,
             30,
@@ -1850,71 +1849,90 @@
           ]
         },
         {
-          "hour": 13,
+          "hour": 11,
           "minutes": [
             20,
-            43
+            45
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            10,
+            35
+          ]
+        },
+        {
+          "hour": 13,
+          "minutes": [
+            0,
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 14,
           "minutes": [
             5,
-            25,
-            45
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 15,
           "minutes": [
             5,
-            27,
+            20,
+            35,
             50
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            12,
-            34,
-            56
+            5,
+            20,
+            35
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            20,
-            55
+            0,
+            25
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            45
+            15
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            35
+            0,
+            50
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            25
+            40
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            15
+            30
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            5
+            20
           ]
         }
       ]
@@ -2327,11 +2345,11 @@
     "lon": 15.96987
   },
   "stats": {
-    "dailyDepartures": 85,
-    "firstDeparture": "04:47",
-    "lastDeparture": "22:55",
-    "peakHeadwayMin": 23.5,
-    "avgHeadwayMin": 25.3,
+    "dailyDepartures": 98,
+    "firstDeparture": "04:45",
+    "lastDeparture": "23:10",
+    "peakHeadwayMin": 15.7,
+    "avgHeadwayMin": 22.1,
     "travelTimeMin": 33.2,
     "distanceKm": 15.5
   }

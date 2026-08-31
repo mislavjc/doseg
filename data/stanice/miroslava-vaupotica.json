@@ -12,7 +12,7 @@
     "127"
   ],
   "firstDeparture": "4:28",
-  "lastDeparture": "0:23",
+  "lastDeparture": "0:03",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 12.0,
       "peakRangeMin": [
-        20,
-        20
+        12,
+        14
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 17.1
     }
   ],
   "neighbors": [

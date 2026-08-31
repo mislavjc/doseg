@@ -11,7 +11,7 @@
   "busLines": [
     "284"
   ],
-  "firstDeparture": "4:44",
+  "firstDeparture": "4:48",
   "lastDeparture": "23:43",
   "directionGroups": 2,
   "lines": [
@@ -22,7 +22,7 @@
       "headsign": "Ivanja Reka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 74.7
     }

@@ -13,8 +13,8 @@
     "281",
     "282"
   ],
-  "firstDeparture": "4:36",
-  "lastDeparture": "23:54",
+  "firstDeparture": "4:28",
+  "lastDeparture": "23:58",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 34.0
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "281",
@@ -52,10 +52,10 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        23,
-        33
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.4
     }
@@ -87,12 +87,48 @@
         "mode": "bus",
         "shape": [
           [
-            16.10106,
-            45.80791
+            16.10108,
+            45.82196
           ],
           [
-            16.10293,
-            45.81285
+            16.10108,
+            45.82196
+          ],
+          [
+            16.10127,
+            45.82114
+          ],
+          [
+            16.10128,
+            45.82057
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10141,
+            45.8205
+          ],
+          [
+            16.10176,
+            45.81835
+          ],
+          [
+            16.10187,
+            45.8174
+          ],
+          [
+            16.1019,
+            45.81596
+          ],
+          [
+            16.10185,
+            45.81459
+          ],
+          [
+            16.10169,
+            45.81286
           ],
           [
             16.10293,
@@ -250,14 +286,6 @@
         "broj": "282",
         "mode": "bus",
         "shape": [
-          [
-            16.10548,
-            45.8244
-          ],
-          [
-            16.10096,
-            45.82476
-          ],
           [
             16.10108,
             45.82196

@@ -49,12 +49,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.6,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     },
     {
       "broj": "6",
@@ -63,12 +63,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.6,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 8.0
     },
     {
       "broj": "11",
@@ -77,12 +77,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.4,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        7
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "31",
@@ -102,12 +102,12 @@
       "headsign": "Kauzlarićev prilaz",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        8,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "117",
@@ -130,9 +130,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     },
     {
       "broj": "120",
@@ -141,12 +144,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "121",
@@ -199,7 +202,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "125",
@@ -236,12 +239,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 11.9,
       "peakRangeMin": [
-        20,
-        20
+        12,
+        14
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 17.1
     },
     {
       "broj": "128",
@@ -250,12 +253,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        15,
-        15
+        10,
+        11
       ],
-      "allDayHeadwayMin": 16.5
+      "allDayHeadwayMin": 14.0
     },
     {
       "broj": "130",
@@ -292,12 +295,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 21.0,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "135",
@@ -320,12 +323,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.5,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        22,
-        23
+        16,
+        17
       ],
-      "allDayHeadwayMin": 22.8
+      "allDayHeadwayMin": 16.4
     },
     {
       "broj": "137",
@@ -359,12 +362,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 23.3,
       "peakRangeMin": [
-        30,
-        30
+        23,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     },
     {
       "broj": "172",
@@ -373,12 +376,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
-        9,
-        11
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     },
     {
       "broj": "176",
@@ -785,176 +788,184 @@
         "mode": "tram",
         "shape": [
           [
-            15.93493,
-            45.815
+            15.95391,
+            45.8127
           ],
           [
-            15.93503,
-            45.8149
-          ],
-          [
-            15.93516,
-            45.81483
-          ],
-          [
-            15.93529,
-            45.81483
-          ],
-          [
-            15.93551,
-            45.81483
-          ],
-          [
-            15.93575,
-            45.8148
-          ],
-          [
-            15.93607,
-            45.81478
-          ],
-          [
-            15.93659,
-            45.81468
-          ],
-          [
-            15.93831,
-            45.8143
-          ],
-          [
-            15.93887,
-            45.81417
-          ],
-          [
-            15.94026,
-            45.81384
-          ],
-          [
-            15.94161,
-            45.81353
-          ],
-          [
-            15.94213,
-            45.8134
-          ],
-          [
-            15.94262,
-            45.8133
-          ],
-          [
-            15.94291,
-            45.81325
-          ],
-          [
-            15.94304,
-            45.81324
-          ],
-          [
-            15.94308,
-            45.81323
-          ],
-          [
-            15.94327,
-            45.81319
-          ],
-          [
-            15.94341,
-            45.81315
-          ],
-          [
-            15.94357,
-            45.81312
-          ],
-          [
-            15.94376,
-            45.81309
-          ],
-          [
-            15.94399,
-            45.81305
-          ],
-          [
-            15.94425,
-            45.81298
-          ],
-          [
-            15.9453,
-            45.81277
-          ],
-          [
-            15.94568,
+            15.95378,
             45.81268
           ],
           [
-            15.9458,
-            45.81264
+            15.95317,
+            45.81256
           ],
           [
-            15.94624,
+            15.95288,
             45.81252
           ],
           [
-            15.9467,
-            45.81244
+            15.95253,
+            45.81252
           ],
           [
-            15.94721,
-            45.81238
-          ],
-          [
-            15.94776,
-            45.81236
-          ],
-          [
-            15.94813,
-            45.81236
-          ],
-          [
-            15.94832,
-            45.81243
-          ],
-          [
-            15.94832,
-            45.81243
-          ],
-          [
-            15.94857,
-            45.81238
-          ],
-          [
-            15.94975,
-            45.81239
-          ],
-          [
-            15.95091,
-            45.8124
-          ],
-          [
-            15.9517,
-            45.81241
-          ],
-          [
-            15.95195,
-            45.81246
-          ],
-          [
-            15.95196,
-            45.81245
-          ],
-          [
-            15.95221,
-            45.81241
-          ],
-          [
-            15.95246,
-            45.81242
-          ],
-          [
-            15.95296,
+            15.95251,
             45.81247
           ],
           [
-            15.95369,
-            45.81259
+            15.95247,
+            45.81249
+          ],
+          [
+            15.95219,
+            45.81249
+          ],
+          [
+            15.95106,
+            45.81248
+          ],
+          [
+            15.95035,
+            45.81247
+          ],
+          [
+            15.94984,
+            45.81247
+          ],
+          [
+            15.94946,
+            45.81246
+          ],
+          [
+            15.94894,
+            45.81246
+          ],
+          [
+            15.94885,
+            45.81249
+          ],
+          [
+            15.94884,
+            45.81249
+          ],
+          [
+            15.94881,
+            45.81246
+          ],
+          [
+            15.9487,
+            45.81246
+          ],
+          [
+            15.94809,
+            45.81243
+          ],
+          [
+            15.94748,
+            45.81244
+          ],
+          [
+            15.94696,
+            45.81248
+          ],
+          [
+            15.94676,
+            45.81249
+          ],
+          [
+            15.94643,
+            45.81256
+          ],
+          [
+            15.94612,
+            45.81264
+          ],
+          [
+            15.94571,
+            45.81274
+          ],
+          [
+            15.94537,
+            45.81283
+          ],
+          [
+            15.94386,
+            45.81314
+          ],
+          [
+            15.94319,
+            45.81325
+          ],
+          [
+            15.94242,
+            45.81339
+          ],
+          [
+            15.94146,
+            45.81363
+          ],
+          [
+            15.94146,
+            45.81363
+          ],
+          [
+            15.93785,
+            45.81447
+          ],
+          [
+            15.93666,
+            45.81476
+          ],
+          [
+            15.93612,
+            45.81486
+          ],
+          [
+            15.93589,
+            45.81486
+          ],
+          [
+            15.9354,
+            45.81491
+          ],
+          [
+            15.93515,
+            45.81492
+          ],
+          [
+            15.93502,
+            45.81495
+          ],
+          [
+            15.93488,
+            45.81506
+          ],
+          [
+            15.93474,
+            45.81515
+          ],
+          [
+            15.93461,
+            45.81524
+          ],
+          [
+            15.93449,
+            45.81532
+          ],
+          [
+            15.93436,
+            45.81536
+          ],
+          [
+            15.93432,
+            45.81537
+          ],
+          [
+            15.93426,
+            45.81537
+          ],
+          [
+            15.93392,
+            45.8154
           ]
         ]
       },

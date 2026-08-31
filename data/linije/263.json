@@ -1858,24 +1858,24 @@
     0,
     3,
     5,
-    3,
-    3,
-    3,
-    2,
+    4,
+    5,
     3,
     2,
+    3,
+    5,
+    3,
+    4,
+    5,
+    4,
+    4,
+    4,
     4,
     3,
+    3,
     4,
-    3,
-    3,
-    3,
     2,
-    2,
-    3,
-    2,
-    3,
-    1
+    2
   ],
   "timetable": {
     "radniDan": [
@@ -1883,135 +1883,145 @@
         {
           "hour": 4,
           "minutes": [
-            20,
-            50
+            45
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            15,
-            45
+            0,
+            10,
+            40
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
-            45
+            0,
+            25,
+            35
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
+            0,
+            25,
             45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            10,
-            50
+            0,
+            40
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            30
+            20,
+            50
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            10,
-            50
+            35
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            30,
-            50
+            10,
+            40,
+            55
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            50
+            25,
+            40
           ]
         },
         {
           "hour": 13,
           "minutes": [
+            0,
             20,
-            45
+            40
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
+            0,
+            20,
             45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            45
+            0,
+            25,
+            40
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
-            45
+            10,
+            20,
+            50
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            10,
-            55
+            5,
+            35
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            40
+            0,
+            35
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            20
+            0,
+            30
           ]
         },
         {
           "hour": 20,
           "minutes": [
             0,
-            40
+            30
           ]
         },
         {
           "hour": 21,
           "minutes": [
+            10,
             45
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            20
+            30
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            30
+            50
           ]
         }
       ],
@@ -2019,65 +2029,67 @@
         {
           "hour": 4,
           "minutes": [
-            30
-          ]
-        },
-        {
-          "hour": 5,
-          "minutes": [
-            0,
             30,
             55
           ]
         },
         {
+          "hour": 5,
+          "minutes": [
+            20,
+            50
+          ]
+        },
+        {
           "hour": 6,
           "minutes": [
-            30
+            40
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            30
+            15,
+            40
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            50
-          ]
-        },
-        {
-          "hour": 9,
-          "minutes": [
-            30
+            40
           ]
         },
         {
           "hour": 10,
           "minutes": [
+            0,
+            30
+          ]
+        },
+        {
+          "hour": 11,
+          "minutes": [
+            15,
             50
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            10,
             35
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            0
+            20
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            0,
-            30
+            5,
+            45
           ]
         },
         {
@@ -2089,19 +2101,21 @@
         {
           "hour": 16,
           "minutes": [
-            30
+            25
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            0
+            10,
+            50
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            0
+            20,
+            50
           ]
         },
         {
@@ -2113,26 +2127,32 @@
         {
           "hour": 20,
           "minutes": [
-            0
+            15
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            20
+            15,
+            50
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            25,
-            55
+            25
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            10
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            5
+            30
           ]
         }
       ]
@@ -2149,78 +2169,84 @@
           "hour": 5,
           "minutes": [
             10,
-            50
+            45
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            10,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            10,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            10,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            10,
-            50
+            15,
+            45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            30
+            15,
+            45
           ]
         },
         {
@@ -2258,7 +2284,7 @@
         {
           "hour": 22,
           "minutes": [
-            15
+            10
           ]
         },
         {
@@ -2291,7 +2317,7 @@
         {
           "hour": 7,
           "minutes": [
-            10
+            30
           ]
         },
         {
@@ -2303,20 +2329,25 @@
         {
           "hour": 9,
           "minutes": [
-            50
+            30
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            10,
-            50
+            0
+          ]
+        },
+        {
+          "hour": 12,
+          "minutes": [
+            0
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            10
+            0
           ]
         },
         {
@@ -2328,7 +2359,7 @@
         {
           "hour": 15,
           "minutes": [
-            10
+            30
           ]
         },
         {
@@ -2340,7 +2371,7 @@
         {
           "hour": 17,
           "minutes": [
-            10,
+            0,
             50
           ]
         },
@@ -2721,11 +2752,11 @@
     "lon": 16.11544
   },
   "stats": {
-    "dailyDepartures": 58,
-    "firstDeparture": "04:20",
-    "lastDeparture": "23:30",
-    "peakHeadwayMin": 31.7,
-    "avgHeadwayMin": 34.8,
+    "dailyDepartures": 73,
+    "firstDeparture": "04:45",
+    "lastDeparture": "23:50",
+    "peakHeadwayMin": 25.0,
+    "avgHeadwayMin": 26.6,
     "travelTimeMin": 34.3,
     "distanceKm": 19.1
   }

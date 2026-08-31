@@ -12,7 +12,7 @@
     "118"
   ],
   "firstDeparture": "4:40",
-  "lastDeparture": "0:35",
+  "lastDeparture": "0:30",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Trg Mažur.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [

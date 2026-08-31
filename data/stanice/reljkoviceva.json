@@ -53,12 +53,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 23.4,
       "peakRangeMin": [
-        30,
-        30
+        23,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     },
     {
       "broj": "148",

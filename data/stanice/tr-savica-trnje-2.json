@@ -13,7 +13,7 @@
     "218",
     "281"
   ],
-  "firstDeparture": "4:51",
+  "firstDeparture": "4:53",
   "lastDeparture": "23:49",
   "directionGroups": 1,
   "lines": [
@@ -24,12 +24,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 20.8,
+      "peakHeadwayMin": 17.0,
       "peakRangeMin": [
-        18,
-        23
+        15,
+        15
       ],
-      "allDayHeadwayMin": 26.2
+      "allDayHeadwayMin": 22.7
     },
     {
       "broj": "218",
@@ -38,9 +38,12 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 23.3,
+      "peakRangeMin": [
+        23,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     },
     {
       "broj": "281",

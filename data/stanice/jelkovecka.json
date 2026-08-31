@@ -34,7 +34,7 @@
       "headsign": "Ivanja Reka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 74.7
     }
@@ -47,10 +47,6 @@
     {
       "name": "Ivice Lovinčića",
       "slug": "ivice-lovincica"
-    },
-    {
-      "name": "Sesvete-izlaz",
-      "slug": "sesvete-izlaz-sesvete"
     },
     {
       "name": "Nova cesta",
@@ -86,8 +82,20 @@
             45.81952
           ],
           [
-            16.10589,
-            45.82451
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -96,12 +104,12 @@
         "mode": "bus",
         "shape": [
           [
-            16.10548,
-            45.8244
+            16.1074,
+            45.82563
           ],
           [
-            16.10096,
-            45.82476
+            16.10554,
+            45.82781
           ],
           [
             16.10333,

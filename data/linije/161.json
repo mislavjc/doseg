@@ -1950,8 +1950,8 @@
     0,
     0,
     1,
-    4,
-    4,
+    5,
+    5,
     2,
     4,
     2,
@@ -1977,6 +1977,7 @@
           "hour": 5,
           "minutes": [
             5,
+            30,
             50
           ]
         },
@@ -2121,6 +2122,7 @@
         {
           "hour": 6,
           "minutes": [
+            10,
             30,
             45
           ]
@@ -2784,11 +2786,11 @@
     "lon": 15.89667
   },
   "stats": {
-    "dailyDepartures": 61,
+    "dailyDepartures": 63,
     "firstDeparture": "05:05",
     "lastDeparture": "24:05",
     "peakHeadwayMin": 40.0,
-    "avgHeadwayMin": 39.3,
+    "avgHeadwayMin": 38.0,
     "travelTimeMin": 32.7,
     "distanceKm": 19.8
   }

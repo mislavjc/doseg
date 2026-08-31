@@ -25,12 +25,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.6,
       "peakRangeMin": [
         10,
         10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.4
     },
     {
       "broj": "159",

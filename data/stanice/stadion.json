@@ -14,7 +14,7 @@
     "182"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "1:52",
+  "lastDeparture": "1:42",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.5,
+      "peakHeadwayMin": 7.8,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     },
     {
       "broj": "174",

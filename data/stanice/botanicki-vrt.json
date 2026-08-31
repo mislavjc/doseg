@@ -14,8 +14,8 @@
     "33"
   ],
   "busLines": [],
-  "firstDeparture": "4:35",
-  "lastDeparture": "1:02",
+  "firstDeparture": "4:22",
+  "lastDeparture": "0:59",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.5,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 10.0
     },
     {
       "broj": "4",
@@ -39,26 +39,26 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.1,
+      "peakHeadwayMin": 8.8,
       "peakRangeMin": [
-        11,
-        11
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "9",
       "mode": "tram",
       "isNight": false,
-      "headsign": "Trg žrt.fašizma",
+      "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 10.8
     },
     {
       "broj": "33",
@@ -1161,6 +1161,66 @@
           [
             15.98763,
             45.80944
+          ],
+          [
+            15.98763,
+            45.80944
+          ],
+          [
+            15.98794,
+            45.80945
+          ],
+          [
+            15.988,
+            45.80949
+          ],
+          [
+            15.98808,
+            45.80956
+          ],
+          [
+            15.98808,
+            45.80963
+          ],
+          [
+            15.98807,
+            45.80972
+          ],
+          [
+            15.98809,
+            45.80989
+          ],
+          [
+            15.98813,
+            45.80992
+          ],
+          [
+            15.98822,
+            45.80996
+          ],
+          [
+            15.98847,
+            45.80998
+          ],
+          [
+            15.98999,
+            45.81005
+          ],
+          [
+            15.99056,
+            45.81007
+          ],
+          [
+            15.99102,
+            45.8101
+          ],
+          [
+            15.99294,
+            45.81027
+          ],
+          [
+            15.99314,
+            45.8103
           ]
         ]
       },

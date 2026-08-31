@@ -2298,12 +2298,6 @@
         "terminal": "Gl.kolodvor"
       },
       {
-        "broj": "313",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Gl.kolodvor"
-      },
-      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,

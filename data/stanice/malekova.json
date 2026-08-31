@@ -12,7 +12,7 @@
     "206"
   ],
   "firstDeparture": "4:39",
-  "lastDeparture": "23:12",
+  "lastDeparture": "23:47",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 20.0
     }
   ],
   "neighbors": [

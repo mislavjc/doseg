@@ -11,7 +11,7 @@
   "busLines": [
     "227"
   ],
-  "firstDeparture": "4:48",
+  "firstDeparture": "4:53",
   "lastDeparture": "0:13",
   "directionGroups": 1,
   "lines": [
@@ -22,12 +22,12 @@
       "headsign": "Grač. dolje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 13.5,
       "peakRangeMin": [
-        22,
-        22
+        13,
+        14
       ],
-      "allDayHeadwayMin": 22.0
+      "allDayHeadwayMin": 17.1
     }
   ],
   "neighbors": [

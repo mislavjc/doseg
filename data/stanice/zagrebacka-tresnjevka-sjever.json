@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.5,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        20,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "114",
@@ -40,9 +40,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "115",
@@ -51,12 +54,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.5,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        12,
-        16
+        10,
+        11
       ],
-      "allDayHeadwayMin": 14.9
+      "allDayHeadwayMin": 12.2
     },
     {
       "broj": "116",
@@ -79,12 +82,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        28,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [

@@ -39,12 +39,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.8,
+      "peakHeadwayMin": 8.8,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        9
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -53,12 +53,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.4,
+      "peakHeadwayMin": 7.0,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.2
     },
     {
       "broj": "31",
@@ -97,7 +97,7 @@
         10,
         10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.4
     },
     {
       "broj": "111",
@@ -122,7 +122,7 @@
         56,
         59
       ],
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     },
     {
       "broj": "132",
@@ -145,12 +145,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.7,
+      "peakHeadwayMin": 24.0,
       "peakRangeMin": [
-        25,
+        20,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     },
     {
       "broj": "159",
@@ -192,7 +192,7 @@
         18,
         43
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",

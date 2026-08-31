@@ -1511,8 +1511,8 @@
     6,
     4,
     4,
-    4,
-    4,
+    5,
+    5,
     4,
     3
   ],
@@ -1644,6 +1644,7 @@
           "hour": 20,
           "minutes": [
             10,
+            30,
             45
           ]
         },
@@ -1792,13 +1793,14 @@
         {
           "hour": 20,
           "minutes": [
-            10,
+            15,
             40
           ]
         },
         {
           "hour": 21,
           "minutes": [
+            0,
             15,
             45
           ]
@@ -2417,11 +2419,11 @@
     "lon": 15.96449
   },
   "stats": {
-    "dailyDepartures": 96,
+    "dailyDepartures": 98,
     "firstDeparture": "04:20",
     "lastDeparture": "23:25",
     "peakHeadwayMin": 22.5,
-    "avgHeadwayMin": 24.4,
+    "avgHeadwayMin": 23.9,
     "travelTimeMin": 25.0,
     "distanceKm": 7.7
   }

@@ -26,12 +26,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 8.2,
       "peakRangeMin": [
-        9,
-        9
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "166",
@@ -51,10 +51,10 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 47.5,
       "peakRangeMin": [
-        45,
-        45
+        46,
+        49
       ],
       "allDayHeadwayMin": 45.2
     },
@@ -65,7 +65,7 @@
       "headsign": "Mala Mlaka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 80.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 83.8
     },

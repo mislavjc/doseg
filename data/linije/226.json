@@ -1810,98 +1810,128 @@
         {
           "hour": 6,
           "minutes": [
-            50
+            20
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            55
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 8,
+          "minutes": [
+            15
           ]
         },
         {
           "hour": 9,
           "minutes": [
             0,
-            55
+            40
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            55
+            15
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            55
+            0,
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            55
+            15
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            55
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 14,
+          "minutes": [
+            15
           ]
         },
         {
           "hour": 15,
           "minutes": [
             0,
-            55
+            40
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            55
+            15
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            55
+            0,
+            40
+          ]
+        },
+        {
+          "hour": 18,
+          "minutes": [
+            15
           ]
         },
         {
           "hour": 19,
           "minutes": [
             0,
-            55
+            40
           ]
         },
         {
           "hour": 20,
           "minutes": [
+            15,
             55
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            55
+            35
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            55
+            20
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            55
+            0,
+            35
           ]
         }
       ],
       [
+        {
+          "hour": 5,
+          "minutes": [
+            40
+          ]
+        },
         {
           "hour": 6,
           "minutes": [
@@ -1911,103 +1941,111 @@
         {
           "hour": 7,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            25
+            0,
+            40
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            25
+            20
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            25
+            0
           ]
         }
       ]

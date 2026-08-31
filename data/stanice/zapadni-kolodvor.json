@@ -2,19 +2,35 @@
   "slug": "zapadni-kolodvor",
   "name": "Zapadni kolodvor",
   "kvart": "Črnomerec",
-  "lat": 45.80949,
-  "lon": 15.95393,
-  "mode": "bus",
-  "bothDirections": false,
-  "lineCount": 1,
-  "tramLines": [],
+  "lat": 45.80944,
+  "lon": 15.95485,
+  "mode": "both",
+  "bothDirections": true,
+  "lineCount": 2,
+  "tramLines": [
+    "1"
+  ],
   "busLines": [
     "146"
   ],
-  "firstDeparture": "5:06",
-  "lastDeparture": "23:36",
+  "firstDeparture": "4:42",
+  "lastDeparture": "0:13",
   "directionGroups": 1,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        11,
+        13
+      ],
+      "allDayHeadwayMin": 14.5
+    },
     {
       "broj": "146",
       "mode": "bus",
@@ -22,15 +38,23 @@
       "headsign": "Reljkovićeva",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 24.3,
       "peakRangeMin": [
-        30,
-        30
+        24,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     }
   ],
   "neighbors": [
+    {
+      "name": "Trg dr. F. Tuđmana",
+      "slug": "trg-dr-f-tudmana"
+    },
+    {
+      "name": "Talovčeva",
+      "slug": "talovceva"
+    },
     {
       "name": "Pr. b. Filipovića",
       "slug": "pr-b-filipovica"
@@ -42,12 +66,34 @@
   ],
   "hero": {
     "bbox": [
-      15.95186,
-      45.80805,
-      15.956,
-      45.81094
+      15.95278,
+      45.80799,
+      15.95692,
+      45.81088
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.95579,
+            45.80933
+          ],
+          [
+            15.95745,
+            45.8128
+          ],
+          [
+            15.96308,
+            45.81232
+          ],
+          [
+            15.9694,
+            45.81325
+          ]
+        ]
+      },
       {
         "broj": "146",
         "mode": "bus",
@@ -133,9 +179,9 @@
     ]
   },
   "reach": {
-    "stations15": 18,
-    "stations30": 85,
-    "stations45": 350
+    "stations15": 28,
+    "stations30": 143,
+    "stations45": 434
   },
   "prevSlug": "zamenhofova",
   "nextSlug": "zapci"

@@ -12,8 +12,8 @@
     "215",
     "236"
   ],
-  "firstDeparture": "4:27",
-  "lastDeparture": "0:08",
+  "firstDeparture": "4:26",
+  "lastDeparture": "0:07",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.2,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        11
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.1
     },
     {
       "broj": "236",

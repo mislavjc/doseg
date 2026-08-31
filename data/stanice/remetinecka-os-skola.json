@@ -40,7 +40,7 @@
         10,
         10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.4
     },
     {
       "broj": "111",
@@ -74,12 +74,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.7,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        25,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     },
     {
       "broj": "159",
@@ -121,7 +121,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -196,7 +196,7 @@
         19,
         21
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     },
     {
       "broj": "315",

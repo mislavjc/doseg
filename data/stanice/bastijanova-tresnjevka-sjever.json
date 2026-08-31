@@ -22,12 +22,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     }
   ],
   "neighbors": [

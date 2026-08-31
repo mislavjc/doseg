@@ -809,7 +809,9 @@
           "lat": 45.80949,
           "lon": 15.95393,
           "offsetMin": 22,
-          "tramInterchange": []
+          "tramInterchange": [
+            "1"
+          ]
         },
         {
           "name": "Reljkovićeva",
@@ -1383,25 +1385,25 @@
     0,
     0,
     1,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    3
+    6,
+    5,
+    6,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    4
   ],
   "timetable": {
     "radniDan": [
@@ -1410,132 +1412,145 @@
           "hour": 5,
           "minutes": [
             15,
-            45
+            35,
+            55
           ]
         },
         {
           "hour": 6,
           "minutes": [
             15,
-            45
+            35
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
-            45
+            0,
+            23,
+            47
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            11,
+            33,
+            57
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            45
+            20,
+            43
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            45
+            7,
+            30,
+            53
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            45
+            17,
+            40
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            45
+            3,
+            26,
+            50
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            45
+            13,
+            37
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            45
+            1,
+            23,
+            47
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
-            45
+            10,
+            33,
+            57
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
-            45
+            20,
+            43
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            15,
-            45
+            7,
+            30,
+            53
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            15,
-            45
+            17,
+            40
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15,
+            3,
+            25,
             45
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            15,
+            6,
+            25,
             45
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            15,
+            6,
+            25,
             45
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            15,
+            6,
+            25,
             45
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            15,
+            6,
+            25,
             45
           ]
         }
@@ -1550,127 +1565,140 @@
         {
           "hour": 5,
           "minutes": [
-            15,
+            5,
+            25,
             45
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            15,
+            5,
+            26,
             45
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            15,
-            45
+            10,
+            34,
+            58
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            15,
-            45
+            22,
+            44
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            15,
-            45
+            8,
+            32,
+            54
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            15,
-            45
+            18,
+            42
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            15,
-            45
+            6,
+            28,
+            52
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            15,
-            45
+            16,
+            38
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            15,
-            45
+            2,
+            25,
+            48
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            15,
-            45
+            12,
+            34,
+            58
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            15,
+            22,
             45
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            15,
-            45
+            8,
+            32,
+            56
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            15,
-            45
+            18,
+            40
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            15,
-            45
+            5,
+            28,
+            52
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            15,
-            45
+            14,
+            34,
+            56
           ]
         },
         {
           "hour": 20,
           "minutes": [
             15,
-            45
+            35,
+            56
           ]
         },
         {
           "hour": 21,
           "minutes": [
             15,
-            45
+            35,
+            56
           ]
         },
         {
           "hour": 22,
           "minutes": [
             15,
-            45
+            34,
+            55
           ]
         },
         {
@@ -2232,11 +2260,11 @@
     "lon": 15.90397
   },
   "stats": {
-    "dailyDepartures": 76,
+    "dailyDepartures": 102,
     "firstDeparture": "05:15",
     "lastDeparture": "23:45",
-    "peakHeadwayMin": 30.0,
-    "avgHeadwayMin": 30.0,
+    "peakHeadwayMin": 23.4,
+    "avgHeadwayMin": 22.2,
     "travelTimeMin": 22.7,
     "distanceKm": 8.1
   }

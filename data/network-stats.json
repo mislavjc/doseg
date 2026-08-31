@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T00:00:00.000Z",
+  "generatedAt": "2026-08-31T00:00:00.000Z",
   "vehicleKm": {
     "tram": 25309,
     "bus": 58202,
@@ -258,14 +258,14 @@
       ],
       "headwayCv": 0.16,
       "peakHeadwayCv": 0.11,
-      "tortuosity": 1.63,
-      "straightLineKm": 6.38,
+      "tortuosity": 1.79,
+      "straightLineKm": 5.67,
       "stopSpacing": {
-        "avgM": 424,
-        "minM": 181,
-        "maxM": 753,
-        "cv": 0.39,
-        "count": 25
+        "avgM": 449,
+        "minM": 148,
+        "maxM": 777,
+        "cv": 0.31,
+        "count": 23
       },
       "peakDepPerHour": 14.0,
       "baseDepPerHour": 12.8,
@@ -302,14 +302,14 @@
       ],
       "headwayCv": 0.17,
       "peakHeadwayCv": 0.03,
-      "tortuosity": 1.88,
+      "tortuosity": 1.68,
       "straightLineKm": 7.78,
       "stopSpacing": {
-        "avgM": 454,
+        "avgM": 484,
         "minM": 91,
         "maxM": 1013,
-        "cv": 0.45,
-        "count": 32
+        "cv": 0.43,
+        "count": 27
       },
       "peakDepPerHour": 12.0,
       "baseDepPerHour": 10.8,
@@ -346,14 +346,14 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 2.35,
-      "straightLineKm": 5.13,
+      "tortuosity": 1.63,
+      "straightLineKm": 5.71,
       "stopSpacing": {
-        "avgM": 459,
-        "minM": 82,
-        "maxM": 839,
-        "cv": 0.35,
-        "count": 26
+        "avgM": 450,
+        "minM": 243,
+        "maxM": 753,
+        "cv": 0.36,
+        "count": 21
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -610,14 +610,14 @@
       ],
       "headwayCv": 0.0,
       "peakHeadwayCv": 0.0,
-      "tortuosity": 2.38,
+      "tortuosity": 1.81,
       "straightLineKm": 5.14,
       "stopSpacing": {
-        "avgM": 446,
-        "minM": 82,
+        "avgM": 473,
+        "minM": 124,
         "maxM": 839,
-        "cv": 0.38,
-        "count": 27
+        "cv": 0.37,
+        "count": 20
       },
       "peakDepPerHour": 10.0,
       "baseDepPerHour": 10.8,
@@ -698,14 +698,14 @@
       ],
       "headwayCv": 0.02,
       "peakHeadwayCv": null,
-      "tortuosity": 1.87,
-      "straightLineKm": 7.64,
+      "tortuosity": 3.91,
+      "straightLineKm": 3.57,
       "stopSpacing": {
-        "avgM": 449,
+        "avgM": 467,
         "minM": 91,
         "maxM": 1013,
-        "cv": 0.44,
-        "count": 32
+        "cv": 0.41,
+        "count": 30
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -9073,11 +9073,11 @@
     }
   ],
   "deadEndStops": {
-    "total": 1402,
+    "total": 1401,
     "byMode": {
+      "RAIL": 47,
       "BUS": 1330,
-      "TRAM": 25,
-      "RAIL": 47
+      "TRAM": 24
     },
     "stops": [
       {
@@ -9831,6 +9831,20 @@
       },
       {
         "name": "Jarun",
+        "lat": 45.78398,
+        "lon": 15.925851,
+        "route": "113",
+        "mode": "BUS"
+      },
+      {
+        "name": "Ljubljanica",
+        "lat": 45.795814,
+        "lon": 15.936707,
+        "route": "113",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jarun",
         "lat": 45.783464,
         "lon": 15.925684,
         "route": "113",
@@ -9903,20 +9917,6 @@
         "name": "Petrine",
         "lat": 45.781235,
         "lon": 15.932469,
-        "route": "113",
-        "mode": "BUS"
-      },
-      {
-        "name": "Ljubljanica",
-        "lat": 45.795814,
-        "lon": 15.936707,
-        "route": "113",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jarun",
-        "lat": 45.78398,
-        "lon": 15.925851,
         "route": "113",
         "mode": "BUS"
       },
@@ -11202,6 +11202,13 @@
         "mode": "BUS"
       },
       {
+        "name": "Savski most",
+        "lat": 45.784882,
+        "lon": 15.952645,
+        "route": "133",
+        "mode": "BUS"
+      },
+      {
         "name": "Mrkšina-raskrižje",
         "lat": 45.755106,
         "lon": 15.963779,
@@ -11212,13 +11219,6 @@
         "name": "Čehi - Bulićeva",
         "lat": 45.736742,
         "lon": 15.962942,
-        "route": "133",
-        "mode": "BUS"
-      },
-      {
-        "name": "Savski most",
-        "lat": 45.784882,
-        "lon": 15.952645,
         "route": "133",
         "mode": "BUS"
       },
@@ -12882,13 +12882,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Črnomerec",
-        "lat": 45.815837,
-        "lon": 15.934329,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
         "name": "Jarek",
         "lat": 45.838373,
         "lon": 15.82431,
@@ -12941,6 +12934,13 @@
         "name": "Zelengaj",
         "lat": 45.869735,
         "lon": 15.789258,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Črnomerec",
+        "lat": 45.815837,
+        "lon": 15.934329,
         "route": "172",
         "mode": "BUS"
       },
@@ -13435,6 +13435,20 @@
         "mode": "BUS"
       },
       {
+        "name": "Konzum",
+        "lat": 45.861475,
+        "lon": 15.786383,
+        "route": "182",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dvorac Lužnica",
+        "lat": 45.861512,
+        "lon": 15.777793,
+        "route": "182",
+        "mode": "BUS"
+      },
+      {
         "name": "Mokrička 8",
         "lat": 45.863348,
         "lon": 15.790697,
@@ -13508,20 +13522,6 @@
         "name": "Mokrička 8",
         "lat": 45.862839,
         "lon": 15.790582,
-        "route": "182",
-        "mode": "BUS"
-      },
-      {
-        "name": "Konzum",
-        "lat": 45.861475,
-        "lon": 15.786383,
-        "route": "182",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dvorac Lužnica",
-        "lat": 45.861512,
-        "lon": 15.777793,
         "route": "182",
         "mode": "BUS"
       },
@@ -16788,6 +16788,13 @@
         "mode": "BUS"
       },
       {
+        "name": "Dubec",
+        "lat": 45.827519,
+        "lon": 16.077276,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
         "name": "Sesvetska Sela",
         "lat": 45.823721,
         "lon": 16.131891,
@@ -16847,13 +16854,6 @@
         "name": "Iver",
         "lat": 45.812683,
         "lon": 16.182832,
-        "route": "269",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubec",
-        "lat": 45.827519,
-        "lon": 16.077276,
         "route": "269",
         "mode": "BUS"
       },
@@ -17901,6 +17901,41 @@
         "mode": "BUS"
       },
       {
+        "name": "Gradićka 4",
+        "lat": 45.70652,
+        "lon": 16.040067,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gradići društveni d.",
+        "lat": 45.704599,
+        "lon": 16.03784,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gradići novo naselje",
+        "lat": 45.700857,
+        "lon": 16.037174,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Petrovina 6",
+        "lat": 45.696182,
+        "lon": 16.035648,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Petrovina,društ. dom",
+        "lat": 45.692703,
+        "lon": 16.03137,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
         "name": "Velika Gorica",
         "lat": 45.71156,
         "lon": 16.077368,
@@ -17939,41 +17974,6 @@
         "name": "Željezn.-Vukomerička",
         "lat": 45.713111,
         "lon": 16.044564,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gradićka 4",
-        "lat": 45.70652,
-        "lon": 16.040067,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gradići društveni d.",
-        "lat": 45.704599,
-        "lon": 16.03784,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gradići novo naselje",
-        "lat": 45.700857,
-        "lon": 16.037174,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Petrovina 6",
-        "lat": 45.696182,
-        "lon": 16.035648,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Petrovina,društ. dom",
-        "lat": 45.692703,
-        "lon": 16.03137,
         "route": "310",
         "mode": "BUS"
       },
@@ -18076,34 +18076,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Željezn.-Vukomerička",
-        "lat": 45.714319,
-        "lon": 16.045442,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kačićeva-Željeznička",
-        "lat": 45.71714,
-        "lon": 16.048387,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kačićeva-Vukomerička",
-        "lat": 45.715672,
-        "lon": 16.052302,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kolodvorska 48",
-        "lat": 45.713498,
-        "lon": 16.06043,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
         "name": "Gradići,K.Tomis. 46",
         "lat": 45.70818,
         "lon": 16.039852,
@@ -18163,6 +18135,34 @@
         "name": "Velika Mlaka",
         "lat": 45.729955,
         "lon": 16.026075,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Željezn.-Vukomerička",
+        "lat": 45.714319,
+        "lon": 16.045442,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kačićeva-Željeznička",
+        "lat": 45.71714,
+        "lon": 16.048387,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kačićeva-Vukomerička",
+        "lat": 45.715672,
+        "lon": 16.052302,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kolodvorska 48",
+        "lat": 45.713498,
+        "lon": 16.06043,
         "route": "310",
         "mode": "BUS"
       },
@@ -18741,13 +18741,6 @@
         "mode": "TRAM"
       },
       {
-        "name": "Ljubljanica",
-        "lat": 45.797236,
-        "lon": 15.937948,
-        "route": "12",
-        "mode": "TRAM"
-      },
-      {
         "name": "Dubrava",
         "lat": 45.824437,
         "lon": 16.037388,
@@ -18904,75 +18897,17 @@
     "interlinedBlocks": 91,
     "interlinedExamples": [
       {
-        "blockId": "22302",
+        "blockId": "27701",
         "routes": [
-          "213",
-          "223"
+          "277",
+          "284"
         ]
       },
       {
-        "blockId": "20502",
+        "blockId": "12902",
         "routes": [
-          "205",
-          "230"
-        ]
-      },
-      {
-        "blockId": "15901",
-        "routes": [
-          "159",
-          "163"
-        ]
-      },
-      {
-        "blockId": "10902",
-        "routes": [
-          "109",
-          "124"
-        ]
-      },
-      {
-        "blockId": "12001",
-        "routes": [
-          "120",
-          "177"
-        ]
-      },
-      {
-        "blockId": "14801",
-        "routes": [
-          "139",
-          "141",
-          "148"
-        ]
-      },
-      {
-        "blockId": "21301",
-        "routes": [
-          "213",
-          "230"
-        ]
-      },
-      {
-        "blockId": "13301",
-        "routes": [
-          "133",
-          "164"
-        ]
-      },
-      {
-        "blockId": "11004",
-        "routes": [
-          "108",
-          "110",
-          "164"
-        ]
-      },
-      {
-        "blockId": "20201",
-        "routes": [
-          "201",
-          "202"
+          "129",
+          "149"
         ]
       },
       {
@@ -18984,6 +18919,95 @@
         ]
       },
       {
+        "blockId": "11001",
+        "routes": [
+          "110",
+          "111",
+          "133",
+          "160",
+          "162",
+          "163"
+        ]
+      },
+      {
+        "blockId": "15101",
+        "routes": [
+          "144",
+          "151"
+        ]
+      },
+      {
+        "blockId": "13001",
+        "routes": [
+          "124",
+          "130"
+        ]
+      },
+      {
+        "blockId": "22601",
+        "routes": [
+          "213",
+          "226"
+        ]
+      },
+      {
+        "blockId": "20101",
+        "routes": [
+          "201",
+          "202"
+        ]
+      },
+      {
+        "blockId": "16102",
+        "routes": [
+          "132",
+          "161",
+          "163",
+          "164"
+        ]
+      },
+      {
+        "blockId": "17605",
+        "routes": [
+          "120",
+          "176",
+          "177"
+        ]
+      },
+      {
+        "blockId": "27801",
+        "routes": [
+          "278",
+          "282"
+        ]
+      },
+      {
+        "blockId": "16001",
+        "routes": [
+          "110",
+          "160",
+          "162",
+          "163",
+          "164"
+        ]
+      },
+      {
+        "blockId": "30803",
+        "routes": [
+          "307",
+          "308",
+          "313"
+        ]
+      },
+      {
+        "blockId": "16301",
+        "routes": [
+          "133",
+          "163",
+          "164"
+        ]
+      },
+      {
         "blockId": "21603",
         "routes": [
           "216",
@@ -18991,62 +19015,40 @@
         ]
       },
       {
-        "blockId": "13701",
+        "blockId": "13101",
         "routes": [
+          "116",
           "120",
+          "131",
           "137"
         ]
       },
       {
-        "blockId": "27103",
+        "blockId": "16601",
         "routes": [
-          "271",
-          "272"
+          "108",
+          "166"
         ]
       },
       {
-        "blockId": "12902",
+        "blockId": "15901",
         "routes": [
-          "129",
-          "149"
+          "159",
+          "163"
         ]
       },
       {
-        "blockId": "17602",
+        "blockId": "23201",
         "routes": [
-          "176",
-          "177"
+          "230",
+          "232"
         ]
       },
       {
-        "blockId": "13901",
-        "routes": [
-          "139",
-          "141"
-        ]
-      },
-      {
-        "blockId": "11801",
-        "routes": [
-          "112",
-          "118",
-          "132"
-        ]
-      },
-      {
-        "blockId": "22401",
+        "blockId": "21301",
         "routes": [
           "213",
-          "224",
           "230"
-        ]
-      },
-      {
-        "blockId": "10101",
-        "routes": [
-          "101",
-          "103",
-          "130"
         ]
       }
     ]
@@ -19075,93 +19077,93 @@
       {
         "name": "101",
         "mode": "BUS",
-        "weekdayTrips": 356,
-        "saturdayTrips": 272,
-        "sundayTrips": 156
+        "weekdayTrips": 204,
+        "saturdayTrips": 164,
+        "sundayTrips": 104
       },
       {
         "name": "102",
         "mode": "BUS",
-        "weekdayTrips": 358,
-        "saturdayTrips": 328,
-        "sundayTrips": 150
+        "weekdayTrips": 204,
+        "saturdayTrips": 202,
+        "sundayTrips": 100
       },
       {
         "name": "103",
         "mode": "BUS",
-        "weekdayTrips": 346,
-        "saturdayTrips": 206,
-        "sundayTrips": 102
+        "weekdayTrips": 190,
+        "saturdayTrips": 126,
+        "sundayTrips": 68
       },
       {
         "name": "104",
         "mode": "BUS",
-        "weekdayTrips": 184,
+        "weekdayTrips": 92,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "105",
         "mode": "BUS",
-        "weekdayTrips": 274,
-        "saturdayTrips": 180,
-        "sundayTrips": 90
+        "weekdayTrips": 152,
+        "saturdayTrips": 114,
+        "sundayTrips": 60
       },
       {
         "name": "106",
         "mode": "BUS",
-        "weekdayTrips": 400,
-        "saturdayTrips": 400,
-        "sundayTrips": 240
+        "weekdayTrips": 240,
+        "saturdayTrips": 240,
+        "sundayTrips": 160
       },
       {
         "name": "107",
         "mode": "BUS",
-        "weekdayTrips": 396,
-        "saturdayTrips": 150,
-        "sundayTrips": 90
+        "weekdayTrips": 220,
+        "saturdayTrips": 90,
+        "sundayTrips": 60
       },
       {
         "name": "108",
         "mode": "BUS",
-        "weekdayTrips": 40,
+        "weekdayTrips": 20,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "109",
         "mode": "BUS",
-        "weekdayTrips": 899,
-        "saturdayTrips": 540,
-        "sundayTrips": 306
+        "weekdayTrips": 509,
+        "saturdayTrips": 332,
+        "sundayTrips": 204
       },
       {
         "name": "110",
         "mode": "BUS",
-        "weekdayTrips": 918,
-        "saturdayTrips": 750,
-        "sundayTrips": 432
+        "weekdayTrips": 538,
+        "saturdayTrips": 452,
+        "sundayTrips": 288
       },
       {
         "name": "111",
         "mode": "BUS",
-        "weekdayTrips": 148,
-        "saturdayTrips": 74,
-        "sundayTrips": 48
+        "weekdayTrips": 82,
+        "saturdayTrips": 44,
+        "sundayTrips": 32
       },
       {
         "name": "112",
         "mode": "BUS",
-        "weekdayTrips": 232,
-        "saturdayTrips": 182,
-        "sundayTrips": 66
+        "weekdayTrips": 128,
+        "saturdayTrips": 114,
+        "sundayTrips": 44
       },
       {
         "name": "113",
         "mode": "BUS",
-        "weekdayTrips": 370,
-        "saturdayTrips": 450,
-        "sundayTrips": 270
+        "weekdayTrips": 230,
+        "saturdayTrips": 270,
+        "sundayTrips": 180
       },
       {
         "name": "114",
@@ -19173,716 +19175,716 @@
       {
         "name": "115",
         "mode": "BUS",
-        "weekdayTrips": 776,
-        "saturdayTrips": 626,
-        "sundayTrips": 282
+        "weekdayTrips": 452,
+        "saturdayTrips": 386,
+        "sundayTrips": 188
       },
       {
         "name": "116",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 333,
-        "sundayTrips": 144
+        "weekdayTrips": 208,
+        "saturdayTrips": 206,
+        "sundayTrips": 96
       },
       {
         "name": "117",
         "mode": "BUS",
-        "weekdayTrips": 228,
-        "saturdayTrips": 210,
-        "sundayTrips": 108
+        "weekdayTrips": 132,
+        "saturdayTrips": 128,
+        "sundayTrips": 72
       },
       {
         "name": "118",
         "mode": "BUS",
-        "weekdayTrips": 1000,
-        "saturdayTrips": 764,
-        "sundayTrips": 350
+        "weekdayTrips": 584,
+        "saturdayTrips": 502,
+        "sundayTrips": 244
       },
       {
         "name": "119",
         "mode": "BUS",
-        "weekdayTrips": 242,
-        "saturdayTrips": 224,
-        "sundayTrips": 129
+        "weekdayTrips": 156,
+        "saturdayTrips": 135,
+        "sundayTrips": 86
       },
       {
         "name": "120",
         "mode": "BUS",
-        "weekdayTrips": 372,
-        "saturdayTrips": 320,
-        "sundayTrips": 174
+        "weekdayTrips": 214,
+        "saturdayTrips": 194,
+        "sundayTrips": 116
       },
       {
         "name": "121",
         "mode": "BUS",
-        "weekdayTrips": 636,
-        "saturdayTrips": 486,
-        "sundayTrips": 252
+        "weekdayTrips": 360,
+        "saturdayTrips": 306,
+        "sundayTrips": 168
       },
       {
         "name": "122",
         "mode": "BUS",
         "weekdayTrips": 30,
-        "saturdayTrips": 111,
-        "sundayTrips": 90
+        "saturdayTrips": 64,
+        "sundayTrips": 60
       },
       {
         "name": "123",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 288,
-        "sundayTrips": 144
+        "weekdayTrips": 208,
+        "saturdayTrips": 176,
+        "sundayTrips": 96
       },
       {
         "name": "124",
         "mode": "BUS",
-        "weekdayTrips": 359,
-        "saturdayTrips": 276,
-        "sundayTrips": 165
+        "weekdayTrips": 207,
+        "saturdayTrips": 177,
+        "sundayTrips": 110
       },
       {
         "name": "125",
         "mode": "BUS",
-        "weekdayTrips": 492,
-        "saturdayTrips": 424,
-        "sundayTrips": 132
+        "weekdayTrips": 268,
+        "saturdayTrips": 268,
+        "sundayTrips": 88
       },
       {
         "name": "126",
         "mode": "BUS",
-        "weekdayTrips": 528,
-        "saturdayTrips": 298,
-        "sundayTrips": 168
+        "weekdayTrips": 292,
+        "saturdayTrips": 180,
+        "sundayTrips": 112
       },
       {
         "name": "127",
         "mode": "BUS",
-        "weekdayTrips": 554,
-        "saturdayTrips": 336,
-        "sundayTrips": 168
+        "weekdayTrips": 314,
+        "saturdayTrips": 218,
+        "sundayTrips": 112
       },
       {
         "name": "128",
         "mode": "BUS",
-        "weekdayTrips": 648,
-        "saturdayTrips": 396,
-        "sundayTrips": 144
+        "weekdayTrips": 360,
+        "saturdayTrips": 248,
+        "sundayTrips": 96
       },
       {
         "name": "129",
         "mode": "BUS",
-        "weekdayTrips": 308,
-        "saturdayTrips": 198,
-        "sundayTrips": 108
+        "weekdayTrips": 172,
+        "saturdayTrips": 120,
+        "sundayTrips": 72
       },
       {
         "name": "130",
         "mode": "BUS",
-        "weekdayTrips": 308,
-        "saturdayTrips": 166,
-        "sundayTrips": 60
+        "weekdayTrips": 164,
+        "saturdayTrips": 104,
+        "sundayTrips": 40
       },
       {
         "name": "131",
         "mode": "BUS",
-        "weekdayTrips": 304,
-        "saturdayTrips": 178,
-        "sundayTrips": 96
+        "weekdayTrips": 168,
+        "saturdayTrips": 108,
+        "sundayTrips": 64
       },
       {
         "name": "132",
         "mode": "BUS",
-        "weekdayTrips": 341,
-        "saturdayTrips": 148,
-        "sundayTrips": 87
+        "weekdayTrips": 185,
+        "saturdayTrips": 89,
+        "sundayTrips": 58
       },
       {
         "name": "133",
         "mode": "BUS",
-        "weekdayTrips": 352,
-        "saturdayTrips": 216,
-        "sundayTrips": 108
+        "weekdayTrips": 200,
+        "saturdayTrips": 132,
+        "sundayTrips": 72
       },
       {
         "name": "134",
         "mode": "BUS",
-        "weekdayTrips": 443,
-        "saturdayTrips": 410,
-        "sundayTrips": 192
+        "weekdayTrips": 263,
+        "saturdayTrips": 252,
+        "sundayTrips": 128
       },
       {
         "name": "135",
         "mode": "BUS",
-        "weekdayTrips": 316,
-        "saturdayTrips": 220,
-        "sundayTrips": 132
+        "weekdayTrips": 180,
+        "saturdayTrips": 132,
+        "sundayTrips": 88
       },
       {
         "name": "136",
         "mode": "BUS",
-        "weekdayTrips": 538,
-        "saturdayTrips": 496,
-        "sundayTrips": 294
+        "weekdayTrips": 338,
+        "saturdayTrips": 298,
+        "sundayTrips": 196
       },
       {
         "name": "137",
         "mode": "BUS",
-        "weekdayTrips": 204,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 116,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "138",
         "mode": "BUS",
-        "weekdayTrips": 152,
-        "saturdayTrips": 100,
-        "sundayTrips": 60
+        "weekdayTrips": 86,
+        "saturdayTrips": 60,
+        "sundayTrips": 40
       },
       {
         "name": "139",
         "mode": "BUS",
-        "weekdayTrips": 126,
-        "saturdayTrips": 94,
-        "sundayTrips": 42
+        "weekdayTrips": 70,
+        "saturdayTrips": 58,
+        "sundayTrips": 28
       },
       {
         "name": "140",
         "mode": "BUS",
-        "weekdayTrips": 94,
-        "saturdayTrips": 150,
-        "sundayTrips": 90
+        "weekdayTrips": 62,
+        "saturdayTrips": 90,
+        "sundayTrips": 60
       },
       {
         "name": "141",
         "mode": "BUS",
-        "weekdayTrips": 118,
-        "saturdayTrips": 94,
-        "sundayTrips": 42
+        "weekdayTrips": 66,
+        "saturdayTrips": 58,
+        "sundayTrips": 28
       },
       {
         "name": "142",
         "mode": "BUS",
-        "weekdayTrips": 106,
-        "saturdayTrips": 84,
-        "sundayTrips": 45
+        "weekdayTrips": 70,
+        "saturdayTrips": 51,
+        "sundayTrips": 30
       },
       {
         "name": "143",
         "mode": "BUS",
-        "weekdayTrips": 186,
-        "saturdayTrips": 126,
-        "sundayTrips": 18
+        "weekdayTrips": 110,
+        "saturdayTrips": 82,
+        "sundayTrips": 12
       },
       {
         "name": "144",
         "mode": "BUS",
-        "weekdayTrips": 12,
+        "weekdayTrips": 6,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "146",
         "mode": "BUS",
-        "weekdayTrips": 366,
-        "saturdayTrips": 300,
-        "sundayTrips": 108
+        "weekdayTrips": 214,
+        "saturdayTrips": 188,
+        "sundayTrips": 72
       },
       {
         "name": "148",
         "mode": "BUS",
-        "weekdayTrips": 105,
-        "saturdayTrips": 100,
-        "sundayTrips": 51
+        "weekdayTrips": 61,
+        "saturdayTrips": 61,
+        "sundayTrips": 34
       },
       {
         "name": "149",
         "mode": "BUS",
-        "weekdayTrips": 286,
-        "saturdayTrips": 208,
-        "sundayTrips": 114
+        "weekdayTrips": 162,
+        "saturdayTrips": 126,
+        "sundayTrips": 76
       },
       {
         "name": "150",
         "mode": "BUS",
-        "weekdayTrips": 324,
-        "saturdayTrips": 286,
-        "sundayTrips": 150
+        "weekdayTrips": 200,
+        "saturdayTrips": 174,
+        "sundayTrips": 100
       },
       {
         "name": "151",
         "mode": "BUS",
-        "weekdayTrips": 108,
+        "weekdayTrips": 54,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "159",
         "mode": "BUS",
-        "weekdayTrips": 216,
-        "saturdayTrips": 60,
+        "weekdayTrips": 108,
+        "saturdayTrips": 40,
         "sundayTrips": 0
       },
       {
         "name": "160",
         "mode": "BUS",
-        "weekdayTrips": 202,
-        "saturdayTrips": 98,
-        "sundayTrips": 30
+        "weekdayTrips": 106,
+        "saturdayTrips": 62,
+        "sundayTrips": 20
       },
       {
         "name": "161",
         "mode": "BUS",
-        "weekdayTrips": 284,
-        "saturdayTrips": 201,
-        "sundayTrips": 90
+        "weekdayTrips": 158,
+        "saturdayTrips": 124,
+        "sundayTrips": 60
       },
       {
         "name": "162",
         "mode": "BUS",
-        "weekdayTrips": 166,
-        "saturdayTrips": 112,
-        "sundayTrips": 42
+        "weekdayTrips": 90,
+        "saturdayTrips": 70,
+        "sundayTrips": 28
       },
       {
         "name": "163",
         "mode": "BUS",
-        "weekdayTrips": 123,
-        "saturdayTrips": 77,
-        "sundayTrips": 21
+        "weekdayTrips": 65,
+        "saturdayTrips": 49,
+        "sundayTrips": 14
       },
       {
         "name": "164",
         "mode": "BUS",
-        "weekdayTrips": 190,
-        "saturdayTrips": 100,
-        "sundayTrips": 42
+        "weekdayTrips": 102,
+        "saturdayTrips": 62,
+        "sundayTrips": 28
       },
       {
         "name": "166",
         "mode": "BUS",
-        "weekdayTrips": 80,
-        "saturdayTrips": 54,
+        "weekdayTrips": 40,
+        "saturdayTrips": 36,
         "sundayTrips": 0
       },
       {
         "name": "168",
         "mode": "BUS",
-        "weekdayTrips": 248,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 138,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "172",
         "mode": "BUS",
-        "weekdayTrips": 985,
-        "saturdayTrips": 568,
-        "sundayTrips": 231
+        "weekdayTrips": 543,
+        "saturdayTrips": 353,
+        "sundayTrips": 154
       },
       {
         "name": "174",
         "mode": "BUS",
-        "weekdayTrips": 146,
-        "saturdayTrips": 110,
-        "sundayTrips": 30
+        "weekdayTrips": 78,
+        "saturdayTrips": 70,
+        "sundayTrips": 20
       },
       {
         "name": "176",
         "mode": "BUS",
-        "weekdayTrips": 400,
-        "saturdayTrips": 198,
-        "sundayTrips": 72
+        "weekdayTrips": 212,
+        "saturdayTrips": 124,
+        "sundayTrips": 48
       },
       {
         "name": "177",
         "mode": "BUS",
-        "weekdayTrips": 76,
-        "saturdayTrips": 26,
-        "sundayTrips": 12
+        "weekdayTrips": 40,
+        "saturdayTrips": 16,
+        "sundayTrips": 8
       },
       {
         "name": "182",
         "mode": "BUS",
-        "weekdayTrips": 224,
-        "saturdayTrips": 134,
-        "sundayTrips": 48
+        "weekdayTrips": 120,
+        "saturdayTrips": 84,
+        "sundayTrips": 32
       },
       {
         "name": "201",
         "mode": "BUS",
-        "weekdayTrips": 336,
-        "saturdayTrips": 318,
-        "sundayTrips": 180
+        "weekdayTrips": 208,
+        "saturdayTrips": 192,
+        "sundayTrips": 120
       },
       {
         "name": "202",
         "mode": "BUS",
-        "weekdayTrips": 346,
-        "saturdayTrips": 348,
-        "sundayTrips": 186
+        "weekdayTrips": 214,
+        "saturdayTrips": 218,
+        "sundayTrips": 124
       },
       {
         "name": "203",
         "mode": "BUS",
-        "weekdayTrips": 431,
-        "saturdayTrips": 303,
-        "sundayTrips": 153
+        "weekdayTrips": 241,
+        "saturdayTrips": 185,
+        "sundayTrips": 102
       },
       {
         "name": "204",
         "mode": "BUS",
-        "weekdayTrips": 60,
-        "saturdayTrips": 32,
+        "weekdayTrips": 42,
+        "saturdayTrips": 24,
         "sundayTrips": 8
       },
       {
         "name": "205",
         "mode": "BUS",
-        "weekdayTrips": 428,
-        "saturdayTrips": 390,
-        "sundayTrips": 212
+        "weekdayTrips": 252,
+        "saturdayTrips": 240,
+        "sundayTrips": 144
       },
       {
         "name": "206",
         "mode": "BUS",
-        "weekdayTrips": 418,
-        "saturdayTrips": 382,
-        "sundayTrips": 222
+        "weekdayTrips": 266,
+        "saturdayTrips": 230,
+        "sundayTrips": 148
       },
       {
         "name": "207",
         "mode": "BUS",
-        "weekdayTrips": 107,
-        "saturdayTrips": 55,
-        "sundayTrips": 33
+        "weekdayTrips": 59,
+        "saturdayTrips": 33,
+        "sundayTrips": 22
       },
       {
         "name": "208",
         "mode": "BUS",
-        "weekdayTrips": 356,
-        "saturdayTrips": 264,
-        "sundayTrips": 114
+        "weekdayTrips": 200,
+        "saturdayTrips": 166,
+        "sundayTrips": 76
       },
       {
         "name": "209",
         "mode": "BUS",
-        "weekdayTrips": 530,
-        "saturdayTrips": 384,
-        "sundayTrips": 210
+        "weekdayTrips": 310,
+        "saturdayTrips": 240,
+        "sundayTrips": 140
       },
       {
         "name": "210",
         "mode": "BUS",
-        "weekdayTrips": 404,
-        "saturdayTrips": 366,
-        "sundayTrips": 168
+        "weekdayTrips": 244,
+        "saturdayTrips": 230,
+        "sundayTrips": 112
       },
       {
         "name": "211",
         "mode": "BUS",
-        "weekdayTrips": 112,
+        "weekdayTrips": 56,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "212",
         "mode": "BUS",
-        "weekdayTrips": 616,
-        "saturdayTrips": 622,
-        "sundayTrips": 384
+        "weekdayTrips": 372,
+        "saturdayTrips": 372,
+        "sundayTrips": 256
       },
       {
         "name": "213",
         "mode": "BUS",
-        "weekdayTrips": 332,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 180,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "214",
         "mode": "BUS",
-        "weekdayTrips": 180,
-        "saturdayTrips": 186,
-        "sundayTrips": 108
+        "weekdayTrips": 108,
+        "saturdayTrips": 112,
+        "sundayTrips": 72
       },
       {
         "name": "215",
         "mode": "BUS",
-        "weekdayTrips": 836,
-        "saturdayTrips": 622,
-        "sundayTrips": 294
+        "weekdayTrips": 476,
+        "saturdayTrips": 382,
+        "sundayTrips": 196
       },
       {
         "name": "216",
         "mode": "BUS",
-        "weekdayTrips": 80,
-        "saturdayTrips": 114,
-        "sundayTrips": 36
+        "weekdayTrips": 56,
+        "saturdayTrips": 72,
+        "sundayTrips": 24
       },
       {
         "name": "217",
         "mode": "BUS",
-        "weekdayTrips": 668,
-        "saturdayTrips": 386,
-        "sundayTrips": 228
+        "weekdayTrips": 372,
+        "saturdayTrips": 232,
+        "sundayTrips": 152
       },
       {
         "name": "218",
         "mode": "BUS",
-        "weekdayTrips": 262,
-        "saturdayTrips": 248,
-        "sundayTrips": 138
+        "weekdayTrips": 170,
+        "saturdayTrips": 150,
+        "sundayTrips": 92
       },
       {
         "name": "219",
         "mode": "BUS",
-        "weekdayTrips": 208,
+        "weekdayTrips": 104,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "220",
         "mode": "BUS",
-        "weekdayTrips": 744,
-        "saturdayTrips": 630,
-        "sundayTrips": 336
+        "weekdayTrips": 436,
+        "saturdayTrips": 394,
+        "sundayTrips": 224
       },
       {
         "name": "221",
         "mode": "BUS",
-        "weekdayTrips": 740,
-        "saturdayTrips": 612,
-        "sundayTrips": 336
+        "weekdayTrips": 440,
+        "saturdayTrips": 384,
+        "sundayTrips": 224
       },
       {
         "name": "222",
         "mode": "BUS",
-        "weekdayTrips": 164,
-        "saturdayTrips": 30,
+        "weekdayTrips": 82,
+        "saturdayTrips": 20,
         "sundayTrips": 0
       },
       {
         "name": "223",
         "mode": "BUS",
-        "weekdayTrips": 464,
-        "saturdayTrips": 308,
-        "sundayTrips": 120
+        "weekdayTrips": 252,
+        "saturdayTrips": 194,
+        "sundayTrips": 80
       },
       {
         "name": "224",
         "mode": "BUS",
-        "weekdayTrips": 250,
-        "saturdayTrips": 220,
-        "sundayTrips": 78
+        "weekdayTrips": 138,
+        "saturdayTrips": 138,
+        "sundayTrips": 52
       },
       {
         "name": "225",
         "mode": "BUS",
-        "weekdayTrips": 169,
-        "saturdayTrips": 99,
-        "sundayTrips": 27
+        "weekdayTrips": 89,
+        "saturdayTrips": 63,
+        "sundayTrips": 18
       },
       {
         "name": "226",
         "mode": "BUS",
-        "weekdayTrips": 330,
-        "saturdayTrips": 291,
-        "sundayTrips": 126
+        "weekdayTrips": 192,
+        "saturdayTrips": 188,
+        "sundayTrips": 90
       },
       {
         "name": "227",
         "mode": "BUS",
-        "weekdayTrips": 539,
-        "saturdayTrips": 360,
-        "sundayTrips": 152
+        "weekdayTrips": 323,
+        "saturdayTrips": 245,
+        "sundayTrips": 114
       },
       {
         "name": "228",
         "mode": "BUS",
-        "weekdayTrips": 370,
-        "saturdayTrips": 169,
-        "sundayTrips": 78
+        "weekdayTrips": 198,
+        "saturdayTrips": 104,
+        "sundayTrips": 52
       },
       {
         "name": "229",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 122,
-        "sundayTrips": 66
+        "weekdayTrips": 78,
+        "saturdayTrips": 74,
+        "sundayTrips": 44
       },
       {
         "name": "230",
         "mode": "BUS",
-        "weekdayTrips": 318,
-        "saturdayTrips": 182,
-        "sundayTrips": 84
+        "weekdayTrips": 186,
+        "saturdayTrips": 112,
+        "sundayTrips": 56
       },
       {
         "name": "231",
         "mode": "BUS",
-        "weekdayTrips": 229,
-        "saturdayTrips": 218,
-        "sundayTrips": 111
+        "weekdayTrips": 133,
+        "saturdayTrips": 133,
+        "sundayTrips": 74
       },
       {
         "name": "232",
         "mode": "BUS",
-        "weekdayTrips": 300,
-        "saturdayTrips": 212,
-        "sundayTrips": 84
+        "weekdayTrips": 164,
+        "saturdayTrips": 132,
+        "sundayTrips": 56
       },
       {
         "name": "233",
         "mode": "BUS",
-        "weekdayTrips": 490,
-        "saturdayTrips": 364,
-        "sundayTrips": 150
+        "weekdayTrips": 270,
+        "saturdayTrips": 226,
+        "sundayTrips": 100
       },
       {
         "name": "234",
         "mode": "BUS",
-        "weekdayTrips": 432,
-        "saturdayTrips": 236,
-        "sundayTrips": 138
+        "weekdayTrips": 240,
+        "saturdayTrips": 142,
+        "sundayTrips": 92
       },
       {
         "name": "235",
         "mode": "BUS",
-        "weekdayTrips": 172,
-        "saturdayTrips": 140,
-        "sundayTrips": 84
+        "weekdayTrips": 100,
+        "saturdayTrips": 84,
+        "sundayTrips": 56
       },
       {
         "name": "236",
         "mode": "BUS",
-        "weekdayTrips": 328,
+        "weekdayTrips": 164,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "237",
         "mode": "BUS",
-        "weekdayTrips": 240,
-        "saturdayTrips": 206,
-        "sundayTrips": 120
+        "weekdayTrips": 140,
+        "saturdayTrips": 124,
+        "sundayTrips": 80
       },
       {
         "name": "238",
         "mode": "BUS",
-        "weekdayTrips": 88,
+        "weekdayTrips": 52,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "239",
         "mode": "BUS",
-        "weekdayTrips": 80,
+        "weekdayTrips": 40,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "241",
         "mode": "BUS",
-        "weekdayTrips": 182,
-        "saturdayTrips": 196,
-        "sundayTrips": 114
+        "weekdayTrips": 110,
+        "saturdayTrips": 118,
+        "sundayTrips": 76
       },
       {
         "name": "242",
         "mode": "BUS",
-        "weekdayTrips": 244,
-        "saturdayTrips": 228,
-        "sundayTrips": 108
+        "weekdayTrips": 140,
+        "saturdayTrips": 140,
+        "sundayTrips": 72
       },
       {
         "name": "243",
         "mode": "BUS",
-        "weekdayTrips": 208,
-        "saturdayTrips": 108,
+        "weekdayTrips": 104,
+        "saturdayTrips": 72,
         "sundayTrips": 0
       },
       {
         "name": "261",
         "mode": "BUS",
-        "weekdayTrips": 204,
-        "saturdayTrips": 158,
-        "sundayTrips": 60
+        "weekdayTrips": 112,
+        "saturdayTrips": 100,
+        "sundayTrips": 40
       },
       {
         "name": "262",
         "mode": "BUS",
-        "weekdayTrips": 231,
-        "saturdayTrips": 153,
-        "sundayTrips": 57
+        "weekdayTrips": 125,
+        "saturdayTrips": 97,
+        "sundayTrips": 38
       },
       {
         "name": "263",
         "mode": "BUS",
-        "weekdayTrips": 352,
-        "saturdayTrips": 286,
-        "sundayTrips": 150
+        "weekdayTrips": 212,
+        "saturdayTrips": 178,
+        "sundayTrips": 100
       },
       {
         "name": "264",
         "mode": "BUS",
-        "weekdayTrips": 150,
-        "saturdayTrips": 130,
-        "sundayTrips": 42
+        "weekdayTrips": 82,
+        "saturdayTrips": 82,
+        "sundayTrips": 28
       },
       {
         "name": "267",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 70,
-        "sundayTrips": 42
+        "weekdayTrips": 74,
+        "saturdayTrips": 42,
+        "sundayTrips": 28
       },
       {
         "name": "268",
         "mode": "BUS",
-        "weekdayTrips": 968,
-        "saturdayTrips": 820,
-        "sundayTrips": 456
+        "weekdayTrips": 560,
+        "saturdayTrips": 496,
+        "sundayTrips": 304
       },
       {
         "name": "269",
         "mode": "BUS",
-        "weekdayTrips": 578,
-        "saturdayTrips": 402,
-        "sundayTrips": 234
+        "weekdayTrips": 342,
+        "saturdayTrips": 242,
+        "sundayTrips": 156
       },
       {
         "name": "270",
         "mode": "BUS",
-        "weekdayTrips": 238,
-        "saturdayTrips": 166,
-        "sundayTrips": 66
+        "weekdayTrips": 130,
+        "saturdayTrips": 104,
+        "sundayTrips": 44
       },
       {
         "name": "271",
         "mode": "BUS",
-        "weekdayTrips": 182,
-        "saturdayTrips": 142,
-        "sundayTrips": 42
+        "weekdayTrips": 98,
+        "saturdayTrips": 90,
+        "sundayTrips": 28
       },
       {
         "name": "272",
         "mode": "BUS",
-        "weekdayTrips": 170,
-        "saturdayTrips": 148,
-        "sundayTrips": 42
+        "weekdayTrips": 92,
+        "saturdayTrips": 94,
+        "sundayTrips": 28
       },
       {
         "name": "273",
         "mode": "BUS",
-        "weekdayTrips": 192,
-        "saturdayTrips": 134,
-        "sundayTrips": 48
+        "weekdayTrips": 104,
+        "saturdayTrips": 84,
+        "sundayTrips": 32
       },
       {
         "name": "274",
         "mode": "BUS",
-        "weekdayTrips": 206,
-        "saturdayTrips": 138,
-        "sundayTrips": 42
+        "weekdayTrips": 110,
+        "saturdayTrips": 88,
+        "sundayTrips": 28
       },
       {
         "name": "275",
@@ -19894,126 +19896,126 @@
       {
         "name": "276",
         "mode": "BUS",
-        "weekdayTrips": 228,
-        "saturdayTrips": 148,
-        "sundayTrips": 60
+        "weekdayTrips": 124,
+        "saturdayTrips": 92,
+        "sundayTrips": 40
       },
       {
         "name": "277",
         "mode": "BUS",
-        "weekdayTrips": 108,
-        "saturdayTrips": 126,
-        "sundayTrips": 36
+        "weekdayTrips": 60,
+        "saturdayTrips": 80,
+        "sundayTrips": 24
       },
       {
         "name": "278",
         "mode": "BUS",
-        "weekdayTrips": 171,
+        "weekdayTrips": 87,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "279",
         "mode": "BUS",
-        "weekdayTrips": 364,
-        "saturdayTrips": 216,
-        "sundayTrips": 126
+        "weekdayTrips": 224,
+        "saturdayTrips": 130,
+        "sundayTrips": 84
       },
       {
         "name": "280",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 118,
-        "sundayTrips": 42
+        "weekdayTrips": 74,
+        "saturdayTrips": 74,
+        "sundayTrips": 28
       },
       {
         "name": "281",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 289,
-        "sundayTrips": 168
+        "weekdayTrips": 212,
+        "saturdayTrips": 174,
+        "sundayTrips": 112
       },
       {
         "name": "282",
         "mode": "BUS",
-        "weekdayTrips": 290,
-        "saturdayTrips": 272,
-        "sundayTrips": 138
+        "weekdayTrips": 168,
+        "saturdayTrips": 166,
+        "sundayTrips": 92
       },
       {
         "name": "283",
         "mode": "BUS",
-        "weekdayTrips": 120,
-        "saturdayTrips": 90,
+        "weekdayTrips": 60,
+        "saturdayTrips": 60,
         "sundayTrips": 0
       },
       {
         "name": "284",
         "mode": "BUS",
-        "weekdayTrips": 140,
-        "saturdayTrips": 126,
-        "sundayTrips": 36
+        "weekdayTrips": 76,
+        "saturdayTrips": 80,
+        "sundayTrips": 24
       },
       {
         "name": "290",
         "mode": "BUS",
-        "weekdayTrips": 341,
-        "saturdayTrips": 337,
-        "sundayTrips": 195
+        "weekdayTrips": 203,
+        "saturdayTrips": 203,
+        "sundayTrips": 130
       },
       {
         "name": "295",
         "mode": "BUS",
-        "weekdayTrips": 162,
-        "saturdayTrips": 111,
-        "sundayTrips": 126
+        "weekdayTrips": 102,
+        "saturdayTrips": 60,
+        "sundayTrips": 84
       },
       {
         "name": "307",
         "mode": "BUS",
-        "weekdayTrips": 114,
-        "saturdayTrips": 77,
-        "sundayTrips": 30
+        "weekdayTrips": 62,
+        "saturdayTrips": 48,
+        "sundayTrips": 20
       },
       {
         "name": "308",
         "mode": "BUS",
-        "weekdayTrips": 118,
-        "saturdayTrips": 60,
-        "sundayTrips": 36
+        "weekdayTrips": 66,
+        "saturdayTrips": 36,
+        "sundayTrips": 24
       },
       {
         "name": "310",
         "mode": "BUS",
-        "weekdayTrips": 168,
-        "saturdayTrips": 54,
+        "weekdayTrips": 84,
+        "saturdayTrips": 36,
         "sundayTrips": 0
       },
       {
         "name": "311",
         "mode": "BUS",
-        "weekdayTrips": 68,
-        "saturdayTrips": 33,
+        "weekdayTrips": 34,
+        "saturdayTrips": 22,
         "sundayTrips": 0
       },
       {
         "name": "313",
         "mode": "BUS",
-        "weekdayTrips": 18,
-        "saturdayTrips": 6,
+        "weekdayTrips": 10,
+        "saturdayTrips": 4,
         "sundayTrips": 0
       },
       {
         "name": "315",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 74,
-        "sundayTrips": 30
+        "weekdayTrips": 72,
+        "saturdayTrips": 46,
+        "sundayTrips": 20
       },
       {
         "name": "330",
         "mode": "BUS",
-        "weekdayTrips": 256,
+        "weekdayTrips": 128,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
@@ -20034,16 +20036,16 @@
       {
         "name": "11",
         "mode": "TRAM",
-        "weekdayTrips": 1351,
-        "saturdayTrips": 1093,
-        "sundayTrips": 582
+        "weekdayTrips": 801,
+        "saturdayTrips": 664,
+        "sundayTrips": 388
       },
       {
         "name": "12",
         "mode": "TRAM",
-        "weekdayTrips": 1170,
-        "saturdayTrips": 1030,
-        "sundayTrips": 540
+        "weekdayTrips": 694,
+        "saturdayTrips": 630,
+        "sundayTrips": 360
       },
       {
         "name": "13",
@@ -20055,107 +20057,107 @@
       {
         "name": "14",
         "mode": "TRAM",
-        "weekdayTrips": 1246,
-        "saturdayTrips": 1159,
-        "sundayTrips": 630
+        "weekdayTrips": 778,
+        "saturdayTrips": 749,
+        "sundayTrips": 443
       },
       {
         "name": "15",
         "mode": "TRAM",
-        "weekdayTrips": 1004,
-        "saturdayTrips": 994,
-        "sundayTrips": 576
+        "weekdayTrips": 600,
+        "saturdayTrips": 600,
+        "sundayTrips": 384
       },
       {
         "name": "17",
         "mode": "TRAM",
-        "weekdayTrips": 1181,
-        "saturdayTrips": 1173,
-        "sundayTrips": 665
+        "weekdayTrips": 727,
+        "saturdayTrips": 709,
+        "sundayTrips": 443
       },
       {
         "name": "2",
         "mode": "TRAM",
-        "weekdayTrips": 1115,
-        "saturdayTrips": 1018,
-        "sundayTrips": 530
+        "weekdayTrips": 613,
+        "saturdayTrips": 541,
+        "sundayTrips": 300
       },
       {
         "name": "3",
         "mode": "TRAM",
-        "weekdayTrips": 556,
+        "weekdayTrips": 296,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "31",
         "mode": "TRAM",
-        "weekdayTrips": 72,
-        "saturdayTrips": 78,
-        "sundayTrips": 42
+        "weekdayTrips": 42,
+        "saturdayTrips": 46,
+        "sundayTrips": 28
       },
       {
         "name": "32",
         "mode": "TRAM",
-        "weekdayTrips": 82,
-        "saturdayTrips": 88,
-        "sundayTrips": 48
+        "weekdayTrips": 48,
+        "saturdayTrips": 52,
+        "sundayTrips": 32
       },
       {
         "name": "33",
         "mode": "TRAM",
-        "weekdayTrips": 72,
-        "saturdayTrips": 78,
-        "sundayTrips": 42
+        "weekdayTrips": 42,
+        "saturdayTrips": 46,
+        "sundayTrips": 28
       },
       {
         "name": "34",
         "mode": "TRAM",
-        "weekdayTrips": 62,
-        "saturdayTrips": 68,
-        "sundayTrips": 36
+        "weekdayTrips": 36,
+        "saturdayTrips": 40,
+        "sundayTrips": 24
       },
       {
         "name": "4",
         "mode": "TRAM",
-        "weekdayTrips": 1038,
-        "saturdayTrips": 943,
-        "sundayTrips": 528
+        "weekdayTrips": 626,
+        "saturdayTrips": 575,
+        "sundayTrips": 352
       },
       {
         "name": "5",
         "mode": "TRAM",
-        "weekdayTrips": 1038,
-        "saturdayTrips": 952,
-        "sundayTrips": 529
+        "weekdayTrips": 604,
+        "saturdayTrips": 571,
+        "sundayTrips": 350
       },
       {
         "name": "6",
         "mode": "TRAM",
-        "weekdayTrips": 1335,
-        "saturdayTrips": 1188,
-        "sundayTrips": 641
+        "weekdayTrips": 753,
+        "saturdayTrips": 681,
+        "sundayTrips": 402
       },
       {
         "name": "7",
         "mode": "TRAM",
-        "weekdayTrips": 1090,
-        "saturdayTrips": 930,
-        "sundayTrips": 504
+        "weekdayTrips": 674,
+        "saturdayTrips": 570,
+        "sundayTrips": 336
       },
       {
         "name": "8",
         "mode": "TRAM",
-        "weekdayTrips": 567,
+        "weekdayTrips": 295,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "9",
         "mode": "TRAM",
-        "weekdayTrips": 1086,
-        "saturdayTrips": 1114,
-        "sundayTrips": 608
+        "weekdayTrips": 634,
+        "saturdayTrips": 658,
+        "sundayTrips": 400
       }
     ]
   },
@@ -20163,22 +20165,22 @@
     {
       "name": "295",
       "mode": "BUS",
-      "outboundTrips": 148,
+      "outboundTrips": 88,
       "inboundTrips": 14,
-      "ratio": 0.09
+      "ratio": 0.16
     },
     {
       "name": "144",
       "mode": "BUS",
-      "outboundTrips": 4,
-      "inboundTrips": 8,
+      "outboundTrips": 2,
+      "inboundTrips": 4,
       "ratio": 0.5
     },
     {
       "name": "330",
       "mode": "BUS",
-      "outboundTrips": 144,
-      "inboundTrips": 112,
+      "outboundTrips": 72,
+      "inboundTrips": 56,
       "ratio": 0.78
     }
   ],
@@ -21243,52 +21245,6 @@
       ]
     },
     {
-      "stopName": "Trg bana J. Jelačića",
-      "stopKey": "45.81286,15.97726",
-      "lat": 45.812858,
-      "lon": 15.977265,
-      "routeCount": 13,
-      "routes": [
-        "1",
-        "6",
-        "8",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "17",
-        "31",
-        "32",
-        "33",
-        "34"
-      ],
-      "avgTransferWaitMin": 5.9,
-      "bestHour": 13,
-      "bestHourWaitMin": 4.8,
-      "hourlyWait": [
-        8.1,
-        7.6,
-        6.6,
-        5.4,
-        5.2,
-        5.2,
-        5.1,
-        4.9,
-        4.8,
-        4.9,
-        4.9,
-        4.9,
-        5.0,
-        4.9,
-        5.5,
-        5.9,
-        7.0,
-        7.1,
-        9.5
-      ]
-    },
-    {
       "stopName": "Park Maksimir",
       "stopKey": "45.81862,16.01215",
       "lat": 45.81862,
@@ -21427,52 +21383,6 @@
       ]
     },
     {
-      "stopName": "Glavni kolodvor",
-      "stopKey": "45.80524,15.97846",
-      "lat": 45.805235,
-      "lon": 15.97846,
-      "routeCount": 13,
-      "routes": [
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "8",
-        "9",
-        "13",
-        "14",
-        "15",
-        "31",
-        "33",
-        "34"
-      ],
-      "avgTransferWaitMin": 6.7,
-      "bestHour": 10,
-      "bestHourWaitMin": 5.3,
-      "hourlyWait": [
-        8.4,
-        7.6,
-        6.8,
-        5.5,
-        5.5,
-        5.3,
-        5.4,
-        5.4,
-        5.3,
-        5.5,
-        5.4,
-        5.6,
-        5.4,
-        5.4,
-        5.7,
-        7.6,
-        8.4,
-        8.7,
-        14.0
-      ]
-    },
-    {
       "stopName": "Kvaternikov trg",
       "stopKey": "45.81528,15.99763",
       "lat": 45.815284,
@@ -21608,6 +21518,98 @@
         7.1,
         7.1,
         12.8
+      ]
+    },
+    {
+      "stopName": "Jordanovac",
+      "stopKey": "45.81762,16.00817",
+      "lat": 45.817623,
+      "lon": 16.008165,
+      "routeCount": 13,
+      "routes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "31",
+        "33",
+        "34"
+      ],
+      "avgTransferWaitMin": 7.0,
+      "bestHour": 12,
+      "bestHourWaitMin": 4.9,
+      "hourlyWait": [
+        9.2,
+        8.0,
+        6.2,
+        5.6,
+        5.3,
+        5.3,
+        5.1,
+        4.9,
+        5.0,
+        5.1,
+        5.2,
+        5.0,
+        5.1,
+        5.0,
+        15.4,
+        8.5,
+        7.1,
+        7.1,
+        15.5
+      ]
+    },
+    {
+      "stopName": "Muzej suv.umjetnosti",
+      "stopKey": "45.77861,15.98067",
+      "lat": 45.778613,
+      "lon": 15.980671,
+      "routeCount": 13,
+      "routes": [
+        "166",
+        "219",
+        "220",
+        "221",
+        "222",
+        "229",
+        "241",
+        "242",
+        "268",
+        "310",
+        "311",
+        "313",
+        "330"
+      ],
+      "avgTransferWaitMin": 14.2,
+      "bestHour": 9,
+      "bestHourWaitMin": 9.5,
+      "hourlyWait": [
+        13.3,
+        15.5,
+        16.0,
+        14.1,
+        9.5,
+        11.6,
+        18.8,
+        11.7,
+        13.6,
+        19.0,
+        13.4,
+        14.9,
+        13.8,
+        17.6,
+        10.0,
+        14.1,
+        16.0,
+        10.7,
+        16.7
       ]
     }
   ]

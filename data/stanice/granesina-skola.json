@@ -22,12 +22,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     }
   ],
   "neighbors": [

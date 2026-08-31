@@ -17,7 +17,7 @@
     "280"
   ],
   "firstDeparture": "4:47",
-  "lastDeparture": "0:26",
+  "lastDeparture": "0:51",
   "directionGroups": 2,
   "lines": [
     {
@@ -49,9 +49,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 51.1
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        28,
+        33
+      ],
+      "allDayHeadwayMin": 42.9
     },
     {
       "broj": "267",

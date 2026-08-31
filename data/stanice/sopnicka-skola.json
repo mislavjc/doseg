@@ -11,20 +11,20 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "0:00",
-  "lastDeparture": "0:00",
+  "firstDeparture": "5:25",
+  "lastDeparture": "16:30",
   "directionGroups": 1,
   "lines": [
     {
       "broj": "275",
       "mode": "bus",
       "isNight": false,
-      "headsign": "Sopnica-škola",
+      "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
     }
   ],
   "neighbors": [
@@ -50,20 +50,36 @@
         "mode": "bus",
         "shape": [
           [
-            16.10717,
-            45.82609
-          ],
-          [
-            16.10554,
-            45.82781
-          ],
-          [
-            16.09697,
-            45.82454
-          ],
-          [
             16.09298,
             45.82184
+          ],
+          [
+            16.09571,
+            45.81928
+          ],
+          [
+            16.09918,
+            45.81705
+          ],
+          [
+            16.10196,
+            45.81768
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10776,
+            45.82749
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       }

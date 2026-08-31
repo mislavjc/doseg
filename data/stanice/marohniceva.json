@@ -12,8 +12,8 @@
     "107",
     "108"
   ],
-  "firstDeparture": "4:56",
-  "lastDeparture": "23:10",
+  "firstDeparture": "5:00",
+  "lastDeparture": "23:25",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 23.0,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        18,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "108",

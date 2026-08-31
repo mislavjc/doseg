@@ -21,7 +21,6 @@
           "lon": 15.93669,
           "offsetMin": 0,
           "tramInterchange": [
-            "1",
             "3",
             "9",
             "12"
@@ -31,7 +30,7 @@
           "name": "Fallerovo",
           "lat": 45.79409,
           "lon": 15.93546,
-          "offsetMin": 2,
+          "offsetMin": 1,
           "tramInterchange": []
         },
         {
@@ -52,56 +51,56 @@
           "name": "Rudeška",
           "lat": 45.79558,
           "lon": 15.91852,
-          "offsetMin": 7,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
           "name": "Zagrebačka",
           "lat": 45.79645,
           "lon": 15.9073,
-          "offsetMin": 9,
+          "offsetMin": 8,
           "tramInterchange": []
         },
         {
           "name": "Gustava Krkleca",
           "lat": 45.79793,
           "lon": 15.90057,
-          "offsetMin": 12,
+          "offsetMin": 10,
           "tramInterchange": []
         },
         {
           "name": "Antuna Šoljana",
           "lat": 45.80193,
           "lon": 15.90202,
-          "offsetMin": 14,
+          "offsetMin": 11,
           "tramInterchange": []
         },
         {
           "name": "Tržnica Špansko",
           "lat": 45.80208,
           "lon": 15.89699,
-          "offsetMin": 15,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Matije Vlačića",
           "lat": 45.8022,
           "lon": 15.8932,
-          "offsetMin": 16,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Špansko",
           "lat": 45.80234,
           "lon": 15.88984,
-          "offsetMin": 17,
+          "offsetMin": 14,
           "tramInterchange": []
         },
         {
           "name": "Bol. Jankomir",
           "lat": 45.806,
           "lon": 15.87508,
-          "offsetMin": 19,
+          "offsetMin": 16,
           "tramInterchange": []
         }
       ],
@@ -411,7 +410,7 @@
           "name": "Antuna Šoljana",
           "lat": 45.80131,
           "lon": 15.90299,
-          "offsetMin": 5,
+          "offsetMin": 6,
           "tramInterchange": []
         },
         {
@@ -425,7 +424,7 @@
           "name": "Slavenskog",
           "lat": 45.79655,
           "lon": 15.90133,
-          "offsetMin": 8,
+          "offsetMin": 9,
           "tramInterchange": []
         },
         {
@@ -446,23 +445,22 @@
           "name": "Hrvatskog sokola",
           "lat": 45.79472,
           "lon": 15.92402,
-          "offsetMin": 13,
+          "offsetMin": 12,
           "tramInterchange": []
         },
         {
           "name": "Dragutina Golika",
           "lat": 45.79401,
           "lon": 15.93264,
-          "offsetMin": 15,
+          "offsetMin": 13,
           "tramInterchange": []
         },
         {
           "name": "Ljubljanica",
           "lat": 45.79706,
           "lon": 15.93697,
-          "offsetMin": 19,
+          "offsetMin": 15,
           "tramInterchange": [
-            "1",
             "3",
             "9",
             "12"
@@ -806,24 +804,24 @@
     0,
     3,
     9,
+    11,
     10,
-    10,
-    9,
-    7,
-    8,
-    7,
-    8,
+    12,
     9,
     10,
     10,
     10,
+    8,
+    11,
+    12,
+    11,
+    11,
+    11,
+    10,
     9,
-    7,
-    8,
-    7,
-    8,
-    6,
-    4
+    9,
+    10,
+    7
   ],
   "timetable": {
     "radniDan": [
@@ -831,186 +829,203 @@
         {
           "hour": 4,
           "minutes": [
-            50
+            55
           ]
         },
         {
           "hour": 5,
           "minutes": [
-            5,
-            20,
-            35,
-            47
+            10,
+            25,
+            40,
+            55
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            12,
-            24,
-            36,
-            48
+            10,
+            22,
+            33,
+            44,
+            55
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            12,
-            24,
-            36,
-            48
+            6,
+            17,
+            28,
+            38,
+            50
           ]
         },
         {
           "hour": 8,
           "minutes": [
             0,
-            12,
-            24,
-            40,
-            56
+            11,
+            22,
+            33,
+            44,
+            54
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            12,
-            28,
-            44
+            5,
+            16,
+            24,
+            36,
+            49
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            0,
-            16,
-            32,
-            48
+            2,
+            14,
+            26,
+            39,
+            52
           ]
         },
         {
           "hour": 11,
           "minutes": [
             4,
-            20,
-            36,
-            52
+            17,
+            29,
+            42,
+            54
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            8,
-            24,
-            40,
+            6,
+            19,
+            32,
+            44,
             56
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            12,
-            28,
-            40,
-            52
+            9,
+            22,
+            35,
+            48
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
+            1,
+            13,
+            26,
+            39,
             52
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
-            52
+            2,
+            13,
+            24,
+            35,
+            46,
+            56
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
-            52
+            8,
+            15,
+            26,
+            37,
+            45,
+            58
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            4,
-            16,
-            30,
-            43,
-            59
+            10,
+            22,
+            32,
+            42,
+            52
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            15,
-            30,
-            45
+            3,
+            14,
+            25,
+            36,
+            46,
+            55
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            0,
-            16,
+            7,
+            19,
             32,
-            48
+            45,
+            57
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            4,
-            20,
-            36,
-            52
+            10,
+            22,
+            35,
+            47
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            8,
-            24,
-            40,
-            56
+            0,
+            12,
+            25,
+            37,
+            50
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            12,
-            28,
-            44
+            2,
+            15,
+            27,
+            40,
+            52
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            0,
-            25
+            5,
+            20,
+            35,
+            50
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            0,
+            10,
             50
           ]
         }
@@ -1027,179 +1042,196 @@
           "hour": 5,
           "minutes": [
             0,
-            12,
-            24,
-            36,
-            48
+            15,
+            30,
+            41,
+            52
           ]
         },
         {
           "hour": 6,
           "minutes": [
-            0,
-            12,
-            24,
+            3,
+            14,
+            25,
             36,
-            48
+            47,
+            58
           ]
         },
         {
           "hour": 7,
           "minutes": [
-            0,
-            12,
-            24,
-            36,
-            48
+            8,
+            20,
+            30,
+            41,
+            52
           ]
         },
         {
           "hour": 8,
           "minutes": [
-            0,
-            16,
-            32,
-            48
+            3,
+            14,
+            24,
+            35,
+            46,
+            58
           ]
         },
         {
           "hour": 9,
           "minutes": [
-            4,
-            20,
+            10,
+            23,
             36,
-            52
+            48
           ]
         },
         {
           "hour": 10,
           "minutes": [
-            8,
-            24,
-            40,
-            56
+            0,
+            13,
+            26,
+            38,
+            51
           ]
         },
         {
           "hour": 11,
           "minutes": [
-            12,
+            3,
+            16,
             28,
-            44
+            40,
+            53
           ]
         },
         {
           "hour": 12,
           "minutes": [
-            0,
-            16,
-            32,
-            48
+            6,
+            18,
+            30,
+            43,
+            56
           ]
         },
         {
           "hour": 13,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
-            52
+            9,
+            22,
+            35,
+            47
           ]
         },
         {
           "hour": 14,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
-            52
+            0,
+            11,
+            22,
+            32,
+            43,
+            54
           ]
         },
         {
           "hour": 15,
           "minutes": [
-            4,
+            5,
             16,
-            28,
-            40,
-            52
+            27,
+            38,
+            48,
+            59
           ]
         },
         {
           "hour": 16,
           "minutes": [
-            4,
-            16,
-            28,
-            40,
+            10,
+            20,
+            31,
+            42,
             52
           ]
         },
         {
           "hour": 17,
           "minutes": [
-            4,
-            16,
-            32,
-            48
+            2,
+            12,
+            22,
+            33,
+            44,
+            55
           ]
         },
         {
           "hour": 18,
           "minutes": [
-            4,
-            20,
-            36,
-            52
+            6,
+            17,
+            27,
+            38,
+            49
           ]
         },
         {
           "hour": 19,
           "minutes": [
-            8,
-            24,
-            40,
+            5,
+            18,
+            31,
+            43,
             56
           ]
         },
         {
           "hour": 20,
           "minutes": [
-            12,
-            28,
-            44
+            9,
+            21,
+            34,
+            46,
+            59
           ]
         },
         {
           "hour": 21,
           "minutes": [
-            0,
-            16,
-            32,
-            48
+            11,
+            24,
+            36,
+            49
           ]
         },
         {
           "hour": 22,
           "minutes": [
-            4,
-            20,
-            36
+            1,
+            14,
+            26,
+            40,
+            55
           ]
         },
         {
           "hour": 23,
           "minutes": [
-            5,
-            30
+            10,
+            30,
+            50
           ]
         },
         {
           "hour": 24,
           "minutes": [
-            25
+            10
           ]
         }
       ]
@@ -1865,12 +1897,6 @@
   "related": {
     "sharedTerminal": [
       {
-        "broj": "1",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Ljubljanica"
-      },
-      {
         "broj": "3",
         "mode": "tram",
         "isNight": false,
@@ -1930,12 +1956,12 @@
     "lon": 15.90057
   },
   "stats": {
-    "dailyDepartures": 162,
-    "firstDeparture": "04:50",
+    "dailyDepartures": 196,
+    "firstDeparture": "04:55",
     "lastDeparture": "24:50",
-    "peakHeadwayMin": 12.9,
-    "avgHeadwayMin": 15.0,
-    "travelTimeMin": 19.0,
+    "peakHeadwayMin": 10.8,
+    "avgHeadwayMin": 12.3,
+    "travelTimeMin": 15.7,
     "distanceKm": 6.2
   }
 }

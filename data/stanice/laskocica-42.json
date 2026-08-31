@@ -12,7 +12,7 @@
     "229"
   ],
   "firstDeparture": "4:58",
-  "lastDeparture": "23:13",
+  "lastDeparture": "23:18",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,9 +22,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 80.0,
+      "peakHeadwayMin": 85.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 84.2
+      "allDayHeadwayMin": 84.6
     }
   ],
   "neighbors": [

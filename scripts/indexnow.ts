@@ -21,6 +21,7 @@ const KEY = "761c62e2daf49843b64800df4f51c7c5"
 // Static routes, mirrored from app/sitemap.ts.
 const STATIC_PATHS = [
   "",
+  "/karta",
   "/o-projektu",
   "/statistika",
   "/statistika/podaci",

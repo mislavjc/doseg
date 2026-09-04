@@ -279,10 +279,14 @@ export function GiniSection({
             <GiniCards giniData={giniData} />
             <div className="mt-12 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
               <GiniInterpretation giniData={giniData} />
+              {/* The previous copy here benchmarked against "most European
+                  cities: 0,25 to 0,35" with no source behind it. Removed rather
+                  than cited: the number could not be traced, and this page is
+                  pitched to fact-checking desks. What is left is definitional. */}
               <p className="mt-6">
-                Za usporedbu: većina europskih gradova s dobrim javnim prijevozom
-                ima Gini koeficijent između 0,25 i 0,35. Više vrijednosti ukazuju
-                da je dobar javni prijevoz koncentriran samo u malom dijelu grada.
+                Gini ide od 0 (svi kvartovi imaju jednak doseg) do 1 (sav doseg
+                je u jednom kvartu). Ovdje mjeri raspodjelu dosega javnim
+                prijevozom, ne prihoda.
               </p>
             </div>
           </div>

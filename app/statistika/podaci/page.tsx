@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { inter } from "@/app/fonts/inter"
 import { JsonLd } from "@/app/statistika/editorial/json-ld"
 import { PodaciDashboard } from "../podaci-dashboard"
 
@@ -47,9 +48,9 @@ const datasetJsonLd = {
 
 export default function PodaciPage() {
   return (
-    <>
+    <div className={inter.variable}>
       <JsonLd data={datasetJsonLd} />
       <PodaciDashboard />
-    </>
+    </div>
   )
 }

@@ -17,15 +17,19 @@ export function Hero({
 }) {
   return (
     <header className="relative flex h-[340px] flex-col items-center overflow-clip bg-white pt-14 sm:h-[400px]">
-      {/* Dither map (decorative; aria-hidden — nav carries the page identity) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/hero-map.png"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover"
-        style={{ objectPosition: mapPosition }}
-      />
+      {/* Dither map (decorative; aria-hidden — nav carries the page identity).
+          The <picture> wrapper keeps React from emitting a preload hint for
+          it: the hint rides along in every prefetched RSC payload, so without
+          it each line/stop/kvart page fetched this 112K map it never shows. */}
+      <picture>
+        <img
+          src="/hero-map.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: mapPosition }}
+        />
+      </picture>
       {/* Pixel-cloud fade to white */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

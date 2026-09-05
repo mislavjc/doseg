@@ -74,8 +74,14 @@
   --ink-ghost: #c9cdd3; /* departed times / past rows */
 }
 
+/* Not inline: `font-sans` and raw var(--font-sans) both read the variable, so
+   a route that opts into Inter (app/fonts/inter.ts) overrides it on a wrapper
+   and everything beneath, SVG text included, follows. Heros elsewhere. */
+@theme {
+  --font-sans: var(--font-heros), "Helvetica Neue", Arial, sans-serif;
+}
+
 @theme inline {
-  --font-sans: var(--font-sans);
   /* ── Statistika editorial system ── */
   --font-heros: var(--font-heros), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, "SF Mono", monospace;

@@ -134,6 +134,7 @@ export function FooterMapBand() {
         src="/footer-map.png"
         alt=""
         aria-hidden
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover"
         style={{ objectPosition: "center 66%" }}
       />

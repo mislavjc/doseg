@@ -1,0 +1,167 @@
+[
+  {
+    "date": "Mon, 15 Jun 2026",
+    "title": "Izmjene na noćnim tramvajskim linijama",
+    "link": "https://www.zet.hr/default.aspx?id=9564",
+    "lines": [
+      "31",
+      "32",
+      "33",
+      "34"
+    ],
+    "category": "ostalo"
+  },
+  {
+    "date": "Mon, 15 Jun 2026",
+    "title": "Izmješteno stajalište na trasi linije 226",
+    "link": "https://www.zet.hr/default.aspx?id=10048",
+    "lines": [
+      "226"
+    ],
+    "category": "stajalište"
+  },
+  {
+    "date": "Fri, 12 Jun 2026",
+    "title": "Obustava tramvajskog prometa prema Borongaju",
+    "link": "https://www.zet.hr/default.aspx?id=10039",
+    "lines": [
+      "9",
+      "17",
+      "13",
+      "32",
+      "602"
+    ],
+    "category": "skraćena"
+  },
+  {
+    "date": "Fri, 12 Jun 2026",
+    "title": "Tramvaji od ponedjeljka opet voze Branimirovom ulicom",
+    "link": "https://www.zet.hr/default.aspx?id=10047",
+    "lines": [
+      "2",
+      "6",
+      "8"
+    ],
+    "category": "nova"
+  },
+  {
+    "date": "Fri, 12 Jun 2026",
+    "title": "Stajalište „SD Stjepan Radić“ izvan funkcije",
+    "link": "https://www.zet.hr/default.aspx?id=10043",
+    "lines": [
+      "109"
+    ],
+    "category": "stajalište"
+  },
+  {
+    "date": "Thu, 11 Jun 2026",
+    "title": "Žičara Sljeme neće prometovati od 15. do 17. lipnja",
+    "link": "https://www.zet.hr/default.aspx?id=7866",
+    "lines": [
+      "140"
+    ],
+    "category": "ostalo"
+  },
+  {
+    "date": "Thu, 11 Jun 2026",
+    "title": "Radovi uvjetuju izmjene na linijama 275, 277, 279, 282 i 284",
+    "link": "https://www.zet.hr/default.aspx?id=10042",
+    "lines": [
+      "275",
+      "277",
+      "279",
+      "282",
+      "284"
+    ],
+    "category": "skraćena"
+  },
+  {
+    "date": "Mon, 08 Jun 2026",
+    "title": "Linija 107 prometuje preko Savske ceste",
+    "link": "https://www.zet.hr/default.aspx?id=10027",
+    "lines": [
+      "107"
+    ],
+    "category": "trasa"
+  },
+  {
+    "date": "Mon, 08 Jun 2026",
+    "title": "Izmješteno stajalište na trasi linije 269",
+    "link": "https://www.zet.hr/default.aspx?id=10034",
+    "lines": [
+      "269"
+    ],
+    "category": "stajalište"
+  },
+  {
+    "date": "Fri, 15 May 2026",
+    "title": "Linija 233 prometuje skraćenom trasom",
+    "link": "https://www.zet.hr/default.aspx?id=10000",
+    "lines": [
+      "233"
+    ],
+    "category": "skraćena"
+  },
+  {
+    "date": "Thu, 30 Apr 2026",
+    "title": "Linija 270 mijenja trasu, uvodi se linija 270A",
+    "link": "https://www.zet.hr/default.aspx?id=9977",
+    "lines": [
+      "270"
+    ],
+    "category": "trasa"
+  },
+  {
+    "date": "Fri, 17 Apr 2026",
+    "title": "Izmješteno stajalište „Trešnjevački trg sjever“",
+    "link": "https://www.zet.hr/default.aspx?id=9968",
+    "lines": [],
+    "category": "stajalište"
+  },
+  {
+    "date": "Fri, 10 Apr 2026",
+    "title": "Radovi uz izmjenu trase linije 160",
+    "link": "https://www.zet.hr/default.aspx?id=9959",
+    "lines": [
+      "160"
+    ],
+    "category": "trasa"
+  },
+  {
+    "date": "Tue, 07 Apr 2026",
+    "title": "Privremeno izmještanje autobusnog stajališta \"Bukovačka 276\"",
+    "link": "https://www.zet.hr/default.aspx?id=9952",
+    "lines": [
+      "203"
+    ],
+    "category": "stajalište"
+  },
+  {
+    "date": "Mon, 09 Mar 2026",
+    "title": "Izmjena trasa linija 295, 307 i 308",
+    "link": "https://www.zet.hr/default.aspx?id=9933",
+    "lines": [
+      "295",
+      "307",
+      "308"
+    ],
+    "category": "trasa"
+  },
+  {
+    "date": "Thu, 20 Feb 2025",
+    "title": "Stajalište \"Trg Republike Hrvatske\" ispred Mimare",
+    "link": "https://www.zet.hr/default.aspx?id=9592",
+    "lines": [],
+    "category": "stajalište"
+  },
+  {
+    "date": "Fri, 10 Mar 2023",
+    "title": "Linije 139 i 141 voze obilazno zbog radova",
+    "link": "https://www.zet.hr/default.aspx?id=8047",
+    "lines": [
+      "139",
+      "141"
+    ],
+    "category": "trasa"
+  }
+]

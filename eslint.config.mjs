@@ -21,6 +21,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     ".claude/**",
     ".expect/**",
+    // Archived experiments, kept as the evidence behind a decision rather than
+    // as maintained code. Their value is being exactly what was run, so linting
+    // them would only pressure us to edit the record.
+    "scripts/proto/**",
   ]),
 ]);
 

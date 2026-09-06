@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Inter, Geist_Mono } from "next/font/google"
+import { Geist_Mono } from "next/font/google"
 import localFont from "next/font/local"
 
 import { JsonLd } from "@/app/statistika/editorial/json-ld"
@@ -8,11 +8,6 @@ import { Agentation } from "@/components/agentation"
 import SwrProvider from "@/lib/swr-config"
 
 import "./globals.css"
-
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-sans",
-})
 
 // Geist Mono — labels, eyebrows, nav, data cells (statistika editorial system).
 const geistMono = Geist_Mono({
@@ -84,7 +79,7 @@ export default function RootLayout({
   return (
     <html
       lang="hr"
-      className={`antialiased ${inter.variable} ${geistMono.variable} ${heros.variable} font-sans`}
+      className={`antialiased ${geistMono.variable} ${heros.variable} font-sans`}
     >
       <body>
         <JsonLd data={websiteJsonLd} />

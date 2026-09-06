@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { isDarkScore, scoreColor, scoreTextColor } from "@/lib/score-color"
 import { cn } from "@/lib/utils"
+import { MountWhenNear } from "@/components/mount-when-near"
 import type { PovezanostData } from "./facts"
 import { Eyebrow, MonoLabel, Section } from "./primitives"
 
@@ -21,7 +22,8 @@ const BAR_W = 84 // px, the "raspon iznutra" column (w-21)
 const BAR_MAX_HALF = 38
 const BAR_CENTER = BAR_W / 2
 
-// Heavy + client-only — lazy-load, baked render as the instant fallback.
+// Heavy + client-only: the chunk is fetched only once the section is on
+// screen (MountWhenNear); the baked render is the same picture until then.
 const TerrainView = dynamic(
   () => import("./terrain-view").then((m) => m.TerrainView),
   { ssr: false, loading: () => <BakedTerrain /> }
@@ -179,7 +181,9 @@ export function Povezanost({ data }: { data: PovezanostData }) {
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-12">
         <div className="flex flex-col gap-5 md:w-[336px] md:shrink-0">
           <Eyebrow>povezanost · {data.total} kvartova</Eyebrow>
-          <TerrainView hovered={hovered} onHover={setHovered} />
+          <MountWhenNear fallback={<BakedTerrain />} rootMargin="0px">
+            <TerrainView hovered={hovered} onHover={setHovered} />
+          </MountWhenNear>
           <Stats data={data} />
         </div>
         <RankingBoard rows={data.rows} hovered={hovered} setHovered={setHovered} />

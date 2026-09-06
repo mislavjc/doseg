@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import { useState } from "react"
 
 import { MonoLabel } from "@/app/statistika/editorial/primitives"
+import { MountWhenNear } from "@/components/mount-when-near"
 import type { KvartRides } from "@/lib/bajs-terrain"
 import { scoreColor, scoreTextColor } from "@/lib/score-color"
 
@@ -99,12 +100,14 @@ export function KvartTerrain({
   return (
     <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
       <div className="flex flex-col gap-4 md:w-[400px] md:shrink-0">
-        <TerrainView
-          hovered={hovered}
-          onHover={setHovered}
-          values={values}
-          ariaLabel="3D karta zagrebačkih kvartova, visina označava vožnje javnim biciklom"
-        />
+        <MountWhenNear fallback={<div className="w-full [aspect-ratio:1300/980]" />}>
+          <TerrainView
+            hovered={hovered}
+            onHover={setHovered}
+            values={values}
+            ariaLabel="3D karta zagrebačkih kvartova, visina označava vožnje javnim biciklom"
+          />
+        </MountWhenNear>
         <MonoLabel className="text-ink">
           {lit
             ? `${lit.name} · ${RIDES.format(lit.rides)} vožnji, ${Math.round(lit.share * 100)}% grada`

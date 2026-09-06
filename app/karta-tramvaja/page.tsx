@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+
+import { inter } from "@/app/fonts/inter"
 import { TramMap } from "./tram-map"
 
 export const metadata: Metadata = {
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function KartaTramvajaPage() {
   return (
-    <main id="main-content" className="h-svh">
+    <main id="main-content" className={`h-svh ${inter.variable}`}>
       <TramMap />
     </main>
   )

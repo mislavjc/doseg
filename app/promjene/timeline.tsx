@@ -3,6 +3,7 @@
 import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
+import { MountWhenNear } from "@/components/mount-when-near"
 import { IconCircleBanSign } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import {
   INK, MUTE, FAINT, OLD, BLUE, HAIR, DOT, HEROS, MONO,
@@ -12,8 +13,10 @@ import {
   num, dateLabel, monthLabel, expandStop, TAG, TALLY, norm,
 } from "./lib"
 
-// Code-split maplibre-gl out of the initial /promjene bundle; the diff map sits
-// below the fold and LazyDiffMap still defers WebGL init until it scrolls in.
+// Code-split maplibre-gl out of the initial /promjene bundle; MountWhenNear
+// holds the chunk fetch until the map is 200px from the viewport (the first
+// one sits just under the fold on a phone), and LazyDiffMap still defers
+// WebGL init until it scrolls in.
 const LazyDiffMap = dynamic(
   () => import("./diff-map").then((m) => m.LazyDiffMap),
   {
@@ -125,7 +128,9 @@ function LineMap({ geom, stat, label, title }: { geom: Geom; stat: Stat; label?:
         </div>
       )}
       <div style={{ width: "100%", maxWidth: 1240, marginTop: label ? 12 : 26, overflow: "hidden" }}>
-        <LazyDiffMap oldShape={geom.old.shape} newShape={geom.new.shape} shared={geom.shared} newTip={geom.newTip} oldTip={geom.oldTip} allStops={geom.newStops} added={geom.addedStops} removed={geom.removedStops} mode={geom.mode} change={geom.change} stopConnected={geom.stopConnected} label={aria} />
+        <MountWhenNear fallback={<div style={{ width: "100%", height: "clamp(360px, 44vw, 580px)" }} />} rootMargin="200px">
+          <LazyDiffMap oldShape={geom.old.shape} newShape={geom.new.shape} shared={geom.shared} newTip={geom.newTip} oldTip={geom.oldTip} allStops={geom.newStops} added={geom.addedStops} removed={geom.removedStops} mode={geom.mode} change={geom.change} stopConnected={geom.stopConnected} label={aria} />
+        </MountWhenNear>
       </div>
       {geom.stopConnected && (
         <div style={{ width: "100%", maxWidth: 556, paddingTop: 10 }}>

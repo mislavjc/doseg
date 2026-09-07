@@ -22,12 +22,12 @@
       "headsign": "Travno",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.8,
+      "peakHeadwayMin": 10.9,
       "peakRangeMin": [
-        13,
-        14
+        10,
+        12
       ],
-      "allDayHeadwayMin": 15.7
+      "allDayHeadwayMin": 13.2
     }
   ],
   "neighbors": [
@@ -362,8 +362,8 @@
   },
   "reach": {
     "stations15": 35,
-    "stations30": 166,
-    "stations45": 372
+    "stations30": 162,
+    "stations45": 381
   },
   "prevSlug": "fallerovo-tresnjevka-jug-2",
   "nextSlug": "farkasicka"

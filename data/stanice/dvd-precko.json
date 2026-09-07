@@ -13,7 +13,7 @@
     "134"
   ],
   "firstDeparture": "5:15",
-  "lastDeparture": "0:10",
+  "lastDeparture": "0:40",
   "directionGroups": 1,
   "lines": [
     {
@@ -23,9 +23,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "134",
@@ -34,12 +37,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        28,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -65,28 +68,28 @@
         "mode": "bus",
         "shape": [
           [
-            15.90808,
-            45.79554
+            15.90809,
+            45.79555
           ],
           [
-            15.90565,
+            15.90566,
             45.79154
           ],
           [
-            15.9014,
+            15.90141,
             45.7909
           ],
           [
-            15.89819,
+            15.8982,
             45.79183
           ],
           [
             15.89455,
-            45.79305
+            45.79306
           ],
           [
             15.89961,
-            45.79475
+            45.79476
           ]
         ]
       },
@@ -255,9 +258,9 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 99,
-    "stations45": 257
+    "stations15": 26,
+    "stations30": 107,
+    "stations45": 280
   },
   "prevSlug": "durdekovec",
   "nextSlug": "dvorac-luznica"

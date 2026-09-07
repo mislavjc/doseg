@@ -2,11 +2,11 @@
   "slug": "culinecka",
   "name": "Čulinečka",
   "kvart": "Donja Dubrava",
-  "lat": 45.82832,
-  "lon": 16.063,
+  "lat": 45.82837,
+  "lon": 16.06299,
   "mode": "both",
   "bothDirections": true,
-  "lineCount": 8,
+  "lineCount": 7,
   "tramLines": [
     "4",
     "11",
@@ -16,11 +16,10 @@
     "210",
     "214",
     "225",
-    "235",
-    "279"
+    "235"
   ],
   "firstDeparture": "4:13",
-  "lastDeparture": "1:01",
+  "lastDeparture": "1:04",
   "directionGroups": 4,
   "lines": [
     {
@@ -30,12 +29,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.7,
+      "peakHeadwayMin": 9.6,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        11
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -44,12 +43,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.2,
+      "peakHeadwayMin": 6.3,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -69,12 +68,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        33
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "214",
@@ -111,20 +110,6 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 63.2
-    },
-    {
-      "broj": "279",
-      "mode": "bus",
-      "isNight": false,
-      "headsign": "Novi Jelkovec",
-      "isLoop": false,
-      "bothDirections": true,
-      "peakHeadwayMin": 30.0,
-      "peakRangeMin": [
-        30,
-        30
-      ],
-      "allDayHeadwayMin": 34.0
     }
   ],
   "neighbors": [
@@ -155,10 +140,10 @@
   ],
   "hero": {
     "bbox": [
-      16.06093,
-      45.82687,
+      16.06092,
+      45.82693,
       16.06506,
-      45.82976
+      45.82981
     ],
     "lines": [
       {
@@ -959,6 +944,10 @@
         "broj": "210",
         "mode": "bus",
         "shape": [
+          [
+            16.04939,
+            45.83913
+          ],
           [
             16.05049,
             45.83962
@@ -1922,139 +1911,13 @@
             45.81579
           ]
         ]
-      },
-      {
-        "broj": "279",
-        "mode": "bus",
-        "shape": [
-          [
-            16.07827,
-            45.82824
-          ],
-          [
-            16.06297,
-            45.82814
-          ],
-          [
-            16.06296,
-            45.82814
-          ],
-          [
-            16.06297,
-            45.82814
-          ],
-          [
-            16.06325,
-            45.82691
-          ],
-          [
-            16.06364,
-            45.82518
-          ],
-          [
-            16.06364,
-            45.82518
-          ],
-          [
-            16.06378,
-            45.82453
-          ],
-          [
-            16.06402,
-            45.82345
-          ],
-          [
-            16.06412,
-            45.82302
-          ],
-          [
-            16.06414,
-            45.82268
-          ],
-          [
-            16.06413,
-            45.82242
-          ],
-          [
-            16.06405,
-            45.82221
-          ],
-          [
-            16.06406,
-            45.82221
-          ],
-          [
-            16.06412,
-            45.8222
-          ],
-          [
-            16.06409,
-            45.82198
-          ],
-          [
-            16.06386,
-            45.82129
-          ],
-          [
-            16.06382,
-            45.82097
-          ],
-          [
-            16.06383,
-            45.82076
-          ],
-          [
-            16.06416,
-            45.81952
-          ],
-          [
-            16.06463,
-            45.81796
-          ],
-          [
-            16.06468,
-            45.81769
-          ],
-          [
-            16.06469,
-            45.81769
-          ],
-          [
-            16.06474,
-            45.81767
-          ],
-          [
-            16.06508,
-            45.81644
-          ],
-          [
-            16.06517,
-            45.8162
-          ],
-          [
-            16.06531,
-            45.81608
-          ],
-          [
-            16.06556,
-            45.81594
-          ],
-          [
-            16.06577,
-            45.81585
-          ],
-          [
-            16.06581,
-            45.81579
-          ]
-        ]
       }
     ]
   },
   "reach": {
-    "stations15": 43,
-    "stations30": 146,
-    "stations45": 375
+    "stations15": 42,
+    "stations30": 157,
+    "stations45": 377
   },
   "prevSlug": "cukovici",
   "nextSlug": "culinecka-119"

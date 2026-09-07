@@ -11,8 +11,8 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "0:00",
-  "lastDeparture": "0:00",
+  "firstDeparture": "5:26",
+  "lastDeparture": "16:31",
   "directionGroups": 1,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
     }
   ],
   "neighbors": [
@@ -51,7 +51,7 @@
         "shape": [
           [
             16.09298,
-            45.82184
+            45.82185
           ],
           [
             16.09571,
@@ -59,19 +59,19 @@
           ],
           [
             16.09918,
-            45.81705
+            45.81706
           ],
           [
             16.10196,
-            45.81768
+            45.81769
           ],
           [
             16.10114,
             45.82204
           ],
           [
-            16.10776,
-            45.82749
+            16.10777,
+            45.8275
           ],
           [
             16.11075,
@@ -86,9 +86,9 @@
     ]
   },
   "reach": {
-    "stations15": 13,
-    "stations30": 73,
-    "stations45": 168
+    "stations15": 12,
+    "stations30": 83,
+    "stations45": 175
   },
   "prevSlug": "solici",
   "nextSlug": "sopnicka-kod-10d"

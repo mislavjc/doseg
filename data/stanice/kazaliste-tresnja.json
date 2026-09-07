@@ -22,12 +22,12 @@
       "headsign": "Dugave",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.2,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        9,
-        11
+        8,
+        9
       ],
-      "allDayHeadwayMin": 11.8
+      "allDayHeadwayMin": 10.8
     }
   ],
   "neighbors": [
@@ -278,8 +278,8 @@
   },
   "reach": {
     "stations15": 28,
-    "stations30": 175,
-    "stations45": 490
+    "stations30": 182,
+    "stations45": 493
   },
   "prevSlug": "kauzlaricev-prilaz",
   "nextSlug": "kb-dubrava"

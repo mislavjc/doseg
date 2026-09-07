@@ -23,12 +23,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        20,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     },
     {
       "broj": "315",
@@ -579,9 +579,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 67,
-    "stations45": 253
+    "stations15": 27,
+    "stations30": 70,
+    "stations45": 262
   },
   "prevSlug": "co-prekrizje",
   "nextSlug": "cret"

@@ -28,7 +28,7 @@
         46,
         59
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -333,7 +333,7 @@
   "reach": {
     "stations15": 14,
     "stations30": 37,
-    "stations45": 80
+    "stations45": 81
   },
   "prevSlug": "sokolska",
   "nextSlug": "sopnicka-37"

@@ -22,9 +22,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [
@@ -347,8 +350,8 @@
   },
   "reach": {
     "stations15": 24,
-    "stations30": 140,
-    "stations45": 340
+    "stations30": 159,
+    "stations45": 378
   },
   "prevSlug": "kruge-trnje",
   "nextSlug": "kruzna-ulica"

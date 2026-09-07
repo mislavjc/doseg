@@ -1,12 +1,12 @@
 {
-  "slug": "sesvete-izlaz-sesvete",
+  "slug": "sesvete-izlaz",
   "name": "Sesvete-izlaz",
   "kvart": "Sesvete",
   "lat": 45.82544,
   "lon": 16.10951,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 15,
+  "lineCount": 18,
   "tramLines": [],
   "busLines": [
     "212",
@@ -21,12 +21,15 @@
     "273",
     "274",
     "275",
+    "277",
     "278",
     "280",
-    "283"
+    "282",
+    "283",
+    "284"
   ],
   "firstDeparture": "3:46",
-  "lastDeparture": "0:33",
+  "lastDeparture": "0:58",
   "directionGroups": 1,
   "lines": [
     {
@@ -83,12 +86,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        28,
-        35
+        19,
+        29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "264",
@@ -149,7 +152,7 @@
         44,
         51
       ],
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 51.8
     },
     {
       "broj": "274",
@@ -174,7 +177,18 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
+    },
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 101.8
     },
     {
       "broj": "278",
@@ -183,12 +197,12 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        50,
-        50
+        15,
+        35
       ],
-      "allDayHeadwayMin": 46.0
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "280",
@@ -202,6 +216,20 @@
       "allDayHeadwayMin": 79.3
     },
     {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        20,
+        30
+      ],
+      "allDayHeadwayMin": 38.7
+    },
+    {
       "broj": "283",
       "mode": "bus",
       "isNight": false,
@@ -211,6 +239,17 @@
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 64.6
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sesvete",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 124.4
     }
   ],
   "neighbors": [
@@ -220,7 +259,7 @@
     },
     {
       "name": "Sesvete-ukrcaj",
-      "slug": "sesvete-ukrcaj-sesvete"
+      "slug": "sesvete-ukrcaj"
     },
     {
       "name": "Dubec",
@@ -2127,7 +2166,7 @@
         "shape": [
           [
             16.09298,
-            45.82184
+            45.82185
           ],
           [
             16.09571,
@@ -2135,19 +2174,49 @@
           ],
           [
             16.09918,
-            45.81705
+            45.81706
           ],
           [
             16.10196,
-            45.81768
+            45.81769
           ],
           [
             16.10114,
             45.82204
           ],
           [
-            16.10776,
-            45.82749
+            16.10777,
+            45.8275
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
+      },
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.12589,
+            45.81899
+          ],
+          [
+            16.11685,
+            45.81952
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10777,
+            45.8275
           ],
           [
             16.11075,
@@ -2172,7 +2241,23 @@
             45.82381
           ],
           [
-            16.12471,
+            16.12956,
+            45.82374
+          ],
+          [
+            16.12913,
+            45.82374
+          ],
+          [
+            16.12693,
+            45.82382
+          ],
+          [
+            16.12487,
+            45.82392
+          ],
+          [
+            16.12472,
             45.82398
           ],
           [
@@ -2184,16 +2269,16 @@
             45.82393
           ],
           [
-            16.12913,
-            45.82374
+            16.12389,
+            45.82395
           ],
           [
             16.12261,
             45.82401
           ],
           [
-            16.12487,
-            45.82392
+            16.12197,
+            45.82409
           ],
           [
             16.12066,
@@ -2228,16 +2313,12 @@
             45.82508
           ],
           [
-            16.12471,
-            45.82398
-          ],
-          [
             16.11602,
             45.82517
           ],
           [
-            16.12389,
-            45.82395
+            16.11544,
+            45.82543
           ],
           [
             16.11399,
@@ -2252,48 +2333,32 @@
             45.82675
           ],
           [
-            16.11929,
-            45.82445
+            16.11153,
+            45.827
           ],
           [
-            16.11865,
-            45.82454
-          ],
-          [
-            16.11075,
-            45.82666
+            16.11081,
+            45.82711
           ],
           [
             16.11075,
             45.82666
           ],
           [
-            16.11687,
-            45.82486
-          ],
-          [
-            16.11652,
-            45.82498
-          ],
-          [
-            16.11644,
-            45.82508
-          ],
-          [
             16.11075,
             45.82666
           ],
           [
-            16.11602,
-            45.82517
+            16.11063,
+            45.82617
           ],
           [
             16.11039,
             45.82573
           ],
           [
-            16.11399,
-            45.82621
+            16.11016,
+            45.82532
           ],
           [
             16.11,
@@ -2492,6 +2557,32 @@
           [
             16.10942,
             45.83842
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10196,
+            45.81769
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10777,
+            45.8275
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       },
@@ -2932,14 +3023,44 @@
             45.82544
           ]
         ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11916,
+            45.81355
+          ],
+          [
+            16.11685,
+            45.81952
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10777,
+            45.8275
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 48,
-    "stations30": 178,
-    "stations45": 263
+    "stations15": 59,
+    "stations30": 185,
+    "stations45": 289
   },
   "prevSlug": "sestinski-vrh",
-  "nextSlug": "sesvete-izlaz-sesvete-2"
+  "nextSlug": "sesvete-ukrcaj"
 }

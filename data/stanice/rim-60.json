@@ -22,8 +22,11 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -979,8 +982,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 70,
-    "stations45": 185
+    "stations30": 75,
+    "stations45": 199
   },
   "prevSlug": "rim-14a",
   "nextSlug": "rim-put-dj-igraliste"

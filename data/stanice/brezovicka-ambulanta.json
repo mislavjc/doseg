@@ -28,7 +28,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -348,8 +348,8 @@
   },
   "reach": {
     "stations15": 31,
-    "stations30": 71,
-    "stations45": 181
+    "stations30": 74,
+    "stations45": 190
   },
   "prevSlug": "brezovicka-80",
   "nextSlug": "brezovicka-ekonomija"

@@ -24,9 +24,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 105.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "276",
@@ -37,7 +37,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 45.0
+      "allDayHeadwayMin": 44.6
     },
     {
       "broj": "284",
@@ -770,29 +770,29 @@
         "mode": "bus",
         "shape": [
           [
-            16.11863,
-            45.81009
+            16.11864,
+            45.8101
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11862,
-            45.80182
+            16.11863,
+            45.80183
           ],
           [
-            16.11896,
-            45.79781
+            16.11897,
+            45.79782
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 50,
-    "stations45": 180
+    "stations15": 23,
+    "stations30": 66,
+    "stations45": 205
   },
   "prevSlug": "ivanicgradska",
   "nextSlug": "ivanjorecka-posta"

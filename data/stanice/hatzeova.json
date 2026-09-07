@@ -13,7 +13,7 @@
     "134"
   ],
   "firstDeparture": "5:13",
-  "lastDeparture": "0:08",
+  "lastDeparture": "0:38",
   "directionGroups": 1,
   "lines": [
     {
@@ -23,9 +23,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "134",
@@ -34,12 +37,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        28,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -65,36 +68,36 @@
         "mode": "bus",
         "shape": [
           [
-            15.92154,
-            45.79524
+            15.92155,
+            45.79525
           ],
           [
             15.91852,
-            45.79557
+            45.79558
           ],
           [
-            15.90808,
-            45.79554
+            15.90809,
+            45.79555
           ],
           [
-            15.90565,
+            15.90566,
             45.79154
           ],
           [
-            15.9014,
+            15.90141,
             45.7909
           ],
           [
-            15.89819,
+            15.8982,
             45.79183
           ],
           [
             15.89455,
-            45.79305
+            45.79306
           ],
           [
             15.89961,
-            45.79475
+            45.79476
           ]
         ]
       },
@@ -279,9 +282,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 99,
-    "stations45": 335
+    "stations15": 28,
+    "stations30": 115,
+    "stations45": 355
   },
   "prevSlug": "harambasiceva",
   "nextSlug": "havidic-selo"

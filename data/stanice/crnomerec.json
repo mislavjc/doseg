@@ -49,12 +49,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.1,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        9
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "6",
@@ -63,12 +63,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        9,
-        9
+        6,
+        6
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "11",
@@ -77,12 +77,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "31",
@@ -102,12 +102,12 @@
       "headsign": "Kauzlarićev prilaz",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        8,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     },
     {
       "broj": "117",
@@ -116,12 +116,12 @@
       "headsign": "Jarun",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 52.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        51,
-        54
+        30,
+        30
       ],
-      "allDayHeadwayMin": 50.0
+      "allDayHeadwayMin": 41.1
     },
     {
       "broj": "119",
@@ -130,9 +130,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     },
     {
       "broj": "120",
@@ -141,12 +144,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 37.5,
       "peakRangeMin": [
-        25,
-        25
+        36,
+        39
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "121",
@@ -199,7 +202,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "125",
@@ -236,12 +239,12 @@
       "headsign": "Mikulići",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 11.9,
       "peakRangeMin": [
-        20,
-        20
+        12,
+        14
       ],
-      "allDayHeadwayMin": 20.0
+      "allDayHeadwayMin": 17.1
     },
     {
       "broj": "128",
@@ -250,12 +253,12 @@
       "headsign": "Lukšić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        15,
-        15
+        10,
+        11
       ],
-      "allDayHeadwayMin": 16.5
+      "allDayHeadwayMin": 14.0
     },
     {
       "broj": "130",
@@ -292,12 +295,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 21.0,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "135",
@@ -320,12 +323,12 @@
       "headsign": "Špansko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.5,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        22,
-        23
+        16,
+        17
       ],
-      "allDayHeadwayMin": 22.8
+      "allDayHeadwayMin": 16.4
     },
     {
       "broj": "137",
@@ -359,12 +362,12 @@
       "headsign": "Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 23.3,
       "peakRangeMin": [
-        30,
-        30
+        23,
+        24
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 22.2
     },
     {
       "broj": "172",
@@ -373,12 +376,12 @@
       "headsign": "Zaprešić",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
-        9,
-        11
+        7,
+        9
       ],
-      "allDayHeadwayMin": 13.7
+      "allDayHeadwayMin": 12.6
     },
     {
       "broj": "176",
@@ -4497,9 +4500,9 @@
     ]
   },
   "reach": {
-    "stations15": 48,
-    "stations30": 252,
-    "stations45": 490
+    "stations15": 50,
+    "stations30": 255,
+    "stations45": 499
   },
   "prevSlug": "crnkovecka-pescenica-zitnjak-2",
   "nextSlug": "cucerje"

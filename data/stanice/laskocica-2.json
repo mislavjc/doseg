@@ -12,7 +12,7 @@
     "229"
   ],
   "firstDeparture": "4:57",
-  "lastDeparture": "23:12",
+  "lastDeparture": "23:17",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,9 +22,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 80.0,
+      "peakHeadwayMin": 85.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 84.2
+      "allDayHeadwayMin": 84.6
     }
   ],
   "neighbors": [
@@ -403,8 +403,8 @@
   },
   "reach": {
     "stations15": 24,
-    "stations30": 80,
-    "stations45": 237
+    "stations30": 84,
+    "stations45": 247
   },
   "prevSlug": "lascinski-borovec",
   "nextSlug": "laskocica-42"

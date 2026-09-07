@@ -6,13 +6,14 @@
   "lon": 16.09076,
   "mode": "bus",
   "bothDirections": false,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "212",
     "224",
     "225",
-    "267"
+    "267",
+    "279"
   ],
   "firstDeparture": "4:20",
   "lastDeparture": "0:20",
@@ -67,6 +68,20 @@
       "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -1034,13 +1049,43 @@
             45.828
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.10196,
+            45.81769
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.09748,
+            45.82765
+          ],
+          [
+            16.09076,
+            45.82647
+          ],
+          [
+            16.08586,
+            45.82634
+          ],
+          [
+            16.0777,
+            45.82801
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 52,
-    "stations30": 119,
-    "stations45": 269
+    "stations15": 58,
+    "stations30": 127,
+    "stations45": 299
   },
   "prevSlug": "zagrebacka-42",
   "nextSlug": "zagrebacka-tresnjevka-sjever"

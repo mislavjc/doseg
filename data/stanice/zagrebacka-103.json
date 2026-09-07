@@ -6,13 +6,14 @@
   "lon": 16.08998,
   "mode": "bus",
   "bothDirections": false,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "212",
     "224",
     "225",
-    "267"
+    "267",
+    "279"
   ],
   "firstDeparture": "3:33",
   "lastDeparture": "23:58",
@@ -64,6 +65,20 @@
       "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -1055,13 +1070,43 @@
             45.83359
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.08457,
+            45.82642
+          ],
+          [
+            16.08998,
+            45.82617
+          ],
+          [
+            16.09791,
+            45.82757
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 54,
-    "stations30": 128,
-    "stations45": 284
+    "stations15": 60,
+    "stations30": 132,
+    "stations45": 313
   },
   "prevSlug": "zagrebacka",
   "nextSlug": "zagrebacka-42"

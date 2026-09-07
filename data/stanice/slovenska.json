@@ -14,8 +14,8 @@
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:45",
-  "lastDeparture": "1:06",
+  "firstDeparture": "4:43",
+  "lastDeparture": "1:04",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.1,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        9
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "6",
@@ -39,12 +39,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        9,
-        9
+        6,
+        6
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "11",
@@ -53,12 +53,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "31",
@@ -1525,9 +1525,9 @@
     ]
   },
   "reach": {
-    "stations15": 52,
-    "stations30": 218,
-    "stations45": 497
+    "stations15": 54,
+    "stations30": 220,
+    "stations45": 506
   },
   "prevSlug": "slobostina",
   "nextSlug": "snjezna-kraljica"

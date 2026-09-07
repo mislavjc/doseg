@@ -11,8 +11,8 @@
   "busLines": [
     "275"
   ],
-  "firstDeparture": "0:00",
-  "lastDeparture": "0:00",
+  "firstDeparture": "6:18",
+  "lastDeparture": "16:23",
   "directionGroups": 1,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 86.4
     }
   ],
   "neighbors": [
@@ -50,11 +50,11 @@
         "mode": "bus",
         "shape": [
           [
-            16.10717,
+            16.10718,
             45.82609
           ],
           [
-            16.10554,
+            16.10555,
             45.82781
           ],
           [
@@ -63,16 +63,16 @@
           ],
           [
             16.09298,
-            45.82184
+            45.82185
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 93,
-    "stations45": 188
+    "stations15": 18,
+    "stations30": 94,
+    "stations45": 194
   },
   "prevSlug": "anke-krizmanic",
   "nextSlug": "antolkovici"

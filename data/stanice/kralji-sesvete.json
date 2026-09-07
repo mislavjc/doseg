@@ -13,7 +13,7 @@
     "270"
   ],
   "firstDeparture": "4:35",
-  "lastDeparture": "0:16",
+  "lastDeparture": "0:41",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        28,
-        30
+        18,
+        23
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "270",
@@ -380,8 +380,8 @@
   },
   "reach": {
     "stations15": 30,
-    "stations30": 62,
-    "stations45": 140
+    "stations30": 65,
+    "stations45": 149
   },
   "prevSlug": "kralji-brezovica",
   "nextSlug": "kraljicin-zdenac"

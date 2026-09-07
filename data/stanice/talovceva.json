@@ -6,15 +6,30 @@
   "lon": 15.95709,
   "mode": "tram",
   "bothDirections": false,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [
+    "1",
     "2"
   ],
   "busLines": [],
-  "firstDeparture": "4:55",
+  "firstDeparture": "4:51",
   "lastDeparture": "0:27",
-  "directionGroups": 1,
+  "directionGroups": 2,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Z. kolodvor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 12.3,
+      "peakRangeMin": [
+        12,
+        13
+      ],
+      "allDayHeadwayMin": 14.6
+    },
     {
       "broj": "2",
       "mode": "tram",
@@ -22,18 +37,22 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.0,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     }
   ],
   "neighbors": [
     {
       "name": "Trg dr. F. Tuđmana",
       "slug": "trg-dr-f-tudmana"
+    },
+    {
+      "name": "Zapadni kolodvor",
+      "slug": "zapadni-kolodvor"
     },
     {
       "name": "HNK 2 - Adžijina",
@@ -48,6 +67,36 @@
       45.81111
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.97653,
+            45.81307
+          ],
+          [
+            15.96863,
+            45.8133
+          ],
+          [
+            15.96473,
+            45.81242
+          ],
+          [
+            15.95779,
+            45.81317
+          ],
+          [
+            15.95709,
+            45.80967
+          ],
+          [
+            15.95483,
+            45.80948
+          ]
+        ]
+      },
       {
         "broj": "2",
         "mode": "tram",
@@ -477,9 +526,9 @@
     ]
   },
   "reach": {
-    "stations15": 59,
-    "stations30": 203,
-    "stations45": 495
+    "stations15": 60,
+    "stations30": 213,
+    "stations45": 521
   },
   "prevSlug": "talani",
   "nextSlug": "tehnicki-muzej"

@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.4,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        18,
-        23
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "113",
@@ -54,9 +54,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        40,
+        40
+      ],
+      "allDayHeadwayMin": 39.8
     },
     {
       "broj": "115",
@@ -65,12 +68,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.0,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        12,
-        13
+        11,
+        11
       ],
-      "allDayHeadwayMin": 14.9
+      "allDayHeadwayMin": 12.2
     },
     {
       "broj": "116",
@@ -410,123 +413,19 @@
         "mode": "bus",
         "shape": [
           [
-            15.9134,
-            45.79573
-          ],
-          [
-            15.91663,
-            45.79545
-          ],
-          [
-            15.91895,
-            45.79524
-          ],
-          [
-            15.9203,
-            45.79513
-          ],
-          [
-            15.92069,
-            45.79509
-          ],
-          [
-            15.92084,
+            15.92085,
             45.79496
           ],
           [
-            15.92102,
-            45.79507
-          ],
-          [
-            15.92398,
-            45.7948
-          ],
-          [
-            15.924,
+            15.92402,
             45.79472
-          ],
-          [
-            15.92401,
-            45.79472
-          ],
-          [
-            15.92413,
-            45.7948
-          ],
-          [
-            15.92431,
-            45.79479
-          ],
-          [
-            15.93049,
-            45.79426
-          ],
-          [
-            15.9325,
-            45.79408
-          ],
-          [
-            15.93263,
-            45.794
           ],
           [
             15.93264,
-            45.794
+            45.79401
           ],
           [
-            15.93289,
-            45.79404
-          ],
-          [
-            15.93322,
-            45.79403
-          ],
-          [
-            15.93346,
-            45.794
-          ],
-          [
-            15.93463,
-            45.79392
-          ],
-          [
-            15.93685,
-            45.79385
-          ],
-          [
-            15.93684,
-            45.79444
-          ],
-          [
-            15.93682,
-            45.79453
-          ],
-          [
-            15.93679,
-            45.79475
-          ],
-          [
-            15.93671,
-            45.79543
-          ],
-          [
-            15.93655,
-            45.79671
-          ],
-          [
-            15.93655,
-            45.79687
-          ],
-          [
-            15.93668,
-            45.79699
-          ],
-          [
-            15.93678,
-            45.79702
-          ],
-          [
-            15.93696,
+            15.93697,
             45.79706
           ]
         ]
@@ -786,9 +685,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 170,
-    "stations45": 458
+    "stations15": 42,
+    "stations30": 182,
+    "stations45": 468
   },
   "prevSlug": "dragonozec-skola",
   "nextSlug": "dragutina-golika-tresnjevka-jug-2"

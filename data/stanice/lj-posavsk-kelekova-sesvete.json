@@ -6,13 +6,14 @@
   "lon": 16.10196,
   "mode": "bus",
   "bothDirections": false,
-  "lineCount": 2,
+  "lineCount": 3,
   "tramLines": [],
   "busLines": [
     "275",
+    "279",
     "282"
   ],
-  "firstDeparture": "4:53",
+  "firstDeparture": "4:43",
   "lastDeparture": "0:13",
   "directionGroups": 1,
   "lines": [
@@ -25,7 +26,21 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 83.1
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Dubec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "282",
@@ -36,8 +51,8 @@
       "bothDirections": false,
       "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        25,
-        28
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.7
     }
@@ -70,7 +85,7 @@
         "shape": [
           [
             16.09298,
-            45.82184
+            45.82185
           ],
           [
             16.09571,
@@ -78,19 +93,19 @@
           ],
           [
             16.09918,
-            45.81705
+            45.81706
           ],
           [
             16.10196,
-            45.81768
+            45.81769
           ],
           [
             16.10114,
             45.82204
           ],
           [
-            16.10776,
-            45.82749
+            16.10777,
+            45.8275
           ],
           [
             16.11075,
@@ -103,7 +118,7 @@
         ]
       },
       {
-        "broj": "282",
+        "broj": "279",
         "mode": "bus",
         "shape": [
           [
@@ -111,7 +126,7 @@
             45.81287
           ],
           [
-            16.11275,
+            16.11276,
             45.80976
           ],
           [
@@ -124,24 +139,74 @@
           ],
           [
             16.10196,
-            45.81768
+            45.81769
           ],
           [
-            16.10333,
-            45.8211
+            16.10114,
+            45.82204
           ],
           [
-            16.10589,
-            45.82451
+            16.09748,
+            45.82765
+          ],
+          [
+            16.09076,
+            45.82647
+          ],
+          [
+            16.08586,
+            45.82634
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.11402,
+            45.81287
+          ],
+          [
+            16.11276,
+            45.80976
+          ],
+          [
+            16.10728,
+            45.80985
+          ],
+          [
+            16.10196,
+            45.80992
+          ],
+          [
+            16.10196,
+            45.81769
+          ],
+          [
+            16.10114,
+            45.82204
+          ],
+          [
+            16.10777,
+            45.8275
+          ],
+          [
+            16.11075,
+            45.82666
+          ],
+          [
+            16.10951,
+            45.82544
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 77,
-    "stations45": 231
+    "stations15": 34,
+    "stations30": 111,
+    "stations45": 290
   },
   "prevSlug": "lj-posav-rimski-put",
   "nextSlug": "lj-posavsk-kelekova-sesvete-2"

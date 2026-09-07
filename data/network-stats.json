@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-08-17T00:00:00.000Z",
+  "generatedAt": "2026-09-07T00:00:00.000Z",
   "vehicleKm": {
-    "tram": 25309,
-    "bus": 58202,
+    "tram": 27732,
+    "bus": 58574,
     "rail": 0,
-    "total": 83511
+    "total": 86305
   },
   "routes": [
     {
@@ -38,7 +38,7 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 1.15,
+      "tortuosity": 1.11,
       "straightLineKm": 6.59,
       "stopSpacing": {
         "avgM": 406,
@@ -59,41 +59,41 @@
         0,
         0,
         0,
-        7,
-        6,
-        7,
         9,
-        11,
         9,
+        10,
+        13,
         11,
-        10,
-        10,
-        10,
-        10,
-        10,
-        10,
         11,
+        12,
+        12,
+        10,
+        12,
+        12,
+        10,
+        12,
+        12,
         10,
         10,
         8,
-        7,
-        6,
-        8
+        9,
+        8,
+        11
       ],
-      "headwayCv": 0.26,
-      "peakHeadwayCv": 0.17,
-      "tortuosity": 1.25,
-      "straightLineKm": 8.36,
+      "headwayCv": 0.16,
+      "peakHeadwayCv": 0.04,
+      "tortuosity": 1.3,
+      "straightLineKm": 8.28,
       "stopSpacing": {
-        "avgM": 390,
-        "minM": 187,
-        "maxM": 618,
-        "cv": 0.29,
-        "count": 27
+        "avgM": 371,
+        "minM": 219,
+        "maxM": 696,
+        "cv": 0.26,
+        "count": 30
       },
-      "peakDepPerHour": 11.0,
-      "baseDepPerHour": 10.2,
-      "peakToBaseRatio": 1.08
+      "peakDepPerHour": 13.0,
+      "baseDepPerHour": 11.6,
+      "peakToBaseRatio": 1.12
     },
     {
       "name": "3",
@@ -129,11 +129,11 @@
       "tortuosity": 1.32,
       "straightLineKm": 7.5,
       "stopSpacing": {
-        "avgM": 357,
-        "minM": 100,
+        "avgM": 366,
+        "minM": 219,
         "maxM": 587,
-        "cv": 0.27,
-        "count": 28
+        "cv": 0.22,
+        "count": 27
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -147,29 +147,29 @@
         0,
         0,
         0,
+        10,
         8,
+        8,
+        13,
+        10,
+        10,
+        11,
+        11,
+        12,
+        11,
+        12,
+        11,
+        12,
+        11,
+        10,
+        10,
+        10,
         7,
-        10,
-        12,
-        10,
-        10,
-        10,
-        12,
-        10,
-        10,
-        10,
-        10,
-        12,
-        10,
-        10,
-        10,
         8,
-        6,
-        6,
-        11
+        12
       ],
-      "headwayCv": 0.22,
-      "peakHeadwayCv": 0.02,
+      "headwayCv": 0.19,
+      "peakHeadwayCv": 0.12,
       "tortuosity": 1.16,
       "straightLineKm": 10.82,
       "stopSpacing": {
@@ -179,9 +179,9 @@
         "cv": 0.31,
         "count": 30
       },
-      "peakDepPerHour": 12.0,
-      "baseDepPerHour": 10.4,
-      "peakToBaseRatio": 1.15
+      "peakDepPerHour": 13.0,
+      "baseDepPerHour": 11.4,
+      "peakToBaseRatio": 1.14
     },
     {
       "name": "5",
@@ -258,14 +258,14 @@
       ],
       "headwayCv": 0.16,
       "peakHeadwayCv": 0.11,
-      "tortuosity": 1.63,
-      "straightLineKm": 6.38,
+      "tortuosity": 1.82,
+      "straightLineKm": 6.57,
       "stopSpacing": {
-        "avgM": 424,
-        "minM": 181,
-        "maxM": 753,
-        "cv": 0.39,
-        "count": 25
+        "avgM": 459,
+        "minM": 234,
+        "maxM": 1013,
+        "cv": 0.37,
+        "count": 27
       },
       "peakDepPerHour": 14.0,
       "baseDepPerHour": 12.8,
@@ -283,37 +283,37 @@
         8,
         9,
         12,
-        10,
+        13,
         12,
-        10,
         12,
-        10,
         12,
-        10,
+        13,
         12,
-        10,
         12,
-        11,
-        8,
+        12,
+        12,
+        12,
+        12,
+        9,
         7,
         8,
         8,
         7
       ],
-      "headwayCv": 0.17,
-      "peakHeadwayCv": 0.03,
-      "tortuosity": 1.88,
+      "headwayCv": 0.22,
+      "peakHeadwayCv": 0.0,
+      "tortuosity": 1.68,
       "straightLineKm": 7.78,
       "stopSpacing": {
-        "avgM": 454,
+        "avgM": 484,
         "minM": 91,
         "maxM": 1013,
-        "cv": 0.45,
-        "count": 32
+        "cv": 0.43,
+        "count": 27
       },
-      "peakDepPerHour": 12.0,
-      "baseDepPerHour": 10.8,
-      "peakToBaseRatio": 1.11
+      "peakDepPerHour": 13.0,
+      "baseDepPerHour": 12.2,
+      "peakToBaseRatio": 1.07
     },
     {
       "name": "8",
@@ -346,14 +346,14 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 2.35,
-      "straightLineKm": 5.13,
+      "tortuosity": 1.63,
+      "straightLineKm": 5.71,
       "stopSpacing": {
-        "avgM": 459,
-        "minM": 82,
-        "maxM": 839,
-        "cv": 0.35,
-        "count": 26
+        "avgM": 450,
+        "minM": 243,
+        "maxM": 753,
+        "cv": 0.36,
+        "count": 21
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -367,41 +367,41 @@
         0,
         0,
         0,
-        5,
+        4,
         8,
         12,
-        15,
-        15,
-        15,
-        15,
         14,
-        15,
-        15,
+        12,
         14,
+        12,
         14,
-        15,
-        15,
-        15,
-        15,
-        9,
-        7,
+        12,
+        14,
+        12,
+        14,
+        12,
+        14,
+        12,
+        10,
+        6,
         8,
-        7
+        6,
+        8
       ],
-      "headwayCv": 0.31,
-      "peakHeadwayCv": 0.0,
-      "tortuosity": 1.09,
-      "straightLineKm": 6.59,
+      "headwayCv": 0.29,
+      "peakHeadwayCv": 0.02,
+      "tortuosity": null,
+      "straightLineKm": 0.07,
       "stopSpacing": {
-        "avgM": 402,
-        "minM": 133,
+        "avgM": 429,
+        "minM": 308,
         "maxM": 608,
-        "cv": 0.26,
-        "count": 18
+        "cv": 0.18,
+        "count": 19
       },
-      "peakDepPerHour": 15.0,
-      "baseDepPerHour": 14.6,
-      "peakToBaseRatio": 1.03
+      "peakDepPerHour": 14.0,
+      "baseDepPerHour": 12.8,
+      "peakToBaseRatio": 1.09
     },
     {
       "name": "11",
@@ -456,28 +456,28 @@
         0,
         0,
         5,
-        6,
+        10,
         8,
-        11,
-        10,
-        10,
-        13,
-        12,
-        14,
-        14,
-        12,
-        14,
-        14,
-        12,
-        14,
-        13,
-        11,
         9,
         10,
-        8
+        12,
+        13,
+        15,
+        15,
+        14,
+        15,
+        15,
+        14,
+        14,
+        12,
+        13,
+        12,
+        9,
+        8,
+        7
       ],
-      "headwayCv": 0.23,
-      "peakHeadwayCv": 0.1,
+      "headwayCv": 0.25,
+      "peakHeadwayCv": 0.12,
       "tortuosity": 1.12,
       "straightLineKm": 8.25,
       "stopSpacing": {
@@ -487,9 +487,9 @@
         "cv": 0.3,
         "count": 20
       },
-      "peakDepPerHour": 11.0,
-      "baseDepPerHour": 13.0,
-      "peakToBaseRatio": 0.85
+      "peakDepPerHour": 10.0,
+      "baseDepPerHour": 14.4,
+      "peakToBaseRatio": 0.69
     },
     {
       "name": "13",
@@ -504,23 +504,23 @@
         6,
         9,
         10,
-        8,
-        8,
-        8,
+        10,
+        11,
+        10,
+        12,
+        10,
+        10,
+        12,
+        10,
+        10,
+        11,
         10,
         8,
-        8,
-        8,
-        10,
-        8,
-        8,
         7,
-        7,
-        5,
         6,
-        5
+        7
       ],
-      "headwayCv": 0.21,
+      "headwayCv": 0.25,
       "peakHeadwayCv": 0.03,
       "tortuosity": 5.23,
       "straightLineKm": 2.75,
@@ -532,8 +532,8 @@
         "count": 34
       },
       "peakDepPerHour": 10.0,
-      "baseDepPerHour": 8.4,
-      "peakToBaseRatio": 1.19
+      "baseDepPerHour": 10.6,
+      "peakToBaseRatio": 0.94
     },
     {
       "name": "14",
@@ -543,29 +543,29 @@
         0,
         0,
         0,
-        10,
+        13,
+        11,
+        11,
+        15,
+        13,
+        14,
+        15,
+        17,
+        16,
+        16,
+        16,
+        18,
+        15,
+        15,
+        12,
+        13,
         9,
         10,
         10,
-        10,
-        11,
-        12,
-        12,
-        13,
-        13,
-        12,
-        13,
-        13,
-        12,
-        11,
-        12,
-        8,
-        10,
-        10,
-        13
+        12
       ],
-      "headwayCv": 0.15,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.22,
+      "peakHeadwayCv": 0.06,
       "tortuosity": 2.35,
       "straightLineKm": 5.77,
       "stopSpacing": {
@@ -575,9 +575,9 @@
         "cv": 0.36,
         "count": 30
       },
-      "peakDepPerHour": 10.0,
-      "baseDepPerHour": 12.4,
-      "peakToBaseRatio": 0.81
+      "peakDepPerHour": 15.0,
+      "baseDepPerHour": 16.0,
+      "peakToBaseRatio": 0.94
     },
     {
       "name": "15",
@@ -610,14 +610,14 @@
       ],
       "headwayCv": 0.0,
       "peakHeadwayCv": 0.0,
-      "tortuosity": 2.38,
+      "tortuosity": 1.81,
       "straightLineKm": 5.14,
       "stopSpacing": {
-        "avgM": 446,
-        "minM": 82,
+        "avgM": 473,
+        "minM": 124,
         "maxM": 839,
-        "cv": 0.38,
-        "count": 27
+        "cv": 0.37,
+        "count": 20
       },
       "peakDepPerHour": 10.0,
       "baseDepPerHour": 10.8,
@@ -631,41 +631,41 @@
         0,
         0,
         0,
+        9,
         8,
-        10,
-        10,
-        14,
-        14,
-        14,
-        12,
-        14,
-        14,
-        12,
-        14,
-        14,
-        13,
-        13,
-        14,
-        13,
         11,
-        8,
+        13,
+        13,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        9,
         10,
-        10
+        8,
+        11
       ],
-      "headwayCv": 0.21,
-      "peakHeadwayCv": 0.11,
-      "tortuosity": 1.24,
-      "straightLineKm": 9.94,
+      "headwayCv": 0.26,
+      "peakHeadwayCv": 0.01,
+      "tortuosity": null,
+      "straightLineKm": 0.07,
       "stopSpacing": {
-        "avgM": 413,
-        "minM": 248,
-        "maxM": 713,
-        "cv": 0.28,
-        "count": 30
+        "avgM": 428,
+        "minM": 210,
+        "maxM": 814,
+        "cv": 0.32,
+        "count": 41
       },
-      "peakDepPerHour": 14.0,
-      "baseDepPerHour": 13.2,
-      "peakToBaseRatio": 1.06
+      "peakDepPerHour": 13.0,
+      "baseDepPerHour": 14.0,
+      "peakToBaseRatio": 0.93
     },
     {
       "name": "31",
@@ -696,16 +696,16 @@
         0,
         16
       ],
-      "headwayCv": 0.02,
+      "headwayCv": 0.03,
       "peakHeadwayCv": null,
-      "tortuosity": 1.87,
-      "straightLineKm": 7.64,
+      "tortuosity": 3.91,
+      "straightLineKm": 3.57,
       "stopSpacing": {
-        "avgM": 449,
+        "avgM": 467,
         "minM": 91,
         "maxM": 1013,
-        "cv": 0.44,
-        "count": 32
+        "cv": 0.41,
+        "count": 30
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -784,7 +784,7 @@
         0,
         16
       ],
-      "headwayCv": 0.05,
+      "headwayCv": 0.06,
       "peakHeadwayCv": null,
       "tortuosity": 3.78,
       "straightLineKm": 3.83,
@@ -916,7 +916,7 @@
         4,
         4
       ],
-      "headwayCv": 0.08,
+      "headwayCv": 0.17,
       "peakHeadwayCv": 0.0,
       "tortuosity": 2.83,
       "straightLineKm": 3.24,
@@ -1031,13 +1031,13 @@
         2,
         2,
         2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        3,
         2,
         2,
         2,
@@ -1048,8 +1048,8 @@
         2,
         0
       ],
-      "headwayCv": 0.0,
-      "peakHeadwayCv": null,
+      "headwayCv": 0.34,
+      "peakHeadwayCv": 0.33,
       "tortuosity": 7.25,
       "straightLineKm": 1.11,
       "stopSpacing": {
@@ -1059,9 +1059,9 @@
         "cv": 0.29,
         "count": 18
       },
-      "peakDepPerHour": 2.0,
-      "baseDepPerHour": 2.0,
-      "peakToBaseRatio": 1.0
+      "peakDepPerHour": 3.0,
+      "baseDepPerHour": 3.8,
+      "peakToBaseRatio": 0.79
     },
     {
       "name": "106",
@@ -1204,27 +1204,27 @@
         0,
         0,
         4,
-        3,
-        5,
         6,
         6,
         6,
         6,
         6,
         6,
+        8,
+        7,
+        8,
+        7,
+        8,
+        7,
+        7,
         6,
         6,
         6,
         6,
         6,
-        6,
-        6,
-        4,
-        5,
-        4,
-        3
+        2
       ],
-      "headwayCv": 0.14,
+      "headwayCv": 0.13,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.39,
       "straightLineKm": 7.74,
@@ -1236,8 +1236,8 @@
         "count": 20
       },
       "peakDepPerHour": 6.0,
-      "baseDepPerHour": 6.0,
-      "peakToBaseRatio": 1.0
+      "baseDepPerHour": 7.2,
+      "peakToBaseRatio": 0.83
     },
     {
       "name": "110",
@@ -1356,8 +1356,8 @@
         2,
         0
       ],
-      "headwayCv": 0.35,
-      "peakHeadwayCv": null,
+      "headwayCv": 0.36,
+      "peakHeadwayCv": 0.0,
       "tortuosity": 1.72,
       "straightLineKm": 5.6,
       "stopSpacing": {
@@ -1446,13 +1446,13 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 1.46,
-      "straightLineKm": 2.89,
+      "tortuosity": 1.48,
+      "straightLineKm": 2.88,
       "stopSpacing": {
-        "avgM": 423,
+        "avgM": 425,
         "minM": 238,
         "maxM": 810,
-        "cv": 0.42,
+        "cv": 0.41,
         "count": 11
       },
       "peakDepPerHour": 0.0,
@@ -1599,28 +1599,28 @@
         0,
         0,
         0,
-        2,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        8,
-        10
+        4,
+        10,
+        13,
+        12,
+        11,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        10,
+        9,
+        9,
+        9,
+        9,
+        9,
+        7
       ],
-      "headwayCv": 0.12,
+      "headwayCv": 0.38,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.39,
       "straightLineKm": 3.49,
@@ -1631,8 +1631,8 @@
         "cv": 0.27,
         "count": 10
       },
-      "peakDepPerHour": 8.0,
-      "baseDepPerHour": 8.0,
+      "peakDepPerHour": 12.0,
+      "baseDepPerHour": 12.0,
       "peakToBaseRatio": 1.0
     },
     {
@@ -1732,28 +1732,28 @@
         0,
         0,
         3,
-        4,
+        6,
         6,
         4,
-        6,
+        7,
+        8,
+        7,
+        7,
+        7,
+        7,
+        8,
+        7,
+        7,
+        7,
+        7,
+        8,
+        8,
+        5,
         4,
-        6,
-        4,
-        6,
-        4,
-        6,
-        4,
-        6,
-        4,
-        6,
-        4,
-        6,
-        4,
-        6,
         3
       ],
-      "headwayCv": 0.0,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.22,
+      "peakHeadwayCv": 0.22,
       "tortuosity": 1.32,
       "straightLineKm": 4.53,
       "stopSpacing": {
@@ -1763,9 +1763,9 @@
         "cv": 0.43,
         "count": 12
       },
-      "peakDepPerHour": 6.0,
-      "baseDepPerHour": 5.2,
-      "peakToBaseRatio": 1.15
+      "peakDepPerHour": 7.0,
+      "baseDepPerHour": 7.2,
+      "peakToBaseRatio": 0.97
     },
     {
       "name": "122",
@@ -1863,28 +1863,28 @@
         0,
         0,
         0,
-        1,
+        2,
+        7,
+        4,
+        6,
+        4,
+        6,
+        4,
+        4,
+        6,
+        4,
+        5,
+        5,
+        4,
+        3,
         3,
         2,
-        2,
         3,
         2,
-        2,
-        2,
         3,
-        2,
-        2,
-        2,
-        2,
-        2,
-        3,
-        2,
-        2,
-        3,
-        2,
-        2
+        1
       ],
-      "headwayCv": 0.05,
+      "headwayCv": 0.36,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.37,
       "straightLineKm": 5.35,
@@ -1895,9 +1895,9 @@
         "cv": 0.39,
         "count": 15
       },
-      "peakDepPerHour": 3.0,
-      "baseDepPerHour": 2.2,
-      "peakToBaseRatio": 1.36
+      "peakDepPerHour": 6.0,
+      "baseDepPerHour": 4.6,
+      "peakToBaseRatio": 1.3
     },
     {
       "name": "125",
@@ -1997,26 +1997,26 @@
         0,
         2,
         3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
+        4,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        4,
         3,
         3,
         4,
         5
       ],
-      "headwayCv": 0.07,
+      "headwayCv": 0.32,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.25,
       "straightLineKm": 4.08,
@@ -2027,8 +2027,8 @@
         "cv": 0.16,
         "count": 10
       },
-      "peakDepPerHour": 3.0,
-      "baseDepPerHour": 3.0,
+      "peakDepPerHour": 6.0,
+      "baseDepPerHour": 6.0,
       "peakToBaseRatio": 1.0
     },
     {
@@ -2060,7 +2060,7 @@
         3,
         4
       ],
-      "headwayCv": 0.39,
+      "headwayCv": 0.4,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.24,
       "straightLineKm": 4.12,
@@ -2148,7 +2148,7 @@
         2,
         1
       ],
-      "headwayCv": 0.14,
+      "headwayCv": 0.13,
       "peakHeadwayCv": null,
       "tortuosity": 1.69,
       "straightLineKm": 4.5,
@@ -2194,7 +2194,7 @@
       ],
       "headwayCv": 0.03,
       "peakHeadwayCv": null,
-      "tortuosity": 1.66,
+      "tortuosity": 1.54,
       "straightLineKm": 5.71,
       "stopSpacing": {
         "avgM": 604,
@@ -2368,8 +2368,8 @@
         2,
         3
       ],
-      "headwayCv": 0.22,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.24,
+      "peakHeadwayCv": null,
       "tortuosity": 1.31,
       "straightLineKm": 1.97,
       "stopSpacing": {
@@ -2412,8 +2412,8 @@
         4,
         5
       ],
-      "headwayCv": 0.28,
-      "peakHeadwayCv": 0.14,
+      "headwayCv": 0.22,
+      "peakHeadwayCv": 0.02,
       "tortuosity": 1.36,
       "straightLineKm": 3.71,
       "stopSpacing": {
@@ -2721,7 +2721,7 @@
         2
       ],
       "headwayCv": 0.0,
-      "peakHeadwayCv": 0.0,
+      "peakHeadwayCv": null,
       "tortuosity": 1.48,
       "straightLineKm": 2.34,
       "stopSpacing": {
@@ -2808,8 +2808,8 @@
         5,
         3
       ],
-      "headwayCv": 0.2,
-      "peakHeadwayCv": 0.13,
+      "headwayCv": 0.22,
+      "peakHeadwayCv": 0.19,
       "tortuosity": 1.43,
       "straightLineKm": 6.24,
       "stopSpacing": {
@@ -3292,7 +3292,7 @@
         0,
         2
       ],
-      "headwayCv": 0.28,
+      "headwayCv": 0.25,
       "peakHeadwayCv": null,
       "tortuosity": 1.43,
       "straightLineKm": 15.94,
@@ -3627,13 +3627,13 @@
         4,
         3,
         4,
-        3,
-        4,
-        3,
-        3,
-        4,
-        3,
-        4,
+        5,
+        8,
+        6,
+        7,
+        7,
+        6,
+        5,
         3,
         4,
         3,
@@ -3644,20 +3644,20 @@
         3,
         5
       ],
-      "headwayCv": 0.0,
-      "peakHeadwayCv": 0.0,
-      "tortuosity": 4.01,
-      "straightLineKm": 1.91,
+      "headwayCv": 0.33,
+      "peakHeadwayCv": 0.33,
+      "tortuosity": 1.29,
+      "straightLineKm": 1.94,
       "stopSpacing": {
-        "avgM": 356,
-        "minM": 220,
-        "maxM": 532,
-        "cv": 0.31,
-        "count": 7
+        "avgM": 407,
+        "minM": 284,
+        "maxM": 604,
+        "cv": 0.27,
+        "count": 6
       },
-      "peakDepPerHour": 4.0,
-      "baseDepPerHour": 3.4,
-      "peakToBaseRatio": 1.18
+      "peakDepPerHour": 5.0,
+      "baseDepPerHour": 6.2,
+      "peakToBaseRatio": 0.81
     },
     {
       "name": "203",
@@ -3888,13 +3888,6 @@
         0,
         0,
         1,
-        2,
-        2,
-        3,
-        3,
-        4,
-        4,
-        2,
         4,
         4,
         3,
@@ -3904,11 +3897,18 @@
         2,
         4,
         4,
-        1,
+        3,
+        3,
+        4,
+        4,
         2,
-        4
+        4,
+        4,
+        3,
+        3,
+        5
       ],
-      "headwayCv": 0.28,
+      "headwayCv": 0.0,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.24,
       "straightLineKm": 8.17,
@@ -3932,28 +3932,28 @@
         0,
         0,
         3,
-        4,
+        6,
+        5,
+        6,
+        5,
+        6,
+        5,
+        6,
+        5,
+        6,
+        6,
+        5,
+        5,
         4,
         4,
         2,
         4,
         4,
-        4,
-        4,
-        4,
-        3,
-        3,
-        4,
-        4,
-        4,
-        4,
-        4,
-        2,
         4,
         5
       ],
-      "headwayCv": 0.11,
-      "peakHeadwayCv": 0.07,
+      "headwayCv": 0.25,
+      "peakHeadwayCv": 0.11,
       "tortuosity": 1.18,
       "straightLineKm": 9.12,
       "stopSpacing": {
@@ -3963,9 +3963,9 @@
         "cv": 0.57,
         "count": 21
       },
-      "peakDepPerHour": 4.0,
-      "baseDepPerHour": 3.8,
-      "peakToBaseRatio": 1.05
+      "peakDepPerHour": 6.0,
+      "baseDepPerHour": 5.6,
+      "peakToBaseRatio": 1.07
     },
     {
       "name": "210",
@@ -3976,16 +3976,16 @@
         0,
         0,
         1,
+        4,
+        5,
+        5,
+        6,
+        6,
+        6,
         6,
         4,
-        2,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
+        6,
+        6,
         4,
         4,
         4,
@@ -3996,7 +3996,7 @@
         4,
         7
       ],
-      "headwayCv": 0.06,
+      "headwayCv": 0.18,
       "peakHeadwayCv": 0.0,
       "tortuosity": 3.6,
       "straightLineKm": 2.03,
@@ -4007,9 +4007,9 @@
         "cv": 0.32,
         "count": 17
       },
-      "peakDepPerHour": 4.0,
-      "baseDepPerHour": 4.0,
-      "peakToBaseRatio": 1.0
+      "peakDepPerHour": 6.0,
+      "baseDepPerHour": 5.6,
+      "peakToBaseRatio": 1.07
     },
     {
       "name": "211",
@@ -4172,8 +4172,8 @@
         2,
         0
       ],
-      "headwayCv": 0.04,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.02,
+      "peakHeadwayCv": null,
       "tortuosity": 1.96,
       "straightLineKm": 3.99,
       "stopSpacing": {
@@ -4304,8 +4304,8 @@
         4,
         5
       ],
-      "headwayCv": 0.02,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.0,
+      "peakHeadwayCv": null,
       "tortuosity": 1.42,
       "straightLineKm": 6.2,
       "stopSpacing": {
@@ -4417,18 +4417,18 @@
         0,
         5,
         6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        7,
         6,
         6,
         6,
@@ -4436,8 +4436,8 @@
         6,
         11
       ],
-      "headwayCv": 0.22,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.35,
+      "peakHeadwayCv": 0.04,
       "tortuosity": 1.46,
       "straightLineKm": 4.69,
       "stopSpacing": {
@@ -4447,8 +4447,8 @@
         "cv": 0.48,
         "count": 13
       },
-      "peakDepPerHour": 6.0,
-      "baseDepPerHour": 6.0,
+      "peakDepPerHour": 9.0,
+      "baseDepPerHour": 9.0,
       "peakToBaseRatio": 1.0
     },
     {
@@ -4459,29 +4459,29 @@
         0,
         0,
         0,
-        2,
+        3,
         6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
-        6,
+        10,
+        8,
+        10,
+        8,
+        10,
+        8,
+        10,
+        8,
+        10,
+        8,
+        10,
+        8,
+        9,
         6,
         6,
         6,
         6,
         6
       ],
-      "headwayCv": 0.0,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.19,
+      "peakHeadwayCv": 0.04,
       "tortuosity": 1.71,
       "straightLineKm": 3.74,
       "stopSpacing": {
@@ -4491,9 +4491,9 @@
         "cv": 0.45,
         "count": 12
       },
-      "peakDepPerHour": 6.0,
-      "baseDepPerHour": 6.0,
-      "peakToBaseRatio": 1.0
+      "peakDepPerHour": 10.0,
+      "baseDepPerHour": 9.2,
+      "peakToBaseRatio": 1.09
     },
     {
       "name": "222",
@@ -4547,9 +4547,7 @@
         0,
         0,
         0,
-        2,
-        3,
-        2,
+        1,
         4,
         4,
         4,
@@ -4563,12 +4561,14 @@
         4,
         4,
         4,
-        5,
-        3,
-        3,
-        4
+        4,
+        4,
+        4,
+        4,
+        4,
+        7
       ],
-      "headwayCv": 0.17,
+      "headwayCv": 0.05,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.78,
       "straightLineKm": 3.15,
@@ -4613,7 +4613,7 @@
         4
       ],
       "headwayCv": 0.06,
-      "peakHeadwayCv": 0.0,
+      "peakHeadwayCv": null,
       "tortuosity": 2.55,
       "straightLineKm": 2.68,
       "stopSpacing": {
@@ -4724,27 +4724,27 @@
         0,
         0,
         1,
-        3,
         4,
+        5,
+        5,
+        5,
         4,
+        5,
+        5,
+        5,
+        5,
         4,
+        5,
+        5,
+        5,
+        5,
         4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
-        4,
+        5,
+        5,
+        5,
         5
       ],
-      "headwayCv": 0.0,
+      "headwayCv": 0.23,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.86,
       "straightLineKm": 5.41,
@@ -4755,9 +4755,9 @@
         "cv": 0.3,
         "count": 21
       },
-      "peakDepPerHour": 4.0,
-      "baseDepPerHour": 4.0,
-      "peakToBaseRatio": 1.0
+      "peakDepPerHour": 5.0,
+      "baseDepPerHour": 4.8,
+      "peakToBaseRatio": 1.04
     },
     {
       "name": "228",
@@ -4832,7 +4832,7 @@
         0,
         0
       ],
-      "headwayCv": 0.11,
+      "headwayCv": 0.08,
       "peakHeadwayCv": null,
       "tortuosity": 1.71,
       "straightLineKm": 8.6,
@@ -4876,7 +4876,7 @@
         2,
         4
       ],
-      "headwayCv": 0.1,
+      "headwayCv": 0.12,
       "peakHeadwayCv": null,
       "tortuosity": 1.12,
       "straightLineKm": 4.04,
@@ -4922,7 +4922,7 @@
       ],
       "headwayCv": 0.0,
       "peakHeadwayCv": 0.0,
-      "tortuosity": 4.04,
+      "tortuosity": 1.36,
       "straightLineKm": 4.84,
       "stopSpacing": {
         "avgM": 454,
@@ -5008,7 +5008,7 @@
         4,
         16
       ],
-      "headwayCv": 0.18,
+      "headwayCv": 0.21,
       "peakHeadwayCv": 0.0,
       "tortuosity": 1.19,
       "straightLineKm": 4.88,
@@ -5053,7 +5053,7 @@
         3
       ],
       "headwayCv": 0.0,
-      "peakHeadwayCv": 0.0,
+      "peakHeadwayCv": null,
       "tortuosity": 2.01,
       "straightLineKm": 3.85,
       "stopSpacing": {
@@ -5360,8 +5360,8 @@
         3,
         2
       ],
-      "headwayCv": 0.02,
-      "peakHeadwayCv": 0.0,
+      "headwayCv": 0.07,
+      "peakHeadwayCv": null,
       "tortuosity": 1.16,
       "straightLineKm": 4.07,
       "stopSpacing": {
@@ -5443,14 +5443,14 @@
         2,
         2,
         1,
+        3,
         2,
-        1,
-        1,
+        3,
         2
       ],
-      "headwayCv": 0.28,
+      "headwayCv": 0.27,
       "peakHeadwayCv": null,
-      "tortuosity": 17.94,
+      "tortuosity": 3.49,
       "straightLineKm": 3.73,
       "stopSpacing": {
         "avgM": 525,
@@ -5485,14 +5485,14 @@
         4,
         2,
         2,
-        1,
+        3,
         2,
-        0,
+        2,
         2,
         1,
         2
       ],
-      "headwayCv": 0.36,
+      "headwayCv": 0.3,
       "peakHeadwayCv": null,
       "tortuosity": 1.56,
       "straightLineKm": 11.13,
@@ -5517,18 +5517,18 @@
         0,
         3,
         4,
-        2,
+        3,
         4,
-        2,
         4,
-        2,
         4,
-        2,
         4,
-        2,
         4,
-        2,
         4,
+        4,
+        4,
+        4,
+        4,
+        5,
         2,
         4,
         2,
@@ -5536,7 +5536,7 @@
         2,
         2
       ],
-      "headwayCv": 0.33,
+      "headwayCv": 0.29,
       "peakHeadwayCv": null,
       "tortuosity": 1.54,
       "straightLineKm": 12.4,
@@ -5548,8 +5548,8 @@
         "count": 24
       },
       "peakDepPerHour": 4.0,
-      "baseDepPerHour": 2.8,
-      "peakToBaseRatio": 1.43
+      "baseDepPerHour": 4.0,
+      "peakToBaseRatio": 1.0
     },
     {
       "name": "264",
@@ -5624,7 +5624,7 @@
         0,
         0
       ],
-      "headwayCv": 0.04,
+      "headwayCv": 0.06,
       "peakHeadwayCv": null,
       "tortuosity": 1.51,
       "straightLineKm": 5.38,
@@ -5714,7 +5714,7 @@
       ],
       "headwayCv": 0.11,
       "peakHeadwayCv": 0.0,
-      "tortuosity": 5.17,
+      "tortuosity": 1.16,
       "straightLineKm": 12.76,
       "stopSpacing": {
         "avgM": 779,
@@ -5747,8 +5747,8 @@
         3,
         2,
         2,
-        3,
-        0,
+        4,
+        1,
         2,
         1,
         2,
@@ -5756,7 +5756,7 @@
         1,
         2
       ],
-      "headwayCv": 0.41,
+      "headwayCv": 0.39,
       "peakHeadwayCv": null,
       "tortuosity": 1.34,
       "straightLineKm": 12.03,
@@ -5871,9 +5871,9 @@
         2,
         4,
         3,
-        0,
-        0,
         1,
+        2,
+        2,
         1,
         2,
         2,
@@ -5888,7 +5888,7 @@
         2,
         2
       ],
-      "headwayCv": 0.59,
+      "headwayCv": 0.31,
       "peakHeadwayCv": null,
       "tortuosity": 1.22,
       "straightLineKm": 11.23,
@@ -5900,8 +5900,8 @@
         "count": 13
       },
       "peakDepPerHour": 3.0,
-      "baseDepPerHour": 1.6,
-      "peakToBaseRatio": 1.88
+      "baseDepPerHour": 1.8,
+      "peakToBaseRatio": 1.67
     },
     {
       "name": "274",
@@ -5930,7 +5930,7 @@
         1,
         2,
         1,
-        1
+        3
       ],
       "headwayCv": 0.28,
       "peakHeadwayCv": 0.11,
@@ -6110,7 +6110,7 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 9.61,
+      "tortuosity": 2.4,
       "straightLineKm": 2.13,
       "stopSpacing": {
         "avgM": 503,
@@ -6131,29 +6131,29 @@
         0,
         0,
         0,
-        2,
-        2,
-        2,
-        2,
         3,
-        2,
-        2,
-        2,
-        2,
-        1,
-        3,
-        2,
-        2,
-        2,
-        2,
-        3,
-        2,
-        2,
-        2,
+        5,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
         4
       ],
-      "headwayCv": 0.12,
-      "peakHeadwayCv": null,
+      "headwayCv": 0.08,
+      "peakHeadwayCv": 0.0,
       "tortuosity": 2.47,
       "straightLineKm": 3.35,
       "stopSpacing": {
@@ -6163,9 +6163,9 @@
         "cv": 0.67,
         "count": 13
       },
-      "peakDepPerHour": 3.0,
-      "baseDepPerHour": 2.0,
-      "peakToBaseRatio": 1.5
+      "peakDepPerHour": 4.0,
+      "baseDepPerHour": 4.0,
+      "peakToBaseRatio": 1.0
     },
     {
       "name": "280",
@@ -6329,7 +6329,7 @@
         0
       ],
       "headwayCv": 0.16,
-      "peakHeadwayCv": null,
+      "peakHeadwayCv": 0.0,
       "tortuosity": 2.93,
       "straightLineKm": 2.44,
       "stopSpacing": {
@@ -9073,11 +9073,11 @@
     }
   ],
   "deadEndStops": {
-    "total": 1402,
+    "total": 1396,
     "byMode": {
-      "BUS": 1330,
-      "TRAM": 25,
-      "RAIL": 47
+      "TRAM": 20,
+      "RAIL": 47,
+      "BUS": 1329
     },
     "stops": [
       {
@@ -9158,6 +9158,55 @@
         "mode": "BUS"
       },
       {
+        "name": "Gornje Prekrižje",
+        "lat": 45.840097,
+        "lon": 15.96903,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "CO Prekrižje",
+        "lat": 45.843868,
+        "lon": 15.966135,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "Donje Prekrižje",
+        "lat": 45.84309,
+        "lon": 15.962565,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "Potočani",
+        "lat": 45.855006,
+        "lon": 15.954817,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "Grebenščica",
+        "lat": 45.851501,
+        "lon": 15.959115,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "Mlinovi",
+        "lat": 45.846983,
+        "lon": 15.965608,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
+        "name": "Snježničke stube",
+        "lat": 45.844431,
+        "lon": 15.97147,
+        "route": "102",
+        "mode": "BUS"
+      },
+      {
         "name": "Mihaljevac",
         "lat": 45.84149,
         "lon": 15.975079,
@@ -9221,62 +9270,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Gornje Prekrižje",
-        "lat": 45.840097,
-        "lon": 15.96903,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "CO Prekrižje",
-        "lat": 45.843868,
-        "lon": 15.966135,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Donje Prekrižje",
-        "lat": 45.84309,
-        "lon": 15.962565,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Potočani",
-        "lat": 45.855006,
-        "lon": 15.954817,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Grebenščica",
-        "lat": 45.851501,
-        "lon": 15.959115,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Mlinovi",
-        "lat": 45.846983,
-        "lon": 15.965608,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Snježničke stube",
-        "lat": 45.844431,
-        "lon": 15.97147,
-        "route": "102",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kraljevec",
-        "lat": 45.830592,
-        "lon": 15.968771,
-        "route": "103",
-        "mode": "BUS"
-      },
-      {
         "name": "Britanski trg",
         "lat": 45.814285,
         "lon": 15.964053,
@@ -9301,6 +9294,13 @@
         "name": "II. Kraljevec",
         "lat": 45.826971,
         "lon": 15.968331,
+        "route": "103",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kraljevec",
+        "lat": 45.830592,
+        "lon": 15.968771,
         "route": "103",
         "mode": "BUS"
       },
@@ -9333,23 +9333,23 @@
         "mode": "BUS"
       },
       {
-        "name": "Jurjevska 77",
-        "lat": 45.832597,
-        "lon": 15.975368,
+        "name": "Nova ves",
+        "lat": 45.82027,
+        "lon": 15.978057,
         "route": "105",
         "mode": "BUS"
       },
       {
-        "name": "Jurjevska 64",
-        "lat": 45.830533,
-        "lon": 15.975411,
+        "name": "Znikina",
+        "lat": 45.824659,
+        "lon": 15.977467,
         "route": "105",
         "mode": "BUS"
       },
       {
-        "name": "Becićeve stube",
-        "lat": 45.827042,
-        "lon": 15.975642,
+        "name": "Zdravs. veleučilište",
+        "lat": 45.827649,
+        "lon": 15.978332,
         "route": "105",
         "mode": "BUS"
       },
@@ -9375,48 +9375,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Zdravs. veleučilište",
-        "lat": 45.827657,
-        "lon": 15.978316,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
-        "name": "Znikina",
-        "lat": 45.824119,
-        "lon": 15.977617,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
-        "name": "KAPTOL CENTAR",
-        "lat": 45.820333,
-        "lon": 15.976493,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
-        "name": "Nova ves",
-        "lat": 45.82027,
-        "lon": 15.978057,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
-        "name": "Znikina",
-        "lat": 45.824659,
-        "lon": 15.977467,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zdravs. veleučilište",
-        "lat": 45.827649,
-        "lon": 15.978332,
-        "route": "105",
-        "mode": "BUS"
-      },
-      {
         "name": "Becićeve stube",
         "lat": 45.8272,
         "lon": 15.975505,
@@ -9434,6 +9392,48 @@
         "name": "Jurjevska 77",
         "lat": 45.832803,
         "lon": 15.975274,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jurjevska 77",
+        "lat": 45.832597,
+        "lon": 15.975368,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jurjevska 64",
+        "lat": 45.830533,
+        "lon": 15.975411,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "Becićeve stube",
+        "lat": 45.827042,
+        "lon": 15.975642,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zdravs. veleučilište",
+        "lat": 45.827657,
+        "lon": 15.978316,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "Znikina",
+        "lat": 45.824119,
+        "lon": 15.977617,
+        "route": "105",
+        "mode": "BUS"
+      },
+      {
+        "name": "KAPTOL CENTAR",
+        "lat": 45.820333,
+        "lon": 15.976493,
         "route": "105",
         "mode": "BUS"
       },
@@ -9536,62 +9536,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Kauzlarićev prilaz",
-        "lat": 45.76425,
-        "lon": 16.002236,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Hrelićka",
-        "lat": 45.762166,
-        "lon": 15.99717,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Abramovićeva",
-        "lat": 45.763189,
-        "lon": 15.993005,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Knežija",
-        "lat": 45.788807,
-        "lon": 15.945608,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Blaža Trogiranina",
-        "lat": 45.791676,
-        "lon": 15.94485,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Selska",
-        "lat": 45.799051,
-        "lon": 15.943096,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Baštijanova",
-        "lat": 45.801854,
-        "lon": 15.943368,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zagorska",
-        "lat": 45.807774,
-        "lon": 15.942512,
-        "route": "109",
-        "mode": "BUS"
-      },
-      {
         "name": "Črnomerec",
         "lat": 45.814933,
         "lon": 15.933877,
@@ -9644,6 +9588,62 @@
         "name": "Vatikanska-Sv.Mateja",
         "lat": 45.767983,
         "lon": 15.998913,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kauzlarićev prilaz",
+        "lat": 45.76425,
+        "lon": 16.002236,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Hrelićka",
+        "lat": 45.762166,
+        "lon": 15.99717,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Abramovićeva",
+        "lat": 45.763189,
+        "lon": 15.993005,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Knežija",
+        "lat": 45.788807,
+        "lon": 15.945608,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Blaža Trogiranina",
+        "lat": 45.791676,
+        "lon": 15.94485,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Selska",
+        "lat": 45.799051,
+        "lon": 15.943096,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Baštijanova",
+        "lat": 45.801854,
+        "lon": 15.943368,
+        "route": "109",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zagorska",
+        "lat": 45.807774,
+        "lon": 15.942512,
         "route": "109",
         "mode": "BUS"
       },
@@ -9929,15 +9929,8 @@
       },
       {
         "name": "Ljubljanica",
-        "lat": 45.796155,
-        "lon": 15.93677,
-        "route": "114",
-        "mode": "BUS"
-      },
-      {
-        "name": "Prečko-terminal",
-        "lat": 45.794876,
-        "lon": 15.899648,
+        "lat": 45.79642,
+        "lon": 15.936608,
         "route": "114",
         "mode": "BUS"
       },
@@ -10131,41 +10124,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Samoborska",
-        "lat": 45.812225,
-        "lon": 15.861391,
-        "route": "119",
-        "mode": "BUS"
-      },
-      {
-        "name": "Josipa Lončara",
-        "lat": 45.811719,
-        "lon": 15.869931,
-        "route": "119",
-        "mode": "BUS"
-      },
-      {
-        "name": "Mokrovićeva",
-        "lat": 45.811317,
-        "lon": 15.873257,
-        "route": "119",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gimn.L.Vranjanin",
-        "lat": 45.811594,
-        "lon": 15.891385,
-        "route": "119",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vrapče-želj.stanica",
-        "lat": 45.811755,
-        "lon": 15.895267,
-        "route": "119",
-        "mode": "BUS"
-      },
-      {
         "name": "Vrapče-želj.stanica",
         "lat": 45.811983,
         "lon": 15.897261,
@@ -10202,9 +10160,51 @@
       },
       {
         "name": "Samoborska",
+        "lat": 45.812225,
+        "lon": 15.861391,
+        "route": "119",
+        "mode": "BUS"
+      },
+      {
+        "name": "Josipa Lončara",
+        "lat": 45.811719,
+        "lon": 15.869931,
+        "route": "119",
+        "mode": "BUS"
+      },
+      {
+        "name": "Mokrovićeva",
+        "lat": 45.811317,
+        "lon": 15.873257,
+        "route": "119",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gimn.L.Vranjanin",
+        "lat": 45.811594,
+        "lon": 15.891385,
+        "route": "119",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vrapče-želj.stanica",
+        "lat": 45.811755,
+        "lon": 15.895267,
+        "route": "119",
+        "mode": "BUS"
+      },
+      {
+        "name": "Samoborska",
         "lat": 45.812912,
         "lon": 15.861898,
         "route": "120",
+        "mode": "BUS"
+      },
+      {
+        "name": "Črnomerec",
+        "lat": 45.815703,
+        "lon": 15.933606,
+        "route": "121",
         "mode": "BUS"
       },
       {
@@ -10219,55 +10219,6 @@
         "lat": 45.818402,
         "lon": 15.876893,
         "route": "121",
-        "mode": "BUS"
-      },
-      {
-        "name": "Črnomerec",
-        "lat": 45.815703,
-        "lon": 15.933606,
-        "route": "121",
-        "mode": "BUS"
-      },
-      {
-        "name": "Seljačke bune",
-        "lat": 45.819621,
-        "lon": 15.833149,
-        "route": "123",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kamenolom",
-        "lat": 45.823558,
-        "lon": 15.836911,
-        "route": "123",
-        "mode": "BUS"
-      },
-      {
-        "name": "Sutinska vrela",
-        "lat": 45.824069,
-        "lon": 15.840096,
-        "route": "123",
-        "mode": "BUS"
-      },
-      {
-        "name": "Prigornica-sjever",
-        "lat": 45.826128,
-        "lon": 15.846295,
-        "route": "123",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bengezi",
-        "lat": 45.82958,
-        "lon": 15.84911,
-        "route": "123",
-        "mode": "BUS"
-      },
-      {
-        "name": "Podsusedsko Dolje",
-        "lat": 45.833427,
-        "lon": 15.85256,
-        "route": "123",
         "mode": "BUS"
       },
       {
@@ -10313,31 +10264,45 @@
         "mode": "BUS"
       },
       {
-        "name": "Mesekov put",
-        "lat": 45.821206,
-        "lon": 15.871113,
-        "route": "124",
+        "name": "Seljačke bune",
+        "lat": 45.819621,
+        "lon": 15.833149,
+        "route": "123",
         "mode": "BUS"
       },
       {
-        "name": "Kancelak",
-        "lat": 45.8257,
-        "lon": 15.870079,
-        "route": "124",
+        "name": "Kamenolom",
+        "lat": 45.823558,
+        "lon": 15.836911,
+        "route": "123",
         "mode": "BUS"
       },
       {
-        "name": "Kudekov put",
-        "lat": 45.830155,
-        "lon": 15.870195,
-        "route": "124",
+        "name": "Sutinska vrela",
+        "lat": 45.824069,
+        "lon": 15.840096,
+        "route": "123",
         "mode": "BUS"
       },
       {
-        "name": "Gornji Stenjevec",
-        "lat": 45.833294,
-        "lon": 15.869604,
-        "route": "124",
+        "name": "Prigornica-sjever",
+        "lat": 45.826128,
+        "lon": 15.846295,
+        "route": "123",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bengezi",
+        "lat": 45.82958,
+        "lon": 15.84911,
+        "route": "123",
+        "mode": "BUS"
+      },
+      {
+        "name": "Podsusedsko Dolje",
+        "lat": 45.833427,
+        "lon": 15.85256,
+        "route": "123",
         "mode": "BUS"
       },
       {
@@ -10366,6 +10331,69 @@
         "lat": 45.821154,
         "lon": 15.871025,
         "route": "124",
+        "mode": "BUS"
+      },
+      {
+        "name": "Mesekov put",
+        "lat": 45.821206,
+        "lon": 15.871113,
+        "route": "124",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kancelak",
+        "lat": 45.8257,
+        "lon": 15.870079,
+        "route": "124",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kudekov put",
+        "lat": 45.830155,
+        "lon": 15.870195,
+        "route": "124",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornji Stenjevec",
+        "lat": 45.833294,
+        "lon": 15.869604,
+        "route": "124",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jalšina",
+        "lat": 45.8231,
+        "lon": 15.90663,
+        "route": "125",
+        "mode": "BUS"
+      },
+      {
+        "name": "Margalići",
+        "lat": 45.826218,
+        "lon": 15.905551,
+        "route": "125",
+        "mode": "BUS"
+      },
+      {
+        "name": "Horvatnica",
+        "lat": 45.832635,
+        "lon": 15.903592,
+        "route": "125",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vrapčanska 269",
+        "lat": 45.838487,
+        "lon": 15.901064,
+        "route": "125",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornje Vrapče",
+        "lat": 45.842992,
+        "lon": 15.899857,
+        "route": "125",
         "mode": "BUS"
       },
       {
@@ -10407,41 +10435,6 @@
         "name": "Manterovčak",
         "lat": 45.819281,
         "lon": 15.905956,
-        "route": "125",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jalšina",
-        "lat": 45.8231,
-        "lon": 15.90663,
-        "route": "125",
-        "mode": "BUS"
-      },
-      {
-        "name": "Margalići",
-        "lat": 45.826218,
-        "lon": 15.905551,
-        "route": "125",
-        "mode": "BUS"
-      },
-      {
-        "name": "Horvatnica",
-        "lat": 45.832635,
-        "lon": 15.903592,
-        "route": "125",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vrapčanska 269",
-        "lat": 45.838487,
-        "lon": 15.901064,
-        "route": "125",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gornje Vrapče",
-        "lat": 45.842992,
-        "lon": 15.899857,
         "route": "125",
         "mode": "BUS"
       },
@@ -10635,6 +10628,90 @@
         "mode": "BUS"
       },
       {
+        "name": "Črnomerec",
+        "lat": 45.816087,
+        "lon": 15.933219,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bolnica Sveti Duh",
+        "lat": 45.819858,
+        "lon": 15.937881,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Orahovac",
+        "lat": 45.823457,
+        "lon": 15.938506,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Čukovići",
+        "lat": 45.827018,
+        "lon": 15.938032,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Trsje",
+        "lat": 45.830827,
+        "lon": 15.938949,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bijenik - crkva",
+        "lat": 45.833272,
+        "lon": 15.938568,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Čičkovina",
+        "lat": 45.834644,
+        "lon": 15.937288,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Viktora Vide",
+        "lat": 45.838604,
+        "lon": 15.935803,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Treščak",
+        "lat": 45.841349,
+        "lon": 15.935961,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Selišće",
+        "lat": 45.843927,
+        "lon": 15.936382,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Trpučev breg",
+        "lat": 45.847408,
+        "lon": 15.938793,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
+        "name": "Lukšić",
+        "lat": 45.850194,
+        "lon": 15.938595,
+        "route": "128",
+        "mode": "BUS"
+      },
+      {
         "name": "Lukšić-okretište",
         "lat": 45.853048,
         "lon": 15.935213,
@@ -10726,90 +10803,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Črnomerec",
-        "lat": 45.816087,
-        "lon": 15.933219,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bolnica Sveti Duh",
-        "lat": 45.819858,
-        "lon": 15.937881,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Orahovac",
-        "lat": 45.823457,
-        "lon": 15.938506,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Čukovići",
-        "lat": 45.827018,
-        "lon": 15.938032,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Trsje",
-        "lat": 45.830827,
-        "lon": 15.938949,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bijenik - crkva",
-        "lat": 45.833272,
-        "lon": 15.938568,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Čičkovina",
-        "lat": 45.834644,
-        "lon": 15.937288,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Viktora Vide",
-        "lat": 45.838604,
-        "lon": 15.935803,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Treščak",
-        "lat": 45.841349,
-        "lon": 15.935961,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Selišće",
-        "lat": 45.843927,
-        "lon": 15.936382,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Trpučev breg",
-        "lat": 45.847408,
-        "lon": 15.938793,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lukšić",
-        "lat": 45.850194,
-        "lon": 15.938595,
-        "route": "128",
-        "mode": "BUS"
-      },
-      {
         "name": "Šestinski dol 58",
         "lat": 45.821188,
         "lon": 15.944155,
@@ -10873,34 +10866,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Gajnički vidikovac",
-        "lat": 45.8207,
-        "lon": 15.872077,
-        "route": "130",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zelena mag.-Rušiščak",
-        "lat": 45.824617,
-        "lon": 15.873675,
-        "route": "130",
-        "mode": "BUS"
-      },
-      {
-        "name": "Rušiščak",
-        "lat": 45.830529,
-        "lon": 15.877139,
-        "route": "130",
-        "mode": "BUS"
-      },
-      {
-        "name": "Borčec",
-        "lat": 45.832287,
-        "lon": 15.880386,
-        "route": "130",
-        "mode": "BUS"
-      },
-      {
         "name": "Borčec",
         "lat": 45.832224,
         "lon": 15.880598,
@@ -10925,6 +10890,34 @@
         "name": "Gajnički vidikovac",
         "lat": 45.820438,
         "lon": 15.871398,
+        "route": "130",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gajnički vidikovac",
+        "lat": 45.8207,
+        "lon": 15.872077,
+        "route": "130",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zelena mag.-Rušiščak",
+        "lat": 45.824617,
+        "lon": 15.873675,
+        "route": "130",
+        "mode": "BUS"
+      },
+      {
+        "name": "Rušiščak",
+        "lat": 45.830529,
+        "lon": 15.877139,
+        "route": "130",
+        "mode": "BUS"
+      },
+      {
+        "name": "Borčec",
+        "lat": 45.832287,
+        "lon": 15.880386,
         "route": "130",
         "mode": "BUS"
       },
@@ -11020,6 +11013,13 @@
         "mode": "BUS"
       },
       {
+        "name": "Jadranska av.-Arena",
+        "lat": 45.773802,
+        "lon": 15.942138,
+        "route": "132",
+        "mode": "BUS"
+      },
+      {
         "name": "Zastavn.-nadvožnjak",
         "lat": 45.749832,
         "lon": 15.890156,
@@ -11100,13 +11100,6 @@
         "name": "Drežnik",
         "lat": 45.722665,
         "lon": 15.901282,
-        "route": "132",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jadranska av.-Arena",
-        "lat": 45.773802,
-        "lon": 15.942138,
         "route": "132",
         "mode": "BUS"
       },
@@ -11300,34 +11293,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Graberje-okretište",
-        "lat": 45.826778,
-        "lon": 15.91426,
-        "route": "135",
-        "mode": "BUS"
-      },
-      {
-        "name": "Millerova",
-        "lat": 45.824824,
-        "lon": 15.916593,
-        "route": "135",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kotoripska",
-        "lat": 45.822612,
-        "lon": 15.917934,
-        "route": "135",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šuma Grmoščica",
-        "lat": 45.819721,
-        "lon": 15.922831,
-        "route": "135",
-        "mode": "BUS"
-      },
-      {
         "name": "Šuma Grmoščica",
         "lat": 45.819566,
         "lon": 15.922956,
@@ -11356,6 +11321,41 @@
         "mode": "BUS"
       },
       {
+        "name": "Graberje-okretište",
+        "lat": 45.826778,
+        "lon": 15.91426,
+        "route": "135",
+        "mode": "BUS"
+      },
+      {
+        "name": "Millerova",
+        "lat": 45.824824,
+        "lon": 15.916593,
+        "route": "135",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kotoripska",
+        "lat": 45.822612,
+        "lon": 15.917934,
+        "route": "135",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šuma Grmoščica",
+        "lat": 45.819721,
+        "lon": 15.922831,
+        "route": "135",
+        "mode": "BUS"
+      },
+      {
+        "name": "Matije Divkovića",
+        "lat": 45.804284,
+        "lon": 15.897184,
+        "route": "136",
+        "mode": "BUS"
+      },
+      {
         "name": "Špansko",
         "lat": 45.802291,
         "lon": 15.889258,
@@ -11367,41 +11367,6 @@
         "lat": 45.802674,
         "lon": 15.897952,
         "route": "136",
-        "mode": "BUS"
-      },
-      {
-        "name": "Matije Divkovića",
-        "lat": 45.804284,
-        "lon": 15.897184,
-        "route": "136",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gornje Padine",
-        "lat": 45.820419,
-        "lon": 15.890035,
-        "route": "137",
-        "mode": "BUS"
-      },
-      {
-        "name": "Perjavica",
-        "lat": 45.826945,
-        "lon": 15.890763,
-        "route": "137",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dominika Mandića",
-        "lat": 45.830675,
-        "lon": 15.894042,
-        "route": "137",
-        "mode": "BUS"
-      },
-      {
-        "name": "Međašni klanac",
-        "lat": 45.834445,
-        "lon": 15.892167,
-        "route": "137",
         "mode": "BUS"
       },
       {
@@ -11436,6 +11401,34 @@
         "name": "Gornje Padine",
         "lat": 45.819779,
         "lon": 15.889884,
+        "route": "137",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornje Padine",
+        "lat": 45.820419,
+        "lon": 15.890035,
+        "route": "137",
+        "mode": "BUS"
+      },
+      {
+        "name": "Perjavica",
+        "lat": 45.826945,
+        "lon": 15.890763,
+        "route": "137",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dominika Mandića",
+        "lat": 45.830675,
+        "lon": 15.894042,
+        "route": "137",
+        "mode": "BUS"
+      },
+      {
+        "name": "Međašni klanac",
+        "lat": 45.834445,
+        "lon": 15.892167,
         "route": "137",
         "mode": "BUS"
       },
@@ -11538,86 +11531,9 @@
         "mode": "BUS"
       },
       {
-        "name": "Mihaljevac",
-        "lat": 45.841886,
-        "lon": 15.975311,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bikčevićeva staza",
-        "lat": 45.86965,
-        "lon": 15.97874,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "P.D. Runolist",
-        "lat": 45.88988,
-        "lon": 15.964786,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šumarske jaslice",
-        "lat": 45.898437,
-        "lon": 15.953917,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "A.K.Snježna kraljica",
-        "lat": 45.902498,
-        "lon": 15.95796,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Puntijarka",
-        "lat": 45.904273,
-        "lon": 15.969675,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Hunjka",
-        "lat": 45.914092,
-        "lon": 15.974792,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Puntijarka",
-        "lat": 45.904101,
-        "lon": 15.969189,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Snježna kraljica",
-        "lat": 45.90381,
-        "lon": 15.963155,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šumarske jaslice",
-        "lat": 45.899153,
-        "lon": 15.953648,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
         "name": "Tomislavov dom",
         "lat": 45.897966,
         "lon": 15.946613,
-        "route": "140",
-        "mode": "BUS"
-      },
-      {
-        "name": "Snježna kraljica",
-        "lat": 45.904236,
-        "lon": 15.963336,
         "route": "140",
         "mode": "BUS"
       },
@@ -11653,6 +11569,83 @@
         "name": "Šestinski lagvić",
         "lat": 45.857477,
         "lon": 15.949055,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Mihaljevac",
+        "lat": 45.841886,
+        "lon": 15.975311,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bikčevićeva staza",
+        "lat": 45.86965,
+        "lon": 15.97874,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "P.D. Runolist",
+        "lat": 45.88988,
+        "lon": 15.964786,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šumarske jaslice",
+        "lat": 45.898437,
+        "lon": 15.953917,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "A.K.Snježna kraljica",
+        "lat": 45.902498,
+        "lon": 15.95796,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šumarske jaslice",
+        "lat": 45.899153,
+        "lon": 15.953648,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Snježna kraljica",
+        "lat": 45.904236,
+        "lon": 15.963336,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Puntijarka",
+        "lat": 45.904273,
+        "lon": 15.969675,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Hunjka",
+        "lat": 45.914092,
+        "lon": 15.974792,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Puntijarka",
+        "lat": 45.904101,
+        "lon": 15.969189,
+        "route": "140",
+        "mode": "BUS"
+      },
+      {
+        "name": "Snježna kraljica",
+        "lat": 45.90381,
+        "lon": 15.963155,
         "route": "140",
         "mode": "BUS"
       },
@@ -11755,6 +11748,41 @@
         "mode": "BUS"
       },
       {
+        "name": "Orešje 47c",
+        "lat": 45.831797,
+        "lon": 15.88394,
+        "route": "143",
+        "mode": "BUS"
+      },
+      {
+        "name": "Borovina",
+        "lat": 45.827425,
+        "lon": 15.885098,
+        "route": "143",
+        "mode": "BUS"
+      },
+      {
+        "name": "Orešje 3",
+        "lat": 45.824384,
+        "lon": 15.883054,
+        "route": "143",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gospodska 108",
+        "lat": 45.8203,
+        "lon": 15.881933,
+        "route": "143",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gospodska 59a",
+        "lat": 45.819699,
+        "lon": 15.885355,
+        "route": "143",
+        "mode": "BUS"
+      },
+      {
         "name": "Vrapčanska aleja",
         "lat": 45.812578,
         "lon": 15.897055,
@@ -11797,66 +11825,10 @@
         "mode": "BUS"
       },
       {
-        "name": "Orešje 47c",
-        "lat": 45.831797,
-        "lon": 15.88394,
-        "route": "143",
-        "mode": "BUS"
-      },
-      {
-        "name": "Borovina",
-        "lat": 45.827425,
-        "lon": 15.885098,
-        "route": "143",
-        "mode": "BUS"
-      },
-      {
-        "name": "Orešje 3",
-        "lat": 45.824384,
-        "lon": 15.883054,
-        "route": "143",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gospodska 108",
-        "lat": 45.8203,
-        "lon": 15.881933,
-        "route": "143",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gospodska 59a",
-        "lat": 45.819699,
-        "lon": 15.885355,
-        "route": "143",
-        "mode": "BUS"
-      },
-      {
         "name": "Dom  Svetog Josipa",
         "lat": 45.819609,
         "lon": 15.941147,
         "route": "144",
-        "mode": "BUS"
-      },
-      {
-        "name": "Marina Tartaglie",
-        "lat": 45.806739,
-        "lon": 15.893652,
-        "route": "146",
-        "mode": "BUS"
-      },
-      {
-        "name": "Stenjevečka",
-        "lat": 45.807256,
-        "lon": 15.889219,
-        "route": "146",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jankomir",
-        "lat": 45.809941,
-        "lon": 15.878456,
-        "route": "146",
         "mode": "BUS"
       },
       {
@@ -11877,6 +11849,27 @@
         "name": "Zapadni kolodvor",
         "lat": 45.809494,
         "lon": 15.953928,
+        "route": "146",
+        "mode": "BUS"
+      },
+      {
+        "name": "Marina Tartaglie",
+        "lat": 45.806739,
+        "lon": 15.893652,
+        "route": "146",
+        "mode": "BUS"
+      },
+      {
+        "name": "Stenjevečka",
+        "lat": 45.807256,
+        "lon": 15.889219,
+        "route": "146",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jankomir",
+        "lat": 45.809941,
+        "lon": 15.878456,
         "route": "146",
         "mode": "BUS"
       },
@@ -12098,20 +12091,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Trdice 52",
-        "lat": 45.835349,
-        "lon": 15.909394,
-        "route": "151",
-        "mode": "BUS"
-      },
-      {
-        "name": "Završje III. odvojak",
-        "lat": 45.833126,
-        "lon": 15.915875,
-        "route": "151",
-        "mode": "BUS"
-      },
-      {
         "name": "Peršinci",
         "lat": 45.832362,
         "lon": 15.917749,
@@ -12129,6 +12108,20 @@
         "name": "Trdice 56",
         "lat": 45.835618,
         "lon": 15.909641,
+        "route": "151",
+        "mode": "BUS"
+      },
+      {
+        "name": "Trdice 52",
+        "lat": 45.835349,
+        "lon": 15.909394,
+        "route": "151",
+        "mode": "BUS"
+      },
+      {
+        "name": "Završje III. odvojak",
+        "lat": 45.833126,
+        "lon": 15.915875,
         "route": "151",
         "mode": "BUS"
       },
@@ -12490,13 +12483,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Društveni dom",
-        "lat": 45.715597,
-        "lon": 15.942448,
-        "route": "163",
-        "mode": "BUS"
-      },
-      {
         "name": "G.Trpuci,okretište",
         "lat": 45.649756,
         "lon": 15.909155,
@@ -12535,6 +12521,13 @@
         "name": "Ferki",
         "lat": 45.665209,
         "lon": 15.937611,
+        "route": "163",
+        "mode": "BUS"
+      },
+      {
+        "name": "Društveni dom",
+        "lat": 45.715597,
+        "lon": 15.942448,
         "route": "163",
         "mode": "BUS"
       },
@@ -12742,27 +12735,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Markuševec",
-        "lat": 45.658901,
-        "lon": 15.964248,
-        "route": "166",
-        "mode": "BUS"
-      },
-      {
-        "name": "Turopolj.-Markulini",
-        "lat": 45.659979,
-        "lon": 15.956957,
-        "route": "166",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dragonožec-kapela",
-        "lat": 45.660767,
-        "lon": 15.949612,
-        "route": "166",
-        "mode": "BUS"
-      },
-      {
         "name": "Dragonožec-škola",
         "lat": 45.662715,
         "lon": 15.942727,
@@ -12787,6 +12759,27 @@
         "name": "Markuševec",
         "lat": 45.658917,
         "lon": 15.96496,
+        "route": "166",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markuševec",
+        "lat": 45.658901,
+        "lon": 15.964248,
+        "route": "166",
+        "mode": "BUS"
+      },
+      {
+        "name": "Turopolj.-Markulini",
+        "lat": 45.659979,
+        "lon": 15.956957,
+        "route": "166",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dragonožec-kapela",
+        "lat": 45.660767,
+        "lon": 15.949612,
         "route": "166",
         "mode": "BUS"
       },
@@ -12882,6 +12875,69 @@
         "mode": "BUS"
       },
       {
+        "name": "Zelengaj",
+        "lat": 45.869735,
+        "lon": 15.789258,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Trg Dr. Tuđmana",
+        "lat": 45.869631,
+        "lon": 15.794963,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Stadion",
+        "lat": 45.864229,
+        "lon": 15.802106,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Terminal",
+        "lat": 45.860994,
+        "lon": 15.799585,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dom zdravlja",
+        "lat": 45.85771,
+        "lon": 15.802778,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kodrmanova",
+        "lat": 45.854854,
+        "lon": 15.805822,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Crkva",
+        "lat": 45.850229,
+        "lon": 15.810043,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Klake",
+        "lat": 45.849087,
+        "lon": 15.81447,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
+        "name": "Željeznička stanica",
+        "lat": 45.843761,
+        "lon": 15.815181,
+        "route": "172",
+        "mode": "BUS"
+      },
+      {
         "name": "Črnomerec",
         "lat": 45.815837,
         "lon": 15.934329,
@@ -12934,69 +12990,6 @@
         "name": "Terminal",
         "lat": 45.860895,
         "lon": 15.799619,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zelengaj",
-        "lat": 45.869735,
-        "lon": 15.789258,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Terminal",
-        "lat": 45.860994,
-        "lon": 15.799585,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Trg Dr. Tuđmana",
-        "lat": 45.869631,
-        "lon": 15.794963,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Stadion",
-        "lat": 45.864229,
-        "lon": 15.802106,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dom zdravlja",
-        "lat": 45.85771,
-        "lon": 15.802778,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kodrmanova",
-        "lat": 45.854854,
-        "lon": 15.805822,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Crkva",
-        "lat": 45.850229,
-        "lon": 15.810043,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Klake",
-        "lat": 45.849087,
-        "lon": 15.81447,
-        "route": "172",
-        "mode": "BUS"
-      },
-      {
-        "name": "Željeznička stanica",
-        "lat": 45.843761,
-        "lon": 15.815181,
         "route": "172",
         "mode": "BUS"
       },
@@ -13435,6 +13428,20 @@
         "mode": "BUS"
       },
       {
+        "name": "Konzum",
+        "lat": 45.861475,
+        "lon": 15.786383,
+        "route": "182",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dvorac Lužnica",
+        "lat": 45.861512,
+        "lon": 15.777793,
+        "route": "182",
+        "mode": "BUS"
+      },
+      {
         "name": "Mokrička 8",
         "lat": 45.863348,
         "lon": 15.790697,
@@ -13508,20 +13515,6 @@
         "name": "Mokrička 8",
         "lat": 45.862839,
         "lon": 15.790582,
-        "route": "182",
-        "mode": "BUS"
-      },
-      {
-        "name": "Konzum",
-        "lat": 45.861475,
-        "lon": 15.786383,
-        "route": "182",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dvorac Lužnica",
-        "lat": 45.861512,
-        "lon": 15.777793,
         "route": "182",
         "mode": "BUS"
       },
@@ -14030,104 +14023,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Vidovec - škola",
-        "lat": 45.898476,
-        "lon": 16.034182,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vidovec-trgovina",
-        "lat": 45.896274,
-        "lon": 16.03264,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Budeki-kapelica",
-        "lat": 45.891309,
-        "lon": 16.033378,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Markušev. Popovec 62",
-        "lat": 45.888748,
-        "lon": 16.034968,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Markuševečka Trnava",
-        "lat": 45.880525,
-        "lon": 16.032939,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Miroševečka 190",
-        "lat": 45.876041,
-        "lon": 16.034473,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Čepini",
-        "lat": 45.871161,
-        "lon": 16.035466,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Miroševečka 137",
-        "lat": 45.867921,
-        "lon": 16.037168,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Žigulići",
-        "lat": 45.864186,
-        "lon": 16.0381,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Put za Bediće",
-        "lat": 45.859635,
-        "lon": 16.040071,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Novaki",
-        "lat": 45.854331,
-        "lon": 16.042705,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Grad mladih",
-        "lat": 45.851662,
-        "lon": 16.046403,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Granešina-groblje",
-        "lat": 45.849619,
-        "lon": 16.04925,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
-        "name": "Granešina-škola",
-        "lat": 45.846742,
-        "lon": 16.052874,
-        "route": "208",
-        "mode": "BUS"
-      },
-      {
         "name": "Dubrava",
         "lat": 45.825074,
         "lon": 16.036643,
@@ -14236,6 +14131,104 @@
         "name": "Vidovec - škola",
         "lat": 45.89847,
         "lon": 16.034366,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vidovec - škola",
+        "lat": 45.898476,
+        "lon": 16.034182,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vidovec-trgovina",
+        "lat": 45.896274,
+        "lon": 16.03264,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Budeki-kapelica",
+        "lat": 45.891309,
+        "lon": 16.033378,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markušev. Popovec 62",
+        "lat": 45.888748,
+        "lon": 16.034968,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markuševečka Trnava",
+        "lat": 45.880525,
+        "lon": 16.032939,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Miroševečka 190",
+        "lat": 45.876041,
+        "lon": 16.034473,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Čepini",
+        "lat": 45.871161,
+        "lon": 16.035466,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Miroševečka 137",
+        "lat": 45.867921,
+        "lon": 16.037168,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Žigulići",
+        "lat": 45.864186,
+        "lon": 16.0381,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Put za Bediće",
+        "lat": 45.859635,
+        "lon": 16.040071,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Novaki",
+        "lat": 45.854331,
+        "lon": 16.042705,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Grad mladih",
+        "lat": 45.851662,
+        "lon": 16.046403,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Granešina-groblje",
+        "lat": 45.849619,
+        "lon": 16.04925,
+        "route": "208",
+        "mode": "BUS"
+      },
+      {
+        "name": "Granešina-škola",
+        "lat": 45.846742,
+        "lon": 16.052874,
         "route": "208",
         "mode": "BUS"
       },
@@ -14828,6 +14821,20 @@
         "mode": "BUS"
       },
       {
+        "name": "Žitnjak-ambulanta",
+        "lat": 45.781706,
+        "lon": 16.061702,
+        "route": "217",
+        "mode": "BUS"
+      },
+      {
+        "name": "Struge III.",
+        "lat": 45.786335,
+        "lon": 16.065218,
+        "route": "217",
+        "mode": "BUS"
+      },
+      {
         "name": "Struge",
         "lat": 45.790915,
         "lon": 16.071703,
@@ -14835,16 +14842,23 @@
         "mode": "BUS"
       },
       {
-        "name": "Struge III.",
-        "lat": 45.786868,
-        "lon": 16.065901,
+        "name": "Kvaternikov trg",
+        "lat": 45.812745,
+        "lon": 15.999159,
         "route": "217",
         "mode": "BUS"
       },
       {
-        "name": "Žitnjak-ambulanta",
-        "lat": 45.781732,
-        "lon": 16.061639,
+        "name": "Petruševec I odv. V",
+        "lat": 45.774636,
+        "lon": 16.056965,
+        "route": "217",
+        "mode": "BUS"
+      },
+      {
+        "name": "Trafostanica",
+        "lat": 45.773122,
+        "lon": 16.053407,
         "route": "217",
         "mode": "BUS"
       },
@@ -14870,37 +14884,16 @@
         "mode": "BUS"
       },
       {
-        "name": "Žitnjak-ambulanta",
-        "lat": 45.781706,
-        "lon": 16.061702,
-        "route": "217",
-        "mode": "BUS"
-      },
-      {
         "name": "Struge III.",
-        "lat": 45.786335,
-        "lon": 16.065218,
+        "lat": 45.786868,
+        "lon": 16.065901,
         "route": "217",
         "mode": "BUS"
       },
       {
-        "name": "Kvaternikov trg",
-        "lat": 45.812745,
-        "lon": 15.999159,
-        "route": "217",
-        "mode": "BUS"
-      },
-      {
-        "name": "Petruševec I odv. V",
-        "lat": 45.774636,
-        "lon": 16.056965,
-        "route": "217",
-        "mode": "BUS"
-      },
-      {
-        "name": "Trafostanica",
-        "lat": 45.773122,
-        "lon": 16.053407,
+        "name": "Žitnjak-ambulanta",
+        "lat": 45.781732,
+        "lon": 16.061639,
         "route": "217",
         "mode": "BUS"
       },
@@ -15038,6 +15031,20 @@
         "mode": "BUS"
       },
       {
+        "name": "Kauzlarićev prilaz",
+        "lat": 45.765171,
+        "lon": 16.002383,
+        "route": "220",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vatikanska-Sv.Mateja",
+        "lat": 45.768283,
+        "lon": 15.998494,
+        "route": "220",
+        "mode": "BUS"
+      },
+      {
         "name": "Hribarov prilaz",
         "lat": 45.7653,
         "lon": 15.993417,
@@ -15055,20 +15062,6 @@
         "name": "Hrelićka",
         "lat": 45.762125,
         "lon": 15.998448,
-        "route": "220",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kauzlarićev prilaz",
-        "lat": 45.765171,
-        "lon": 16.002383,
-        "route": "220",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vatikanska-Sv.Mateja",
-        "lat": 45.768283,
-        "lon": 15.998494,
         "route": "220",
         "mode": "BUS"
       },
@@ -15101,6 +15094,27 @@
         "mode": "BUS"
       },
       {
+        "name": "Folnegovićevo",
+        "lat": 45.790911,
+        "lon": 16.00298,
+        "route": "222",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zapruđe",
+        "lat": 45.778957,
+        "lon": 16.001482,
+        "route": "222",
+        "mode": "BUS"
+      },
+      {
+        "name": "Utrina",
+        "lat": 45.778141,
+        "lon": 15.995839,
+        "route": "222",
+        "mode": "BUS"
+      },
+      {
         "name": "Središće",
         "lat": 45.777698,
         "lon": 15.991608,
@@ -15129,37 +15143,9 @@
         "mode": "BUS"
       },
       {
-        "name": "Folnegovićevo",
-        "lat": 45.790911,
-        "lon": 16.00298,
-        "route": "222",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zapruđe",
-        "lat": 45.778957,
-        "lon": 16.001482,
-        "route": "222",
-        "mode": "BUS"
-      },
-      {
-        "name": "Utrina",
-        "lat": 45.778141,
-        "lon": 15.995839,
-        "route": "222",
-        "mode": "BUS"
-      },
-      {
-        "name": "Josipa Stadlera",
-        "lat": 45.836753,
-        "lon": 16.072898,
-        "route": "223",
-        "mode": "BUS"
-      },
-      {
-        "name": "Trnovčica 117",
-        "lat": 45.836206,
-        "lon": 16.068583,
+        "name": "Dubrava",
+        "lat": 45.824571,
+        "lon": 16.037459,
         "route": "223",
         "mode": "BUS"
       },
@@ -15167,13 +15153,6 @@
         "name": "Ljubijska",
         "lat": 45.825895,
         "lon": 16.04376,
-        "route": "223",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubrava",
-        "lat": 45.824571,
-        "lon": 16.037459,
         "route": "223",
         "mode": "BUS"
       },
@@ -15206,31 +15185,17 @@
         "mode": "BUS"
       },
       {
-        "name": "Novoselec",
-        "lat": 45.852181,
-        "lon": 16.082228,
-        "route": "224",
+        "name": "Josipa Stadlera",
+        "lat": 45.836753,
+        "lon": 16.072898,
+        "route": "223",
         "mode": "BUS"
       },
       {
-        "name": "Žukčićeva 19",
-        "lat": 45.84901,
-        "lon": 16.082906,
-        "route": "224",
-        "mode": "BUS"
-      },
-      {
-        "name": "Brestovečka 128",
-        "lat": 45.838965,
-        "lon": 16.089021,
-        "route": "224",
-        "mode": "BUS"
-      },
-      {
-        "name": "Brestovečka 100",
-        "lat": 45.836663,
-        "lon": 16.089756,
-        "route": "224",
+        "name": "Trnovčica 117",
+        "lat": 45.836206,
+        "lon": 16.068583,
+        "route": "223",
         "mode": "BUS"
       },
       {
@@ -15297,16 +15262,44 @@
         "mode": "BUS"
       },
       {
-        "name": "Kozari Bok",
-        "lat": 45.798784,
-        "lon": 16.044554,
-        "route": "225",
+        "name": "Novoselec",
+        "lat": 45.85218,
+        "lon": 16.082231,
+        "route": "224",
+        "mode": "BUS"
+      },
+      {
+        "name": "Žukčićeva 19",
+        "lat": 45.84901,
+        "lon": 16.082906,
+        "route": "224",
+        "mode": "BUS"
+      },
+      {
+        "name": "Brestovečka 128",
+        "lat": 45.838965,
+        "lon": 16.089021,
+        "route": "224",
+        "mode": "BUS"
+      },
+      {
+        "name": "Brestovečka 100",
+        "lat": 45.836663,
+        "lon": 16.089756,
+        "route": "224",
         "mode": "BUS"
       },
       {
         "name": "Dubec",
         "lat": 45.827758,
         "lon": 16.075979,
+        "route": "225",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kozari Bok",
+        "lat": 45.798784,
+        "lon": 16.044554,
         "route": "225",
         "mode": "BUS"
       },
@@ -15322,6 +15315,48 @@
         "lat": 45.79863,
         "lon": 16.044873,
         "route": "225",
+        "mode": "BUS"
+      },
+      {
+        "name": "Remete 128",
+        "lat": 45.846837,
+        "lon": 15.992544,
+        "route": "226",
+        "mode": "BUS"
+      },
+      {
+        "name": "Remete 76",
+        "lat": 45.84343,
+        "lon": 15.995327,
+        "route": "226",
+        "mode": "BUS"
+      },
+      {
+        "name": "Remete 8",
+        "lat": 45.838898,
+        "lon": 15.997695,
+        "route": "226",
+        "mode": "BUS"
+      },
+      {
+        "name": "Rim",
+        "lat": 45.834771,
+        "lon": 16.002208,
+        "route": "226",
+        "mode": "BUS"
+      },
+      {
+        "name": "Barutanski jarak 96",
+        "lat": 45.832022,
+        "lon": 16.004617,
+        "route": "226",
+        "mode": "BUS"
+      },
+      {
+        "name": "Barutanski jarak 48",
+        "lat": 45.828141,
+        "lon": 16.006319,
+        "route": "226",
         "mode": "BUS"
       },
       {
@@ -15374,45 +15409,115 @@
         "mode": "BUS"
       },
       {
-        "name": "Remete 128",
-        "lat": 45.846837,
-        "lon": 15.992544,
-        "route": "226",
+        "name": "Gračansko dolje",
+        "lat": 45.861607,
+        "lon": 15.983143,
+        "route": "227",
         "mode": "BUS"
       },
       {
-        "name": "Remete 76",
-        "lat": 45.84343,
-        "lon": 15.995327,
-        "route": "226",
+        "name": "Jazbina 159",
+        "lat": 45.861115,
+        "lon": 15.995262,
+        "route": "227",
         "mode": "BUS"
       },
       {
-        "name": "Remete 8",
-        "lat": 45.838898,
-        "lon": 15.997695,
-        "route": "226",
+        "name": "Fakultetsko dobro",
+        "lat": 45.855955,
+        "lon": 16.001462,
+        "route": "227",
         "mode": "BUS"
       },
       {
-        "name": "Rim",
-        "lat": 45.834771,
-        "lon": 16.002208,
-        "route": "226",
+        "name": "Jazbina 120",
+        "lat": 45.851502,
+        "lon": 16.008571,
+        "route": "227",
         "mode": "BUS"
       },
       {
-        "name": "Barutanski jarak 96",
-        "lat": 45.832022,
-        "lon": 16.004617,
-        "route": "226",
+        "name": "VIII. Jazbinski odv.",
+        "lat": 45.848178,
+        "lon": 16.011709,
+        "route": "227",
         "mode": "BUS"
       },
       {
-        "name": "Barutanski jarak 48",
-        "lat": 45.828141,
-        "lon": 16.006319,
-        "route": "226",
+        "name": "Jazbina 71",
+        "lat": 45.846614,
+        "lon": 16.01396,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jazbina 48",
+        "lat": 45.844636,
+        "lon": 16.016962,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Čret 27",
+        "lat": 45.842492,
+        "lon": 16.020532,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornji Bukovac-Kosa",
+        "lat": 45.840763,
+        "lon": 16.01548,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornji Bukovac",
+        "lat": 45.844377,
+        "lon": 16.009052,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bukovac 115",
+        "lat": 45.842903,
+        "lon": 16.007559,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bukovac - VODOVOD",
+        "lat": 45.840726,
+        "lon": 16.007543,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Oboj - Kosa",
+        "lat": 45.837694,
+        "lon": 16.009484,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Oboj 28",
+        "lat": 45.833447,
+        "lon": 16.011656,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Oboj-Jurja Ves",
+        "lat": 45.829663,
+        "lon": 16.012205,
+        "route": "227",
+        "mode": "BUS"
+      },
+      {
+        "name": "Prilesje - ŠUMA",
+        "lat": 45.827362,
+        "lon": 16.013494,
+        "route": "227",
         "mode": "BUS"
       },
       {
@@ -15542,118 +15647,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Gračansko dolje",
-        "lat": 45.861607,
-        "lon": 15.983143,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jazbina 159",
-        "lat": 45.861115,
-        "lon": 15.995262,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Fakultetsko dobro",
-        "lat": 45.855955,
-        "lon": 16.001462,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jazbina 120",
-        "lat": 45.851502,
-        "lon": 16.008571,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "VIII. Jazbinski odv.",
-        "lat": 45.848178,
-        "lon": 16.011709,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jazbina 71",
-        "lat": 45.846614,
-        "lon": 16.01396,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jazbina 48",
-        "lat": 45.844636,
-        "lon": 16.016962,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Čret 27",
-        "lat": 45.842492,
-        "lon": 16.020532,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gornji Bukovac-Kosa",
-        "lat": 45.840763,
-        "lon": 16.01548,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gornji Bukovac",
-        "lat": 45.844377,
-        "lon": 16.009052,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bukovac 115",
-        "lat": 45.842903,
-        "lon": 16.007559,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bukovac - VODOVOD",
-        "lat": 45.840726,
-        "lon": 16.007543,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Oboj - Kosa",
-        "lat": 45.837694,
-        "lon": 16.009484,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Oboj 28",
-        "lat": 45.833447,
-        "lon": 16.011656,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Oboj-Jurja Ves",
-        "lat": 45.829663,
-        "lon": 16.012205,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
-        "name": "Prilesje - ŠUMA",
-        "lat": 45.827362,
-        "lon": 16.013494,
-        "route": "227",
-        "mode": "BUS"
-      },
-      {
         "name": "Borongaj",
         "lat": 45.814667,
         "lon": 16.017922,
@@ -15679,13 +15672,6 @@
         "lat": 45.81985,
         "lon": 16.003754,
         "route": "228",
-        "mode": "BUS"
-      },
-      {
-        "name": "Odra-Svetog Izidora",
-        "lat": 45.729874,
-        "lon": 15.992315,
-        "route": "229",
         "mode": "BUS"
       },
       {
@@ -15721,6 +15707,69 @@
         "lat": 45.729773,
         "lon": 15.993341,
         "route": "229",
+        "mode": "BUS"
+      },
+      {
+        "name": "Odra-Svetog Izidora",
+        "lat": 45.729874,
+        "lon": 15.992315,
+        "route": "229",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dotršćinska",
+        "lat": 45.860812,
+        "lon": 16.032955,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Blizno",
+        "lat": 45.856825,
+        "lon": 16.033662,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Lešće",
+        "lat": 45.854421,
+        "lon": 16.034707,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zelenčica",
+        "lat": 45.850174,
+        "lon": 16.035402,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Pesteri",
+        "lat": 45.84804,
+        "lon": 16.037726,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Sjeverna",
+        "lat": 45.843534,
+        "lon": 16.038826,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Valturska",
+        "lat": 45.83833,
+        "lon": 16.03785,
+        "route": "230",
+        "mode": "BUS"
+      },
+      {
+        "name": "Škabrnjska",
+        "lat": 45.833765,
+        "lon": 16.038012,
+        "route": "230",
         "mode": "BUS"
       },
       {
@@ -15794,59 +15843,31 @@
         "mode": "BUS"
       },
       {
-        "name": "Dotršćinska",
-        "lat": 45.860812,
-        "lon": 16.032955,
-        "route": "230",
+        "name": "Dubec",
+        "lat": 45.827958,
+        "lon": 16.078045,
+        "route": "231",
         "mode": "BUS"
       },
       {
-        "name": "Blizno",
-        "lat": 45.856825,
-        "lon": 16.033662,
-        "route": "230",
+        "name": "Branim.-Zagrebačka",
+        "lat": 45.826019,
+        "lon": 16.082847,
+        "route": "231",
         "mode": "BUS"
       },
       {
-        "name": "Lešće",
-        "lat": 45.854421,
-        "lon": 16.034707,
-        "route": "230",
+        "name": "Branim.-Škrnjugova",
+        "lat": 45.823555,
+        "lon": 16.076966,
+        "route": "231",
         "mode": "BUS"
       },
       {
-        "name": "Zelenčica",
-        "lat": 45.850174,
-        "lon": 16.035402,
-        "route": "230",
-        "mode": "BUS"
-      },
-      {
-        "name": "Pesteri",
-        "lat": 45.84804,
-        "lon": 16.037726,
-        "route": "230",
-        "mode": "BUS"
-      },
-      {
-        "name": "Sjeverna",
-        "lat": 45.843534,
-        "lon": 16.038826,
-        "route": "230",
-        "mode": "BUS"
-      },
-      {
-        "name": "Valturska",
-        "lat": 45.83833,
-        "lon": 16.03785,
-        "route": "230",
-        "mode": "BUS"
-      },
-      {
-        "name": "Škabrnjska",
-        "lat": 45.833765,
-        "lon": 16.038012,
-        "route": "230",
+        "name": "Ravnice",
+        "lat": 45.815774,
+        "lon": 16.031734,
+        "route": "231",
         "mode": "BUS"
       },
       {
@@ -15878,38 +15899,80 @@
         "mode": "BUS"
       },
       {
-        "name": "Dubec",
-        "lat": 45.827958,
-        "lon": 16.078045,
-        "route": "231",
-        "mode": "BUS"
-      },
-      {
-        "name": "Branim.-Zagrebačka",
-        "lat": 45.826019,
-        "lon": 16.082847,
-        "route": "231",
-        "mode": "BUS"
-      },
-      {
-        "name": "Branim.-Škrnjugova",
-        "lat": 45.823555,
-        "lon": 16.076966,
-        "route": "231",
-        "mode": "BUS"
-      },
-      {
-        "name": "Ravnice",
-        "lat": 45.815774,
-        "lon": 16.031734,
-        "route": "231",
-        "mode": "BUS"
-      },
-      {
         "name": "Čret-Melinišće",
         "lat": 45.840828,
         "lon": 16.021176,
         "route": "232",
+        "mode": "BUS"
+      },
+      {
+        "name": "Mihaljevac",
+        "lat": 45.841798,
+        "lon": 15.974822,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gračanska 10",
+        "lat": 45.846438,
+        "lon": 15.976997,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gračanska 48",
+        "lat": 45.850991,
+        "lon": 15.975136,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gračanska 60",
+        "lat": 45.854339,
+        "lon": 15.974635,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Zvečaj",
+        "lat": 45.857754,
+        "lon": 15.976324,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jelenčica",
+        "lat": 45.86458,
+        "lon": 15.992458,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Bačun",
+        "lat": 45.867195,
+        "lon": 15.997275,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kamenarski breg",
+        "lat": 45.868789,
+        "lon": 16.000209,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markuševečka 106",
+        "lat": 45.871191,
+        "lon": 16.00519,
+        "route": "233",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markuševečka 140",
+        "lat": 45.87428,
+        "lon": 16.011829,
+        "route": "233",
         "mode": "BUS"
       },
       {
@@ -15990,73 +16053,10 @@
         "mode": "BUS"
       },
       {
-        "name": "Mihaljevac",
-        "lat": 45.841798,
-        "lon": 15.974822,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gračanska 10",
-        "lat": 45.846438,
-        "lon": 15.976997,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gračanska 48",
-        "lat": 45.850991,
-        "lon": 15.975136,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gračanska 60",
-        "lat": 45.854339,
-        "lon": 15.974635,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zvečaj",
-        "lat": 45.857754,
-        "lon": 15.976324,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jelenčica",
-        "lat": 45.86458,
-        "lon": 15.992458,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Bačun",
-        "lat": 45.867195,
-        "lon": 15.997275,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kamenarski breg",
-        "lat": 45.868789,
-        "lon": 16.000209,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Markuševečka 106",
-        "lat": 45.871191,
-        "lon": 16.00519,
-        "route": "233",
-        "mode": "BUS"
-      },
-      {
-        "name": "Markuševečka 140",
-        "lat": 45.87428,
-        "lon": 16.011829,
-        "route": "233",
+        "name": "Žarka Dolinara",
+        "lat": 45.778309,
+        "lon": 15.966151,
+        "route": "234",
         "mode": "BUS"
       },
       {
@@ -16070,13 +16070,6 @@
         "name": "ZG Velesajam",
         "lat": 45.778408,
         "lon": 15.966078,
-        "route": "234",
-        "mode": "BUS"
-      },
-      {
-        "name": "Žarka Dolinara",
-        "lat": 45.778309,
-        "lon": 15.966151,
         "route": "234",
         "mode": "BUS"
       },
@@ -16235,16 +16228,16 @@
         "mode": "BUS"
       },
       {
-        "name": "Podbrežje okretište",
-        "lat": 45.767264,
-        "lon": 15.973458,
+        "name": "Podbrežje",
+        "lat": 45.767403,
+        "lon": 15.979462,
         "route": "242",
         "mode": "BUS"
       },
       {
-        "name": "Podbrežje",
-        "lat": 45.767403,
-        "lon": 15.979462,
+        "name": "Podbrežje okretište",
+        "lat": 45.767264,
+        "lon": 15.973458,
         "route": "242",
         "mode": "BUS"
       },
@@ -16288,69 +16281,6 @@
         "lat": 45.785208,
         "lon": 15.961288,
         "route": "243",
-        "mode": "BUS"
-      },
-      {
-        "name": "Škola Vugrovec",
-        "lat": 45.876708,
-        "lon": 16.111469,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vugrovec kod crkve",
-        "lat": 45.881289,
-        "lon": 16.108784,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vugrovec D.-groblje",
-        "lat": 45.884689,
-        "lon": 16.106272,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vugrovečka-Grljakova",
-        "lat": 45.891264,
-        "lon": 16.100992,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Vugrovečka-Vukasi",
-        "lat": 45.891721,
-        "lon": 16.098832,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gornji Vugrovec 58",
-        "lat": 45.892447,
-        "lon": 16.095364,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Židaki",
-        "lat": 45.893545,
-        "lon": 16.089675,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Rožići",
-        "lat": 45.895365,
-        "lon": 16.084881,
-        "route": "261",
-        "mode": "BUS"
-      },
-      {
-        "name": "Goranec",
-        "lat": 45.897248,
-        "lon": 16.078668,
-        "route": "261",
         "mode": "BUS"
       },
       {
@@ -16413,6 +16343,69 @@
         "name": "Škola Vugrovec",
         "lat": 45.877118,
         "lon": 16.111321,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Škola Vugrovec",
+        "lat": 45.876708,
+        "lon": 16.111469,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vugrovec kod crkve",
+        "lat": 45.881289,
+        "lon": 16.108784,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vugrovec D.-groblje",
+        "lat": 45.884689,
+        "lon": 16.106272,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vugrovečka-Grljakova",
+        "lat": 45.891264,
+        "lon": 16.100992,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Vugrovečka-Vukasi",
+        "lat": 45.891721,
+        "lon": 16.098832,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gornji Vugrovec 58",
+        "lat": 45.892447,
+        "lon": 16.095364,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Židaki",
+        "lat": 45.893545,
+        "lon": 16.089675,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Rožići",
+        "lat": 45.895365,
+        "lon": 16.084881,
+        "route": "261",
+        "mode": "BUS"
+      },
+      {
+        "name": "Goranec",
+        "lat": 45.897248,
+        "lon": 16.078668,
         "route": "261",
         "mode": "BUS"
       },
@@ -16669,6 +16662,27 @@
         "mode": "BUS"
       },
       {
+        "name": "Aleja mira",
+        "lat": 45.861768,
+        "lon": 16.115555,
+        "route": "267",
+        "mode": "BUS"
+      },
+      {
+        "name": "Markovo P.mrtvačnica",
+        "lat": 45.858389,
+        "lon": 16.120129,
+        "route": "267",
+        "mode": "BUS"
+      },
+      {
+        "name": "M.Polje istočni ulaz",
+        "lat": 45.857759,
+        "lon": 16.124986,
+        "route": "267",
+        "mode": "BUS"
+      },
+      {
         "name": "M.Polje-okretište",
         "lat": 45.860514,
         "lon": 16.12899,
@@ -16693,27 +16707,6 @@
         "name": "Aleja mira",
         "lat": 45.86135,
         "lon": 16.11592,
-        "route": "267",
-        "mode": "BUS"
-      },
-      {
-        "name": "Aleja mira",
-        "lat": 45.861768,
-        "lon": 16.115555,
-        "route": "267",
-        "mode": "BUS"
-      },
-      {
-        "name": "Markovo P.mrtvačnica",
-        "lat": 45.858389,
-        "lon": 16.120129,
-        "route": "267",
-        "mode": "BUS"
-      },
-      {
-        "name": "M.Polje istočni ulaz",
-        "lat": 45.857759,
-        "lon": 16.124986,
         "route": "267",
         "mode": "BUS"
       },
@@ -16753,6 +16746,13 @@
         "mode": "BUS"
       },
       {
+        "name": "Glavni kolodvor",
+        "lat": 45.803206,
+        "lon": 15.977119,
+        "route": "268",
+        "mode": "BUS"
+      },
+      {
         "name": "Podbrežje",
         "lat": 45.76662,
         "lon": 15.980645,
@@ -16781,10 +16781,59 @@
         "mode": "BUS"
       },
       {
-        "name": "Glavni kolodvor",
-        "lat": 45.803206,
-        "lon": 15.977119,
-        "route": "268",
+        "name": "Iver",
+        "lat": 45.812683,
+        "lon": 16.182832,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Put za Cerje",
+        "lat": 45.815282,
+        "lon": 16.180171,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Školska",
+        "lat": 45.816511,
+        "lon": 16.174782,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Sesvetski Kraljevec",
+        "lat": 45.818406,
+        "lon": 16.169162,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kobiljak 69",
+        "lat": 45.822376,
+        "lon": 16.159536,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kobiljak-trgovina",
+        "lat": 45.824414,
+        "lon": 16.151127,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dubec",
+        "lat": 45.827135,
+        "lon": 16.076435,
+        "route": "269",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dubec",
+        "lat": 45.827519,
+        "lon": 16.077276,
+        "route": "269",
         "mode": "BUS"
       },
       {
@@ -16844,59 +16893,45 @@
         "mode": "BUS"
       },
       {
-        "name": "Iver",
-        "lat": 45.812683,
-        "lon": 16.182832,
-        "route": "269",
+        "name": "Blaguša - centar",
+        "lat": 45.929625,
+        "lon": 16.130349,
+        "route": "270",
         "mode": "BUS"
       },
       {
-        "name": "Dubec",
-        "lat": 45.827519,
-        "lon": 16.077276,
-        "route": "269",
+        "name": "Blaguša-kapela",
+        "lat": 45.924147,
+        "lon": 16.131096,
+        "route": "270",
         "mode": "BUS"
       },
       {
-        "name": "Put za Cerje",
-        "lat": 45.815282,
-        "lon": 16.180171,
-        "route": "269",
+        "name": "Blaguša 12",
+        "lat": 45.920222,
+        "lon": 16.131742,
+        "route": "270",
         "mode": "BUS"
       },
       {
-        "name": "Školska",
-        "lat": 45.816511,
-        "lon": 16.174782,
-        "route": "269",
+        "name": "Pustički",
+        "lat": 45.911611,
+        "lon": 16.133126,
+        "route": "270",
         "mode": "BUS"
       },
       {
-        "name": "Sesvetski Kraljevec",
-        "lat": 45.818406,
-        "lon": 16.169162,
-        "route": "269",
+        "name": "Frljur-Blaguška",
+        "lat": 45.908727,
+        "lon": 16.131234,
+        "route": "270",
         "mode": "BUS"
       },
       {
-        "name": "Kobiljak 69",
-        "lat": 45.822376,
-        "lon": 16.159536,
-        "route": "269",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kobiljak-trgovina",
-        "lat": 45.824414,
-        "lon": 16.151127,
-        "route": "269",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubec",
-        "lat": 45.827135,
-        "lon": 16.076435,
-        "route": "269",
+        "name": "Put za Kašinu",
+        "lat": 45.904248,
+        "lon": 16.130473,
+        "route": "270",
         "mode": "BUS"
       },
       {
@@ -16938,48 +16973,6 @@
         "name": "Blaguša - centar",
         "lat": 45.929691,
         "lon": 16.13035,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Blaguša - centar",
-        "lat": 45.929625,
-        "lon": 16.130349,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Blaguša-kapela",
-        "lat": 45.924147,
-        "lon": 16.131096,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Blaguša 12",
-        "lat": 45.920222,
-        "lon": 16.131742,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Pustički",
-        "lat": 45.911611,
-        "lon": 16.133126,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Frljur-Blaguška",
-        "lat": 45.908727,
-        "lon": 16.131234,
-        "route": "270",
-        "mode": "BUS"
-      },
-      {
-        "name": "Put za Kašinu",
-        "lat": 45.904248,
-        "lon": 16.130473,
         "route": "270",
         "mode": "BUS"
       },
@@ -17089,27 +17082,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Lužan-Zeleni vijenac",
-        "lat": 45.885721,
-        "lon": 16.196373,
-        "route": "273",
-        "mode": "BUS"
-      },
-      {
-        "name": "Grgati 8",
-        "lat": 45.890139,
-        "lon": 16.193142,
-        "route": "273",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lužan",
-        "lat": 45.888971,
-        "lon": 16.188378,
-        "route": "273",
-        "mode": "BUS"
-      },
-      {
         "name": "Belovar",
         "lat": 45.882082,
         "lon": 16.174856,
@@ -17138,80 +17110,24 @@
         "mode": "BUS"
       },
       {
-        "name": "Laktec",
-        "lat": 45.858176,
-        "lon": 16.229483,
-        "route": "274",
+        "name": "Lužan-Zeleni vijenac",
+        "lat": 45.885721,
+        "lon": 16.196373,
+        "route": "273",
         "mode": "BUS"
       },
       {
-        "name": "Glavničica",
-        "lat": 45.848905,
-        "lon": 16.213333,
-        "route": "274",
+        "name": "Grgati 8",
+        "lat": 45.890139,
+        "lon": 16.193142,
+        "route": "273",
         "mode": "BUS"
       },
       {
-        "name": "Drenčec",
-        "lat": 45.837654,
-        "lon": 16.201131,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Cerje",
-        "lat": 45.830349,
-        "lon": 16.189688,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Budenečka 34",
-        "lat": 45.83485,
-        "lon": 16.17871,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Budenečka 14",
-        "lat": 45.83659,
-        "lon": 16.174287,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Budenec-Stančira",
-        "lat": 45.839284,
-        "lon": 16.169204,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šijavrh",
-        "lat": 45.845953,
-        "lon": 16.162913,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šašinovec-vatr. dom",
-        "lat": 45.849935,
-        "lon": 16.165297,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Šašinovec",
-        "lat": 45.854268,
-        "lon": 16.16398,
-        "route": "274",
-        "mode": "BUS"
-      },
-      {
-        "name": "Ivana Granđe 6",
-        "lat": 45.858796,
-        "lon": 16.158856,
-        "route": "274",
+        "name": "Lužan",
+        "lat": 45.888971,
+        "lon": 16.188378,
+        "route": "273",
         "mode": "BUS"
       },
       {
@@ -17295,6 +17211,83 @@
         "name": "Laktec",
         "lat": 45.858211,
         "lon": 16.229453,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Laktec",
+        "lat": 45.858176,
+        "lon": 16.229483,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Glavničica",
+        "lat": 45.848905,
+        "lon": 16.213333,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Drenčec",
+        "lat": 45.837654,
+        "lon": 16.201131,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Cerje",
+        "lat": 45.830349,
+        "lon": 16.189688,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Budenečka 34",
+        "lat": 45.83485,
+        "lon": 16.17871,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Budenečka 14",
+        "lat": 45.83659,
+        "lon": 16.174287,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Budenec-Stančira",
+        "lat": 45.839284,
+        "lon": 16.169204,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šijavrh",
+        "lat": 45.845953,
+        "lon": 16.162913,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šašinovec-vatr. dom",
+        "lat": 45.849935,
+        "lon": 16.165297,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Šašinovec",
+        "lat": 45.854268,
+        "lon": 16.16398,
+        "route": "274",
+        "mode": "BUS"
+      },
+      {
+        "name": "Ivana Granđe 6",
+        "lat": 45.858796,
+        "lon": 16.158856,
         "route": "274",
         "mode": "BUS"
       },
@@ -17530,9 +17523,16 @@
         "mode": "BUS"
       },
       {
-        "name": "Ive Dulčića",
-        "lat": 45.82942,
-        "lon": 16.097806,
+        "name": "Ul. Kaktusa 34",
+        "lat": 45.829502,
+        "lon": 16.086731,
+        "route": "283",
+        "mode": "BUS"
+      },
+      {
+        "name": "MO N.Brestje",
+        "lat": 45.828824,
+        "lon": 16.091205,
         "route": "283",
         "mode": "BUS"
       },
@@ -17558,6 +17558,20 @@
         "mode": "BUS"
       },
       {
+        "name": "Ivana Šturlića 15",
+        "lat": 45.82904,
+        "lon": 16.098464,
+        "route": "283",
+        "mode": "BUS"
+      },
+      {
+        "name": "Ive Dulčića",
+        "lat": 45.82942,
+        "lon": 16.097806,
+        "route": "283",
+        "mode": "BUS"
+      },
+      {
         "name": "MO N.Brestje",
         "lat": 45.828985,
         "lon": 16.090948,
@@ -17572,24 +17586,31 @@
         "mode": "BUS"
       },
       {
-        "name": "Ul. Kaktusa 34",
-        "lat": 45.829502,
-        "lon": 16.086731,
-        "route": "283",
+        "name": "Sv. Ivana-D.Grubera",
+        "lat": 45.801465,
+        "lon": 16.118664,
+        "route": "284",
         "mode": "BUS"
       },
       {
-        "name": "MO N.Brestje",
-        "lat": 45.828824,
-        "lon": 16.091205,
-        "route": "283",
+        "name": "Savska - Metro",
+        "lat": 45.80481,
+        "lon": 16.119288,
+        "route": "284",
         "mode": "BUS"
       },
       {
-        "name": "Ivana Šturlića 15",
-        "lat": 45.82904,
-        "lon": 16.098464,
-        "route": "283",
+        "name": "Pirinova",
+        "lat": 45.810544,
+        "lon": 16.118488,
+        "route": "284",
+        "mode": "BUS"
+      },
+      {
+        "name": "Nova cesta",
+        "lat": 45.813554,
+        "lon": 16.119161,
+        "route": "284",
         "mode": "BUS"
       },
       {
@@ -17628,31 +17649,38 @@
         "mode": "BUS"
       },
       {
-        "name": "Sv. Ivana-D.Grubera",
-        "lat": 45.801465,
-        "lon": 16.118664,
-        "route": "284",
+        "name": "Velika Kosnica",
+        "lat": 45.767334,
+        "lon": 16.078276,
+        "route": "290",
         "mode": "BUS"
       },
       {
-        "name": "Savska - Metro",
-        "lat": 45.80481,
-        "lon": 16.119288,
-        "route": "284",
+        "name": "Zračna luka",
+        "lat": 45.739598,
+        "lon": 16.081806,
+        "route": "290",
         "mode": "BUS"
       },
       {
-        "name": "Pirinova",
-        "lat": 45.810544,
-        "lon": 16.118488,
-        "route": "284",
+        "name": "Zrak. tehnička škola",
+        "lat": 45.734462,
+        "lon": 16.070726,
+        "route": "290",
         "mode": "BUS"
       },
       {
-        "name": "Nova cesta",
-        "lat": 45.813554,
-        "lon": 16.119161,
-        "route": "284",
+        "name": "Stari terminal",
+        "lat": 45.733223,
+        "lon": 16.062413,
+        "route": "290",
+        "mode": "BUS"
+      },
+      {
+        "name": "Ivana Pavla II",
+        "lat": 45.7266,
+        "lon": 16.054794,
+        "route": "290",
         "mode": "BUS"
       },
       {
@@ -17705,51 +17733,23 @@
         "mode": "BUS"
       },
       {
-        "name": "Velika Kosnica",
-        "lat": 45.767334,
-        "lon": 16.078276,
-        "route": "290",
+        "name": "Sajam Jakuševec",
+        "lat": 45.772733,
+        "lon": 16.018408,
+        "route": "295",
         "mode": "BUS"
       },
       {
-        "name": "Zračna luka",
-        "lat": 45.739598,
-        "lon": 16.081806,
-        "route": "290",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zrak. tehnička škola",
-        "lat": 45.734462,
-        "lon": 16.070726,
-        "route": "290",
-        "mode": "BUS"
-      },
-      {
-        "name": "Stari terminal",
-        "lat": 45.733223,
-        "lon": 16.062413,
-        "route": "290",
-        "mode": "BUS"
-      },
-      {
-        "name": "Ivana Pavla II",
-        "lat": 45.7266,
-        "lon": 16.054794,
-        "route": "290",
+        "name": "Zapruđe",
+        "lat": 45.781876,
+        "lon": 16.002674,
+        "route": "295",
         "mode": "BUS"
       },
       {
         "name": "Zapruđe",
         "lat": 45.781688,
         "lon": 16.003167,
-        "route": "295",
-        "mode": "BUS"
-      },
-      {
-        "name": "Sajam Jakuševec",
-        "lat": 45.772733,
-        "lon": 16.018408,
         "route": "295",
         "mode": "BUS"
       },
@@ -17772,48 +17772,6 @@
         "lat": 45.776963,
         "lon": 16.001041,
         "route": "295",
-        "mode": "BUS"
-      },
-      {
-        "name": "Zapruđe",
-        "lat": 45.781876,
-        "lon": 16.002674,
-        "route": "295",
-        "mode": "BUS"
-      },
-      {
-        "name": "Črnko. put za Strmec",
-        "lat": 45.750095,
-        "lon": 16.111964,
-        "route": "307",
-        "mode": "BUS"
-      },
-      {
-        "name": "Črnkovec, centar",
-        "lat": 45.750592,
-        "lon": 16.12,
-        "route": "307",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lekneno I",
-        "lat": 45.752898,
-        "lon": 16.128089,
-        "route": "307",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lekneno II",
-        "lat": 45.747997,
-        "lon": 16.138401,
-        "route": "307",
-        "mode": "BUS"
-      },
-      {
-        "name": "Strmec Bukevski",
-        "lat": 45.750293,
-        "lon": 16.156614,
-        "route": "307",
         "mode": "BUS"
       },
       {
@@ -17866,6 +17824,41 @@
         "mode": "BUS"
       },
       {
+        "name": "Črnko. put za Strmec",
+        "lat": 45.750095,
+        "lon": 16.111964,
+        "route": "307",
+        "mode": "BUS"
+      },
+      {
+        "name": "Črnkovec, centar",
+        "lat": 45.750592,
+        "lon": 16.12,
+        "route": "307",
+        "mode": "BUS"
+      },
+      {
+        "name": "Lekneno I",
+        "lat": 45.752898,
+        "lon": 16.128089,
+        "route": "307",
+        "mode": "BUS"
+      },
+      {
+        "name": "Lekneno II",
+        "lat": 45.747997,
+        "lon": 16.138401,
+        "route": "307",
+        "mode": "BUS"
+      },
+      {
+        "name": "Strmec Bukevski",
+        "lat": 45.750293,
+        "lon": 16.156614,
+        "route": "307",
+        "mode": "BUS"
+      },
+      {
         "name": "Put za Bapče",
         "lat": 45.74071,
         "lon": 16.106832,
@@ -17901,6 +17894,69 @@
         "mode": "BUS"
       },
       {
+        "name": "Petrovina,društ. dom",
+        "lat": 45.692703,
+        "lon": 16.03137,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Petrovina 6",
+        "lat": 45.696458,
+        "lon": 16.036185,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gradići novo naselje",
+        "lat": 45.700767,
+        "lon": 16.037211,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gradići društveni d.",
+        "lat": 45.704584,
+        "lon": 16.037808,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Gradićka 5",
+        "lat": 45.70655,
+        "lon": 16.040051,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Željezn.-Vukomerička",
+        "lat": 45.714319,
+        "lon": 16.045442,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kačićeva-Željeznička",
+        "lat": 45.71714,
+        "lon": 16.048387,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kačićeva-Vukomerička",
+        "lat": 45.715672,
+        "lon": 16.052302,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
+        "name": "Kolodvorska 48",
+        "lat": 45.713498,
+        "lon": 16.06043,
+        "route": "310",
+        "mode": "BUS"
+      },
+      {
         "name": "Velika Gorica",
         "lat": 45.71156,
         "lon": 16.077368,
@@ -17908,72 +17964,65 @@
         "mode": "BUS"
       },
       {
-        "name": "Kolodvorska 48",
-        "lat": 45.713866,
-        "lon": 16.060799,
+        "name": "Gradići,K.Tomis. 46",
+        "lat": 45.70818,
+        "lon": 16.039852,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Kačićeva-Kolodvorska",
-        "lat": 45.713151,
-        "lon": 16.057986,
+        "name": "Gradići, K.Tomis. 85",
+        "lat": 45.709497,
+        "lon": 16.035488,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Kačićeva-Vukomerička",
-        "lat": 45.716478,
-        "lon": 16.05048,
+        "name": "Lomnica - Odranska 6",
+        "lat": 45.712708,
+        "lon": 16.027781,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Kačićeva-Željeznička",
-        "lat": 45.716922,
-        "lon": 16.046977,
+        "name": "Lomnica-dom zdravlja",
+        "lat": 45.71453,
+        "lon": 16.023049,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Željezn.-Vukomerička",
-        "lat": 45.713111,
-        "lon": 16.044564,
+        "name": "Lomnica,Step.6 okret",
+        "lat": 45.712638,
+        "lon": 16.019768,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradićka 4",
-        "lat": 45.70652,
-        "lon": 16.040067,
+        "name": "Lomnica,Stepanska 72",
+        "lat": 45.714225,
+        "lon": 16.016533,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradići društveni d.",
-        "lat": 45.704599,
-        "lon": 16.03784,
+        "name": "Lomnica, Deverić. 4",
+        "lat": 45.716724,
+        "lon": 16.01829,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradići novo naselje",
-        "lat": 45.700857,
-        "lon": 16.037174,
+        "name": "Lomnica, šljunčara",
+        "lat": 45.720311,
+        "lon": 16.018298,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Petrovina 6",
-        "lat": 45.696182,
-        "lon": 16.035648,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Petrovina,društ. dom",
-        "lat": 45.692703,
-        "lon": 16.03137,
+        "name": "Velika Mlaka",
+        "lat": 45.729955,
+        "lon": 16.026075,
         "route": "310",
         "mode": "BUS"
       },
@@ -18048,178 +18097,66 @@
         "mode": "BUS"
       },
       {
-        "name": "Petrovina 6",
-        "lat": 45.696458,
-        "lon": 16.036185,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Gradići novo naselje",
-        "lat": 45.700767,
-        "lon": 16.037211,
+        "name": "Gradićka 4",
+        "lat": 45.70652,
+        "lon": 16.040067,
         "route": "310",
         "mode": "BUS"
       },
       {
         "name": "Gradići društveni d.",
-        "lat": 45.704584,
-        "lon": 16.037808,
+        "lat": 45.704599,
+        "lon": 16.03784,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradićka 5",
-        "lat": 45.70655,
-        "lon": 16.040051,
+        "name": "Gradići novo naselje",
+        "lat": 45.700857,
+        "lon": 16.037174,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Željezn.-Vukomerička",
-        "lat": 45.714319,
-        "lon": 16.045442,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kačićeva-Željeznička",
-        "lat": 45.71714,
-        "lon": 16.048387,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Kačićeva-Vukomerička",
-        "lat": 45.715672,
-        "lon": 16.052302,
+        "name": "Petrovina 6",
+        "lat": 45.696182,
+        "lon": 16.035648,
         "route": "310",
         "mode": "BUS"
       },
       {
         "name": "Kolodvorska 48",
-        "lat": 45.713498,
-        "lon": 16.06043,
+        "lat": 45.713866,
+        "lon": 16.060799,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradići,K.Tomis. 46",
-        "lat": 45.70818,
-        "lon": 16.039852,
+        "name": "Kačićeva-Kolodvorska",
+        "lat": 45.713151,
+        "lon": 16.057986,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Gradići, K.Tomis. 85",
-        "lat": 45.709497,
-        "lon": 16.035488,
+        "name": "Kačićeva-Vukomerička",
+        "lat": 45.716478,
+        "lon": 16.05048,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Lomnica - Odranska 6",
-        "lat": 45.712708,
-        "lon": 16.027781,
+        "name": "Kačićeva-Željeznička",
+        "lat": 45.716922,
+        "lon": 16.046977,
         "route": "310",
         "mode": "BUS"
       },
       {
-        "name": "Lomnica-dom zdravlja",
-        "lat": 45.71453,
-        "lon": 16.023049,
+        "name": "Željezn.-Vukomerička",
+        "lat": 45.713111,
+        "lon": 16.044564,
         "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lomnica,Step.6 okret",
-        "lat": 45.712638,
-        "lon": 16.019768,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lomnica,Stepanska 72",
-        "lat": 45.714225,
-        "lon": 16.016533,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lomnica, Deverić. 4",
-        "lat": 45.716724,
-        "lon": 16.01829,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Lomnica, šljunčara",
-        "lat": 45.720311,
-        "lon": 16.018298,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Velika Mlaka",
-        "lat": 45.729955,
-        "lon": 16.026075,
-        "route": "310",
-        "mode": "BUS"
-      },
-      {
-        "name": "Žužić Brdo",
-        "lat": 45.567115,
-        "lon": 15.94548,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Cerovski - selo",
-        "lat": 45.575368,
-        "lon": 15.943638,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Cerovski - škola",
-        "lat": 45.583161,
-        "lon": 15.953397,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Jerebić",
-        "lat": 45.58755,
-        "lon": 15.96301,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Prvonožina",
-        "lat": 45.598592,
-        "lon": 15.96462,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubranec,put za Gust",
-        "lat": 45.606344,
-        "lon": 15.967375,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubranec, centar",
-        "lat": 45.611829,
-        "lon": 15.965428,
-        "route": "311",
-        "mode": "BUS"
-      },
-      {
-        "name": "Dubranec,vikend nas.",
-        "lat": 45.619875,
-        "lon": 15.96023,
-        "route": "311",
         "mode": "BUS"
       },
       {
@@ -18275,6 +18212,62 @@
         "name": "Žužić Brdo",
         "lat": 45.567085,
         "lon": 15.945371,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Žužić Brdo",
+        "lat": 45.567115,
+        "lon": 15.94548,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Cerovski - selo",
+        "lat": 45.575368,
+        "lon": 15.943638,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Cerovski - škola",
+        "lat": 45.583161,
+        "lon": 15.953397,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Jerebić",
+        "lat": 45.58755,
+        "lon": 15.96301,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Prvonožina",
+        "lat": 45.598592,
+        "lon": 15.96462,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dubranec,put za Gust",
+        "lat": 45.606344,
+        "lon": 15.967375,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dubranec, centar",
+        "lat": 45.611829,
+        "lon": 15.965428,
+        "route": "311",
+        "mode": "BUS"
+      },
+      {
+        "name": "Dubranec,vikend nas.",
+        "lat": 45.619875,
+        "lon": 15.96023,
         "route": "311",
         "mode": "BUS"
       },
@@ -18735,30 +18728,16 @@
       },
       {
         "name": "Dubrava",
-        "lat": 45.824386,
-        "lon": 16.037146,
-        "route": "12",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Ljubljanica",
-        "lat": 45.797236,
-        "lon": 15.937948,
-        "route": "12",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Dubrava",
         "lat": 45.824437,
         "lon": 16.037388,
         "route": "12",
         "mode": "TRAM"
       },
       {
-        "name": "Kvaternikov trg",
-        "lat": 45.814861,
-        "lon": 15.996662,
-        "route": "13",
+        "name": "Dubrava",
+        "lat": 45.824386,
+        "lon": 16.037146,
+        "route": "12",
         "mode": "TRAM"
       },
       {
@@ -18766,55 +18745,6 @@
         "lat": 45.814723,
         "lon": 15.996434,
         "route": "13",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Žitnjak",
-        "lat": 45.798842,
-        "lon": 16.034778,
-        "route": "13",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Zapruđe",
-        "lat": 45.778185,
-        "lon": 16.000339,
-        "route": "14",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Mihaljevac",
-        "lat": 45.842686,
-        "lon": 15.975202,
-        "route": "15",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Gračansko dolje",
-        "lat": 45.860247,
-        "lon": 15.980952,
-        "route": "15",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Gračani",
-        "lat": 45.858211,
-        "lon": 15.973936,
-        "route": "15",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Grač. Mihaljevac",
-        "lat": 45.853578,
-        "lon": 15.973232,
-        "route": "15",
-        "mode": "TRAM"
-      },
-      {
-        "name": "Gračanske stube",
-        "lat": 45.849088,
-        "lon": 15.975274,
-        "route": "15",
         "mode": "TRAM"
       },
       {
@@ -18853,10 +18783,38 @@
         "mode": "TRAM"
       },
       {
-        "name": "Črnomerec",
-        "lat": 45.815127,
-        "lon": 15.934536,
-        "route": "2",
+        "name": "Mihaljevac",
+        "lat": 45.842686,
+        "lon": 15.975202,
+        "route": "15",
+        "mode": "TRAM"
+      },
+      {
+        "name": "Gračansko dolje",
+        "lat": 45.860247,
+        "lon": 15.980952,
+        "route": "15",
+        "mode": "TRAM"
+      },
+      {
+        "name": "Gračani",
+        "lat": 45.858211,
+        "lon": 15.973936,
+        "route": "15",
+        "mode": "TRAM"
+      },
+      {
+        "name": "Grač. Mihaljevac",
+        "lat": 45.853578,
+        "lon": 15.973232,
+        "route": "15",
+        "mode": "TRAM"
+      },
+      {
+        "name": "Gračanske stube",
+        "lat": 45.849088,
+        "lon": 15.975274,
+        "route": "15",
         "mode": "TRAM"
       },
       {
@@ -18897,67 +18855,24 @@
     ]
   },
   "fleet": {
-    "tramBlocks": 177,
-    "busBlocks": 296,
+    "tramBlocks": 187,
+    "busBlocks": 297,
     "railBlocks": 0,
-    "totalBlocks": 473,
-    "interlinedBlocks": 91,
+    "totalBlocks": 484,
+    "interlinedBlocks": 93,
     "interlinedExamples": [
       {
-        "blockId": "22302",
+        "blockId": "12901",
         "routes": [
-          "213",
-          "223"
+          "129",
+          "149"
         ]
       },
       {
-        "blockId": "20502",
+        "blockId": "26202",
         "routes": [
-          "205",
-          "230"
-        ]
-      },
-      {
-        "blockId": "15901",
-        "routes": [
-          "159",
-          "163"
-        ]
-      },
-      {
-        "blockId": "10902",
-        "routes": [
-          "109",
-          "124"
-        ]
-      },
-      {
-        "blockId": "12001",
-        "routes": [
-          "120",
-          "177"
-        ]
-      },
-      {
-        "blockId": "14801",
-        "routes": [
-          "139",
-          "141",
-          "148"
-        ]
-      },
-      {
-        "blockId": "21301",
-        "routes": [
-          "213",
-          "230"
-        ]
-      },
-      {
-        "blockId": "13301",
-        "routes": [
-          "133",
-          "164"
+          "262",
+          "273"
         ]
       },
       {
@@ -18969,39 +18884,26 @@
         ]
       },
       {
-        "blockId": "20201",
+        "blockId": "10202",
         "routes": [
-          "201",
-          "202"
+          "102",
+          "103"
         ]
       },
       {
-        "blockId": "26102",
+        "blockId": "16102",
         "routes": [
-          "261",
-          "262",
-          "273"
+          "132",
+          "161",
+          "163",
+          "164"
         ]
       },
       {
-        "blockId": "21603",
+        "blockId": "18201",
         "routes": [
-          "216",
-          "276"
-        ]
-      },
-      {
-        "blockId": "13701",
-        "routes": [
-          "120",
-          "137"
-        ]
-      },
-      {
-        "blockId": "27103",
-        "routes": [
-          "271",
-          "272"
+          "174",
+          "182"
         ]
       },
       {
@@ -19012,41 +18914,108 @@
         ]
       },
       {
-        "blockId": "17602",
+        "blockId": "11201",
         "routes": [
+          "108",
+          "110",
+          "112",
+          "132",
+          "161",
+          "163"
+        ]
+      },
+      {
+        "blockId": "11002",
+        "routes": [
+          "110",
+          "111"
+        ]
+      },
+      {
+        "blockId": "10201",
+        "routes": [
+          "102",
+          "103"
+        ]
+      },
+      {
+        "blockId": "22302",
+        "routes": [
+          "213",
+          "223"
+        ]
+      },
+      {
+        "blockId": "27001",
+        "routes": [
+          "270",
+          "274"
+        ]
+      },
+      {
+        "blockId": "16801",
+        "routes": [
+          "162",
+          "164",
+          "168"
+        ]
+      },
+      {
+        "blockId": "20502",
+        "routes": [
+          "205",
+          "230"
+        ]
+      },
+      {
+        "blockId": "31501",
+        "routes": [
+          "268",
+          "307",
+          "308",
+          "311",
+          "315"
+        ]
+      },
+      {
+        "blockId": "13001",
+        "routes": [
+          "124",
+          "130"
+        ]
+      },
+      {
+        "blockId": "27102",
+        "routes": [
+          "261",
+          "271",
+          "272"
+        ]
+      },
+      {
+        "blockId": "15901",
+        "routes": [
+          "159",
+          "163"
+        ]
+      },
+      {
+        "blockId": "12002",
+        "routes": [
+          "120",
+          "127",
+          "128",
+          "131",
           "176",
           "177"
         ]
       },
       {
-        "blockId": "13901",
+        "blockId": "30802",
         "routes": [
-          "139",
-          "141"
-        ]
-      },
-      {
-        "blockId": "11801",
-        "routes": [
-          "112",
-          "118",
-          "132"
-        ]
-      },
-      {
-        "blockId": "22401",
-        "routes": [
-          "213",
-          "224",
-          "230"
-        ]
-      },
-      {
-        "blockId": "10101",
-        "routes": [
-          "101",
-          "103",
-          "130"
+          "307",
+          "308",
+          "313"
         ]
       }
     ]
@@ -19067,953 +19036,952 @@
       "278",
       "330",
       "1",
-      "3",
       "8"
     ],
-    "weekdayOnlyCount": 16,
+    "weekdayOnlyCount": 15,
     "routes": [
       {
         "name": "101",
         "mode": "BUS",
-        "weekdayTrips": 356,
-        "saturdayTrips": 272,
-        "sundayTrips": 156
+        "weekdayTrips": 332,
+        "saturdayTrips": 164,
+        "sundayTrips": 104
       },
       {
         "name": "102",
         "mode": "BUS",
-        "weekdayTrips": 358,
-        "saturdayTrips": 328,
-        "sundayTrips": 150
+        "weekdayTrips": 331,
+        "saturdayTrips": 202,
+        "sundayTrips": 100
       },
       {
         "name": "103",
         "mode": "BUS",
-        "weekdayTrips": 346,
-        "saturdayTrips": 206,
-        "sundayTrips": 102
+        "weekdayTrips": 302,
+        "saturdayTrips": 126,
+        "sundayTrips": 68
       },
       {
         "name": "104",
         "mode": "BUS",
-        "weekdayTrips": 184,
+        "weekdayTrips": 138,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "105",
         "mode": "BUS",
-        "weekdayTrips": 274,
-        "saturdayTrips": 180,
-        "sundayTrips": 90
+        "weekdayTrips": 243,
+        "saturdayTrips": 114,
+        "sundayTrips": 60
       },
       {
         "name": "106",
         "mode": "BUS",
         "weekdayTrips": 400,
-        "saturdayTrips": 400,
-        "sundayTrips": 240
+        "saturdayTrips": 240,
+        "sundayTrips": 160
       },
       {
         "name": "107",
         "mode": "BUS",
-        "weekdayTrips": 396,
-        "saturdayTrips": 150,
-        "sundayTrips": 90
+        "weekdayTrips": 352,
+        "saturdayTrips": 90,
+        "sundayTrips": 60
       },
       {
         "name": "108",
         "mode": "BUS",
-        "weekdayTrips": 40,
+        "weekdayTrips": 30,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "109",
         "mode": "BUS",
-        "weekdayTrips": 899,
-        "saturdayTrips": 540,
-        "sundayTrips": 306
+        "weekdayTrips": 823,
+        "saturdayTrips": 332,
+        "sundayTrips": 204
       },
       {
         "name": "110",
         "mode": "BUS",
-        "weekdayTrips": 918,
-        "saturdayTrips": 750,
-        "sundayTrips": 432
+        "weekdayTrips": 886,
+        "saturdayTrips": 452,
+        "sundayTrips": 288
       },
       {
         "name": "111",
         "mode": "BUS",
-        "weekdayTrips": 148,
-        "saturdayTrips": 74,
-        "sundayTrips": 48
+        "weekdayTrips": 131,
+        "saturdayTrips": 44,
+        "sundayTrips": 32
       },
       {
         "name": "112",
         "mode": "BUS",
-        "weekdayTrips": 232,
-        "saturdayTrips": 182,
-        "sundayTrips": 66
+        "weekdayTrips": 204,
+        "saturdayTrips": 114,
+        "sundayTrips": 44
       },
       {
         "name": "113",
         "mode": "BUS",
-        "weekdayTrips": 370,
-        "saturdayTrips": 450,
-        "sundayTrips": 270
+        "weekdayTrips": 390,
+        "saturdayTrips": 270,
+        "sundayTrips": 180
       },
       {
         "name": "114",
         "mode": "BUS",
-        "weekdayTrips": 61,
+        "weekdayTrips": 122,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "115",
         "mode": "BUS",
-        "weekdayTrips": 776,
-        "saturdayTrips": 626,
-        "sundayTrips": 282
+        "weekdayTrips": 742,
+        "saturdayTrips": 386,
+        "sundayTrips": 188
       },
       {
         "name": "116",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 333,
-        "sundayTrips": 144
+        "weekdayTrips": 336,
+        "saturdayTrips": 206,
+        "sundayTrips": 96
       },
       {
         "name": "117",
         "mode": "BUS",
-        "weekdayTrips": 228,
-        "saturdayTrips": 210,
-        "sundayTrips": 108
+        "weekdayTrips": 236,
+        "saturdayTrips": 128,
+        "sundayTrips": 72
       },
       {
         "name": "118",
         "mode": "BUS",
-        "weekdayTrips": 1000,
-        "saturdayTrips": 764,
-        "sundayTrips": 350
+        "weekdayTrips": 960,
+        "saturdayTrips": 502,
+        "sundayTrips": 244
       },
       {
         "name": "119",
         "mode": "BUS",
-        "weekdayTrips": 242,
-        "saturdayTrips": 224,
-        "sundayTrips": 129
+        "weekdayTrips": 269,
+        "saturdayTrips": 135,
+        "sundayTrips": 86
       },
       {
         "name": "120",
         "mode": "BUS",
-        "weekdayTrips": 372,
-        "saturdayTrips": 320,
-        "sundayTrips": 174
+        "weekdayTrips": 349,
+        "saturdayTrips": 194,
+        "sundayTrips": 116
       },
       {
         "name": "121",
         "mode": "BUS",
-        "weekdayTrips": 636,
-        "saturdayTrips": 486,
-        "sundayTrips": 252
+        "weekdayTrips": 582,
+        "saturdayTrips": 306,
+        "sundayTrips": 168
       },
       {
         "name": "122",
         "mode": "BUS",
-        "weekdayTrips": 30,
-        "saturdayTrips": 111,
-        "sundayTrips": 90
+        "weekdayTrips": 60,
+        "saturdayTrips": 64,
+        "sundayTrips": 60
       },
       {
         "name": "123",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 288,
-        "sundayTrips": 144
+        "weekdayTrips": 336,
+        "saturdayTrips": 176,
+        "sundayTrips": 96
       },
       {
         "name": "124",
         "mode": "BUS",
-        "weekdayTrips": 359,
-        "saturdayTrips": 276,
-        "sundayTrips": 165
+        "weekdayTrips": 338,
+        "saturdayTrips": 177,
+        "sundayTrips": 110
       },
       {
         "name": "125",
         "mode": "BUS",
-        "weekdayTrips": 492,
-        "saturdayTrips": 424,
-        "sundayTrips": 132
+        "weekdayTrips": 424,
+        "saturdayTrips": 268,
+        "sundayTrips": 88
       },
       {
         "name": "126",
         "mode": "BUS",
-        "weekdayTrips": 528,
-        "saturdayTrips": 298,
-        "sundayTrips": 168
+        "weekdayTrips": 466,
+        "saturdayTrips": 180,
+        "sundayTrips": 112
       },
       {
         "name": "127",
         "mode": "BUS",
-        "weekdayTrips": 554,
-        "saturdayTrips": 336,
-        "sundayTrips": 168
+        "weekdayTrips": 508,
+        "saturdayTrips": 218,
+        "sundayTrips": 112
       },
       {
         "name": "128",
         "mode": "BUS",
-        "weekdayTrips": 648,
-        "saturdayTrips": 396,
-        "sundayTrips": 144
+        "weekdayTrips": 576,
+        "saturdayTrips": 248,
+        "sundayTrips": 96
       },
       {
         "name": "129",
         "mode": "BUS",
-        "weekdayTrips": 308,
-        "saturdayTrips": 198,
-        "sundayTrips": 108
+        "weekdayTrips": 276,
+        "saturdayTrips": 120,
+        "sundayTrips": 72
       },
       {
         "name": "130",
         "mode": "BUS",
-        "weekdayTrips": 308,
-        "saturdayTrips": 166,
-        "sundayTrips": 60
+        "weekdayTrips": 256,
+        "saturdayTrips": 104,
+        "sundayTrips": 40
       },
       {
         "name": "131",
         "mode": "BUS",
-        "weekdayTrips": 304,
-        "saturdayTrips": 178,
-        "sundayTrips": 96
+        "weekdayTrips": 268,
+        "saturdayTrips": 108,
+        "sundayTrips": 64
       },
       {
         "name": "132",
         "mode": "BUS",
-        "weekdayTrips": 341,
-        "saturdayTrips": 148,
-        "sundayTrips": 87
+        "weekdayTrips": 292,
+        "saturdayTrips": 89,
+        "sundayTrips": 58
       },
       {
         "name": "133",
         "mode": "BUS",
-        "weekdayTrips": 352,
-        "saturdayTrips": 216,
-        "sundayTrips": 108
+        "weekdayTrips": 324,
+        "saturdayTrips": 132,
+        "sundayTrips": 72
       },
       {
         "name": "134",
         "mode": "BUS",
-        "weekdayTrips": 443,
-        "saturdayTrips": 410,
-        "sundayTrips": 192
+        "weekdayTrips": 436,
+        "saturdayTrips": 252,
+        "sundayTrips": 128
       },
       {
         "name": "135",
         "mode": "BUS",
-        "weekdayTrips": 316,
-        "saturdayTrips": 220,
-        "sundayTrips": 132
+        "weekdayTrips": 292,
+        "saturdayTrips": 132,
+        "sundayTrips": 88
       },
       {
         "name": "136",
         "mode": "BUS",
-        "weekdayTrips": 538,
-        "saturdayTrips": 496,
-        "sundayTrips": 294
+        "weekdayTrips": 576,
+        "saturdayTrips": 298,
+        "sundayTrips": 196
       },
       {
         "name": "137",
         "mode": "BUS",
-        "weekdayTrips": 204,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 188,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "138",
         "mode": "BUS",
-        "weekdayTrips": 152,
-        "saturdayTrips": 100,
-        "sundayTrips": 60
+        "weekdayTrips": 139,
+        "saturdayTrips": 60,
+        "sundayTrips": 40
       },
       {
         "name": "139",
         "mode": "BUS",
-        "weekdayTrips": 126,
-        "saturdayTrips": 94,
-        "sundayTrips": 42
+        "weekdayTrips": 112,
+        "saturdayTrips": 58,
+        "sundayTrips": 28
       },
       {
         "name": "140",
         "mode": "BUS",
-        "weekdayTrips": 94,
-        "saturdayTrips": 150,
-        "sundayTrips": 90
+        "weekdayTrips": 108,
+        "saturdayTrips": 90,
+        "sundayTrips": 60
       },
       {
         "name": "141",
         "mode": "BUS",
-        "weekdayTrips": 118,
-        "saturdayTrips": 94,
-        "sundayTrips": 42
+        "weekdayTrips": 106,
+        "saturdayTrips": 58,
+        "sundayTrips": 28
       },
       {
         "name": "142",
         "mode": "BUS",
-        "weekdayTrips": 106,
-        "saturdayTrips": 84,
-        "sundayTrips": 45
+        "weekdayTrips": 122,
+        "saturdayTrips": 51,
+        "sundayTrips": 30
       },
       {
         "name": "143",
         "mode": "BUS",
-        "weekdayTrips": 186,
-        "saturdayTrips": 126,
-        "sundayTrips": 18
+        "weekdayTrips": 182,
+        "saturdayTrips": 82,
+        "sundayTrips": 12
       },
       {
         "name": "144",
         "mode": "BUS",
-        "weekdayTrips": 12,
+        "weekdayTrips": 9,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "146",
         "mode": "BUS",
-        "weekdayTrips": 366,
-        "saturdayTrips": 300,
-        "sundayTrips": 108
+        "weekdayTrips": 352,
+        "saturdayTrips": 188,
+        "sundayTrips": 72
       },
       {
         "name": "148",
         "mode": "BUS",
-        "weekdayTrips": 105,
-        "saturdayTrips": 100,
-        "sundayTrips": 51
+        "weekdayTrips": 100,
+        "saturdayTrips": 61,
+        "sundayTrips": 34
       },
       {
         "name": "149",
         "mode": "BUS",
-        "weekdayTrips": 286,
-        "saturdayTrips": 208,
-        "sundayTrips": 114
+        "weekdayTrips": 262,
+        "saturdayTrips": 126,
+        "sundayTrips": 76
       },
       {
         "name": "150",
         "mode": "BUS",
-        "weekdayTrips": 324,
-        "saturdayTrips": 286,
-        "sundayTrips": 150
+        "weekdayTrips": 338,
+        "saturdayTrips": 174,
+        "sundayTrips": 100
       },
       {
         "name": "151",
         "mode": "BUS",
-        "weekdayTrips": 108,
+        "weekdayTrips": 81,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "159",
         "mode": "BUS",
-        "weekdayTrips": 216,
-        "saturdayTrips": 60,
+        "weekdayTrips": 162,
+        "saturdayTrips": 40,
         "sundayTrips": 0
       },
       {
         "name": "160",
         "mode": "BUS",
-        "weekdayTrips": 202,
-        "saturdayTrips": 98,
-        "sundayTrips": 30
+        "weekdayTrips": 164,
+        "saturdayTrips": 62,
+        "sundayTrips": 20
       },
       {
         "name": "161",
         "mode": "BUS",
-        "weekdayTrips": 284,
-        "saturdayTrips": 201,
-        "sundayTrips": 90
+        "weekdayTrips": 253,
+        "saturdayTrips": 124,
+        "sundayTrips": 60
       },
       {
         "name": "162",
         "mode": "BUS",
-        "weekdayTrips": 166,
-        "saturdayTrips": 112,
-        "sundayTrips": 42
+        "weekdayTrips": 142,
+        "saturdayTrips": 70,
+        "sundayTrips": 28
       },
       {
         "name": "163",
         "mode": "BUS",
-        "weekdayTrips": 123,
-        "saturdayTrips": 77,
-        "sundayTrips": 21
+        "weekdayTrips": 101,
+        "saturdayTrips": 49,
+        "sundayTrips": 14
       },
       {
         "name": "164",
         "mode": "BUS",
-        "weekdayTrips": 190,
-        "saturdayTrips": 100,
-        "sundayTrips": 42
+        "weekdayTrips": 160,
+        "saturdayTrips": 62,
+        "sundayTrips": 28
       },
       {
         "name": "166",
         "mode": "BUS",
-        "weekdayTrips": 80,
-        "saturdayTrips": 54,
+        "weekdayTrips": 60,
+        "saturdayTrips": 36,
         "sundayTrips": 0
       },
       {
         "name": "168",
         "mode": "BUS",
-        "weekdayTrips": 248,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 221,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "172",
         "mode": "BUS",
-        "weekdayTrips": 985,
-        "saturdayTrips": 568,
-        "sundayTrips": 231
+        "weekdayTrips": 865,
+        "saturdayTrips": 353,
+        "sundayTrips": 154
       },
       {
         "name": "174",
         "mode": "BUS",
-        "weekdayTrips": 146,
-        "saturdayTrips": 110,
-        "sundayTrips": 30
+        "weekdayTrips": 122,
+        "saturdayTrips": 70,
+        "sundayTrips": 20
       },
       {
         "name": "176",
         "mode": "BUS",
-        "weekdayTrips": 400,
-        "saturdayTrips": 198,
-        "sundayTrips": 72
+        "weekdayTrips": 330,
+        "saturdayTrips": 124,
+        "sundayTrips": 48
       },
       {
         "name": "177",
         "mode": "BUS",
-        "weekdayTrips": 76,
-        "saturdayTrips": 26,
-        "sundayTrips": 12
+        "weekdayTrips": 62,
+        "saturdayTrips": 16,
+        "sundayTrips": 8
       },
       {
         "name": "182",
         "mode": "BUS",
-        "weekdayTrips": 224,
-        "saturdayTrips": 134,
-        "sundayTrips": 48
+        "weekdayTrips": 188,
+        "saturdayTrips": 84,
+        "sundayTrips": 32
       },
       {
         "name": "201",
         "mode": "BUS",
-        "weekdayTrips": 336,
-        "saturdayTrips": 318,
-        "sundayTrips": 180
+        "weekdayTrips": 352,
+        "saturdayTrips": 192,
+        "sundayTrips": 120
       },
       {
         "name": "202",
         "mode": "BUS",
-        "weekdayTrips": 346,
-        "saturdayTrips": 348,
-        "sundayTrips": 186
+        "weekdayTrips": 362,
+        "saturdayTrips": 218,
+        "sundayTrips": 124
       },
       {
         "name": "203",
         "mode": "BUS",
-        "weekdayTrips": 431,
-        "saturdayTrips": 303,
-        "sundayTrips": 153
+        "weekdayTrips": 387,
+        "saturdayTrips": 185,
+        "sundayTrips": 102
       },
       {
         "name": "204",
         "mode": "BUS",
-        "weekdayTrips": 60,
-        "saturdayTrips": 32,
+        "weekdayTrips": 75,
+        "saturdayTrips": 24,
         "sundayTrips": 8
       },
       {
         "name": "205",
         "mode": "BUS",
-        "weekdayTrips": 428,
-        "saturdayTrips": 390,
-        "sundayTrips": 212
+        "weekdayTrips": 416,
+        "saturdayTrips": 240,
+        "sundayTrips": 144
       },
       {
         "name": "206",
         "mode": "BUS",
-        "weekdayTrips": 418,
-        "saturdayTrips": 382,
-        "sundayTrips": 222
+        "weekdayTrips": 456,
+        "saturdayTrips": 230,
+        "sundayTrips": 148
       },
       {
         "name": "207",
         "mode": "BUS",
-        "weekdayTrips": 107,
-        "saturdayTrips": 55,
-        "sundayTrips": 33
+        "weekdayTrips": 94,
+        "saturdayTrips": 33,
+        "sundayTrips": 22
       },
       {
         "name": "208",
         "mode": "BUS",
-        "weekdayTrips": 356,
-        "saturdayTrips": 264,
-        "sundayTrips": 114
+        "weekdayTrips": 322,
+        "saturdayTrips": 166,
+        "sundayTrips": 76
       },
       {
         "name": "209",
         "mode": "BUS",
-        "weekdayTrips": 530,
-        "saturdayTrips": 384,
-        "sundayTrips": 210
+        "weekdayTrips": 510,
+        "saturdayTrips": 240,
+        "sundayTrips": 140
       },
       {
         "name": "210",
         "mode": "BUS",
-        "weekdayTrips": 404,
-        "saturdayTrips": 366,
-        "sundayTrips": 168
+        "weekdayTrips": 408,
+        "saturdayTrips": 230,
+        "sundayTrips": 112
       },
       {
         "name": "211",
         "mode": "BUS",
-        "weekdayTrips": 112,
+        "weekdayTrips": 84,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "212",
         "mode": "BUS",
-        "weekdayTrips": 616,
-        "saturdayTrips": 622,
-        "sundayTrips": 384
+        "weekdayTrips": 622,
+        "saturdayTrips": 372,
+        "sundayTrips": 256
       },
       {
         "name": "213",
         "mode": "BUS",
-        "weekdayTrips": 332,
-        "saturdayTrips": 170,
-        "sundayTrips": 84
+        "weekdayTrips": 284,
+        "saturdayTrips": 104,
+        "sundayTrips": 56
       },
       {
         "name": "214",
         "mode": "BUS",
         "weekdayTrips": 180,
-        "saturdayTrips": 186,
-        "sundayTrips": 108
+        "saturdayTrips": 112,
+        "sundayTrips": 72
       },
       {
         "name": "215",
         "mode": "BUS",
-        "weekdayTrips": 836,
-        "saturdayTrips": 622,
-        "sundayTrips": 294
+        "weekdayTrips": 772,
+        "saturdayTrips": 382,
+        "sundayTrips": 196
       },
       {
         "name": "216",
         "mode": "BUS",
-        "weekdayTrips": 80,
-        "saturdayTrips": 114,
-        "sundayTrips": 36
+        "weekdayTrips": 100,
+        "saturdayTrips": 72,
+        "sundayTrips": 24
       },
       {
         "name": "217",
         "mode": "BUS",
-        "weekdayTrips": 668,
-        "saturdayTrips": 386,
-        "sundayTrips": 228
+        "weekdayTrips": 596,
+        "saturdayTrips": 232,
+        "sundayTrips": 152
       },
       {
         "name": "218",
         "mode": "BUS",
-        "weekdayTrips": 262,
-        "saturdayTrips": 248,
-        "sundayTrips": 138
+        "weekdayTrips": 294,
+        "saturdayTrips": 150,
+        "sundayTrips": 92
       },
       {
         "name": "219",
         "mode": "BUS",
-        "weekdayTrips": 208,
+        "weekdayTrips": 156,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "220",
         "mode": "BUS",
-        "weekdayTrips": 744,
-        "saturdayTrips": 630,
-        "sundayTrips": 336
+        "weekdayTrips": 718,
+        "saturdayTrips": 394,
+        "sundayTrips": 224
       },
       {
         "name": "221",
         "mode": "BUS",
-        "weekdayTrips": 740,
-        "saturdayTrips": 612,
-        "sundayTrips": 336
+        "weekdayTrips": 730,
+        "saturdayTrips": 384,
+        "sundayTrips": 224
       },
       {
         "name": "222",
         "mode": "BUS",
-        "weekdayTrips": 164,
-        "saturdayTrips": 30,
+        "weekdayTrips": 123,
+        "saturdayTrips": 20,
         "sundayTrips": 0
       },
       {
         "name": "223",
         "mode": "BUS",
-        "weekdayTrips": 464,
-        "saturdayTrips": 308,
-        "sundayTrips": 120
+        "weekdayTrips": 398,
+        "saturdayTrips": 194,
+        "sundayTrips": 80
       },
       {
         "name": "224",
         "mode": "BUS",
-        "weekdayTrips": 250,
-        "saturdayTrips": 220,
-        "sundayTrips": 78
+        "weekdayTrips": 220,
+        "saturdayTrips": 138,
+        "sundayTrips": 52
       },
       {
         "name": "225",
         "mode": "BUS",
-        "weekdayTrips": 169,
-        "saturdayTrips": 99,
-        "sundayTrips": 27
+        "weekdayTrips": 138,
+        "saturdayTrips": 63,
+        "sundayTrips": 18
       },
       {
         "name": "226",
         "mode": "BUS",
-        "weekdayTrips": 330,
-        "saturdayTrips": 291,
-        "sundayTrips": 126
+        "weekdayTrips": 315,
+        "saturdayTrips": 188,
+        "sundayTrips": 90
       },
       {
         "name": "227",
         "mode": "BUS",
-        "weekdayTrips": 539,
-        "saturdayTrips": 360,
-        "sundayTrips": 152
+        "weekdayTrips": 538,
+        "saturdayTrips": 245,
+        "sundayTrips": 114
       },
       {
         "name": "228",
         "mode": "BUS",
-        "weekdayTrips": 370,
-        "saturdayTrips": 169,
-        "sundayTrips": 78
+        "weekdayTrips": 310,
+        "saturdayTrips": 104,
+        "sundayTrips": 52
       },
       {
         "name": "229",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 122,
-        "sundayTrips": 66
+        "weekdayTrips": 128,
+        "saturdayTrips": 74,
+        "sundayTrips": 44
       },
       {
         "name": "230",
         "mode": "BUS",
-        "weekdayTrips": 318,
-        "saturdayTrips": 182,
-        "sundayTrips": 84
+        "weekdayTrips": 306,
+        "saturdayTrips": 112,
+        "sundayTrips": 56
       },
       {
         "name": "231",
         "mode": "BUS",
-        "weekdayTrips": 229,
-        "saturdayTrips": 218,
-        "sundayTrips": 111
+        "weekdayTrips": 218,
+        "saturdayTrips": 133,
+        "sundayTrips": 74
       },
       {
         "name": "232",
         "mode": "BUS",
-        "weekdayTrips": 300,
-        "saturdayTrips": 212,
-        "sundayTrips": 84
+        "weekdayTrips": 280,
+        "saturdayTrips": 132,
+        "sundayTrips": 56
       },
       {
         "name": "233",
         "mode": "BUS",
-        "weekdayTrips": 490,
-        "saturdayTrips": 364,
-        "sundayTrips": 150
+        "weekdayTrips": 430,
+        "saturdayTrips": 226,
+        "sundayTrips": 100
       },
       {
         "name": "234",
         "mode": "BUS",
-        "weekdayTrips": 432,
-        "saturdayTrips": 236,
-        "sundayTrips": 138
+        "weekdayTrips": 384,
+        "saturdayTrips": 142,
+        "sundayTrips": 92
       },
       {
         "name": "235",
         "mode": "BUS",
-        "weekdayTrips": 172,
-        "saturdayTrips": 140,
-        "sundayTrips": 84
+        "weekdayTrips": 164,
+        "saturdayTrips": 84,
+        "sundayTrips": 56
       },
       {
         "name": "236",
         "mode": "BUS",
-        "weekdayTrips": 328,
+        "weekdayTrips": 246,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "237",
         "mode": "BUS",
-        "weekdayTrips": 240,
-        "saturdayTrips": 206,
-        "sundayTrips": 120
+        "weekdayTrips": 230,
+        "saturdayTrips": 124,
+        "sundayTrips": 80
       },
       {
         "name": "238",
         "mode": "BUS",
-        "weekdayTrips": 88,
+        "weekdayTrips": 86,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "239",
         "mode": "BUS",
-        "weekdayTrips": 80,
+        "weekdayTrips": 60,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "241",
         "mode": "BUS",
-        "weekdayTrips": 182,
-        "saturdayTrips": 196,
-        "sundayTrips": 114
+        "weekdayTrips": 184,
+        "saturdayTrips": 118,
+        "sundayTrips": 76
       },
       {
         "name": "242",
         "mode": "BUS",
-        "weekdayTrips": 244,
-        "saturdayTrips": 228,
-        "sundayTrips": 108
+        "weekdayTrips": 228,
+        "saturdayTrips": 140,
+        "sundayTrips": 72
       },
       {
         "name": "243",
         "mode": "BUS",
-        "weekdayTrips": 208,
-        "saturdayTrips": 108,
+        "weekdayTrips": 156,
+        "saturdayTrips": 72,
         "sundayTrips": 0
       },
       {
         "name": "261",
         "mode": "BUS",
-        "weekdayTrips": 204,
-        "saturdayTrips": 158,
-        "sundayTrips": 60
+        "weekdayTrips": 178,
+        "saturdayTrips": 100,
+        "sundayTrips": 40
       },
       {
         "name": "262",
         "mode": "BUS",
-        "weekdayTrips": 231,
-        "saturdayTrips": 153,
-        "sundayTrips": 57
+        "weekdayTrips": 197,
+        "saturdayTrips": 97,
+        "sundayTrips": 38
       },
       {
         "name": "263",
         "mode": "BUS",
-        "weekdayTrips": 352,
-        "saturdayTrips": 286,
-        "sundayTrips": 150
+        "weekdayTrips": 354,
+        "saturdayTrips": 178,
+        "sundayTrips": 100
       },
       {
         "name": "264",
         "mode": "BUS",
-        "weekdayTrips": 150,
-        "saturdayTrips": 130,
-        "sundayTrips": 42
+        "weekdayTrips": 130,
+        "saturdayTrips": 82,
+        "sundayTrips": 28
       },
       {
         "name": "267",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 70,
-        "sundayTrips": 42
+        "weekdayTrips": 118,
+        "saturdayTrips": 42,
+        "sundayTrips": 28
       },
       {
         "name": "268",
         "mode": "BUS",
-        "weekdayTrips": 968,
-        "saturdayTrips": 820,
-        "sundayTrips": 456
+        "weekdayTrips": 916,
+        "saturdayTrips": 496,
+        "sundayTrips": 304
       },
       {
         "name": "269",
         "mode": "BUS",
-        "weekdayTrips": 578,
-        "saturdayTrips": 402,
-        "sundayTrips": 234
+        "weekdayTrips": 566,
+        "saturdayTrips": 242,
+        "sundayTrips": 156
       },
       {
         "name": "270",
         "mode": "BUS",
-        "weekdayTrips": 238,
-        "saturdayTrips": 166,
-        "sundayTrips": 66
+        "weekdayTrips": 206,
+        "saturdayTrips": 104,
+        "sundayTrips": 44
       },
       {
         "name": "271",
         "mode": "BUS",
-        "weekdayTrips": 182,
-        "saturdayTrips": 142,
-        "sundayTrips": 42
+        "weekdayTrips": 154,
+        "saturdayTrips": 90,
+        "sundayTrips": 28
       },
       {
         "name": "272",
         "mode": "BUS",
-        "weekdayTrips": 170,
-        "saturdayTrips": 148,
-        "sundayTrips": 42
+        "weekdayTrips": 145,
+        "saturdayTrips": 94,
+        "sundayTrips": 28
       },
       {
         "name": "273",
         "mode": "BUS",
-        "weekdayTrips": 192,
-        "saturdayTrips": 134,
-        "sundayTrips": 48
+        "weekdayTrips": 168,
+        "saturdayTrips": 88,
+        "sundayTrips": 32
       },
       {
         "name": "274",
         "mode": "BUS",
-        "weekdayTrips": 206,
-        "saturdayTrips": 138,
-        "sundayTrips": 42
+        "weekdayTrips": 172,
+        "saturdayTrips": 88,
+        "sundayTrips": 28
       },
       {
         "name": "275",
         "mode": "BUS",
-        "weekdayTrips": 18,
+        "weekdayTrips": 36,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "276",
         "mode": "BUS",
-        "weekdayTrips": 228,
-        "saturdayTrips": 148,
-        "sundayTrips": 60
+        "weekdayTrips": 196,
+        "saturdayTrips": 92,
+        "sundayTrips": 40
       },
       {
         "name": "277",
         "mode": "BUS",
-        "weekdayTrips": 108,
-        "saturdayTrips": 126,
-        "sundayTrips": 36
+        "weekdayTrips": 96,
+        "saturdayTrips": 80,
+        "sundayTrips": 24
       },
       {
         "name": "278",
         "mode": "BUS",
-        "weekdayTrips": 171,
+        "weekdayTrips": 132,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "279",
         "mode": "BUS",
-        "weekdayTrips": 364,
-        "saturdayTrips": 216,
-        "sundayTrips": 126
+        "weekdayTrips": 410,
+        "saturdayTrips": 182,
+        "sundayTrips": 100
       },
       {
         "name": "280",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 118,
-        "sundayTrips": 42
+        "weekdayTrips": 118,
+        "saturdayTrips": 74,
+        "sundayTrips": 28
       },
       {
         "name": "281",
         "mode": "BUS",
-        "weekdayTrips": 368,
-        "saturdayTrips": 289,
-        "sundayTrips": 168
+        "weekdayTrips": 346,
+        "saturdayTrips": 174,
+        "sundayTrips": 112
       },
       {
         "name": "282",
         "mode": "BUS",
-        "weekdayTrips": 290,
-        "saturdayTrips": 272,
-        "sundayTrips": 138
+        "weekdayTrips": 275,
+        "saturdayTrips": 166,
+        "sundayTrips": 92
       },
       {
         "name": "283",
         "mode": "BUS",
-        "weekdayTrips": 120,
-        "saturdayTrips": 90,
+        "weekdayTrips": 90,
+        "saturdayTrips": 60,
         "sundayTrips": 0
       },
       {
         "name": "284",
         "mode": "BUS",
-        "weekdayTrips": 140,
-        "saturdayTrips": 126,
-        "sundayTrips": 36
+        "weekdayTrips": 120,
+        "saturdayTrips": 80,
+        "sundayTrips": 24
       },
       {
         "name": "290",
         "mode": "BUS",
-        "weekdayTrips": 341,
-        "saturdayTrips": 337,
-        "sundayTrips": 195
+        "weekdayTrips": 337,
+        "saturdayTrips": 203,
+        "sundayTrips": 130
       },
       {
         "name": "295",
         "mode": "BUS",
-        "weekdayTrips": 162,
-        "saturdayTrips": 111,
-        "sundayTrips": 126
+        "weekdayTrips": 174,
+        "saturdayTrips": 60,
+        "sundayTrips": 84
       },
       {
         "name": "307",
         "mode": "BUS",
-        "weekdayTrips": 114,
-        "saturdayTrips": 77,
-        "sundayTrips": 30
+        "weekdayTrips": 98,
+        "saturdayTrips": 48,
+        "sundayTrips": 20
       },
       {
         "name": "308",
         "mode": "BUS",
-        "weekdayTrips": 118,
-        "saturdayTrips": 60,
-        "sundayTrips": 36
+        "weekdayTrips": 106,
+        "saturdayTrips": 36,
+        "sundayTrips": 24
       },
       {
         "name": "310",
         "mode": "BUS",
-        "weekdayTrips": 168,
-        "saturdayTrips": 54,
+        "weekdayTrips": 126,
+        "saturdayTrips": 36,
         "sundayTrips": 0
       },
       {
         "name": "311",
         "mode": "BUS",
-        "weekdayTrips": 68,
-        "saturdayTrips": 33,
+        "weekdayTrips": 51,
+        "saturdayTrips": 22,
         "sundayTrips": 0
       },
       {
         "name": "313",
         "mode": "BUS",
-        "weekdayTrips": 18,
-        "saturdayTrips": 6,
+        "weekdayTrips": 16,
+        "saturdayTrips": 4,
         "sundayTrips": 0
       },
       {
         "name": "315",
         "mode": "BUS",
-        "weekdayTrips": 134,
-        "saturdayTrips": 74,
-        "sundayTrips": 30
+        "weekdayTrips": 113,
+        "saturdayTrips": 46,
+        "sundayTrips": 20
       },
       {
         "name": "330",
         "mode": "BUS",
-        "weekdayTrips": 256,
+        "weekdayTrips": 192,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
@@ -20027,135 +19995,135 @@
       {
         "name": "1",
         "mode": "TRAM",
-        "weekdayTrips": 166,
+        "weekdayTrips": 332,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "11",
         "mode": "TRAM",
-        "weekdayTrips": 1351,
-        "saturdayTrips": 1093,
-        "sundayTrips": 582
+        "weekdayTrips": 1363,
+        "saturdayTrips": 429,
+        "sundayTrips": 194
       },
       {
         "name": "12",
         "mode": "TRAM",
-        "weekdayTrips": 1170,
-        "saturdayTrips": 1030,
-        "sundayTrips": 540
+        "weekdayTrips": 1206,
+        "saturdayTrips": 676,
+        "sundayTrips": 408
       },
       {
         "name": "13",
         "mode": "TRAM",
-        "weekdayTrips": 497,
-        "saturdayTrips": 497,
-        "sundayTrips": 303
+        "weekdayTrips": 824,
+        "saturdayTrips": 345,
+        "sundayTrips": 163
       },
       {
         "name": "14",
         "mode": "TRAM",
-        "weekdayTrips": 1246,
-        "saturdayTrips": 1159,
-        "sundayTrips": 630
+        "weekdayTrips": 1321,
+        "saturdayTrips": 773,
+        "sundayTrips": 480
       },
       {
         "name": "15",
         "mode": "TRAM",
-        "weekdayTrips": 1004,
-        "saturdayTrips": 994,
-        "sundayTrips": 576
+        "weekdayTrips": 996,
+        "saturdayTrips": 396,
+        "sundayTrips": 192
       },
       {
         "name": "17",
         "mode": "TRAM",
-        "weekdayTrips": 1181,
-        "saturdayTrips": 1173,
-        "sundayTrips": 665
+        "weekdayTrips": 1269,
+        "saturdayTrips": 601,
+        "sundayTrips": 351
       },
       {
         "name": "2",
         "mode": "TRAM",
-        "weekdayTrips": 1115,
-        "saturdayTrips": 1018,
-        "sundayTrips": 530
+        "weekdayTrips": 1048,
+        "saturdayTrips": 543,
+        "sundayTrips": 300
       },
       {
         "name": "3",
         "mode": "TRAM",
-        "weekdayTrips": 556,
-        "saturdayTrips": 0,
-        "sundayTrips": 0
+        "weekdayTrips": 504,
+        "saturdayTrips": 196,
+        "sundayTrips": 160
       },
       {
         "name": "31",
         "mode": "TRAM",
-        "weekdayTrips": 72,
-        "saturdayTrips": 78,
-        "sundayTrips": 42
+        "weekdayTrips": 74,
+        "saturdayTrips": 48,
+        "sundayTrips": 28
       },
       {
         "name": "32",
         "mode": "TRAM",
-        "weekdayTrips": 82,
-        "saturdayTrips": 88,
-        "sundayTrips": 48
+        "weekdayTrips": 84,
+        "saturdayTrips": 54,
+        "sundayTrips": 32
       },
       {
         "name": "33",
         "mode": "TRAM",
-        "weekdayTrips": 72,
-        "saturdayTrips": 78,
-        "sundayTrips": 42
+        "weekdayTrips": 74,
+        "saturdayTrips": 48,
+        "sundayTrips": 28
       },
       {
         "name": "34",
         "mode": "TRAM",
-        "weekdayTrips": 62,
-        "saturdayTrips": 68,
-        "sundayTrips": 36
+        "weekdayTrips": 64,
+        "saturdayTrips": 42,
+        "sundayTrips": 24
       },
       {
         "name": "4",
         "mode": "TRAM",
-        "weekdayTrips": 1038,
-        "saturdayTrips": 943,
-        "sundayTrips": 528
+        "weekdayTrips": 1046,
+        "saturdayTrips": 812,
+        "sundayTrips": 535
       },
       {
         "name": "5",
         "mode": "TRAM",
-        "weekdayTrips": 1038,
-        "saturdayTrips": 952,
-        "sundayTrips": 529
+        "weekdayTrips": 1001,
+        "saturdayTrips": 560,
+        "sundayTrips": 345
       },
       {
         "name": "6",
         "mode": "TRAM",
-        "weekdayTrips": 1335,
-        "saturdayTrips": 1188,
-        "sundayTrips": 641
+        "weekdayTrips": 1300,
+        "saturdayTrips": 695,
+        "sundayTrips": 436
       },
       {
         "name": "7",
         "mode": "TRAM",
-        "weekdayTrips": 1090,
-        "saturdayTrips": 930,
-        "sundayTrips": 504
+        "weekdayTrips": 1168,
+        "saturdayTrips": 376,
+        "sundayTrips": 168
       },
       {
         "name": "8",
         "mode": "TRAM",
-        "weekdayTrips": 567,
+        "weekdayTrips": 610,
         "saturdayTrips": 0,
         "sundayTrips": 0
       },
       {
         "name": "9",
         "mode": "TRAM",
-        "weekdayTrips": 1086,
-        "saturdayTrips": 1114,
-        "sundayTrips": 608
+        "weekdayTrips": 1042,
+        "saturdayTrips": 538,
+        "sundayTrips": 314
       }
     ]
   },
@@ -20163,22 +20131,22 @@
     {
       "name": "295",
       "mode": "BUS",
-      "outboundTrips": 148,
-      "inboundTrips": 14,
-      "ratio": 0.09
+      "outboundTrips": 146,
+      "inboundTrips": 28,
+      "ratio": 0.19
     },
     {
       "name": "144",
       "mode": "BUS",
-      "outboundTrips": 4,
-      "inboundTrips": 8,
+      "outboundTrips": 3,
+      "inboundTrips": 6,
       "ratio": 0.5
     },
     {
       "name": "330",
       "mode": "BUS",
-      "outboundTrips": 144,
-      "inboundTrips": 112,
+      "outboundTrips": 108,
+      "inboundTrips": 84,
       "ratio": 0.78
     }
   ],
@@ -20204,44 +20172,44 @@
       },
       {
         "label": "04:00",
-        "stopCount": 502,
-        "tramStops": 85,
-        "busStops": 417,
+        "stopCount": 517,
+        "tramStops": 90,
+        "busStops": 427,
         "railStops": 0
       },
       {
         "label": "04:30",
-        "stopCount": 1096,
-        "tramStops": 138,
-        "busStops": 958,
+        "stopCount": 1094,
+        "tramStops": 142,
+        "busStops": 952,
         "railStops": 0
       },
       {
         "label": "05:00",
-        "stopCount": 381,
-        "tramStops": 11,
-        "busStops": 370,
+        "stopCount": 382,
+        "tramStops": 18,
+        "busStops": 364,
         "railStops": 0
       },
       {
         "label": "05:30",
-        "stopCount": 97,
-        "tramStops": 2,
+        "stopCount": 96,
+        "tramStops": 1,
         "busStops": 95,
         "railStops": 0
       },
       {
         "label": "06:00",
-        "stopCount": 40,
+        "stopCount": 41,
         "tramStops": 0,
-        "busStops": 40,
+        "busStops": 41,
         "railStops": 0
       },
       {
         "label": "06:30",
-        "stopCount": 36,
+        "stopCount": 37,
         "tramStops": 0,
-        "busStops": 36,
+        "busStops": 37,
         "railStops": 0
       },
       {
@@ -20253,9 +20221,9 @@
       },
       {
         "label": "07:30",
-        "stopCount": 96,
-        "tramStops": 17,
-        "busStops": 79,
+        "stopCount": 80,
+        "tramStops": 2,
+        "busStops": 78,
         "railStops": 0
       }
     ],
@@ -20297,23 +20265,23 @@
       },
       {
         "label": "21:30",
-        "stopCount": 13,
+        "stopCount": 15,
         "tramStops": 0,
-        "busStops": 13,
+        "busStops": 15,
         "railStops": 0
       },
       {
         "label": "22:00",
-        "stopCount": 59,
+        "stopCount": 63,
         "tramStops": 0,
-        "busStops": 59,
+        "busStops": 63,
         "railStops": 0
       },
       {
         "label": "22:30",
-        "stopCount": 113,
+        "stopCount": 121,
         "tramStops": 0,
-        "busStops": 113,
+        "busStops": 121,
         "railStops": 0
       },
       {
@@ -20325,30 +20293,30 @@
       },
       {
         "label": "23:30",
-        "stopCount": 511,
+        "stopCount": 505,
         "tramStops": 7,
-        "busStops": 504,
+        "busStops": 498,
         "railStops": 0
       },
       {
         "label": "00:00",
-        "stopCount": 517,
-        "tramStops": 14,
+        "stopCount": 516,
+        "tramStops": 13,
         "busStops": 503,
         "railStops": 0
       },
       {
         "label": "00:30",
-        "stopCount": 259,
-        "tramStops": 0,
-        "busStops": 259,
+        "stopCount": 247,
+        "tramStops": 1,
+        "busStops": 246,
         "railStops": 0
       },
       {
         "label": "01:00",
-        "stopCount": 42,
+        "stopCount": 46,
         "tramStops": 0,
-        "busStops": 42,
+        "busStops": 46,
         "railStops": 0
       },
       {
@@ -20384,10 +20352,10 @@
     ],
     "hasRail": false,
     "nightGap": {
-      "stopsDarkBy22": 167,
-      "stopsDarkBy23": 339,
-      "totalStops": 2373,
-      "pctDarkBy23": 14.3,
+      "stopsDarkBy22": 169,
+      "stopsDarkBy23": 353,
+      "totalStops": 2372,
+      "pctDarkBy23": 14.9,
       "routesEndingBefore22": [
         "1",
         "104",
@@ -20569,7 +20537,6 @@
       ],
       "routesPastMidnight": [
         "102",
-        "109",
         "11",
         "110",
         "111",
@@ -20683,29 +20650,29 @@
         "176",
         "177"
       ],
-      "avgTransferWaitMin": 15.0,
-      "bestHour": 23,
-      "bestHourWaitMin": 12.9,
+      "avgTransferWaitMin": 14.4,
+      "bestHour": 15,
+      "bestHourWaitMin": 12.6,
       "hourlyWait": [
-        14.4,
         14.8,
-        17.4,
-        14.8,
-        14.8,
-        14.4,
-        16.4,
+        14.1,
+        16.5,
+        13.5,
+        14.3,
+        13.5,
         15.9,
         15.3,
+        14.9,
+        13.2,
+        12.6,
+        13.3,
+        14.8,
+        13.4,
         13.8,
-        14.3,
-        15.4,
-        15.7,
-        13.6,
-        14.2,
-        15.0,
-        15.9,
-        16.2,
-        12.9
+        14.9,
+        16.7,
+        16.0,
+        12.7
       ]
     },
     {
@@ -20734,29 +20701,29 @@
         "283",
         "284"
       ],
-      "avgTransferWaitMin": 16.6,
-      "bestHour": 9,
-      "bestHourWaitMin": 13.2,
+      "avgTransferWaitMin": 16.9,
+      "bestHour": 21,
+      "bestHourWaitMin": 13.3,
       "hourlyWait": [
-        16.0,
-        14.3,
-        14.1,
-        16.6,
-        13.2,
-        16.0,
-        17.6,
-        20.7,
-        18.5,
+        16.4,
+        15.0,
+        14.4,
         17.4,
-        18.0,
-        20.3,
-        14.6,
-        17.0,
+        15.0,
+        15.7,
+        18.1,
+        20.2,
+        18.8,
+        16.9,
+        18.6,
+        20.5,
+        14.4,
         17.4,
-        16.7,
-        13.3,
         17.2,
-        17.4
+        18.1,
+        13.3,
+        15.8,
+        17.0
       ]
     },
     {
@@ -20785,29 +20752,29 @@
         "280",
         "283"
       ],
-      "avgTransferWaitMin": 17.5,
-      "bestHour": 10,
-      "bestHourWaitMin": 15.3,
+      "avgTransferWaitMin": 17.0,
+      "bestHour": 23,
+      "bestHourWaitMin": 14.5,
       "hourlyWait": [
-        18.4,
-        18.6,
+        17.5,
+        17.2,
+        18.2,
         17.7,
-        18.5,
+        17.6,
+        16.5,
         18.1,
-        15.3,
-        18.0,
-        17.7,
-        15.9,
-        17.3,
-        17.4,
-        16.7,
-        16.2,
-        15.6,
-        18.0,
         17.8,
+        15.4,
+        16.3,
+        17.4,
+        17.4,
+        15.7,
+        16.3,
+        18.0,
         18.1,
-        18.8,
-        18.6
+        17.2,
+        17.0,
+        14.5
       ]
     },
     {
@@ -20836,29 +20803,29 @@
         "283",
         "284"
       ],
-      "avgTransferWaitMin": 18.1,
+      "avgTransferWaitMin": 18.0,
       "bestHour": 7,
-      "bestHourWaitMin": 13.8,
+      "bestHourWaitMin": 14.9,
       "hourlyWait": [
-        17.3,
-        15.6,
-        13.8,
-        20.2,
-        14.6,
-        18.0,
-        19.5,
-        22.0,
-        20.0,
-        21.4,
-        14.6,
-        22.3,
-        17.1,
-        17.9,
-        17.1,
-        20.3,
+        17.6,
+        16.0,
+        14.9,
+        19.7,
+        16.1,
         16.7,
-        18.4,
-        16.5
+        19.6,
+        21.1,
+        18.9,
+        20.1,
+        17.0,
+        21.4,
+        15.7,
+        18.5,
+        17.6,
+        20.2,
+        16.0,
+        16.6,
+        18.1
       ]
     },
     {
@@ -20886,26 +20853,26 @@
         "311",
         "313"
       ],
-      "avgTransferWaitMin": 15.6,
-      "bestHour": 13,
-      "bestHourWaitMin": 13.1,
+      "avgTransferWaitMin": 15.3,
+      "bestHour": 12,
+      "bestHourWaitMin": 12.9,
       "hourlyWait": [
-        16.8,
-        15.6,
-        16.8,
-        14.6,
-        14.0,
-        14.4,
-        19.1,
-        13.6,
-        13.1,
-        15.8,
-        15.8,
-        18.0,
+        15.9,
+        14.9,
+        16.3,
+        14.3,
         13.5,
-        16.5,
-        14.4,
-        15.7,
+        13.9,
+        18.8,
+        12.9,
+        12.9,
+        15.4,
+        15.5,
+        17.8,
+        13.5,
+        16.8,
+        15.0,
+        15.9,
         16.8,
         14.5,
         16.9
@@ -20935,29 +20902,29 @@
         "311",
         "313"
       ],
-      "avgTransferWaitMin": 14.7,
+      "avgTransferWaitMin": 14.3,
       "bestHour": 10,
-      "bestHourWaitMin": 11.4,
+      "bestHourWaitMin": 11.0,
       "hourlyWait": [
-        16.9,
         16.6,
-        13.5,
-        16.4,
-        14.9,
-        11.4,
-        13.9,
-        14.1,
-        15.8,
+        16.3,
+        12.4,
+        16.0,
+        14.0,
+        11.0,
+        13.8,
+        13.8,
+        15.0,
+        16.3,
+        13.8,
+        12.5,
+        15.1,
         16.7,
-        14.6,
-        12.6,
-        15.5,
-        17.4,
         14.2,
-        14.9,
+        14.6,
         14.8,
-        12.6,
-        12.4
+        12.4,
+        12.5
       ]
     },
     {
@@ -20982,26 +20949,26 @@
         "268",
         "281"
       ],
-      "avgTransferWaitMin": 15.4,
-      "bestHour": 13,
-      "bestHourWaitMin": 13.1,
+      "avgTransferWaitMin": 15.2,
+      "bestHour": 9,
+      "bestHourWaitMin": 12.7,
       "hourlyWait": [
-        17.2,
-        14.6,
-        16.8,
-        14.5,
-        13.2,
-        14.4,
-        19.1,
-        13.8,
-        13.1,
-        15.8,
-        14.4,
-        17.6,
+        16.2,
+        13.9,
+        16.3,
         14.2,
-        16.5,
-        14.4,
-        15.4,
+        12.7,
+        13.9,
+        18.8,
+        13.0,
+        12.9,
+        15.3,
+        14.0,
+        17.4,
+        14.0,
+        16.8,
+        15.0,
+        15.9,
         16.8,
         14.3,
         16.5
@@ -21243,52 +21210,6 @@
       ]
     },
     {
-      "stopName": "Trg bana J. Jelačića",
-      "stopKey": "45.81286,15.97726",
-      "lat": 45.812858,
-      "lon": 15.977265,
-      "routeCount": 13,
-      "routes": [
-        "1",
-        "6",
-        "8",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "17",
-        "31",
-        "32",
-        "33",
-        "34"
-      ],
-      "avgTransferWaitMin": 5.9,
-      "bestHour": 13,
-      "bestHourWaitMin": 4.8,
-      "hourlyWait": [
-        8.1,
-        7.6,
-        6.6,
-        5.4,
-        5.2,
-        5.2,
-        5.1,
-        4.9,
-        4.8,
-        4.9,
-        4.9,
-        4.9,
-        5.0,
-        4.9,
-        5.5,
-        5.9,
-        7.0,
-        7.1,
-        9.5
-      ]
-    },
-    {
       "stopName": "Park Maksimir",
       "stopKey": "45.81862,16.01215",
       "lat": 45.81862,
@@ -21309,29 +21230,29 @@
         "33",
         "34"
       ],
-      "avgTransferWaitMin": 6.6,
-      "bestHour": 13,
-      "bestHourWaitMin": 5.0,
+      "avgTransferWaitMin": 6.5,
+      "bestHour": 11,
+      "bestHourWaitMin": 4.5,
       "hourlyWait": [
-        7.2,
-        12.5,
-        7.7,
-        5.6,
-        5.4,
-        10.5,
+        6.5,
+        13.4,
+        7.9,
+        5.5,
         5.2,
-        5.1,
-        5.0,
-        5.0,
+        11.8,
+        4.5,
+        4.9,
+        4.8,
+        4.8,
+        4.8,
+        4.9,
+        4.9,
         5.2,
-        5.2,
-        5.0,
-        5.1,
-        5.8,
+        5.9,
+        6.5,
+        6.6,
         6.8,
-        6.9,
-        7.1,
-        8.3
+        7.9
       ]
     },
     {
@@ -21355,29 +21276,29 @@
         "33",
         "34"
       ],
-      "avgTransferWaitMin": 6.6,
+      "avgTransferWaitMin": 6.5,
       "bestHour": 11,
-      "bestHourWaitMin": 5.0,
+      "bestHourWaitMin": 4.5,
       "hourlyWait": [
-        7.3,
-        12.5,
-        8.0,
-        5.5,
-        5.3,
-        11.0,
-        5.0,
-        5.1,
-        5.0,
-        5.0,
-        5.1,
-        5.1,
-        5.0,
+        6.5,
+        13.4,
+        7.6,
+        5.6,
+        5.4,
+        12.1,
+        4.5,
+        4.9,
+        4.8,
+        4.8,
+        4.8,
+        4.9,
+        4.9,
         5.2,
         5.7,
+        6.4,
+        6.5,
         6.8,
-        6.8,
-        7.1,
-        8.3
+        7.8
       ]
     },
     {
@@ -21403,73 +21324,27 @@
       ],
       "avgTransferWaitMin": 6.6,
       "bestHour": 11,
-      "bestHourWaitMin": 4.8,
+      "bestHourWaitMin": 4.7,
       "hourlyWait": [
-        7.3,
-        12.7,
-        8.0,
-        5.4,
-        5.3,
-        11.2,
-        4.8,
-        5.2,
-        5.0,
-        5.1,
-        5.0,
-        5.0,
-        5.0,
-        5.2,
-        5.8,
-        6.8,
-        7.0,
-        7.3,
-        8.3
-      ]
-    },
-    {
-      "stopName": "Glavni kolodvor",
-      "stopKey": "45.80524,15.97846",
-      "lat": 45.805235,
-      "lon": 15.97846,
-      "routeCount": 13,
-      "routes": [
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "8",
-        "9",
-        "13",
-        "14",
-        "15",
-        "31",
-        "33",
-        "34"
-      ],
-      "avgTransferWaitMin": 6.7,
-      "bestHour": 10,
-      "bestHourWaitMin": 5.3,
-      "hourlyWait": [
-        8.4,
-        7.6,
-        6.8,
-        5.5,
-        5.5,
-        5.3,
-        5.4,
-        5.4,
-        5.3,
-        5.5,
-        5.4,
+        6.4,
+        14.6,
+        8.3,
         5.6,
-        5.4,
-        5.4,
         5.7,
-        7.6,
-        8.4,
-        8.7,
-        14.0
+        12.2,
+        4.7,
+        4.9,
+        4.8,
+        4.8,
+        4.7,
+        4.7,
+        4.9,
+        5.2,
+        5.7,
+        6.4,
+        6.7,
+        6.8,
+        8.0
       ]
     },
     {
@@ -21494,28 +21369,28 @@
         "34"
       ],
       "avgTransferWaitMin": 6.7,
-      "bestHour": 11,
-      "bestHourWaitMin": 5.0,
+      "bestHour": 15,
+      "bestHourWaitMin": 4.7,
       "hourlyWait": [
-        7.6,
-        12.7,
-        8.4,
-        5.7,
-        5.3,
-        11.6,
-        5.0,
-        5.3,
-        5.1,
-        5.1,
-        5.0,
-        5.0,
-        5.0,
-        5.1,
-        5.8,
-        6.4,
         7.1,
-        7.3,
-        8.3
+        14.5,
+        8.3,
+        5.7,
+        5.9,
+        12.6,
+        4.8,
+        5.0,
+        4.8,
+        4.9,
+        4.7,
+        4.8,
+        4.9,
+        5.2,
+        5.7,
+        6.5,
+        6.7,
+        7.0,
+        8.7
       ]
     },
     {
@@ -21539,29 +21414,29 @@
         "33",
         "34"
       ],
-      "avgTransferWaitMin": 6.9,
+      "avgTransferWaitMin": 7.1,
       "bestHour": 12,
-      "bestHourWaitMin": 4.9,
+      "bestHourWaitMin": 4.8,
       "hourlyWait": [
-        8.3,
-        7.8,
-        6.4,
+        7.4,
+        7.2,
+        6.8,
         5.7,
-        5.4,
         5.2,
         5.1,
         4.9,
-        5.1,
-        5.2,
-        5.1,
+        4.8,
+        4.9,
+        4.8,
+        4.8,
+        4.8,
+        9.6,
         5.0,
-        5.1,
-        5.0,
-        14.2,
-        8.4,
-        7.3,
-        7.3,
-        14.7
+        15.2,
+        7.9,
+        6.7,
+        9.7,
+        14.6
       ]
     },
     {
@@ -21585,29 +21460,121 @@
         "33",
         "34"
       ],
-      "avgTransferWaitMin": 6.9,
+      "avgTransferWaitMin": 7.1,
       "bestHour": 12,
-      "bestHourWaitMin": 4.9,
+      "bestHourWaitMin": 4.7,
       "hourlyWait": [
-        9.0,
-        8.0,
-        6.4,
+        8.5,
+        7.4,
+        6.7,
         5.5,
-        5.4,
-        5.3,
+        5.2,
         5.1,
         4.9,
-        5.0,
+        4.7,
+        4.8,
+        4.7,
+        4.7,
+        4.8,
+        10.7,
+        4.8,
+        16.2,
+        8.1,
+        6.8,
+        9.6,
+        12.6
+      ]
+    },
+    {
+      "stopName": "Jordanovac",
+      "stopKey": "45.81762,16.00817",
+      "lat": 45.817623,
+      "lon": 16.008165,
+      "routeCount": 13,
+      "routes": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "31",
+        "33",
+        "34"
+      ],
+      "avgTransferWaitMin": 7.3,
+      "bestHour": 12,
+      "bestHourWaitMin": 4.7,
+      "hourlyWait": [
+        8.8,
+        7.5,
+        6.7,
+        5.6,
+        5.2,
         5.1,
-        5.0,
-        5.1,
-        5.1,
-        5.1,
-        15.9,
-        8.6,
-        7.1,
-        7.1,
-        12.8
+        4.9,
+        4.7,
+        4.8,
+        4.9,
+        4.8,
+        4.8,
+        10.6,
+        4.9,
+        15.7,
+        7.8,
+        6.9,
+        9.7,
+        15.3
+      ]
+    },
+    {
+      "stopName": "Muzej suv.umjetnosti",
+      "stopKey": "45.77861,15.98067",
+      "lat": 45.778613,
+      "lon": 15.980671,
+      "routeCount": 13,
+      "routes": [
+        "166",
+        "219",
+        "220",
+        "221",
+        "222",
+        "229",
+        "241",
+        "242",
+        "268",
+        "310",
+        "311",
+        "313",
+        "330"
+      ],
+      "avgTransferWaitMin": 13.7,
+      "bestHour": 9,
+      "bestHourWaitMin": 8.4,
+      "hourlyWait": [
+        12.9,
+        14.6,
+        14.9,
+        13.1,
+        8.4,
+        10.9,
+        18.0,
+        10.6,
+        13.1,
+        18.3,
+        13.1,
+        14.3,
+        13.6,
+        16.3,
+        10.1,
+        14.2,
+        16.0,
+        10.7,
+        16.7
       ]
     }
   ]

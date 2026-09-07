@@ -40,7 +40,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -535,7 +535,7 @@
   "reach": {
     "stations15": 29,
     "stations30": 67,
-    "stations45": 170
+    "stations45": 178
   },
   "prevSlug": "desinicka",
   "nextSlug": "desprimska-34"

@@ -1986,13 +1986,20 @@
         {
           "hour": 20,
           "minutes": [
-            10
+            10,
+            50
           ]
         },
         {
           "hour": 21,
           "minutes": [
             25
+          ]
+        },
+        {
+          "hour": 22,
+          "minutes": [
+            15
           ]
         },
         {
@@ -2096,9 +2103,16 @@
           ]
         },
         {
+          "hour": 21,
+          "minutes": [
+            20
+          ]
+        },
+        {
           "hour": 22,
           "minutes": [
-            5
+            5,
+            50
           ]
         },
         {
@@ -2358,7 +2372,7 @@
   "prevBroj": "243",
   "nextBroj": "262",
   "reach": {
-    "areaKm2": 31.8,
+    "areaKm2": 32.4,
     "stopName": "Mark.polje-raskrižje",
     "lat": 45.87049,
     "lon": 16.11336

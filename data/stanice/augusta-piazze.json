@@ -22,9 +22,12 @@
       "headsign": "Jarun",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 41.1
     }
   ],
   "neighbors": [
@@ -251,8 +254,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 85,
-    "stations45": 302
+    "stations30": 92,
+    "stations45": 299
   },
   "prevSlug": "aspergeri",
   "nextSlug": "autobusni-kol"

@@ -63,7 +63,7 @@
         44,
         51
       ],
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 51.8
     }
   ],
   "neighbors": [
@@ -680,8 +680,8 @@
   },
   "reach": {
     "stations15": 25,
-    "stations30": 42,
-    "stations45": 132
+    "stations30": 46,
+    "stations45": 138
   },
   "prevSlug": "belostenceva",
   "nextSlug": "bencekovici"

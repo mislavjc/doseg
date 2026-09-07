@@ -2,22 +2,37 @@
   "slug": "trg-dr-f-tudmana",
   "name": "Trg dr. F. Tuđmana",
   "kvart": "Črnomerec",
-  "lat": 45.81309,
-  "lon": 15.95726,
+  "lat": 45.81307,
+  "lon": 15.95734,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [
+    "1",
     "2",
     "6",
     "11",
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:46",
-  "lastDeparture": "1:04",
+  "firstDeparture": "4:44",
+  "lastDeparture": "1:02",
   "directionGroups": 3,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        11,
+        13
+      ],
+      "allDayHeadwayMin": 14.5
+    },
     {
       "broj": "2",
       "mode": "tram",
@@ -25,12 +40,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.0,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "6",
@@ -39,12 +54,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        9,
-        9
+        6,
+        6
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "11",
@@ -53,12 +68,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "31",
@@ -74,30 +89,60 @@
   ],
   "neighbors": [
     {
-      "name": "Slovenska",
-      "slug": "slovenska"
+      "name": "Zapadni kolodvor",
+      "slug": "zapadni-kolodvor"
+    },
+    {
+      "name": "Britanski trg",
+      "slug": "britanski-trg"
     },
     {
       "name": "Talovčeva",
       "slug": "talovceva"
     },
     {
-      "name": "Jagićeva",
-      "slug": "jagiceva"
+      "name": "Slovenska",
+      "slug": "slovenska"
     },
     {
-      "name": "Britanski trg",
-      "slug": "britanski-trg"
+      "name": "Jagićeva",
+      "slug": "jagiceva"
     }
   ],
   "hero": {
     "bbox": [
-      15.9552,
-      45.81165,
-      15.95933,
-      45.81454
+      15.95527,
+      45.81163,
+      15.9594,
+      45.81452
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.9558,
+            45.80933
+          ],
+          [
+            15.95746,
+            45.81281
+          ],
+          [
+            15.96309,
+            45.81233
+          ],
+          [
+            15.9694,
+            45.81325
+          ],
+          [
+            15.97727,
+            45.81286
+          ]
+        ]
+      },
       {
         "broj": "2",
         "mode": "tram",
@@ -509,6 +554,10 @@
           [
             15.97403,
             45.80555
+          ],
+          [
+            15.97485,
+            45.80558
           ]
         ]
       },
@@ -1657,9 +1706,9 @@
     ]
   },
   "reach": {
-    "stations15": 65,
-    "stations30": 243,
-    "stations45": 525
+    "stations15": 69,
+    "stations30": 251,
+    "stations45": 536
   },
   "prevSlug": "trg-bana-j-jelacica",
   "nextSlug": "trg-dr-tudmana"

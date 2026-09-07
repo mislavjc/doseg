@@ -22,12 +22,12 @@
       "headsign": "Jarun",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 52.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        51,
-        54
+        30,
+        30
       ],
-      "allDayHeadwayMin": 50.0
+      "allDayHeadwayMin": 41.1
     }
   ],
   "neighbors": [
@@ -310,8 +310,8 @@
   },
   "reach": {
     "stations15": 26,
-    "stations30": 140,
-    "stations45": 416
+    "stations30": 151,
+    "stations45": 430
   },
   "prevSlug": "p-d-runolist",
   "nextSlug": "palcici-odvojak"

@@ -387,9 +387,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 127,
-    "stations45": 328
+    "stations15": 24,
+    "stations30": 133,
+    "stations45": 352
   },
   "prevSlug": "pliva",
   "nextSlug": "podbrezje-okretiste"

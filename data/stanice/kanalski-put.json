@@ -310,9 +310,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 121,
-    "stations45": 333
+    "stations15": 32,
+    "stations30": 130,
+    "stations45": 350
   },
   "prevSlug": "kampus-restoran",
   "nextSlug": "kancelak"

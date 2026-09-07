@@ -2,7 +2,7 @@
   "slug": "precko-terminal",
   "name": "Prečko-terminal",
   "kvart": "Trešnjevka - jug",
-  "lat": 45.79495,
+  "lat": 45.79493,
   "lon": 15.89967,
   "mode": "bus",
   "bothDirections": true,
@@ -15,7 +15,7 @@
     "168"
   ],
   "firstDeparture": "4:10",
-  "lastDeparture": "0:30",
+  "lastDeparture": "0:43",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,9 +25,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "120",
@@ -36,12 +39,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 38.3,
       "peakRangeMin": [
-        25,
-        25
+        38,
+        40
       ],
-      "allDayHeadwayMin": 31.1
+      "allDayHeadwayMin": 31.4
     },
     {
       "broj": "134",
@@ -50,12 +53,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        28,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "168",
@@ -86,9 +89,9 @@
   "hero": {
     "bbox": [
       15.8976,
-      45.79351,
-      15.90174,
-      45.79639
+      45.79349,
+      15.90173,
+      45.79638
     ],
     "lines": [
       {
@@ -97,31 +100,31 @@
         "shape": [
           [
             15.91852,
-            45.79557
+            45.79558
           ],
           [
-            15.90808,
-            45.79554
+            15.90809,
+            45.79555
           ],
           [
-            15.90565,
+            15.90566,
             45.79154
           ],
           [
-            15.9014,
+            15.90141,
             45.7909
           ],
           [
-            15.89819,
+            15.8982,
             45.79183
           ],
           [
             15.89455,
-            45.79305
+            45.79306
           ],
           [
             15.89961,
-            45.79475
+            45.79476
           ]
         ]
       },
@@ -511,8 +514,8 @@
   },
   "reach": {
     "stations15": 48,
-    "stations30": 152,
-    "stations45": 431
+    "stations30": 164,
+    "stations45": 440
   },
   "prevSlug": "precko",
   "nextSlug": "predsjednicki-dvori"

@@ -320,7 +320,6 @@
           "lon": 15.93697,
           "offsetMin": 6,
           "tramInterchange": [
-            "1",
             "3",
             "9",
             "12"
@@ -1373,12 +1372,6 @@
   "related": {
     "sharedTerminal": [
       {
-        "broj": "1",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Ljubljanica"
-      },
-      {
         "broj": "3",
         "mode": "tram",
         "isNight": false,
@@ -1426,7 +1419,7 @@
   "prevBroj": "112",
   "nextBroj": "114",
   "reach": {
-    "areaKm2": 35.2,
+    "areaKm2": 36.3,
     "stopName": "Tržnica Jarun",
     "lat": 45.78988,
     "lon": 15.93024

@@ -12,7 +12,7 @@
     "128"
   ],
   "firstDeparture": "4:56",
-  "lastDeparture": "0:31",
+  "lastDeparture": "0:21",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 15.0,
+      "peakHeadwayMin": 10.2,
       "peakRangeMin": [
-        15,
-        15
+        10,
+        11
       ],
-      "allDayHeadwayMin": 16.5
+      "allDayHeadwayMin": 14.0
     }
   ],
   "neighbors": [
@@ -381,9 +381,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 145,
-    "stations45": 365
+    "stations15": 32,
+    "stations30": 129,
+    "stations45": 351
   },
   "prevSlug": "ivice-lovincica",
   "nextSlug": "jackovina-105"

@@ -11,7 +11,7 @@
   "busLines": [
     "284"
   ],
-  "firstDeparture": "4:45",
+  "firstDeparture": "4:49",
   "lastDeparture": "23:43",
   "directionGroups": 2,
   "lines": [
@@ -54,33 +54,33 @@
             45.81947
           ],
           [
-            16.11925,
+            16.11926,
             45.81435
           ],
           [
-            16.11863,
-            45.81009
+            16.11864,
+            45.8101
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11862,
-            45.80182
+            16.11863,
+            45.80183
           ],
           [
-            16.11896,
-            45.79781
+            16.11897,
+            45.79782
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 55,
-    "stations45": 183
+    "stations15": 16,
+    "stations30": 65,
+    "stations45": 201
   },
   "prevSlug": "pipici",
   "nextSlug": "planina-donja"

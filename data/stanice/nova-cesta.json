@@ -11,7 +11,7 @@
   "busLines": [
     "284"
   ],
-  "firstDeparture": "4:44",
+  "firstDeparture": "4:48",
   "lastDeparture": "23:43",
   "directionGroups": 2,
   "lines": [
@@ -22,7 +22,7 @@
       "headsign": "Ivanja Reka",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 74.7
     }
@@ -50,28 +50,28 @@
         "mode": "bus",
         "shape": [
           [
-            16.10333,
-            45.8211
+            16.10334,
+            45.82111
           ],
           [
             16.11748,
             45.81947
           ],
           [
-            16.11925,
+            16.11926,
             45.81435
           ],
           [
-            16.11863,
-            45.81009
+            16.11864,
+            45.8101
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11862,
-            45.80182
+            16.11863,
+            45.80183
           ]
         ]
       }
@@ -79,8 +79,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 56,
-    "stations45": 183
+    "stations30": 65,
+    "stations45": 200
   },
   "prevSlug": "ninska",
   "nextSlug": "nova-kosnica-66"

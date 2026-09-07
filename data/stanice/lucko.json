@@ -24,7 +24,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     }
   ],
   "neighbors": [
@@ -160,7 +160,7 @@
   "reach": {
     "stations15": 11,
     "stations30": 35,
-    "stations45": 139
+    "stations45": 144
   },
   "prevSlug": "lubenjaki",
   "nextSlug": "lucko-centar-novi-zagreb-zapad"

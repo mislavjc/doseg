@@ -2,12 +2,13 @@
   "slug": "britanski-trg",
   "name": "Britanski trg",
   "kvart": "Gornji grad - Medveščak",
-  "lat": 45.81334,
-  "lon": 15.96404,
+  "lat": 45.81323,
+  "lon": 15.96403,
   "mode": "both",
   "bothDirections": true,
-  "lineCount": 8,
+  "lineCount": 9,
   "tramLines": [
+    "1",
     "6",
     "11",
     "31"
@@ -20,9 +21,23 @@
     "138"
   ],
   "firstDeparture": "4:40",
-  "lastDeparture": "1:02",
+  "lastDeparture": "1:00",
   "directionGroups": 3,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.1,
+      "peakRangeMin": [
+        12,
+        13
+      ],
+      "allDayHeadwayMin": 14.5
+    },
     {
       "broj": "6",
       "mode": "tram",
@@ -30,12 +45,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        9,
-        9
+        6,
+        6
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "11",
@@ -44,12 +59,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "31",
@@ -157,12 +172,42 @@
   ],
   "hero": {
     "bbox": [
-      15.96197,
-      45.8119,
-      15.96611,
-      45.81478
+      15.96196,
+      45.81179,
+      15.9661,
+      45.81467
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.9558,
+            45.80933
+          ],
+          [
+            15.95746,
+            45.81281
+          ],
+          [
+            15.96309,
+            45.81233
+          ],
+          [
+            15.9694,
+            45.81325
+          ],
+          [
+            15.97727,
+            45.81286
+          ],
+          [
+            15.98447,
+            45.81152
+          ]
+        ]
+      },
       {
         "broj": "6",
         "mode": "tram",
@@ -1786,10 +1831,6 @@
         "mode": "bus",
         "shape": [
           [
-            15.96836,
-            45.82739
-          ],
-          [
             15.96832,
             45.82692
           ],
@@ -2294,9 +2335,9 @@
     ]
   },
   "reach": {
-    "stations15": 65,
-    "stations30": 216,
-    "stations45": 517
+    "stations15": 67,
+    "stations30": 221,
+    "stations45": 522
   },
   "prevSlug": "brezovicka-ekonomija",
   "nextSlug": "brod-kunticeva"

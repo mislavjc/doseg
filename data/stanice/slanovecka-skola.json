@@ -498,10 +498,10 @@
     ]
   },
   "reach": {
-    "stations15": 20,
-    "stations30": 48,
-    "stations45": 118
+    "stations15": 21,
+    "stations30": 64,
+    "stations45": 156
   },
   "prevSlug": "slanovecka-cesta",
-  "nextSlug": "slatinska"
+  "nextSlug": "slavenskog-stenjevec"
 }

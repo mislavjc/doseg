@@ -12,7 +12,7 @@
     "124"
   ],
   "firstDeparture": "4:40",
-  "lastDeparture": "23:45",
+  "lastDeparture": "23:35",
   "directionGroups": 1,
   "lines": [
     {
@@ -27,7 +27,7 @@
         29,
         31
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     }
   ],
   "neighbors": [
@@ -298,8 +298,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 53,
-    "stations45": 201
+    "stations30": 54,
+    "stations45": 203
   },
   "prevSlug": "gornji-bukovac-maksimir-2",
   "nextSlug": "gornji-vugrovec-58"

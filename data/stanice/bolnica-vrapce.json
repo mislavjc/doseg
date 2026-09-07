@@ -64,9 +64,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 26.3,
+      "peakRangeMin": [
+        24,
+        28
+      ],
+      "allDayHeadwayMin": 32.8
     }
   ],
   "neighbors": [
@@ -1286,9 +1289,9 @@
     ]
   },
   "reach": {
-    "stations15": 63,
-    "stations30": 165,
-    "stations45": 320
+    "stations15": 62,
+    "stations30": 174,
+    "stations45": 334
   },
   "prevSlug": "bolnica-sveti-duh",
   "nextSlug": "bolnica-vuk-vrhovac"

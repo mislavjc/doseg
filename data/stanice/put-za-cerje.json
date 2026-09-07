@@ -22,12 +22,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.0,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     }
   ],
   "neighbors": [
@@ -155,7 +155,7 @@
   "reach": {
     "stations15": 8,
     "stations30": 19,
-    "stations45": 68
+    "stations45": 82
   },
   "prevSlug": "put-za-bedice",
   "nextSlug": "put-za-franje"

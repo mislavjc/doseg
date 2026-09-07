@@ -23,12 +23,12 @@
       "headsign": "Kozjak",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 35.0,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        35,
-        35
+        25,
+        25
       ],
-      "allDayHeadwayMin": 35.5
+      "allDayHeadwayMin": 27.0
     },
     {
       "broj": "228",
@@ -1103,8 +1103,8 @@
   },
   "reach": {
     "stations15": 42,
-    "stations30": 163,
-    "stations45": 376
+    "stations30": 173,
+    "stations45": 415
   },
   "prevSlug": "kvaternikov-trg",
   "nextSlug": "laktec"

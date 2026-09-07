@@ -22,9 +22,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     }
   ],
   "neighbors": [
@@ -199,8 +202,8 @@
   },
   "reach": {
     "stations15": 52,
-    "stations30": 162,
-    "stations45": 319
+    "stations30": 178,
+    "stations45": 341
   },
   "prevSlug": "jordanovac-maksimir-2",
   "nextSlug": "josipa-sabana"

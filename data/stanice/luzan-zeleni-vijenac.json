@@ -24,7 +24,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 55.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 51.8
     }
   ],
   "neighbors": [
@@ -132,7 +132,7 @@
   "reach": {
     "stations15": 2,
     "stations30": 11,
-    "stations45": 48
+    "stations45": 53
   },
   "prevSlug": "luzan",
   "nextSlug": "m-polje-istocni-ulaz"

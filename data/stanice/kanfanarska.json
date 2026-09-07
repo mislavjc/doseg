@@ -22,12 +22,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 11.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        12
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.1
     }
   ],
   "neighbors": [
@@ -550,8 +550,8 @@
   },
   "reach": {
     "stations15": 19,
-    "stations30": 53,
-    "stations45": 207
+    "stations30": 71,
+    "stations45": 237
   },
   "prevSlug": "kancelak",
   "nextSlug": "kaptol"

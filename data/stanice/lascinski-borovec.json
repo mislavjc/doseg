@@ -23,10 +23,10 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 40.0,
       "peakRangeMin": [
-        43,
-        48
+        38,
+        43
       ],
       "allDayHeadwayMin": 42.0
     },
@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 81.3
+      "allDayHeadwayMin": 52.2
     }
   ],
   "neighbors": [
@@ -1567,9 +1567,9 @@
     ]
   },
   "reach": {
-    "stations15": 35,
-    "stations30": 117,
-    "stations45": 261
+    "stations15": 45,
+    "stations30": 150,
+    "stations45": 332
   },
   "prevSlug": "laniste",
   "nextSlug": "laskocica-2"

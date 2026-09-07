@@ -38,12 +38,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        38,
-        43
+        15,
+        20
       ],
-      "allDayHeadwayMin": 37.8
+      "allDayHeadwayMin": 26.9
     },
     {
       "broj": "232",
@@ -52,12 +52,12 @@
       "headsign": "Čret-Melinišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        43,
-        48
+        20,
+        23
       ],
-      "allDayHeadwayMin": 34.1
+      "allDayHeadwayMin": 29.6
     }
   ],
   "neighbors": [
@@ -820,8 +820,8 @@
   },
   "reach": {
     "stations15": 33,
-    "stations30": 102,
-    "stations45": 295
+    "stations30": 122,
+    "stations45": 338
   },
   "prevSlug": "rudeska",
   "nextSlug": "ruscenica"

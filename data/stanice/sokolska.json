@@ -12,7 +12,7 @@
     "134"
   ],
   "firstDeparture": "4:43",
-  "lastDeparture": "0:00",
+  "lastDeparture": "23:35",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -265,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 26,
-    "stations30": 190,
-    "stations45": 375
+    "stations15": 30,
+    "stations30": 196,
+    "stations45": 393
   },
   "prevSlug": "sobolski-put",
   "nextSlug": "solici"

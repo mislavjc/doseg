@@ -11,8 +11,8 @@
   "busLines": [
     "133"
   ],
-  "firstDeparture": "5:17",
-  "lastDeparture": "23:56",
+  "firstDeparture": "5:12",
+  "lastDeparture": "23:54",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 25.0,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        20,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     }
   ],
   "neighbors": [
@@ -390,8 +390,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 57,
-    "stations45": 225
+    "stations30": 60,
+    "stations45": 233
   },
   "prevSlug": "mrksina-67c",
   "nextSlug": "mudifaji-gornja-dubrava"

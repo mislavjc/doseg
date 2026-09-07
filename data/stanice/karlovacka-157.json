@@ -39,7 +39,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     },
     {
       "broj": "132",
@@ -1346,8 +1346,8 @@
   },
   "reach": {
     "stations15": 33,
-    "stations30": 98,
-    "stations45": 280
+    "stations30": 101,
+    "stations45": 284
   },
   "prevSlug": "karaznik",
   "nextSlug": "karlovacka-18"

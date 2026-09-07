@@ -17,7 +17,7 @@
     "223"
   ],
   "firstDeparture": "4:34",
-  "lastDeparture": "0:59",
+  "lastDeparture": "1:01",
   "directionGroups": 3,
   "lines": [
     {
@@ -27,12 +27,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.7,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -41,12 +41,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -66,12 +66,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 20.0
     },
     {
       "broj": "223",
@@ -1303,9 +1303,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 170,
-    "stations45": 416
+    "stations15": 31,
+    "stations30": 177,
+    "stations45": 427
   },
   "prevSlug": "grgati-8",
   "nextSlug": "grskoviceva"

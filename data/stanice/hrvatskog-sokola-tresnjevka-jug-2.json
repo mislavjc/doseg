@@ -25,12 +25,12 @@
       "headsign": "RT Jankomir",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 21.8,
+      "peakHeadwayMin": 16.7,
       "peakRangeMin": [
-        18,
-        24
+        15,
+        15
       ],
-      "allDayHeadwayMin": 26.2
+      "allDayHeadwayMin": 22.7
     },
     {
       "broj": "114",
@@ -39,9 +39,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 39.5,
+      "peakRangeMin": [
+        39,
+        40
+      ],
+      "allDayHeadwayMin": 40.0
     },
     {
       "broj": "115",
@@ -50,12 +53,12 @@
       "headsign": "Špansko-Jank.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 12.5,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        12,
-        12
+        10,
+        11
       ],
-      "allDayHeadwayMin": 15.0
+      "allDayHeadwayMin": 12.3
     },
     {
       "broj": "116",
@@ -209,31 +212,31 @@
         "mode": "bus",
         "shape": [
           [
-            15.93677,
-            45.79615
+            15.93661,
+            45.79642
           ],
           [
-            15.93545,
-            45.79408
+            15.93546,
+            45.79409
           ],
           [
-            15.92997,
+            15.92998,
             45.79453
           ],
           [
-            15.92154,
-            45.79524
+            15.92155,
+            45.79525
           ],
           [
             15.91852,
-            45.79557
+            45.79558
           ],
           [
-            15.90808,
-            45.79554
+            15.90809,
+            45.79555
           ],
           [
-            15.90565,
+            15.90566,
             45.79154
           ]
         ]
@@ -457,9 +460,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 150,
-    "stations45": 384
+    "stations15": 44,
+    "stations30": 162,
+    "stations45": 403
   },
   "prevSlug": "hrvatskog-sokola-tresnjevka-jug",
   "nextSlug": "hudobicka-1"

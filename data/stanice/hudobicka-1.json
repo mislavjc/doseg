@@ -25,7 +25,7 @@
       "bothDirections": true,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -394,7 +394,7 @@
   "reach": {
     "stations15": 33,
     "stations30": 63,
-    "stations45": 156
+    "stations45": 164
   },
   "prevSlug": "hrvatskog-sokola-tresnjevka-jug-2",
   "nextSlug": "hudobicka-36"

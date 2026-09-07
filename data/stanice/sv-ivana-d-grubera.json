@@ -23,9 +23,9 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
+      "peakHeadwayMin": 105.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 235.2
+      "allDayHeadwayMin": 78.4
     },
     {
       "broj": "284",
@@ -372,24 +372,24 @@
         "mode": "bus",
         "shape": [
           [
-            16.11925,
+            16.11926,
             45.81435
           ],
           [
-            16.11863,
-            45.81009
+            16.11864,
+            45.8101
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11862,
-            45.80182
+            16.11863,
+            45.80183
           ],
           [
-            16.11896,
-            45.79781
+            16.11897,
+            45.79782
           ]
         ]
       }
@@ -397,8 +397,8 @@
   },
   "reach": {
     "stations15": 17,
-    "stations30": 48,
-    "stations45": 167
+    "stations30": 62,
+    "stations45": 185
   },
   "prevSlug": "sutinska-vrela",
   "nextSlug": "sv-leopolda-mandica"

@@ -11,7 +11,7 @@
   "busLines": [
     "284"
   ],
-  "firstDeparture": "4:47",
+  "firstDeparture": "4:50",
   "lastDeparture": "23:41",
   "directionGroups": 2,
   "lines": [
@@ -50,24 +50,24 @@
         "mode": "bus",
         "shape": [
           [
-            16.11925,
+            16.11926,
             45.81435
           ],
           [
-            16.11863,
-            45.81009
+            16.11864,
+            45.8101
           ],
           [
             16.11957,
             45.8052
           ],
           [
-            16.11862,
-            45.80182
+            16.11863,
+            45.80183
           ],
           [
-            16.11896,
-            45.79781
+            16.11897,
+            45.79782
           ]
         ]
       }
@@ -75,8 +75,8 @@
   },
   "reach": {
     "stations15": 13,
-    "stations30": 49,
-    "stations45": 151
+    "stations30": 61,
+    "stations45": 162
   },
   "prevSlug": "savska",
   "nextSlug": "savska-opatovina"

@@ -22,12 +22,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        8
       ],
-      "allDayHeadwayMin": 11.5
+      "allDayHeadwayMin": 10.5
     }
   ],
   "neighbors": [
@@ -254,8 +254,8 @@
   },
   "reach": {
     "stations15": 19,
-    "stations30": 163,
-    "stations45": 485
+    "stations30": 177,
+    "stations45": 488
   },
   "prevSlug": "bastaliceva-ii",
   "nextSlug": "bastijanova-tresnjevka-sjever-2"

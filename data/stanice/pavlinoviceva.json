@@ -454,9 +454,9 @@
     ]
   },
   "reach": {
-    "stations15": 40,
-    "stations30": 148,
-    "stations45": 386
+    "stations15": 44,
+    "stations30": 158,
+    "stations45": 392
   },
   "prevSlug": "pavlici",
   "nextSlug": "pekarska"

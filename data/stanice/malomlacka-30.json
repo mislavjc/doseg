@@ -12,8 +12,8 @@
     "229",
     "315"
   ],
-  "firstDeparture": "4:47",
-  "lastDeparture": "23:10",
+  "firstDeparture": "4:52",
+  "lastDeparture": "23:15",
   "directionGroups": 2,
   "lines": [
     {
@@ -472,8 +472,8 @@
   },
   "reach": {
     "stations15": 27,
-    "stations30": 77,
-    "stations45": 224
+    "stations30": 81,
+    "stations45": 232
   },
   "prevSlug": "malekova",
   "nextSlug": "malomlacka-igralisna"

@@ -39,7 +39,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     },
     {
       "broj": "132",
@@ -1038,8 +1038,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 80,
-    "stations45": 231
+    "stations30": 83,
+    "stations45": 240
   },
   "prevSlug": "petina",
   "nextSlug": "petlja-izlaz-novi-zagreb-zapad-2"

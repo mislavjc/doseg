@@ -2048,7 +2048,13 @@
         {
           "hour": 22,
           "minutes": [
-            55
+            40
+          ]
+        },
+        {
+          "hour": 23,
+          "minutes": [
+            15
           ]
         }
       ],
@@ -2148,7 +2154,8 @@
         {
           "hour": 23,
           "minutes": [
-            30
+            15,
+            55
           ]
         }
       ]
@@ -2366,7 +2373,7 @@
   "prevBroj": "273",
   "nextBroj": "275",
   "reach": {
-    "areaKm2": 23.3,
+    "areaKm2": 23.4,
     "stopName": "Šašinovec-vatr. dom",
     "lat": 45.84997,
     "lon": 16.16516

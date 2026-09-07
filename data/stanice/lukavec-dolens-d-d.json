@@ -44,12 +44,12 @@
       "broj": "313",
       "mode": "bus",
       "isNight": false,
-      "headsign": "Gl.kolodvor",
+      "headsign": "V. Gorica",
       "isLoop": false,
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 610.0
+      "allDayHeadwayMin": 305.0
     },
     {
       "broj": "315",
@@ -449,7 +449,7 @@
   "reach": {
     "stations15": 13,
     "stations30": 44,
-    "stations45": 131
+    "stations45": 135
   },
   "prevSlug": "lukavec-buverke",
   "nextSlug": "lukavec-kanal"

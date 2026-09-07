@@ -6,18 +6,19 @@
   "lon": 16.0977,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 5,
+  "lineCount": 6,
   "tramLines": [],
   "busLines": [
     "212",
     "224",
     "225",
     "267",
+    "279",
     "283"
   ],
   "firstDeparture": "3:34",
   "lastDeparture": "0:19",
-  "directionGroups": 3,
+  "directionGroups": 4,
   "lines": [
     {
       "broj": "212",
@@ -67,6 +68,20 @@
       "allDayHeadwayMin": 54.3
     },
     {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
+    },
+    {
       "broj": "283",
       "mode": "bus",
       "isNight": false,
@@ -94,6 +109,10 @@
     {
       "name": "Anke Krizmanić",
       "slug": "anke-krizmanic"
+    },
+    {
+      "name": "Ljudevita Posavskog",
+      "slug": "ljudevita-posavskog"
     },
     {
       "name": "MO N.Brestje",
@@ -1121,6 +1140,36 @@
         ]
       },
       {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.08457,
+            45.82642
+          ],
+          [
+            16.08998,
+            45.82617
+          ],
+          [
+            16.09791,
+            45.82757
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ]
+        ]
+      },
+      {
         "broj": "283",
         "mode": "bus",
         "shape": [
@@ -1641,9 +1690,9 @@
     ]
   },
   "reach": {
-    "stations15": 61,
-    "stations30": 128,
-    "stations45": 279
+    "stations15": 60,
+    "stations30": 132,
+    "stations45": 303
   },
   "prevSlug": "branovecka-143",
   "nextSlug": "brestovecka-100"

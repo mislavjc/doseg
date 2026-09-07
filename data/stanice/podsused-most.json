@@ -37,9 +37,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     }
   ],
   "neighbors": [
@@ -191,9 +194,9 @@
     ]
   },
   "reach": {
-    "stations15": 40,
-    "stations30": 135,
-    "stations45": 305
+    "stations15": 42,
+    "stations30": 140,
+    "stations45": 316
   },
   "prevSlug": "podsused-centar",
   "nextSlug": "podsusedsko-dolje"

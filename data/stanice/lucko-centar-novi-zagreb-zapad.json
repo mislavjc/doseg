@@ -26,7 +26,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 60.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     },
     {
       "broj": "164",
@@ -410,8 +410,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 84,
-    "stations45": 222
+    "stations30": 88,
+    "stations45": 230
   },
   "prevSlug": "lucko",
   "nextSlug": "lucko-centar-novi-zagreb-zapad-2"

@@ -46,12 +46,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.1,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     }
   ],
   "neighbors": [
@@ -1122,8 +1122,8 @@
   },
   "reach": {
     "stations15": 26,
-    "stations30": 122,
-    "stations45": 398
+    "stations30": 155,
+    "stations45": 437
   },
   "prevSlug": "os-pantovcak",
   "nextSlug": "otok"

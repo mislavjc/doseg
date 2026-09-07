@@ -1,12 +1,12 @@
 {
-  "slug": "sesvete-ukrcaj-sesvete",
+  "slug": "sesvete-ukrcaj",
   "name": "Sesvete-ukrcaj",
   "kvart": "Sesvete",
-  "lat": 45.82595,
-  "lon": 16.10781,
+  "lat": 45.82589,
+  "lon": 16.10774,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 10,
+  "lineCount": 13,
   "tramLines": [],
   "busLines": [
     "212",
@@ -16,13 +16,16 @@
     "263",
     "270",
     "275",
+    "277",
     "278",
     "280",
-    "283"
+    "282",
+    "283",
+    "284"
   ],
   "firstDeparture": "4:15",
-  "lastDeparture": "0:33",
-  "directionGroups": 1,
+  "lastDeparture": "0:58",
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "212",
@@ -78,12 +81,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        28,
-        35
+        19,
+        29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "270",
@@ -108,7 +111,18 @@
       "bothDirections": false,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "allDayHeadwayMin": 86.4
+    },
+    {
+      "broj": "277",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ses.Selnica",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": null,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 105.0
     },
     {
       "broj": "278",
@@ -133,6 +147,20 @@
       "allDayHeadwayMin": 79.3
     },
     {
+      "broj": "282",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        20,
+        30
+      ],
+      "allDayHeadwayMin": 38.4
+    },
+    {
       "broj": "283",
       "mode": "bus",
       "isNight": false,
@@ -142,6 +170,17 @@
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
       "allDayHeadwayMin": 65.0
+    },
+    {
+      "broj": "284",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Ivanja Reka",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 45.0,
+      "peakRangeMin": null,
+      "allDayHeadwayMin": 74.7
     }
   ],
   "neighbors": [
@@ -151,7 +190,7 @@
     },
     {
       "name": "Sesvete-izlaz",
-      "slug": "sesvete-izlaz-sesvete"
+      "slug": "sesvete-izlaz"
     },
     {
       "name": "Dubec",
@@ -160,10 +199,10 @@
   ],
   "hero": {
     "bbox": [
-      16.10574,
-      45.82451,
-      16.10988,
-      45.82739
+      16.10567,
+      45.82445,
+      16.1098,
+      45.82734
     ],
     "lines": [
       {
@@ -337,6 +376,10 @@
           [
             16.08755,
             45.82597
+          ],
+          [
+            16.08717,
+            45.82599
           ]
         ]
       },
@@ -491,6 +534,10 @@
           [
             16.08755,
             45.82597
+          ],
+          [
+            16.08717,
+            45.82599
           ]
         ]
       },
@@ -1351,11 +1398,11 @@
         "mode": "bus",
         "shape": [
           [
-            16.10717,
+            16.10718,
             45.82609
           ],
           [
-            16.10554,
+            16.10555,
             45.82781
           ],
           [
@@ -1364,7 +1411,33 @@
           ],
           [
             16.09298,
-            45.82184
+            45.82185
+          ]
+        ]
+      },
+      {
+        "broj": "277",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1074,
+            45.82563
+          ],
+          [
+            16.10555,
+            45.82781
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ],
+          [
+            16.12491,
+            45.81914
           ]
         ]
       },
@@ -1665,6 +1738,36 @@
           [
             16.10942,
             45.83842
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1074,
+            45.82563
+          ],
+          [
+            16.10555,
+            45.82781
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10892,
+            45.81279
           ]
         ]
       },
@@ -2109,14 +2212,40 @@
             45.82977
           ]
         ]
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1074,
+            45.82563
+          ],
+          [
+            16.10555,
+            45.82781
+          ],
+          [
+            16.10334,
+            45.82111
+          ],
+          [
+            16.11748,
+            45.81947
+          ],
+          [
+            16.11926,
+            45.81435
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 63,
-    "stations30": 195,
-    "stations45": 274
+    "stations15": 72,
+    "stations30": 204,
+    "stations45": 305
   },
-  "prevSlug": "sesvete-izlaz-sesvete-2",
-  "nextSlug": "sesvete-ukrcaj-sesvete-2"
+  "prevSlug": "sesvete-izlaz",
+  "nextSlug": "sesvetska-sela"
 }

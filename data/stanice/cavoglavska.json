@@ -11,8 +11,8 @@
   "busLines": [
     "133"
   ],
-  "firstDeparture": "5:13",
-  "lastDeparture": "0:00",
+  "firstDeparture": "5:08",
+  "lastDeparture": "23:58",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Čehi",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 26.7,
+      "peakHeadwayMin": 23.8,
       "peakRangeMin": [
-        25,
+        19,
         30
       ],
-      "allDayHeadwayMin": 31.3
+      "allDayHeadwayMin": 27.6
     }
   ],
   "neighbors": [
@@ -354,8 +354,8 @@
   },
   "reach": {
     "stations15": 18,
-    "stations30": 76,
-    "stations45": 287
+    "stations30": 79,
+    "stations45": 302
   },
   "prevSlug": "caviceva-pescenica-zitnjak-2",
   "nextSlug": "cehi-buliceva"

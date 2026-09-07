@@ -6,13 +6,14 @@
   "lon": 16.08521,
   "mode": "bus",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [],
   "busLines": [
     "212",
     "224",
     "225",
-    "267"
+    "267",
+    "279"
   ],
   "firstDeparture": "3:32",
   "lastDeparture": "0:20",
@@ -64,6 +65,20 @@
       "peakHeadwayMin": null,
       "peakRangeMin": null,
       "allDayHeadwayMin": 54.3
+    },
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -979,13 +994,43 @@
             45.82768
           ]
         ]
+      },
+      {
+        "broj": "279",
+        "mode": "bus",
+        "shape": [
+          [
+            16.07828,
+            45.82825
+          ],
+          [
+            16.08457,
+            45.82642
+          ],
+          [
+            16.08998,
+            45.82617
+          ],
+          [
+            16.09791,
+            45.82757
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ]
+        ]
       }
     ]
   },
   "reach": {
-    "stations15": 56,
-    "stations30": 105,
-    "stations45": 286
+    "stations15": 62,
+    "stations30": 127,
+    "stations45": 320
   },
   "prevSlug": "ulica-grada-chicaga",
   "nextSlug": "ulica-platana"

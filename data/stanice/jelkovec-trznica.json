@@ -13,7 +13,7 @@
     "281",
     "282"
   ],
-  "firstDeparture": "4:35",
+  "firstDeparture": "4:29",
   "lastDeparture": "0:05",
   "directionGroups": 2,
   "lines": [
@@ -24,12 +24,12 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 34.0
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "281",
@@ -52,10 +52,10 @@
       "headsign": "Sesvete",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        25,
-        33
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.7
     }
@@ -83,51 +83,23 @@
         "mode": "bus",
         "shape": [
           [
-            16.10106,
-            45.80791
+            16.10109,
+            45.82197
           ],
           [
-            16.10293,
-            45.81285
-          ],
-          [
-            16.10293,
-            45.81285
+            16.10129,
+            45.82057
           ],
           [
             16.10294,
             45.81285
           ],
           [
-            16.10567,
-            45.81283
-          ],
-          [
-            16.1089,
+            16.10892,
             45.81279
           ],
           [
-            16.10891,
-            45.81279
-          ],
-          [
-            16.11164,
-            45.8128
-          ],
-          [
-            16.11446,
-            45.8128
-          ],
-          [
-            16.11475,
-            45.81279
-          ],
-          [
-            16.11485,
-            45.81266
-          ],
-          [
-            16.1148,
+            16.11481,
             45.81227
           ]
         ]
@@ -243,7 +215,7 @@
             45.81287
           ],
           [
-            16.11275,
+            16.11276,
             45.80976
           ],
           [
@@ -256,24 +228,20 @@
           ],
           [
             16.10196,
-            45.81768
+            45.81769
           ],
           [
-            16.10333,
-            45.8211
-          ],
-          [
-            16.10589,
-            45.82451
+            16.10114,
+            45.82204
           ]
         ]
       }
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 88,
-    "stations45": 292
+    "stations15": 28,
+    "stations30": 97,
+    "stations45": 310
   },
   "prevSlug": "jelenovac-sercerova",
   "nextSlug": "jelkovec-vrtic"

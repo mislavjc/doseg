@@ -6,15 +6,30 @@
   "lon": 16.10129,
   "mode": "bus",
   "bothDirections": false,
-  "lineCount": 1,
+  "lineCount": 2,
   "tramLines": [],
   "busLines": [
+    "279",
     "282"
   ],
-  "firstDeparture": "5:18",
-  "lastDeparture": "23:53",
+  "firstDeparture": "4:27",
+  "lastDeparture": "23:57",
   "directionGroups": 1,
   "lines": [
+    {
+      "broj": "279",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Novi Jelkovec",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 20.0,
+      "peakRangeMin": [
+        20,
+        20
+      ],
+      "allDayHeadwayMin": 21.3
+    },
     {
       "broj": "282",
       "mode": "bus",
@@ -22,10 +37,10 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 26.7,
       "peakRangeMin": [
-        23,
-        33
+        20,
+        30
       ],
       "allDayHeadwayMin": 38.4
     }
@@ -49,20 +64,24 @@
     ],
     "lines": [
       {
-        "broj": "282",
+        "broj": "279",
         "mode": "bus",
         "shape": [
           [
-            16.10548,
-            45.8244
+            16.08457,
+            45.82642
           ],
           [
-            16.10096,
-            45.82476
+            16.08998,
+            45.82617
           ],
           [
-            16.10108,
-            45.82196
+            16.09791,
+            45.82757
+          ],
+          [
+            16.10109,
+            45.82197
           ],
           [
             16.10129,
@@ -73,7 +92,41 @@
             45.81285
           ],
           [
-            16.10891,
+            16.10892,
+            45.81279
+          ],
+          [
+            16.11481,
+            45.81227
+          ]
+        ]
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "shape": [
+          [
+            16.1074,
+            45.82563
+          ],
+          [
+            16.10555,
+            45.82781
+          ],
+          [
+            16.10109,
+            45.82197
+          ],
+          [
+            16.10129,
+            45.82057
+          ],
+          [
+            16.10294,
+            45.81285
+          ],
+          [
+            16.10892,
             45.81279
           ],
           [
@@ -85,9 +138,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 86,
-    "stations45": 216
+    "stations15": 29,
+    "stations30": 102,
+    "stations45": 244
   },
   "prevSlug": "lj-posavsk-kelekova-sesvete",
   "nextSlug": "ljubijska-gornja-dubrava"

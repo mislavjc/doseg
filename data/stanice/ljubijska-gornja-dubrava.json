@@ -16,7 +16,7 @@
     "223"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "0:57",
+  "lastDeparture": "0:59",
   "directionGroups": 2,
   "lines": [
     {
@@ -26,12 +26,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.7,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -40,12 +40,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -882,9 +882,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 131,
-    "stations45": 402
+    "stations15": 28,
+    "stations30": 151,
+    "stations45": 414
   },
   "prevSlug": "lj-posavsk-kelekova-sesvete-2",
   "nextSlug": "ljubijska-gornja-dubrava-2"

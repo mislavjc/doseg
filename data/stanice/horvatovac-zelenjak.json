@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "7:35",
-  "lastDeparture": "13:35",
+  "firstDeparture": "5:25",
+  "lastDeparture": "23:25",
   "directionGroups": 1,
   "lines": [
     {
@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 21,
-    "stations30": 105,
-    "stations45": 245
+    "stations15": 23,
+    "stations30": 113,
+    "stations45": 261
   },
   "prevSlug": "horvatovac-trgovina",
   "nextSlug": "hrasce-centar"

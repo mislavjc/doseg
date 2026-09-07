@@ -64,7 +64,7 @@
         44,
         51
       ],
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 51.8
     },
     {
       "broj": "274",
@@ -666,8 +666,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 51,
-    "stations45": 159
+    "stations30": 56,
+    "stations45": 161
   },
   "prevSlug": "soblinec",
   "nextSlug": "soblinecka-22"

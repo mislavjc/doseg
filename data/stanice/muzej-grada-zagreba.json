@@ -22,12 +22,12 @@
       "headsign": "T.b.J.Jelačića",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 30.0
+      "allDayHeadwayMin": 20.9
     }
   ],
   "neighbors": [
@@ -337,9 +337,9 @@
     ]
   },
   "reach": {
-    "stations15": 46,
-    "stations30": 198,
-    "stations45": 439
+    "stations15": 50,
+    "stations30": 207,
+    "stations45": 460
   },
   "prevSlug": "mup",
   "nextSlug": "muzej-suv-umjetnosti"

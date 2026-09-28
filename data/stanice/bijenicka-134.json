@@ -22,8 +22,11 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -1038,9 +1041,9 @@
     ]
   },
   "reach": {
-    "stations15": 45,
-    "stations30": 126,
-    "stations45": 280
+    "stations15": 46,
+    "stations30": 144,
+    "stations45": 322
   },
   "prevSlug": "bijenicka",
   "nextSlug": "bijenicka-bocaliste"

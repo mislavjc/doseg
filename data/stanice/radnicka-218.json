@@ -294,9 +294,9 @@
     ]
   },
   "reach": {
-    "stations15": 25,
-    "stations30": 78,
-    "stations45": 268
+    "stations15": 27,
+    "stations30": 84,
+    "stations45": 275
   },
   "prevSlug": "radnicka-182",
   "nextSlug": "radnicka-ina"

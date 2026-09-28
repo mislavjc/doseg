@@ -21,7 +21,9 @@
           "lon": 15.99916,
           "offsetMin": 0,
           "tramInterchange": [
-            "1"
+            "1",
+            "9",
+            "17"
           ]
         },
         {
@@ -1760,7 +1762,7 @@
   "prevBroj": "216",
   "nextBroj": "218",
   "reach": {
-    "areaKm2": 33.0,
+    "areaKm2": 33.6,
     "stopName": "Savišće",
     "lat": 45.78804,
     "lon": 16.0353

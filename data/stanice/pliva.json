@@ -13,7 +13,7 @@
     "134"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "23:55",
+  "lastDeparture": "23:42",
   "directionGroups": 1,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Jarun",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 52.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        51,
-        54
+        30,
+        30
       ],
-      "allDayHeadwayMin": 50.0
+      "allDayHeadwayMin": 41.1
     },
     {
       "broj": "134",
@@ -37,12 +37,12 @@
       "headsign": "Prečko",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.3
     }
   ],
   "neighbors": [
@@ -414,9 +414,9 @@
     ]
   },
   "reach": {
-    "stations15": 67,
+    "stations15": 64,
     "stations30": 237,
-    "stations45": 437
+    "stations45": 443
   },
   "prevSlug": "planinska-20",
   "nextSlug": "podbrezje"

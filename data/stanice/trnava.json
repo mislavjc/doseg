@@ -35,12 +35,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        12
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.1
     },
     {
       "broj": "235",
@@ -1830,8 +1830,8 @@
   },
   "reach": {
     "stations15": 28,
-    "stations30": 109,
-    "stations45": 333
+    "stations30": 128,
+    "stations45": 372
   },
   "prevSlug": "trg-zrt-fasizma",
   "nextSlug": "trnava-i-trgovina"

@@ -22,9 +22,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [
@@ -478,9 +481,9 @@
     ]
   },
   "reach": {
-    "stations15": 17,
-    "stations30": 79,
-    "stations45": 268
+    "stations15": 19,
+    "stations30": 98,
+    "stations45": 298
   },
   "prevSlug": "miroslava-vaupotica",
   "nextSlug": "mladena-halape"

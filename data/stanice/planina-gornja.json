@@ -12,7 +12,7 @@
     "263"
   ],
   "firstDeparture": "4:30",
-  "lastDeparture": "0:05",
+  "lastDeparture": "0:30",
   "directionGroups": 1,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Sesvete-izlaz",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 28.3,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        28,
-        30
+        19,
+        25
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     }
   ],
   "neighbors": [

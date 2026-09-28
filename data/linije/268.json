@@ -3015,7 +3015,7 @@
         "broj": "313",
         "mode": "bus",
         "isNight": false,
-        "terminal": "Gl.kolodvor"
+        "terminal": "V. Gorica"
       },
       {
         "broj": "330",
@@ -3050,7 +3050,7 @@
   "prevBroj": "267",
   "nextBroj": "269",
   "reach": {
-    "areaKm2": 41.6,
+    "areaKm2": 42.5,
     "stopName": "Odra",
     "lat": 45.74277,
     "lon": 15.99972

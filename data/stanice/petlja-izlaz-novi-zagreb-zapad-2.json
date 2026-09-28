@@ -39,7 +39,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 65.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 43.2
+      "allDayHeadwayMin": 41.5
     },
     {
       "broj": "132",
@@ -941,8 +941,8 @@
   },
   "reach": {
     "stations15": 35,
-    "stations30": 86,
-    "stations45": 255
+    "stations30": 90,
+    "stations45": 259
   },
   "prevSlug": "petlja-izlaz-novi-zagreb-zapad",
   "nextSlug": "petlja-ulaz"

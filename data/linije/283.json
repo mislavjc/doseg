@@ -1791,6 +1791,12 @@
         "terminal": "Sesvete"
       },
       {
+        "broj": "277",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "278",
         "mode": "bus",
         "isNight": false,
@@ -1807,6 +1813,18 @@
         "mode": "bus",
         "isNight": false,
         "terminal": "Dubec"
+      },
+      {
+        "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "284",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
       }
     ],
     "tramCrossings": []
@@ -1814,7 +1832,7 @@
   "prevBroj": "282",
   "nextBroj": "284",
   "reach": {
-    "areaKm2": 18.1,
+    "areaKm2": 22.3,
     "stopName": "Delec",
     "lat": 45.8348,
     "lon": 16.09595

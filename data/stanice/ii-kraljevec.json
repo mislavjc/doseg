@@ -710,9 +710,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 119,
-    "stations45": 328
+    "stations15": 31,
+    "stations30": 127,
+    "stations45": 352
   },
   "prevSlug": "i-stefanov-zavoj",
   "nextSlug": "ilirski-trg"

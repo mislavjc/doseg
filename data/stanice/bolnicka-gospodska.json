@@ -43,7 +43,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "130",
@@ -1039,9 +1039,9 @@
     ]
   },
   "reach": {
-    "stations15": 44,
-    "stations30": 125,
-    "stations45": 282
+    "stations15": 45,
+    "stations30": 130,
+    "stations45": 297
   },
   "prevSlug": "bolnica-vuk-vrhovac",
   "nextSlug": "bolsiceva"

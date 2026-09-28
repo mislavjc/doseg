@@ -2,22 +2,37 @@
   "slug": "trg-dr-f-tudmana",
   "name": "Trg dr. F. Tuđmana",
   "kvart": "Črnomerec",
-  "lat": 45.81309,
-  "lon": 15.95726,
+  "lat": 45.81307,
+  "lon": 15.95734,
   "mode": "tram",
   "bothDirections": true,
-  "lineCount": 4,
+  "lineCount": 5,
   "tramLines": [
+    "1",
     "2",
     "6",
     "11",
     "31"
   ],
   "busLines": [],
-  "firstDeparture": "4:46",
-  "lastDeparture": "1:04",
+  "firstDeparture": "4:44",
+  "lastDeparture": "1:02",
   "directionGroups": 3,
   "lines": [
+    {
+      "broj": "1",
+      "mode": "tram",
+      "isNight": false,
+      "headsign": "Borongaj",
+      "isLoop": false,
+      "bothDirections": true,
+      "peakHeadwayMin": 12.0,
+      "peakRangeMin": [
+        11,
+        13
+      ],
+      "allDayHeadwayMin": 14.5
+    },
     {
       "broj": "2",
       "mode": "tram",
@@ -25,12 +40,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.4,
+      "peakHeadwayMin": 8.0,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "6",
@@ -39,12 +54,12 @@
       "headsign": "Sopot",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        9,
-        9
+        6,
+        6
       ],
-      "allDayHeadwayMin": 10.3
+      "allDayHeadwayMin": 7.6
     },
     {
       "broj": "11",
@@ -53,12 +68,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "31",
@@ -74,30 +89,240 @@
   ],
   "neighbors": [
     {
-      "name": "Slovenska",
-      "slug": "slovenska"
+      "name": "Zapadni kolodvor",
+      "slug": "zapadni-kolodvor"
+    },
+    {
+      "name": "Britanski trg",
+      "slug": "britanski-trg"
     },
     {
       "name": "Talovčeva",
       "slug": "talovceva"
     },
     {
-      "name": "Jagićeva",
-      "slug": "jagiceva"
+      "name": "Slovenska",
+      "slug": "slovenska"
     },
     {
-      "name": "Britanski trg",
-      "slug": "britanski-trg"
+      "name": "Jagićeva",
+      "slug": "jagiceva"
     }
   ],
   "hero": {
     "bbox": [
-      15.9552,
-      45.81165,
-      15.95933,
-      45.81454
+      15.95527,
+      45.81163,
+      15.9594,
+      45.81452
     ],
     "lines": [
+      {
+        "broj": "1",
+        "mode": "tram",
+        "shape": [
+          [
+            15.95579,
+            45.80935
+          ],
+          [
+            15.95582,
+            45.80936
+          ],
+          [
+            15.95649,
+            45.8093
+          ],
+          [
+            15.95682,
+            45.80929
+          ],
+          [
+            15.95697,
+            45.80935
+          ],
+          [
+            15.95705,
+            45.80958
+          ],
+          [
+            15.95745,
+            45.8128
+          ],
+          [
+            15.95745,
+            45.81303
+          ],
+          [
+            15.95747,
+            45.81307
+          ],
+          [
+            15.95756,
+            45.81314
+          ],
+          [
+            15.9582,
+            45.81312
+          ],
+          [
+            15.95863,
+            45.81309
+          ],
+          [
+            15.95963,
+            45.81298
+          ],
+          [
+            15.96112,
+            45.81268
+          ],
+          [
+            15.96253,
+            45.81238
+          ],
+          [
+            15.96299,
+            45.8123
+          ],
+          [
+            15.96308,
+            45.81233
+          ],
+          [
+            15.96308,
+            45.81232
+          ],
+          [
+            15.96316,
+            45.81226
+          ],
+          [
+            15.96331,
+            45.81226
+          ],
+          [
+            15.96366,
+            45.81227
+          ],
+          [
+            15.9639,
+            45.81231
+          ],
+          [
+            15.96423,
+            45.81238
+          ],
+          [
+            15.96493,
+            45.81257
+          ],
+          [
+            15.96565,
+            45.81278
+          ],
+          [
+            15.96668,
+            45.81302
+          ],
+          [
+            15.96743,
+            45.81316
+          ],
+          [
+            15.96833,
+            45.81325
+          ],
+          [
+            15.96904,
+            45.81328
+          ],
+          [
+            15.9694,
+            45.81325
+          ],
+          [
+            15.96942,
+            45.81325
+          ],
+          [
+            15.96939,
+            45.81329
+          ],
+          [
+            15.96939,
+            45.81329
+          ],
+          [
+            15.9704,
+            45.81325
+          ],
+          [
+            15.97101,
+            45.81322
+          ],
+          [
+            15.97182,
+            45.81317
+          ],
+          [
+            15.97301,
+            45.81313
+          ],
+          [
+            15.97428,
+            45.81306
+          ],
+          [
+            15.97445,
+            45.81305
+          ],
+          [
+            15.97474,
+            45.81304
+          ],
+          [
+            15.97569,
+            45.81304
+          ],
+          [
+            15.97613,
+            45.81303
+          ],
+          [
+            15.97685,
+            45.81295
+          ],
+          [
+            15.97708,
+            45.81289
+          ],
+          [
+            15.97726,
+            45.81286
+          ],
+          [
+            15.97733,
+            45.81285
+          ],
+          [
+            15.97731,
+            45.8129
+          ],
+          [
+            15.97732,
+            45.81286
+          ],
+          [
+            15.9776,
+            45.81279
+          ],
+          [
+            15.97777,
+            45.81275
+          ]
+        ]
+      },
       {
         "broj": "2",
         "mode": "tram",
@@ -509,6 +734,10 @@
           [
             15.97403,
             45.80555
+          ],
+          [
+            15.97485,
+            45.80558
           ]
         ]
       },
@@ -1657,9 +1886,9 @@
     ]
   },
   "reach": {
-    "stations15": 65,
-    "stations30": 243,
-    "stations45": 525
+    "stations15": 69,
+    "stations30": 251,
+    "stations45": 536
   },
   "prevSlug": "trg-bana-j-jelacica",
   "nextSlug": "trg-dr-tudmana"

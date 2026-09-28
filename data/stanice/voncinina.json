@@ -14,8 +14,8 @@
     "34"
   ],
   "busLines": [],
-  "firstDeparture": "4:23",
-  "lastDeparture": "0:54",
+  "firstDeparture": "4:18",
+  "lastDeparture": "0:52",
   "directionGroups": 2,
   "lines": [
     {
@@ -25,12 +25,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.4,
+      "peakHeadwayMin": 9.1,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -39,12 +39,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "12",
@@ -53,12 +53,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.6,
+      "peakHeadwayMin": 6.9,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 9.9
+      "allDayHeadwayMin": 7.8
     },
     {
       "broj": "34",
@@ -1501,9 +1501,9 @@
     ]
   },
   "reach": {
-    "stations15": 56,
-    "stations30": 212,
-    "stations45": 564
+    "stations15": 57,
+    "stations30": 222,
+    "stations45": 576
   },
   "prevSlug": "voltino",
   "nextSlug": "vrapcanska"

@@ -31,6 +31,7 @@
           "lon": 15.95676,
           "offsetMin": 2,
           "tramInterchange": [
+            "1",
             "2",
             "6",
             "11"
@@ -917,6 +918,10 @@
     ],
     "tramCrossings": [
       {
+        "broj": "1",
+        "stopName": "Hercegovačka 21"
+      },
+      {
         "broj": "2",
         "stopName": "Hercegovačka 21"
       },
@@ -933,7 +938,7 @@
   "prevBroj": "146",
   "nextBroj": "149",
   "reach": {
-    "areaKm2": 20.5,
+    "areaKm2": 21.3,
     "stopName": "Bosanska",
     "lat": 45.81848,
     "lon": 15.95747

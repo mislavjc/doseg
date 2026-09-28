@@ -11,8 +11,8 @@
   "busLines": [
     "209"
   ],
-  "firstDeparture": "4:20",
-  "lastDeparture": "0:44",
+  "firstDeparture": "4:15",
+  "lastDeparture": "0:39",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 16.4,
       "peakRangeMin": [
-        20,
-        25
+        15,
+        18
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 18.6
     }
   ],
   "neighbors": [
@@ -353,9 +353,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 86,
-    "stations45": 225
+    "stations15": 37,
+    "stations30": 93,
+    "stations45": 256
   },
   "prevSlug": "olipska",
   "nextSlug": "orahovac"

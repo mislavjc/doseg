@@ -13,8 +13,8 @@
     "33"
   ],
   "busLines": [],
-  "firstDeparture": "4:50",
-  "lastDeparture": "0:33",
+  "firstDeparture": "4:49",
+  "lastDeparture": "0:38",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 18.3,
+      "peakHeadwayMin": 9.2,
       "peakRangeMin": [
-        18,
-        18
+        9,
+        9
       ],
-      "allDayHeadwayMin": 17.6
+      "allDayHeadwayMin": 10.1
     },
     {
       "broj": "14",
@@ -38,12 +38,12 @@
       "headsign": "Zapruđe",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 7.5,
       "peakRangeMin": [
-        10,
-        10
+        7,
+        8
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 8.8
     },
     {
       "broj": "33",
@@ -1116,9 +1116,9 @@
     ]
   },
   "reach": {
-    "stations15": 56,
-    "stations30": 207,
-    "stations45": 458
+    "stations15": 68,
+    "stations30": 218,
+    "stations45": 492
   },
   "prevSlug": "grizanska",
   "nextSlug": "gumerec"

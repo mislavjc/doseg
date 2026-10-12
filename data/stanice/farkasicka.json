@@ -22,9 +22,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [
@@ -434,9 +437,9 @@
     ]
   },
   "reach": {
-    "stations15": 12,
+    "stations15": 11,
     "stations30": 47,
-    "stations45": 223
+    "stations45": 228
   },
   "prevSlug": "fancevljev-prilaz",
   "nextSlug": "ferde-kocha"

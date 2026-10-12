@@ -37,12 +37,12 @@
       "headsign": "Čret-Melinišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        43,
-        48
+        20,
+        23
       ],
-      "allDayHeadwayMin": 34.1
+      "allDayHeadwayMin": 29.6
     }
   ],
   "neighbors": [
@@ -666,9 +666,9 @@
     ]
   },
   "reach": {
-    "stations15": 31,
-    "stations30": 99,
-    "stations45": 281
+    "stations15": 32,
+    "stations30": 113,
+    "stations45": 306
   },
   "prevSlug": "autobusni-kol",
   "nextSlug": "bacun"

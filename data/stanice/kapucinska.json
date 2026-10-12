@@ -13,8 +13,8 @@
     "34"
   ],
   "busLines": [],
-  "firstDeparture": "4:39",
-  "lastDeparture": "0:58",
+  "firstDeparture": "4:47",
+  "lastDeparture": "1:00",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.7,
+      "peakHeadwayMin": 9.5,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -38,12 +38,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -788,9 +788,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 94,
-    "stations45": 370
+    "stations15": 24,
+    "stations30": 106,
+    "stations45": 367
   },
   "prevSlug": "kaptol-centar",
   "nextSlug": "karaznik"

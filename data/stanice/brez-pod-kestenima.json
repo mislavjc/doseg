@@ -28,7 +28,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -340,8 +340,8 @@
   },
   "reach": {
     "stations15": 21,
-    "stations30": 73,
-    "stations45": 224
+    "stations30": 74,
+    "stations45": 236
   },
   "prevSlug": "brestovecka-d-dom",
   "nextSlug": "brezaki"

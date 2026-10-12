@@ -28,7 +28,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -388,8 +388,8 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 85,
-    "stations45": 283
+    "stations30": 88,
+    "stations45": 298
   },
   "prevSlug": "brezovicka-28",
   "nextSlug": "brezovicka-ambulanta"

@@ -23,12 +23,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     },
     {
       "broj": "239",
@@ -652,8 +652,8 @@
   },
   "reach": {
     "stations15": 39,
-    "stations30": 84,
-    "stations45": 174
+    "stations30": 87,
+    "stations45": 198
   },
   "prevSlug": "mirosevecka-190",
   "nextSlug": "miroslava-vaupotica"

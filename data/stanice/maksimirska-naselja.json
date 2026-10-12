@@ -246,9 +246,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 102,
-    "stations45": 349
+    "stations15": 25,
+    "stations30": 116,
+    "stations45": 380
   },
   "prevSlug": "m-trnava-v-rocica",
   "nextSlug": "malekova"

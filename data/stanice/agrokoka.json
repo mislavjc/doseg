@@ -28,7 +28,7 @@
         31,
         54
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",
@@ -372,8 +372,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 71,
-    "stations45": 238
+    "stations30": 73,
+    "stations45": 249
   },
   "prevSlug": "adamovec-sostarici",
   "nextSlug": "aleja-javora-donja-dubrava"

@@ -339,8 +339,8 @@
   },
   "reach": {
     "stations15": 16,
-    "stations30": 36,
-    "stations45": 148
+    "stations30": 40,
+    "stations45": 151
   },
   "prevSlug": "sasi-okretiste",
   "nextSlug": "sasinovec-vatr-dom"

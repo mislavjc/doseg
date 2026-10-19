@@ -37,9 +37,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 75.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.5
+      "peakHeadwayMin": 35.0,
+      "peakRangeMin": [
+        30,
+        38
+      ],
+      "allDayHeadwayMin": 36.1
     }
   ],
   "neighbors": [
@@ -296,8 +299,8 @@
   },
   "reach": {
     "stations15": 37,
-    "stations30": 148,
-    "stations45": 318
+    "stations30": 158,
+    "stations45": 328
   },
   "prevSlug": "vucak-podsused-vrapce",
   "nextSlug": "vugrovec-d-groblje"

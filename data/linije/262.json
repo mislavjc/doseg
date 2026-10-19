@@ -2086,7 +2086,19 @@
           ]
         },
         {
+          "hour": 18,
+          "minutes": [
+            0
+          ]
+        },
+        {
           "hour": 19,
+          "minutes": [
+            0
+          ]
+        },
+        {
+          "hour": 20,
           "minutes": [
             0
           ]
@@ -2187,11 +2199,18 @@
         {
           "hour": 18,
           "minutes": [
-            10
+            10,
+            45
           ]
         },
         {
           "hour": 19,
+          "minutes": [
+            45
+          ]
+        },
+        {
+          "hour": 20,
           "minutes": [
             45
           ]
@@ -2454,7 +2473,7 @@
   "prevBroj": "261",
   "nextBroj": "263",
   "reach": {
-    "areaKm2": 27.5,
+    "areaKm2": 27.7,
     "stopName": "Reber, Habeki",
     "lat": 45.88497,
     "lon": 16.11544

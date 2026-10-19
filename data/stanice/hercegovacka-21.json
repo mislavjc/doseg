@@ -534,9 +534,9 @@
     ]
   },
   "reach": {
-    "stations15": 50,
-    "stations30": 216,
-    "stations45": 479
+    "stations15": 49,
+    "stations30": 225,
+    "stations45": 499
   },
   "prevSlug": "hercegov-gaj",
   "nextSlug": "hipodrom"

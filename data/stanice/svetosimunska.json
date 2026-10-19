@@ -37,12 +37,12 @@
       "headsign": "Čret-Melinišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        43,
-        48
+        20,
+        23
       ],
-      "allDayHeadwayMin": 34.1
+      "allDayHeadwayMin": 29.6
     }
   ],
   "neighbors": [
@@ -642,9 +642,9 @@
     ]
   },
   "reach": {
-    "stations15": 27,
-    "stations30": 101,
-    "stations45": 284
+    "stations15": 28,
+    "stations30": 115,
+    "stations45": 308
   },
   "prevSlug": "svetice-maksimir-2",
   "nextSlug": "svetosimunska-trgov"

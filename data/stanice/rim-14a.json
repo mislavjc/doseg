@@ -22,8 +22,11 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        38,
+        43
+      ],
       "allDayHeadwayMin": 42.0
     }
   ],
@@ -1003,8 +1006,8 @@
   },
   "reach": {
     "stations15": 31,
-    "stations30": 88,
-    "stations45": 228
+    "stations30": 97,
+    "stations45": 261
   },
   "prevSlug": "rim",
   "nextSlug": "rim-60"

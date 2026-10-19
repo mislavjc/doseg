@@ -26,12 +26,12 @@
       "headsign": "Žitnjak-okr.",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 23.5,
+      "peakHeadwayMin": 15.7,
       "peakRangeMin": [
-        20,
-        26
+        15,
+        15
       ],
-      "allDayHeadwayMin": 25.3
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "114",
@@ -40,9 +40,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": null,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": null
+      "peakHeadwayMin": 40.0,
+      "peakRangeMin": [
+        40,
+        40
+      ],
+      "allDayHeadwayMin": 39.8
     },
     {
       "broj": "115",
@@ -51,12 +54,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 13.5,
+      "peakHeadwayMin": 10.8,
       "peakRangeMin": [
-        12,
-        16
+        10,
+        11
       ],
-      "allDayHeadwayMin": 14.9
+      "allDayHeadwayMin": 12.2
     },
     {
       "broj": "116",
@@ -79,12 +82,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 27.5,
+      "peakHeadwayMin": 22.0,
       "peakRangeMin": [
-        25,
-        30
+        20,
+        25
       ],
-      "allDayHeadwayMin": 26.4
+      "allDayHeadwayMin": 21.4
     }
   ],
   "neighbors": [
@@ -308,8 +311,36 @@
         "mode": "bus",
         "shape": [
           [
-            15.90183,
-            45.7966
+            15.89974,
+            45.79523
+          ],
+          [
+            15.89977,
+            45.79536
+          ],
+          [
+            15.89983,
+            45.79578
+          ],
+          [
+            15.89987,
+            45.79617
+          ],
+          [
+            15.89995,
+            45.79666
+          ],
+          [
+            15.90018,
+            45.79677
+          ],
+          [
+            15.9012,
+            45.7967
+          ],
+          [
+            15.90132,
+            45.79655
           ],
           [
             15.90133,
@@ -827,8 +858,8 @@
   },
   "reach": {
     "stations15": 43,
-    "stations30": 148,
-    "stations45": 417
+    "stations30": 155,
+    "stations45": 426
   },
   "prevSlug": "slavenskog-stenjevec",
   "nextSlug": "slavenskoga-jug"

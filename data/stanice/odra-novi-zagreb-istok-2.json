@@ -36,9 +36,9 @@
       "headsign": "Gl.kolodvor",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 80.0,
+      "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 84.2
+      "allDayHeadwayMin": 84.6
     },
     {
       "broj": "241",
@@ -828,8 +828,8 @@
   },
   "reach": {
     "stations15": 19,
-    "stations30": 60,
-    "stations45": 217
+    "stations30": 65,
+    "stations45": 230
   },
   "prevSlug": "odra-novi-zagreb-istok",
   "nextSlug": "odra-svetog-izidora"

@@ -25,8 +25,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        15,
-        20
+        13,
+        23
       ],
       "allDayHeadwayMin": 26.5
     },
@@ -380,8 +380,8 @@
   },
   "reach": {
     "stations15": 19,
-    "stations30": 57,
-    "stations45": 134
+    "stations30": 58,
+    "stations45": 151
   },
   "prevSlug": "pri-saicu",
   "nextSlug": "pri-spoljaru"

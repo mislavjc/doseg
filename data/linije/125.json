@@ -2051,6 +2051,8 @@
         {
           "hour": 8,
           "minutes": [
+            0,
+            15,
             30
           ]
         },
@@ -2165,6 +2167,8 @@
           "hour": 8,
           "minutes": [
             5,
+            25,
+            40,
             55
           ]
         },
@@ -2421,7 +2425,7 @@
   "prevBroj": "124",
   "nextBroj": "126",
   "reach": {
-    "areaKm2": 24.0,
+    "areaKm2": 24.6,
     "stopName": "Jalšina",
     "lat": 45.8231,
     "lon": 15.90663

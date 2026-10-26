@@ -26,7 +26,7 @@
       "peakHeadwayMin": 20.0,
       "peakRangeMin": [
         15,
-        20
+        30
       ],
       "allDayHeadwayMin": 26.5
     },
@@ -321,7 +321,7 @@
   "reach": {
     "stations15": 6,
     "stations30": 22,
-    "stations45": 51
+    "stations45": 53
   },
   "prevSlug": "furdini",
   "nextSlug": "g-trpuci-okretiste"

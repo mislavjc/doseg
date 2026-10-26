@@ -1,0 +1,86 @@
+{
+  "slug": "gata-13",
+  "name": "Gata 13",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.76263,
+  "lon": 16.01467,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "4:59",
+  "lastDeparture": "23:09",
+  "directionGroups": 1,
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Sarajevska-rotor",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 26.7,
+      "peakRangeMin": [
+        23,
+        30
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Tišinska ul. III odv",
+      "slug": "tisinska-ul-iii-odv"
+    },
+    {
+      "name": "Sarajevska - Hrelić",
+      "slug": "sarajevska-hrelic"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.0126,
+      45.76118,
+      16.01674,
+      45.76407
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.0184,
+            45.77273
+          ],
+          [
+            16.02179,
+            45.76936
+          ],
+          [
+            16.01781,
+            45.76358
+          ],
+          [
+            16.01467,
+            45.76262
+          ],
+          [
+            16.00696,
+            45.76549
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 13,
+    "stations30": 41,
+    "stations45": 129
+  },
+  "prevSlug": "gata",
+  "nextSlug": "getaldiceva-gospica"
+}

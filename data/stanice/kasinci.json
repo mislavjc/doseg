@@ -11,7 +11,7 @@
   "busLines": [
     "159"
   ],
-  "firstDeparture": "5:06",
+  "firstDeparture": "4:21",
   "lastDeparture": "23:56",
   "directionGroups": 1,
   "lines": [
@@ -343,7 +343,7 @@
   "reach": {
     "stations15": 19,
     "stations30": 62,
-    "stations45": 129
+    "stations45": 131
   },
   "prevSlug": "kasina-okretiste",
   "nextSlug": "kasinska-rasadnik"

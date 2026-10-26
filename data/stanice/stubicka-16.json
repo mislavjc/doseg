@@ -25,8 +25,8 @@
       "bothDirections": false,
       "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        15,
-        20
+        13,
+        23
       ],
       "allDayHeadwayMin": 26.5
     },
@@ -460,8 +460,8 @@
   },
   "reach": {
     "stations15": 28,
-    "stations30": 66,
-    "stations45": 214
+    "stations30": 67,
+    "stations45": 218
   },
   "prevSlug": "strpet-okretiste",
   "nextSlug": "stubicka-i-odvojak"

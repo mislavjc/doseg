@@ -1613,7 +1613,7 @@
     0,
     0,
     0,
-    2,
+    3,
     4,
     4,
     4,
@@ -1640,6 +1640,7 @@
         {
           "hour": 4,
           "minutes": [
+            5,
             50
           ]
         },
@@ -2136,14 +2137,14 @@
   "prevBroj": "151",
   "nextBroj": "160",
   "reach": {
-    "areaKm2": 36.1,
+    "areaKm2": 36.6,
     "stopName": "Naletilićeva 104",
     "lat": 45.73802,
     "lon": 15.93209
   },
   "stats": {
-    "dailyDepartures": 53,
-    "firstDeparture": "04:50",
+    "dailyDepartures": 54,
+    "firstDeparture": "04:05",
     "lastDeparture": "23:40",
     "peakHeadwayMin": 45.0,
     "avgHeadwayMin": 45.2,

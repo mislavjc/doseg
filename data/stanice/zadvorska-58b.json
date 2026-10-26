@@ -11,7 +11,7 @@
   "busLines": [
     "159"
   ],
-  "firstDeparture": "5:08",
+  "firstDeparture": "4:23",
   "lastDeparture": "23:58",
   "directionGroups": 1,
   "lines": [
@@ -307,7 +307,7 @@
   "reach": {
     "stations15": 22,
     "stations30": 61,
-    "stations45": 130
+    "stations45": 133
   },
   "prevSlug": "zadvorska-54",
   "nextSlug": "zagorska"

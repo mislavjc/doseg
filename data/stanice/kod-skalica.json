@@ -26,7 +26,7 @@
       "peakHeadwayMin": 20.0,
       "peakRangeMin": [
         15,
-        20
+        30
       ],
       "allDayHeadwayMin": 26.5
     },
@@ -512,7 +512,7 @@
   },
   "reach": {
     "stations15": 14,
-    "stations30": 34,
+    "stations30": 36,
     "stations45": 74
   },
   "prevSlug": "kod-ilenica",

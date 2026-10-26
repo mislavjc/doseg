@@ -12,7 +12,7 @@
     "143"
   ],
   "firstDeparture": "5:02",
-  "lastDeparture": "23:10",
+  "lastDeparture": "22:40",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,9 +22,12 @@
       "headsign": "Orešje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 60.0
+      "peakHeadwayMin": 26.3,
+      "peakRangeMin": [
+        24,
+        28
+      ],
+      "allDayHeadwayMin": 32.8
     }
   ],
   "neighbors": [
@@ -379,8 +382,8 @@
   },
   "reach": {
     "stations15": 38,
-    "stations30": 98,
-    "stations45": 243
+    "stations30": 105,
+    "stations45": 251
   },
   "prevSlug": "gospodska",
   "nextSlug": "gospodska-59a"

@@ -1,0 +1,55 @@
+{
+  "slug": "sarajevska-rotor",
+  "name": "Sarajevska-rotor",
+  "kvart": null,
+  "lat": 0.0,
+  "lon": 0.0,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "5:05",
+  "lastDeparture": "23:15",
+  "directionGroups": 0,
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Zapruđe",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 27.5,
+      "peakRangeMin": [
+        24,
+        31
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sarajevska - Hrelić",
+      "slug": "sarajevska-hrelic"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      -0.00144,
+      -0.00144,
+      0.00144,
+      0.00144
+    ],
+    "lines": []
+  },
+  "reach": {
+    "stations15": 0,
+    "stations30": 0,
+    "stations45": 0
+  },
+  "prevSlug": "sarajevska-hrelic",
+  "nextSlug": "sasi-okretiste"
+}

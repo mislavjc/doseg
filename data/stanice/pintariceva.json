@@ -25,8 +25,8 @@
       "bothDirections": true,
       "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        15,
-        20
+        13,
+        23
       ],
       "allDayHeadwayMin": 26.5
     },
@@ -500,8 +500,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 43,
-    "stations45": 83
+    "stations30": 46,
+    "stations45": 81
   },
   "prevSlug": "pilati",
   "nextSlug": "pipici"

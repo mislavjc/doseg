@@ -24,12 +24,12 @@
       "headsign": "Krematorij",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 14.3,
       "peakRangeMin": [
-        20,
+        10,
         20
       ],
-      "allDayHeadwayMin": 19.7
+      "allDayHeadwayMin": 17.1
     },
     {
       "broj": "203",
@@ -696,8 +696,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 114,
-    "stations45": 265
+    "stations30": 126,
+    "stations45": 295
   },
   "prevSlug": "remetineckih-zrtava",
   "nextSlug": "resnicki-gaj"

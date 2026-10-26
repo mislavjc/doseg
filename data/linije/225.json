@@ -2307,13 +2307,31 @@
         "terminal": "Sesvete"
       },
       {
+        "broj": "277",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "278",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
       },
       {
+        "broj": "282",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
         "broj": "283",
+        "mode": "bus",
+        "isNight": false,
+        "terminal": "Sesvete"
+      },
+      {
+        "broj": "284",
         "mode": "bus",
         "isNight": false,
         "terminal": "Sesvete"
@@ -2333,7 +2351,7 @@
   "prevBroj": "224",
   "nextBroj": "226",
   "reach": {
-    "areaKm2": 39.4,
+    "areaKm2": 30.8,
     "stopName": "Resnički gaj",
     "lat": 45.80909,
     "lon": 16.06426

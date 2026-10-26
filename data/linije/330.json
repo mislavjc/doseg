@@ -7,7 +7,8 @@
     "V. Gorica"
   ],
   "via": [
-    "Muzej suv.umjetnosti"
+    "Muzej suv.umjetnosti",
+    "Galženica"
   ],
   "oneWay": false,
   "directions": [
@@ -416,6 +417,10 @@
         [
           16.06231,
           45.71449
+        ],
+        [
+          16.06747,
+          45.71274
         ],
         [
           16.06747,
@@ -1164,7 +1169,7 @@
         "broj": "313",
         "mode": "bus",
         "isNight": false,
-        "terminal": "Gl.kolodvor"
+        "terminal": "V. Gorica"
       }
     ],
     "tramCrossings": [

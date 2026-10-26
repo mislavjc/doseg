@@ -11,7 +11,7 @@
   "busLines": [
     "159"
   ],
-  "firstDeparture": "5:10",
+  "firstDeparture": "4:25",
   "lastDeparture": "0:00",
   "directionGroups": 1,
   "lines": [
@@ -247,7 +247,7 @@
   "reach": {
     "stations15": 7,
     "stations30": 46,
-    "stations45": 85
+    "stations45": 88
   },
   "prevSlug": "hudobicka-i-odvojak",
   "nextSlug": "hunjka"

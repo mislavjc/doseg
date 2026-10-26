@@ -24,12 +24,12 @@
       "headsign": "Krematorij",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 14.3,
       "peakRangeMin": [
-        20,
+        10,
         20
       ],
-      "allDayHeadwayMin": 19.7
+      "allDayHeadwayMin": 17.1
     },
     {
       "broj": "203",
@@ -635,9 +635,9 @@
     ]
   },
   "reach": {
-    "stations15": 43,
-    "stations30": 146,
-    "stations45": 311
+    "stations15": 44,
+    "stations30": 153,
+    "stations45": 342
   },
   "prevSlug": "miramarska",
   "nextSlug": "mirogoj-arkade"

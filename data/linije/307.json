@@ -1126,8 +1126,8 @@
         },
         {
           "name": "Sarajevska - Hrelić",
-          "lat": 45.76522,
-          "lon": 16.00675,
+          "lat": 45.76549,
+          "lon": 16.00697,
           "offsetMin": 27,
           "tramInterchange": []
         },
@@ -2169,12 +2169,6 @@
       {
         "broj": "14",
         "mode": "tram",
-        "isNight": false,
-        "terminal": "Zapruđe"
-      },
-      {
-        "broj": "295",
-        "mode": "bus",
         "isNight": false,
         "terminal": "Zapruđe"
       },

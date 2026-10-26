@@ -45,12 +45,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 9.7,
       "peakRangeMin": [
-        11,
-        12
+        9,
+        11
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -59,12 +59,12 @@
       "headsign": "Črnomerec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.3,
+      "peakHeadwayMin": 6.3,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -187,12 +187,12 @@
       "headsign": "Planina Gornja",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 31.7,
+      "peakHeadwayMin": 25.0,
       "peakRangeMin": [
-        28,
-        35
+        19,
+        29
       ],
-      "allDayHeadwayMin": 34.8
+      "allDayHeadwayMin": 26.6
     },
     {
       "broj": "264",
@@ -223,12 +223,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.1,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     },
     {
       "broj": "270",
@@ -278,7 +278,7 @@
         44,
         51
       ],
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 51.8
     },
     {
       "broj": "274",
@@ -301,12 +301,12 @@
       "headsign": "Novi Jelkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 34.0
+      "allDayHeadwayMin": 21.3
     },
     {
       "broj": "280",
@@ -362,7 +362,7 @@
     },
     {
       "name": "Sesvete-ukrcaj",
-      "slug": "sesvete-ukrcaj-sesvete-2"
+      "slug": "sesvete-ukrcaj"
     },
     {
       "name": "Bistrička-Zagrebačka",
@@ -370,7 +370,7 @@
     },
     {
       "name": "Sesvete-izlaz",
-      "slug": "sesvete-izlaz-sesvete-2"
+      "slug": "sesvete-izlaz"
     },
     {
       "name": "Osječka",
@@ -3446,100 +3446,152 @@
         "mode": "bus",
         "shape": [
           [
-            16.07827,
-            45.82824
+            16.07826,
+            45.82825
           ],
           [
-            16.06297,
-            45.82814
+            16.07778,
+            45.82831
           ],
           [
-            16.06296,
-            45.82814
+            16.07756,
+            45.82836
           ],
           [
-            16.06297,
-            45.82814
+            16.07745,
+            45.82837
           ],
           [
-            16.06325,
-            45.82691
+            16.07733,
+            45.82831
           ],
           [
-            16.06364,
-            45.82518
+            16.07727,
+            45.82825
           ],
           [
-            16.06364,
-            45.82518
+            16.07702,
+            45.8283
           ],
           [
-            16.06378,
-            45.82453
+            16.077,
+            45.82817
           ],
           [
-            16.06402,
-            45.82345
+            16.07675,
+            45.82767
           ],
           [
-            16.06412,
-            45.82302
+            16.07701,
+            45.82761
           ],
           [
-            16.06414,
-            45.82268
+            16.07758,
+            45.82748
           ],
           [
-            16.06413,
-            45.82242
+            16.07922,
+            45.82718
           ],
           [
-            16.06405,
-            45.82221
+            16.08144,
+            45.8269
           ],
           [
-            16.06406,
-            45.82221
+            16.0818,
+            45.82685
           ],
           [
-            16.06412,
-            45.8222
+            16.08208,
+            45.8268
           ],
           [
-            16.06409,
-            45.82198
+            16.08269,
+            45.82667
           ],
           [
-            16.06386,
-            45.82129
+            16.08361,
+            45.82654
           ],
           [
-            16.06382,
-            45.82097
+            16.08455,
+            45.82642
           ],
           [
-            16.06383,
-            45.82076
+            16.08456,
+            45.82642
           ],
           [
-            16.06416,
-            45.81952
+            16.08466,
+            45.82645
           ],
           [
-            16.06463,
-            45.81796
+            16.08512,
+            45.8264
           ],
           [
-            16.06468,
-            45.81769
+            16.08598,
+            45.8262
           ],
           [
-            16.06469,
-            45.81769
+            16.08686,
+            45.826
           ],
           [
-            16.06474,
-            45.81767
+            16.08763,
+            45.82594
+          ],
+          [
+            16.08858,
+            45.82597
+          ],
+          [
+            16.08946,
+            45.8261
+          ],
+          [
+            16.08987,
+            45.82617
+          ],
+          [
+            16.08997,
+            45.82616
+          ],
+          [
+            16.08998,
+            45.82616
+          ],
+          [
+            16.09011,
+            45.82623
+          ],
+          [
+            16.0912,
+            45.82645
+          ],
+          [
+            16.09261,
+            45.82667
+          ],
+          [
+            16.09362,
+            45.82681
+          ],
+          [
+            16.09489,
+            45.82699
+          ],
+          [
+            16.09572,
+            45.82714
+          ],
+          [
+            16.0979,
+            45.82757
+          ],
+          [
+            16.0979,
+            45.82757
           ]
         ]
       },
@@ -3798,9 +3850,9 @@
     ]
   },
   "reach": {
-    "stations15": 50,
-    "stations30": 158,
-    "stations45": 356
+    "stations15": 52,
+    "stations30": 182,
+    "stations45": 393
   },
   "prevSlug": "drziceva-petlja",
   "nextSlug": "dubecka-89"

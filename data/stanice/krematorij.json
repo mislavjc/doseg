@@ -24,12 +24,12 @@
       "headsign": "Kaptol",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 20.0,
+      "peakHeadwayMin": 15.0,
       "peakRangeMin": [
-        20,
+        13,
         20
       ],
-      "allDayHeadwayMin": 19.7
+      "allDayHeadwayMin": 17.1
     },
     {
       "broj": "203",
@@ -704,8 +704,8 @@
   },
   "reach": {
     "stations15": 38,
-    "stations30": 140,
-    "stations45": 299
+    "stations30": 154,
+    "stations45": 315
   },
   "prevSlug": "kraljicin-zdenac",
   "nextSlug": "kruge-trnje"

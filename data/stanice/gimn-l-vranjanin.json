@@ -22,9 +22,12 @@
       "headsign": "Podsused",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 60.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 59.3
+      "peakHeadwayMin": 30.0,
+      "peakRangeMin": [
+        30,
+        30
+      ],
+      "allDayHeadwayMin": 35.9
     }
   ],
   "neighbors": [
@@ -319,8 +322,8 @@
   },
   "reach": {
     "stations15": 40,
-    "stations30": 159,
-    "stations45": 332
+    "stations30": 164,
+    "stations45": 346
   },
   "prevSlug": "getaldiceva-pescenica-zitnjak-2",
   "nextSlug": "glavna"

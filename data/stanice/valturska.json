@@ -22,12 +22,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        38,
-        43
+        15,
+        20
       ],
-      "allDayHeadwayMin": 37.8
+      "allDayHeadwayMin": 26.9
     }
   ],
   "neighbors": [
@@ -346,8 +346,8 @@
   },
   "reach": {
     "stations15": 29,
-    "stations30": 97,
-    "stations45": 277
+    "stations30": 108,
+    "stations45": 313
   },
   "prevSlug": "utrina",
   "nextSlug": "varazdinska-selcina"

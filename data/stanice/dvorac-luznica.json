@@ -177,9 +177,9 @@
     ]
   },
   "reach": {
-    "stations15": 9,
+    "stations15": 11,
     "stations30": 33,
-    "stations45": 75
+    "stations45": 77
   },
   "prevSlug": "dvd-precko",
   "nextSlug": "elka"

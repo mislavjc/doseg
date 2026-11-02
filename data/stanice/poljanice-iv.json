@@ -13,8 +13,8 @@
     "34"
   ],
   "busLines": [],
-  "firstDeparture": "4:32",
-  "lastDeparture": "1:03",
+  "firstDeparture": "4:40",
+  "lastDeparture": "1:06",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,12 +24,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.9,
+      "peakHeadwayMin": 9.7,
       "peakRangeMin": [
-        11,
-        12
+        9,
+        11
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "11",
@@ -38,12 +38,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.3,
+      "peakHeadwayMin": 6.3,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "34",
@@ -736,9 +736,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 130,
-    "stations45": 351
+    "stations15": 33,
+    "stations30": 143,
+    "stations45": 374
   },
   "prevSlug": "poljanica-zeleni-br",
   "nextSlug": "popovec-gostiona"

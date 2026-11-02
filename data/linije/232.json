@@ -748,14 +748,14 @@
     0,
     0,
     1,
-    3,
+    4,
     5,
+    4,
+    4,
     3,
     3,
-    3,
-    3,
-    3,
-    3,
+    4,
+    4,
     5,
     4,
     5,
@@ -780,7 +780,8 @@
         {
           "hour": 5,
           "minutes": [
-            20
+            20,
+            45
           ]
         },
         {
@@ -794,13 +795,15 @@
         {
           "hour": 7,
           "minutes": [
-            25
+            25,
+            55
           ]
         },
         {
           "hour": 8,
           "minutes": [
             15,
+            35,
             55
           ]
         },
@@ -820,12 +823,14 @@
         {
           "hour": 11,
           "minutes": [
+            20,
             35
           ]
         },
         {
           "hour": 12,
           "minutes": [
+            10,
             25,
             50
           ]
@@ -1540,17 +1545,17 @@
   "prevBroj": "231",
   "nextBroj": "233",
   "reach": {
-    "areaKm2": 35.9,
+    "areaKm2": 37.4,
     "stopName": "Avenija G.Šuška-MUP",
     "lat": 45.83916,
     "lon": 16.0319
   },
   "stats": {
-    "dailyDepartures": 68,
+    "dailyDepartures": 73,
     "firstDeparture": "04:55",
     "lastDeparture": "23:40",
-    "peakHeadwayMin": 45.0,
-    "avgHeadwayMin": 34.1,
+    "peakHeadwayMin": 22.5,
+    "avgHeadwayMin": 29.6,
     "travelTimeMin": 7.5,
     "distanceKm": 3.5
   }

@@ -459,6 +459,10 @@
             45.71274
           ],
           [
+            16.06747,
+            45.71274
+          ],
+          [
             16.06748,
             45.71274
           ],
@@ -480,8 +484,8 @@
   },
   "reach": {
     "stations15": 22,
-    "stations30": 48,
-    "stations45": 164
+    "stations30": 49,
+    "stations45": 171
   },
   "prevSlug": "zagorska",
   "nextSlug": "zagrebacka-103"

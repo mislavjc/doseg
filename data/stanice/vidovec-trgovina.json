@@ -22,12 +22,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     }
   ],
   "neighbors": [
@@ -290,8 +290,8 @@
   },
   "reach": {
     "stations15": 21,
-    "stations30": 61,
-    "stations45": 135
+    "stations30": 66,
+    "stations45": 158
   },
   "prevSlug": "vidovec-skola",
   "nextSlug": "viii-jazbinski-odv"

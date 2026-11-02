@@ -43,7 +43,7 @@
         30,
         33
       ],
-      "allDayHeadwayMin": 30.9
+      "allDayHeadwayMin": 30.7
     },
     {
       "broj": "130",
@@ -1080,8 +1080,8 @@
   },
   "reach": {
     "stations15": 40,
-    "stations30": 127,
-    "stations45": 272
+    "stations30": 132,
+    "stations45": 283
   },
   "prevSlug": "kapucinska",
   "nextSlug": "karlovacka-157"

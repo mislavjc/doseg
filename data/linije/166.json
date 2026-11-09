@@ -2298,12 +2298,6 @@
         "terminal": "Gl.kolodvor"
       },
       {
-        "broj": "313",
-        "mode": "bus",
-        "isNight": false,
-        "terminal": "Gl.kolodvor"
-      },
-      {
         "broj": "330",
         "mode": "bus",
         "isNight": false,
@@ -2336,7 +2330,7 @@
   "prevBroj": "164",
   "nextBroj": "168",
   "reach": {
-    "areaKm2": 42.5,
+    "areaKm2": 43.3,
     "stopName": "Odra-nadvožnjak",
     "lat": 45.73941,
     "lon": 16.00595

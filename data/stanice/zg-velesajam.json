@@ -27,7 +27,7 @@
         20,
         21
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     }
   ],
   "neighbors": [
@@ -333,9 +333,9 @@
     ]
   },
   "reach": {
-    "stations15": 37,
-    "stations30": 165,
-    "stations45": 478
+    "stations15": 36,
+    "stations30": 172,
+    "stations45": 482
   },
   "prevSlug": "zet-garaza-pod",
   "nextSlug": "zidaki"

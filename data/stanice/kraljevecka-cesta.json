@@ -13,7 +13,7 @@
     "162"
   ],
   "firstDeparture": "4:37",
-  "lastDeparture": "0:29",
+  "lastDeparture": "0:31",
   "directionGroups": 3,
   "lines": [
     {
@@ -28,7 +28,7 @@
         46,
         59
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     },
     {
       "broj": "162",

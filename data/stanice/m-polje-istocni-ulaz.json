@@ -12,7 +12,7 @@
     "267"
   ],
   "firstDeparture": "6:57",
-  "lastDeparture": "19:46",
+  "lastDeparture": "18:06",
   "directionGroups": 2,
   "lines": [
     {
@@ -24,7 +24,7 @@
       "bothDirections": true,
       "peakHeadwayMin": null,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 54.3
+      "allDayHeadwayMin": 55.0
     }
   ],
   "neighbors": [
@@ -175,8 +175,8 @@
   },
   "reach": {
     "stations15": 10,
-    "stations30": 36,
-    "stations45": 155
+    "stations30": 40,
+    "stations45": 162
   },
   "prevSlug": "luzan-zeleni-vijenac",
   "nextSlug": "m-polje-okretiste"

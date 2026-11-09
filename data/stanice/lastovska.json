@@ -22,9 +22,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [
@@ -475,8 +478,8 @@
   },
   "reach": {
     "stations15": 24,
-    "stations30": 117,
-    "stations45": 328
+    "stations30": 135,
+    "stations45": 360
   },
   "prevSlug": "laskocica-42",
   "nextSlug": "lastovska-skola"

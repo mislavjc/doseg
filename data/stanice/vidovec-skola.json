@@ -22,12 +22,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     }
   ],
   "neighbors": [
@@ -258,8 +258,8 @@
   },
   "reach": {
     "stations15": 20,
-    "stations30": 56,
-    "stations45": 130
+    "stations30": 61,
+    "stations45": 149
   },
   "prevSlug": "vidovcica-i",
   "nextSlug": "vidovec-trgovina"

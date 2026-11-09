@@ -13,8 +13,8 @@
     "215",
     "235"
   ],
-  "firstDeparture": "4:21",
-  "lastDeparture": "0:02",
+  "firstDeparture": "4:20",
+  "lastDeparture": "0:01",
   "directionGroups": 2,
   "lines": [
     {
@@ -35,12 +35,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.3,
+      "peakHeadwayMin": 10.0,
       "peakRangeMin": [
-        11,
-        12
+        10,
+        10
       ],
-      "allDayHeadwayMin": 13.3
+      "allDayHeadwayMin": 12.1
     },
     {
       "broj": "235",
@@ -1949,9 +1949,9 @@
     ]
   },
   "reach": {
-    "stations15": 29,
-    "stations30": 106,
-    "stations45": 339
+    "stations15": 30,
+    "stations30": 118,
+    "stations45": 370
   },
   "prevSlug": "resnicki-gaj",
   "nextSlug": "resnik-104"

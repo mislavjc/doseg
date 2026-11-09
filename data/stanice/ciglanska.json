@@ -498,9 +498,9 @@
     ]
   },
   "reach": {
-    "stations15": 63,
+    "stations15": 60,
     "stations30": 220,
-    "stations45": 368
+    "stations45": 385
   },
   "prevSlug": "cickovina",
   "nextSlug": "cileanska"

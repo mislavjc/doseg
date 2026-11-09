@@ -654,9 +654,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 129,
-    "stations45": 255
+    "stations15": 39,
+    "stations30": 144,
+    "stations45": 279
   },
   "prevSlug": "sestin-dol-odvojak",
   "nextSlug": "sestinski-dol"

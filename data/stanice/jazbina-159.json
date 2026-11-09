@@ -22,12 +22,12 @@
       "headsign": "Svetice",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 22.0,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
-        22,
-        22
+        13,
+        13
       ],
-      "allDayHeadwayMin": 22.0
+      "allDayHeadwayMin": 16.9
     }
   ],
   "neighbors": [
@@ -435,7 +435,7 @@
   "reach": {
     "stations15": 21,
     "stations30": 50,
-    "stations45": 140
+    "stations45": 145
   },
   "prevSlug": "jazbina-120",
   "nextSlug": "jazbina-166"

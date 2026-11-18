@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import * as maplibregl from "@/lib/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
-import { getMapStyleUrl } from "@/lib/map-styles"
+import { MAP_STYLE_URL } from "@/lib/map-styles"
 import { MapTile, MapTileButton } from "@/components/home/ui/controls"
 import { expandStop, INK, OLD, BLUE, KEPT } from "./lib"
 
@@ -82,7 +82,7 @@ function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, 
 
     const map = new maplibregl.Map({
       container: ref.current,
-      style: getMapStyleUrl(),
+      style: MAP_STYLE_URL,
       center: bounds.getCenter(),
       zoom: 11,
       attributionControl: false,

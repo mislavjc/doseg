@@ -103,7 +103,6 @@ export async function POST(request: NextRequest) {
       districtsInReach,
       cityAreaKm2,
     },
-    request,
     "private, max-age=60"
   )
   return response

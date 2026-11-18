@@ -10,8 +10,7 @@ import {
 
 import {
   applyBasemapBackgroundTint,
-  DEFAULT_MAP_STYLE,
-  getMapStyleUrl,
+  MAP_STYLE_URL,
 } from "@/lib/map-styles"
 import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
 import { GEOCODE_KIND_META, POI_CATEGORIES } from "@/lib/poi"
@@ -311,7 +310,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
     if (!containerRef.current) return
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: getMapStyleUrl(),
+      style: MAP_STYLE_URL,
       center: ZAGREB,
       zoom: 12.4,
       attributionControl: false,
@@ -322,7 +321,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
       "bottom-right"
     )
     map.on("load", () => {
-      applyBasemapBackgroundTint(map, DEFAULT_MAP_STYLE)
+      applyBasemapBackgroundTint(map)
       addWalkAreaLayers(map)
       addRouteLayers(map)
       addPoiBajsLayers(map)

@@ -7,7 +7,7 @@ import {
   type AdresaStreet,
   type ResolvedAdresa,
 } from "@/lib/adresa"
-import { districtAt } from "@/lib/doseg-at"
+import { districtAt } from "@/lib/district-at"
 import { norm } from "@/lib/normalize"
 
 /**
@@ -82,7 +82,7 @@ function streetHit(street: IndexedStreet): AdresaHit {
     lat,
     lon,
     kind: "ulica",
-    kvart: districtAt(lon, lat),
+    kvart: districtAt(lat, lon),
   }
 }
 
@@ -123,7 +123,7 @@ export function GET(request: Request) {
           lat,
           lon,
           kind: "adresa",
-          kvart: districtAt(lon, lat),
+          kvart: districtAt(lat, lon),
         })
       }
     } else {

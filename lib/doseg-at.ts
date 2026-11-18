@@ -1,9 +1,7 @@
-import { join } from "node:path"
-
+import { districtAt } from "@/lib/district-at"
 import { loadScores, reachKm2 } from "@/lib/district-scores"
-import { fastDistKm, pointInRing, walkMin, type Ring } from "@/lib/geo"
+import { fastDistKm, walkMin } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
-import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopIndex, serviceWindow } from "@/lib/stop-data"
 
 /**
@@ -20,25 +18,6 @@ const NEARBY_MAX = 3
 const NEARBY_RADIUS_KM = 0.8
 /** Lines are aggregated over stops within this radius (~5 min walk). */
 const LINES_RADIUS_KM = 0.45
-
-interface GeoFeature {
-  properties: { name: string }
-  geometry: { type: string; coordinates: Ring[] }
-}
-
-/** Name of the gradska četvrt containing the point (holes respected). */
-export function districtAt(lon: number, lat: number): string | null {
-  const features =
-    readJsonCached<{ features: GeoFeature[] }>(
-      join(process.cwd(), "data/districts.geojson")
-    )?.features ?? []
-  for (const f of features) {
-    const [outer, ...holes] = f.geometry.coordinates
-    if (pointInRing(lon, lat, outer) && !holes.some((h) => pointInRing(lon, lat, h)))
-      return f.properties.name
-  }
-  return null
-}
 
 export interface NearbyStop {
   slug: string
@@ -175,7 +154,7 @@ function nearbyBlock(
 
 export function dosegAt(lon: number, lat: number): DosegAtPayload {
   const scores = loadScores()
-  const name = districtAt(lon, lat)
+  const name = districtAt(lat, lon)
   const d = name ? scores?.districts.find((x) => x.name === name) : null
   if (!scores || !d) return { found: false }
 
@@ -188,7 +167,7 @@ export function dosegAt(lon: number, lat: number): DosegAtPayload {
       total: scores.districts.length,
       score: d.score,
     },
-    reachKm2: reachKm2(scores, d.avgReachableCells),
+    reachKm2: reachKm2(d.avgReachableCells),
     basis: "kvart",
     ...nearbyBlock(lon, lat),
   }

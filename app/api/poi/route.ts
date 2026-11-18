@@ -28,13 +28,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (categories.length === 0) {
-      const { response } = jsonResponse([], request, "public, max-age=86400")
+      const { response } = jsonResponse([], "public, max-age=86400")
       return response
     }
 
     const pois = await fetchPOIs(categories)
 
-    const { response } = jsonResponse(pois, request, "public, max-age=86400")
+    const { response } = jsonResponse(pois, "public, max-age=86400")
     return response
   } catch (err) {
     console.error("POI fetch failed:", err)

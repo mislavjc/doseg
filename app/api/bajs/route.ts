@@ -1,9 +1,7 @@
-import type { NextRequest } from "next/server"
-
 import { apiErrorResponse, jsonResponse } from "@/lib/api-response"
 import { buildBajsFeatureCollection, getBajsData } from "@/lib/bajs"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const data = await getBajsData()
 
@@ -13,7 +11,6 @@ export async function GET(request: NextRequest) {
         updatedAt: data.updatedAt,
         ttl: data.ttlSeconds,
       },
-      request,
       `private, max-age=${data.ttlSeconds}`
     )
     return response

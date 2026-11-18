@@ -15,7 +15,6 @@ export function apiErrorResponse(context: string, err: unknown, status: number):
  */
 export function jsonResponse(
   data: unknown,
-  _request: { headers: { get(name: string): string | null } },
   cacheControl: string
 ): { response: Response; serializeMs: number } {
   const t0 = performance.now()

@@ -26,7 +26,7 @@ import { readJsonCached } from "@/lib/page-data"
 const REACH_CELL_DEG = 0.002
 const REACH_CELL_KM2 = REACH_CELL_DEG * KM_PER_DEG_LAT * (REACH_CELL_DEG * KM_PER_DEG_LON)
 
-export function reachKm2(_scores: ScoreData, cells: number): number {
+export function reachKm2(cells: number): number {
   return Math.round(cells * REACH_CELL_KM2)
 }
 

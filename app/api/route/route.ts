@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       return Response.json({ error: "Route not found" }, { status: 404 })
     }
 
-    const { response } = jsonResponse(itinerary, request, "private, max-age=5")
+    const { response } = jsonResponse(itinerary, "private, max-age=5")
     return response
   } catch (err) {
     return apiErrorResponse("route route error", err, 502)

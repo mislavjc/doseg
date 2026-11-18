@@ -154,7 +154,7 @@ export function StatistikaTeaser() {
       <Hook className="mt-4">Gdje mreža radi, a gdje staje.</Hook>
       <Body className="mt-3 max-w-[520px]">
         {scores && best && worst
-          ? `${best.name} dosegne ${reachKm2(scores, best.avgReachableCells)} km², ${worst.name} ${reachKm2(scores, worst.avgReachableCells)}. `
+          ? `${best.name} dosegne ${reachKm2(best.avgReachableCells)} km², ${worst.name} ${reachKm2(worst.avgReachableCells)}. `
           : ""}
         Analiza povezanosti po kvartu, dobu dana i udaljenosti do stanice.
       </Body>

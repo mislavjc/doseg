@@ -38,7 +38,6 @@ function connectivityColor(score: number) {
   return "#c4f8ea"
 }
 
-/** Matches `bajsBoostColor` in scripts/build-district-map-svg.ts */
 function bajsBoostColor(boostPct: number) {
   if (boostPct >= 40) return "#d97706"
   if (boostPct >= 25) return "#f59e0b"

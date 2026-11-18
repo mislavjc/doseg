@@ -49,6 +49,7 @@ function peekSnap(): string {
   probe.style.cssText =
     "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
   document.body.append(probe)
+  // oxlint-disable-next-line unicorn/prefer-number-coercion -- paddingBottom is a CSS length ("12px"); Number() would give NaN
   const inset = parseFloat(getComputedStyle(probe).paddingBottom) || 0
   probe.remove()
   return `${ANSWER_BAR_PX + inset}px`

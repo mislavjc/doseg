@@ -91,7 +91,7 @@ function LineChips({ lines }: { lines: string[] }) {
 /** "Borongaj – Borongaj" (loop) reads as a no-op; collapse it to "kružna · X". */
 function relacijaLabel(r: string): string {
   const parts = r.split(" – ")
-  return parts[0] && parts[0] === parts[1] ? `kružna · ${expandStop(parts[0])}` : parts.map(expandStop).join(" – ")
+  return parts[0] && parts[0] === parts[1] ? `kružna · ${expandStop(parts[0])}` : parts.map((p) => expandStop(p)).join(" – ")
 }
 
 function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
@@ -107,8 +107,8 @@ function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
   if (approx) rows[0][0] += " (procjena)"
   return (
     <div style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", paddingTop: 24 }}>
-      {rows.map(([label, a, b], i) => (
-        <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 12, paddingBlock: 9 }}>
+      {rows.map(([label, a, b]) => (
+        <div key={label} style={{ display: "flex", alignItems: "baseline", gap: 12, paddingBlock: 9 }}>
           <span style={{ flexShrink: 0, fontFamily: HEROS, fontSize: 16, lineHeight: "22px", color: MUTE }}>{label}</span>
           <div style={{ flexGrow: 1, height: 13, borderBottom: `1px dotted ${DOT}` }} />
           <span style={{ flexShrink: 1, minWidth: 0, whiteSpace: "normal", overflowWrap: "anywhere", fontFamily: MONO, fontSize: 16, lineHeight: "22px", color: INK, textAlign: "right" }}><span style={{ color: FAINT }}>{a}</span> {b}</span>
@@ -241,7 +241,7 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
       const ym = it.date.slice(0, 7)
       ;(by.get(ym) ?? by.set(ym, []).get(ym)!).push(it)
     }
-    return [...by.entries()].sort((a, b) => b[0].localeCompare(a[0]))
+    return [...by.entries()].toSorted((a, b) => b[0].localeCompare(a[0]))
   }, [items])
   const headBase: CSSProperties = { width: "100%", boxSizing: "border-box", display: "flex", gap: 8, alignItems: "center", paddingBlock: 14, borderTop: `1px solid ${HAIR}`, color: MUTE }
   const label = <span style={{ fontFamily: MONO, fontSize: 12, color: MUTE }}>izmještena stajališta ({items.length})</span>
@@ -271,14 +271,14 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
 }
 
 function YearHeader({ year, tally }: { year: string; tally: { category: string; count: number }[] }) {
-  const tokens = [...tally].sort((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
+  const tokens = tally.toSorted((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
   return (
     <div style={{ width: "100%", maxWidth: 556, paddingTop: 56, paddingBottom: 10, display: "flex", flexDirection: "column", gap: 8 }}>
       <h2 style={{ margin: 0, fontFamily: MONO, fontWeight: 400, fontSize: 16, color: INK }}>{year}.</h2>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8 }}>
         {tokens.map((t, i) => {
+          if (!Object.hasOwn(TALLY, t.category)) return null
           const m = TALLY[t.category]
-          if (!m) return null
           return (
             <Fragment key={t.category}>
               {i > 0 && <Sep />}
@@ -375,7 +375,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
   const segCounts = { total: qLine + qStop, line: qLine, stop: qStop }
   const sections = matched
     .map((y) => ({ year: y.year, lineItems: showLines ? y.line : [], stopItems: showStops ? y.stop : [] }))
-    .filter((s) => s.lineItems.length || s.stopItems.length)
+    .filter((s) => s.lineItems.length > 0 || s.stopItems.length > 0)
   const shown = sections.reduce((a, s) => a + s.lineItems.length + s.stopItems.length, 0)
   const resultLabel = nq ? `${num(shown)} ${shown === 1 ? "rezultat" : "rezultata"}` : "najnovije gore"
   const ledgerOpen = nq !== "" || seg === "stajalište"

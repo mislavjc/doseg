@@ -8,7 +8,7 @@ import Link from "next/link"
 
 import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
 import type { Itinerary, Leg } from "@/lib/otp"
-import { POI_CATEGORIES } from "@/lib/poi"
+import { POI_CATEGORIES, type MapPoiCategory } from "@/lib/poi"
 import {
   deShout,
   formatClock,
@@ -50,7 +50,7 @@ export type PanelContentProps = {
   stats: ReachStats | null
   poiCounts: Record<string, number> | null
   poiLayers: Record<string, boolean>
-  onTogglePoi: (key: string) => void
+  onTogglePoi: (key: MapPoiCategory) => void
   districtCtx: DistrictContext | null
   departedAt: Date | null
   onBackToReach: () => void
@@ -184,7 +184,7 @@ export function PoiList({
 }: {
   poiCounts: Record<string, number> | null
   active: PoiLayerState
-  onToggle: (key: string) => void
+  onToggle: (key: MapPoiCategory) => void
 }) {
   return (
     <div className="flex flex-col gap-[11px]">
@@ -235,7 +235,7 @@ export function ReachContent({
   stats: ReachStats | null
   poiCounts: Record<string, number> | null
   poiLayers: PoiLayerState
-  onTogglePoi: (key: string) => void
+  onTogglePoi: (key: MapPoiCategory) => void
 }) {
   return (
     <>
@@ -280,6 +280,7 @@ export function JourneyStrip({
         const walk = isWalkMode(leg.mode)
         return (
           <div
+            // oxlint-disable-next-line react/no-array-index-key -- legs have no id; the strip is rebuilt per itinerary, never reordered
             key={i}
             className="flex basis-0 items-center justify-center"
             style={{
@@ -382,6 +383,7 @@ export function LegList({
     <div className="flex flex-col border-t border-hairline">
       {itinerary.legs.map((leg, i) => (
         <LegRow
+          // oxlint-disable-next-line react/no-array-index-key -- legs have no id; the list is rebuilt per itinerary, never reordered
           key={i}
           leg={leg}
           color={colors[i]}

@@ -80,7 +80,7 @@ export function HomeHeroVariant({
       >
         <HeroPicture src={src} alt="Karta Zagreba s granicom grada" variant={variant} />
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""

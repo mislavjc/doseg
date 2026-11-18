@@ -14,7 +14,7 @@ export interface SearchIndexPayload {
   stops: { slug: string; name: string; kvart: string | null }[]
 }
 
-export async function GET(request: Request) {
+export function GET(request: Request) {
   // ~105 stops share a name (opposite platforms, "-2" slugs); in a search
   // list they read as duplicates, so keep one per name+kvart — the first,
   // whose slug is the primary (unsuffixed) page.

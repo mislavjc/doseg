@@ -93,27 +93,19 @@ function directionKind(data: StopPageData): DirectionKind {
  * like Glavni kolodvor, where the lines actually fan out several ways.
  */
 export function directionLabel(data: StopPageData): string | null {
-  switch (directionKind(data)) {
-    case "multi":
-      return data.lineCount >= 5 ? "čvorište" : "više smjerova"
-    case "two":
-      return "oba smjera"
-    default:
-      return null
-  }
+  const kind = directionKind(data)
+  if (kind === "multi") return data.lineCount >= 5 ? "čvorište" : "više smjerova"
+  if (kind === "two") return "oba smjera"
+  return null
 }
 
 /** FAQ fragment for the line-count sentence, derived from the same direction
  *  kind as the chip (not by string-matching directionLabel's output). */
 export function directionNote(data: StopPageData): string {
-  switch (directionKind(data)) {
-    case "multi":
-      return ", iz više smjerova"
-    case "two":
-      return ", u oba smjera"
-    default:
-      return ""
-  }
+  const kind = directionKind(data)
+  if (kind === "multi") return ", iz više smjerova"
+  if (kind === "two") return ", u oba smjera"
+  return ""
 }
 
 /** Lede paragraph under the title. */
@@ -160,22 +152,25 @@ export function stopTitle(data: StopPageData): string {
 }
 
 /** "tramvaj" / "autobus" for one line's row. */
-export function lineModeNoun(line: StopLine): string {
+export function lineModeNoun(line: Pick<StopLine, "mode">): string {
   return line.mode === "tram" ? "tramvaj" : "autobus"
 }
 
 /** Headway for one line's row — peak range, else all-day interval. */
-export function lineHeadway(line: StopLine): string | null {
+export function lineHeadway(
+  line: Pick<StopLine, "peakRangeMin" | "allDayHeadwayMin">
+): string | null {
   if (line.peakRangeMin) return `svakih ${rangeText(line.peakRangeMin)} min`
   if (line.allDayHeadwayMin != null) return `svakih ${Math.round(line.allDayHeadwayMin)} min`
   return null
 }
 
+const stanica = (n: number) => `${n} ${plural(n, "stanicu", "stanice", "stanica")}`
+
 /** Doseg hook + lede, templated from the real 15/30/45 station counts. */
-export function dosegCopy(data: StopPageData): { hook: string; lede: string } | null {
+export function dosegCopy(data: Pick<StopPageData, "reach">): { hook: string; lede: string } | null {
   const r = data.reach
   if (!r) return null
-  const stanica = (n: number) => `${n} ${plural(n, "stanicu", "stanice", "stanica")}`
   return {
     hook: `Za pola sata dosegneš ${stanica(r.stations30)}.`,
     lede: `Odavde javnim prijevozom i pješice za 15 minuta dosegneš ${stanica(

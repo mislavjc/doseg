@@ -47,7 +47,7 @@ function currentNow(): Now {
 function mergedHours(dirs: HourRow[][]): number[] {
   const hours = new Set<number>()
   for (const dir of dirs) for (const row of dir) hours.add(row.hour)
-  return [...hours].sort((a, b) => a - b)
+  return [...hours].toSorted((a, b) => a - b)
 }
 
 function MinuteCell({
@@ -71,6 +71,7 @@ function MinuteCell({
         if (now && t === nextDep) {
           return (
             <span
+              // oxlint-disable-next-line react/no-array-index-key -- a minute can repeat within an hour; position is the identity
               key={i}
               className="bg-zg-blue px-1.5 py-px font-mono text-label font-bold text-white"
             >
@@ -81,6 +82,7 @@ function MinuteCell({
         const past = now !== null && t < now.serviceMin
         return (
           <span
+            // oxlint-disable-next-line react/no-array-index-key -- a minute can repeat within an hour; position is the identity
             key={i}
             className={cn(
               "font-mono text-label",
@@ -168,6 +170,7 @@ function DayTable({
             </span>
             {rows.map((dir, di) => (
               <span
+                // oxlint-disable-next-line react/no-array-index-key -- the index is the direction, the column's identity
                 key={di}
                 className={cn(
                   "min-w-0 flex-1",

@@ -24,7 +24,8 @@ import {
  * a client Timeline adds search + line/stop filtering.
  */
 
-const read = <T,>(p: string): T => JSON.parse(readFileSync(join(process.cwd(), "data", "promjene", p), "utf8"))
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters, typescript/no-unsafe-type-assertion -- committed pipeline output under data/promjene; its shapes are declared in ./lib
+const read = <T,>(p: string): T => JSON.parse(readFileSync(join(process.cwd(), "data", "promjene", p), "utf8")) as T
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 // ~ marker: the date is an approximate Wayback timestamp, not a body-read effective date.
 const approx = (c: Cand) => !c.datePrecise && c.source === "wayback"
@@ -39,11 +40,15 @@ export const metadata: Metadata = {
  * client Timeline can search and filter. Counts are derived from the rendered
  * set so the funnel sentence and year tallies always match the list. */
 function buildModel(data: Data, cand: Candidates): TimelineModel {
-  const index = read<Record<string, Record<string, Stat>>>("geom/index.json") // id → { line: stat }
-  const geoms: Record<string, Geom> = {}
-  for (const id in index) for (const line in index[id]) geoms[`${id}-${line}`] = read<Geom>(`geom/${id}-${line}.json`)
+  // id → { line: stat }
+  const index = read<Record<string, Record<string, Stat>>>("geom/index.json")
+  const geoms = new Map<string, Geom>()
+  for (const id in index) for (const line in index[id]) geoms.set(`${id}-${line}`, read<Geom>(`geom/${id}-${line}.json`))
   const mapsFor = (id: string): MapEntryData[] =>
-    Object.keys(index[id] ?? {}).map((line) => ({ line, geom: geoms[`${id}-${line}`], stat: index[id][line] })).filter((m) => m.geom)
+    Object.entries(index[id] ?? {}).flatMap(([line, stat]) => {
+      const geom = geoms.get(`${id}-${line}`)
+      return geom ? [{ line, geom, stat }] : []
+    })
 
   const entryById = new Map(data.entries.map((e) => [entryId(e), e]))
   const curated: FeaturedItem[] = data.entries.map((e) => {
@@ -54,7 +59,7 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
     return { kind: "featured", id, date: e.date, approxDate: false, category, mode: e.mode, lines: e.lines, title: e.title, summary: e.summary, source: e.source, removed: category === "ukinuta", successor: e.successor, maps: mapsFor(id) }
   })
   const autoFeatured: FeaturedItem[] = cand.candidates
-    .filter((c) => c.listWorthy && c.date && index[c.id] && !entryById.has(c.id))
+    .filter((c) => c.listWorthy && !!c.date && Object.hasOwn(index, c.id) && !entryById.has(c.id))
     .map((c) => {
       // Eyebrow shows the line(s) we actually mapped (not every line in a multi-line
       // announcement). Title uses the body-grounded displayTitle (honest about partial /
@@ -72,7 +77,7 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
   const featured = [...curated, ...autoFeatured]
   const featuredIds = new Set(featured.map((f) => f.id))
 
-  const rows = cand.candidates.filter((c) => c.listWorthy && c.date && !featuredIds.has(c.id))
+  const rows = cand.candidates.filter((c) => c.listWorthy && !!c.date && !featuredIds.has(c.id))
   const lineRows: LineRowItem[] = rows.filter((c) => c.category !== "stajalište").map((c) => ({
     kind: "linerow", id: c.id, date: c.date!, approxDate: approx(c), category: c.category, lines: c.lines, title: c.displayTitle ?? c.title, url: c.url, removed: c.category === "ukinuta",
   }))
@@ -88,7 +93,7 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
   for (const it of stopRows) ensure(it.date.slice(0, 4)).stop.push(it)
 
   const years: YearGroup[] = [...byYear.entries()]
-    .sort((a, b) => b[0].localeCompare(a[0]))
+    .toSorted((a, b) => b[0].localeCompare(a[0]))
     .map(([year, g]) => {
       g.line.sort((a, b) => b.date.localeCompare(a.date))
       g.stop.sort((a, b) => b.date.localeCompare(a.date))
@@ -104,6 +109,8 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
 
 const lineSw = (color: string, dash?: string) => <svg width={30} height={10} aria-hidden><line x1={3} y1={5} x2={27} y2={5} stroke={color} strokeWidth={4} strokeLinecap="round" strokeDasharray={dash} /></svg>
 
+const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria-hidden><circle cx={7} cy={7} r={fill === "#fff" ? 4 : 4.5} fill={fill} stroke={stroke} strokeWidth={fill === "#fff" ? 2 : 1.5} /></svg>
+
 const Strong = ({ children }: { children: React.ReactNode }) => <span style={{ color: INK, fontWeight: 500 }}>{children}</span>
 
 export default function Page() {
@@ -113,7 +120,6 @@ export default function Page() {
   const { total, line, stop, maps } = model.counts
   const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
 
-  const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria-hidden><circle cx={7} cy={7} r={fill === "#fff" ? 4 : 4.5} fill={fill} stroke={stroke} strokeWidth={fill === "#fff" ? 2 : 1.5} /></svg>
   const legendItems: [React.ReactNode, string][] = [
     [lineSw(BLUE), "trasa danas"], [lineSw(OLD, "0.1 5.2"), "prijašnja trasa"],
     [dotSw(BLUE, "#fff"), "novo stajalište"], [dotSw("#fff", OLD), "ukinuto stajalište"], [dotSw("#fff", KEPT), "stajalište na trasi"],
@@ -126,8 +132,8 @@ export default function Page() {
     <div style={{ width: "100%", maxWidth: 556, marginTop: 4, border: `1px solid ${HAIR}`, boxSizing: "border-box", padding: "15px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
       <span style={{ fontFamily: MONO, fontSize: 12, color: FAINT }}>kako čitati kartu</span>
       <div className="pr-legend-grid" style={{ display: "grid", gridTemplateColumns: "max-content max-content", justifyContent: "start", columnGap: 40, rowGap: 11 }}>
-        {legendItems.map(([icon, label], i) => (
-          <span key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        {legendItems.map(([icon, label]) => (
+          <span key={label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ display: "flex", width: 26, justifyContent: "center", alignItems: "center" }}>{icon}</span>
             <span style={{ fontFamily: MONO, fontSize: 12, color: INK }}>{label}</span>
           </span>

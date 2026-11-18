@@ -80,7 +80,7 @@ function KvartHeroVariant({
         alt={`Karta kvarta ${data.name} u Zagrebu`}
         variant={variant}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -160,7 +160,7 @@ export function Naslov({ data }: { data: KvartData }) {
       </Hook>
       <Body className="mt-1 text-ink-muted">
         {data.rank}. od {data.total} po povezanosti javnim prijevozom
-        {data.population ? ` · ${data.population.toLocaleString("hr")} stanovnika` : ""}
+        {data.population !== null && data.population !== 0 ? ` · ${data.population.toLocaleString("hr")} stanovnika` : ""}
       </Body>
     </>
   )
@@ -495,7 +495,7 @@ export function Promjene({ data }: { data: KvartData }) {
 // ── FAQ + JSON-LD ────────────────────────────────────────────────────────────
 
 export function buildFaq(data: KvartData): FaqItem[] {
-  const top = data.commute[0]
+  const top = data.commute.at(0)
   const tram = data.lines.filter((l) => l.mode === "tram").map((l) => l.broj)
   const bus = data.lines.filter((l) => l.mode === "bus").map((l) => l.broj)
   // Only name the modes the kvart actually has — gluing an empty list left a

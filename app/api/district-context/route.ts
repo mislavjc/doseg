@@ -1,10 +1,11 @@
-import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { NextRequest } from "next/server"
+import { z } from "zod"
 
 import { jsonResponse } from "@/lib/api-response"
 import { loadScores } from "@/lib/district-scores"
 import { pointInRing, type Ring } from "@/lib/geo"
+import { readJsonCached } from "@/lib/page-data"
 
 /**
  * Origin → district context for the map sidebar (map redesign §4 stats CTA):
@@ -28,9 +29,10 @@ let cache: {
 
 function loadDistricts() {
   if (cache) return cache
-  const geo = JSON.parse(
-    readFileSync(join(process.cwd(), "data/districts.geojson"), "utf-8")
-  ) as { features: DistrictFeature[] }
+  const geo = readJsonCached<{ features: DistrictFeature[] }>(
+    join(process.cwd(), "data/districts.geojson")
+  )
+  if (!geo) throw new Error("data/districts.geojson missing or malformed")
   // Day-filtered scores (same as the kvart pages), not the pooled legacy file.
   const districts = loadScores()?.districts ?? []
   cache = {
@@ -63,14 +65,23 @@ function districtTouchesReach(d: DistrictFeature, reachRing: Ring) {
   return false
 }
 
+const RequestBody = z.object({
+  origin: z.object({ lat: z.number(), lon: z.number() }).optional(),
+  rings: z.array(z.array(z.tuple([z.number(), z.number()]))).optional(),
+})
+
 export async function POST(request: NextRequest) {
-  let body: { origin?: { lat: number; lon: number }; rings?: Ring[] }
+  let json: unknown
   try {
-    body = await request.json()
+    json = await request.json()
   } catch {
     return Response.json({ error: "invalid JSON" }, { status: 400 })
   }
-  const { origin, rings } = body
+  const body = RequestBody.safeParse(json)
+  if (!body.success) {
+    return Response.json({ error: "missing origin" }, { status: 400 })
+  }
+  const { origin, rings } = body.data
   if (
     !origin ||
     !Number.isFinite(origin.lat) ||
@@ -89,7 +100,7 @@ export async function POST(request: NextRequest) {
     : null
 
   let districtsInReach = 0
-  if (rings?.length) {
+  if (rings !== undefined && rings.length > 0) {
     districtsInReach = features.filter((d) =>
       rings.some((ring) => districtTouchesReach(d, ring))
     ).length

@@ -4,10 +4,14 @@ import { join } from "node:path"
 
 // Editorial tokens (globals.css). Satori can't resolve CSS vars, so the
 // values are mirrored here. Keep in sync with the :root block.
-const GROUND = "#ffffff" // --ground
-const INK = "#0a0a0a" // --ink
-const ZG_BLUE = "#0e51c9" // --zg-blue
-const NAVY = "#0e3fb0" // --navy
+// --ground
+const GROUND = "#ffffff"
+// --ink
+const INK = "#0a0a0a"
+// --zg-blue
+const ZG_BLUE = "#0e51c9"
+// --navy
+const NAVY = "#0e3fb0"
 
 const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
 
@@ -83,7 +87,7 @@ function OgCard({
         overflow: "hidden",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src={tramSrc}
         alt=""

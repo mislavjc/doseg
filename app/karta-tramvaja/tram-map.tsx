@@ -111,10 +111,12 @@ const LABEL_POSITIONS: Record<string, LabelLayout> = {
   "studentski-centar":  { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
   "vodnikova":          { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
   "botanicki-vrt":      { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
-  "glavni-kolodvor":    { dx: 0,   dy: -16, anchor: "middle" }, // above, to avoid botanicki-vrt collision
+  // above, to avoid botanicki-vrt collision
+  "glavni-kolodvor":    { dx: 0,   dy: -16, anchor: "middle" },
   "branimir-centar":    { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
   "autobusni-kolodvor": { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
-  "drziceva":           { dx: 0,   dy: -16, anchor: "middle" }, // above, lines go south from here
+  // above, lines go south from here
+  "drziceva":           { dx: 0,   dy: -16, anchor: "middle" },
   "heinzelova":         { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
   "getaldic":           { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
   "zitnjak":            { dx: 4,   dy: 16, anchor: "start", rotate: 45 },
@@ -315,9 +317,9 @@ const SAVA_PATH = "M -10 590 C 150 590, 250 600, 400 598 S 620 588, 820 593 S 10
 function MapSvgSegments({ activeLine }: { activeLine: string | null }) {
   return (
     <g>
-      {allSegments.map((seg, i) => (
+      {allSegments.map((seg) => (
         <line
-          key={i}
+          key={`${seg.line}-${seg.x1}-${seg.y1}-${seg.x2}-${seg.y2}`}
           x1={seg.x1} y1={seg.y1} x2={seg.x2} y2={seg.y2}
           stroke={seg.color} strokeWidth={LINE_W} strokeLinecap="round"
           opacity={activeLine ? (seg.line === activeLine ? 1 : 0.1) : 1}
@@ -378,7 +380,7 @@ function StationLabels({ activeLine }: { activeLine: string | null }) {
             className="pointer-events-none select-none transition-opacity duration-200"
             style={{ paintOrder: "stroke fill" }}
             stroke="white" strokeWidth={3} strokeLinejoin="round"
-            {...(lp.rotate ? { transform: `rotate(${lp.rotate} ${tx} ${ty})` } : {})}
+            {...(lp.rotate !== undefined && lp.rotate !== 0 ? { transform: `rotate(${lp.rotate} ${tx} ${ty})` } : {})}
           >
             {s.name}
           </text>
@@ -408,7 +410,7 @@ function usePanZoom() {
   const pinchDist = useRef<number | null>(null), dragStart = useRef<{ x: number; y: number } | null>(null)
 
   const onDown = useCallback((e: React.PointerEvent) => {
-    if ((e.target as Element).closest("[data-ui]")) return
+    if (e.target instanceof Element && e.target.closest("[data-ui]")) return
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     dragStart.current = { x: e.clientX, y: e.clientY }
     containerRef.current?.setPointerCapture(e.pointerId)
@@ -439,7 +441,8 @@ function usePanZoom() {
     return ds && Math.hypot(e.clientX - ds.x, e.clientY - ds.y) < 4
   }, [])
 
-  useEffect(() => { // passive: false required to prevent page scroll
+  // passive: false required to prevent page scroll
+  useEffect(() => {
     const el = containerRef.current
     if (!el) return
     const handler = (e: WheelEvent) => {
@@ -509,7 +512,7 @@ export function TramMap() {
       style={{ touchAction: "none" }}
       onPointerDown={onDown} onPointerMove={onMove}
       onPointerUp={(e) => { if (onUp(e)) setActiveStop(null) }}
-      onPointerCancel={onUp}
+      onPointerCancel={(e) => { onUp(e) }}
     >
       <MapSvg view={view} activeLine={activeLine} activeStop={activeStop} hoverStop={hoverStop} onHover={setHoverStop} onSelect={(id) => setActiveStop((p) => (p === id ? null : id))} />
       <header data-ui className="island island-compact absolute top-4 left-4 z-10 flex items-center gap-3">

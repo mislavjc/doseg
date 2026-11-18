@@ -92,7 +92,7 @@ export default function StaniceIndexPage() {
   const present = HR_LETTERS.filter((L) => groups.has(L))
   const extra = [...groups.keys()]
     .filter((k) => !(HR_LETTERS as readonly string[]).includes(k))
-    .sort()
+    .toSorted()
   const letters = [...present, ...extra]
 
   // JSON-LD order = the on-page order, derived from the already-sorted buckets.

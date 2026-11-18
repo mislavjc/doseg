@@ -107,7 +107,7 @@ export function peakRange(data: LinePageData): [number, number] | null {
   const gaps = deps
     .slice(1)
     .map((t, i) => t - deps[i])
-    .sort((a, b) => a - b)
+    .toSorted((a, b) => a - b)
   const lo = Math.round(gaps[Math.floor(gaps.length * 0.2)])
   const hi = Math.round(gaps[Math.floor(gaps.length * 0.8)])
   return [lo, hi]
@@ -148,7 +148,7 @@ export function serviceStatus(data: LinePageData): ServiceStatus {
 
 /** First/last departure (minutes-of-day) across the given day rows, or null. */
 function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
-  const mins = rows.flatMap(flatDepartures)
+  const mins = rows.flatMap((dir) => flatDepartures(dir))
   return mins.length > 0 ? [Math.min(...mins), Math.max(...mins)] : null
 }
 
@@ -168,7 +168,7 @@ export function serviceHistogram(data: LinePageData): number[] {
       best = dir
     }
   }
-  const hist = new Array<number>(24).fill(0)
+  const hist = Array.from({ length: 24 }, () => 0)
   for (const r of best) hist[r.hour % 24] += r.minutes.length
   return hist
 }

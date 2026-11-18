@@ -7,8 +7,8 @@ import { GET } from "./route"
  * catches the counts in /llms.txt drifting away from what the site publishes.
  */
 describe("GET /llms.txt", () => {
-  it("serves markdown as browser-readable text/plain", async () => {
-    const res = await GET()
+  it("serves markdown as browser-readable text/plain", () => {
+    const res = GET()
     expect(res.status).toBe(200)
     expect(res.headers.get("Content-Type")).toBe("text/plain; charset=utf-8")
     expect(res.headers.get("Cache-Control")).toBe("public, max-age=3600")
@@ -25,14 +25,14 @@ describe("GET /llms.txt", () => {
     const stops = loadStopIndex().stops.length
     const kvartovi = loadKvartIndex().length
 
-    const body = await (await GET()).text()
+    const body = await GET().text()
     expect(body).toContain(
       `${lines.toLocaleString("en-US")} lines, ${stops.toLocaleString("en-US")} stops, ${kvartovi} kvartovi`
     )
   })
 
   it("starts with the H1 the spec requires", async () => {
-    const body = await (await GET()).text()
+    const body = await GET().text()
     expect(body.startsWith("# Doseg\n")).toBe(true)
   })
 })

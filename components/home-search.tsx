@@ -99,13 +99,13 @@ function search(index: SearchIndex, rawQuery: string): Result[] {
   const q = norm(rawQuery.trim())
   if (!q) return []
 
-  if (/^\d+$/.test(q)) {
+  if (/^\d+$/u.test(q)) {
     // Digits — a line number lookup, exact broj first.
     return index.lines
       .filter((l) => l.broj.startsWith(q))
-      .sort((a, b) => a.broj.length - b.broj.length || Number(a.broj) - Number(b.broj))
+      .toSorted((a, b) => a.broj.length - b.broj.length || Number(a.broj) - Number(b.broj))
       .slice(0, MAX_RESULTS)
-      .map(lineResult)
+      .map((l) => lineResult(l))
   }
 
   // Text — alias targets first (e.g. "kvatrić" means Kvaternikov trg), then
@@ -142,11 +142,17 @@ function search(index: SearchIndex, rawQuery: string): Result[] {
 
 // ── Address lookup (baked DGU index, /api/adrese) ─────────────────────────────
 
+/** Same-origin API body, typed by the payload type its route exports. */
+async function readJson<T>(res: Response): Promise<T> {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- same-origin route; its exported payload type is the contract
+  return (await res.json()) as T
+}
+
 async function geocode(query: string): Promise<Result[]> {
   try {
     const res = await fetch(`/api/adrese?${new URLSearchParams({ q: query })}`)
     if (!res.ok) return []
-    const data = (await res.json()) as { hits?: AdresaHit[] }
+    const data = await readJson<{ hits?: AdresaHit[] }>(res)
     return (data.hits ?? []).slice(0, ADDR_SLOTS).map((h) => ({
       href: `/adresa/${h.slug}`,
       broj: null,
@@ -182,7 +188,7 @@ function useHomeSearch() {
 
   const loadIndex = () => {
     indexPromiseRef.current ??= fetch("/api/search-index")
-      .then((res) => (res.ok ? (res.json() as Promise<SearchIndexPayload>) : null))
+      .then((res) => (res.ok ? readJson<SearchIndexPayload>(res) : null))
       .then((data) => (indexRef.current = data && buildIndex(data)))
       .catch(() => null)
     return indexPromiseRef.current
@@ -207,9 +213,9 @@ function useHomeSearch() {
         addrRef.current = addrs
         applyResults()
       }
-      const next = addrQueued.current
+      const queued = addrQueued.current
       addrQueued.current = null
-      if (next && next !== q) fetchAddrs(next)
+      if (queued && queued !== q) fetchAddrs(queued)
     })
   }
 
@@ -228,7 +234,7 @@ function useHomeSearch() {
 
     // Addresses: text-ish queries only (digits are line lookups).
     const q = value.trim()
-    if (/^\d+$/.test(q) || q.length < ADDR_MIN_CHARS) {
+    if (/^\d+$/u.test(q) || q.length < ADDR_MIN_CHARS) {
       addrQueued.current = null
       addrRef.current = []
       applyResults()
@@ -279,9 +285,8 @@ export function HomeSearch() {
 
   /** Top-result action shared by the traži button and the Enter fallback. */
   const goTop = () => {
-    const top = results[0]
-    if (!top) return false
-    router.push(top.href)
+    if (results.length === 0) return false
+    router.push(results[0].href)
     return true
   }
 
@@ -291,7 +296,9 @@ export function HomeSearch() {
       mode="none"
       autoHighlight
       onValueChange={runSearch}
-      onItemHighlighted={(item) => (highlightedRef.current = item)}
+      onItemHighlighted={(item) => {
+        highlightedRef.current = item
+      }}
     >
       {/* Warm the index on approach (hover/touch) so it's usually resolved
           before the first keystroke; onFocus covers keyboard-only users. */}

@@ -131,13 +131,14 @@ function bajsHook(stations: NearestBajs[], nearestStop?: NearbyStop) {
 }
 
 /** "Škola na minutu, park na četiri, bolnica na devet." — sorted by distance. */
+const minutesWord = (n: number) => (n === 1 ? "minutu" : numberWordF(n))
+
 function okolinaHook(pois: NearestPoi[]) {
-  const t = (n: number) => (n === 1 ? "minutu" : numberWordF(n))
   return (
     pois
       .map((p, i) => {
         const label = POI_TITLE[p.key]
-        return `${i === 0 ? label : label.toLowerCase()} na ${t(p.walkMin)}`
+        return `${i === 0 ? label : label.toLowerCase()} na ${minutesWord(p.walkMin)}`
       })
       .join(", ") + "."
   )
@@ -157,7 +158,7 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
   // Up to 4 facts, hairline rows of 2 — each entry renders only when its data
   // exists, so thin addresses get a shorter band, never empty cells.
   const cells = [
-    nearest && {
+    nearest !== undefined && {
       key: "stanica",
       icon: IconMapPin,
       value: `${nearest.name} · ${nearest.distM} m`,
@@ -169,22 +170,21 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
       value: `svakih ~${Math.round(minPeak)} min`,
       label: "najčešća linija u špici",
     },
-    data.firstDeparture &&
-      data.lastDeparture && {
-        key: "polasci",
-        icon: IconMoon,
-        value: `${data.firstDeparture} → ${data.lastDeparture}`,
-        label: data.windowStop
-          ? `prvi i zadnji polazak · ${data.windowStop}`
-          : "prvi i zadnji polazak",
-      },
+    Boolean(data.firstDeparture && data.lastDeparture) && {
+      key: "polasci",
+      icon: IconMoon,
+      value: `${data.firstDeparture} → ${data.lastDeparture}`,
+      label: data.windowStop
+        ? `prvi i zadnji polazak · ${data.windowStop}`
+        : "prvi i zadnji polazak",
+    },
     lineParts.length > 0 && {
       key: "linije",
       icon: IconBus,
       value: lineParts.join(" + "),
       label: "linije na 5 min hoda",
     },
-  ].filter((c) => !!c)
+  ].filter((c) => c !== false)
   if (cells.length === 0) return null
 
   const rows = []
@@ -195,8 +195,8 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
       className="pb-0 pt-10 sm:pb-0"
       innerClassName="flex flex-col divide-y divide-hairline border-y border-hairline"
     >
-      {rows.map((row, i) => (
-        <div key={i} className="flex flex-col gap-5 py-4 sm:flex-row sm:gap-10">
+      {rows.map((row) => (
+        <div key={row[0].key} className="flex flex-col gap-5 py-4 sm:flex-row sm:gap-10">
           {row.map((c) => (
             <LedgerCell key={c.key} icon={c.icon} value={c.value} label={c.label} />
           ))}
@@ -359,7 +359,7 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
         <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
           {img && (
             <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* oxlint-disable-next-line nextjs/no-img-element */}
               <img
                 src="/hero-zagreb.png"
                 alt=""
@@ -406,7 +406,7 @@ export default async function AdresaPage({ params }: Params) {
   const cityAvgM = (scores && computeWalk(scores)?.avg) ?? null
   const withPeak = (data.lines ?? [])
     .filter((l): l is NearbyLine & { peakMin: number } => !l.isNight && l.peakMin !== null)
-    .sort((a, b) => a.peakMin - b.peakMin)
+    .toSorted((a, b) => a.peakMin - b.peakMin)
   const minPeak = withPeak[0]?.peakMin ?? null
   const pois = data.found ? nearestPois(adresa.lon, adresa.lat) : []
 

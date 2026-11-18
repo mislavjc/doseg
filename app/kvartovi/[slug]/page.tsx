@@ -40,7 +40,7 @@ function notableStopsInKvart(kvart: string): KvartStop[] {
     }
   }
   return [...byName.values()]
-    .sort((a, b) => b.lineCount - a.lineCount)
+    .toSorted((a, b) => b.lineCount - a.lineCount)
     .slice(0, 12)
 }
 

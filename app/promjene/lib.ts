@@ -45,7 +45,7 @@ export const shortDate = (iso: string) => { const [y, m, d] = iso.split("-").map
 export const dateLabel = (iso: string, approx: boolean) => (approx ? "~" : "") + shortDate(iso)
 /** "YYYY-MM" → "ožujak 2025." for ledger month sub-headers. */
 export const monthLabel = (ym: string) => { const [y, m] = ym.split("-").map(Number); return `${MJ_NOM[m - 1]} ${y}.` }
-export const idOf = (url: string) => { const m = url.match(/[?&]id=(\d+)/) ?? url.match(/\/(\d+)\/?$/); return m ? m[1] : url }
+export const idOf = (url: string) => { const m = url.match(/[?&]id=(\d+)/u) ?? url.match(/\/(\d+)\/?$/u); return m ? m[1] : url }
 /** The geom/dedup key for a curated entry: its ZET notice id. Taken explicitly when
  * given (some source URLs point at an archived listing that lacks the id). This is the
  * join key between entries.json, geom/<id>-<line>.json, and the page's index lookup —
@@ -56,12 +56,12 @@ const WORDS = ["nula", "jedna", "dvije", "tri", "četiri", "pet", "šest", "seda
 /** Spell small counts (the funnel reads "Šest ima kartu…", not "6"). */
 export const hrWord = (n: number) => (n >= 0 && n < WORDS.length ? WORDS[n] : String(n))
 
-export const isTram = (l: string) => /^\d+$/.test(l) && (+l <= 17 || (+l >= 31 && +l <= 34))
+export const isTram = (l: string) => /^\d+$/u.test(l) && (+l <= 17 || (+l >= 31 && +l <= 34))
 export const joinLines = (ls: string[]) => (ls.length <= 1 ? ls[0] ?? "" : `${ls.slice(0, -1).join(", ")} i ${ls.at(-1)}`)
 
 /** Expand the jarring GTFS abbreviation in endpoint labels ("Ivanja Reka-okret."
  * → "Ivanja Reka-okretište"). Only the unambiguous one. */
-export const expandStop = (s: string) => s.replaceAll(/okret\./gi, "okretište").replaceAll(/\bokr\./gi, "okretište")
+export const expandStop = (s: string) => s.replaceAll(/okret\./giu, "okretište").replaceAll(/\bokr\./giu, "okretište")
 
 /** entries.json uses plural kinds ("ukinute"); candidates use singular category
  * ("ukinuta"). Normalise to the candidate vocabulary for tally + styling. */
@@ -71,7 +71,7 @@ export const normCategory = (k: string): string => ({ ukinute: "ukinuta", produl
  * titles lack diacritics + casing, so generate from line numbers + category). */
 export function autoHeadline(lines: string[], category: string): string {
   if (lines.length === 0) return category === "nova" ? "Nova linija." : category === "ukinuta" ? "Ukinuta linija." : "Izmjena u mreži."
-  const single = lines.length === 1, trams = lines.every(isTram)
+  const single = lines.length === 1, trams = lines.every((l) => isTram(l))
   const noun = trams ? "Tramvaj" : "Autobus"
   if (category === "nova") return single ? `Nova ${trams ? "tramvajska" : "autobusna"} linija ${lines[0]}.` : `Nove linije ${joinLines(lines)}.`
   if (category === "ukinuta") return single ? `${noun} ${lines[0]} ukinut.` : `Ukinute linije ${joinLines(lines)}.`

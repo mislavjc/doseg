@@ -13,12 +13,17 @@ function parseDepartureTime(timeStr: string | null): number {
   return secondsOfDay()
 }
 
+function parseCoord(value: string | null): number {
+  // oxlint-disable-next-line unicorn/prefer-number-coercion -- Number("") is 0, parseFloat("") is NaN; the NaN is what rejects a missing coordinate
+  return Number.parseFloat(value ?? "")
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
-  const originLat = parseFloat(searchParams.get("originLat") || "")
-  const originLon = parseFloat(searchParams.get("originLon") || "")
-  const destLat = parseFloat(searchParams.get("destLat") || "")
-  const destLon = parseFloat(searchParams.get("destLon") || "")
+  const originLat = parseCoord(searchParams.get("originLat"))
+  const originLon = parseCoord(searchParams.get("originLon"))
+  const destLat = parseCoord(searchParams.get("destLat"))
+  const destLon = parseCoord(searchParams.get("destLon"))
 
   if (
     Number.isNaN(originLat) ||

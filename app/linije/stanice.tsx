@@ -105,6 +105,7 @@ function DirectionColumn({
       <ul>
         {direction.stops.map((stop, i) => (
           <StopRow
+            // oxlint-disable-next-line react/no-array-index-key -- stop names repeat on loop lines; position in the ordered route is the identity
             key={`${stop.name}-${i}`}
             stop={stop}
             newTrams={newTramsPerStop[i]}
@@ -119,10 +120,12 @@ function DirectionColumn({
   )
 }
 
+const NO_SLUGS: Record<string, string> = {}
+
 export function Stanice({
   directions,
   terminalChips,
-  stopSlugs = {},
+  stopSlugs = NO_SLUGS,
 }: {
   directions: LineDirection[]
   /** Fallback chip per direction's end terminal (e.g. "bus 220 · 221"). */

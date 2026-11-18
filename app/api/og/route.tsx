@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { loadScores } from "@/lib/district-scores"
 import { loadLineData, loadLineIndex } from "@/lib/line-data"
+import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopHeroMeta, loadStopIndex } from "@/lib/stop-data"
 
 import { renderOgCard } from "./card"
@@ -22,12 +22,11 @@ let cachedGeoJSON: DistrictFeature[] | null = null
 
 function getDistrictGeoJSON(): DistrictFeature[] {
   if (cachedGeoJSON) return cachedGeoJSON
-  const raw = readFileSync(
-    join(process.cwd(), "data/districts.geojson"),
-    "utf8"
+  const parsed = readJsonCached<{ features: DistrictFeature[] }>(
+    join(process.cwd(), "data/districts.geojson")
   )
-  const parsed = JSON.parse(raw)
-  cachedGeoJSON = parsed.features as DistrictFeature[]
+  if (!parsed) throw new Error("data/districts.geojson missing or malformed")
+  cachedGeoJSON = parsed.features
   return cachedGeoJSON
 }
 
@@ -192,7 +191,7 @@ export async function GET(request: Request) {
     const peak = line.stats.peakHeadwayMin
     return renderOgCard({
       headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,
-      sub: peak
+      sub: peak !== null && peak !== 0
         ? `vozni red · u špici svakih ${Math.round(peak)} min`
         : "vozni red i stanice",
     })
@@ -211,8 +210,8 @@ export async function GET(request: Request) {
   }
 
   const hasCoords = latStr && lonStr
-  const lat = hasCoords ? parseFloat(latStr) : NaN
-  const lon = hasCoords ? parseFloat(lonStr) : NaN
+  // oxlint-disable-next-line unicorn/prefer-number-coercion -- shared OG links may carry loose coords ("45.81,"); parseFloat keeps accepting them where Number() would 400
+  const [lat, lon] = hasCoords ? [parseFloat(latStr), parseFloat(lonStr)] : [NaN, NaN]
 
   if (hasCoords && (Number.isNaN(lat) || Number.isNaN(lon))) {
     return new Response("Invalid coordinates", { status: 400 })

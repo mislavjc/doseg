@@ -83,11 +83,11 @@ export function LineBadges({
 }) {
   return (
     <g className="pointer-events-none">
-      {allBadges.map((badge, i) => {
-        const dimmed = activeLine && badge.lineNumber !== activeLine
+      {allBadges.map((badge) => {
+        const dimmed = !!activeLine && badge.lineNumber !== activeLine
         return (
           <g
-            key={`${badge.lineNumber}-${i}`}
+            key={`${badge.lineNumber}-${badge.x}-${badge.y}`}
             transform={`translate(${badge.x}, ${badge.y}) rotate(${badge.angle})`}
             opacity={dimmed ? 0.1 : 1}
             className="transition-opacity duration-200"

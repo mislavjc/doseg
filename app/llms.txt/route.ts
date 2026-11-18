@@ -16,7 +16,7 @@ import { loadStopIndex } from "@/lib/stop-data"
  * /api/open-data is serving from the same directory. One render an hour is
  * cheaper than that inconsistency.
  */
-export async function GET() {
+export function GET() {
   const lines = loadLineIndex()
   const stops = loadStopIndex()
   const kvartovi = loadKvartIndex()

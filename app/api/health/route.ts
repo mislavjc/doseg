@@ -1,4 +1,11 @@
+import { z } from "zod"
+
+// oxlint-disable-next-line typescript/prefer-nullish-coalescing -- an empty OTP_URL must also fall back to the default
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
+
+const FeedsResponse = z.object({
+  data: z.object({ feeds: z.array(z.unknown()).nullish() }).nullish(),
+})
 
 /**
  * Readiness probe. The deploy pipeline polls this for two minutes and rolls
@@ -17,8 +24,8 @@ export async function GET() {
       signal: AbortSignal.timeout(4000),
     })
     if (!res.ok) throw new Error(`OTP responded ${res.status}`)
-    const json = (await res.json()) as { data?: { feeds?: unknown[] } }
-    if (!json.data?.feeds?.length) throw new Error("OTP has no feed loaded")
+    const feeds = FeedsResponse.parse(await res.json()).data?.feeds
+    if (feeds == null || feeds.length === 0) throw new Error("OTP has no feed loaded")
     return Response.json({ status: "ok" })
   } catch (err) {
     // Log the detail server-side; keep the public body generic.

@@ -1,19 +1,44 @@
 import { NextResponse, type NextRequest } from "next/server"
+import { z } from "zod"
 
 const PHOTON_REVERSE = "https://photon.komoot.io/reverse"
 const NOMINATIM_REVERSE = "https://nominatim.openstreetmap.org/reverse"
 const ZAGREB_CENTER = { lat: 45.815, lon: 15.982 }
 const NEARBY_THRESHOLD = 0.35
 
-type PhotonFeature = {
-  properties: {
-    name?: string
-    street?: string
-    housenumber?: string
-    city?: string
-  }
-  geometry: { coordinates: [number, number] }
-}
+const PhotonFeatureSchema = z.object({
+  properties: z.object({
+    name: z.string().optional(),
+    street: z.string().optional(),
+    housenumber: z.string().optional(),
+    city: z.string().optional(),
+  }),
+  geometry: z.object({
+    coordinates: z.tuple([z.number(), z.number()]).rest(z.number()),
+  }),
+})
+
+type PhotonFeature = z.infer<typeof PhotonFeatureSchema>
+
+const PhotonResponse = z.object({
+  features: z.array(PhotonFeatureSchema).optional(),
+})
+
+const NominatimReverse = z.object({
+  display_name: z.string().optional(),
+  lat: z.string().optional(),
+  lon: z.string().optional(),
+  address: z
+    .object({
+      road: z.string().optional(),
+      house_number: z.string().optional(),
+      city: z.string().optional(),
+      town: z.string().optional(),
+      village: z.string().optional(),
+      suburb: z.string().optional(),
+    })
+    .optional(),
+})
 
 function isNearby(lat: number, lon: number) {
   return (
@@ -49,8 +74,8 @@ export async function GET(req: NextRequest) {
   }
 
   let displayName = await reversePhoton(lat, lon)
-  if (!displayName) displayName = await reverseNominatim(lat, lon)
-  if (!displayName) {
+  displayName ??= await reverseNominatim(lat, lon)
+  if (displayName === null || displayName === "") {
     displayName = `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`
   }
 
@@ -72,8 +97,7 @@ async function reversePhoton(lat: number, lon: number): Promise<string | null> {
       signal: AbortSignal.timeout(4000),
     })
     if (!res.ok) return null
-    const data = await res.json()
-    const f = data.features?.[0] as PhotonFeature | undefined
+    const f = PhotonResponse.parse(await res.json()).features?.[0]
     if (!f) return null
     const [flon, flat] = f.geometry.coordinates
     if (!isNearby(flat, flon)) return null
@@ -100,22 +124,10 @@ async function reverseNominatim(lat: number, lon: number): Promise<string | null
       signal: AbortSignal.timeout(4000),
     })
     if (!res.ok) return null
-    const item: {
-      display_name?: string
-      lat?: string
-      lon?: string
-      address?: {
-        road?: string
-        house_number?: string
-        city?: string
-        town?: string
-        village?: string
-        suburb?: string
-      }
-    } = await res.json()
+    const item = NominatimReverse.parse(await res.json())
     if (item.lat && item.lon) {
-      const la = parseFloat(item.lat)
-      const lo = parseFloat(item.lon)
+      const la = Number(item.lat)
+      const lo = Number(item.lon)
       if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo))
         return null
     }

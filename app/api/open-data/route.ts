@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
 
-export async function GET() {
+export function GET() {
   try {
     const data = readFileSync(
       join(getDataDir(), "district-scores.json"),

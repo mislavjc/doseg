@@ -29,9 +29,10 @@ interface IndexedStreet extends AdresaStreet {
 let indexed: IndexedStreet[] | null = null
 function loadIndex(): IndexedStreet[] {
   if (indexed && process.env.NODE_ENV === "production") return indexed
+  // oxlint-disable-next-line oxc/no-map-spread -- loadAdrese() objects are the shared page-data cache; mutating them would leak index fields into adresa pages
   indexed = loadAdrese().map((s) => {
     const nameNorm = norm(s.name)
-    return { ...s, nameNorm, words: nameNorm.split(/\s+/) }
+    return { ...s, nameNorm, words: nameNorm.split(/\s+/u) }
   })
   return indexed
 }
@@ -73,7 +74,19 @@ export interface AdresaHit {
 
 const MAX_HITS = 5
 
-export async function GET(request: Request) {
+function streetHit(street: IndexedStreet): AdresaHit {
+  const [, lat, lon] = centroid(street)
+  return {
+    label: street.name,
+    slug: adresaSlug(street),
+    lat,
+    lon,
+    kind: "ulica",
+    kvart: districtAt(lon, lat),
+  }
+}
+
+export function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const raw = searchParams.get("q")?.trim() ?? ""
   const q = norm(raw)
@@ -82,9 +95,9 @@ export async function GET(request: Request) {
 
   // Trailing house number ("savska 25", "ilica 5a") splits off; a digits-only
   // query is a line lookup, not an address — the client never sends one.
-  const tokens = q.split(/\s+/)
+  const tokens = q.split(/\s+/u)
   const last = tokens.at(-1)
-  const houseNum = /^\d+[a-z]?$/.test(last ?? "") ? last : null
+  const houseNum = /^\d+[a-z]?$/u.test(last ?? "") ? last : null
   const streetTokens = houseNum ? tokens.slice(0, -1) : tokens
   if (streetTokens.length === 0)
     return NextResponse.json({ hits: [] as AdresaHit[] })
@@ -92,19 +105,7 @@ export async function GET(request: Request) {
   const joined = streetTokens.join(" ")
   const matched = loadIndex()
     .filter((s) => matchesStreet(s, streetTokens))
-    .sort((a, b) => rank(a, joined) - rank(b, joined) || a.name.length - b.name.length)
-
-  const streetHit = (street: IndexedStreet): AdresaHit => {
-    const [, lat, lon] = centroid(street)
-    return {
-      label: street.name,
-      slug: adresaSlug(street),
-      lat,
-      lon,
-      kind: "ulica",
-      kvart: districtAt(lon, lat),
-    }
-  }
+    .toSorted((a, b) => rank(a, joined) - rank(b, joined) || a.name.length - b.name.length)
 
   const hits: AdresaHit[] = []
   for (const street of matched) {
@@ -113,7 +114,7 @@ export async function GET(request: Request) {
       // Exact number first, then prefix matches (2 → 2, 2a, 21…).
       const nums = street.addrs
         .filter(([hn]) => hn.startsWith(houseNum))
-        .sort(([a], [b]) => (a === houseNum ? -1 : b === houseNum ? 1 : 0))
+        .toSorted(([a], [b]) => (a === houseNum ? -1 : b === houseNum ? 1 : 0))
       for (const [hn, lat, lon] of nums) {
         if (hits.length >= MAX_HITS) break
         hits.push({

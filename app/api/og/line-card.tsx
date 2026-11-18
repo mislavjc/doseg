@@ -8,9 +8,12 @@ import type { LinePageData } from "@/lib/generated/LinePageData"
 import { loadHeroMeta } from "@/lib/line-data"
 
 // Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-const INK = "#0a0a0a" // --ink
-const INK_MUTED = "#6a7178" // --ink-muted
-const ZG_BLUE = "#0e51c9" // --zg-blue
+// --ink
+const INK = "#0a0a0a"
+// --ink-muted
+const INK_MUTED = "#6a7178"
+// --zg-blue
+const ZG_BLUE = "#0e51c9"
 
 const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
 
@@ -89,11 +92,11 @@ function MapWindow({ data }: { data: LinePageData }) {
         overflow: "hidden",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {routeSrc && <img src={routeSrc} alt="" style={MAP_LAYER} />}
     </div>
   )
@@ -103,7 +106,7 @@ function MapWindow({ data }: { data: LinePageData }) {
 function InfoBand({ data }: { data: LinePageData }) {
   const peak = data.stats.peakHeadwayMin
   const facts = [
-    peak ? `u špici svakih ${Math.round(peak)} min` : null,
+    peak !== null && peak !== 0 ? `u špici svakih ${Math.round(peak)} min` : null,
     `${clockTime(data.stats.firstDeparture)} - ${clockTime(data.stats.lastDeparture)}`,
   ]
     .filter(Boolean)

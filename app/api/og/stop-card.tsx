@@ -7,9 +7,12 @@ import type { LineHeroMeta } from "@/lib/line-data"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 
 // Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-const INK = "#0a0a0a" // --ink
-const INK_MUTED = "#6a7178" // --ink-muted
-const ZG_BLUE = "#0e51c9" // --zg-blue
+// --ink
+const INK = "#0a0a0a"
+// --ink-muted
+const INK_MUTED = "#6a7178"
+// --zg-blue
+const ZG_BLUE = "#0e51c9"
 
 const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
 
@@ -44,9 +47,9 @@ function MapWindow({ data }: { data: StopPageData }) {
     : null
   return (
     <div style={{ position: "relative", width: "1200px", height: `${MAP_H}px`, display: "flex", overflow: "hidden" }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
       {/* Stop marker + name, centred (crop is symmetric around the stop). */}
       <div

@@ -22,6 +22,11 @@ const BAN = "M21 12C21 16.9706 16.9706 21 12 21C9.51472 21 7.26472 19.9926 5.636
 type LonLat = [number, number]
 type Pt = { lat: number; lon: number; name: string }
 
+const near = (a: Pt, b: Pt) => {
+  const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111320
+  const dy = (a.lat - b.lat) * 110540
+  return Math.hypot(dx, dy) < 220
+}
 
 const fcLine = (coords: LonLat[]) => ({ type: "FeatureCollection" as const, features: [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: coords } }] })
 const fcPts = (pts: Pt[]) => ({ type: "FeatureCollection" as const, features: pts.map((p) => ({ type: "Feature" as const, properties: {}, geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] } })) })
@@ -32,11 +37,13 @@ function muteBasemap(map: maplibregl.Map) {
   if (map.getLayer("background")) map.setPaintProperty("background", "background-color", "#F6F7F9")
   for (const l of map.getStyle().layers ?? []) {
     try {
-      if (/poi|airport|housenum|aeroway|ferry/i.test(l.id)) { map.setLayoutProperty(l.id, "visibility", "none"); continue }
+      if (/poi|airport|housenum|aeroway|ferry/iu.test(l.id)) { map.setLayoutProperty(l.id, "visibility", "none"); continue }
       if (l.type === "symbol") { map.setPaintProperty(l.id, "text-opacity", 0.6); map.setPaintProperty(l.id, "icon-opacity", 0) }
       if (l.id === "water") map.setPaintProperty(l.id, "fill-color", "#E7EDF3")
-      if (/^(park|landcover|wood|grass|wetland)/i.test(l.id) && l.type === "fill") map.setPaintProperty(l.id, "fill-opacity", 0.5)
-    } catch { /* layer lacks that property — fine */ }
+      if (/^(park|landcover|wood|grass|wetland)/iu.test(l.id) && l.type === "fill") map.setPaintProperty(l.id, "fill-opacity", 0.5)
+    } catch {
+      // layer lacks that property, fine
+    }
   }
 }
 
@@ -130,11 +137,6 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       const cl = bounds.getCenter().lng
       // On loop lines the origin and terminus are the same stop, so the plain
       // origin pill would stack under the icon pill. Drop it when they coincide.
-      const near = (a: Pt, b: Pt) => {
-        const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111320
-        const dy = (a.lat - b.lat) * 110540
-        return Math.hypot(dx, dy) < 220
-      }
       if (mode === "removed") {
         endpointMarker(map, oldTip, "old", cl)
         if (!near(shared, oldTip)) endpointMarker(map, shared, "old-origin", cl)
@@ -154,7 +156,7 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       fit()
     })
 
-    const ro = new ResizeObserver(() => map.resize())
+    const ro = new ResizeObserver(() => { map.resize() })
     ro.observe(ref.current)
     return () => { ro.disconnect(); mapRef.current = null; map.remove() }
   }, [oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode, change, stopConnected])
@@ -163,8 +165,8 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
     <div role="img" aria-label={label} style={{ position: "relative", width: "100%", height: "clamp(360px, 44vw, 580px)", overflow: "hidden" }}>
       <div ref={ref} className="diffmap" style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 0 1px #E5E8EC, inset 0 0 60px rgba(15,23,42,.05)" }} />
       <MapTile className="absolute bottom-3 right-3 z-[2] flex flex-col">
-        <MapTileButton label="Približi kartu" onClick={() => mapRef.current?.zoomIn()} className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2">+</MapTileButton>
-        <MapTileButton label="Udalji kartu" onClick={() => mapRef.current?.zoomOut()} className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2">−</MapTileButton>
+        <MapTileButton label="Približi kartu" onClick={() => { mapRef.current?.zoomIn() }} className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2">+</MapTileButton>
+        <MapTileButton label="Udalji kartu" onClick={() => { mapRef.current?.zoomOut() }} className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2">−</MapTileButton>
       </MapTile>
     </div>
   )

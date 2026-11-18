@@ -249,7 +249,7 @@ export function buildFaq(data: LinePageData): FaqItem[] {
         ? `Radnim danom svakih ${range[0]} minuta u špici`
         : `Radnim danom svakih ${range[0]} do ${range[1]} minuta u špici`
     )
-    if (data.stats.avgHeadwayMin) {
+    if (data.stats.avgHeadwayMin !== null && data.stats.avgHeadwayMin !== 0) {
       freqParts.push(
         `a u prosjeku svakih ${Math.round(data.stats.avgHeadwayMin)} minuta tijekom dana`
       )
@@ -291,7 +291,7 @@ export function buildFaq(data: LinePageData): FaqItem[] {
       for (const c of crossings) {
         byStop.set(c.stopName, [...(byStop.get(c.stopName) ?? []), c.broj])
       }
-      const [stopName, trams] = [...byStop.entries()].sort(
+      const [stopName, trams] = [...byStop.entries()].toSorted(
         (a, b) => b[1].length - a[1].length
       )[0]
       parts.push(

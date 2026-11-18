@@ -29,7 +29,8 @@ type Feed = GeoJSON.FeatureCollection<GeoJSON.Point>
 const EMPTY: Feed = { type: "FeatureCollection", features: [] }
 
 /** The pannable world: the padded box the tiles were baked over. */
-const BOUNDS = meta.bounds as [number, number, number, number]
+const [WEST, SOUTH, EAST, NORTH] = meta.bounds
+const BOUNDS: [number, number, number, number] = [WEST, SOUTH, EAST, NORTH]
 
 const DITHER_STYLE: StyleSpecification = {
   version: 8,
@@ -58,7 +59,7 @@ function popupContent(p: Record<string, unknown>) {
   const docks = Number(p.docksAvailable ?? 0)
 
   const name = document.createElement("strong")
-  name.textContent = String(p.name ?? "")
+  name.textContent = typeof p.name === "string" ? p.name : ""
   const counts = document.createElement("span")
   counts.textContent =
     `${bikes} ${plural(bikes, "bajs", "bajsa", "bajsa")} · ` +
@@ -72,7 +73,8 @@ function popupContent(p: Record<string, unknown>) {
 function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
   map.on("mousemove", STATION_LAYER, (e) => {
     map.getCanvas().style.cursor = "pointer"
-    setStationHover(map, e.features?.[0]?.properties?.stationId)
+    const id: unknown = e.features?.[0]?.properties?.stationId
+    setStationHover(map, typeof id === "string" || typeof id === "number" ? id : undefined)
   })
   map.on("mouseleave", STATION_LAYER, () => {
     map.getCanvas().style.cursor = ""
@@ -81,11 +83,17 @@ function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
   map.on("click", STATION_LAYER, (e) => {
     const f = e.features?.[0]
     if (!f || f.geometry.type !== "Point") return
+    const [lng, lat] = f.geometry.coordinates
     popup
-      .setLngLat(f.geometry.coordinates.slice(0, 2) as [number, number])
+      .setLngLat([lng, lat])
       .setDOMContent(popupContent(f.properties ?? {}))
       .addTo(map)
   })
+}
+
+function quantile(vals: number[], p: number) {
+  const s = vals.toSorted((a, b) => a - b)
+  return s[Math.min(s.length - 1, Math.floor(s.length * p))]
 }
 
 /**
@@ -98,15 +106,11 @@ function openingBounds(data: Feed): maplibregl.LngLatBoundsLike {
   const pts = data.features.map((f) => f.geometry.coordinates)
   if (pts.length < 20) return BOUNDS
 
-  const at = (vals: number[], p: number) => {
-    const s = vals.sort((a, b) => a - b)
-    return s[Math.min(s.length - 1, Math.floor(s.length * p))]
-  }
   const lons = pts.map((p) => p[0])
   const lats = pts.map((p) => p[1])
   return [
-    [at(lons, 0.02), at(lats, 0.02)],
-    [at(lons, 0.98), at(lats, 0.98)],
+    [quantile(lons, 0.02), quantile(lats, 0.02)],
+    [quantile(lons, 0.98), quantile(lats, 0.98)],
   ]
 }
 
@@ -177,8 +181,7 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
     const map = mapRef.current
     if (!map || !data) return
     const apply = () => {
-      const src = map.getSource("stations") as maplibregl.GeoJSONSource | undefined
-      src?.setData(data)
+      void map.getSource<maplibregl.GeoJSONSource>("stations")?.setData(data)
     }
     // The source only exists once the load handler above has run, so its absence
     // is exactly the signal that we still have to wait for it.

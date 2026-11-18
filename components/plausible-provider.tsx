@@ -9,7 +9,7 @@ export function PlausibleProvider() {
   useEffect(() => {
     if (initialized) return
     initialized = true
-    import("@plausible-analytics/tracker").then(({ init }) => {
+    void import("@plausible-analytics/tracker").then(({ init }) => {
       init({ domain: SITE_DOMAIN })
     })
   }, [])

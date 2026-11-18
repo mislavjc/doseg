@@ -61,7 +61,7 @@ function LayerRow({
       >
         {label}
       </span>
-      {meta && (
+      {meta != null && (
         <span className="font-mono text-label text-ink-faint">{meta}</span>
       )}
     </button>

@@ -257,15 +257,8 @@ export function RouteBreak() {
   )
 }
 
-/** Half-height rail segments above/below a stop dot (mobile vertical route). */
-function Rail({
-  upper,
-  lower,
-}: {
-  upper: "solid" | "dashed" | "none"
-  lower: "solid" | "dashed" | "none"
-}) {
-  const seg = (kind: "solid" | "dashed", pos: "upper" | "lower") => (
+function railSeg(kind: "solid" | "dashed", pos: "upper" | "lower") {
+  return (
     <span
       className={cn(
         "absolute left-[5px]",
@@ -276,10 +269,20 @@ function Rail({
       )}
     />
   )
+}
+
+/** Half-height rail segments above/below a stop dot (mobile vertical route). */
+function Rail({
+  upper,
+  lower,
+}: {
+  upper: "solid" | "dashed" | "none"
+  lower: "solid" | "dashed" | "none"
+}) {
   return (
     <>
-      {upper !== "none" && seg(upper, "upper")}
-      {lower !== "none" && seg(lower, "lower")}
+      {upper !== "none" && railSeg(upper, "upper")}
+      {lower !== "none" && railSeg(lower, "lower")}
     </>
   )
 }

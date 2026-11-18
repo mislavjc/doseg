@@ -6,7 +6,7 @@ const LABEL_DARK = "#0f172a"
 const LABEL_LIGHT = "#fafaf9"
 
 /** Same grid positions as connectivity map; scores are static snapshot from district-scores. */
-export const ZAGREB_DISTRICTS_GRID = [
+const ZAGREB_DISTRICTS_GRID = [
   { id: "podsljeme", name: "Podsljeme", short: "POD", col: 2, row: 0, score: 13 },
   { id: "podsused-vrapce", name: "Podsused - Vrapče", short: "POV", col: 0, row: 1, score: 31 },
   { id: "crnomerec", name: "Črnomerec", short: "ČRN", col: 1, row: 1, score: 31 },

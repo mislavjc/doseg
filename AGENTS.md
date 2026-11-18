@@ -66,7 +66,7 @@ will embarrass you. Pluralisation goes through `plural()` in
 `app/statistika/editorial/primitives.tsx` is the kit every editorial page
 composes from: `EditorialShell`, `Section` (80px/56px vertical rhythm,
 article=620px / wide=840px columns), `Eyebrow`, `Hook`/`PageTitle`, `Body`,
-`BodyMuted`, `MonoLabel`, `MonoValue`, `Chip`, `Hairline`. The shared header
+`BodyMuted`, `MonoLabel`, `Chip`, `Hairline`. The shared header
 band is `editorial/hero.tsx` + `site-nav.tsx` (ASCII corner brackets);
 line pages use their own `app/linije/line-hero.tsx` (dithered route-corridor
 map with an SVG overlay). Reach for primitives before writing raw `<p
@@ -107,7 +107,7 @@ so check.
 
 ## Verification before pushing
 
-`bun run typecheck` and `bun run lint` must be clean (lint caps functions at
+`bun run typecheck`, `bun run lint` (oxlint) and `bun run knip` must be clean (lint caps functions at
 90 lines — split JSX into subcomponents). Rust: `cargo fmt -- --check` and
 `clippy` run in CI. `bun run build` statically generates all line pages, so
 it catches data/loader regressions. The dev server runs behind portless at

@@ -52,7 +52,7 @@ export function isBikeMode(otpMode: string): boolean {
  * strip, leg list, and map polylines all share them so each line is
  * traceable from sidebar to map. Walks stay grey.
  */
-export const LINE_PALETTE = [
+const LINE_PALETTE = [
   // zg-blue
   "#0e51c9",
   // rail green

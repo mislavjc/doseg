@@ -167,19 +167,6 @@ export function MonoLabel({
   )
 }
 
-/** Mono value — tabular figures, primary ink (scores, minutes, metres). */
-export function MonoValue({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn("font-mono text-label tabular-nums text-ink", className)}
-      {...props}
-    />
-  )
-}
-
 /** Methodology / metadata tag — mono 11px in a sharp light box. */
 export function Chip({ className, ...props }: ComponentPropsWithoutRef<"span">) {
   return (

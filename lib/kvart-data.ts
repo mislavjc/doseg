@@ -24,7 +24,7 @@ import { readJsonCached } from "@/lib/page-data"
  * left out of v1 rather than faked.
  */
 
-export { kvartSlug }
+
 
 export interface KvartIndexEntry {
   slug: string
@@ -37,14 +37,14 @@ export function loadKvartIndex(): KvartIndexEntry[] {
   return s.districts.map((d) => ({ slug: kvartSlug(d.name), name: d.name }))
 }
 
-export interface CommuteRow {
+interface CommuteRow {
   name: string
   slug: string
   min: number
   transfer: boolean
 }
 
-export interface KvartLine {
+interface KvartLine {
   broj: string
   mode: "tram" | "bus"
   isNight: boolean
@@ -54,14 +54,14 @@ export interface KvartLine {
 
 export type PoiKey = "hospital" | "school" | "park"
 
-export interface PoiCat {
+interface PoiCat {
   key: PoiKey
   count: number
   nearestName: string | null
   nearestKm: number | null
 }
 
-export interface KvartPromjena {
+interface KvartPromjena {
   id: string
   date: string
   kind: string
@@ -69,7 +69,7 @@ export interface KvartPromjena {
   url: string
 }
 
-export interface ScoreBar {
+interface ScoreBar {
   name: string
   score: number
   kind: "best" | "self" | "city" | "worst"

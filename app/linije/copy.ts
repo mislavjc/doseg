@@ -9,7 +9,7 @@ import type { LinePageData } from "@/lib/generated/LinePageData"
  * to avoid needing it.
  */
 
-export const MODE_NOUN: Record<LineMode, string> = {
+const MODE_NOUN: Record<LineMode, string> = {
   tram: "tramvaj",
   bus: "autobus",
 }

@@ -1,5 +1,5 @@
 /** Shared transit mode configuration. Single source of truth. */
-export const TRANSIT_MODES = {
+const TRANSIT_MODES = {
   WALK: { label: "Hodanje", color: "#94a3b8", speed: 5 },
   BIKE: { label: "BAJS", color: "#f59e0b", speed: 14 },
   BUS: { label: "Bus", color: "#2563eb", speed: 16 },

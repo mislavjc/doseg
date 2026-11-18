@@ -8,9 +8,9 @@
  */
 
 // Zagreb, for the local equirectangular projection
-export const REF_LAT = 45.8
-export const MX = 111320 * Math.cos((REF_LAT * Math.PI) / 180)
-export const MY = 110540
+const REF_LAT = 45.8
+const MX = 111320 * Math.cos((REF_LAT * Math.PI) / 180)
+const MY = 110540
 export type LonLat = [number, number]
 export const toM = ([lon, lat]: LonLat): [number, number] => [lon * MX, lat * MY]
 
@@ -25,7 +25,7 @@ export function ptSegM(p: [number, number], a: [number, number], b: [number, num
 export const lenM = (line: LonLat[]) => { let s = 0; for (let i = 1; i < line.length; i++) { const a = toM(line[i - 1]), b = toM(line[i]); s += Math.hypot(b[0] - a[0], b[1] - a[1]) } return s }
 
 /** Douglas–Peucker (lon/lat, tolerance in degrees). */
-export function dp(points: LonLat[], tol: number): LonLat[] {
+function dp(points: LonLat[], tol: number): LonLat[] {
   if (points.length <= 2) return points
   let maxD = 0, maxI = 0
   const a = points[0], b = points[points.length - 1]
@@ -36,7 +36,7 @@ export const simplify = (line: LonLat[]) => (line.length > 140 ? dp(line, 6e-5) 
 
 /** Closest point on a polyline — GTFS stops sit a few metres off the shape, so
  * snap each onto the rendered line for clean dots-on-the-route. */
-export function snap(p: LonLat, line: LonLat[]): LonLat {
+function snap(p: LonLat, line: LonLat[]): LonLat {
   if (line.length < 2) return p
   const P = toM(p)
   let best = p, bestD = Infinity

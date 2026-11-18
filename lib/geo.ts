@@ -1,5 +1,5 @@
 /** Precomputed geographic constants for Zagreb latitude (~45.8°) */
-export const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
+const COS_LAT = Math.cos((45.8 * Math.PI) / 180)
 export const KM_PER_DEG_LAT = 111.32
 export const KM_PER_DEG_LON = 111.32 * COS_LAT
 
@@ -85,7 +85,7 @@ export function pointInMultiPolygon(
 }
 
 /** Shoelace area of one ring in km², flat-earth projection at Zagreb latitude. */
-export function ringAreaKm2(ring: Ring): number {
+function ringAreaKm2(ring: Ring): number {
   let sum = 0
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
     sum += (ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1]) * KM_PER_DEG_LON * KM_PER_DEG_LAT
@@ -105,7 +105,7 @@ export function multiPolygonAreaKm2(coordinates: Ring[][]): number {
 }
 
 /** Shared walking pace (~4.5 km/h) for "N min hoda" copy across surfaces. */
-export const WALK_M_PER_MIN = 75
+const WALK_M_PER_MIN = 75
 
 /** Straight-line metres → whole walking minutes, never less than 1. */
 export function walkMin(distM: number): number {

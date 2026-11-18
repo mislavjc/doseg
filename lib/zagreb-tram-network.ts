@@ -21,7 +21,7 @@ export interface TramLine {
 
 // ---- Official ZET line-colour groups ----------------------------------------
 
-export const LINE_COLORS = {
+const LINE_COLORS = {
   blue: "#0072CE",
   darkGreen: "#00843D",
   yellow: "#FFB81C",

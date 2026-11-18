@@ -183,21 +183,6 @@ export function StatEyebrow({
 
 // --- Body copy ---
 
-export function StatBody({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"p">) {
-  return (
-    <p
-      className={cn(
-        "text-base leading-relaxed text-slate-600 dark:text-slate-400",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
 export function StatBodyLarge({
   className,
   ...props
@@ -299,33 +284,6 @@ export function StatKpiCaption({
   )
 }
 
-export function StatMetricValue({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn(
-        "font-sans text-3xl font-semibold tracking-tighter tabular-nums text-slate-900 sm:text-[28px] dark:text-slate-100",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-export function StatMetricHint({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn("text-xs text-slate-500 dark:text-slate-400", className)}
-      {...props}
-    />
-  )
-}
-
 // --- Insight callouts (network section pattern) ---
 
 export function StatInsight({
@@ -359,21 +317,3 @@ export function StatInsightBody({
 }
 
 // --- Dense card / list title (district rows, etc.) ---
-
-export function StatCardTitle({
-  className,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"h4">) {
-  return (
-    <h4
-      className={cn(
-        "font-sans text-lg leading-tight font-medium tracking-tight text-slate-900 sm:text-[22px] dark:text-slate-100",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </h4>
-  )
-}

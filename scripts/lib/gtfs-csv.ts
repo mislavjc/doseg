@@ -11,7 +11,7 @@
 import { createReadStream, readFileSync } from "node:fs"
 import { createInterface } from "node:readline"
 
-export function splitCsv(line: string): string[] {
+function splitCsv(line: string): string[] {
   const out: string[] = []
   let cur = "", q = false
   for (let i = 0; i < line.length; i++) {

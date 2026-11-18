@@ -7,7 +7,7 @@ const CACHE_TTL_MS = 30_000
 // Trip update types (existing)
 // ---------------------------------------------------------------------------
 
-export interface StopTimeRT {
+interface StopTimeRT {
   stopSequence: number
   /** Seconds, positive = late. */
   arrivalDelay: number

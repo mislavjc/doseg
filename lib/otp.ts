@@ -1,8 +1,4 @@
-import type { FeatureCollection } from "geojson"
-import type {
-  IsochroneResponse as RustIsochroneResponse,
-  RoutingOnlyResponse,
-} from "./generated"
+import type { IsochroneResponse as RustIsochroneResponse } from "./generated"
 import { responseJson } from "./json"
 
 interface IsochroneParams {
@@ -15,7 +11,6 @@ interface IsochroneParams {
 
 // Re-export Rust-generated types as the canonical source of truth
 export type IsochroneResponse = RustIsochroneResponse
-type IsochroneRoutingResponse = RoutingOnlyResponse
 
 /** The isochrone server rounds lat/lon to 3 decimals and departure time to
  * 5-minute buckets before computing, so requests inside the same bucket are
@@ -29,7 +24,6 @@ function snapTime(time: string): string {
   const mm = snapped % 60
   return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`
 }
-
 /** "Sada" = the actual current Zagreb wall-clock time. Sent explicitly even in
  * now-mode so the URL is an honest cache key — a time-less URL would pin
  * whatever "now" the server saw at cache-fill time for the whole CDN TTL. */
@@ -72,31 +66,6 @@ export async function fetchIsochrone(
     throw new Error(`Isochrone request failed: ${response.status}`)
   }
   return responseJson<IsochroneResponse>(response)
-}
-
-export async function fetchIsochroneRouting(
-  params: IsochroneParams,
-  signal?: AbortSignal
-): Promise<IsochroneRoutingResponse> {
-  const searchParams = buildIsochroneSearchParams(params)
-  searchParams.set("routing", "only")
-  const response = await fetch(`/api/isochrone?${searchParams.toString()}`, {
-    signal,
-  })
-  if (!response.ok) {
-    throw new Error(`Isochrone routing request failed: ${response.status}`)
-  }
-  return responseJson<IsochroneRoutingResponse>(response)
-}
-
-export async function fetchBajsStations(
-  signal?: AbortSignal
-): Promise<FeatureCollection> {
-  const response = await fetch("/api/bajs", { signal })
-  if (!response.ok) {
-    throw new Error(`BAJS request failed: ${response.status}`)
-  }
-  return responseJson<FeatureCollection>(response)
 }
 
 interface ExactRouteParams {

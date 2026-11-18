@@ -29,7 +29,7 @@ const REVALIDATE_SEC = 300
  * A day is only worth quoting if we saw nearly all of it. Below this the total
  * is a floor, not a count, so headline copy must skip it.
  */
-export const FULL_DAY_MINUTES = 1400
+const FULL_DAY_MINUTES = 1400
 
 /**
  * Ranking order below this much measurement is noise: a single event weekend

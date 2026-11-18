@@ -35,7 +35,7 @@ export function loadAdrese(): AdresaStreet[] {
 }
 
 /** URL-safe slug fragment: diacritic-folded, non-alphanumerics collapse to "-". */
-export const adresaSlugify = (s: string) =>
+const adresaSlugify = (s: string) =>
   norm(s)
     .replaceAll(/[^a-z0-9]+/gu, "-")
     .replaceAll(/^-+|-+$/gu, "")

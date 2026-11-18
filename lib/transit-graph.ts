@@ -52,7 +52,7 @@ interface NearbyStop {
   distKm: number
 }
 
-export interface StopNode {
+interface StopNode {
   lat: number
   lon: number
   key: string

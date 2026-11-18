@@ -32,7 +32,7 @@ export function lineListProse(data: StopPageData): string {
 }
 
 /** "5" when lo == hi, else "5–8". The shared equal-vs-range branch. */
-export function rangeText([lo, hi]: [number, number]): string {
+function rangeText([lo, hi]: [number, number]): string {
   return lo === hi ? `${lo}` : `${lo}-${hi}`
 }
 

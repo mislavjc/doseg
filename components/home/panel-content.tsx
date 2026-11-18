@@ -414,7 +414,7 @@ export function RouteSkeleton() {
 }
 
 /** Beyond ~3 h it isn't a real ZET trip — the router pads it with mega-walks. */
-export const MAX_SANE_ROUTE_MIN = 180
+const MAX_SANE_ROUTE_MIN = 180
 
 export function isRouteTooFar(itinerary: Itinerary): boolean {
   return itinerary.duration / 60 > MAX_SANE_ROUTE_MIN

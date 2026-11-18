@@ -29,7 +29,7 @@ export function readDataJson<T>(path: string): T | null {
   }
 }
 
-export function loadDistrictEmblems(): DistrictEmblems {
+function loadDistrictEmblems(): DistrictEmblems {
   return (
     readDataJson<DistrictEmblems>(
       join(process.cwd(), "public", "district-emblems.json")
@@ -52,7 +52,7 @@ export function loadTravelMatrix(): TravelMatrix | null {
   return readDataJson<TravelMatrix>(matrixPath)
 }
 
-export function loadRouteStats(): RouteStats | null {
+function loadRouteStats(): RouteStats | null {
   const statsPath = join(getDataDir(), "route-stats.json")
   return readDataJson<RouteStats>(statsPath)
 }
@@ -638,7 +638,7 @@ function findMatrixGaps(
   return gaps
 }
 
-export function computeConnectivityGaps(
+function computeConnectivityGaps(
   data: ScoreData,
   travelMatrix: TravelMatrix | null
 ): ConnectivityGap[] {
@@ -731,7 +731,7 @@ export function computeWeekendData(data: ScoreData, saturdayData: ScoreData | nu
   return { weekendComparison: items, cityWeekendChange }
 }
 
-export function computeRouteInsights(routeStats: RouteStats | null) {
+function computeRouteInsights(routeStats: RouteStats | null) {
   const urbanRoutes = routeStats?.routes.filter((r) => r.mode !== "RAIL") ?? []
   const tramRoutes = urbanRoutes.filter((r) => r.mode === "TRAM")
   const busRoutes = urbanRoutes.filter((r) => r.mode === "BUS")

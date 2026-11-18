@@ -25,7 +25,7 @@ const POI_ICON: Record<PoiKey, typeof IconPark> = {
   park: IconPark,
 }
 
-export function PoiIcon({ k }: { k: PoiKey }) {
+function PoiIcon({ k }: { k: PoiKey }) {
   const Icon = POI_ICON[k]
   return <Icon size={22} className="shrink-0 text-zg-blue" />
 }

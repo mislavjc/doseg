@@ -69,7 +69,7 @@ function endpointMarker(map: maplibregl.Map, p: Pt, kind: "shared" | "new" | "ol
   new maplibregl.Marker({ element: pill, anchor: onRight ? "right" : "left", offset: onRight ? [-12, 0] : [12, 0] }).setLngLat([p.lon, p.lat]).addTo(map)
 }
 
-export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode = "diff", change = "terminus", stopConnected = false, label }: {
+function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode = "diff", change = "terminus", stopConnected = false, label }: {
   oldShape: LonLat[]; newShape: LonLat[]; shared: Pt; newTip: Pt; oldTip: Pt; allStops: Pt[]; added: Pt[]; removed: Pt[]; mode?: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; label?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)

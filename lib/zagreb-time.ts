@@ -24,7 +24,7 @@ export function formatTime(): string {
 /** Current date in Zagreb as a GTFS service date, "YYYY-MM-DD". Matches the
  * plain-calendar-date rule the Rust isochrone server uses to pick its service
  * day, so both engines route on the same schedule. */
-export function serviceDate(): string {
+function serviceDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: TZ })
 }
 

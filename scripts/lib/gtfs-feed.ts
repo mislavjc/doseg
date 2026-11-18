@@ -12,12 +12,12 @@ import { join } from "node:path"
 import { idx, readCsv, streamCsv } from "./gtfs-csv"
 import { distM, lenM, simplify, snapStop, type LonLat } from "./geo-line"
 
-export interface Stop { id: string; name: string; lat: number; lon: number }
+interface Stop { id: string; name: string; lat: number; lon: number }
 // shape = real GTFS polyline ([] when the feed ships none); headsign = ZET's own
 // destination text for that direction (the right terminus label — GTFS last-stop
 // names drift from it, e.g. line 145's terminus stop is "Ratarska" but ZET calls
 // the destination "Oranice").
-export interface DirData { shape: LonLat[]; stops: Stop[]; headsign: string }
+interface DirData { shape: LonLat[]; stops: Stop[]; headsign: string }
 export interface Line { short: string; type: number; dirs: Record<number, DirData> }
 
 /** Load a feed, picking per line+direction the trip that visits the MOST stops —
@@ -108,11 +108,11 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
 const dist = (a: Stop, b: Stop) => distM([a.lon, a.lat], [b.lon, b.lat])
 
 // a tip that moved more than this = a terminus change, not a mid-route reroute
-export const TERMINUS_M = 300
+const TERMINUS_M = 300
 
 /** Pick the direction with the most visible change: terminus move + how many stops
  * differ by name (a mid-route reroute keeps termini but swaps stops). */
-export function pickChangedDir(o: Line, n: Line): number {
+function pickChangedDir(o: Line, n: Line): number {
   let bestDir = 0, bestScore = -1
   for (const dir of [0, 1]) {
     const od = o.dirs[dir], nd = n.dirs[dir]
@@ -132,11 +132,11 @@ const km = (line: LonLat[]) => +(lenM(line) / 1000).toFixed(1)
 const relabel = (s: Stop, name: string): Stop => ({ ...s, name })
 
 export type Mode = "diff" | "new" | "removed"
-export interface DiffStat {
+interface DiffStat {
   mode: "diff"; change: "terminus" | "midroute"; len_old_km: number; len_new_km: number; added: number; removed: number
   oldTipName: string; newTipName: string; relacija: string
 }
-export interface OneSidedStat { mode: "new" | "removed"; len_km: number; stops_count: number; terminusName: string; originName: string }
+interface OneSidedStat { mode: "new" | "removed"; len_km: number; stops_count: number; terminusName: string; originName: string }
 export interface Result { geom: object; stat: DiffStat | OneSidedStat }
 export interface DiffResult extends Result { stat: DiffStat }
 

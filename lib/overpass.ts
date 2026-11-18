@@ -139,7 +139,7 @@ const OVERPASS_MIRRORS = [
  * a stale list beats an empty map.
  */
 function snapshotPath() {
-  const dataDir = process.env.DATA_DIR ?? join(process.cwd(), "data")
+  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
   return join(dataDir, "poi-snapshot.json")
 }
 
@@ -209,7 +209,7 @@ let photoMap: Partial<Record<string, PoiPhoto>> | null = null
 function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
   if (photoMap) return photoMap
   try {
-    const dataDir = process.env.DATA_DIR ?? join(process.cwd(), "data")
+    const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
     photoMap = parseJson<Partial<Record<string, PoiPhoto>>>(
       readFileSync(join(dataDir, "poi-photos.json"), "utf-8")
     )

@@ -1,6 +1,5 @@
 import { z } from "zod"
 
-// oxlint-disable-next-line typescript/prefer-nullish-coalescing -- an empty OTP_URL must also fall back to the default
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 
 const FeedsResponse = z.object({

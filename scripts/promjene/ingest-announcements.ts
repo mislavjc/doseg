@@ -118,7 +118,6 @@ async function main() {
     // resolve 200, but older canonical article URLs now 302 → homepage. For those
     // (wayback-only) link to the archived snapshot, which renders the real notice.
     const url = (r || l) ? canonical : w ? `https://web.archive.org/web/${w.ts}/${canonical}` : canonical
-    // oxlint-disable-next-line typescript/prefer-nullish-coalescing -- an empty title ("" after strip) must fall through to the next source
     const title = r?.title || l?.title || (slug ? titleFromSlug(slug) : "")
     const date = r?.date ?? (w ? tsDate(w.ts) : null)
     // space-normalized so slug ("u-ponedjeljak") and title ("U Ponedjeljak") match the same patterns

@@ -38,6 +38,10 @@
       "error",
       { "ignoreArrowShorthand": true }
     ],
+    "typescript/prefer-nullish-coalescing": [
+      "error",
+      { "ignorePrimitives": { "string": true } }
+    ],
     "promise/always-return": ["error", { "ignoreLastCallback": true }],
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
 
@@ -58,7 +62,11 @@
     // Without noUncheckedIndexedAccess only .at() types as T | undefined, so it forces guards [0] never needs on the same arrays.
     "unicorn/prefer-at": "off",
     // getElementById takes an id as-is; the querySelector rewrite needs CSS escaping for ids that start with a digit.
-    "unicorn/prefer-query-selector": "off"
+    "unicorn/prefer-query-selector": "off",
+    // Clashes with unicorn/no-useless-undefined on effects that bail early and otherwise return a cleanup; tsc already checks return types.
+    "typescript/consistent-return": "off",
+    // Number() is not parseInt/parseFloat: "31A" and "16px" parse today and would become NaN.
+    "unicorn/prefer-number-coercion": "off"
   },
   "ignorePatterns": [
     ".next/**",

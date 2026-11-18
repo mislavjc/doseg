@@ -28,7 +28,7 @@ export function serviceDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: TZ })
 }
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL ?? "http://localhost:3002"
+const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
 const HEALTH_TTL_MS = 10 * 60_000
 
 let cachedHealthDate: { value: string; expiresAt: number } | null = null

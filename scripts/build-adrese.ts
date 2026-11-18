@@ -71,7 +71,6 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).toSo
   }
 }
 
-// oxlint-disable-next-line unicorn/prefer-number-coercion -- house numbers like "12a" need parseInt's leading-digits parse; Number() gives NaN
 const numeric = (hn: string) => Number.parseInt(hn, 10) || 0
 const out = {
   source: "DGU Registar prostornih jedinica (INSPIRE AD WFS)",

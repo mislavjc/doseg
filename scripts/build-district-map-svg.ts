@@ -3,7 +3,7 @@ import { join } from "node:path"
 import type { FeatureCollection, Geometry, Position } from "geojson"
 import { readJson } from "./lib/json"
 
-const DATA_DIR = process.env.DATA_DIR ?? join(process.cwd(), "data")
+const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
 const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
 const BAJS_MAP_OUTPUT_PATH = join(
   process.cwd(),

@@ -14,7 +14,6 @@ function parseDepartureTime(timeStr: string | null): number {
 }
 
 function parseCoord(value: string | null): number {
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- Number("") is 0, parseFloat("") is NaN; the NaN is what rejects a missing coordinate
   return Number.parseFloat(value ?? "")
 }
 

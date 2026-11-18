@@ -16,7 +16,7 @@ import { parseJson, readJson } from "./lib/json"
 
 // --- Config ---
 
-const OTP_URL = process.env.OTP_URL ?? "http://localhost:8080"
+const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const DEFAULT_CONCURRENCY = 5
 
 // --- CLI args ---

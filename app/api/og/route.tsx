@@ -210,7 +210,6 @@ export async function GET(request: Request) {
   }
 
   const hasCoords = latStr && lonStr
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- shared OG links may carry loose coords ("45.81,"); parseFloat keeps accepting them where Number() would 400
   const [lat, lon] = hasCoords ? [parseFloat(latStr), parseFloat(lonStr)] : [NaN, NaN]
 
   if (hasCoords && (Number.isNaN(lat) || Number.isNaN(lon))) {

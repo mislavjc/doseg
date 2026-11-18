@@ -5,7 +5,7 @@ import { KM_PER_DEG_LAT, fastDistKm } from "./geo"
 import { responseJson } from "./json"
 import { modeSpeed, type TransitMode } from "./transit"
 
-const OTP_URL = process.env.OTP_URL ?? "http://localhost:8080"
+const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_WAIT = 60 * 60
 /** Bounds on the applied RT adjustment (delay at alight minus delay at
  * boarding). The adjustment is relative, so legitimate values are small even

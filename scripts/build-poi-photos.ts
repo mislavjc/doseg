@@ -176,7 +176,7 @@ async function main() {
     }
   }
 
-  const dataDir = process.env.DATA_DIR ?? join(process.cwd(), "data")
+  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
   const outPath = join(dataDir, "poi-photos.json")
   writeFileSync(outPath, JSON.stringify(map, null, 2) + "\n")
   console.log(`Wrote ${Object.keys(map).length} photos → ${outPath}`)

@@ -20,7 +20,7 @@ import { responseJson } from "@/lib/json"
  * accumulating/unavailable state when the RT server is down.
  */
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL ?? "http://localhost:3002"
+const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
 
 /** Matches the endpoints' own Cache-Control. */
 const REVALIDATE_SEC = 300

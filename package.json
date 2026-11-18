@@ -53,7 +53,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.187.0",
     "agentation": "^3.1.2",
-    "eslint": "^9.39.5",
+    "eslint": "^10.15.0",
     "eslint-config-next": "^16.4.6",
     "evalite": "^0.19.0",
     "graphql": "^17.1.0",

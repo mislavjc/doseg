@@ -852,13 +852,6 @@ pub struct DelayProfilePoint {
     pub samples: i64,
 }
 
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DelayProfileResponse {
-    pub route: String,
-    pub points: Vec<DelayProfilePoint>,
-}
-
 pub fn query_delay_profile(
     conn: &Connection,
     route: &str,
@@ -924,42 +917,6 @@ pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
         last_ts,
         alert_count,
     })
-}
-
-// --- Speed comparison query (feature 2.2) ---
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SpeedSnapshotPoint {
-    pub ts: i64,
-    pub avg_speed_kmh: f64,
-    pub sample_count: i32,
-}
-
-pub fn query_speed_history(
-    conn: &Connection,
-    route: &str,
-    from: i64,
-    to: i64,
-) -> rusqlite::Result<Vec<SpeedSnapshotPoint>> {
-    let mut stmt = conn.prepare_cached(
-        "SELECT ts, avg_speed_mps, sample_count
-         FROM speed_snapshots WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
-         ORDER BY ts",
-    )?;
-    let mut points = Vec::new();
-    let rows = stmt.query_map(params![route, from, to], |row| {
-        let avg_mps: f64 = row.get(1)?;
-        Ok(SpeedSnapshotPoint {
-            ts: row.get(0)?,
-            avg_speed_kmh: (avg_mps * 3.6 * 10.0).round() / 10.0,
-            sample_count: row.get(2)?,
-        })
-    })?;
-    for row in rows {
-        points.push(row?);
-    }
-    Ok(points)
 }
 
 // --- Occupancy query (feature 2.4) ---
@@ -1097,6 +1054,7 @@ pub fn query_bajs_usage(
 
 // --- BAJS measured ride flow ---
 
+#[cfg(test)]
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BajsFlowPoint {
@@ -1264,6 +1222,7 @@ pub fn insert_bajs_trips(
 
 /// Minute-level ride flow. `max_gap_sec` drops intervals where polling
 /// stalled, so a feed outage reads as missing rather than as zero rides.
+#[cfg(test)]
 pub fn query_bajs_flow(
     conn: &Connection,
     from: i64,

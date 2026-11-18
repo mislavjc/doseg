@@ -40,7 +40,6 @@ struct RawPattern {
     trips: Vec<RawTrip>,
 }
 
-#[allow(dead_code)]
 struct RawStop {
     name: String,
     lat: f64,
@@ -419,7 +418,6 @@ struct GbfsStationInfoData {
 struct GbfsStationInfo {
     station_id: String,
     name: String,
-    short_name: Option<String>,
     lat: f64,
     lon: f64,
     is_virtual_station: Option<bool>,
@@ -452,7 +450,6 @@ pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
         .map(|s| crate::bajs::BajsStation {
             key: format!("bajs:{}", s.station_id),
             station_id: s.station_id,
-            short_name: s.short_name.unwrap_or_default(),
             name: s.name,
             lat: s.lat,
             lon: s.lon,

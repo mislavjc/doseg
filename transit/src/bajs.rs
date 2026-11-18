@@ -14,8 +14,6 @@ pub struct BajsStation {
     pub key: String,
     #[serde(rename = "stationId")]
     pub station_id: String,
-    #[serde(rename = "shortName")]
-    pub short_name: String,
     pub name: String,
     pub lat: f64,
     pub lon: f64,

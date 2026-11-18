@@ -58,7 +58,6 @@ pub struct NearbyStopIndex {
 }
 
 /// Transit stop node.
-#[allow(dead_code)]
 #[derive(Deserialize, Clone)]
 pub struct StopNode {
     pub lat: f64,

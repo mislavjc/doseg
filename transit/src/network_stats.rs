@@ -245,8 +245,6 @@ pub struct PulseHub {
 // ---------------------------------------------------------------------------
 
 struct RouteGroup {
-    #[allow(dead_code)]
-    mode: Mode,
     mode_str: String,
     /// Indices into graph.patterns
     pattern_indices: Vec<usize>,
@@ -258,7 +256,6 @@ fn group_routes(graph: &TransitGraphJson) -> Vec<(String, RouteGroup)> {
         let key = format!("{}:{}", p.mode, p.route);
         map.entry(key)
             .or_insert_with(|| RouteGroup {
-                mode: p.mode_enum,
                 mode_str: p.mode.clone(),
                 pattern_indices: Vec::new(),
             })

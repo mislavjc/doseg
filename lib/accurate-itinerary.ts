@@ -5,6 +5,7 @@ import {
   BAJS_PICKUP_SECONDS,
   BAJS_SPEED,
   computeTransitLegDuration,
+  type PatternData,
   WALK_SPEED,
 } from "./transit-graph"
 import { distMeters, findStreetPath } from "./street-path"
@@ -215,7 +216,7 @@ function buildTransitLeg(
     return null
   }
 
-  const pattern = state.graph.patterns[pred.patternIdx]
+  const pattern = state.graph.patterns[pred.patternIdx] as PatternData | undefined
   if (!pattern) return null
 
   // Use accumulated elapsed time (actual walk/bike/ride durations) rather than

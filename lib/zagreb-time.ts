@@ -1,3 +1,5 @@
+import { responseJson } from "./json"
+
 const TZ = "Europe/Zagreb"
 
 /** Current time in Zagreb as seconds since midnight. */
@@ -26,7 +28,7 @@ export function serviceDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: TZ })
 }
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
+const ISOCHRONE_URL = process.env.ISOCHRONE_URL ?? "http://localhost:3002"
 const HEALTH_TTL_MS = 10 * 60_000
 
 let cachedHealthDate: { value: string; expiresAt: number } | null = null
@@ -47,8 +49,9 @@ export async function engineServiceDate(): Promise<string> {
     const res = await fetch(`${ISOCHRONE_URL}/health`, {
       signal: AbortSignal.timeout(2000),
     })
-    const date = (await res.json())?.feed?.serviceDate
-    if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const health = await responseJson<{ feed?: { serviceDate?: unknown } } | null>(res)
+    const date = health?.feed?.serviceDate
+    if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(date)) {
       cachedHealthDate = { value: date, expiresAt: now + HEALTH_TTL_MS }
       return date
     }

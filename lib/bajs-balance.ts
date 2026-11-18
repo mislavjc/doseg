@@ -52,7 +52,7 @@ export async function loadBajsBalance(
       kvart: districtAt(s.lat, s.lon),
       surplus: s.bikesAvailable - s.capacity,
     }))
-    .sort((a, b) => b.surplus - a.surplus)
+    .toSorted((a, b) => b.surplus - a.surplus)
 
   // No sample-count filter: every station is polled on the same minute tick,
   // so they all carry the same number of samples and none is noisier than the
@@ -63,8 +63,8 @@ export async function loadBajsBalance(
   // they are barely stocked, and naming one says nothing about demand.
   const byId = new Map(live.stations.map((s) => [s.stationId, s]))
   const empty = ranking.all
-    .filter((s) => s.emptyShare > 0 && !/privremen/i.test(s.name))
-    .sort((a, b) => b.emptyShare - a.emptyShare)
+    .filter((s) => s.emptyShare > 0 && !/privremen/iu.test(s.name))
+    .toSorted((a, b) => b.emptyShare - a.emptyShare)
     .slice(0, limit)
     .map((s) => {
       const info = byId.get(s.stationId)

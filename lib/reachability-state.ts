@@ -114,7 +114,7 @@ async function computeState(
   }
 }
 
-export async function getReachabilityState(params: {
+export function getReachabilityState(params: {
   originLat: number
   originLon: number
   departureTime: number

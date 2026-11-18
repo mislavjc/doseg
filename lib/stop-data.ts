@@ -39,7 +39,7 @@ export function serviceWindow(
 
 export function loadStopData(slug: string): StopPageData | null {
   // slug comes from the URL — keep it from escaping the data directory.
-  if (!/^[a-z0-9-]+$/.test(slug)) return null
+  if (!/^[a-z0-9-]+$/u.test(slug)) return null
   return readJsonCached<StopPageData>(join(staniceDir(), `${slug}.json`))
 }
 
@@ -109,7 +109,7 @@ export function siblingStops(self: {
       lineCount: c.lineCount,
       distM: Math.round(fastDistKm(self.lat, self.lon, c.lat, c.lon) * 1000),
     }))
-    .sort((a, b) => a.distM - b.distM)
+    .toSorted((a, b) => a.distM - b.distM)
 }
 
 /**

@@ -101,7 +101,7 @@ function nearbyBlock(
   const inRange = stops
     .map((s) => ({ s, km: fastDistKm(lat, lon, s.lat, s.lon) }))
     .filter((x) => x.km <= NEARBY_RADIUS_KM)
-    .sort((a, b) => a.km - b.km)
+    .toSorted((a, b) => a.km - b.km)
 
   // Platform pairs share a name — keep only the nearest of each.
   const seen = new Set<string>()
@@ -129,9 +129,9 @@ function nearbyBlock(
     if (km > LINES_RADIUS_KM) break
     const data = loadStopData(s.slug)
     for (const l of data?.lines ?? []) {
-      const seen = lineMap.get(l.broj)
+      const existing = lineMap.get(l.broj)
       const peakMin = l.peakHeadwayMin ?? null
-      if (!seen) {
+      if (!existing) {
         lineMap.set(l.broj, {
           broj: l.broj,
           mode: l.mode,
@@ -139,13 +139,13 @@ function nearbyBlock(
           peakMin,
           headsign: l.headsign ?? null,
         })
-      } else if (peakMin !== null && (seen.peakMin === null || peakMin < seen.peakMin)) {
-        seen.peakMin = peakMin
-        seen.headsign = l.headsign ?? seen.headsign
+      } else if (peakMin !== null && (existing.peakMin === null || peakMin < existing.peakMin)) {
+        existing.peakMin = peakMin
+        existing.headsign = l.headsign ?? existing.headsign
       }
     }
   }
-  const lines = [...lineMap.values()].sort(
+  const lines = [...lineMap.values()].toSorted(
     (a, b) =>
       (a.mode === "tram" ? 0 : 1) - (b.mode === "tram" ? 0 : 1) ||
       Number(a.broj) - Number(b.broj)

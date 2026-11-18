@@ -10,9 +10,11 @@ import type { Metadata } from "next"
 export function pseoMetadata(opts: {
   title: string
   description: string
-  path: string // e.g. `/linije/1`
+  /** E.g. `/linije/1`. */
+  path: string
   ogType: "article" | "website"
-  ogImage: string // full path incl. any `v` cache-buster
+  /** Full path incl. any `v` cache-buster. */
+  ogImage: string
 }): Metadata {
   const { title, description, path, ogType, ogImage } = opts
   return {

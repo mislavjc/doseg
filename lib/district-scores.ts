@@ -37,7 +37,8 @@ import { readJsonCached } from "@/lib/page-data"
  *
  * Keep these mirrored with transit/src/geo.rs.
  */
-const REACH_CELL_DEG = 0.002 // walk_graph.rs GRID_CELL_SIZE
+// walk_graph.rs GRID_CELL_SIZE
+const REACH_CELL_DEG = 0.002
 const REACH_CELL_KM2 = REACH_CELL_DEG * KM_PER_DEG_LAT * (REACH_CELL_DEG * KM_PER_DEG_LON)
 
 export function reachKm2(_scores: ScoreData, cells: number): number {

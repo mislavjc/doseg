@@ -3,11 +3,13 @@ import type {
   IsochroneResponse as RustIsochroneResponse,
   RoutingOnlyResponse,
 } from "./generated"
+import { responseJson } from "./json"
 
 interface IsochroneParams {
   lat: number
   lon: number
-  time?: string // HH:MM departure time
+  /** HH:MM departure time. */
+  time?: string
   bajs?: boolean
 }
 
@@ -69,7 +71,7 @@ export async function fetchIsochrone(
   if (!response.ok) {
     throw new Error(`Isochrone request failed: ${response.status}`)
   }
-  return response.json()
+  return responseJson<IsochroneResponse>(response)
 }
 
 export async function fetchIsochroneRouting(
@@ -84,7 +86,7 @@ export async function fetchIsochroneRouting(
   if (!response.ok) {
     throw new Error(`Isochrone routing request failed: ${response.status}`)
   }
-  return response.json()
+  return responseJson<IsochroneRoutingResponse>(response)
 }
 
 export async function fetchBajsStations(
@@ -94,7 +96,7 @@ export async function fetchBajsStations(
   if (!response.ok) {
     throw new Error(`BAJS request failed: ${response.status}`)
   }
-  return response.json()
+  return responseJson<FeatureCollection>(response)
 }
 
 interface ExactRouteParams {
@@ -127,7 +129,7 @@ export async function fetchExactRoute(
   if (!response.ok) {
     throw new Error(`Route request failed: ${response.status}`)
   }
-  return response.json()
+  return responseJson<Itinerary>(response)
 }
 
 export interface Itinerary {
@@ -145,7 +147,8 @@ export interface Leg {
   duration: number
   distance: number
   route?: string
-  delay?: number // RT delay in seconds (positive = late, negative = early)
+  /** RT delay in seconds (positive = late, negative = early). */
+  delay?: number
   legGeometry: {
     points: string
     coords?: [number, number][]

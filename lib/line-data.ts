@@ -22,7 +22,7 @@ export function loadLineIndex(): LinePagesIndex {
 
 export function loadLineData(broj: string): LinePageData | null {
   // broj comes from the URL — keep it from escaping the data directory.
-  if (!/^[0-9]{1,3}$/.test(broj)) return null
+  if (!/^[0-9]{1,3}$/u.test(broj)) return null
   return readJsonCached<LinePageData>(join(linijeDir(), `${broj}.json`))
 }
 

@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { parseJson } from "./json"
+
 /**
  * Which kvart a coordinate falls in, from the same `data/districts.geojson`
  * the OG cards use. Server-only: it reads from disk and caches for the life of
@@ -17,7 +19,7 @@ let cached: DistrictFeature[] | null = null
 function districts(): DistrictFeature[] {
   if (cached) return cached
   const raw = readFileSync(join(process.cwd(), "data/districts.geojson"), "utf8")
-  cached = (JSON.parse(raw) as { features: DistrictFeature[] }).features
+  cached = parseJson<{ features: DistrictFeature[] }>(raw).features
   return cached
 }
 

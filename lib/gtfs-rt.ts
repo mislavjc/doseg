@@ -9,11 +9,13 @@ const CACHE_TTL_MS = 30_000
 
 export interface StopTimeRT {
   stopSequence: number
-  arrivalDelay: number // seconds, positive = late
+  /** Seconds, positive = late. */
+  arrivalDelay: number
 }
 
 export interface TripRT {
-  stopTimes: StopTimeRT[] // sorted by stopSequence
+  /** Sorted by stopSequence. */
+  stopTimes: StopTimeRT[]
 }
 
 // ---------------------------------------------------------------------------
@@ -78,7 +80,7 @@ const MAX_PLAUSIBLE_DELAY = 1800
 
 function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
   const tu = entity.tripUpdate
-  if (!tu?.trip?.tripId || !tu.stopTimeUpdate?.length) return
+  if (!tu?.trip?.tripId || tu.stopTimeUpdate == null || tu.stopTimeUpdate.length === 0) return
 
   const stopTimes: StopTimeRT[] = []
   for (const stu of tu.stopTimeUpdate) {
@@ -167,7 +169,8 @@ export function getVehiclePositions(): VehiclePosition[] {
  * Per spec, delays propagate forward until overridden.
  */
 export function getStopDelay(trip: TripRT, stopIdx: number): number {
-  const seq = stopIdx + 1 // 0-based → 1-based
+  // 0-based → 1-based
+  const seq = stopIdx + 1
   let delay = 0
   for (const st of trip.stopTimes) {
     if (st.stopSequence > seq) break

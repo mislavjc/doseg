@@ -13,6 +13,12 @@ import { loadPois, type PoiKey } from "@/lib/kvart-data"
 const BAJS_MAX = 3
 const BAJS_RADIUS_KM = 1.2
 
+const POI_KEYS: readonly string[] = ["hospital", "school", "park"] satisfies PoiKey[]
+
+function isPoiKey(category: string): category is PoiKey {
+  return POI_KEYS.includes(category)
+}
+
 export interface NearestPoi {
   key: PoiKey
   name: string
@@ -26,12 +32,12 @@ export interface NearestPoi {
 export function nearestPois(lon: number, lat: number): NearestPoi[] {
   const best = new Map<string, NearestPoi>()
   for (const p of loadPois()) {
-    if (!p.name) continue
+    if (!p.name || !isPoiKey(p.category)) continue
     const distM = Math.round(fastDistKm(lat, lon, p.lat, p.lon) * 1000)
     const seen = best.get(p.category)
     if (!seen || distM < seen.distM)
       best.set(p.category, {
-        key: p.category as PoiKey,
+        key: p.category,
         name: p.name,
         lat: p.lat,
         lon: p.lon,
@@ -39,7 +45,7 @@ export function nearestPois(lon: number, lat: number): NearestPoi[] {
         walkMin: walkMin(distM),
       })
   }
-  return [...best.values()].sort((a, b) => a.distM - b.distM)
+  return [...best.values()].toSorted((a, b) => a.distM - b.distM)
 }
 
 export interface NearestBajs {
@@ -60,7 +66,7 @@ export async function nearestBajs(lon: number, lat: number): Promise<NearestBajs
         return { name: s.name, distM, walkMin: walkMin(distM), bikesAvailable: s.bikesAvailable }
       })
       .filter((s) => s.distM <= BAJS_RADIUS_KM * 1000)
-      .sort((a, b) => a.distM - b.distM)
+      .toSorted((a, b) => a.distM - b.distM)
       .slice(0, BAJS_MAX)
   } catch {
     return []

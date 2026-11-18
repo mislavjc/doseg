@@ -5,6 +5,7 @@ import type {
   BajsStationFlow,
   BajsStationFlowResponse,
 } from "./generated"
+import { responseJson } from "./json"
 
 /**
  * Two readings that the ride counts on their own cannot give.
@@ -22,7 +23,7 @@ import type {
  * unavailable state when the RT server is down.
  */
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
+const ISOCHRONE_URL = process.env.ISOCHRONE_URL ?? "http://localhost:3002"
 
 const REVALIDATE_SEC = 300
 
@@ -46,7 +47,7 @@ async function readJson<T>(path: string): Promise<T | null> {
       next: { revalidate: REVALIDATE_SEC },
     })
     if (!res.ok) return null
-    return (await res.json()) as T
+    return await responseJson<T>(res)
   } catch {
     return null
   }
@@ -133,7 +134,7 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
           Math.abs(afternoonNet) >= MIN_NET_PER_DAY,
       }
     })
-    .sort((a, b) => a.morningNet - b.morningNet)
+    .toSorted((a, b) => a.morningNet - b.morningNet)
 
   const strong = kvartovi.filter((k) => Math.abs(k.morningNet) >= MIN_NET_PER_DAY)
 
@@ -142,7 +143,7 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
     drains: strong.filter((k) => k.morningNet < 0).slice(0, 5),
     fills: strong
       .filter((k) => k.morningNet > 0)
-      .sort((a, b) => b.morningNet - a.morningNet)
+      .toSorted((a, b) => b.morningNet - a.morningNet)
       .slice(0, 5),
     morningDays,
   }
@@ -176,10 +177,10 @@ export async function loadBajsRelocations(
   if (!data || data.days.length === 0) return null
 
   const observed = fullDays && new Set(fullDays.map((d) => d.date))
+  // Without a ride window to lean on, drop the ends, which are always partial.
   const complete = observed
     ? data.days.filter((d) => observed.has(d.date))
-    : // No ride window to lean on: drop the ends, which are always partial.
-      data.days.slice(1, -1)
+    : data.days.slice(1, -1)
   if (complete.length === 0) return null
   const perDay =
     complete.reduce((sum, d) => sum + d.moves, 0) / complete.length

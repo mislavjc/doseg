@@ -3,13 +3,15 @@
 import { SWRConfig } from "swr"
 import { LazyMotion, domAnimation } from "motion/react"
 
+import { responseJson } from "./json"
+
 const fetcher = async (url: string) => {
   const res = await fetch(url)
   if (!res.ok) {
     const error = new Error("Podaci nisu dostupni")
     throw error
   }
-  return res.json()
+  return responseJson<unknown>(res)
 }
 
 export default function SwrProvider({ children }: { children: React.ReactNode }) {

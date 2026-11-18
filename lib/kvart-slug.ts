@@ -9,7 +9,7 @@ const DIA: Record<string, string> = { č: "c", ć: "c", š: "s", ž: "z", đ: "d
 export function kvartSlug(name: string): string {
   return name
     .toLowerCase()
-    .replaceAll(/[čćšžđ]/g, (c) => DIA[c] ?? c)
-    .replaceAll(/[^a-z0-9]+/g, "-")
-    .replaceAll(/^-+|-+$/g, "")
+    .replaceAll(/[čćšžđ]/gu, (c) => DIA[c] ?? c)
+    .replaceAll(/[^a-z0-9]+/gu, "-")
+    .replaceAll(/^-+|-+$/gu, "")
 }

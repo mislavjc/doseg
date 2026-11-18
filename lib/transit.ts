@@ -11,6 +11,10 @@ export const TRANSIT_MODES = {
 
 export type TransitMode = keyof typeof TRANSIT_MODES
 
+function isTransitMode(mode: string): mode is TransitMode {
+  return Object.hasOwn(TRANSIT_MODES, mode)
+}
+
 export function modeSpeed(mode: string): number {
-  return TRANSIT_MODES[mode as TransitMode]?.speed ?? 16
+  return isTransitMode(mode) ? TRANSIT_MODES[mode].speed : 16
 }

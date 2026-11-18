@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { isDarkScore, scoreColor } from "./score-color"
 
-const HEX_PATTERN = /^#[0-9a-f]{6}$/i
+const HEX_PATTERN = /^#[0-9a-f]{6}$/iu
 
 // ---------------------------------------------------------------------------
 // scoreColor()

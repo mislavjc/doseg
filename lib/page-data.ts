@@ -1,5 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 
+import { parseJson } from "./json"
+
 /**
  * Read + parse a JSON file, memoized per path in production. SSG renders many
  * pages in one process (154 lines, ~1230 stops, 17 kvartovi); without this the
@@ -10,12 +12,14 @@ import { existsSync, readFileSync } from "node:fs"
  */
 const cache = new Map<string, unknown>()
 
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- callers name the file's shape; this is the typed JSON boundary for data/
 export function readJsonCached<T>(path: string): T | null {
   const hit = cache.get(path)
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the cache only holds what the miss path below parsed as T for this path
   if (hit !== undefined && process.env.NODE_ENV === "production") return hit as T
   if (!existsSync(path)) return null
   try {
-    const parsed = JSON.parse(readFileSync(path, "utf-8")) as T
+    const parsed = parseJson<T>(readFileSync(path, "utf-8"))
     cache.set(path, parsed)
     return parsed
   } catch {

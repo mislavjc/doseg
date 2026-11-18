@@ -155,7 +155,8 @@ function loadHeroMeta(slug: string): LineHeroMeta | null {
   )
 }
 
-const NEARBY_KM = 4 // only consider POIs within 4 km of the kvart for "nearest"
+// Only consider POIs within 4 km of the kvart for "nearest".
+const NEARBY_KM = 4
 
 function poiInDistrict(geo: GeoFeature | undefined, pois: Poi[]): PoiCat[] {
   const keys: PoiCat["key"][] = ["hospital", "school", "park"]
@@ -233,8 +234,8 @@ function buildLines(d: DistrictScore): {
     }
   }
   const byNum = (a: KvartLine, b: KvartLine) => Number(a.broj) - Number(b.broj)
-  const trams = (d.tramLines ?? []).map((b) => toLine(b, "tram")).sort(byNum)
-  const buses = (d.busLines ?? []).map((b) => toLine(b, "bus")).sort(byNum)
+  const trams = (d.tramLines ?? []).map((b) => toLine(b, "tram")).toSorted(byNum)
+  const buses = (d.busLines ?? []).map((b) => toLine(b, "bus")).toSorted(byNum)
   const lines = [...trams, ...buses]
   return {
     lines,
@@ -260,11 +261,11 @@ function buildPromjene(d: DistrictScore): KvartPromjena[] {
   return loadPromjene()
     .filter((e) => e.lines.some((l) => set.has(l)))
     .map((e) => ({ id: e.id, date: e.date, kind: e.kind, title: e.title, url: e.source.url }))
-    .sort((a, b) => b.date.localeCompare(a.date))
+    .toSorted((a, b) => b.date.localeCompare(a.date))
 }
 
 function loadKvartImpl(slug: string): KvartData | null {
-  if (!/^[a-z0-9-]+$/.test(slug)) return null
+  if (!/^[a-z0-9-]+$/u.test(slug)) return null
   const scores = loadScores()
   if (!scores) return null
   const d = scores.districts.find((x) => kvartSlug(x.name) === slug)
@@ -291,10 +292,12 @@ function loadKvartImpl(slug: string): KvartData | null {
   // POI in the kvart (point-in-polygon) + nearest by straight-line distance
   const geo = loadGeo().find((f) => f.properties.name === d.name)
   const pois = loadPois()
-  const poi = poiInDistrict(geo, pois).map((c) => {
+  const poi = poiInDistrict(geo, pois)
+  for (const c of poi) {
     const near = nearestPoi(d.bestPoint, pois, c.key)
-    return { ...c, nearestName: near?.name ?? null, nearestKm: near?.km ?? null }
-  })
+    c.nearestName = near?.name ?? null
+    c.nearestKm = near?.km ?? null
+  }
 
   const promjene = buildPromjene(d)
 
@@ -367,8 +370,8 @@ export interface KvartBoard {
 export function loadKvartBoard(): KvartBoard | null {
   const s = loadScores()
   if (!s) return null
-  const rows: KvartBoardRow[] = [...s.districts]
-    .sort((a, b) => a.rank - b.rank)
+  const rows: KvartBoardRow[] = s.districts
+    .toSorted((a, b) => a.rank - b.rank)
     .map((d) => ({
       slug: kvartSlug(d.name),
       name: d.name,

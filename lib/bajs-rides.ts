@@ -6,6 +6,7 @@ import type {
   BajsRideHour,
   BajsRidesResponse,
 } from "@/lib/generated"
+import { responseJson } from "@/lib/json"
 
 /**
  * Server-side reader for the measured BAJS ride flow.
@@ -19,7 +20,7 @@ import type {
  * accumulating/unavailable state when the RT server is down.
  */
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
+const ISOCHRONE_URL = process.env.ISOCHRONE_URL ?? "http://localhost:3002"
 
 /** Matches the endpoints' own Cache-Control. */
 const REVALIDATE_SEC = 300
@@ -45,10 +46,15 @@ async function readJson<T>(
       next: { revalidate },
     })
     if (!res.ok) return null
-    return (await res.json()) as T
+    return await responseJson<T>(res)
   } catch {
     return null
   }
+}
+
+/** The endpoint reports 0 (or null) before anything has been measured. */
+function epochDate(seconds: number | null): Date | null {
+  return seconds != null && seconds !== 0 ? new Date(seconds * 1000) : null
 }
 
 export type BajsRides = {
@@ -105,8 +111,8 @@ export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
     hourly,
     peakHour,
     morningPeak,
-    measuredFrom: data.measuredFrom ? new Date(data.measuredFrom * 1000) : null,
-    measuredTo: data.measuredTo ? new Date(data.measuredTo * 1000) : null,
+    measuredFrom: epochDate(data.measuredFrom),
+    measuredTo: epochDate(data.measuredTo),
   }
 }
 
@@ -169,8 +175,8 @@ export async function loadBajsRanking(
 
   // The endpoint already orders by measured starts.
   const busiest = stations.slice(0, limit)
-  const emptiest = [...stations]
-    .sort((a, b) => b.emptyShare - a.emptyShare)
+  const emptiest = stations
+    .toSorted((a, b) => b.emptyShare - a.emptyShare)
     .slice(0, limit)
 
   return {

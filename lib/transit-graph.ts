@@ -1,10 +1,11 @@
 import type { BajsStation } from "./bajs"
 import { getStopDelay, type TripRT } from "./gtfs-rt"
 import { decodePolyline } from "./polyline"
-import { COS_LAT, KM_PER_DEG_LAT, KM_PER_DEG_LON, fastDistKm } from "./geo"
+import { KM_PER_DEG_LAT, fastDistKm } from "./geo"
+import { responseJson } from "./json"
 import { modeSpeed, type TransitMode } from "./transit"
 
-const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
+const OTP_URL = process.env.OTP_URL ?? "http://localhost:8080"
 const MAX_WAIT = 60 * 60
 /** Bounds on the applied RT adjustment (delay at alight minus delay at
  * boarding). The adjustment is relative, so legitimate values are small even
@@ -18,25 +19,32 @@ function clampRtAdjustment(adjustment: number): number {
   return Math.min(RT_ADJUSTMENT_MAX, Math.max(RT_ADJUSTMENT_MIN, adjustment))
 }
 
-export const WALK_SPEED = 5 // km/h
+/** km/h */
+export const WALK_SPEED = 5
 const WALK_MAX_KM = 1.2
 const TRANSFER_MAX_KM = 0.3
 const BAJS_TRANSFER_MAX_KM = 0.35
 const BAJS_BIKE_MAX_KM = 6
-export const BAJS_SPEED = 14 // km/h
+/** km/h */
+export const BAJS_SPEED = 14
 export const BAJS_PICKUP_SECONDS = 60
 export const BAJS_DROPOFF_SECONDS = 30
-const TRANSFER_PENALTY = 120 // 2-minute penalty for line changes
+/** 2-minute penalty for line changes. */
+const TRANSFER_PENALTY = 120
 
 export interface PatternData {
   geometry: [number, number][]
   stopKeys: string[]
-  stopIndices: number[] // numeric indices parallel to stopKeys (for integer-indexed Dijkstra)
+  /** Numeric indices parallel to stopKeys (for integer-indexed Dijkstra). */
+  stopIndices: number[]
   mode: TransitMode
   route: string
-  departures: number[] // sorted departure seconds from first stop
-  tripIds: string[] // GTFS trip IDs, parallel to departures
-  stopOffsets: number[] // cumulative travel seconds from first stop to each stop
+  /** Sorted departure seconds from first stop. */
+  departures: number[]
+  /** GTFS trip IDs, parallel to departures. */
+  tripIds: string[]
+  /** Cumulative travel seconds from first stop to each stop. */
+  stopOffsets: number[]
 }
 
 interface NearbyStop {
@@ -49,7 +57,8 @@ export interface StopNode {
   lon: number
   key: string
   name: string
-  idx: number // numeric index for integer-indexed Dijkstra
+  /** Numeric index for integer-indexed Dijkstra. */
+  idx: number
   patterns: Array<{ patternIdx: number; stopIdx: number }>
   nearbyStops: NearbyStop[]
   nearbyStopIndices: Array<{ idx: number; distKm: number }>
@@ -60,7 +69,8 @@ export interface TransitGraph {
   stops: Map<string, StopNode>
   stopCount: number
   stopArray: StopNode[]
-  stopIndex: Map<string, number> // key → numeric index
+  /** key → numeric index */
+  stopIndex: Map<string, number>
 }
 
 export interface Predecessor {
@@ -69,6 +79,24 @@ export interface Predecessor {
   patternIdx?: number
   boardIdx?: number
   alightIdx?: number
+}
+
+/** The slice of OTP's GraphQL `patterns` payload that fetchOtpPatterns asks for. */
+interface OtpTrip {
+  gtfsId: string | null
+  stoptimes: Array<{ scheduledDeparture: number | null }> | null
+}
+
+interface OtpPattern {
+  route: {
+    mode: TransitMode | null
+    shortName: string | null
+    longName: string | null
+  } | null
+  patternGeometry: { points: string | null } | null
+  stops: Array<{ name: string | null; lat: number; lon: number }>
+  trips?: OtpTrip[] | null
+  tripsForDate?: OtpTrip[] | null
 }
 
 interface ComputeTravelTimesOptions {
@@ -86,8 +114,8 @@ let graphPromise: Promise<TransitGraph> | null = null
  *   When provided, only trips active on that date are included, giving correct
  *   weekday vs weekend schedules. When omitted, all trips are returned (legacy behavior).
  */
-export async function getGraph(serviceDate?: string): Promise<TransitGraph> {
-  if (cachedGraph && cachedGraphDate === serviceDate) return cachedGraph
+export function getGraph(serviceDate?: string): Promise<TransitGraph> {
+  if (cachedGraph && cachedGraphDate === serviceDate) return Promise.resolve(cachedGraph)
   if (!graphPromise || cachedGraphDate !== serviceDate) {
     cachedGraphDate = serviceDate
     graphPromise = buildGraph(serviceDate).catch((err) => {
@@ -98,8 +126,7 @@ export async function getGraph(serviceDate?: string): Promise<TransitGraph> {
   return graphPromise
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractPatternStopKeys(p: any, patternIdx: number, stops: Map<string, StopNode>): string[] {
+function extractPatternStopKeys(p: OtpPattern, patternIdx: number, stops: Map<string, StopNode>): string[] {
   const stopKeys: string[] = []
   for (let stopIdx = 0; stopIdx < p.stops.length; stopIdx++) {
     const s = p.stops[stopIdx]
@@ -111,7 +138,7 @@ function extractPatternStopKeys(p: any, patternIdx: number, stops: Map<string, S
         lat: s.lat,
         lon: s.lon,
         key,
-        name: s.name || "",
+        name: s.name ?? "",
         idx: -1,
         patterns: [],
         nearbyStops: [],
@@ -123,14 +150,13 @@ function extractPatternStopKeys(p: any, patternIdx: number, stops: Map<string, S
   return stopKeys
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractTripDepartures(p: any): { departures: number[]; tripIds: string[] } {
+function extractTripDepartures(p: OtpPattern): { departures: number[]; tripIds: string[] } {
   const trips = p.tripsForDate ?? p.trips ?? []
   const tripDeps: Array<{ dep: number; tripId: string }> = []
   for (const trip of trips) {
     const st = trip.stoptimes?.[0]
     if (st?.scheduledDeparture != null) {
-      const rawId = ((trip.gtfsId as string) || "").replace(/^[^:]*:/, "")
+      const rawId = (trip.gtfsId ?? "").replace(/^[^:]*:/u, "")
       tripDeps.push({ dep: st.scheduledDeparture, tripId: rawId })
     }
   }
@@ -141,8 +167,7 @@ function extractTripDepartures(p: any): { departures: number[]; tripIds: string[
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function computeStopOffsets(p: any, mode: TransitMode): number[] {
+function computeStopOffsets(p: OtpPattern, mode: TransitMode): number[] {
   const nStops = p.stops.length
   const speed = modeSpeed(mode)
   const stopOffsets = [0]
@@ -157,15 +182,14 @@ function computeStopOffsets(p: any, mode: TransitMode): number[] {
           trips[Math.floor((i * trips.length) / sampleCount)]
         )
   for (const trip of tripSample) {
-    const st = trip.stoptimes as
-      | Array<{ scheduledDeparture: number }>
-      | undefined
+    const st = trip.stoptimes
     if (!st || st.length !== nStops) continue
     const base = st[0]?.scheduledDeparture
     if (base == null) continue
     for (let si = 1; si < nStops; si++) {
-      if (st[si]?.scheduledDeparture != null) {
-        const offset = st[si].scheduledDeparture - base
+      const dep = st[si]?.scheduledDeparture
+      if (dep != null) {
+        const offset = dep - base
         if (offset >= 0) offsetSamples[si].push(offset)
       }
     }
@@ -192,6 +216,9 @@ function computeStopOffsets(p: any, mode: TransitMode): number[] {
   return stopOffsets
 }
 
+/** The 3x3 block of grid cells around a stop, dx-major. */
+const NEIGHBOR_CELLS = [-1, 0, 1].flatMap((dx) => [-1, 0, 1].map((dy) => [dx, dy]))
+
 function computeNearbyStops(stops: Map<string, StopNode>) {
   const cellSize = TRANSFER_MAX_KM / KM_PER_DEG_LAT
   const grid = new Map<string, StopNode[]>()
@@ -208,16 +235,14 @@ function computeNearbyStops(stops: Map<string, StopNode>) {
     const cx = Math.floor(stop.lon / cellSize)
     const cy = Math.floor(stop.lat / cellSize)
 
-    for (let dx = -1; dx <= 1; dx++) {
-      for (let dy = -1; dy <= 1; dy++) {
-        const neighbors = grid.get(`${cx + dx},${cy + dy}`)
-        if (!neighbors) continue
-        for (const other of neighbors) {
-          if (other.key === stop.key) continue
-          const d = fastDistKm(stop.lat, stop.lon, other.lat, other.lon)
-          if (d <= TRANSFER_MAX_KM) {
-            stop.nearbyStops.push({ key: other.key, distKm: d })
-          }
+    for (const [dx, dy] of NEIGHBOR_CELLS) {
+      const neighbors = grid.get(`${cx + dx},${cy + dy}`)
+      if (!neighbors) continue
+      for (const other of neighbors) {
+        if (other.key === stop.key) continue
+        const d = fastDistKm(stop.lat, stop.lon, other.lat, other.lon)
+        if (d <= TRANSFER_MAX_KM) {
+          stop.nearbyStops.push({ key: other.key, distKm: d })
         }
       }
     }
@@ -249,7 +274,7 @@ function buildStopIndex(
   return { stopArray, stopIndex }
 }
 
-async function fetchOtpPatterns(serviceDate?: string) {
+async function fetchOtpPatterns(serviceDate?: string): Promise<OtpPattern[]> {
   const tripsField = serviceDate
     ? `tripsForDate(serviceDate: "${serviceDate}") { gtfsId stoptimes { scheduledDeparture } }`
     : `trips { gtfsId stoptimes { scheduledDeparture } }`
@@ -266,7 +291,7 @@ async function fetchOtpPatterns(serviceDate?: string) {
     throw new Error(`OTP pattern fetch failed: ${res.status}`)
   }
 
-  const json = await res.json()
+  const json = await responseJson<{ data?: { patterns?: OtpPattern[] | null } | null }>(res)
   if (!json.data?.patterns) {
     throw new Error("OTP returned no pattern data")
   }
@@ -280,22 +305,22 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
   const patterns: PatternData[] = []
   const stops = new Map<string, StopNode>()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const p of rawPatterns as any[]) {
-    if (!p.patternGeometry?.points || p.stops.length < 2) continue
+  for (const p of rawPatterns) {
+    const points = p.patternGeometry?.points
+    if (!points || p.stops.length < 2) continue
 
     const patternIdx = patterns.length
     const stopKeys = extractPatternStopKeys(p, patternIdx, stops)
     const { departures, tripIds } = extractTripDepartures(p)
-    const mode = (p.route?.mode || "BUS") as TransitMode
+    const mode = p.route?.mode ?? "BUS"
     const stopOffsets = computeStopOffsets(p, mode)
 
     patterns.push({
-      geometry: decodePolyline(p.patternGeometry.points),
+      geometry: decodePolyline(points),
       stopKeys,
       stopIndices: [],
       mode,
-      route: p.route?.shortName || p.route?.longName || "",
+      route: [p.route?.shortName, p.route?.longName].find((n) => n != null && n !== "") ?? "",
       departures,
       tripIds,
       stopOffsets,
@@ -635,25 +660,19 @@ function expandBajsStation(
   time: number,
   bajsAdj: IndexedBajsAdjacency
 ) {
-  const stopLinks = bajsAdj.stationToStopLinks[bi]
-  if (stopLinks) {
-    for (const { idx: stopIdx, distKm } of stopLinks) {
-      relaxWalk(s, stopIdx, time + (distKm / WALK_SPEED) * 3600, nodeIdx)
-    }
+  for (const { idx: stopIdx, distKm } of bajsAdj.stationToStopLinks[bi]) {
+    relaxWalk(s, stopIdx, time + (distKm / WALK_SPEED) * 3600, nodeIdx)
   }
 
   const station = bajsAdj.stations[bi]
   if (station.isRenting && station.bikesAvailable > 0) {
-    const bikeLinks = bajsAdj.stationBikeLinks[bi]
-    if (bikeLinks) {
-      for (const { idx: targetIdx, distKm } of bikeLinks) {
-        const bikeTime = time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
-        if (bikeTime < s.best[targetIdx]) {
-          s.best[targetIdx] = bikeTime
-          s.predFrom[targetIdx] = nodeIdx
-          s.predKind[targetIdx] = PRED_BIKE
-          flatHeapPush(s.h, bikeTime, targetIdx)
-        }
+    for (const { idx: targetIdx, distKm } of bajsAdj.stationBikeLinks[bi]) {
+      const bikeTime = time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
+      if (bikeTime < s.best[targetIdx]) {
+        s.best[targetIdx] = bikeTime
+        s.predFrom[targetIdx] = nodeIdx
+        s.predKind[targetIdx] = PRED_BIKE
+        flatHeapPush(s.h, bikeTime, targetIdx)
       }
     }
   }
@@ -763,9 +782,12 @@ interface IndexedLink {
 interface IndexedBajsAdjacency {
   bajsCount: number
   stations: BajsStation[]
-  stopToStationLinks: Array<IndexedLink[] | undefined> // stopIdx → BAJS dijkstra indices
-  stationToStopLinks: IndexedLink[][] // bajs local idx → stop indices
-  stationBikeLinks: IndexedLink[][] // bajs local idx → BAJS dijkstra indices
+  /** stopIdx → BAJS dijkstra indices */
+  stopToStationLinks: Array<IndexedLink[] | undefined>
+  /** bajs local idx → stop indices */
+  stationToStopLinks: IndexedLink[][]
+  /** bajs local idx → BAJS dijkstra indices */
+  stationBikeLinks: IndexedLink[][]
 }
 
 let cachedIndexedBajsAdj: {
@@ -783,9 +805,9 @@ function buildIndexedStopStationLinks(
   stopToStationLinks: Array<IndexedLink[] | undefined>
   stationToStopLinks: IndexedLink[][]
 } {
-  const stopToStationLinks: Array<IndexedLink[] | undefined> = new Array(
-    stopCount
-  )
+  const stopToStationLinks = Array.from<IndexedLink[] | undefined>({
+    length: stopCount,
+  })
   const stationToStopLinks: IndexedLink[][] = Array.from(
     { length: bajsCount },
     () => []
@@ -800,7 +822,7 @@ function buildIndexedStopStationLinks(
       const distKm = fastDistKm(stop.lat, stop.lon, station.lat, station.lon)
       if (distKm > BAJS_TRANSFER_MAX_KM) continue
 
-      if (!links) links = []
+      links ??= []
       links.push({ idx: stopCount + bi, distKm })
       stationToStopLinks[bi].push({ idx: si, distKm })
     }

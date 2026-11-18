@@ -3,30 +3,17 @@
  * bounding box and writes a compact binary graph file.
  *
  * Usage: bun scripts/build-walk-graph.ts
- *
- * Binary format (all little-endian):
- *   4 bytes  nodeCount  (uint32)
- *   4 bytes  edgeCount  (uint32)
- *   nodeCount × 16 bytes  [lat f64, lon f64]
- *   (nodeCount+1) × 4 bytes  CSR offsets (uint32)
- *   edgeCount × 8 bytes  [toIdx uint32, distCm uint32]
+ * Binary format: see writeBinaryGraph in scripts/lib/osm-graph.ts.
  */
 
-import { createReadStream, readFileSync, writeFileSync } from "fs"
+import { createReadStream, readFileSync } from "fs"
 import createParser from "osm-pbf-parser"
 import through2 from "through2"
-import type { OsmItem, Edge } from "./shared-types"
+
+import { BBOX, type Edge, type OsmItem, writeBinaryGraph } from "./lib/osm-graph"
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"
-
-// Zagreb bounding box (generous)
-const BBOX = {
-  minLat: 45.7,
-  maxLat: 45.92,
-  minLon: 15.75,
-  maxLon: 16.2,
-}
 
 const WALKABLE_HIGHWAYS = new Set([
   "residential",
@@ -48,8 +35,6 @@ const WALKABLE_HIGHWAYS = new Set([
 ])
 
 import { fastDistKm as distKm } from "../lib/geo"
-
-// --- SRTM elevation data ---
 
 // 1 arc-second resolution
 const SRTM_SIZE = 3601
@@ -206,63 +191,6 @@ function buildEdges(
   return edges
 }
 
-function writeBinaryGraph(
-  nodeList: { lat: number; lon: number }[],
-  edges: Edge[]
-) {
-  edges.sort((a, b) => a.from - b.from)
-
-  const nodeCount = nodeList.length
-  const edgeCount = edges.length
-  const offsets = new Uint32Array(nodeCount + 1)
-
-  for (const e of edges) {
-    offsets[e.from + 1]++
-  }
-  for (let i = 1; i <= nodeCount; i++) {
-    offsets[i] += offsets[i - 1]
-  }
-
-  const headerSize = 8
-  const nodesSize = nodeCount * 16
-  const offsetsSize = (nodeCount + 1) * 4
-  const edgesSize = edgeCount * 8
-  const totalSize = headerSize + nodesSize + offsetsSize + edgesSize
-
-  const buffer = Buffer.alloc(totalSize)
-  const view = new DataView(buffer.buffer)
-  let pos = 0
-
-  view.setUint32(pos, nodeCount, true)
-  pos += 4
-  view.setUint32(pos, edgeCount, true)
-  pos += 4
-
-  for (const node of nodeList) {
-    view.setFloat64(pos, node.lat, true)
-    pos += 8
-    view.setFloat64(pos, node.lon, true)
-    pos += 8
-  }
-
-  for (let i = 0; i <= nodeCount; i++) {
-    view.setUint32(pos, offsets[i], true)
-    pos += 4
-  }
-
-  for (const e of edges) {
-    view.setUint32(pos, e.to, true)
-    pos += 4
-    view.setUint32(pos, e.distCm, true)
-    pos += 4
-  }
-
-  writeFileSync(OUTPUT, buffer)
-
-  const sizeMB = (totalSize / 1024 / 1024).toFixed(1)
-  console.log(`Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`)
-}
-
 async function main() {
   console.log("Collecting walkable ways and all nodes within bbox...")
   const nodeCoords = new Map<number, { lat: number; lon: number }>()
@@ -300,12 +228,7 @@ async function main() {
   console.log(`  ${edges.length} directed edges`)
 
   console.log(`Writing ${OUTPUT}...`)
-  writeBinaryGraph(nodeList, edges)
+  writeBinaryGraph(OUTPUT, nodeList, edges)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

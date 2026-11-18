@@ -19,6 +19,7 @@ import { setTimeout as sleep } from "node:timers/promises"
 import sharp from "sharp"
 
 import { mercatorX, mercatorY } from "../../lib/geo"
+import { mapConcurrent } from "./concurrency"
 
 const TILE_SIZE = 256
 
@@ -32,6 +33,12 @@ export interface HeroCrop {
   zoom: number
   /** Parameter signature — crops with a matching sig are skipped on re-runs. */
   sig?: string
+}
+
+/** The desktop + mobile crop pair every per-page hero bakes. */
+export interface HeroMeta {
+  desktop: HeroCrop
+  mobile: HeroCrop
 }
 
 export interface DitherCropperOptions {
@@ -53,30 +60,11 @@ type Cfg = Required<Omit<DitherCropperOptions, "zoomOverride">> & {
   zoomOverride?: number
 }
 
-const mercX = (lon: number, worldPx: number) => mercatorX(lon) * worldPx
-const mercY = (lat: number, worldPx: number) => mercatorY(lat) * worldPx
-const invMercX = (x: number, worldPx: number) => (x / worldPx) * 360 - 180
-const invMercY = (y: number, worldPx: number) =>
+export const mercX = (lon: number, worldPx: number) => mercatorX(lon) * worldPx
+export const mercY = (lat: number, worldPx: number) => mercatorY(lat) * worldPx
+export const invMercX = (x: number, worldPx: number) => (x / worldPx) * 360 - 180
+export const invMercY = (y: number, worldPx: number) =>
   (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldPx))) * 180) / Math.PI
-
-export async function mapConcurrent<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T) => Promise<R>
-): Promise<R[]> {
-  const results: R[] = []
-  let next = 0
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) {
-        const i = next++
-        // oxlint-disable-next-line no-await-in-loop -- each worker runs one item at a time; the worker count is the concurrency limit
-        results[i] = await fn(items[i])
-      }
-    })
-  )
-  return results
-}
 
 /** Sharp's raw input only takes 1-4 channels; anything else is a corrupt decode. */
 export function rawChannels(n: number): 1 | 2 | 3 | 4 {

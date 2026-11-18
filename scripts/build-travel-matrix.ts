@@ -12,14 +12,12 @@
 
 import { writeFileSync } from "fs"
 import { join } from "path"
-import { parseJson, readJson } from "./lib/json"
-
-// --- Config ---
+import { responseJson } from "../lib/json"
+import { mapConcurrent } from "./lib/concurrency"
+import { readJson } from "./lib/json"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const DEFAULT_CONCURRENCY = 5
-
-// --- CLI args ---
 
 function parseArgs() {
   const args = process.argv.slice(2)
@@ -34,10 +32,8 @@ function parseArgs() {
       concurrency = Math.trunc(Number(args[++i]))
   }
 
-  // If no date given, find the next weekday
   if (!date) {
     const d = new Date()
-    // Advance to next weekday (Mon-Fri)
     while (d.getDay() === 0 || d.getDay() === 6) {
       d.setDate(d.getDate() + 1)
     }
@@ -49,16 +45,12 @@ function parseArgs() {
 
 import type { District, DistrictScoresOutput } from "../lib/generated"
 
-// --- District data ---
-
 function loadDistricts(): District[] {
   const data = readJson<DistrictScoresOutput>(
     join(process.cwd(), "data/district-scores.json")
   )
   return data.districts
 }
-
-// --- OTP plan query ---
 
 interface PlanResponse {
   data?: {
@@ -135,7 +127,7 @@ async function queryPlan(
     return null
   }
 
-  const json = parseJson<PlanResponse>(await res.text())
+  const json = await responseJson<PlanResponse>(res)
   const itineraries = json.data?.plan?.itineraries
   if (!itineraries || itineraries.length === 0) {
     return null
@@ -148,36 +140,6 @@ async function queryPlan(
     walkDistanceM: Math.round(it.walkDistance),
   }
 }
-
-// --- Concurrency limiter ---
-
-async function runWithConcurrency<T>(
-  tasks: (() => Promise<T>)[],
-  limit: number,
-  onProgress?: (done: number, total: number) => void
-): Promise<T[]> {
-  const results: T[] = []
-  let nextIdx = 0
-  let doneCount = 0
-
-  async function runNext(): Promise<void> {
-    while (nextIdx < tasks.length) {
-      const idx = nextIdx++
-      // oxlint-disable-next-line no-await-in-loop -- each worker runs its tasks one at a time; the pool size is the concurrency limit
-      results[idx] = await tasks[idx]()
-      doneCount++
-      onProgress?.(doneCount, tasks.length)
-    }
-  }
-
-  const workers = Array.from({ length: Math.min(limit, tasks.length) }, () =>
-    runNext()
-  )
-  await Promise.all(workers)
-  return results
-}
-
-// --- Main ---
 
 interface PairResult {
   i: number
@@ -270,13 +232,13 @@ async function main() {
   console.error(`\nComputing ${n * n} district pairs...`)
   const t0 = performance.now()
 
-  const results = await runWithConcurrency(
-    tasks,
-    concurrency,
-    (done, total) => {
-      process.stderr.write(`\r  Computing ${done}/${total}...`)
-    }
-  )
+  let done = 0
+  const results = await mapConcurrent(tasks, concurrency, async (task) => {
+    const result = await task()
+    done++
+    process.stderr.write(`\r  Computing ${done}/${tasks.length}...`)
+    return result
+  })
   console.error()
 
   const { matrix, transferMatrix, walkMatrix, noRouteCount } = fillMatrices(results, n)
@@ -304,9 +266,4 @@ async function main() {
   printSummaryTable(names, matrix)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

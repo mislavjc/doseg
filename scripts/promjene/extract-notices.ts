@@ -19,8 +19,9 @@
  */
 import { writeFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
+import { mapConcurrent } from "../lib/concurrency"
 import { readJson } from "../lib/json"
-import { extractNotice, loadBody, pool, loadEnvLocal, type Notice } from "./extract"
+import { extractNotice, loadBody, loadEnvLocal, type Notice } from "./extract"
 import { autoHeadline, isTram } from "../../app/promjene/lib"
 
 /** Page title for a classified notice. Stop notices use the model's faithful sentence.
@@ -68,7 +69,7 @@ async function main() {
   let done = 0, noBody = 0, perm = 0, temp = 0, flagged = 0
   const drops: string[] = [], reviews: string[] = []
 
-  await pool(targets, 10, async (c) => {
+  await mapConcurrent(targets, 10, async (c) => {
     const body = await loadBody(c.id, c.url, bodies)
     // can't verify → hold for review
     if (!body) { noBody++; c.review = true; return }
@@ -94,7 +95,6 @@ async function main() {
     if (++done % 20 === 0) console.error(`  …${done}/${targets.length}`)
   })
 
-  // refresh tallies + persist
   const lw = cands.filter((c) => c.listWorthy)
   if (doc.counts) { doc.counts.listWorthy = lw.length }
   writeFileSync(BODIES, JSON.stringify(bodies, null, 2))

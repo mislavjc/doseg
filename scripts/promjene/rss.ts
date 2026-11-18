@@ -7,7 +7,7 @@
  * consumes (LIST_CATEGORIES / app/promjene/lib.ts) instead of drifting copies.
  */
 
-export const UA = { "User-Agent": "Mozilla/5.0 doseg-promjene" }
+const UA = { "User-Agent": "Mozilla/5.0 doseg-promjene" }
 
 /** Classify the change category from text (title preferred, slug fallback). */
 export function classify(t: string): string {

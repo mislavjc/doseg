@@ -10,8 +10,9 @@
  */
 import { writeFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
+import { mapConcurrent } from "../../lib/concurrency"
 import { readJson } from "../../lib/json"
-import { loadBody, pool } from "../extract"
+import { loadBody } from "../extract"
 
 const DIR = join(process.cwd(), "scripts/promjene/eval")
 const OUT = join(DIR, "bodies.json")
@@ -44,7 +45,7 @@ const toFetch = listWorthy.filter((c) => wantIds.has(c.id) && !already.has(c.id)
 console.error(`have ${already.size} cached · selecting ${wantIds.size} (${lineCands.length} line-changes + ${stopSample.length} stops) · fetching ${toFetch.length} new`)
 
 let ok = 0, fail = 0
-await pool(toFetch, 5, async (c) => {
+await mapConcurrent(toFetch, 5, async (c) => {
   const body = await loadBody(c.id, c.url, bodies)
   if (body) { ok++; console.error(`  ✓ ${c.id} ${c.category.padEnd(11)} ${c.date}  (${body.length}b)`) }
   else { fail++; console.error(`  ✗ ${c.id} ${c.category.padEnd(11)} ${c.date}  no body`) }

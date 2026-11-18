@@ -13,11 +13,9 @@
 import { mkdirSync } from "node:fs"
 import { join } from "node:path"
 
+import { argValue } from "./lib/args"
+import { fetchStations } from "./lib/bajs-stations"
 import { createDitherCropper } from "./lib/dither-crop"
-import { parseJson } from "./lib/json"
-
-const STATION_INFORMATION_URL =
-  "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json"
 
 // Wide and short: the band is a horizon, not a map you read distances off. The
 // service area is ~2.8:1 in Mercator, so a squarer frame would be mostly empty
@@ -30,15 +28,8 @@ const root = process.cwd()
 const outPng = join(root, "public", "bajs-hero.png")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
-const args = process.argv.slice(2)
-const argValue = (name: string) => {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const cutoff = Number(argValue("--cutoff") ?? 80)
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
-
-type Station = { lat: number; lon: number; is_virtual_station?: boolean }
 
 // Percentiles, not extremes: a handful of far-flung stations would otherwise
 // pull the frame wide and shrink the city everyone recognises to a smear.
@@ -46,11 +37,7 @@ const pct = (v: number[], p: number) =>
   v[Math.min(v.length - 1, Math.floor(v.length * p))]
 
 async function stationBbox(): Promise<number[]> {
-  const feed = parseJson<{ data: { stations: Station[] } }>(
-    await (await fetch(STATION_INFORMATION_URL)).text()
-  )
-  const stations = feed.data.stations.filter((s) => !s.is_virtual_station)
-  if (stations.length === 0) throw new Error("GBFS returned no stations")
+  const stations = await fetchStations()
 
   const lats = stations.map((s) => s.lat).toSorted((a, b) => a - b)
   const lons = stations.map((s) => s.lon).toSorted((a, b) => a - b)
@@ -76,9 +63,4 @@ async function main() {
   console.error(`bajs-hero.png z${crop.zoom} ${crop.width}x${crop.height}`)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

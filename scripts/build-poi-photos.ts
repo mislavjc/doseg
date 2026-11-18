@@ -14,7 +14,7 @@
 import { writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { parseJson } from "./lib/json"
+import { responseJson } from "../lib/json"
 
 import {
   OSM_TAGS,
@@ -55,7 +55,7 @@ async function fetchOsmWikidata(): Promise<Map<number, string>> {
     body: `data=${encodeURIComponent(query)}`,
   })
   if (!res.ok) throw new Error(`Overpass ${res.status}`)
-  const json = parseJson<{ elements: OverpassEl[] }>(await res.text())
+  const json = await responseJson<{ elements: OverpassEl[] }>(res)
 
   const byOsm = new Map<number, string>()
   for (const el of json.elements) {
@@ -75,13 +75,12 @@ async function fetchP18(qids: string[]): Promise<Map<string, string>> {
     const res = await fetch(url, { headers: { "User-Agent": UA } })
     if (!res.ok) throw new Error(`Wikidata ${res.status}`)
     // oxlint-disable-next-line no-await-in-loop -- same request as above
-    const body = await res.text()
-    const data = parseJson<{
+    const data = await responseJson<{
       entities: Record<
         string,
         { claims?: { P18?: { mainsnak?: { datavalue?: { value?: string } } }[] } }
       >
-    }>(body)
+    }>(res)
     for (const [qid, ent] of Object.entries(data.entities)) {
       const file = ent.claims?.P18?.[0]?.mainsnak?.datavalue?.value
       if (file) out.set(qid, file)
@@ -122,8 +121,7 @@ async function fetchCredits(files: string[]): Promise<Map<string, string>> {
     const res = await fetch(url, { headers: { "User-Agent": UA } })
     if (!res.ok) throw new Error(`Commons ${res.status}`)
     // oxlint-disable-next-line no-await-in-loop -- same request as above
-    const body = await res.text()
-    const data = parseJson<{
+    const data = await responseJson<{
       query?: {
         pages?: Record<
           string,
@@ -133,7 +131,7 @@ async function fetchCredits(files: string[]): Promise<Map<string, string>> {
           }
         >
       }
-    }>(body)
+    }>(res)
     for (const page of Object.values(data.query?.pages ?? {})) {
       const file = page.title?.replace(/^File:/u, "")
       const meta = page.imageinfo?.[0]?.extmetadata
@@ -182,9 +180,4 @@ async function main() {
   console.log(`Wrote ${Object.keys(map).length} photos → ${outPath}`)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

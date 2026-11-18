@@ -14,22 +14,15 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { args, argValue } from "./lib/args"
+import { fetchStations } from "./lib/bajs-stations"
 import { createDitherCropper } from "./lib/dither-crop"
-import { parseJson } from "./lib/json"
-
-const STATION_INFORMATION_URL =
-  "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json"
 
 const root = process.cwd()
 const outDir = join(root, "public", "bajs-tiles")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 const metaPath = join(root, "data", "bajs-tiles.json")
 
-const args = process.argv.slice(2)
-const argValue = (name: string) => {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const cutoff = Number(argValue("--cutoff") ?? 80)
 const minZoom = Number(argValue("--min-zoom") ?? 11)
 // 15 is the floor of the useful range, not the ceiling of the map: a 512 px
@@ -37,15 +30,9 @@ const minZoom = Number(argValue("--min-zoom") ?? 11)
 const maxZoom = Number(argValue("--max-zoom") ?? 15)
 const force = args.includes("--force")
 
-type Station = { lat: number; lon: number; is_virtual_station?: boolean }
-
 /** Padded box around the real stations — the frame the map is allowed to roam. */
 async function serviceBbox(): Promise<{ bbox: number[]; stations: number }> {
-  const feed = parseJson<{ data: { stations: Station[] } }>(
-    await (await fetch(STATION_INFORMATION_URL)).text()
-  )
-  const stations = feed.data.stations.filter((s) => !s.is_virtual_station)
-  if (stations.length === 0) throw new Error("GBFS returned no stations")
+  const stations = await fetchStations()
 
   const lats = stations.map((s) => s.lat)
   const lons = stations.map((s) => s.lon)
@@ -87,9 +74,4 @@ async function main() {
   console.error(`bounds → ${metaPath}`)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

@@ -19,8 +19,18 @@ import { join } from "node:path"
 
 import sharp from "sharp"
 
-import { mercatorX, mercatorY } from "../lib/geo"
-import { countBelow, mapConcurrent, rawChannels } from "./lib/dither-crop"
+import { argValue } from "./lib/args"
+import { mapConcurrent } from "./lib/concurrency"
+import {
+  countBelow,
+  type HeroCrop,
+  type HeroMeta,
+  invMercX,
+  invMercY,
+  mercX,
+  mercY,
+  rawChannels,
+} from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 const TILE_URL = "https://basemaps.cartocdn.com/dark_nolabels"
@@ -57,47 +67,10 @@ const dataDir = join(root, "data", "linije")
 const outDir = join(root, "public", "linije")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
-// --- args ---
-const args = process.argv.slice(2)
-function argValue(name: string): string | undefined {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const onlyLine = argValue("--line")
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 /** Coverage cutoff 0–255: how much of a display pixel must be building to turn blue. */
 const cutoff = Number(argValue("--cutoff") ?? 80)
-
-// --- Web Mercator (normalized helpers from lib/geo, scaled to world pixels) ---
-function mercX(lon: number, worldPx: number): number {
-  return mercatorX(lon) * worldPx
-}
-function mercY(lat: number, worldPx: number): number {
-  return mercatorY(lat) * worldPx
-}
-function invMercX(x: number, worldPx: number): number {
-  return (x / worldPx) * 360 - 180
-}
-function invMercY(y: number, worldPx: number): number {
-  return (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldPx))) * 180) / Math.PI
-}
-
-interface HeroCrop {
-  west: number
-  south: number
-  east: number
-  north: number
-  width: number
-  height: number
-  zoom: number
-  /** Parameter signature — crops with a matching sig are skipped on re-runs. */
-  sig?: string
-}
-
-interface HeroMeta {
-  desktop: HeroCrop
-  mobile: HeroCrop
-}
 
 async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
   const max = 2 ** z
@@ -192,7 +165,6 @@ async function buildCrop(
   pad: number,
   prev?: HeroCrop
 ): Promise<HeroCrop> {
-  // Skip work when this exact crop already exists on disk.
   const sig = cropSig(bbox, outW, outH, pad)
   if (
     prev?.sig === sig &&
@@ -323,9 +295,4 @@ async function main() {
   console.error(`Done: ${lines.length} heroes, meta → ${metaPath}`)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

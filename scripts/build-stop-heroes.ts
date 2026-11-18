@@ -19,7 +19,9 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { createDitherCropper, type HeroCrop, mapConcurrent } from "./lib/dither-crop"
+import { argValue } from "./lib/args"
+import { mapConcurrent } from "./lib/concurrency"
+import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 const DESKTOP = { suffix: "", outW: 2880, outH: 1120, pad: 0.18 }
@@ -30,20 +32,10 @@ const dataDir = join(root, "data", "stanice")
 const outDir = join(root, "public", "stanice")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
-const args = process.argv.slice(2)
-function argValue(name: string): string | undefined {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const onlyStop = argValue("--stop")
 const minLines = Number(argValue("--min-lines") ?? 3)
 const cutoff = Number(argValue("--cutoff") ?? 80)
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
-
-interface HeroMeta {
-  desktop: HeroCrop
-  mobile: HeroCrop
-}
 
 // Stops crop a junction window, deeper than the line heroes (km-wide routes).
 // zoomMax 17 → a ~2.4 km-wide crop centred on the stop: enough surrounding city
@@ -87,9 +79,4 @@ async function main() {
   console.error(`Done: ${slugs.length} stop heroes, meta → ${metaPath}`)
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

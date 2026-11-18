@@ -15,7 +15,8 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { mercatorX, mercatorY, type Ring } from "../lib/geo"
-import { createDitherCropper, type HeroCrop } from "./lib/dither-crop"
+import { argValue } from "./lib/args"
+import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 // topPx = city's north edge from the band top (@2x), leaving room for the
@@ -33,11 +34,6 @@ const SIMPLIFY_TOLERANCE = 0.0004
 
 const root = process.cwd()
 
-const args = process.argv.slice(2)
-const argValue = (n: string) => {
-  const i = args.indexOf(n)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 
 // The kvart defaults assume district scale; the city band fits at z10, so
 // texture comes from deep oversampling. The default cutoff (80 ≈ 31% building
@@ -197,9 +193,7 @@ function bandBbox(
   ]
 }
 
-interface HomeHeroData {
-  desktop: HeroCrop
-  mobile: HeroCrop
+interface HomeHeroData extends HeroMeta {
   boundary: Ring
 }
 
@@ -259,9 +253,4 @@ async function main() {
   )
 }
 
-try {
-  await main()
-} catch (err) {
-  console.error(err)
-  process.exit(1)
-}
+await main()

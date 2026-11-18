@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs"
 import { setTimeout as sleep } from "node:timers/promises"
 import { generateObject } from "ai"
 import { z } from "zod"
+import { get } from "./rss"
 
 export const noticeSchema = z.object({
   permanence: z.enum(["permanent", "temporary"]).describe("temporary = roadworks/event/closure/seasonal/one-off ('zbog radova','do završetka radova','privremen','prometuje skraćeno','tijekom', događanje); permanent = a lasting network change"),
@@ -54,7 +55,6 @@ export async function extractNotice(model: string, body: string, publishedHint?:
 }
 
 // ───────── pipeline plumbing, shared by the ingest + eval scripts ─────────
-const UA = { "User-Agent": "Mozilla/5.0 doseg-promjene" }
 
 /** Load .env.local into process.env (scripts + vitest don't auto-load it). */
 export function loadEnvLocal(): void {
@@ -63,12 +63,6 @@ export function loadEnvLocal(): void {
   } catch {
     // no .env.local
   }
-}
-
-/** GET text with an abort timeout. */
-export async function get(url: string, timeoutMs = 45000): Promise<string> {
-  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), timeoutMs)
-  try { return await (await fetch(url, { headers: UA, signal: ctrl.signal })).text() } finally { clearTimeout(t) }
 }
 
 /** True when bodyFromHtml produced real article text, not an empty shell (older
@@ -91,16 +85,4 @@ export async function loadBody(id: string, url: string, bodies: Record<string, s
     }
   }
   return null
-}
-
-/** Run `fn` over items with at most `n` in flight. */
-export async function pool<T>(items: T[], n: number, fn: (t: T, i: number) => Promise<void>): Promise<void> {
-  let i = 0
-  await Promise.all(Array.from({ length: n }, async () => {
-    while (i < items.length) {
-      const k = i++
-      // oxlint-disable-next-line no-await-in-loop -- each worker runs one item at a time; n workers is the concurrency limit
-      await fn(items[k], k)
-    }
-  }))
 }

@@ -1,4 +1,4 @@
-import type maplibregl from "maplibre-gl"
+import type * as maplibregl from "maplibre-gl"
 
 /**
  * How a station is drawn on the /bajs map: a needle.

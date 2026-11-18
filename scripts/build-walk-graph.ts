@@ -13,12 +13,11 @@
  */
 
 import { createReadStream, readFileSync, writeFileSync } from "fs"
+import through2 from "through2"
 import type { OsmItem, Edge } from "./shared-types"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const createParser = require("osm-pbf-parser")
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const through2 = require("through2")
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"

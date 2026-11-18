@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "jsx-a11y",
+    "nextjs",
+    "import",
+    "promise"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error",
+    "pedantic": "error"
+  },
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "error"
+  },
+  "env": { "browser": true, "node": true, "es2024": true },
+  "rules": {
+    "max-lines-per-function": [
+      "error",
+      { "max": 90, "skipBlankLines": true, "skipComments": true }
+    ],
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "typescript/strict-boolean-expressions": [
+      "error",
+      { "allowNullableBoolean": true, "allowNullableString": true }
+    ],
+    "typescript/no-confusing-void-expression": [
+      "error",
+      { "ignoreArrowShorthand": true }
+    ],
+    "promise/always-return": ["error", { "ignoreLastCallback": true }],
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
+
+    // The automatic JSX runtime (react-jsx in tsconfig) never needs React in scope.
+    "react/react-in-jsx-scope": "off",
+    // Would demand readonly on every props object and array param, 2000+ sites with no bug behind any.
+    "typescript/prefer-readonly-parameter-types": "off",
+    // The 90-line function cap is the unit we enforce; long data and section files are fine.
+    "max-lines": "off",
+    // Pages compose many primitives and icons; an import count says nothing about design.
+    "import/max-dependencies": "off",
+    // Declaration order follows meaning (lat before lon), not the alphabet.
+    "sort-vars": "off",
+    // Duplicate of unicorn/no-negated-condition, which stays on.
+    "no-negated-condition": "off",
+    // role="status" on a div is the right live region; <output> is inline and form-associated, so swapping changes layout.
+    "jsx-a11y/prefer-tag-over-role": "off"
+  },
+  "ignorePatterns": [
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    ".claude/**",
+    ".expect/**",
+    "transit/**",
+    // Archived experiments kept as the record of what was run, not maintained code.
+    "scripts/proto/**"
+  ]
+}

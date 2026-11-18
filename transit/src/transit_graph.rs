@@ -206,8 +206,7 @@ pub fn compute_avg_travel_times(
 
     // Seed: walk to nearby BAJS stations
     if let Some(adj) = bajs_adj {
-        for bi in 0..adj.bajs_count {
-            let station = &adj.stations[bi];
+        for (bi, station) in adj.stations.iter().take(adj.bajs_count).enumerate() {
             let dist_km = fast_dist_km(origin_lat, origin_lon, station.lat, station.lon);
             if dist_km > WALK_MAX_KM {
                 continue;

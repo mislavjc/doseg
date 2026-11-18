@@ -27,8 +27,8 @@ export function splitCsv(line: string): string[] {
 }
 
 export function readCsv(path: string): { header: string[]; rows: string[][] } {
-  const lines = readFileSync(path, "utf8").split(/\r?\n/).filter((l) => l.length)
-  return { header: splitCsv(lines[0]), rows: lines.slice(1).map(splitCsv) }
+  const lines = readFileSync(path, "utf8").split(/\r?\n/u).filter((l) => l.length)
+  return { header: splitCsv(lines[0]), rows: lines.slice(1).map((l) => splitCsv(l)) }
 }
 
 export const idx = (header: string[], name: string) => header.indexOf(name)
@@ -42,11 +42,10 @@ export function colIndex(header: string[], name: string): number {
 
 export async function streamCsv(path: string, onRow: (cols: string[], col: (n: string) => number) => void) {
   const rl = createInterface({ input: createReadStream(path), crlfDelay: Infinity })
-  let header: string[] | null = null
-  let col: (n: string) => number = () => -1
+  let col: ((n: string) => number) | null = null
   for await (const line of rl) {
     if (!line) continue
-    if (!header) { header = splitCsv(line); col = (n) => header!.indexOf(n); continue }
+    if (!col) { const header = splitCsv(line); col = (n) => header.indexOf(n); continue }
     onRow(splitCsv(line), col)
   }
 }

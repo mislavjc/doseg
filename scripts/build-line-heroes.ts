@@ -20,6 +20,8 @@ import { join } from "node:path"
 import sharp from "sharp"
 
 import { mercatorX, mercatorY } from "../lib/geo"
+import { countBelow, mapConcurrent, rawChannels } from "./lib/dither-crop"
+import { readJson } from "./lib/json"
 
 const TILE_URL = "https://basemaps.cartocdn.com/dark_nolabels"
 const TILE_SIZE = 256
@@ -33,8 +35,10 @@ const TILE_SIZE = 256
  * Contract with app/linije/line-hero.tsx: the desktop crop renders at
  * viewports ≥640px (Tailwind `sm`), the mobile crop below.
  */
-const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 1320, pad: 0.15 } // 1440×660 @2x
-const MOBILE_W = 840 // 420 @2x
+// 1440×660 @2x
+const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 1320, pad: 0.15 }
+// 420 @2x
+const MOBILE_W = 840
 const MOBILE_H_MIN = 460
 const MOBILE_H_MAX = 1120
 const MOBILE_PAD = 0.24
@@ -114,24 +118,6 @@ async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
   return buf
 }
 
-async function mapConcurrent<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T) => Promise<R>
-): Promise<R[]> {
-  const results: R[] = new Array(items.length)
-  let next = 0
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) {
-        const i = next++
-        results[i] = await fn(items[i])
-      }
-    })
-  )
-  return results
-}
-
 /** Fetch + stitch tiles covering a native crop rect, return grayscale pixels. */
 async function stitchGrayCrop(
   zoom: number,
@@ -176,7 +162,7 @@ async function stitchGrayCrop(
     .toBuffer({ resolveWithObject: true })
 
   const { data } = await sharp(stitched.data, {
-    raw: { width: canvasW, height: stitched.info.height, channels: stitched.info.channels as 3 },
+    raw: { width: canvasW, height: stitched.info.height, channels: rawChannels(stitched.info.channels) },
     limitInputPixels: false,
   })
     .extract({ left: x0 - tx0 * TILE_SIZE, top: y0 - ty0 * TILE_SIZE, width: natW, height: natH })
@@ -257,10 +243,7 @@ async function buildCrop(
       const baseY = oy * scale
       const baseX = ox * scale
       for (let dy = 0; dy < scale; dy++) {
-        const row = (baseY + dy) * natW + baseX
-        for (let dx = 0; dx < scale; dx++) {
-          if (data[row + dx] < BUILDING_GRAY) sub++
-        }
+        sub += countBelow(data, (baseY + dy) * natW + baseX, scale, BUILDING_GRAY)
       }
       const blue = sub >= minSub
       const i = (oy * outW + ox) * 3
@@ -293,7 +276,8 @@ async function buildHero(
 ): Promise<HeroMeta> {
   // Mobile band height follows the route's mercator aspect, clamped.
   const [w, s, e, n] = bbox
-  const worldPx = TILE_SIZE * 2 ** 14 // any zoom — only the ratio matters
+  // any zoom — only the ratio matters
+  const worldPx = TILE_SIZE * 2 ** 14
   const routeAspect =
     (mercY(s, worldPx) - mercY(n, worldPx)) /
     Math.max(mercX(e, worldPx) - mercX(w, worldPx), 1e-9)
@@ -312,19 +296,19 @@ async function buildHero(
 async function main() {
   mkdirSync(outDir, { recursive: true })
   const lines = readdirSync(dataDir)
-    .filter((f) => /^\d+\.json$/.test(f))
+    .filter((f) => /^\d+\.json$/u.test(f))
     .map((f) => f.replace(".json", ""))
     .filter((b) => !onlyLine || b === onlyLine)
-    .sort((a, b) => Number(a) - Number(b))
+    .toSorted((a, b) => Number(a) - Number(b))
 
   const metaPath = join(dataDir, "hero-meta.json")
   const meta: Record<string, HeroMeta> = existsSync(metaPath)
-    ? JSON.parse(readFileSync(metaPath, "utf-8"))
+    ? readJson<Record<string, HeroMeta>>(metaPath)
     : {}
 
   let done = 0
   await mapConcurrent(lines, 4, async (broj) => {
-    const { bbox } = JSON.parse(readFileSync(join(dataDir, `${broj}.json`), "utf-8"))
+    const { bbox } = readJson<{ bbox: number[] }>(join(dataDir, `${broj}.json`))
     const t0 = Date.now()
     const built = await buildHero(broj, bbox, meta[broj])
     meta[broj] = built
@@ -339,7 +323,9 @@ async function main() {
   console.error(`Done: ${lines.length} heroes, meta → ${metaPath}`)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

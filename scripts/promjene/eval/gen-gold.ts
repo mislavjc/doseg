@@ -1,19 +1,21 @@
 /** Generate the eval gold set: run the strong baseline (gpt-5.5) over the cached
  * notice bodies, write gold.json. Spot-verify against the bodies before trusting it.
  * Run: bun scripts/promjene/eval/gen-gold.ts */
-import { readFileSync, writeFileSync } from "node:fs"
+import { writeFileSync } from "node:fs"
 import { join } from "node:path"
-import { extractNotice } from "../extract"
+import { readJson } from "../../lib/json"
+import { extractNotice, loadEnvLocal, type Notice } from "../extract"
 
-try { for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2] } } catch { /* ignore */ }
+loadEnvLocal()
 
-const bodies: Record<string, string> = JSON.parse(readFileSync("/tmp/zet-bodies.json", "utf8"))
-const cands: { id: string; date: string | null }[] = JSON.parse(readFileSync("data/promjene/candidates.json", "utf8")).candidates
+const bodies = readJson<Record<string, string>>("/tmp/zet-bodies.json")
+const { candidates: cands } = readJson<{ candidates: { id: string; date: string | null }[] }>("data/promjene/candidates.json")
 const pub = (id: string) => cands.find((c) => c.id === id)?.date ?? undefined
-const gold: Record<string, unknown> = {}
+const gold: Record<string, Notice> = {}
 for (const id of Object.keys(bodies)) {
-  gold[id] = await extractNotice("openai/gpt-5.5", bodies[id], pub(id))
-  const g = gold[id] as { permanence: string; category: string; cleanTitle: string }
+  // oxlint-disable-next-line no-await-in-loop -- one model call at a time, in id order, to stay under the gateway rate limit and keep the log readable
+  const g = await extractNotice("openai/gpt-5.5", bodies[id], pub(id))
+  gold[id] = g
   console.error(`${id}  ${g.permanence.padEnd(9)} ${g.category.padEnd(11)} "${g.cleanTitle.slice(0, 56)}"`)
 }
 writeFileSync(join(process.cwd(), "scripts/promjene/eval/gold.json"), JSON.stringify(gold, null, 2))

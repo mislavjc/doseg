@@ -5,10 +5,8 @@
  */
 
 import { createReadStream, writeFileSync } from "fs"
+import createParser from "osm-pbf-parser"
 import through2 from "through2"
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const createParser = require("osm-pbf-parser")
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/bike-graph.bin"
@@ -299,7 +297,9 @@ async function main() {
   writeBinaryGraph(nodeList, edges)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

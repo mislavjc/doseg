@@ -10,15 +10,17 @@
  * line + stop heroes); tiles cache at .cache/tiles/dark_nolabels. Run:
  *   bun scripts/build-kvart-heroes.ts [--kvart tresnjevka-sjever] [--zoom 14] [--cutoff 80]
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { mercatorX, mercatorY, type Ring } from "../lib/geo"
 import { kvartSlug } from "../lib/kvart-slug"
 import { createDitherCropper, type HeroCrop, mapConcurrent } from "./lib/dither-crop"
+import { readJson } from "./lib/json"
 
 // Slim band, zoomed out so the district sits clear of the nav with margin.
-const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 800, pad: 0.45 } // 1440×400 @2x
+// 1440×400 @2x
+const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 800, pad: 0.45 }
 const MOBILE_W = 840
 const MOBILE_H_MIN = 420
 const MOBILE_H_MAX = 720
@@ -77,16 +79,16 @@ async function buildHero(slug: string, bbox: number[], prev?: HeroMeta): Promise
 async function main() {
   mkdirSync(outDir, { recursive: true })
   mkdirSync(dataDir, { recursive: true })
-  const geo = JSON.parse(readFileSync(join(root, "data/districts.geojson"), "utf-8")) as {
+  const geo = readJson<{
     features: { properties: { name: string }; geometry: { coordinates: Ring[] } }[]
-  }
+  }>(join(root, "data/districts.geojson"))
   const districts = geo.features
     .map((f) => ({ slug: kvartSlug(f.properties.name), bbox: bboxOf(f.geometry.coordinates) }))
     .filter((d) => !onlyKvart || d.slug === onlyKvart)
 
   const metaPath = join(dataDir, "hero-meta.json")
   const meta: Record<string, HeroMeta> = existsSync(metaPath)
-    ? JSON.parse(readFileSync(metaPath, "utf-8"))
+    ? readJson<Record<string, HeroMeta>>(metaPath)
     : {}
 
   let done = 0
@@ -103,7 +105,9 @@ async function main() {
   console.error(`Done: ${districts.length} kvart heroes, meta → ${metaPath}`)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

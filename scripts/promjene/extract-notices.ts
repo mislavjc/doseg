@@ -17,8 +17,9 @@
  *   bun scripts/promjene/extract-notices.ts          # all list-worthy
  *   bun scripts/promjene/extract-notices.ts 9881 9894 # specific ids (e.g. verify curated)
  */
-import { readFileSync, writeFileSync, existsSync } from "node:fs"
+import { writeFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
+import { readJson } from "../lib/json"
 import { extractNotice, loadBody, pool, loadEnvLocal, type Notice } from "./extract"
 import { autoHeadline, isTram } from "../../app/promjene/lib"
 
@@ -28,8 +29,8 @@ import { autoHeadline, isTram } from "../../app/promjene/lib"
  * would be overclaimed by the terse form — there, keep the model's exact wording. */
 function displayTitleFor(n: Notice, lines: string[]): string {
   if (n.category === "stajalište") return n.cleanTitle
-  if (n.category === "nova" && /ponovno/i.test(n.cleanTitle)) return `Ponovno uvedena ${isTram(lines[0]) ? "tramvajska" : "autobusna"} linija ${lines.join(", ")}.`
-  if (/u pojedinim polascima|djelomično|djelomicno|vikendom|praznikom|samo u smjeru/i.test(n.cleanTitle)) return n.cleanTitle
+  if (n.category === "nova" && /ponovno/iu.test(n.cleanTitle)) return `Ponovno uvedena ${isTram(lines[0]) ? "tramvajska" : "autobusna"} linija ${lines.join(", ")}.`
+  if (/u pojedinim polascima|djelomično|djelomicno|vikendom|praznikom|samo u smjeru/iu.test(n.cleanTitle)) return n.cleanTitle
   return autoHeadline(lines, n.category)
 }
 
@@ -45,18 +46,19 @@ const CHANGE_ROLES = new Set(["new", "extended", "shortened", "rerouted", "remov
 // A permanent change has a start but no END. A bounded "do <završetka radova | date |
 // weekday>" is the signature of a temporary diversion — if the model still calls such a
 // notice permanent, that conflict is held back from the list for a human to check.
-const END_MARKER = /\bdo\s+(zavr[šs]etka|dovr[šs]etka|ponovne|kraja|okon[čc]anja)\b|\bdo\s+\d{1,2}\.\s*(sije[čc]nj|velja[čc]|o[žz]uj|trav|svib|lip|srp|kolovoz|ruj|listopad|studen|prosin)|\bdo\s+(petka|subote|nedjelje|ponedjeljka|utorka|srijede|[čc]etvrtka)\b/i
+const END_MARKER = /\bdo\s+(zavr[šs]etka|dovr[šs]etka|ponovne|kraja|okon[čc]anja)\b|\bdo\s+\d{1,2}\.\s*(sije[čc]nj|velja[čc]|o[žz]uj|trav|svib|lip|srp|kolovoz|ruj|listopad|studen|prosin)|\bdo\s+(petka|subote|nedjelje|ponedjeljka|utorka|srijede|[čc]etvrtka)\b/iu
 
 interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; illustratable?: boolean; displayTitle?: string; datePrecise?: boolean; review?: boolean; classifiedBy?: string; extracted?: Notice }
 
 async function main() {
   const args = process.argv.slice(2)
-  const sweep = args.includes("--sweep") // also classify the slug-EXCLUDED notices, to surface false-negatives
+  // also classify the slug-EXCLUDED notices, to surface false-negatives
+  const sweep = args.includes("--sweep")
   const only = new Set(args.filter((a) => !a.startsWith("--")))
-  const doc = JSON.parse(readFileSync(DATA, "utf8"))
-  const cands: Cand[] = doc.candidates
-  const bodies: Record<string, string> = existsSync(BODIES) ? JSON.parse(readFileSync(BODIES, "utf8")) : {}
-  if (existsSync(SEED)) for (const [k, v] of Object.entries(JSON.parse(readFileSync(SEED, "utf8")))) bodies[k] ??= v as string
+  const doc = readJson<{ candidates: Cand[]; counts?: Record<string, number> }>(DATA)
+  const cands = doc.candidates
+  const bodies = existsSync(BODIES) ? readJson<Record<string, string>>(BODIES) : {}
+  if (existsSync(SEED)) for (const [k, v] of Object.entries(readJson<Record<string, string>>(SEED))) bodies[k] ??= v
 
   const targets = cands.filter((c) =>
     only.size > 0 ? only.has(c.id)
@@ -68,7 +70,8 @@ async function main() {
 
   await pool(targets, 10, async (c) => {
     const body = await loadBody(c.id, c.url, bodies)
-    if (!body) { noBody++; c.review = true; return } // can't verify → hold for review
+    // can't verify → hold for review
+    if (!body) { noBody++; c.review = true; return }
     let n: Notice
     try { n = await extractNotice(MODEL, body, c.date ?? undefined) } catch { noBody++; c.review = true; return }
 
@@ -80,7 +83,7 @@ async function main() {
     c.displayTitle = displayTitleFor(n, c.lines)
     c.classifiedBy = MODEL
     c.extracted = n
-    if (n.effectiveDate && /^\d{4}-\d{2}-\d{2}$/.test(n.effectiveDate)) { c.date = n.effectiveDate; c.datePrecise = true } else { c.datePrecise = false }
+    if (n.effectiveDate && /^\d{4}-\d{2}-\d{2}$/u.test(n.effectiveDate)) { c.date = n.effectiveDate; c.datePrecise = true } else { c.datePrecise = false }
 
     const conflict = n.permanence === "permanent" && END_MARKER.test(body)
     c.review = conflict
@@ -104,7 +107,7 @@ async function main() {
   if (sweep) {
     const surfaced = targets.filter((c) => c.listWorthy)
     console.error(`\nSURFACED ${surfaced.length} false-negatives (slug excluded them, but they're permanent network changes — AUDIT):`)
-    for (const c of surfaced.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))) console.error(`  ${c.id}  ${c.date}  ${c.category.padEnd(11)} "${c.displayTitle}"`)
+    for (const c of surfaced.toSorted((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))) console.error(`  ${c.id}  ${c.date}  ${c.category.padEnd(11)} "${c.displayTitle}"`)
   } else if (drops.length > 0) { console.error(`\nDROPPED as temporary (${drops.length}):`); for (const d of drops.slice(0, 60)) console.error(`  ${d}`) }
 }
-main()
+await main()

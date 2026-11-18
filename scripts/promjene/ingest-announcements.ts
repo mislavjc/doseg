@@ -15,19 +15,22 @@
  *
  * Output: data/promjene/candidates.json. Run: bun scripts/promjene/ingest-announcements.ts
  */
-import { writeFileSync, existsSync, readFileSync } from "node:fs"
+import { writeFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
+import { setTimeout as sleep } from "node:timers/promises"
+import { readJson } from "../lib/json"
 import { classify, extractLines, fromRss, get, idOf, strip } from "./rss"
 
-const EARLIEST_FEED = "2025-04-07" // before this we lack a shapes-bearing GTFS feed to illustrate from
+// before this we lack a shapes-bearing GTFS feed to illustrate from
+const EARLIEST_FEED = "2025-04-07"
 
 // Reasons a change is TEMPORARY (roadworks, races, events, one-off/partial diversions).
 // NOTE: run against a SPACE-normalized basis (hyphens→spaces) so slug + title match
 // the same patterns. Day names are temporary only after "u " ("u ponedjeljak" = this
 // Monday) — NOT after "od " ("od ponedjeljka" = a permanent change's effective date).
-const TEMP = /radov|asfaltir|utrk|maraton|advent|obustav|privremen|izvanredn|zatvor|regulacij|posebn|\bhod\b|procesij|koncert|vatromet|obilazno|\bzbog\b|sajam|fašnik|fasnik|doček|docek|blagdan|prvomaj|\bsvet|izlet|snij|vremen|\bkvar\b|prosvjed|derbi|utakmic|\brun\b|cestovn|zabav|festival|polumaraton|biciklijad|hodočašć|hodocasc|skije|skijaš|zaobilaz|tijekom vikenda|u večernjim|u vecernjim|u jutarnjim|u zadnjim|u posljednjim|u ranim jutarnjim|\bu (ponedjeljak|utorak|srijedu|četvrtak|cetvrtak|petak|subotu|nedjelju)\b|ljetni vozni red|zimski vozni red|ljetni raspored|sezonsk|prometuje skraćen|prometuje skracen|vozi skraćen|vozi skracen|od \d+ sati/
+const TEMP = /radov|asfaltir|utrk|maraton|advent|obustav|privremen|izvanredn|zatvor|regulacij|posebn|\bhod\b|procesij|koncert|vatromet|obilazno|\bzbog\b|sajam|fašnik|fasnik|doček|docek|blagdan|prvomaj|\bsvet|izlet|snij|vremen|\bkvar\b|prosvjed|derbi|utakmic|\brun\b|cestovn|zabav|festival|polumaraton|biciklijad|hodočašć|hodocasc|skije|skijaš|zaobilaz|tijekom vikenda|u večernjim|u vecernjim|u jutarnjim|u zadnjim|u posljednjim|u ranim jutarnjim|\bu (ponedjeljak|utorak|srijedu|četvrtak|cetvrtak|petak|subotu|nedjelju)\b|ljetni vozni red|zimski vozni red|ljetni raspored|sezonsk|prometuje skraćen|prometuje skracen|vozi skraćen|vozi skracen|od \d+ sati/u
 // Strong signals a change is PERMANENT (network redesign, not an event diversion).
-const PERM = /ukidanj|ukida|ukinut|produljen|produžen|produzen|nova linij|nove linij|nova autobusn|uspostavlj|uvodi se|uvode se|novi vozni red|trajno|preimenovan|preimenuje/
+const PERM = /ukidanj|ukida|ukinut|produljen|produžen|produzen|nova linij|nove linij|nova autobusn|uspostavlj|uvodi se|uvode se|novi vozni red|trajno|preimenovan|preimenuje/u
 
 // Categories that represent a real network change (not pure schedule or grab-bag).
 const LIST_CATEGORIES = new Set(["nova", "ukinuta", "produljena", "skraćena", "trasa", "stajalište"])
@@ -37,11 +40,12 @@ function permanence(t: string): "permanent" | "temporary" | "review" {
   const hasTemp = TEMP.test(t), hasPerm = PERM.test(t)
   if (hasPerm && !hasTemp) return "permanent"
   if (hasTemp) return "temporary"
-  return "review" // ambiguous (e.g. a bare "linija X mijenja trasu") — needs a human
+  // ambiguous (e.g. a bare "linija X mijenja trasu") — needs a human
+  return "review"
 }
 
-const slugOf = (url: string) => { const m = url.match(/izmjene-u-prometu\/([a-z0-9-]+)\/\d+/i); return m ? m[1] : "" }
-const titleFromSlug = (slug: string) => slug.replaceAll('-', " ").replaceAll(/\b\w/g, (c) => c.toUpperCase())
+const slugOf = (url: string) => { const m = url.match(/izmjene-u-prometu\/([a-z0-9-]+)\/\d+/iu); return m ? m[1] : "" }
+const titleFromSlug = (slug: string) => slug.replaceAll('-', " ").replaceAll(/\b\w/gu, (c) => c.toUpperCase())
 
 interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; illustratable: boolean }
 
@@ -51,11 +55,13 @@ async function fromLiveListing(): Promise<Map<string, { title: string; url: stri
   const out = new Map<string, { title: string; url: string }>()
   for (let page = 1; page <= 6; page++) {
     let html: string
+    // oxlint-disable-next-line no-await-in-loop -- pages are walked in order until one adds nothing new
     try { html = await get(`https://www.zet.hr/aktualnosti/izmjene-u-prometu/31?page=${page}`) } catch { break }
-    const links = [...html.matchAll(/<a[^>]+href="(\/aktualnosti\/izmjene-u-prometu\/[a-z0-9-]+\/\d+)"[^>]*>([^<]+)<\/a>/gi)]
+    const links = [...html.matchAll(/<a[^>]+href="(\/aktualnosti\/izmjene-u-prometu\/[a-z0-9-]+\/\d+)"[^>]*>([^<]+)<\/a>/giu)]
     const fresh = links.filter(([, href]) => !out.has(idOf(href)))
     for (const [, href, title] of links) { const id = idOf(href); if (id) out.set(id, { title: strip(title), url: `https://www.zet.hr${href}` }) }
-    if (fresh.length === 0) break // no new articles → past the last page
+    // no new articles → past the last page
+    if (fresh.length === 0) break
   }
   console.error(`  live listing: ${out.size} articles`)
   return out
@@ -68,18 +74,22 @@ async function fromWayback(): Promise<Map<string, { url: string; ts: string }>> 
   // transient failure doesn't silently drop years of history.
   for (let attempt = 1; attempt <= 5; attempt++) {
     try {
+      // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
       const txt = await get(URL, 120000)
       for (const line of txt.split("\n")) {
         const [ts, original] = line.split(" ")
         if (!ts || !original) continue
         const id = idOf(original); if (!id || !slugOf(original)) continue
         const prev = out.get(id)
-        if (!prev || ts < prev.ts) out.set(id, { url: original.replace(/^http:/, "https:").replace(":80", ""), ts }) // earliest snapshot ≈ publish date
+        // earliest snapshot ≈ publish date
+        if (!prev || ts < prev.ts) out.set(id, { url: original.replace(/^http:/u, "https:").replace(":80", ""), ts })
       }
-      if (out.size > 50) break // got the full set
+      // got the full set
+      if (out.size > 50) break
       console.error(`  wayback CDX attempt ${attempt}: only ${out.size} — retrying`)
-    } catch (e) { console.error(`  wayback CDX attempt ${attempt} failed: ${(e as Error).message}`) }
-    await new Promise((r) => setTimeout(r, attempt * 4000))
+    } catch (e) { console.error(`  wayback CDX attempt ${attempt} failed: ${e instanceof Error ? e.message : String(e)}`) }
+    // oxlint-disable-next-line no-await-in-loop -- backoff between retries
+    await sleep(attempt * 4000)
   }
   console.error(`  wayback CDX: ${out.size} unique articles`)
   return out
@@ -108,10 +118,11 @@ async function main() {
     // resolve 200, but older canonical article URLs now 302 → homepage. For those
     // (wayback-only) link to the archived snapshot, which renders the real notice.
     const url = (r || l) ? canonical : w ? `https://web.archive.org/web/${w.ts}/${canonical}` : canonical
+    // oxlint-disable-next-line typescript/prefer-nullish-coalescing -- an empty title ("" after strip) must fall through to the next source
     const title = r?.title || l?.title || (slug ? titleFromSlug(slug) : "")
     const date = r?.date ?? (w ? tsDate(w.ts) : null)
     // space-normalized so slug ("u-ponedjeljak") and title ("U Ponedjeljak") match the same patterns
-    const basis = `${title} ${slug} ${r?.body ?? ""}`.toLowerCase().replaceAll(/[-_]+/g, " ").replaceAll(/\s+/g, " ")
+    const basis = `${title} ${slug} ${r?.body ?? ""}`.toLowerCase().replaceAll(/[-_]+/gu, " ").replaceAll(/\s+/gu, " ")
     const category = classify(basis)
     const perm = permanence(basis)
     cands.push({
@@ -142,7 +153,7 @@ async function main() {
   // recent-only RSS/live subset.
   const outPath = join(process.cwd(), "data", "promjene", "candidates.json")
   if (wb.size === 0 && existsSync(outPath)) {
-    const prev = JSON.parse(readFileSync(outPath, "utf8")).candidates?.length ?? 0
+    const prev = readJson<{ candidates?: Cand[] }>(outPath).candidates?.length ?? 0
     if (prev > cands.length) { console.error(`\nABORT: wayback empty and existing file has ${prev} > ${cands.length} candidates — keeping it. Retry later.`); return }
   }
   writeFileSync(outPath, JSON.stringify(out, null, 2))
@@ -154,4 +165,4 @@ async function main() {
     console.error(`  ${(c.date ?? "????-??-??")}  ${c.illustratable ? "▮" : "·"} ${c.category.padEnd(11)} [${c.lines.join(",") || "—"}]  ${c.title.slice(0, 54)}`)
   console.error(`\nwrote data/promjene/candidates.json  (▮ = illustratable from current feeds)`)
 }
-main()
+await main()

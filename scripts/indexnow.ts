@@ -9,10 +9,10 @@
  * discovery channel. The key below is public and must be served verbatim at
  * https://doseg.hr/<KEY>.txt (see public/761c62e2daf49843b64800df4f51c7c5.txt).
  */
-import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { kvartSlug } from "../lib/kvart-slug"
+import { readJson } from "./lib/json"
 
 const HOST = "doseg.hr"
 const BASE = `https://${HOST}`
@@ -42,14 +42,12 @@ interface DistrictScores {
   districts: { name: string }[]
 }
 
-function readData<T>(...parts: string[]): T {
-  return JSON.parse(readFileSync(join(process.cwd(), "data", ...parts), "utf8"))
-}
+const dataPath = (...parts: string[]) => join(process.cwd(), "data", ...parts)
 
 function urlList(): string[] {
-  const lines = readData<LineIndex>("linije", "index.json")
-  const stops = readData<StopIndex>("stanice", "index.json")
-  const scores = readData<DistrictScores>("district-scores.json")
+  const lines = readJson<LineIndex>(dataPath("linije", "index.json"))
+  const stops = readJson<StopIndex>(dataPath("stanice", "index.json"))
+  const scores = readJson<DistrictScores>(dataPath("district-scores.json"))
   return [
     ...STATIC_PATHS.map((p) => `${BASE}${p}`),
     ...lines.lines.map((l) => `${BASE}/linije/${l.broj}`),
@@ -78,4 +76,4 @@ async function main() {
   }
 }
 
-main()
+await main()

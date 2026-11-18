@@ -14,6 +14,8 @@
 import { writeFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { parseJson } from "./lib/json"
+
 import {
   OSM_TAGS,
   ZAGREB_BBOX,
@@ -53,12 +55,12 @@ async function fetchOsmWikidata(): Promise<Map<number, string>> {
     body: `data=${encodeURIComponent(query)}`,
   })
   if (!res.ok) throw new Error(`Overpass ${res.status}`)
-  const json = (await res.json()) as { elements: OverpassEl[] }
+  const json = parseJson<{ elements: OverpassEl[] }>(await res.text())
 
   const byOsm = new Map<number, string>()
   for (const el of json.elements) {
     const qid = el.tags?.wikidata
-    if (qid && /^Q\d+$/.test(qid)) byOsm.set(el.id, qid)
+    if (qid && /^Q\d+$/u.test(qid)) byOsm.set(el.id, qid)
   }
   return byOsm
 }
@@ -69,14 +71,17 @@ async function fetchP18(qids: string[]): Promise<Map<string, string>> {
   for (let i = 0; i < qids.length; i += 50) {
     const batch = qids.slice(i, i + 50).join("|")
     const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${batch}&props=claims&format=json&origin=*`
+    // oxlint-disable-next-line no-await-in-loop -- Wikidata batches go one at a time, as its API etiquette asks
     const res = await fetch(url, { headers: { "User-Agent": UA } })
     if (!res.ok) throw new Error(`Wikidata ${res.status}`)
-    const data = (await res.json()) as {
+    // oxlint-disable-next-line no-await-in-loop -- same request as above
+    const body = await res.text()
+    const data = parseJson<{
       entities: Record<
         string,
         { claims?: { P18?: { mainsnak?: { datavalue?: { value?: string } } }[] } }
       >
-    }
+    }>(body)
     for (const [qid, ent] of Object.entries(data.entities)) {
       const file = ent.claims?.P18?.[0]?.mainsnak?.datavalue?.value
       if (file) out.set(qid, file)
@@ -90,9 +95,9 @@ async function fetchP18(qids: string[]): Promise<Map<string, string>> {
  * author") — collapse an exact full-string duplication. */
 function plain(html: string): string {
   const s = html
-    .replaceAll(/<[^>]*>/g, "")
-    .replaceAll(/&[^;]+;/g, " ")
-    .replaceAll(/\s+/g, " ")
+    .replaceAll(/<[^>]*>/gu, "")
+    .replaceAll(/&[^;]+;/gu, " ")
+    .replaceAll(/\s+/gu, " ")
     .trim()
   if (s.length % 2 === 0) {
     const half = s.slice(0, s.length / 2)
@@ -113,9 +118,12 @@ async function fetchCredits(files: string[]): Promise<Map<string, string>> {
       "https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*" +
       "&prop=imageinfo&iiprop=extmetadata&titles=" +
       encodeURIComponent(titles)
+    // oxlint-disable-next-line no-await-in-loop -- Commons batches go one at a time, as its API etiquette asks
     const res = await fetch(url, { headers: { "User-Agent": UA } })
     if (!res.ok) throw new Error(`Commons ${res.status}`)
-    const data = (await res.json()) as {
+    // oxlint-disable-next-line no-await-in-loop -- same request as above
+    const body = await res.text()
+    const data = parseJson<{
       query?: {
         pages?: Record<
           string,
@@ -125,13 +133,14 @@ async function fetchCredits(files: string[]): Promise<Map<string, string>> {
           }
         >
       }
-    }
+    }>(body)
     for (const page of Object.values(data.query?.pages ?? {})) {
-      const file = page.title?.replace(/^File:/, "")
+      const file = page.title?.replace(/^File:/u, "")
       const meta = page.imageinfo?.[0]?.extmetadata
       if (!file) continue
       let author = meta?.Artist?.value ? plain(meta.Artist.value) : null
-      if (author && /^unknown/i.test(author)) author = null // PD placeholder
+      // PD placeholder
+      if (author && /^unknown/iu.test(author)) author = null
       const license = meta?.LicenseShortName?.value
         ? plain(meta.LicenseShortName.value)
         : null
@@ -167,13 +176,15 @@ async function main() {
     }
   }
 
-  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
+  const dataDir = process.env.DATA_DIR ?? join(process.cwd(), "data")
   const outPath = join(dataDir, "poi-photos.json")
   writeFileSync(outPath, JSON.stringify(map, null, 2) + "\n")
   console.log(`Wrote ${Object.keys(map).length} photos → ${outPath}`)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

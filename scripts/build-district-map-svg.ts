@@ -1,7 +1,9 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+import type { FeatureCollection, Geometry, Position } from "geojson"
+import { readJson } from "./lib/json"
 
-const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data")
+const DATA_DIR = process.env.DATA_DIR ?? join(process.cwd(), "data")
 const MAP_OUTPUT_PATH = join(process.cwd(), "public", "district-map.svg")
 const BAJS_MAP_OUTPUT_PATH = join(
   process.cwd(),
@@ -33,10 +35,16 @@ interface DistrictProperties {
   score?: number
   reachPct?: string
   maxMinutes?: number
-  population?: number
+  population?: number | null
   bajsBoostPct?: number
   bajsStations?: number
+  rank?: number
 }
+
+type DistrictCollection = FeatureCollection<
+  Geometry | null,
+  DistrictProperties | null
+>
 
 interface Projector {
   project(point: Point): Point
@@ -48,7 +56,7 @@ interface DistrictShape {
   score: number
   reachPct: string
   maxMinutes?: number
-  population?: number
+  population?: number | null
   bajsBoostPct?: number
   bajsStations?: number
   path: string
@@ -64,9 +72,9 @@ function pct(cells: number, total: number): string {
 }
 
 function enrichGeoJSON(
-  geojson: GeoJSON.FeatureCollection,
+  geojson: DistrictCollection,
   data: ScoreData
-): GeoJSON.FeatureCollection {
+): DistrictCollection {
   const scoreMap = new Map(
     data.districts.map((district) => [district.osmId, district])
   )
@@ -90,13 +98,17 @@ function enrichGeoJSON(
   return geojson
 }
 
-function getPolygons(geometry: GeoJSON.Geometry | null): PolygonRings[] {
+function toPolygon(rings: Position[][]): PolygonRings {
+  return rings.map((ring) => ring.map(([lon, lat]): Point => [lon, lat]))
+}
+
+function getPolygons(geometry: Geometry | null): PolygonRings[] {
   if (!geometry) return []
   if (geometry.type === "Polygon") {
-    return [geometry.coordinates as PolygonRings]
+    return [toPolygon(geometry.coordinates)]
   }
   if (geometry.type === "MultiPolygon") {
-    return geometry.coordinates as PolygonRings[]
+    return geometry.coordinates.map(toPolygon)
   }
   return []
 }
@@ -120,7 +132,7 @@ function roundCoord(value: number): number {
   return Math.round(value * 10) / 10
 }
 
-function createProjector(geojson: GeoJSON.FeatureCollection): Projector {
+function createProjector(geojson: DistrictCollection): Projector {
   let minLat = Infinity
   let maxLat = -Infinity
   let minLon = Infinity
@@ -171,7 +183,7 @@ function ringToPath(ring: Ring, projector: Projector): string {
 }
 
 function geometryToPath(
-  geometry: GeoJSON.Geometry | null,
+  geometry: Geometry | null,
   projector: Projector
 ): string {
   return getPolygons(geometry)
@@ -181,7 +193,7 @@ function geometryToPath(
 }
 
 function collectEmblemRings(
-  geometry: GeoJSON.Geometry | null
+  geometry: Geometry | null
 ): { rawRings: Ring[]; minLat: number; maxLat: number } {
   const rawRings: Ring[] = []
   let minLat = Infinity
@@ -189,11 +201,12 @@ function collectEmblemRings(
 
   for (const polygon of getPolygons(geometry)) {
     for (const ring of polygon) {
-      const points = ring.map(([lon, lat]) => {
+      const points: Ring = []
+      for (const [lon, lat] of ring) {
         minLat = Math.min(minLat, lat)
         maxLat = Math.max(maxLat, lat)
-        return [lon, lat] as Point
-      })
+        points.push([lon, lat])
+      }
       rawRings.push(points)
     }
   }
@@ -224,7 +237,7 @@ function projectEmblemRings(rawRings: Ring[], minLat: number, maxLat: number) {
 }
 
 function geometryToEmblemPath(
-  geometry: GeoJSON.Geometry | null,
+  geometry: Geometry | null,
   size: number = EMBLEM_SIZE
 ): string {
   const { rawRings, minLat, maxLat } = collectEmblemRings(geometry)
@@ -306,7 +319,7 @@ function bboxCenter(points: Point[]): Point {
 }
 
 function featureLabelPoint(
-  geometry: GeoJSON.Geometry | null,
+  geometry: Geometry | null,
   projector: Projector
 ): { centroid: Point; area: number } {
   let bestArea = 0
@@ -328,7 +341,7 @@ function featureLabelPoint(
 }
 
 function formatLabelLines(name: string): string[] {
-  const words = name.trim().split(/\s+/)
+  const words = name.trim().split(/\s+/u)
   if (words.length <= 1) return [name]
   if (words.length === 2) return words
 
@@ -352,7 +365,7 @@ function featureTitle(shape: DistrictShape): string {
     `${shape.reachPct}% grada dostupno za ${shape.maxMinutes ?? 30} min`,
   ]
 
-  if (shape.population) {
+  if (shape.population != null && shape.population !== 0) {
     lines.push(`${shape.population.toLocaleString("hr-HR")} stanovnika`)
   }
 
@@ -360,13 +373,13 @@ function featureTitle(shape: DistrictShape): string {
 }
 
 function buildDistrictShapes(
-  geojson: GeoJSON.FeatureCollection
+  geojson: DistrictCollection
 ): DistrictShape[] {
   const projector = createProjector(geojson)
   const shapes: DistrictShape[] = []
 
   for (const [index, feature] of geojson.features.entries()) {
-    const properties = (feature.properties ?? {}) as DistrictProperties
+    const properties: DistrictProperties = feature.properties ?? {}
     const path = geometryToPath(feature.geometry, projector)
     if (!path) continue
 
@@ -390,12 +403,12 @@ function buildDistrictShapes(
 }
 
 function buildDistrictEmblems(
-  geojson: GeoJSON.FeatureCollection
+  geojson: DistrictCollection
 ): Record<string, string> {
   const emblems: Record<string, string> = {}
 
   for (const [index, feature] of geojson.features.entries()) {
-    const osmId = Number(feature.properties?.osmId ?? index)
+    const osmId = feature.properties?.osmId ?? index
     const path = geometryToEmblemPath(feature.geometry)
     if (!path || Number.isNaN(osmId)) continue
     emblems[String(osmId)] = path
@@ -404,7 +417,7 @@ function buildDistrictEmblems(
   return emblems
 }
 
-function buildDistrictMapSvg(geojson: GeoJSON.FeatureCollection): string {
+function buildDistrictMapSvg(geojson: DistrictCollection): string {
   const shapes = buildDistrictShapes(geojson)
 
   const districtsMarkup = shapes
@@ -449,14 +462,14 @@ function bajsFeatureTitle(shape: DistrictShape): string {
     `${stations} BAJS ${stations === 1 ? "stanica" : "stanica"}`,
   ]
 
-  if (shape.population) {
+  if (shape.population != null && shape.population !== 0) {
     lines.push(`${shape.population.toLocaleString("hr-HR")} stanovnika`)
   }
 
   return lines.join("\n")
 }
 
-function buildBajsMapSvg(geojson: GeoJSON.FeatureCollection): string {
+function buildBajsMapSvg(geojson: DistrictCollection): string {
   const shapes = buildDistrictShapes(geojson)
 
   const districtsMarkup = shapes
@@ -504,9 +517,7 @@ function main() {
     return
   }
 
-  const rawGeojson = JSON.parse(
-    readFileSync(geojsonPath, "utf-8")
-  ) as GeoJSON.FeatureCollection
+  const rawGeojson = readJson<DistrictCollection>(geojsonPath)
   mkdirSync(join(process.cwd(), "public"), { recursive: true })
 
   const emblems = buildDistrictEmblems(rawGeojson)
@@ -518,7 +529,7 @@ function main() {
     return
   }
 
-  const scoreData = JSON.parse(readFileSync(scorePath, "utf-8")) as ScoreData
+  const scoreData = readJson<ScoreData>(scorePath)
   const enrichedGeojson = enrichGeoJSON(rawGeojson, scoreData)
 
   const svg = buildDistrictMapSvg(enrichedGeojson)

@@ -14,6 +14,7 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+import { setTimeout as sleep } from "node:timers/promises"
 
 import sharp from "sharp"
 
@@ -63,17 +64,46 @@ export async function mapConcurrent<T, R>(
   limit: number,
   fn: (item: T) => Promise<R>
 ): Promise<R[]> {
-  const results: R[] = new Array(items.length)
+  const results: R[] = []
   let next = 0
   await Promise.all(
     Array.from({ length: Math.min(limit, items.length) }, async () => {
       while (next < items.length) {
         const i = next++
+        // oxlint-disable-next-line no-await-in-loop -- each worker runs one item at a time; the worker count is the concurrency limit
         results[i] = await fn(items[i])
       }
     })
   )
   return results
+}
+
+/** Sharp's raw input only takes 1-4 channels; anything else is a corrupt decode. */
+export function rawChannels(n: number): 1 | 2 | 3 | 4 {
+  if (n === 1 || n === 2 || n === 3 || n === 4) return n
+  throw new Error(`unexpected raw channel count ${n}`)
+}
+
+/** How many of `len` pixels from `start` are darker than `threshold`. */
+export function countBelow(data: Buffer, start: number, len: number, threshold: number): number {
+  let n = 0
+  for (let i = start; i < start + len; i++) if (data[i] < threshold) n++
+  return n
+}
+
+/** One tile download, cached on success; null on HTTP or network failure. */
+async function tryFetchTile(url: string, dir: string, cachePath: string): Promise<Buffer | null> {
+  try {
+    const res = await fetch(url)
+    if (!res.ok) return null
+    const buf = Buffer.from(await res.arrayBuffer())
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(cachePath, buf)
+    return buf
+  } catch {
+    // network error — fall through to backoff/retry
+    return null
+  }
 }
 
 function whiteTile(): Promise<Buffer> {
@@ -90,18 +120,11 @@ async function fetchTile(cfg: Cfg, z: number, x: number, y: number): Promise<Buf
   // Retry transient failures (CDN throttling on a big z17/z18 sweep), then fall
   // back to a white tile so one bad tile can't abort the whole batch.
   for (let attempt = 0; attempt < 4; attempt++) {
-    try {
-      const res = await fetch(`${cfg.tileUrl}/${z}/${x}/${y}.png`)
-      if (res.ok) {
-        const buf = Buffer.from(await res.arrayBuffer())
-        mkdirSync(join(cfg.cacheDir, String(z), String(x)), { recursive: true })
-        writeFileSync(cachePath, buf)
-        return buf
-      }
-    } catch {
-      // network error — fall through to backoff/retry
-    }
-    await new Promise((r) => setTimeout(r, 250 * (attempt + 1)))
+    // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
+    const buf = await tryFetchTile(`${cfg.tileUrl}/${z}/${x}/${y}.png`, join(cfg.cacheDir, String(z), String(x)), cachePath)
+    if (buf) return buf
+    // oxlint-disable-next-line no-await-in-loop -- backoff between retries
+    await sleep(250 * (attempt + 1))
   }
   console.error(`tile ${z}/${x}/${y}: gave up after retries, using white`)
   return whiteTile()
@@ -136,7 +159,7 @@ async function stitchGrayCrop(
     .toBuffer({ resolveWithObject: true })
 
   const { data } = await sharp(stitched.data, {
-    raw: { width: canvasW, height: stitched.info.height, channels: stitched.info.channels as 3 },
+    raw: { width: canvasW, height: stitched.info.height, channels: rawChannels(stitched.info.channels) },
     limitInputPixels: false,
   })
     .extract({ left: x0 - tx0 * TILE_SIZE, top: y0 - ty0 * TILE_SIZE, width: natW, height: natH })
@@ -168,10 +191,7 @@ function thresholdToBlue(cfg: Cfg, data: Buffer, outW: number, outH: number, sca
       let sub = 0
       const baseY = oy * scale
       const baseX = ox * scale
-      for (let dy = 0; dy < scale; dy++) {
-        const row = (baseY + dy) * natW + baseX
-        for (let dx = 0; dx < scale; dx++) if (data[row + dx] < cfg.buildingGray) sub++
-      }
+      for (let dy = 0; dy < scale; dy++) sub += countBelow(data, (baseY + dy) * natW + baseX, scale, cfg.buildingGray)
       const isBlue = sub >= minSub
       const i = (oy * outW + ox) * 3
       out[i] = isBlue ? cfg.blue[0] : 255
@@ -345,6 +365,7 @@ async function buildTilePyramid(
       invMercY(y0 * TILE_SIZE, worldPx),
     ]
 
+    // oxlint-disable-next-line no-await-in-loop -- zoom levels build in order so onZoom reports progress level by level
     await mapConcurrent(jobs, Math.max(2, Math.floor(cfg.fetchConcurrency / 4)), (j) =>
       buildTile(cfg, z, j.x, j.y, j.path, tileSize, sourceZoomMax)
     )
@@ -371,6 +392,6 @@ export function createDitherCropper(opts: DitherCropperOptions) {
   return {
     buildCrop: (outPng: string, bbox: number[], outW: number, outH: number, pad: number, prev?: HeroCrop) =>
       buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
-    buildTilePyramid: (opts: TilePyramidOptions) => buildTilePyramid(cfg, opts),
+    buildTilePyramid: (pyramid: TilePyramidOptions) => buildTilePyramid(cfg, pyramid),
   }
 }

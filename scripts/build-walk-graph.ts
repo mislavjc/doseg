@@ -13,11 +13,9 @@
  */
 
 import { createReadStream, readFileSync, writeFileSync } from "fs"
+import createParser from "osm-pbf-parser"
 import through2 from "through2"
 import type { OsmItem, Edge } from "./shared-types"
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const createParser = require("osm-pbf-parser")
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"
@@ -53,7 +51,8 @@ import { fastDistKm as distKm } from "../lib/geo"
 
 // --- SRTM elevation data ---
 
-const SRTM_SIZE = 3601 // 1 arc-second resolution
+// 1 arc-second resolution
+const SRTM_SIZE = 3601
 const SRTM_DIR = "data/srtm"
 
 function loadSRTMTiles(): Map<string, Int16Array> {
@@ -63,7 +62,8 @@ function loadSRTMTiles(): Map<string, Int16Array> {
       const buf = readFileSync(`${SRTM_DIR}/${name}.hgt`)
       const data = new Int16Array(SRTM_SIZE * SRTM_SIZE)
       for (let i = 0; i < data.length; i++) {
-        data[i] = (buf[i * 2] << 8) | buf[i * 2 + 1] // big-endian
+        // big-endian
+        data[i] = (buf[i * 2] << 8) | buf[i * 2 + 1]
       }
       tiles.set(name, data)
     } catch {
@@ -90,7 +90,8 @@ function getElevation(
   if (idx < 0 || idx >= tile.length) return 0
 
   const elev = tile[idx]
-  return elev === -32768 ? 0 : elev // -32768 = void
+  // -32768 = void
+  return elev === -32768 ? 0 : elev
 }
 
 /**
@@ -302,7 +303,9 @@ async function main() {
   writeBinaryGraph(nodeList, edges)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

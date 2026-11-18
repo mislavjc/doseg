@@ -10,12 +10,13 @@
  * Usage: bun scripts/build-travel-matrix.ts [--time HH:MM] [--date YYYY-MM-DD] [--concurrency N]
  */
 
-import { readFileSync, writeFileSync } from "fs"
+import { writeFileSync } from "fs"
 import { join } from "path"
+import { parseJson, readJson } from "./lib/json"
 
 // --- Config ---
 
-const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
+const OTP_URL = process.env.OTP_URL ?? "http://localhost:8080"
 const DEFAULT_CONCURRENCY = 5
 
 // --- CLI args ---
@@ -30,7 +31,7 @@ function parseArgs() {
     if (args[i] === "--time" && args[i + 1]) time = args[++i]
     else if (args[i] === "--date" && args[i + 1]) date = args[++i]
     else if (args[i] === "--concurrency" && args[i + 1])
-      concurrency = parseInt(args[++i])
+      concurrency = Math.trunc(Number(args[++i]))
   }
 
   // If no date given, find the next weekday
@@ -51,15 +52,25 @@ import type { District, DistrictScoresOutput } from "../lib/generated"
 // --- District data ---
 
 function loadDistricts(): District[] {
-  const raw = readFileSync(
-    join(process.cwd(), "data/district-scores.json"),
-    "utf-8"
+  const data = readJson<DistrictScoresOutput>(
+    join(process.cwd(), "data/district-scores.json")
   )
-  const data = JSON.parse(raw) as DistrictScoresOutput
   return data.districts
 }
 
 // --- OTP plan query ---
+
+interface PlanResponse {
+  data?: {
+    plan?: {
+      itineraries?: {
+        duration: number
+        numberOfTransfers: number
+        walkDistance: number
+      }[]
+    } | null
+  } | null
+}
 
 interface PlanResult {
   durationMin: number
@@ -124,7 +135,7 @@ async function queryPlan(
     return null
   }
 
-  const json = await res.json()
+  const json = parseJson<PlanResponse>(await res.text())
   const itineraries = json.data?.plan?.itineraries
   if (!itineraries || itineraries.length === 0) {
     return null
@@ -145,13 +156,14 @@ async function runWithConcurrency<T>(
   limit: number,
   onProgress?: (done: number, total: number) => void
 ): Promise<T[]> {
-  const results: T[] = new Array(tasks.length)
+  const results: T[] = []
   let nextIdx = 0
   let doneCount = 0
 
   async function runNext(): Promise<void> {
     while (nextIdx < tasks.length) {
       const idx = nextIdx++
+      // oxlint-disable-next-line no-await-in-loop -- each worker runs its tasks one at a time; the pool size is the concurrency limit
       results[idx] = await tasks[idx]()
       doneCount++
       onProgress?.(doneCount, tasks.length)
@@ -174,7 +186,7 @@ interface PairResult {
 }
 
 function buildPairTasks(
-  districts: DistrictScore[],
+  districts: District[],
   date: string,
   time: string
 ): (() => Promise<PairResult>)[] {
@@ -185,11 +197,13 @@ function buildPairTasks(
       const fromD = districts[i]
       const toD = districts[j]
       if (i === j) {
-        tasks.push(async () => ({
-          i,
-          j,
-          result: { durationMin: 0, transfers: 0, walkDistanceM: 0 },
-        }))
+        tasks.push(() =>
+          Promise.resolve({
+            i,
+            j,
+            result: { durationMin: 0, transfers: 0, walkDistanceM: 0 },
+          })
+        )
       } else {
         tasks.push(async () => {
           const result = await queryPlan(
@@ -212,9 +226,9 @@ function fillMatrices(
   results: PairResult[],
   n: number
 ): { matrix: number[][]; transferMatrix: number[][]; walkMatrix: number[][]; noRouteCount: number } {
-  const matrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
-  const transferMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
-  const walkMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
+  const matrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const transferMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const walkMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
   let noRouteCount = 0
 
   for (const { i, j, result } of results) {
@@ -290,7 +304,9 @@ async function main() {
   printSummaryTable(names, matrix)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

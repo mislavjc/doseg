@@ -14,6 +14,7 @@ import { mkdirSync } from "node:fs"
 import { join } from "node:path"
 
 import { createDitherCropper } from "./lib/dither-crop"
+import { parseJson } from "./lib/json"
 
 const STATION_INFORMATION_URL =
   "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json"
@@ -39,19 +40,20 @@ const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 
 type Station = { lat: number; lon: number; is_virtual_station?: boolean }
 
+// Percentiles, not extremes: a handful of far-flung stations would otherwise
+// pull the frame wide and shrink the city everyone recognises to a smear.
+const pct = (v: number[], p: number) =>
+  v[Math.min(v.length - 1, Math.floor(v.length * p))]
+
 async function stationBbox(): Promise<number[]> {
-  const feed = (await (await fetch(STATION_INFORMATION_URL)).json()) as {
-    data: { stations: Station[] }
-  }
+  const feed = parseJson<{ data: { stations: Station[] } }>(
+    await (await fetch(STATION_INFORMATION_URL)).text()
+  )
   const stations = feed.data.stations.filter((s) => !s.is_virtual_station)
   if (stations.length === 0) throw new Error("GBFS returned no stations")
 
-  const lats = stations.map((s) => s.lat).sort((a, b) => a - b)
-  const lons = stations.map((s) => s.lon).sort((a, b) => a - b)
-  // Percentiles, not extremes: a handful of far-flung stations would otherwise
-  // pull the frame wide and shrink the city everyone recognises to a smear.
-  const pct = (v: number[], p: number) =>
-    v[Math.min(v.length - 1, Math.floor(v.length * p))]
+  const lats = stations.map((s) => s.lat).toSorted((a, b) => a - b)
+  const lons = stations.map((s) => s.lon).toSorted((a, b) => a - b)
 
   console.error(`${stations.length} stations`)
   return [pct(lons, 0.01), pct(lats, 0.02), pct(lons, 0.99), pct(lats, 0.98)]
@@ -74,7 +76,9 @@ async function main() {
   console.error(`bajs-hero.png z${crop.zoom} ${crop.width}x${crop.height}`)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

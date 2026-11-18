@@ -15,6 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { createDitherCropper } from "./lib/dither-crop"
+import { parseJson } from "./lib/json"
 
 const STATION_INFORMATION_URL =
   "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_information.json"
@@ -40,9 +41,9 @@ type Station = { lat: number; lon: number; is_virtual_station?: boolean }
 
 /** Padded box around the real stations — the frame the map is allowed to roam. */
 async function serviceBbox(): Promise<{ bbox: number[]; stations: number }> {
-  const feed = (await (await fetch(STATION_INFORMATION_URL)).json()) as {
-    data: { stations: Station[] }
-  }
+  const feed = parseJson<{ data: { stations: Station[] } }>(
+    await (await fetch(STATION_INFORMATION_URL)).text()
+  )
   const stations = feed.data.stations.filter((s) => !s.is_virtual_station)
   if (stations.length === 0) throw new Error("GBFS returned no stations")
 
@@ -86,7 +87,9 @@ async function main() {
   console.error(`bounds → ${metaPath}`)
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

@@ -1,8 +1,9 @@
-import { readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { readdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import type { Addr } from "../lib/adresa"
 import { pointInRing, type Ring } from "../lib/geo"
+import { readJson } from "./lib/json"
 
 /**
  * Bakes data/adrese.json — the homepage address-search index — from the
@@ -33,13 +34,9 @@ interface DguFeature {
 }
 
 const pagesDir = process.argv[2] ?? "/tmp/dgu-addr"
-const root = join(import.meta.dir, "..")
+const root = join(import.meta.dirname, "..")
 
-const boundary = (
-  JSON.parse(readFileSync(join(root, "data/home-hero.json"), "utf8")) as {
-    boundary: Ring
-  }
-).boundary
+const { boundary } = readJson<{ boundary: Ring }>(join(root, "data/home-hero.json"))
 
 const round = (v: number) => Math.round(v * 1e5) / 1e5
 
@@ -50,14 +47,12 @@ const streets = new Map<string, { name: string; naselje: string; byNumber: Map<s
 let total = 0
 let inCity = 0
 
-for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).sort()) {
-  const page = JSON.parse(readFileSync(join(pagesDir, file), "utf8")) as {
-    features: DguFeature[]
-  }
+for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).toSorted()) {
+  const page = readJson<{ features: DguFeature[] }>(join(pagesDir, file))
   for (const f of page.features) {
     total++
     const p = f.properties
-    const hn = p.kucni_broj?.toLowerCase().replaceAll(/\s+/g, "")
+    const hn = p.kucni_broj?.toLowerCase().replaceAll(/\s+/gu, "")
     // Rural naselja address by settlement name alone — use it as the street.
     const name = p.ulica ?? p.naselje
     const coords = f.geometry?.coordinates
@@ -76,6 +71,7 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).sort
   }
 }
 
+// oxlint-disable-next-line unicorn/prefer-number-coercion -- house numbers like "12a" need parseInt's leading-digits parse; Number() gives NaN
 const numeric = (hn: string) => Number.parseInt(hn, 10) || 0
 const out = {
   source: "DGU Registar prostornih jedinica (INSPIRE AD WFS)",
@@ -84,11 +80,11 @@ const out = {
     .map(({ name, naselje, byNumber }) => ({
       name,
       naselje,
-      addrs: [...byNumber.values()].sort(
+      addrs: [...byNumber.values()].toSorted(
         (a, b) => numeric(a[0]) - numeric(b[0]) || a[0].localeCompare(b[0])
       ),
     }))
-    .sort((a, b) => a.name.localeCompare(b.name, "hr")),
+    .toSorted((a, b) => a.name.localeCompare(b.name, "hr")),
 }
 
 const target = join(root, "data/adrese.json")

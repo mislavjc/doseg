@@ -11,11 +11,12 @@
  * Tile/dither machinery is shared via scripts/lib/dither-crop.ts. Run:
  *   bun scripts/build-home-hero.ts [--zoom 14] [--cutoff 80]
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { mercatorX, mercatorY, type Ring } from "../lib/geo"
 import { createDitherCropper, type HeroCrop } from "./lib/dither-crop"
+import { readJson } from "./lib/json"
 
 // topPx = city's north edge from the band top (@2x), leaving room for the
 // floating nav strip; the rest of the band is fade/breathing room.
@@ -71,6 +72,9 @@ function ringSignedArea(ring: Ring): number {
   return sum / 2
 }
 
+const pt = ([lon, lat]: [number, number]) => `${lon.toFixed(6)},${lat.toFixed(6)}`
+const undirected = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`)
+
 /**
  * Dissolve the district partition into the city's outer ring: edges shared by
  * two districts cancel, the surviving directed edges chain into the boundary.
@@ -79,9 +83,7 @@ function ringSignedArea(ring: Ring): number {
  * dead-ends inside a single district.
  */
 function dissolveBoundary(inputRings: Ring[]): Ring {
-  const rings = inputRings.map((r) => (ringSignedArea(r) > 0 ? r : [...r].reverse()))
-  const pt = ([lon, lat]: [number, number]) => `${lon.toFixed(6)},${lat.toFixed(6)}`
-  const undirected = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`)
+  const rings = inputRings.map((r) => (ringSignedArea(r) > 0 ? r : r.toReversed()))
 
   const counts = new Map<string, number>()
   for (const ring of rings) {
@@ -136,7 +138,7 @@ function dissolveBoundary(inputRings: Ring[]): Ring {
 
 /** Iterative Douglas-Peucker on [lon, lat] (lat weighted into the lon scale). */
 function simplify(ring: Ring, tolerance: number): Ring {
-  const keep = new Array<boolean>(ring.length).fill(false)
+  const keep = Array.from({ length: ring.length }, () => false)
   keep[0] = keep[ring.length - 1] = true
   const stack: [number, number][] = [[0, ring.length - 1]]
   while (stack.length > 0) {
@@ -145,7 +147,8 @@ function simplify(ring: Ring, tolerance: number): Ring {
     const [ax, ay] = ring[a]
     const [bx, by] = ring[b]
     const dx = bx - ax
-    const dy = (by - ay) * 1.435 // ~1/cos(45.8°): equalize degree lengths
+    // ~1/cos(45.8°): equalize degree lengths
+    const dy = (by - ay) * 1.435
     const len2 = dx * dx + dy * dy || 1e-12
     let maxD = -1
     let maxI = -1
@@ -201,9 +204,9 @@ interface HomeHeroData {
 }
 
 async function main() {
-  const geo = JSON.parse(readFileSync(join(root, "data/districts.geojson"), "utf-8")) as {
-    features: { geometry: { coordinates: Ring[] } }[]
-  }
+  const geo = readJson<{ features: { geometry: { coordinates: Ring[] } }[] }>(
+    join(root, "data/districts.geojson")
+  )
   const boundary = simplify(
     dissolveBoundary(geo.features.map((f) => f.geometry.coordinates[0])),
     SIMPLIFY_TOLERANCE
@@ -225,8 +228,8 @@ async function main() {
   const outDir = join(root, "public")
   mkdirSync(outDir, { recursive: true })
   const metaPath = join(root, "data", "home-hero.json")
-  const prev: HomeHeroData | undefined = existsSync(metaPath)
-    ? JSON.parse(readFileSync(metaPath, "utf-8"))
+  const prev = existsSync(metaPath)
+    ? readJson<HomeHeroData>(metaPath)
     : undefined
 
   // Sequential on purpose: each stitch holds a few-hundred-MB canvas.
@@ -256,7 +259,9 @@ async function main() {
   )
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error(err)
   process.exit(1)
-})
+}

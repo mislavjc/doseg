@@ -84,7 +84,7 @@ export function Sidebar({
           />
         ) : (
           /* header + footer stay pinned; this middle region scrolls */
-          <div className="scroll-fade flex min-h-0 grow flex-col gap-[18px] overflow-y-auto">
+          <div className="edge-fade flex min-h-0 grow flex-col gap-[18px] overflow-y-auto">
             {mode === "empty" && (
               <EmptyContent onUseMyLocation={onUseMyLocation} />
             )}

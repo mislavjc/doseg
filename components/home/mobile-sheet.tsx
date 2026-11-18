@@ -159,7 +159,7 @@ function SheetBody({
   return (
     <div
       className={`flex min-h-0 flex-1 flex-col px-5 pb-6 ${
-        open ? "scroll-fade overflow-y-auto" : "overflow-hidden"
+        open ? "edge-fade overflow-y-auto" : "overflow-hidden"
       }`}
     >
       {/* keyed by mode → enter cross-fade on state change (spec §10) */}

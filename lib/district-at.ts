@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { pointInRing, type Ring } from "./geo"
 import { parseJson } from "./json"
 
 /**
@@ -11,7 +12,7 @@ import { parseJson } from "./json"
 
 type DistrictFeature = {
   properties: { name: string }
-  geometry: { type: "Polygon"; coordinates: number[][][] }
+  geometry: { type: "Polygon"; coordinates: Ring[] }
 }
 
 let cached: DistrictFeature[] | null = null
@@ -23,22 +24,9 @@ function districts(): DistrictFeature[] {
   return cached
 }
 
-/** Ray casting. `ring` is GeoJSON order, so [lon, lat] per point. */
-function pointInRing(lat: number, lon: number, ring: number[][]): boolean {
-  let inside = false
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i]
-    const [xj, yj] = ring[j]
-    const intersect =
-      yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi
-    if (intersect) inside = !inside
-  }
-  return inside
-}
-
 export function districtAt(lat: number, lon: number): string | null {
   for (const feature of districts()) {
-    if (pointInRing(lat, lon, feature.geometry.coordinates[0])) {
+    if (pointInRing(lon, lat, feature.geometry.coordinates[0])) {
       return feature.properties.name
     }
   }

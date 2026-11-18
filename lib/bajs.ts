@@ -94,10 +94,6 @@ async function fetchJson<T>(url: string): Promise<T> {
   return responseJson<T>(response)
 }
 
-function bajsStationKey(stationId: string): string {
-  return `bajs:${stationId}`
-}
-
 async function loadBajsData(): Promise<BajsData> {
   const [infoFeed, statusFeed] = await Promise.all([
     fetchJson<StationInformationFeed>(STATION_INFORMATION_URL),
@@ -123,7 +119,7 @@ async function loadBajsData(): Promise<BajsData> {
     if (!stationStatus) continue
 
     stations.push({
-      key: bajsStationKey(stationInfo.station_id),
+      key: `bajs:${stationInfo.station_id}`,
       stationId: stationInfo.station_id,
       shortName: stationInfo.short_name ?? "",
       name: formatStationName(stationInfo.name),

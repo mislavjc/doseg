@@ -24,8 +24,6 @@ import { readJsonCached } from "@/lib/page-data"
  * left out of v1 rather than faked.
  */
 
-
-
 export interface KvartIndexEntry {
   slug: string
   name: string

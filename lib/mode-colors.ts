@@ -1,6 +1,6 @@
 /**
  * Mode-color map — docs/map-redesign-spec.md §1 (LOCK, single source).
- * Keyed by GTFS/OTP mode. Replaces lib/transit.ts `modeColor` when /new ships.
+ * Keyed by GTFS/OTP mode.
  */
 export const MODE_COLORS = {
   walk: "#9aa0a6",

@@ -4,7 +4,7 @@ const ZET_RT_URL = "https://www.zet.hr/gtfs-rt-protobuf"
 const CACHE_TTL_MS = 30_000
 
 // ---------------------------------------------------------------------------
-// Trip update types (existing)
+// Trip update types
 // ---------------------------------------------------------------------------
 
 interface StopTimeRT {
@@ -169,7 +169,6 @@ export function getVehiclePositions(): VehiclePosition[] {
  * Per spec, delays propagate forward until overridden.
  */
 export function getStopDelay(trip: TripRT, stopIdx: number): number {
-  // 0-based → 1-based
   const seq = stopIdx + 1
   let delay = 0
   for (const st of trip.stopTimes) {

@@ -37,7 +37,8 @@ const FULL_DAY_MINUTES = 1400
  */
 export const RANKING_MIN_DAYS = 14
 
-async function readJson<T>(
+/** GET an isochrone-server RT endpoint; null on any failure so pages degrade. */
+export async function readRtJson<T>(
   path: string,
   revalidate = REVALIDATE_SEC
 ): Promise<T | null> {
@@ -77,7 +78,7 @@ export type BajsRides = {
 }
 
 export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
-  const data = await readJson<BajsRidesResponse>(
+  const data = await readRtJson<BajsRidesResponse>(
     `/api/rt/bajs-rides?days=${days}`
   )
   if (!data) return null
@@ -126,7 +127,7 @@ export type BajsLive = {
 
 /** Current fleet position. Short cache: this is the "right now" reading. */
 export async function loadBajsLive(): Promise<BajsLive | null> {
-  const data = await readJson<{
+  const data = await readRtJson<{
     total_stations?: number
     totalStations?: number
     total_bikes_available?: number
@@ -162,7 +163,7 @@ export async function loadBajsRanking(
   days = 30,
   limit = 10
 ): Promise<BajsRanking | null> {
-  const data = await readJson<BajsRankingResponse>(
+  const data = await readRtJson<BajsRankingResponse>(
     `/api/rt/bajs-station-ranking?days=${days}&limit=200`
   )
   if (!data || data.stations.length === 0) return null

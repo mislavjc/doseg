@@ -1,3 +1,4 @@
+import { readRtJson } from "./bajs-rides"
 import { formatStationName } from "./bajs-station-name"
 import { districtAt } from "./district-at"
 import type {
@@ -5,7 +6,6 @@ import type {
   BajsStationFlow,
   BajsStationFlowResponse,
 } from "./generated"
-import { responseJson } from "./json"
 
 /**
  * Two readings that the ride counts on their own cannot give.
@@ -23,10 +23,6 @@ import { responseJson } from "./json"
  * unavailable state when the RT server is down.
  */
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
-
-const REVALIDATE_SEC = 300
-
 /**
  * The hours that separate a commute from ordinary traffic. Taken from the
  * measured profile: a narrow 07h departure spike, and a much broader afternoon
@@ -40,18 +36,6 @@ const AFTERNOON = [16, 17, 18]
  * trip or one van run flips the sign.
  */
 const MIN_NET_PER_DAY = 3
-
-async function readJson<T>(path: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${ISOCHRONE_URL}${path}`, {
-      next: { revalidate: REVALIDATE_SEC },
-    })
-    if (!res.ok) return null
-    return await responseJson<T>(res)
-  } catch {
-    return null
-  }
-}
 
 /**
  * Net bikes gained across `hours`, counting riders only: the van's own moves
@@ -91,7 +75,7 @@ export type BajsFlow = {
 }
 
 export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
-  const data = await readJson<BajsStationFlowResponse>(
+  const data = await readRtJson<BajsStationFlowResponse>(
     `/api/rt/bajs-station-flow?days=${days}`
   )
   if (!data || data.stations.length === 0) return null
@@ -171,7 +155,7 @@ export async function loadBajsRelocations(
   days = 30,
   fullDays?: { date: string }[]
 ): Promise<BajsRelocations | null> {
-  const data = await readJson<BajsRelocationsResponse>(
+  const data = await readRtJson<BajsRelocationsResponse>(
     `/api/rt/bajs-relocations?days=${days}`
   )
   if (!data || data.days.length === 0) return null

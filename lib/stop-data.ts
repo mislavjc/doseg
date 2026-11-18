@@ -46,11 +46,11 @@ export function loadStopData(slug: string): StopPageData | null {
 /** Baked dither-crop bounds per stop (scripts/build-stop-heroes.ts); same shape
  *  as the line heroes. Null until/unless this stop's map is baked. */
 export function loadStopHeroMeta(slug: string): LineHeroMeta | null {
-  const all = readJsonCached<Record<string, LineHeroMeta>>(
-    join(staniceDir(), "hero-meta.json")
+  return (
+    readJsonCached<Record<string, LineHeroMeta>>(
+      join(staniceDir(), "hero-meta.json")
+    )?.[slug] ?? null
   )
-  const meta = all?.[slug]
-  return meta && "desktop" in meta ? meta : null
 }
 
 /**

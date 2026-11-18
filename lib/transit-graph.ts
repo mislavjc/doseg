@@ -340,10 +340,6 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
   return cachedGraph
 }
 
-/**
- * Find wait time for the next departure of a pattern at a given stop.
- * Returns seconds to wait + index into departures/tripIds, or null if no service.
- */
 /** Binary search for the first departure index reaching this stop at or after
  * clockTime, or -1 if the service day is over. */
 function nextDepartureIndex(
@@ -451,16 +447,7 @@ export function computeTransitLegDuration(
     return { durationSeconds: Math.round(rideSeconds) }
   }
 
-  let tripRT: TripRT | undefined
-  for (
-    let ti = result.tripIndex;
-    ti >= Math.max(0, result.tripIndex - 3);
-    ti--
-  ) {
-    tripRT = rtData.get(pattern.tripIds[ti])
-    if (tripRT) break
-  }
-
+  const tripRT = findTripRT(rtData, pattern.tripIds, result.tripIndex)
   const boardDelay = tripRT ? getStopDelay(tripRT, boardIdx) : 0
   let durationSeconds = result.waitSeconds + rideSeconds
   let delaySeconds: number | undefined

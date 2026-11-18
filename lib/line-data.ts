@@ -44,10 +44,9 @@ export interface LineHeroMeta {
 }
 
 export function loadHeroMeta(broj: string): LineHeroMeta | null {
-  const all = readJsonCached<Record<string, LineHeroMeta>>(
-    join(linijeDir(), "hero-meta.json")
+  return (
+    readJsonCached<Record<string, LineHeroMeta>>(
+      join(linijeDir(), "hero-meta.json")
+    )?.[broj] ?? null
   )
-  const meta = all?.[broj]
-  // Guard against stale pre-rewrite format (flat crop without .desktop).
-  return meta && "desktop" in meta ? meta : null
 }

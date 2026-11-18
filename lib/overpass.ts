@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { getDataDir } from "./data-dir"
 import { parseJson, responseJson } from "./json"
 
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter"
@@ -139,8 +140,7 @@ const OVERPASS_MIRRORS = [
  * a stale list beats an empty map.
  */
 function snapshotPath() {
-  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
-  return join(dataDir, "poi-snapshot.json")
+  return join(getDataDir(), "poi-snapshot.json")
 }
 
 function readSnapshot(categories: POICategory[]): POI[] | null {
@@ -203,15 +203,13 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
  * generated offline by scripts/build-poi-photos.ts. Loaded once; absence is
  * fine, the popup just shows no photo.
  */
-// Loaded from data/poi-photos.json on first use; reset on module reload.
 let photoMap: Partial<Record<string, PoiPhoto>> | null = null
 
 function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
   if (photoMap) return photoMap
   try {
-    const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
     photoMap = parseJson<Partial<Record<string, PoiPhoto>>>(
-      readFileSync(join(dataDir, "poi-photos.json"), "utf-8")
+      readFileSync(join(getDataDir(), "poi-photos.json"), "utf-8")
     )
   } catch {
     photoMap = {}

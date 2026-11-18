@@ -158,7 +158,7 @@ function Choropleth({
               key={s.name}
               d={s.d}
               fill={fill}
-              stroke="#fff"
+              stroke="var(--ground)"
               strokeWidth={1.5}
               strokeLinejoin="round"
               onPointerEnter={() => setHover(s.name)}

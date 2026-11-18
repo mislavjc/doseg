@@ -47,7 +47,6 @@ function cellOpacity(h: OccupancyRouteHour): number {
 export default function OccupancySection() {
   const { data } = useSWR<OccupancyData>("/api/rt/occupancy")
 
-  // Auto-hide: don't render anything if no data
   if (!data || !data.hasData || data.routes.length === 0) return null
 
   return (
@@ -160,7 +159,7 @@ function HeatmapCell({
     <td className="p-[1px]">
       <div
         className="relative h-8 w-full rounded transition-opacity group-hover:opacity-80"
-        title={`${routeId} @ ${hour}:00 — prazno: ${data.empty}, malo mjesta: ${data.fewSeats}, stajaća: ${data.standing}, puno: ${data.full}`}
+        title={`${routeId} @ ${hour}:00 - prazno: ${data.empty}, malo mjesta: ${data.fewSeats}, stajaća: ${data.standing}, puno: ${data.full}`}
       >
         <div
           className="absolute inset-0 rounded"

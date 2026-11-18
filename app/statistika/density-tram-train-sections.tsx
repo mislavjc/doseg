@@ -3,7 +3,7 @@ import { Group } from "@visx/group"
 import { GridRows } from "@visx/grid"
 import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import type { computeScatterData, computeFrequencyInsights, DensityDatum } from "./stat-data"
-import { fmtHR } from "./stat-data"
+import { fmtHR } from "@/lib/format"
 import { SectionIcon } from "./stat-shared"
 import { CollapsibleContent } from "./stat-expandable"
 import { StatModuleTitle } from "./stat-typography"
@@ -526,7 +526,7 @@ export function TramSection({
 function TramlessScores({ districts }: { districts: DistrictScore[] }) {
   return (
     <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-slate-600 dark:text-slate-400">
-      {[...districts]
+      {districts
         .toSorted((a, b) => b.score - a.score)
         .map((d) => (
           <span key={d.name}>
@@ -542,9 +542,9 @@ function TramlessScores({ districts }: { districts: DistrictScore[] }) {
 
 export function HzTrainSection({ data }: { data: ScoreData }) {
   const withTrains = data.districts.filter(
-    (d) => (d.trainLines?.length ?? 0) > 0
+    (d) => d.trainLines.length > 0
   )
-  const anyTrainBoost = withTrains.some((d) => (d.trainBoostPct ?? 0) > 0)
+  const anyTrainBoost = withTrains.some((d) => d.trainBoostPct > 0)
   if (withTrains.length === 0 || anyTrainBoost) return null
   return (
     <section
@@ -654,7 +654,7 @@ function HzTrainBody({
           Tramvaj vs. vlak
         </div>
         <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-300">
-          Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji — a na
+          Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji - a na
           koridorima s više linija u istom smjeru i češće.
           Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi
           značajno proširio doseg perifernih kvartova poput Sesveta i Velike
@@ -693,7 +693,7 @@ function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
             </div>
           </div>
           <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
-            {d.trainLines?.length ?? 0} lin · boost 0%
+            {d.trainLines.length} lin · boost 0%
           </span>
         </div>
       ))}

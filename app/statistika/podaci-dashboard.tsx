@@ -193,7 +193,7 @@ function ReliabilityGroup({
       number={2}
       eyebrow="Kvaliteta usluge"
       title="Pouzdanost i brzina linija"
-      description="Koliko su pouzdane pojedine linije — iz voznog reda i stvarnih mjerenja."
+      description="Koliko su pouzdane pojedine linije - iz voznog reda i stvarnih mjerenja."
     >
       <RouteStatsSection routeStats={routeStats} />
       <FleetDeploymentSection />
@@ -232,7 +232,7 @@ function BajsGroup({ data, bajs }: { data: ScoreData; bajs: AllData["bajs"] }) {
       number={4}
       eyebrow="Mikromobilnost"
       title="BAJS bicikli"
-      description="Dijeljeni bicikli kao nadopuna javnom prijevozu — dostupnost i utjecaj na povezanost."
+      description="Dijeljeni bicikli kao nadopuna javnom prijevozu - dostupnost i utjecaj na povezanost."
     >
       <BajsUtilizationSection />
       <BajsImpactSection data={data} bajs={bajs} />

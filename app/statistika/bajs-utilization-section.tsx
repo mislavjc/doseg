@@ -41,7 +41,7 @@ export default function BajsUtilizationSection() {
         <div>
           <StatModuleTitle>BAJS iskorištenost</StatModuleTitle>
           <StatModuleLead>
-            Trenutna iskorištenost BAJS sustava dijeljenih bicikala — koliko je
+            Trenutna iskorištenost BAJS sustava dijeljenih bicikala - koliko je
             bicikala u uporabi, te prazne i pune stanice.
           </StatModuleLead>
         </div>

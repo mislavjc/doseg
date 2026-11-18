@@ -392,7 +392,7 @@ function EmptyState() {
       </p>
       <p className="mt-2 text-[15px] text-slate-500 dark:text-slate-500">
         Podaci se prikupljaju u stvarnom vremenu iz{" "}
-        <Term title="General Transit Feed Specification — Real Time: međunarodni standard za podatke o javnom prijevozu">
+        <Term title="General Transit Feed Specification - Real Time: međunarodni standard za podatke o javnom prijevozu">
           GTFS-RT
         </Term>{" "}
         feed-a.
@@ -466,7 +466,6 @@ function DelayChartBody({
         <line x1={0} y1={yScale(0) ?? 0} x2={INNER_WIDTH} y2={yScale(0) ?? 0} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.2} />
       )}
       
-      {/* Bars */}
       {points.map((p) => {
         const xPos = xScale(new Date(p.ts * 1000)) ?? 0
         const delay = Math.max(0, p.avgDelay)
@@ -601,7 +600,6 @@ function useHeadwayScales(points: HistoryPoint[]) {
     const xTicks = xScale.ticks(5)
     const yTicks = yScale.ticks(5)
 
-    // Weighted average headway and CV
     const totalTrips = pts.reduce((s, p) => s + p.tripCount, 0)
     const avgHeadway =
       pts.reduce((s, p) => s + (p.headwaySec ?? 0) * p.tripCount, 0) /
@@ -652,7 +650,6 @@ function HeadwayChartBody({
       <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#e2e8f0" strokeOpacity={0.5} strokeWidth={1} strokeDasharray="4 4" className="dark:stroke-slate-700" />
       <RegularityZone yScale={yScale} />
       
-      {/* Bars */}
       {pts.map((p) => {
         const xPos = xScale(new Date(p.ts * 1000)) ?? 0
         const cv = p.headwayCv ?? 0
@@ -789,7 +786,7 @@ function HeadwayChartHeader({
         
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
-            <Term title="Koeficijent varijacije — niži broj znači pravilniji razmak između vozila">CV</Term>
+            <Term title="Koeficijent varijacije - niži broj znači pravilniji razmak između vozila">CV</Term>
           </div>
           <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
             {avgCv.toFixed(2)}
@@ -824,7 +821,6 @@ function SvgTooltip({
 }) {
   const width = 156
   const height = subtitle ? 72 : 52
-  // keep inside bounds
   const adjustedX = Math.max(0, Math.min(x - width / 2, INNER_WIDTH - width))
   const adjustedY = Math.max(0, y - height - 12)
 

@@ -1,7 +1,8 @@
 import { formatHrDate } from "@/lib/hr-date"
 
 import type { DistrictScore, ScoreData } from "../stat-data"
-import { fmtHR, fmtPop } from "../stat-data"
+import { fmtHR } from "@/lib/format"
+import { fmtPop } from "../stat-data"
 
 /**
  * Editorial facts derived from the score data for the static narrative sections
@@ -19,7 +20,7 @@ function rankBy(
   value: (d: DistrictScore) => number
 ): number {
   return (
-    [...districts]
+    districts
       .toSorted((a, b) => value(b) - value(a))
       .findIndex((d) => d.name === name) + 1
   )
@@ -71,7 +72,7 @@ export type EditorialFacts = ReturnType<typeof computeEditorialFacts>
 
 const cv = (d: DistrictScore) =>
   d.avgReachableCells > 0
-    ? (d.stddevReachableCells ?? 0) / d.avgReachableCells
+    ? d.stddevReachableCells / d.avgReachableCells
     : 0
 
 /**
@@ -123,26 +124,26 @@ const SHORT_NAME: Record<string, string> = {
 }
 const shortName = (n: string) => SHORT_NAME[n] ?? n
 
-const m = (d: DistrictScore) => Math.round(d.avgNearestStopM ?? 0)
+const m = (d: DistrictScore) => Math.round(d.avgNearestStopM)
 
 /** Pristup — walk-to-nearest-stop: best vs city average vs worst (metres). */
 export function computeWalk(data: ScoreData) {
-  const ds = data.districts.filter((d) => d.avgNearestStopM !== undefined)
+  const ds = data.districts
   if (ds.length === 0) return null
   const sorted = ds.toSorted(
-    (a, b) => (a.avgNearestStopM ?? 0) - (b.avgNearestStopM ?? 0)
+    (a, b) => a.avgNearestStopM - b.avgNearestStopM
   )
   const best = sorted[0]
   const worst = sorted[sorted.length - 1]
   const avg = Math.round(
-    ds.reduce((s, d) => s + (d.avgNearestStopM ?? 0), 0) / Math.max(ds.length, 1)
+    ds.reduce((s, d) => s + d.avgNearestStopM, 0) / Math.max(ds.length, 1)
   )
   return {
     best: { name: best.name, m: m(best) },
     avg,
     worst: { name: worst.name, m: m(worst) },
     maxM: m(worst),
-    ratio: fmtHR((worst.avgNearestStopM ?? 1) / (best.avgNearestStopM || 1), 1),
+    ratio: fmtHR(worst.avgNearestStopM / (best.avgNearestStopM || 1), 1),
   }
 }
 export type WalkData = NonNullable<ReturnType<typeof computeWalk>>
@@ -150,11 +151,10 @@ export type WalkData = NonNullable<ReturnType<typeof computeWalk>>
 /** Jutro vs. večer — each district's peak→evening reach drop (%), sorted. */
 export function computeEvening(data: ScoreData) {
   return data.districts
-    .filter((d) => d.eveningAvgReachableCells !== undefined)
     .map((d) => ({
       name: d.name,
       short: shortName(d.name),
-      drop: Math.round(d.peakOffpeakDrop ?? 0),
+      drop: Math.round(d.peakOffpeakDrop),
     }))
     .toSorted((a, b) => b.drop - a.drop)
 }

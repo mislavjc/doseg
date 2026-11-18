@@ -96,7 +96,7 @@ export function HeadlineInsights({
 
 function HzEditorialStat({ data }: { data: ScoreData }) {
   const districtsWithTrains = data.districts.filter(
-    (d) => (d.trainLines?.length ?? 0) > 0
+    (d) => d.trainLines.length > 0
   ).length
   if (districtsWithTrains === 0) return null
   return (

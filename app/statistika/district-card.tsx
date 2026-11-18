@@ -1,26 +1,22 @@
 import Link from "next/link"
 import type { District as DistrictScore } from "@/lib/generated"
-import { fmtHR, pct } from "./stat-data"
+import { fmtHR } from "@/lib/format"
+import { pct } from "./stat-data"
 import { DistrictEmblem } from "./stat-shared"
 
-export type DistrictCardProps = {
+type DistrictCardProps = {
   district: DistrictScore
   emblemPath?: string
   totalGridCells: number
   bandColor: string
   cityAvg: number
-  bestDistrict: string
   mapLink: string
 }
-
-// -----------------------------------------------------------------------------
-// HELPER COMPONENTS FOR DATA DENSE VARIANTS (V21 - V25)
-// -----------------------------------------------------------------------------
 
 function DenseSpecialBadges({ d }: { d: DistrictScore }) {
   return (
     <div className="flex flex-wrap gap-1.5 mt-2">
-      {(d.trainLines?.length ?? 0) > 0 && (
+      {d.trainLines.length > 0 && (
         <div className="inline-flex items-center gap-1 rounded-sm bg-teal-50 px-1.5 py-0.5 text-[11px] font-medium text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
           HŽ Vlak
         </div>
@@ -30,12 +26,12 @@ function DenseSpecialBadges({ d }: { d: DistrictScore }) {
           {d.bajsStations} BAJS
         </div>
       )}
-      {(d.peakOffpeakDrop ?? 0) >= 30 && (
+      {d.peakOffpeakDrop >= 30 && (
         <div className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-1.5 py-0.5 text-[11px] font-medium text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
           -{d.peakOffpeakDrop}% navečer
         </div>
       )}
-      {(d.desertPct ?? 0) >= 20 && (
+      {d.desertPct >= 20 && (
         <div className="inline-flex items-center gap-1 rounded-sm bg-red-50 px-1.5 py-0.5 text-[11px] font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
           {d.desertPct}% pustinja
         </div>
@@ -62,8 +58,8 @@ function DenseBoostBars({ d, totalGridCells }: { d: DistrictScore; totalGridCell
 
   return (
     <>
-      {(d.trainBoostPct ?? 0) > 0 && renderBoost("S HŽ Vlakovima", d.trainBoostPct, d.trainAvgReachableCells ?? d.avgReachableCells, "text-teal-600 dark:text-teal-400", "bg-teal-100 dark:bg-teal-900/30", "bg-teal-500 dark:bg-teal-400")}
-      {(d.bajsBoostPct ?? 0) > 0 && renderBoost("S BAJS Biciklima", d.bajsBoostPct, d.bajsAvgReachableCells ?? d.avgReachableCells, "text-amber-600 dark:text-amber-400", "bg-amber-100 dark:bg-amber-900/30", "bg-amber-500 dark:bg-amber-400")}
+      {d.trainBoostPct > 0 && renderBoost("S HŽ Vlakovima", d.trainBoostPct, d.trainAvgReachableCells, "text-teal-600 dark:text-teal-400", "bg-teal-100 dark:bg-teal-900/30", "bg-teal-500 dark:bg-teal-400")}
+      {d.bajsBoostPct > 0 && renderBoost("S BAJS Biciklima", d.bajsBoostPct, d.bajsAvgReachableCells, "text-amber-600 dark:text-amber-400", "bg-amber-100 dark:bg-amber-900/30", "bg-amber-500 dark:bg-amber-400")}
     </>
   )
 }
@@ -79,7 +75,7 @@ function DenseLinesList({ d }: { d: DistrictScore }) {
         {d.busLines.length > 0 && (
           <span className="flex h-5 items-center justify-center rounded-sm bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{d.busLines.length} bus</span>
         )}
-        {(d.trainLines?.length ?? 0) > 0 && (
+        {d.trainLines.length > 0 && (
           <span className="flex h-5 items-center justify-center rounded-sm bg-teal-50 px-1.5 font-mono text-[10px] font-medium text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">HŽ</span>
         )}
       </div>
@@ -87,10 +83,7 @@ function DenseLinesList({ d }: { d: DistrictScore }) {
   )
 }
 
-// -----------------------------------------------------------------------------
-// V28: The Refined Crammed Fix - Spaced out, shadowless, elegant
-// -----------------------------------------------------------------------------
-export function DistrictCardV28({
+export function DistrictCard({
   district: d,
   emblemPath,
   totalGridCells,
@@ -104,7 +97,6 @@ export function DistrictCardV28({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-[24px] border border-slate-200/60 bg-white transition-colors hover:border-slate-300/80 dark:border-white/5 dark:bg-slate-900/50 dark:hover:border-white/10">
       
-      {/* Header with Emblem */}
       <div className="flex items-center justify-between p-6 pb-6">
         <div className="flex items-center gap-4">
           <DistrictEmblem pathData={emblemPath} rank={d.rank} color={bandColor} />
@@ -119,7 +111,6 @@ export function DistrictCardV28({
         </div>
       </div>
 
-      {/* Dense Stats Grid */}
       <div className="px-6">
         <div className="flex justify-between gap-3 text-center">
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
@@ -141,7 +132,6 @@ export function DistrictCardV28({
         </div>
       </div>
 
-      {/* Reach & Boosts */}
       <div className="mt-6 border-t border-slate-50/80 p-6 pb-5 dark:border-slate-800/50">
         <div className="mb-4 flex justify-between text-[11px] uppercase tracking-widest text-slate-500">
           <span>Doseg grada</span>
@@ -157,7 +147,6 @@ export function DistrictCardV28({
         </div>
       </div>
 
-      {/* Lines & Link */}
       <div className="mt-auto border-t border-slate-50/80 bg-slate-50/30 px-6 py-5 dark:border-slate-800/50 dark:bg-slate-800/10">
         <DenseLinesList d={d} />
         
@@ -172,5 +161,3 @@ export function DistrictCardV28({
     </div>
   )
 }
-
-

@@ -215,7 +215,6 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
             <line x1={0} y1={yScale(0) ?? 0} x2={INNER_WIDTH} y2={yScale(0) ?? 0} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.2} />
           )}
           
-          {/* Bars */}
           {points.map((p) => {
             const xPos = xScale(new Date(p.ts * 1000)) ?? 0
             const yPos = yScale(p.bikesInUse) ?? 0
@@ -223,7 +222,6 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
             const isHovered = hovered === p
             const opacity = isHovered ? 1 : 0.85
             
-            // Color based on usage (e.g., above avg vs below avg, or just uniform)
             const color = p.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"
             
             return (

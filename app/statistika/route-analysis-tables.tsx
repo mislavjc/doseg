@@ -116,7 +116,7 @@ function headwayStatus(headway: number | null): {
   text: string
   color: string
 } {
-  if (headway == null) return { dot: "", text: "—", color: "text-slate-300 dark:text-slate-600" }
+  if (headway == null) return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }
   if (headway <= 8)
     return {
       dot: "bg-emerald-500",
@@ -148,7 +148,6 @@ function RouteRow({ route }: { route: RouteInfo }) {
 
   return (
     <tr className="even:bg-slate-50/70 dark:even:bg-white/[0.02]">
-      {/* Line name */}
       <td className="py-3 pr-8">
         <span
           className={`inline-flex min-w-[2.5rem] items-center justify-center rounded-md px-2.5 py-1 text-[15px] font-semibold tabular-nums ${
@@ -160,39 +159,33 @@ function RouteRow({ route }: { route: RouteInfo }) {
           {route.name}
         </span>
       </td>
-      {/* Stops */}
       <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
         {route.stops}
       </td>
-      {/* Distance */}
       <td className="py-3 pr-8 text-[15px] text-slate-700 dark:text-slate-300">
         {fmtHR(route.distanceKm, 1)}
         <span className="ml-1.5 inline-flex rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium tracking-wide text-slate-500 uppercase dark:bg-white/5 dark:text-slate-400">
           km
         </span>
       </td>
-      {/* Daily departures */}
       <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
         {route.dailyDepartures.toLocaleString("hr-HR")}
         <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
           {fmtHR(route.depPerHour, 1)}/h
         </span>
       </td>
-      {/* Speed */}
       <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
         {fmtHR(route.commercialSpeedKmh, 1)}
         <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
           km/h
         </span>
       </td>
-      {/* Travel time */}
       <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-600 dark:text-slate-400">
         {route.travelTimeMin}
         <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
           min
         </span>
       </td>
-      {/* Headway — status style */}
       <td className={`py-3 text-[15px] font-medium ${hw.color}`}>
         {hw.dot ? (
           <span className="inline-flex items-center gap-2">

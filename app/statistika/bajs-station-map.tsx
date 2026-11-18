@@ -7,10 +7,6 @@ import useSWR from "swr"
 
 const ZAGREB: [number, number] = [15.978, 45.815]
 
-function getMapStyle(): string {
-  return "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-}
-
 interface StationProps {
   name: string
   bikesAvailable: number
@@ -139,7 +135,7 @@ export default function BajsStationMap() {
     if (!containerRef.current) return
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: getMapStyle(),
+      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
       center: ZAGREB,
       zoom: 12.5,
       attributionControl: false,

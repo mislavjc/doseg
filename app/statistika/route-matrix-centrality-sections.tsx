@@ -1,8 +1,9 @@
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
-import type { RouteStatsOutput as RouteStats } from "@/lib/generated"
+import { readJsonCached } from "@/lib/page-data"
+import type { CentralityStats, RouteStatsOutput as RouteStats } from "@/lib/generated"
 import type { TravelMatrix, computeMatrixInsights } from "./stat-data"
-import { districtAbbrev, readDataJson, sortRoutesByName } from "./stat-data"
+import { districtAbbrev, sortRoutesByName } from "./stat-data"
 import RouteAnalysisTables from "./route-analysis-tables"
 import { CollapsibleContent } from "./stat-expandable"
 import { StatModuleTitle } from "./stat-typography"
@@ -82,7 +83,7 @@ function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
         <StatModuleTitle>Matrica putovanja</StatModuleTitle>
         <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
           Vrijeme putovanja javnim prijevozom između središta svakog kvarta,
-          polazak u {travelMatrix.departureTime ?? "08:00"}. Boja označava
+          polazak u {travelMatrix.departureTime}. Boja označava
           trajanje - od zelene (brzo) do crvene (sporo).
         </p>
       </div>
@@ -178,7 +179,7 @@ function MatrixCell({
   ci: number
   time: number
 }) {
-  const transfers = travelMatrix.transferMatrix[ri]?.[ci] ?? 0
+  const transfers = travelMatrix.transferMatrix[ri][ci]
   const isDiag = ri === ci
   let bg: string
   let textColor: string
@@ -345,9 +346,9 @@ function computeTransferData(travelMatrix: TravelMatrix) {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       if (i === j) continue
-      const time = travelMatrix.matrix[i]?.[j] ?? -1
+      const time = travelMatrix.matrix[i][j]
       if (time <= 0) continue
-      const transfers = travelMatrix.transferMatrix[i]?.[j] ?? 0
+      const transfers = travelMatrix.transferMatrix[i][j]
       totalPairs++
       totalTransfers += transfers
       if (transfers === 0) {
@@ -371,7 +372,7 @@ function computeTransferData(travelMatrix: TravelMatrix) {
     totalPairs > 0 ? Math.round((buckets["1"].count / totalPairs) * 100) : 0
   const twoPlusPct =
     totalPairs > 0 ? Math.round((buckets["2+"].count / totalPairs) * 100) : 0
-  const worstPairs = [...buckets["2+"].pairs]
+  const worstPairs = buckets["2+"].pairs
     .toSorted((a, b) => b.time - a.time)
     .slice(0, 6)
 
@@ -557,13 +558,6 @@ export function TransferDependencySection({
 // Centrality Analysis (1.16-1.19)
 // ---------------------------------------------------------------------------
 
-function loadCentralityStats():
-  | import("@/lib/generated").CentralityStats
-  | null {
-  const statsPath = join(getDataDir(), "centrality-stats.json")
-  return readDataJson<import("@/lib/generated").CentralityStats>(statsPath)
-}
-
 function CentralityRanking({
   stops,
   title,
@@ -649,7 +643,7 @@ function CentralityRanking({
 function CentralityNumbers({
   data,
 }: {
-  data: import("@/lib/generated").CentralityStats
+  data: CentralityStats
 }) {
   const { networkDiameter, averagePathLength } = data
   return (
@@ -701,7 +695,9 @@ function CentralityNumbers({
 }
 
 export function CentralitySection() {
-  const data = loadCentralityStats()
+  const data = readJsonCached<CentralityStats>(
+    join(getDataDir(), "centrality-stats.json")
+  )
   if (!data) return null
 
   const { betweenness, closeness, networkDiameter } = data

@@ -279,8 +279,8 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
         </span>
       </div>
       <div className="mt-1 flex flex-col gap-1.5 text-[15px] leading-relaxed text-slate-900 dark:text-slate-100">
-        <span className="font-medium">{gap.issue.replaceAll("\u2014", "\u2013")}</span>
-        <span className="text-slate-600 dark:text-slate-400">{gap.impact.replaceAll("\u2014", "\u2013")}</span>
+        <span className="font-medium">{gap.issue}</span>
+        <span className="text-slate-600 dark:text-slate-400">{gap.impact}</span>
       </div>
     </div>
   )
@@ -365,7 +365,7 @@ function HealthTable({ routes }: { routes: RouteHealth[] }) {
             <th className="py-2 pr-2 sm:pr-6 text-right">Na vrijeme</th>
             <th className="py-2 pr-2 sm:pr-6 text-right">Kašnjenje</th>
             <th className="py-2 pr-1 sm:pr-3 text-right">
-              <Term title="Koeficijent varijacije razmaka — mjeri koliko pravilno dolaze vozila (niži = bolje)">
+              <Term title="Koeficijent varijacije razmaka - mjeri koliko pravilno dolaze vozila (niži = bolje)">
                 Regularnost
               </Term>
             </th>
@@ -411,7 +411,7 @@ function HealthRow({ route: r }: { route: RouteHealth }) {
       <td
         className={`py-2.5 pr-3 text-right font-mono tabular-nums ${r.headwayCv === null ? "text-slate-300 dark:text-slate-600" : r.headwayCv > 0.5 ? "text-red-600 dark:text-red-400" : r.headwayCv > 0.3 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}
       >
-        {r.headwayCv === null ? "\u2014" : r.headwayCv.toFixed(2)}
+        {r.headwayCv === null ? "-" : r.headwayCv.toFixed(2)}
       </td>
       <td className="py-2.5 text-right">
         <SeverityBar score={r.severityScore} />

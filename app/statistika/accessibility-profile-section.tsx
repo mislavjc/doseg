@@ -1,6 +1,6 @@
-import { readDataJson } from "./stat-data"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
+import { readJsonCached } from "@/lib/page-data"
 import { scaleLinear } from "@visx/scale"
 import { Group } from "@visx/group"
 import { LinePath } from "@visx/shape"
@@ -11,11 +11,6 @@ import type {
   AccessibilityProfileOutput,
   DistrictHourlyProfile,
 } from "@/lib/generated"
-
-function loadAccessibilityProfile(): AccessibilityProfileOutput | null {
-  const profilePath = join(getDataDir(), "accessibility-profile.json")
-  return readDataJson<AccessibilityProfileOutput>(profilePath)
-}
 
 const DISTRICT_COLORS: Record<string, string> = {
   "Donji grad": "#059669",
@@ -153,7 +148,9 @@ function buildChartLines(
 // ---------------------------------------------------------------------------
 
 export default function AccessibilityProfileSection() {
-  const data = loadAccessibilityProfile()
+  const data = readJsonCached<AccessibilityProfileOutput>(
+    join(getDataDir(), "accessibility-profile.json")
+  )
   if (!data || data.districts.length === 0) return null
 
   const insights = computeInsights(data)

@@ -90,9 +90,9 @@ export function Footer({ updated }: { updated: string }) {
             ))}
             <div className="flex flex-col gap-1.5">
               <MonoLabel className="text-ink">ažurirano</MonoLabel>
-              <span className="font-mono text-label leading-5 text-ink-faint">
+              <MonoLabel className="leading-5">
                 {formatUpdated(updated)}
-              </span>
+              </MonoLabel>
             </div>
           </div>
 
@@ -129,7 +129,7 @@ export function Footer({ updated }: { updated: string }) {
 export function FooterMapBand() {
   return (
     <div className="relative h-[340px] w-full overflow-hidden sm:h-[480px]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
       <img
         src="/footer-map.png"
         alt=""

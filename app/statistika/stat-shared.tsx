@@ -73,7 +73,7 @@ export function SectionGroup({
         <p
           className={`mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.15em] ${accent.eyebrowColor}`}
         >
-          {numLabel} &mdash; {eyebrow}
+          {numLabel} - {eyebrow}
         </p>
 
         <div className="mb-4">

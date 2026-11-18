@@ -7,7 +7,7 @@ import type { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-import { Body, Eyebrow, Hook } from "./primitives"
+import { Body, Eyebrow, Hook, MonoLabel } from "./primitives"
 
 /**
  * Composite blocks shared across the editorial pSEO pages (linije, kvartovi,
@@ -191,7 +191,7 @@ export function PrevNext({
     <nav className="flex items-start justify-between">
       {prev ? (
         <Link href={prev.href} className="group flex flex-col gap-0.5">
-          <span className="font-mono text-label text-ink-faint">{prev.label}</span>
+          <MonoLabel>{prev.label}</MonoLabel>
           <span className={value}>
             <IconArrowLeft size={16} className="shrink-0" />
             {prev.value}
@@ -205,7 +205,7 @@ export function PrevNext({
           href={next.href}
           className="group flex flex-col items-end gap-0.5"
         >
-          <span className="font-mono text-label text-ink-faint">{next.label}</span>
+          <MonoLabel>{next.label}</MonoLabel>
           <span className={value}>
             {next.value}
             <IconArrowRight size={16} className="shrink-0" />

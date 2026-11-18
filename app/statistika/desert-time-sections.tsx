@@ -1,6 +1,7 @@
 import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import type { computeDesertInsights, computeEveningInsights, computeBaseInsights, computeWeekendData, WeekendItem } from "./stat-data"
-import { fmtHR, pct } from "./stat-data"
+import { fmtHR } from "@/lib/format"
+import { pct } from "./stat-data"
 import { RankingList } from "./stat-shared"
 import { CollapsibleContent } from "./stat-expandable"
 import { StatModuleTitle } from "./stat-typography"
@@ -17,7 +18,6 @@ export function TransitDesertSection({
   data: ScoreData
   desert: DesertInsights
 }) {
-  if (!desert.hasDesertData && desert.lowFreqDistricts.length === 0) return null
   return (
     <section
       id="pustinje"
@@ -26,16 +26,14 @@ export function TransitDesertSection({
       <TransitDesertHeader />
       <CollapsibleContent expandLabel="Prikaži prometne pustinje" collapseLabel="Suzi prometne pustinje">
         <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
-          {desert.hasDesertData && desert.desertDistricts.length > 0 && (
+          {desert.desertDistricts.length > 0 && (
             <div className="w-full shrink-0 lg:w-[400px]">
               <DesertRanking data={data} desert={desert} />
             </div>
           )}
-          {desert.hasDesertData && (
-            <div className="flex-1">
-              <DesertInterpretation data={data} desert={desert} />
-            </div>
-          )}
+          <div className="flex-1">
+            <DesertInterpretation data={data} desert={desert} />
+          </div>
         </div>
       </CollapsibleContent>
     </section>
@@ -70,11 +68,9 @@ function DesertRanking({
         <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
           Daleko od stanice (&gt;500m)
         </h3>
-        {data.cityDesertPct !== undefined && (
-          <span className="font-sans text-[15px] tracking-tight text-slate-500 dark:text-slate-400">
-            {data.cityDesertPct}% grada
-          </span>
-        )}
+        <span className="font-sans text-[15px] tracking-tight text-slate-500 dark:text-slate-400">
+          {data.cityDesertPct}% grada
+        </span>
       </div>
       <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
         Udio uzorkovanih točaka u svakom kvartu udaljenijih više od 500m od
@@ -82,7 +78,7 @@ function DesertRanking({
       </p>
       <RankingList
         items={desert.desertDistricts}
-        value={(d) => d.desertPct ?? 0}
+        value={(d) => d.desertPct}
         label={(d) => `${d.desertPct}%`}
         trailing={(d) => `~${d.avgNearestStopM}m`}
         color={{
@@ -124,7 +120,7 @@ function DesertStatCards({
     <div className="my-8 flex flex-col gap-8 border-y border-slate-100 py-6 sm:flex-row sm:gap-12 dark:border-white/10">
       <div className="flex flex-col border-l-2 border-rose-500 py-1 pl-4">
         <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
-          {data.cityDesertPct ?? 0}%
+          {data.cityDesertPct}%
         </div>
         <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
           uzorkovanih točaka grada
@@ -190,7 +186,7 @@ export function StopDistanceSection({
 }: {
   desert: DesertInsights
 }) {
-  if (!desert.hasStopDistData || desert.stopDistSorted.length === 0) return null
+  if (desert.stopDistSorted.length === 0) return null
   return (
     <section
       id="udaljenost-stajalista"
@@ -258,7 +254,7 @@ function StopDistanceBar({
   i: number
   maxStopDist: number
 }) {
-  const meters = d.avgNearestStopM ?? 0
+  const meters = d.avgNearestStopM
   const barPct = (meters / maxStopDist) * 100
   const thresholdPct = (400 / maxStopDist) * 100
   const barColor =
@@ -427,7 +423,7 @@ export function PeakOffPeakSection({
   base: BaseInsights
   evening: EveningInsights
 }) {
-  if (!evening.hasEveningData || evening.eveningRankedByDrop.length === 0)
+  if (evening.eveningRankedByDrop.length === 0)
     return null
   return (
     <section
@@ -491,10 +487,10 @@ function PeakOffPeakRanking({
       <div className="space-y-3">
         <RankingList
           items={evening.eveningRankedByDrop}
-          value={(d) => d.peakOffpeakDrop ?? 0}
+          value={(d) => d.peakOffpeakDrop}
           label={(d) => `-${d.peakOffpeakDrop}%`}
           trailing={(d) =>
-            `${pct(d.eveningAvgReachableCells ?? d.avgReachableCells, data.totalGridCells)}%`
+            `${pct(d.eveningAvgReachableCells, data.totalGridCells)}%`
           }
           color={{
             text: "text-indigo-700 dark:text-indigo-400",
@@ -760,7 +756,7 @@ function WeekendPositiveText({
   weekendComparison: WeekendItem[]
   cityWeekendChange: number
 }) {
-  const worst = [...weekendComparison]
+  const worst = weekendComparison
     .toSorted((a, b) => a.change - b.change)
     .slice(0, 3)
   const hasNegative = worst.some((p) => p.change < 0)

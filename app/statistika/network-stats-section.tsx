@@ -1,6 +1,8 @@
-import { readDataJson } from "./stat-data"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
+import { readJsonCached } from "@/lib/page-data"
+import { fmtHR } from "@/lib/format"
+import { loadRouteStats } from "./stat-data"
 import { scaleLinear } from "@visx/scale"
 import type {
   NetworkStatsOutput,
@@ -20,24 +22,10 @@ import {
 } from "./stat-typography"
 import { CollapsibleContent } from "./stat-expandable"
 
-function loadNetworkStats(): NetworkStatsOutput | null {
-  const statsPath = join(getDataDir(), "network-stats.json")
-  return readDataJson<NetworkStatsOutput>(statsPath)
-}
-
-function loadRouteStatsForInsights(): RouteStatsOutput | null {
-  const statsPath = join(getDataDir(), "route-stats.json")
-  return readDataJson<RouteStatsOutput>(statsPath)
-}
-
 function fmtDots(n: number): string {
   return Math.round(n)
     .toString()
     .replaceAll(/\B(?=(\d{3})+(?!\d))/gu, ".")
-}
-
-function fmtDec(n: number, decimals = 2): string {
-  return n.toFixed(decimals).replace(".", ",")
 }
 
 function tramSort(a: string, b: string): number {
@@ -408,12 +396,12 @@ function HeatmapInsight({
             {" "}
             Najfrekventnija linija {insights.busiestTram.name} ima{" "}
             {insights.busiestPeakDep} polazaka u vršnom satu - tramvaj svakih{" "}
-            <strong>{fmtDec(insights.busiestInterval, 1)} minuta</strong>.
+            <strong>{fmtHR(insights.busiestInterval, 1)} minuta</strong>.
           </>
         )}{" "}
         Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} polazaka -
         tek{" "}
-        {fmtDec(
+        {fmtHR(
           (insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100,
           1
         )}
@@ -512,7 +500,7 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="Tortuoznost"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.tortuosity === null ? "-" : fmtDec(r.tortuosity)}
+        {r.tortuosity === null ? "-" : fmtHR(r.tortuosity, 2)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Razmak"
@@ -524,13 +512,13 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="CV takta"
         valueClassName={cvColor(r.headwayCv) + " font-medium"}
       >
-        {r.headwayCv === null ? "-" : fmtDec(r.headwayCv)}
+        {r.headwayCv === null ? "-" : fmtHR(r.headwayCv, 2)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Vrh:baza"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.peakToBaseRatio === null ? "-" : fmtDec(r.peakToBaseRatio)}
+        {r.peakToBaseRatio === null ? "-" : fmtHR(r.peakToBaseRatio, 2)}
       </RouteQualityCardStatRow>
     </div>
   )
@@ -580,12 +568,12 @@ function RouteQualityInsight({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostDirect.name}
             </strong>{" "}
-            (tortuoznost {fmtDec(insights.mostDirect.tortuosity!, 2)}), a
+            (tortuoznost {fmtHR(insights.mostDirect.tortuosity!, 2)}), a
             najkrivudavija{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostWinding.name}
             </strong>{" "}
-            ({fmtDec(insights.mostWinding.tortuosity!, 2)} -{" "}
+            ({fmtHR(insights.mostWinding.tortuosity!, 2)} -{" "}
             {Math.round((insights.mostWinding.tortuosity! - 1) * 100)}% duža od
             ravne linije).
           </>
@@ -598,12 +586,12 @@ function RouteQualityInsight({
               Tramvaj {insights.fastest.name}
             </strong>{" "}
             ({Math.round(insights.fastest.spacing)} m razmak) postiže{" "}
-            {fmtDec(insights.fastest.speed, 1)} km/h, dok{" "}
+            {fmtHR(insights.fastest.speed, 1)} km/h, dok{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.slowest.name}
             </strong>{" "}
             ({Math.round(insights.slowest.spacing)} m) ide samo{" "}
-            {fmtDec(insights.slowest.speed, 1)} km/h.
+            {fmtHR(insights.slowest.speed, 1)} km/h.
           </>
         )}
       </p>
@@ -698,7 +686,7 @@ function FleetNumbers({ fleet }: { fleet: Fleet }) {
 }
 
 function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
-  const topBlocks = [...fleet.interlinedExamples]
+  const topBlocks = fleet.interlinedExamples
     .toSorted((a, b) => b.routes.length - a.routes.length)
     .slice(0, 5)
 
@@ -1307,7 +1295,7 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
         <span
           className={`inline-flex h-6 items-center rounded-full px-2 text-[13px] font-semibold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
         >
-          {fmtDec(hub.avgTransferWaitMin, 1)} min
+          {fmtHR(hub.avgTransferWaitMin, 1)} min
         </span>
       </td>
       <td className="py-3 text-center">
@@ -1317,7 +1305,7 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
         <span
           className={`ml-1.5 text-[11px] font-medium tabular-nums ${pulseWaitColor(hub.bestHourWaitMin)}`}
         >
-          ({fmtDec(hub.bestHourWaitMin, 1)} min)
+          ({fmtHR(hub.bestHourWaitMin, 1)} min)
         </span>
       </td>
     </tr>
@@ -1502,8 +1490,8 @@ function PulseInsight({
         analiziranih čvorišta (prosječno čekanje na presjedanje &lt;5 min u
         vršnom satu). Najbolje sinkronizirano čvorište je{" "}
         <strong>{bestHub.stopName}</strong> s prosječnim čekanjem od samo{" "}
-        {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta. Ukupni prosjek od{" "}
-        {fmtDec(avgWait, 1)} minuta sugerira da postoji određena koordinacija,
+        {fmtHR(bestHub.avgTransferWaitMin, 1)} minuta. Ukupni prosjek od{" "}
+        {fmtHR(avgWait, 1)} minuta sugerira da postoji određena koordinacija,
         ali ne sustavni pulse.
       </Insight>
     )
@@ -1511,11 +1499,11 @@ function PulseInsight({
   return (
     <Insight>
       Zagreb ne koristi pulse scheduling - prosječno čekanje na presjedanje na
-      velikim čvorištima iznosi <strong>{fmtDec(avgWait, 1)} minuta</strong>.
+      velikim čvorištima iznosi <strong>{fmtHR(avgWait, 1)} minuta</strong>.
       Presjedanja su uglavnom prepuštena slučaju, što je tipično za mreže s
       kratkim intervalima. Najbolje sinkronizirano čvorište je{" "}
       <strong>{bestHub.stopName}</strong> s prosječnim čekanjem od{" "}
-      {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta.
+      {fmtHR(bestHub.avgTransferWaitMin, 1)} minuta.
     </Insight>
   )
 }
@@ -1559,10 +1547,12 @@ function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function NetworkStatsSection() {
-  const data = loadNetworkStats()
+  const data = readJsonCached<NetworkStatsOutput>(
+    join(getDataDir(), "network-stats.json")
+  )
   if (!data) return null
 
-  const routeStats = loadRouteStatsForInsights()
+  const routeStats = loadRouteStats()
   const insights = computeInsights(data, routeStats)
 
   return (

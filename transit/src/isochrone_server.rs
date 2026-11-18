@@ -26,20 +26,20 @@ use std::path::Path;
 use std::sync::{Arc, RwLock};
 use std::time::{Duration, Instant};
 
+use axum::Router;
 use axum::extract::{Query, State};
 use axum::http::header;
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
-use axum::Router;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use tower_http::compression::CompressionLayer;
 use ts_rs::TS;
 
-use crate::geo::{fast_dist_km, WALK_SPEED};
+use crate::geo::{WALK_SPEED, fast_dist_km};
 use crate::heap::FlatHeap;
 use crate::transit_graph::{Mode, TransitGraphJson};
-use crate::walk_expand::{find_nearest_node, snap_stops, StopSnap};
+use crate::walk_expand::{StopSnap, find_nearest_node, snap_stops};
 use crate::walk_graph::WalkGraph;
 
 // --- Constants matching the TS implementation ---
@@ -467,22 +467,19 @@ fn compute_travel_times(
     }
 
     // Seed BAJS stations using real walk-graph times
-    if use_bajs {
-        if let Some(adj) = bajs_adj {
-            for station in adj.stations_by_key.values() {
-                // BAJS stations aren't in stop_snaps — use straight-line with detour
-                let dist_km = fast_dist_km(origin_lat, origin_lon, station.lat, station.lon);
-                if dist_km > WALK_MAX_KM {
-                    continue;
-                }
-                let wt = walk_seconds(dist_km);
-                let existing = best.get(&station.key).copied().unwrap_or(f64::INFINITY);
-                if wt < existing {
-                    best.insert(station.key.clone(), wt);
-                    let node_idx =
-                        get_or_insert_node(&station.key, &mut node_keys, &mut key_to_node);
-                    heap.push(wt, node_idx);
-                }
+    if use_bajs && let Some(adj) = bajs_adj {
+        for station in adj.stations_by_key.values() {
+            // BAJS stations aren't in stop_snaps — use straight-line with detour
+            let dist_km = fast_dist_km(origin_lat, origin_lon, station.lat, station.lon);
+            if dist_km > WALK_MAX_KM {
+                continue;
+            }
+            let wt = walk_seconds(dist_km);
+            let existing = best.get(&station.key).copied().unwrap_or(f64::INFINITY);
+            if wt < existing {
+                best.insert(station.key.clone(), wt);
+                let node_idx = get_or_insert_node(&station.key, &mut node_keys, &mut key_to_node);
+                heap.push(wt, node_idx);
             }
         }
     }
@@ -627,84 +624,78 @@ fn compute_travel_times(
             }
 
             // Walk to nearby BAJS stations
-            if use_bajs {
-                if let Some(adj) = bajs_adj {
-                    if let Some(links) = adj.stop_walk_links.get(key.as_str()) {
-                        for link in links {
-                            let walk_time = time + walk_seconds(link.dist_km);
-                            let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
-                            if walk_time < existing {
-                                best.insert(link.key.clone(), walk_time);
-                                preds.insert(
-                                    link.key.clone(),
-                                    Predecessor {
-                                        from_key: key.clone(),
-                                        kind: PredKind::Walk,
-                                        pattern_idx: None,
-                                        board_idx: None,
-                                        alight_idx: None,
-                                    },
-                                );
-                                let ni =
-                                    get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
-                                heap.push(walk_time, ni);
-                            }
-                        }
+            if use_bajs
+                && let Some(adj) = bajs_adj
+                && let Some(links) = adj.stop_walk_links.get(key.as_str())
+            {
+                for link in links {
+                    let walk_time = time + walk_seconds(link.dist_km);
+                    let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
+                    if walk_time < existing {
+                        best.insert(link.key.clone(), walk_time);
+                        preds.insert(
+                            link.key.clone(),
+                            Predecessor {
+                                from_key: key.clone(),
+                                kind: PredKind::Walk,
+                                pattern_idx: None,
+                                board_idx: None,
+                                alight_idx: None,
+                            },
+                        );
+                        let ni = get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
+                        heap.push(walk_time, ni);
                     }
                 }
             }
         }
 
-        if is_station {
-            if let Some(adj) = bajs_adj {
-                // Walk to nearby transit stops
-                if let Some(links) = adj.station_walk_links.get(key.as_str()) {
-                    for link in links {
-                        let walk_time = time + walk_seconds(link.dist_km);
-                        let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
-                        if walk_time < existing {
-                            best.insert(link.key.clone(), walk_time);
-                            preds.insert(
-                                link.key.clone(),
-                                Predecessor {
-                                    from_key: key.clone(),
-                                    kind: PredKind::Walk,
-                                    pattern_idx: None,
-                                    board_idx: None,
-                                    alight_idx: None,
-                                },
-                            );
-                            let ni =
-                                get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
-                            heap.push(walk_time, ni);
-                        }
+        if is_station && let Some(adj) = bajs_adj {
+            // Walk to nearby transit stops
+            if let Some(links) = adj.station_walk_links.get(key.as_str()) {
+                for link in links {
+                    let walk_time = time + walk_seconds(link.dist_km);
+                    let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
+                    if walk_time < existing {
+                        best.insert(link.key.clone(), walk_time);
+                        preds.insert(
+                            link.key.clone(),
+                            Predecessor {
+                                from_key: key.clone(),
+                                kind: PredKind::Walk,
+                                pattern_idx: None,
+                                board_idx: None,
+                                alight_idx: None,
+                            },
+                        );
+                        let ni = get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
+                        heap.push(walk_time, ni);
                     }
                 }
+            }
 
-                // Bike to other stations
-                if let Some(links) = adj.station_bike_links.get(key.as_str()) {
-                    for link in links {
-                        let bike_time = time
-                            + BAJS_PICKUP_SECONDS
-                            + BAJS_DROPOFF_SECONDS
-                            + (link.dist_km / BAJS_SPEED) * 3600.0;
-                        let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
-                        if bike_time < existing {
-                            best.insert(link.key.clone(), bike_time);
-                            preds.insert(
-                                link.key.clone(),
-                                Predecessor {
-                                    from_key: key.clone(),
-                                    kind: PredKind::Bike,
-                                    pattern_idx: None,
-                                    board_idx: None,
-                                    alight_idx: None,
-                                },
-                            );
-                            let ni =
-                                get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
-                            heap.push(bike_time, ni);
-                        }
+            // Bike to other stations
+            if let Some(links) = adj.station_bike_links.get(key.as_str()) {
+                for link in links {
+                    let bike_time = time
+                        + BAJS_PICKUP_SECONDS
+                        + BAJS_DROPOFF_SECONDS
+                        + (link.dist_km / BAJS_SPEED) * 3600.0;
+                    let existing = best.get(&link.key).copied().unwrap_or(f64::INFINITY);
+                    if bike_time < existing {
+                        best.insert(link.key.clone(), bike_time);
+                        preds.insert(
+                            link.key.clone(),
+                            Predecessor {
+                                from_key: key.clone(),
+                                kind: PredKind::Bike,
+                                pattern_idx: None,
+                                board_idx: None,
+                                alight_idx: None,
+                            },
+                        );
+                        let ni = get_or_insert_node(&link.key, &mut node_keys, &mut key_to_node);
+                        heap.push(bike_time, ni);
                     }
                 }
             }
@@ -733,11 +724,7 @@ fn snap_polyline_to_walk_graph(graph: &WalkGraph, line: Vec<[f64; 2]>) -> Vec<[f
             out.push([plon, plat]);
         }
     }
-    if out.len() < 2 {
-        vec![]
-    } else {
-        out
-    }
+    if out.len() < 2 { vec![] } else { out }
 }
 
 fn round_coord(value: f64) -> f64 {
@@ -1395,10 +1382,10 @@ fn build_routing_payload(
 ) -> RoutingPayload {
     let mut used_patterns = std::collections::HashSet::new();
     for pred in preds.values() {
-        if let PredKind::Transit = pred.kind {
-            if let Some(pi) = pred.pattern_idx {
-                used_patterns.insert(pi);
-            }
+        if let PredKind::Transit = pred.kind
+            && let Some(pi) = pred.pattern_idx
+        {
+            used_patterns.insert(pi);
         }
     }
 
@@ -1728,11 +1715,7 @@ fn zagreb_offset(epoch: i64) -> i64 {
         }
         _ => false, // Nov-Dec
     };
-    if is_summer {
-        7200
-    } else {
-        3600
-    }
+    if is_summer { 7200 } else { 3600 }
 }
 
 fn days_to_ymd(days: u64) -> (u64, u64, u64) {
@@ -2579,7 +2562,7 @@ async fn handle_bajs_rides(
                 [(header::CONTENT_TYPE, "application/json")],
                 format!(r#"{{"error":"{}"}}"#, e),
             )
-                .into_response()
+                .into_response();
         }
     };
 
@@ -2763,7 +2746,7 @@ async fn handle_bajs_station_ranking(
                 [(header::CONTENT_TYPE, "application/json")],
                 format!(r#"{{"error":"{}"}}"#, e),
             )
-                .into_response()
+                .into_response();
         }
     };
 
@@ -2915,7 +2898,7 @@ async fn handle_bajs_station_flow(
                 [(header::CONTENT_TYPE, "application/json")],
                 format!(r#"{{"error":"{}"}}"#, e),
             )
-                .into_response()
+                .into_response();
         }
     };
 
@@ -3052,7 +3035,7 @@ async fn handle_bajs_relocations(
                 [(header::CONTENT_TYPE, "application/json")],
                 format!(r#"{{"error":"{}"}}"#, e),
             )
-                .into_response()
+                .into_response();
         }
     };
 
@@ -3171,20 +3154,21 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
 
                 // Query rolling 24h peak + write snapshot in a single lock.
                 let peak = if let Some(ref db) = config.db_conn {
-                    if let Ok(conn) = db.lock() {
-                        let cutoff = now as i64 - 86400;
-                        let peak = rt_store::query_bajs_peak_available(&conn, cutoff)
-                            .unwrap_or(total_at_stations)
-                            .max(total_at_stations);
-                        let ts = (now / 60) * 60;
-                        let bikes_in_use = (peak - total_at_stations).max(0);
-                        let _ = conn.execute(
+                    match db.lock() {
+                        Ok(conn) => {
+                            let cutoff = now as i64 - 86400;
+                            let peak = rt_store::query_bajs_peak_available(&conn, cutoff)
+                                .unwrap_or(total_at_stations)
+                                .max(total_at_stations);
+                            let ts = (now / 60) * 60;
+                            let bikes_in_use = (peak - total_at_stations).max(0);
+                            let _ = conn.execute(
                             "INSERT OR REPLACE INTO bajs_usage (ts, bikes_in_use, available, known_fleet) VALUES (?1, ?2, ?3, ?4)",
                             rusqlite::params![ts as i64, bikes_in_use, total_at_stations, peak],
                         );
-                        peak
-                    } else {
-                        total_at_stations
+                            peak
+                        }
+                        _ => total_at_stations,
                     }
                 } else {
                     total_at_stations
@@ -3286,15 +3270,15 @@ async fn track_bajs_bike_flow(
 
     // After the flush: a retraction can target the hour just written, and must
     // not be undone by it.
-    if let Some(ref delta) = outcome.delta {
-        if !delta.retractions.is_empty() {
-            match rt_store::apply_bajs_start_retractions(&mut conn, &delta.retractions) {
-                Ok(()) => eprintln!(
-                    "BAJS flow: withdrew {} start(s) from bikes that came back to their own dock",
-                    delta.retractions.len()
-                ),
-                Err(e) => eprintln!("BAJS flow: retraction failed: {}", e),
-            }
+    if let Some(ref delta) = outcome.delta
+        && !delta.retractions.is_empty()
+    {
+        match rt_store::apply_bajs_start_retractions(&mut conn, &delta.retractions) {
+            Ok(()) => eprintln!(
+                "BAJS flow: withdrew {} start(s) from bikes that came back to their own dock",
+                delta.retractions.len()
+            ),
+            Err(e) => eprintln!("BAJS flow: retraction failed: {}", e),
         }
     }
 }
@@ -3364,13 +3348,13 @@ async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response
     let mut route_speeds: HashMap<String, Vec<f32>> = HashMap::new();
 
     for v in vehicle_data.values() {
-        if let Some(speed) = v.speed_mps {
-            if speed >= 0.0 {
-                route_speeds
-                    .entry(v.route_id.clone())
-                    .or_default()
-                    .push(speed);
-            }
+        if let Some(speed) = v.speed_mps
+            && speed >= 0.0
+        {
+            route_speeds
+                .entry(v.route_id.clone())
+                .or_default()
+                .push(speed);
         }
     }
 

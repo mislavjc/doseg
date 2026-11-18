@@ -647,51 +647,49 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
     // Parse calendar_dates.txt to handle feeds where calendar.txt has all-zero
     // day columns (ZET uses exception_type=1 additions exclusively).
     let calendar_needs_dates = calendar.values().all(|c| !c.has_any_day());
-    if calendar_needs_dates {
-        if let Ok(entry) = archive.by_name("calendar_dates.txt") {
-            let mut rdr = csv::ReaderBuilder::new().flexible(true).from_reader(entry);
-            if let Ok(headers) = rdr.headers().cloned() {
-                let sid_col = headers.iter().position(|h| h == "service_id");
-                let date_col = headers.iter().position(|h| h == "date");
-                let etype_col = headers.iter().position(|h| h == "exception_type");
+    if calendar_needs_dates && let Ok(entry) = archive.by_name("calendar_dates.txt") {
+        let mut rdr = csv::ReaderBuilder::new().flexible(true).from_reader(entry);
+        if let Ok(headers) = rdr.headers().cloned() {
+            let sid_col = headers.iter().position(|h| h == "service_id");
+            let date_col = headers.iter().position(|h| h == "date");
+            let etype_col = headers.iter().position(|h| h == "exception_type");
 
-                if let (Some(sc), Some(dc)) = (sid_col, date_col) {
-                    for result in rdr.records() {
-                        let record = match result {
-                            Ok(r) => r,
-                            Err(_) => continue,
-                        };
-                        // Only process additions (exception_type=1)
-                        let etype = etype_col.and_then(|c| record.get(c)).unwrap_or("1");
-                        if etype != "1" {
-                            continue;
-                        }
-                        let sid = record.get(sc).unwrap_or("").to_string();
-                        let date_str = record.get(dc).unwrap_or("");
-                        if date_str.len() != 8 {
-                            continue;
-                        }
-                        // Parse YYYYMMDD and compute day of week
-                        if let Some(dow) = date_to_day_of_week(date_str) {
-                            let cal = calendar.entry(sid).or_insert(GtfsCalendar {
-                                monday: false,
-                                tuesday: false,
-                                wednesday: false,
-                                thursday: false,
-                                friday: false,
-                                saturday: false,
-                                sunday: false,
-                            });
-                            match dow {
-                                0 => cal.sunday = true,
-                                1 => cal.monday = true,
-                                2 => cal.tuesday = true,
-                                3 => cal.wednesday = true,
-                                4 => cal.thursday = true,
-                                5 => cal.friday = true,
-                                6 => cal.saturday = true,
-                                _ => {}
-                            }
+            if let (Some(sc), Some(dc)) = (sid_col, date_col) {
+                for result in rdr.records() {
+                    let record = match result {
+                        Ok(r) => r,
+                        Err(_) => continue,
+                    };
+                    // Only process additions (exception_type=1)
+                    let etype = etype_col.and_then(|c| record.get(c)).unwrap_or("1");
+                    if etype != "1" {
+                        continue;
+                    }
+                    let sid = record.get(sc).unwrap_or("").to_string();
+                    let date_str = record.get(dc).unwrap_or("");
+                    if date_str.len() != 8 {
+                        continue;
+                    }
+                    // Parse YYYYMMDD and compute day of week
+                    if let Some(dow) = date_to_day_of_week(date_str) {
+                        let cal = calendar.entry(sid).or_insert(GtfsCalendar {
+                            monday: false,
+                            tuesday: false,
+                            wednesday: false,
+                            thursday: false,
+                            friday: false,
+                            saturday: false,
+                            sunday: false,
+                        });
+                        match dow {
+                            0 => cal.sunday = true,
+                            1 => cal.monday = true,
+                            2 => cal.tuesday = true,
+                            3 => cal.wednesday = true,
+                            4 => cal.thursday = true,
+                            5 => cal.friday = true,
+                            6 => cal.saturday = true,
+                            _ => {}
                         }
                     }
                 }
@@ -1602,17 +1600,17 @@ pub fn compute_and_write(
     let mut all_parsed: Vec<GtfsParsed> = Vec::new();
     for name in &zip_names {
         let path = gtfs_dir.join(name);
-        if path.exists() {
-            if let Some(parsed) = parse_gtfs_zip(&path) {
-                eprintln!(
-                    "  Parsed GTFS: {} ({} trips, {} routes, {} services)",
-                    name,
-                    parsed.trips.len(),
-                    parsed.routes.len(),
-                    parsed.calendar.len()
-                );
-                all_parsed.push(parsed);
-            }
+        if path.exists()
+            && let Some(parsed) = parse_gtfs_zip(&path)
+        {
+            eprintln!(
+                "  Parsed GTFS: {} ({} trips, {} routes, {} services)",
+                name,
+                parsed.trips.len(),
+                parsed.routes.len(),
+                parsed.calendar.len()
+            );
+            all_parsed.push(parsed);
         }
     }
 

@@ -21,11 +21,11 @@ use std::path::Path;
 use serde::Serialize;
 use ts_rs::TS;
 
-use crate::districts::{load_districts, point_in_polygon, District};
+use crate::districts::{District, load_districts, point_in_polygon};
 use crate::geo::fast_dist_km;
 use crate::line_pages::{
-    direction_departures, dominant_lines, fetch_and_merge, numeric_sort_key, round5,
-    stop_offsets_sec, LineBuild, LineMode, MergedPattern, ServiceDates, DAY_RADNI,
+    DAY_RADNI, LineBuild, LineMode, MergedPattern, ServiceDates, direction_departures,
+    dominant_lines, fetch_and_merge, numeric_sort_key, round5, stop_offsets_sec,
 };
 use crate::route_stats::{compute_headway, decode_polyline, round1};
 

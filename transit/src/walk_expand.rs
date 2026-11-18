@@ -1,8 +1,8 @@
 use rustc_hash::FxHashSet;
 
-use crate::geo::{fast_dist_km, WALK_SPEED};
+use crate::geo::{WALK_SPEED, fast_dist_km};
 use crate::heap::FlatHeap;
-use crate::walk_graph::{WalkGraph, GRID_CELL_SIZE};
+use crate::walk_graph::{GRID_CELL_SIZE, WalkGraph};
 /// cm → seconds: 3600 / (100_000 * 5) = 0.0072
 #[allow(dead_code)]
 const CM_TO_SECONDS: f64 = 0.0072;

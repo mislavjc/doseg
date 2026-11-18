@@ -16,7 +16,7 @@ use ts_rs::TS;
 use crate::geo::WALK_SPEED;
 use crate::heap::FlatHeap;
 use crate::route_stats::round2;
-use crate::transit_graph::{get_avg_wait, Mode, TransitGraphJson, TRANSFER_PENALTY};
+use crate::transit_graph::{Mode, TRANSFER_PENALTY, TransitGraphJson, get_avg_wait};
 
 // ---------------------------------------------------------------------------
 // Output types (exported to TypeScript via ts-rs)

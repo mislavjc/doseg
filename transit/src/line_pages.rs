@@ -13,7 +13,7 @@ use serde::Serialize;
 use ts_rs::TS;
 
 use crate::districts::polygon_area_km2;
-use crate::geo::{fast_dist_km, KM_PER_DEG_LAT};
+use crate::geo::{KM_PER_DEG_LAT, fast_dist_km};
 use crate::route_stats::{
     compute_headway, decode_polyline, format_time, polyline_distance_km, round1,
 };
@@ -487,7 +487,7 @@ fn douglas_peucker(points: &[(f64, f64)], tol: f64) -> Vec<(f64, f64)> {
     points
         .iter()
         .zip(&keep)
-        .filter(|(_, &k)| k)
+        .filter(|&(_, &k)| k)
         .map(|(p, _)| *p)
         .collect()
 }
@@ -1136,10 +1136,10 @@ pub fn generate(
             avg_headway_min: data.stats.avg_headway_min,
         });
 
-        if let Some(filter) = line_filter {
-            if filter != line.broj {
-                continue;
-            }
+        if let Some(filter) = line_filter
+            && filter != line.broj
+        {
+            continue;
         }
         let path = out_dir.join(format!("{}.json", line.broj));
         let json = serde_json::to_string_pretty(&data).expect("JSON serialization failed");

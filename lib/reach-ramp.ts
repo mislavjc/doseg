@@ -1,4 +1,4 @@
-import type maplibregl from "maplibre-gl"
+import type * as maplibregl from "maplibre-gl"
 
 /**
  * Reach (isochrone) ramp, near → far — docs/map-redesign-spec.md §1.

@@ -87,7 +87,7 @@ export function BlueAction({
 
 /** Shimmering placeholder block (skeleton states). */
 export function Skeleton({ className }: { className: string }) {
-  return <div className={`skeleton-block shimmer ${className}`} />
+  return <div className={`skeleton-block skeleton-shimmer ${className}`} />
 }
 
 /**

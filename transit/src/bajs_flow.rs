@@ -371,14 +371,14 @@ impl BikeTracker {
                     // Back at the dock it left, under the id it left with. The
                     // id would have rotated had anyone rented it, so nothing
                     // departed and the counted start has to come back off.
-                    if let Some(ref f) = flight {
-                        if f.station_id == obs.station_id {
-                            retractions.push(StartRetraction {
-                                station_id: f.station_id.clone(),
-                                counted_ts: f.counted_ts,
-                            });
-                            continue;
-                        }
+                    if let Some(ref f) = flight
+                        && f.station_id == obs.station_id
+                    {
+                        retractions.push(StartRetraction {
+                            station_id: f.station_id.clone(),
+                            counted_ts: f.counted_ts,
+                        });
+                        continue;
                     }
                     per_station
                         .entry(obs.station_id.clone())

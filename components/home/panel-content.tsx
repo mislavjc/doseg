@@ -451,7 +451,7 @@ export function RouteContent({
       <RouteSummary itinerary={itinerary} departedAt={departedAt} />
       <JourneyStrip legs={itinerary.legs} colors={colors} />
       {/* Long itineraries scroll here — summary/strip above stay pinned. */}
-      <div className="scroll-fade min-h-0 grow overflow-y-auto">
+      <div className="edge-fade min-h-0 grow overflow-y-auto">
         <LegList itinerary={itinerary} colors={colors} />
       </div>
     </>

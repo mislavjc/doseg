@@ -85,10 +85,14 @@ impl FlatHeap {
             // Find smallest child
             let mut s = first_child;
             let mut s_time = self.times[first_child];
-            for c in (first_child + 1)..last_child {
-                if self.times[c] < s_time {
+            for (c, &t) in self.times[..last_child]
+                .iter()
+                .enumerate()
+                .skip(first_child + 1)
+            {
+                if t < s_time {
                     s = c;
-                    s_time = self.times[c];
+                    s_time = t;
                 }
             }
 

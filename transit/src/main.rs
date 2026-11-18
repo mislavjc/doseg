@@ -28,13 +28,13 @@ use rayon::prelude::*;
 use serde::Serialize;
 use ts_rs::TS;
 
-use crate::bajs::{build_bajs_adjacency_indexed, BAJS_TRANSFER_MAX_KM};
+use crate::bajs::{BAJS_TRANSFER_MAX_KM, build_bajs_adjacency_indexed};
 use crate::districts::{
-    generate_sample_points, load_districts, point_in_polygon, polygon_area_km2, SamplePoint,
+    SamplePoint, generate_sample_points, load_districts, point_in_polygon, polygon_area_km2,
 };
-use crate::geo::{fast_dist_km, WALK_SPEED};
-use crate::osm::{extract_populated_cells, POP_CELL};
-use crate::transit_graph::{compute_avg_travel_times, TransitGraphJson, TransitState};
+use crate::geo::{WALK_SPEED, fast_dist_km};
+use crate::osm::{POP_CELL, extract_populated_cells};
+use crate::transit_graph::{TransitGraphJson, TransitState, compute_avg_travel_times};
 use crate::walk_expand::{count_reachable_cells, snap_stops};
 use crate::walk_graph::WalkGraph;
 
@@ -1270,7 +1270,9 @@ fn compute_accessibility_profile(
 
     eprintln!(
         "Computing 24-hour accessibility profile ({} districts × {} hours × 3 departures = {} Dijkstra runs)...",
-        n_districts, n_hours, n_districts * n_hours * 3
+        n_districts,
+        n_hours,
+        n_districts * n_hours * 3
     );
 
     // For each hour, build 3 departure times: hour-15min, hour, hour+15min

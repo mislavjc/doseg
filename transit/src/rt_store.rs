@@ -12,7 +12,7 @@
 use std::collections::HashMap;
 use std::path::Path;
 
-use rusqlite::{params, Connection};
+use rusqlite::{Connection, params};
 
 use crate::gtfs_rt::RtSnapshot;
 
@@ -263,10 +263,10 @@ impl RtDb {
                     // Filter stale/completed trips: if the latest predicted
                     // time for this trip is well in the past, skip it.
                     let latest_time = trip.stop_times.iter().filter_map(|st| st.time).max();
-                    if let Some(lt) = latest_time {
-                        if lt < ts - STALE_GRACE_SEC {
-                            continue;
-                        }
+                    if let Some(lt) = latest_time
+                        && lt < ts - STALE_GRACE_SEC
+                    {
+                        continue;
                     }
 
                     let d = first.delay;
@@ -376,10 +376,11 @@ impl RtDb {
         {
             let mut by_route: HashMap<&str, Vec<f32>> = HashMap::new();
             for v in &snap.vehicles {
-                if let Some(speed) = v.speed_mps {
-                    if speed >= 0.0 && !v.route_id.is_empty() {
-                        by_route.entry(&v.route_id).or_default().push(speed);
-                    }
+                if let Some(speed) = v.speed_mps
+                    && speed >= 0.0
+                    && !v.route_id.is_empty()
+                {
+                    by_route.entry(&v.route_id).or_default().push(speed);
                 }
             }
             if !by_route.is_empty() {
@@ -398,10 +399,10 @@ impl RtDb {
         if write_stops {
             let mut counts: HashMap<(&str, i32), i64> = HashMap::new();
             for v in &snap.vehicles {
-                if let Some(occ) = v.occupancy_status {
-                    if !v.route_id.is_empty() {
-                        *counts.entry((&v.route_id, occ)).or_insert(0) += 1;
-                    }
+                if let Some(occ) = v.occupancy_status
+                    && !v.route_id.is_empty()
+                {
+                    *counts.entry((&v.route_id, occ)).or_insert(0) += 1;
                 }
             }
             if !counts.is_empty() {
@@ -1887,8 +1888,10 @@ mod tests {
 
         assert_eq!(db.cleanup_old_bajs_flow(now - 365 * 86400).unwrap(), 3);
         assert!(query_bajs_flow(&db.conn, 0, now, 86400).unwrap().is_empty());
-        assert!(query_bajs_station_ranking(&db.conn, 0, now)
-            .unwrap()
-            .is_empty());
+        assert!(
+            query_bajs_station_ranking(&db.conn, 0, now)
+                .unwrap()
+                .is_empty()
+        );
     }
 }

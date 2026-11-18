@@ -1,5 +1,5 @@
 /// Precomputed geographic constants for Zagreb latitude (~45.8°N)
-pub const COS_LAT: f64 = 0.69716510293; // cos(45.8° × π/180)
+pub const COS_LAT: f64 = 0.697_165_102_93; // cos(45.8° × π/180)
 pub const KM_PER_DEG_LAT: f64 = 111.32;
 pub const KM_PER_DEG_LON: f64 = 111.32 * COS_LAT; // ~77.43
 pub const WALK_SPEED: f64 = 5.0; // km/h

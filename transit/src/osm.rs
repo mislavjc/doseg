@@ -88,8 +88,8 @@ pub fn extract_populated_cells(path: &Path) -> HashSet<(i32, i32)> {
                         }
                     }
                     if n > 0 {
-                        let clat = s_lat / n as f64;
-                        let clon = s_lon / n as f64;
+                        let clat = s_lat / f64::from(n);
+                        let clon = s_lon / f64::from(n);
                         let cx = (clon / POP_CELL).floor() as i32;
                         let cy = (clat / POP_CELL).floor() as i32;
                         set.insert((cx, cy));

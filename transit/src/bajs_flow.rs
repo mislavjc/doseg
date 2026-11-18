@@ -7,8 +7,8 @@
 //!
 //! The GBFS `free_bike_status` feed lists every docked bike individually with
 //! a `bike_id` that stays stable while the bike is docked. Diffing consecutive
-//! snapshots therefore yields exact events: a bike_id leaving the feed is one
-//! rental start at its station, a bike_id appearing is one return. Those are
+//! snapshots therefore yields exact events: a `bike_id` leaving the feed is one
+//! rental start at its station, a `bike_id` appearing is one return. Those are
 //! measurements, not estimates.
 //!
 //! Four things still need care and are handled here:
@@ -168,10 +168,10 @@ pub struct PollOutcome {
 /// Diffs consecutive `free_bike_status` snapshots into ride events.
 pub struct BikeTracker {
     docked: HashMap<String, String>,
-    /// bike_id -> (station, ts it went missing) for bikes absent from exactly
+    /// `bike_id` -> (station, ts it went missing) for bikes absent from exactly
     /// one poll. Held back until a second poll confirms the bike really left.
     pending: HashMap<String, (String, i64)>,
-    /// bike_id -> where and when it left, for bikes currently out.
+    /// `bike_id` -> where and when it left, for bikes currently out.
     in_flight: HashMap<String, InFlight>,
     last_poll_ts: Option<i64>,
     hour_ts: i64,
@@ -342,7 +342,7 @@ impl BikeTracker {
         for obs in observations {
             match self.docked.get(&obs.bike_id) {
                 // Sat still, or already resolved above as flicker or short ride.
-                Some(prev_station) if prev_station == &obs.station_id => continue,
+                Some(prev_station) if prev_station == &obs.station_id => {}
                 Some(prev_station) => {
                     // Docked somewhere else without ever leaving the feed. Over
                     // a normal poll interval that is the feed correcting where
@@ -541,7 +541,7 @@ mod tests {
         let delta = out.delta.unwrap();
         assert_eq!(delta.starts, 0, "a bike back at its own dock never left");
         assert_eq!(delta.returns, 0);
-        assert!(delta.trips.is_empty());
+        assert_eq!(delta.trips, [] as [MatchedTrip; 0]);
         assert_eq!(t.in_flight_count(), 0);
     }
 
@@ -600,7 +600,7 @@ mod tests {
         let delta = out.delta.unwrap();
         assert_eq!(delta.starts, 0, "nobody rides A to B in under a minute");
         assert_eq!(delta.returns, 0);
-        assert!(delta.trips.is_empty());
+        assert_eq!(delta.trips, [] as [MatchedTrip; 0]);
     }
 
     #[test]

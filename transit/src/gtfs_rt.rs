@@ -1,7 +1,7 @@
 //! GTFS-RT (realtime) trip delay data — fetched from ZET's protobuf feed.
 //!
 //! The background task fetches every 30 seconds and stores parsed delay data
-//! in a shared HashMap<tripId, TripRT> behind an RwLock.
+//! in a shared `HashMap<tripId, TripRT>` behind an `RwLock`.
 
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
@@ -271,7 +271,7 @@ pub fn get_rt_health(store: &RtStore, last_refresh: &RtLastRefresh) -> RtHealth 
 }
 
 /// Find the delay for a given stop index in a trip's RT data.
-/// GTFS-RT stop_sequence is 1-based; pattern stopIdx is 0-based.
+/// GTFS-RT `stop_sequence` is 1-based; pattern stopIdx is 0-based.
 /// Per spec, delays propagate forward until overridden.
 pub fn get_stop_delay(trip: &TripRT, stop_idx: usize) -> i32 {
     let seq = (stop_idx + 1) as u16; // 0-based → 1-based
@@ -328,34 +328,32 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
     let mut resp = match ureq::get(ZET_RT_URL).call() {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("GTFS-RT: fetch failed: {}", e);
+            eprintln!("GTFS-RT: fetch failed: {e}");
             return None;
         }
     };
     let mut buf = Vec::new();
     if let Err(e) = resp.body_mut().as_reader().read_to_end(&mut buf) {
-        eprintln!("GTFS-RT: read failed: {}", e);
+        eprintln!("GTFS-RT: read failed: {e}");
         return None;
     }
     let feed = match FeedMessage::decode(buf.as_slice()) {
         Ok(f) => f,
         Err(e) => {
-            eprintln!("GTFS-RT: protobuf decode failed: {}", e);
+            eprintln!("GTFS-RT: protobuf decode failed: {e}");
             return None;
         }
     };
 
-    let timestamp = feed
-        .header
-        .as_ref()
-        .and_then(|h| h.timestamp)
-        .map(|t| t as i64)
-        .unwrap_or_else(|| {
+    let timestamp = feed.header.as_ref().and_then(|h| h.timestamp).map_or_else(
+        || {
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_secs() as i64
-        });
+        },
+        |t| t as i64,
+    );
 
     let mut rt = HashMap::new();
     let mut snapshot_trips = Vec::new();
@@ -393,9 +391,8 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
 
         // Parse trip updates
         if let Some(tu) = &entity.trip_update {
-            let trip_id = match tu.trip.as_ref().and_then(|t| t.trip_id.as_ref()) {
-                Some(id) => id,
-                None => continue,
+            let Some(trip_id) = tu.trip.as_ref().and_then(|t| t.trip_id.as_ref()) else {
+                continue;
             };
             if tu.stop_time_update.is_empty() {
                 continue;
@@ -432,8 +429,7 @@ fn fetch_and_parse() -> Option<FeedParseResult> {
                 .trip
                 .as_ref()
                 .and_then(|t| t.route_id.as_ref())
-                .map(|r| strip_prefix(r).to_string())
-                .unwrap_or_default();
+                .map_or_default(|r| strip_prefix(r).to_string());
 
             snapshot_trips.push(SnapshotTrip {
                 trip_id: raw_id.to_string(),
@@ -532,8 +528,7 @@ pub fn spawn_refresh_task(
                     *vehicle_store.write().unwrap() = feed_result.vehicles;
                     *last_refresh.write().unwrap() = Some(Instant::now());
                     eprintln!(
-                        "GTFS-RT: refreshed {} trip updates, {} vehicle positions",
-                        trip_count, vehicle_count
+                        "GTFS-RT: refreshed {trip_count} trip updates, {vehicle_count} vehicle positions"
                     );
 
                     if let Some(ref tx) = db_tx {
@@ -544,7 +539,7 @@ pub fn spawn_refresh_task(
                     // Error already logged in fetch_and_parse
                 }
                 Err(e) => {
-                    eprintln!("GTFS-RT: spawn_blocking failed: {}", e);
+                    eprintln!("GTFS-RT: spawn_blocking failed: {e}");
                 }
             }
             tokio::time::sleep(REFRESH_INTERVAL).await;

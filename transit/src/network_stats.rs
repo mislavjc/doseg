@@ -2,7 +2,7 @@
 //!
 //! Computes: hourly frequency heatmap, headway regularity (CV), vehicle-km/day,
 //! route tortuosity, stop spacing, dead-end stops, peak-to-base ratio,
-//! fleet size from GTFS block_id, weekend service ratios, directional asymmetry.
+//! fleet size from GTFS `block_id`, weekend service ratios, directional asymmetry.
 //!
 //! Outputs `data/network-stats.json`.
 
@@ -493,13 +493,13 @@ fn compute_dead_end_stops(graph: &TransitGraphJson) -> DeadEndStops {
 
 fn compute_peak_to_base(hourly: &[u32]) -> (f64, f64, Option<f64>) {
     // Peak: max of hours 7-8 (AM rush)
-    let peak = hourly[7..=8].iter().copied().max().unwrap_or(0) as f64;
+    let peak = f64::from(hourly[7..=8].iter().copied().max().unwrap_or(0));
     // Base: average of hours 10-14 (midday off-peak)
     let base_hours = &hourly[10..=14];
     let base: f64 = if base_hours.is_empty() {
         0.0
     } else {
-        base_hours.iter().sum::<u32>() as f64 / base_hours.len() as f64
+        f64::from(base_hours.iter().sum::<u32>()) / base_hours.len() as f64
     };
     let ratio = if base > 0.5 {
         Some(round2(peak / base))
@@ -514,6 +514,10 @@ fn compute_peak_to_base(hourly: &[u32]) -> (f64, f64, Option<f64>) {
 // ---------------------------------------------------------------------------
 
 /// A GTFS trip record (only the fields we need).
+#[allow(
+    clippy::struct_field_names,
+    reason = "mirrors the GTFS trips.txt column names"
+)]
 struct GtfsTrip {
     route_id: String,
     service_id: String,
@@ -541,7 +545,7 @@ impl GtfsCalendar {
     }
 }
 
-/// A GTFS route record (route_id → short name + type).
+/// A GTFS route record (`route_id` → short name + type).
 struct GtfsRoute {
     short_name: String,
     route_type: u16, // 0=Tram, 2=Rail, 3=Bus
@@ -575,10 +579,7 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
         let type_col = headers.iter().position(|h| h == "route_type");
 
         for result in rdr.records() {
-            let record = match result {
-                Ok(r) => r,
-                Err(_) => continue,
-            };
+            let Ok(record) = result else { continue };
             let route_id = record.get(id_col).unwrap_or("").to_string();
             let short_name = name_col
                 .and_then(|c| record.get(c))
@@ -618,16 +619,12 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
         .collect();
 
         for result in rdr.records() {
-            let record = match result {
-                Ok(r) => r,
-                Err(_) => continue,
-            };
+            let Ok(record) = result else { continue };
             let sid = record.get(sid_col).unwrap_or("").to_string();
             let day_val = |idx: usize| -> bool {
                 day_cols[idx]
                     .and_then(|c| record.get(c))
-                    .map(|v| v == "1")
-                    .unwrap_or(false)
+                    .is_some_and(|v| v == "1")
             };
             calendar.insert(
                 sid,
@@ -656,10 +653,7 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
 
             if let (Some(sc), Some(dc)) = (sid_col, date_col) {
                 for result in rdr.records() {
-                    let record = match result {
-                        Ok(r) => r,
-                        Err(_) => continue,
-                    };
+                    let Ok(record) = result else { continue };
                     // Only process additions (exception_type=1)
                     let etype = etype_col.and_then(|c| record.get(c)).unwrap_or("1");
                     if etype != "1" {
@@ -708,10 +702,7 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
         let block_col = headers.iter().position(|h| h == "block_id");
 
         for result in rdr.records() {
-            let record = match result {
-                Ok(r) => r,
-                Err(_) => continue,
-            };
+            let Ok(record) = result else { continue };
             let route_id = record.get(rid_col).unwrap_or("").to_string();
             let service_id = record.get(sid_col).unwrap_or("").to_string();
             let direction_id = dir_col
@@ -720,7 +711,7 @@ fn parse_gtfs_zip(zip_path: &Path) -> Option<GtfsParsed> {
             let block_id = block_col
                 .and_then(|c| record.get(c))
                 .filter(|v| !v.is_empty())
-                .map(|v| v.to_string());
+                .map(ToString::to_string);
 
             trips.push(GtfsTrip {
                 route_id,
@@ -764,16 +755,12 @@ fn compute_fleet(parsed: &GtfsParsed) -> Fleet {
             None => continue,
         };
         let route_info = parsed.routes.get(&trip.route_id);
-        let short_name = route_info
-            .map(|r| r.short_name.clone())
-            .unwrap_or_else(|| trip.route_id.clone());
-        let mode = route_info
-            .map(|r| match r.route_type {
-                0 => Mode::Tram,
-                2 => Mode::Rail,
-                _ => Mode::Bus,
-            })
-            .unwrap_or(Mode::Bus);
+        let short_name = route_info.map_or_else(|| trip.route_id.clone(), |r| r.short_name.clone());
+        let mode = route_info.map_or(Mode::Bus, |r| match r.route_type {
+            0 => Mode::Tram,
+            2 => Mode::Rail,
+            _ => Mode::Bus,
+        });
 
         block_routes
             .entry(block.clone())
@@ -828,6 +815,16 @@ struct WeekendAndDirection {
 }
 
 fn compute_weekend_and_direction(parsed: &GtfsParsed) -> WeekendAndDirection {
+    // Per route: weekday/saturday/sunday trip counts + direction counts
+    struct RouteCounts {
+        mode_str: String,
+        weekday: usize,
+        saturday: usize,
+        sunday: usize,
+        dir0: usize,
+        dir1: usize,
+    }
+
     let weekday_sids: HashSet<&str> = parsed
         .calendar
         .iter()
@@ -847,26 +844,15 @@ fn compute_weekend_and_direction(parsed: &GtfsParsed) -> WeekendAndDirection {
         .map(|(s, _)| s.as_str())
         .collect();
 
-    // Per route: weekday/saturday/sunday trip counts + direction counts
-    struct RouteCounts {
-        mode_str: String,
-        weekday: usize,
-        saturday: usize,
-        sunday: usize,
-        dir0: usize,
-        dir1: usize,
-    }
-
     let mut route_counts: HashMap<String, RouteCounts> = HashMap::new();
 
     for trip in &parsed.trips {
         let route_info = parsed.routes.get(&trip.route_id);
-        let short_name = route_info
-            .map(|r| r.short_name.clone())
-            .unwrap_or_else(|| trip.route_id.clone());
-        let mode_str = route_info
-            .map(|r| gtfs_mode_str(r.route_type).to_string())
-            .unwrap_or_else(|| "BUS".to_string());
+        let short_name = route_info.map_or_else(|| trip.route_id.clone(), |r| r.short_name.clone());
+        let mode_str = route_info.map_or_else(
+            || "BUS".to_string(),
+            |r| gtfs_mode_str(r.route_type).to_string(),
+        );
 
         let rc = route_counts
             .entry(short_name)
@@ -916,11 +902,11 @@ fn compute_weekend_and_direction(parsed: &GtfsParsed) -> WeekendAndDirection {
 
     for (name, rc) in &sorted_routes {
         if feed_covers_weekends && rc.saturday == 0 && rc.sunday == 0 && rc.weekday > 0 {
-            weekday_only_routes.push(name.to_string());
+            weekday_only_routes.push((*name).clone());
         }
         if rc.weekday > 0 {
             weekend_routes.push(WeekendRoute {
-                name: name.to_string(),
+                name: (*name).clone(),
                 mode: rc.mode_str.clone(),
                 weekday_trips: rc.weekday,
                 saturday_trips: rc.saturday,
@@ -952,7 +938,7 @@ fn compute_weekend_and_direction(parsed: &GtfsParsed) -> WeekendAndDirection {
         // Only report routes with >20% asymmetry
         if ratio < 0.8 {
             direction_entries.push(DirectionalAsymmetryEntry {
-                name: name.to_string(),
+                name: (*name).clone(),
                 mode: rc.mode_str.clone(),
                 outbound_trips: rc.dir0,
                 inbound_trips: rc.dir1,
@@ -1343,7 +1329,7 @@ fn compute_pulse_scheduling(graph: &TransitGraphJson) -> Vec<PulseHub> {
         let mut hourly_wait: Vec<f64> = Vec::with_capacity(19);
 
         for hour in 5u8..=23 {
-            let hour_start = hour as f64 * 3600.0;
+            let hour_start = f64::from(hour) * 3600.0;
             let hour_end = hour_start + 3600.0;
 
             // Collect arrivals per route within this hour
@@ -1487,11 +1473,11 @@ fn min_transfer_waits(from: &[f64], to: &[f64]) -> Vec<f64> {
 /// Parse YYYYMMDD string and return day of week (0=Sunday, 1=Monday, ..., 6=Saturday).
 /// Uses Tomohiko Sakamoto's algorithm.
 fn date_to_day_of_week(yyyymmdd: &str) -> Option<u32> {
+    static T: [i32; 12] = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
     let y: i32 = yyyymmdd[0..4].parse().ok()?;
     let m: u32 = yyyymmdd[4..6].parse().ok()?;
     let d: u32 = yyyymmdd[6..8].parse().ok()?;
     // Tomohiko Sakamoto's algorithm
-    static T: [i32; 12] = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
     let y = if m < 3 { y - 1 } else { y };
     let dow = (y + y / 4 - y / 100 + y / 400 + T[(m - 1) as usize] + d as i32) % 7;
     Some(dow as u32) // 0=Sunday

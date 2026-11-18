@@ -37,3 +37,21 @@ tempfile = "3"
 lto = true
 codegen-units = 1
 opt-level = 3
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# Grid, routing and stats code converts between f64 coordinates/seconds and integer indices/counts whose ranges are bounded by the Zagreb bbox and feed size.
+cast_possible_truncation = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+cast_possible_wrap = "allow"
+# Long linear pipelines (data generation, request handlers); splitting them would add indirection without making them clearer.
+too_many_lines = "allow"
+# Hot-path heap and distance helpers are force-inlined on purpose for the Dijkstra inner loops.
+inline_always = "allow"
+# Paired geo names (cx/cy, nx/ny, tid/rid) are the clearest names in this code.
+similar_names = "allow"
+# CLI flag structs and GTFS calendar weekday columns are naturally sets of bools.
+struct_excessive_bools = "allow"
+# One explicit arm per mode/month keeps lookup tables readable even when values repeat the fallback.
+match_same_arms = "allow"

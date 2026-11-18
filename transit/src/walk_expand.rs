@@ -3,7 +3,7 @@ use rustc_hash::FxHashSet;
 use crate::geo::{WALK_SPEED, fast_dist_km};
 use crate::heap::FlatHeap;
 use crate::walk_graph::{GRID_CELL_SIZE, WalkGraph};
-/// cm → seconds: 3600 / (100_000 * 5) = 0.0072
+/// cm → seconds: `3600 / (100_000 * 5) = 0.0072`
 #[allow(dead_code)]
 const CM_TO_SECONDS: f64 = 0.0072;
 
@@ -84,8 +84,8 @@ impl WalkExpandState {
 
 /// Count unique reachable grid cells via walk Dijkstra expansion.
 ///
-/// `transit_times` is indexed by stop idx (and optionally BAJS station idx after stop_count).
-/// Uses thread-local WalkExpandState for zero-allocation reuse.
+/// `transit_times` is indexed by stop idx (and optionally BAJS station idx after `stop_count`).
+/// Uses thread-local `WalkExpandState` for zero-allocation reuse.
 #[allow(dead_code)]
 pub fn count_reachable_cells(
     graph: &WalkGraph,
@@ -125,10 +125,7 @@ pub fn count_reachable_cells(
         if time >= max_seconds {
             continue;
         }
-        let snap = match snap_opt {
-            Some(s) => s,
-            None => continue,
-        };
+        let Some(snap) = snap_opt else { continue };
 
         let total_time = time + snap.walk_seconds;
         if total_time < max_seconds && total_time < best_buf[snap.node_idx as usize] {
@@ -162,13 +159,13 @@ pub fn count_reachable_cells(
         let ni2 = node_idx as usize * 2;
         let cx = (coords[ni2 + 1] * inv_cell) as i64; // lon — always positive
         let cy = (coords[ni2] * inv_cell) as i64; // lat — always positive
-        cells.insert(cx * 100000 + cy);
+        cells.insert(cx * 100_000 + cy);
 
         let es = offsets[node_idx as usize] as usize;
         let ee = offsets[node_idx as usize + 1] as usize;
         for e in es..ee {
             let to_idx = edge_targets[e];
-            let arrival_time = time + edge_dist_cm[e] as f64 * CM_TO_SECONDS;
+            let arrival_time = time + f64::from(edge_dist_cm[e]) * CM_TO_SECONDS;
 
             if arrival_time < max_seconds && arrival_time < best_buf[to_idx as usize] {
                 touched.push(to_idx);

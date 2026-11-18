@@ -138,13 +138,12 @@ fn brandes_dijkstra(
         for sp in &stop.patterns {
             let pattern = &graph.patterns[sp.pattern_idx];
             let clock_time = departure_time + time;
-            let avg_wait = match get_avg_wait(
+            let Some(avg_wait) = get_avg_wait(
                 &pattern.departures,
                 pattern.stop_offsets[sp.stop_idx],
                 clock_time,
-            ) {
-                Some(w) => w,
-                None => continue,
+            ) else {
+                continue;
             };
 
             let board_time = time + avg_wait;
@@ -296,7 +295,7 @@ fn dedup_top_stops(graph: &TransitGraphJson, scores: &[f64], limit: usize) -> Ve
             all_routes.dedup();
 
             CentralityStop {
-                name: target_name.to_string(),
+                name: target_name.clone(),
                 key: stop.key.clone(),
                 lat: stop.lat,
                 lon: stop.lon,
@@ -317,7 +316,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &Path) {
     let departure_time = 8.0 * 3600.0; // 08:00
     let time_cap = 3600.0; // 60 minutes
 
-    eprintln!("Computing network centrality ({} stops)...", n);
+    eprintln!("Computing network centrality ({n} stops)...");
     let t0 = Instant::now();
 
     // Phase 1: Run all-pairs Dijkstra in parallel, collect distances + betweenness
@@ -391,7 +390,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &Path) {
     };
 
     let computation_seconds = t0.elapsed().as_secs_f64();
-    eprintln!("  Centrality computed in {:.1}s", computation_seconds);
+    eprintln!("  Centrality computed in {computation_seconds:.1}s");
 
     // Build top-20 betweenness stops (deduplicated by name - OTP has multiple
     // entries per physical stop for different directions/platforms)
@@ -430,11 +429,8 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &Path) {
 
     eprintln!(
         "  Top betweenness: {} (score: {:.4})",
-        top_betweenness
-            .first()
-            .map(|s| s.name.as_str())
-            .unwrap_or("-"),
-        top_betweenness.first().map(|s| s.score).unwrap_or(0.0),
+        top_betweenness.first().map_or("-", |s| s.name.as_str()),
+        top_betweenness.first().map_or(0.0, |s| s.score),
     );
     eprintln!(
         "  Diameter: {:.1} min ({} → {})",

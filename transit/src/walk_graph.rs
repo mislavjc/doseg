@@ -10,7 +10,7 @@ pub const GRID_CELL_SIZE: f64 = 0.002;
 
 /// Walking graph in CSR format, loaded from walk-graph.bin.
 /// All arrays are owned (copied from mmap) so the compiler can prove no aliasing
-/// with the Dijkstra best_buf, enabling better auto-vectorization.
+/// with the Dijkstra `best_buf`, enabling better auto-vectorization.
 pub struct WalkGraph {
     _mmap: Mmap,
     pub node_count: u32,
@@ -52,12 +52,10 @@ impl WalkGraph {
         // `coords.as_mut_ptr() as *mut u8` is valid for `coords_bytes` (= n_coords * 8) bytes.
         // The source slice `data[coords_start..]` comes from a separate mmap region, so
         // source and destination do not overlap. Both are byte-aligned.
-        let coords_byte_slice =
-            unsafe { std::slice::from_raw_parts(coords.as_mut_ptr() as *mut u8, coords_bytes) };
         unsafe {
             std::ptr::copy_nonoverlapping(
                 data[coords_start..].as_ptr(),
-                coords_byte_slice.as_ptr() as *mut u8,
+                coords.as_mut_ptr().cast::<u8>(),
                 coords_bytes,
             );
         }
@@ -74,7 +72,7 @@ impl WalkGraph {
         unsafe {
             std::ptr::copy_nonoverlapping(
                 data[offsets_start..].as_ptr(),
-                offsets.as_mut_ptr() as *mut u8,
+                offsets.as_mut_ptr().cast::<u8>(),
                 offsets_bytes,
             );
         }

@@ -119,7 +119,7 @@ pub struct StopReach {
 pub struct StopHeroLine {
     pub broj: String,
     pub mode: LineMode,
-    /// [lon, lat] pairs, the line's shape clipped to ~HERO_CLIP_KM of the stop.
+    /// [lon, lat] pairs, the line's shape clipped to ~`HERO_CLIP_KM` of the stop.
     #[ts(type = "[number, number][]")]
     pub shape: Vec<(f64, f64)>,
 }
@@ -247,7 +247,7 @@ fn gap_range_min(times: &[f64], start: f64, end: f64) -> Option<(u32, u32)> {
     let mut gaps: Vec<f64> = window.windows(2).map(|w| (w[1] - w[0]) / 60.0).collect();
     gaps.sort_by(|a, b| a.partial_cmp(b).unwrap());
     let lo = crate::percentile(&gaps, 25.0).round().max(1.0) as u32;
-    let hi = crate::percentile(&gaps, 75.0).round().max(lo as f64) as u32;
+    let hi = crate::percentile(&gaps, 75.0).round().max(f64::from(lo)) as u32;
     Some((lo, hi))
 }
 
@@ -299,7 +299,7 @@ struct Occ {
 }
 
 /// A clustered physical stop: the occurrences that share a name and sit within
-/// CLUSTER_KM of each other. `key` is the normalised-name slug (the grouping key),
+/// `CLUSTER_KM` of each other. `key` is the normalised-name slug (the grouping key),
 /// cached so it isn't re-slugified at every downstream use.
 struct Cluster {
     name: String,
@@ -427,8 +427,7 @@ fn fetch_reach(
     self_key: &str,
 ) -> Result<StopReach, ReachError> {
     let url = format!(
-        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=only&realtime=0",
-        isochrone_url, lat, lon
+        "{isochrone_url}/api/isochrone?lat={lat:.5}&lon={lon:.5}&time=08:00&routing=only&realtime=0"
     );
     let mut resp = ureq::get(&url)
         .call()
@@ -447,9 +446,8 @@ fn fetch_reach(
         if node["kind"].as_str() != Some("STOP") {
             continue;
         }
-        let time = match node["time"].as_f64() {
-            Some(t) => t,
-            None => continue,
+        let Some(time) = node["time"].as_f64() else {
+            continue;
         };
         let name = node["name"].as_str().unwrap_or("");
         let key = slugify(name);
@@ -480,7 +478,7 @@ pub fn generate(
     stop_filter: Option<&str>,
     data_dir: &Path,
 ) {
-    eprintln!("Fetching patterns from OTP ({})...", otp_url);
+    eprintln!("Fetching patterns from OTP ({otp_url})...");
     let (service_dates, merged) = fetch_and_merge(otp_url);
     let patterns: Vec<&MergedPattern> = merged.values().collect();
 
@@ -535,8 +533,7 @@ pub fn generate(
             let name = name_counts
                 .into_iter()
                 .max_by_key(|&(n, c)| (c, std::cmp::Reverse(n)))
-                .map(|(n, _)| n.to_string())
-                .unwrap_or_default();
+                .map_or_default(|(n, _)| n.to_string());
             let lat = members.iter().map(|&oi| occs[oi].lat).sum::<f64>() / members.len() as f64;
             let lon = members.iter().map(|&oi| occs[oi].lon).sum::<f64>() / members.len() as f64;
             clusters.push(Cluster {
@@ -609,13 +606,10 @@ pub fn generate(
             match fetch_reach(isochrone_url, c.lat, c.lon, &c.key) {
                 Ok(reach) => data.reach = Some(reach),
                 Err(ReachError::NoData(why)) => {
-                    eprintln!("  {}: no reach ({})", slug, why);
+                    eprintln!("  {slug}: no reach ({why})");
                 }
                 Err(ReachError::Transport(e)) => {
-                    eprintln!(
-                        "  isochrone unreachable ({}), omitting reach for the rest",
-                        e
-                    );
+                    eprintln!("  isochrone unreachable ({e}), omitting reach for the rest");
                     isochrone_alive = false;
                 }
             }
@@ -634,7 +628,7 @@ pub fn generate(
         if stop_filter.is_some_and(|f| f != slug.as_str()) {
             continue;
         }
-        let path = out_dir.join(format!("{}.json", slug));
+        let path = out_dir.join(format!("{slug}.json"));
         let json = serde_json::to_string_pretty(&data).expect("JSON serialization failed");
         std::fs::write(&path, json).expect("Cannot write stop JSON");
         written += 1;
@@ -661,10 +655,7 @@ pub fn generate(
         keep.insert("hero-meta.json".to_string());
         let pruned = crate::prune_orphan_json(&out_dir, &keep);
         if pruned > 0 {
-            eprintln!(
-                "  pruned {} orphan stop page(s) no longer in the feed",
-                pruned
-            );
+            eprintln!("  pruned {pruned} orphan stop page(s) no longer in the feed");
         }
     } else {
         eprintln!("  (single-stop filter active — index.json not rewritten)");
@@ -700,10 +691,10 @@ fn assign_slugs(clusters: &[Cluster], kvarts: &[Option<String>]) -> Vec<String> 
         };
         if taken.contains(&slug) {
             let mut n = 2;
-            while taken.contains(&format!("{}-{}", slug, n)) {
+            while taken.contains(&format!("{slug}-{n}")) {
                 n += 1;
             }
-            slug = format!("{}-{}", slug, n);
+            slug = format!("{slug}-{n}");
         }
         taken.insert(slug.clone());
         slugs.push(slug);
@@ -1006,5 +997,5 @@ fn format_clock(seconds: f64) -> String {
     let total = seconds.max(0.0) as u32;
     let h = (total / 3600) % 24;
     let m = (total % 3600) / 60;
-    format!("{}:{:02}", h, m)
+    format!("{h}:{m:02}")
 }

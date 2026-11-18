@@ -71,10 +71,10 @@ pub fn fetch_and_build_graph(otp_url: &str, service_date: Option<&str>) -> Trans
         fetch_patterns(otp_url)
     };
 
-    build_graph(raw_patterns)
+    build_graph(&raw_patterns)
 }
 
-/// Build a RawPattern from extracted common fields.
+/// Build a `RawPattern` from extracted common fields.
 fn build_raw_pattern(
     route_mode: Option<String>,
     route_short_name: Option<String>,
@@ -96,10 +96,10 @@ fn build_raw_pattern(
 fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
     let body = GetPatterns::build_query(get_patterns::Variables {});
     let resp: graphql_client::Response<get_patterns::ResponseData> =
-        ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
             .header("Content-Type", "application/json")
             .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {}", e))
+            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
             .body_mut()
             .read_json()
             .expect("Failed to parse OTP response");
@@ -114,7 +114,7 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
             let route = p.route;
             let geom_points = p.pattern_geometry.and_then(|g| g.points);
             build_raw_pattern(
-                route.mode.map(|m| format!("{:?}", m)),
+                route.mode.map(|m| format!("{m:?}")),
                 route.short_name,
                 route.long_name,
                 geom_points,
@@ -150,10 +150,10 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
         service_date: service_date.to_string(),
     });
     let resp: graphql_client::Response<get_patterns_for_date::ResponseData> =
-        ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
             .header("Content-Type", "application/json")
             .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {}", e))
+            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
             .body_mut()
             .read_json()
             .expect("Failed to parse OTP response");
@@ -168,7 +168,7 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
             let route = p.route;
             let geom_points = p.pattern_geometry.and_then(|g| g.points);
             build_raw_pattern(
-                route.mode.map(|m| format!("{:?}", m)),
+                route.mode.map(|m| format!("{m:?}")),
                 route.short_name,
                 route.long_name,
                 geom_points,
@@ -200,14 +200,14 @@ fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern>
 }
 
 /// Build the transit graph from raw OTP patterns — 1:1 port of TS buildGraph.
-fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
+fn build_graph(raw_patterns: &[RawPattern]) -> TransitGraphJson {
     let mut patterns: Vec<PatternData> = Vec::new();
     // Ordered map preserving insertion order (like JS Map)
     let mut stops_map: indexmap::IndexMap<String, StopNode> = indexmap::IndexMap::new();
     // Store stop keys per pattern for later index assignment
     let mut pattern_stop_keys: Vec<Vec<String>> = Vec::new();
 
-    for p in &raw_patterns {
+    for p in raw_patterns {
         if p.stops.len() < 2 {
             continue;
         }
@@ -287,28 +287,28 @@ fn build_graph(raw_patterns: Vec<RawPattern>) -> TransitGraphJson {
 
         for i in 1..n_stops {
             let samples = &mut offset_samples[i];
-            if !samples.is_empty() {
-                samples.sort_by(|a, b| a.partial_cmp(b).unwrap());
-                let mid = samples.len() / 2;
-                let median = if samples.len() % 2 == 1 {
-                    samples[mid]
-                } else {
-                    (samples[mid - 1] + samples[mid]) / 2.0
-                };
-                stop_offsets.push(median);
-            } else {
+            if samples.is_empty() {
                 // Fallback: distance-based estimate
                 let prev = &p.stops[i - 1];
                 let curr = &p.stops[i];
                 let d = fast_dist_km(prev.lat, prev.lon, curr.lat, curr.lon);
                 stop_offsets.push(stop_offsets[i - 1] + (d / speed) * 3600.0);
+            } else {
+                samples.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                let mid = samples.len() / 2;
+                let median = if samples.len() % 2 == 1 {
+                    samples[mid]
+                } else {
+                    f64::midpoint(samples[mid - 1], samples[mid])
+                };
+                stop_offsets.push(median);
             }
         }
 
-        let route = if !p.route_short_name.is_empty() {
-            p.route_short_name.clone()
-        } else {
+        let route = if p.route_short_name.is_empty() {
             p.route_long_name.clone()
+        } else {
+            p.route_short_name.clone()
         };
 
         patterns.push(PatternData {
@@ -432,11 +432,11 @@ const STATION_INFORMATION_URL: &str =
 const STATION_STATUS_URL: &str =
     "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr/station_status.json";
 
-/// Fetch BAJS stations and return idealized BajsStations (1 bike, 1 dock each).
+/// Fetch BAJS stations and return idealized `BajsStation`s (1 bike, 1 dock each).
 pub fn fetch_bajs_stations() -> Vec<crate::bajs::BajsStation> {
     let feed: GbfsStationInfoFeed = ureq::get(STATION_INFORMATION_URL)
         .call()
-        .unwrap_or_else(|e| panic!("BAJS feed request failed: {}", e))
+        .unwrap_or_else(|e| panic!("BAJS feed request failed: {e}"))
         .body_mut()
         .read_json()
         .expect("Failed to parse BAJS feed");
@@ -490,14 +490,14 @@ pub fn fetch_station_status() -> Option<Vec<GbfsStationStatus>> {
     let mut resp = match ureq::get(STATION_STATUS_URL).call() {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("BAJS status: fetch failed: {}", e);
+            eprintln!("BAJS status: fetch failed: {e}");
             return None;
         }
     };
     let feed: GbfsStationStatusFeed = match resp.body_mut().read_json() {
         Ok(f) => f,
         Err(e) => {
-            eprintln!("BAJS status: parse failed: {}", e);
+            eprintln!("BAJS status: parse failed: {e}");
             return None;
         }
     };
@@ -551,20 +551,20 @@ pub struct FreeBikeSnapshot {
     pub available_count: usize,
 }
 
-/// Fetch individual bike records from the free_bike_status feed.
+/// Fetch individual bike records from the `free_bike_status` feed.
 #[allow(dead_code)]
 pub fn fetch_free_bike_status() -> Option<FreeBikeSnapshot> {
     let mut resp = match ureq::get(FREE_BIKE_STATUS_URL).call() {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("BAJS free bikes: fetch failed: {}", e);
+            eprintln!("BAJS free bikes: fetch failed: {e}");
             return None;
         }
     };
     let feed: GbfsFreeBikeStatusFeed = match resp.body_mut().read_json() {
         Ok(f) => f,
         Err(e) => {
-            eprintln!("BAJS free bikes: parse failed: {}", e);
+            eprintln!("BAJS free bikes: parse failed: {e}");
             return None;
         }
     };

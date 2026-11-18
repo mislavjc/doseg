@@ -175,6 +175,6 @@ pub fn generate_sample_points(
         }
     }
 
-    eprintln!("  {} grid points skipped (no buildings nearby)", skipped);
+    eprintln!("  {skipped} grid points skipped (no buildings nearby)");
     points
 }

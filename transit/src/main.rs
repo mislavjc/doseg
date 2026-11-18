@@ -132,13 +132,13 @@ fn next_date_for_day(day: &str) -> String {
         .as_secs();
     // day of week: Thursday 1970-01-01 was day 4
     let today_idx = ((now / 86400 + 4) % 7) as usize;
-    let mut days_ahead = (target_idx as i32 - today_idx as i32) as i64;
+    let mut days_ahead = i64::from(target_idx as i32 - today_idx as i32);
     if days_ahead <= 0 {
         days_ahead += 7;
     }
     let target_secs = now as i64 + days_ahead * 86400;
     let (y, month, day_num) = days_to_ymd(target_secs / 86400);
-    format!("{:04}-{:02}-{:02}", y, month, day_num)
+    format!("{y:04}-{month:02}-{day_num:02}")
 }
 
 fn parse_args() -> Args {
@@ -186,7 +186,7 @@ fn parse_args() -> Args {
                 i += 2;
             }
             "--otp-url" if i + 1 < args.len() => {
-                otp_url = args[i + 1].clone();
+                otp_url.clone_from(&args[i + 1]);
                 i += 2;
             }
             "--centrality" => {
@@ -206,7 +206,7 @@ fn parse_args() -> Args {
                 i += 2;
             }
             "--isochrone-url" if i + 1 < args.len() => {
-                isochrone_url = args[i + 1].clone();
+                isochrone_url.clone_from(&args[i + 1]);
                 i += 2;
             }
             "--skip-isochrone" => {
@@ -243,9 +243,7 @@ fn parse_args() -> Args {
 }
 
 fn num_cpus() -> usize {
-    std::thread::available_parallelism()
-        .map(|n| n.get())
-        .unwrap_or(4)
+    std::thread::available_parallelism().map_or(4, std::num::NonZero::get)
 }
 
 /// Run one scoring pass: for each point, average reachable cell count across departures.
@@ -343,7 +341,7 @@ fn scoring_pass(
                             &mut tstate.heap,
                             &mut tstate.touched,
                         );
-                        total += count_reachable_cells(
+                        total += u64::from(count_reachable_cells(
                             walk_graph,
                             &tstate.best,
                             &extended_snaps,
@@ -351,7 +349,7 @@ fn scoring_pass(
                             point.lon,
                             max_seconds,
                             state,
-                        ) as u64;
+                        ));
                         tstate.reset_touched();
                     }
 
@@ -389,7 +387,7 @@ fn median(sorted: &[f64]) -> f64 {
     if sorted.len() % 2 == 1 {
         sorted[mid]
     } else {
-        (sorted[mid - 1] + sorted[mid]) / 2.0
+        f64::midpoint(sorted[mid - 1], sorted[mid])
     }
 }
 
@@ -519,6 +517,60 @@ pub struct BestPoint {
     pub lon: f64,
 }
 
+struct TransitInfo {
+    tram_lines: Vec<String>,
+    bus_lines: Vec<String>,
+    train_lines: Vec<String>,
+    stops: i64,
+    median_headway_min: i64,
+}
+
+struct DistrictScores {
+    base: Vec<f64>,
+    train: Vec<f64>,
+    bajs: Vec<f64>,
+    evening: Vec<f64>,
+    best_lat: f64,
+    best_lon: f64,
+    best_reached: i64,
+}
+
+struct DistrictResult {
+    name: String,
+    osm_id: i64,
+    population: Option<i64>,
+    sample_count: usize,
+    avg_reachable_cells: i64,
+    min_reachable_cells: i64,
+    max_reachable_cells: i64,
+    stddev_reachable_cells: i64,
+    median_reachable_cells: i64,
+    p25_reachable_cells: i64,
+    p75_reachable_cells: i64,
+    evening_avg_reachable_cells: i64,
+    peak_offpeak_drop: i64,
+    train_avg_reachable_cells: i64,
+    train_boost_pct: i64,
+    bajs_avg_reachable_cells: i64,
+    bajs_boost_pct: i64,
+    bajs_stations: i64,
+    area_km2: f64,
+    bajs_density_per_km2: f64,
+    bajs_per_10k: f64,
+    bajs_stop_coverage_pct: i64,
+    desert_pct: i64,
+    avg_nearest_stop_m: i64,
+    best_lat: f64,
+    best_lon: f64,
+    tram_lines: Vec<String>,
+    bus_lines: Vec<String>,
+    train_lines: Vec<String>,
+    transit_stops: i64,
+    median_headway_min: i64,
+    rank: i64,
+    score: i64,
+}
+
 fn main() {
     let args = parse_args();
 
@@ -642,14 +694,6 @@ fn main() {
     eprintln!("Computing transit info per district...");
     let departure_seconds: f64 = 8.0 * 3600.0; // 08:00 for headway computation
 
-    struct TransitInfo {
-        tram_lines: Vec<String>,
-        bus_lines: Vec<String>,
-        train_lines: Vec<String>,
-        stops: i64,
-        median_headway_min: i64,
-    }
-
     let mut stop_to_district: Vec<Option<usize>> = vec![None; graph.stop_count];
     for (si, stop) in graph.stops.iter().enumerate() {
         for (di, d) in districts.iter().enumerate() {
@@ -758,7 +802,7 @@ fn main() {
     }
 
     let assigned_count: usize = stop_to_district.iter().filter(|d| d.is_some()).count();
-    eprintln!("  {} stops assigned to districts", assigned_count);
+    eprintln!("  {assigned_count} stops assigned to districts");
 
     // Generate sample points
     eprintln!("Generating sample grid...");
@@ -891,16 +935,6 @@ fn main() {
     // Aggregate per district
     let n_districts = districts.len();
 
-    struct DistrictScores {
-        base: Vec<f64>,
-        train: Vec<f64>,
-        bajs: Vec<f64>,
-        evening: Vec<f64>,
-        best_lat: f64,
-        best_lon: f64,
-        best_reached: i64,
-    }
-
     let mut ds: Vec<DistrictScores> = (0..n_districts)
         .map(|_| DistrictScores {
             base: Vec::new(),
@@ -928,42 +962,6 @@ fn main() {
     }
 
     // Build result objects
-    struct DistrictResult {
-        name: String,
-        osm_id: i64,
-        population: Option<i64>,
-        sample_count: usize,
-        avg_reachable_cells: i64,
-        min_reachable_cells: i64,
-        max_reachable_cells: i64,
-        stddev_reachable_cells: i64,
-        median_reachable_cells: i64,
-        p25_reachable_cells: i64,
-        p75_reachable_cells: i64,
-        evening_avg_reachable_cells: i64,
-        peak_offpeak_drop: i64,
-        train_avg_reachable_cells: i64,
-        train_boost_pct: i64,
-        bajs_avg_reachable_cells: i64,
-        bajs_boost_pct: i64,
-        bajs_stations: i64,
-        area_km2: f64,
-        bajs_density_per_km2: f64,
-        bajs_per_10k: f64,
-        bajs_stop_coverage_pct: i64,
-        desert_pct: i64,
-        avg_nearest_stop_m: i64,
-        best_lat: f64,
-        best_lon: f64,
-        tram_lines: Vec<String>,
-        bus_lines: Vec<String>,
-        train_lines: Vec<String>,
-        transit_stops: i64,
-        median_headway_min: i64,
-        rank: i64,
-        score: i64,
-    }
-
     let mut results: Vec<DistrictResult> = Vec::new();
 
     for (i, d) in districts.iter().enumerate() {
@@ -996,12 +994,12 @@ fn main() {
         let min_cells = if ds[i].base.is_empty() {
             0
         } else {
-            ds[i].base.iter().cloned().fold(f64::INFINITY, f64::min) as i64
+            ds[i].base.iter().copied().fold(f64::INFINITY, f64::min) as i64
         };
         let max_cells = if ds[i].base.is_empty() {
             0
         } else {
-            ds[i].base.iter().cloned().fold(f64::NEG_INFINITY, f64::max) as i64
+            ds[i].base.iter().copied().fold(f64::NEG_INFINITY, f64::max) as i64
         };
 
         let transit = &district_transit[i];
@@ -1133,7 +1131,7 @@ fn main() {
     };
 
     let out_file = if let Some(ref day) = args.day {
-        format!("district-scores-{}.json", day)
+        format!("district-scores-{day}.json")
     } else {
         "district-scores.json".to_string()
     };
@@ -1280,9 +1278,9 @@ fn compute_accessibility_profile(
     let mut hourly_scores: Vec<Vec<f64>> = vec![Vec::new(); n_districts]; // [district][hour] = avg cells
 
     for &hour in &hours {
-        let h = hour as f64 * 3600.0;
+        let h = f64::from(hour) * 3600.0;
         let departures = [h - 15.0 * 60.0, h, h + 15.0 * 60.0];
-        let label = format!("  {:02}:00", hour);
+        let label = format!("  {hour:02}:00");
 
         let scores = scoring_pass(
             &label,
@@ -1366,7 +1364,10 @@ fn compute_accessibility_profile(
 /// count removed. Run after a full (unfiltered) regen so stops/lines that left
 /// the feed — or were renamed to a new slug — don't leave orphaned pages that
 /// would otherwise be committed and deployed as stale, unlinked URLs.
-pub fn prune_orphan_json(dir: &std::path::Path, keep: &std::collections::HashSet<String>) -> usize {
+pub(crate) fn prune_orphan_json(
+    dir: &std::path::Path,
+    keep: &std::collections::HashSet<String>,
+) -> usize {
     let mut removed = 0;
     if let Ok(entries) = std::fs::read_dir(dir) {
         for entry in entries.flatten() {
@@ -1384,14 +1385,14 @@ pub fn prune_orphan_json(dir: &std::path::Path, keep: &std::collections::HashSet
 }
 
 /// Simple ISO 8601 timestamp without pulling in chrono.
-pub fn chrono_now_iso() -> String {
+pub(crate) fn chrono_now_iso() -> String {
+    use std::time::SystemTime;
     // The page-data generator pins this to a feed-derived value (via the
     // GENERATED_AT env) so regenerating from an unchanged feed yields
     // byte-identical output — no timestamp-only churn in the committed data.
     if let Some(v) = std::env::var("GENERATED_AT").ok().filter(|s| !s.is_empty()) {
         return v;
     }
-    use std::time::SystemTime;
     let dur = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap();
@@ -1403,10 +1404,7 @@ pub fn chrono_now_iso() -> String {
 
     let (y, month, day) = days_to_ymd((secs / 86400) as i64);
 
-    format!(
-        "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}.000Z",
-        y, month, day, h, m, s
-    )
+    format!("{y:04}-{month:02}-{day:02}T{h:02}:{m:02}:{s:02}.000Z")
 }
 
 fn is_leap(y: i64) -> bool {

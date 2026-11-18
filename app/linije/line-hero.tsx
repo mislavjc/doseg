@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils"
  * visible at any viewport.
  */
 
-
 function cut(points: [number, number][], trim: number): [number, number][] {
   let remaining = trim
   const out = [...points]
@@ -94,21 +93,13 @@ function placeLabel(
 ): Box {
   const gap = 16
   const candidates: [number, number][] = [
-    // right
     [x + gap, y - h / 2],
-    // left
     [x - w - gap, y - h / 2],
-    // above
     [x - w / 2, y - h - 14],
-    // below
     [x - w / 2, y + 14],
-    // upper right
     [x + 12, y - h - 10],
-    // upper left
     [x - w - 12, y - h - 10],
-    // lower right
     [x + 12, y + 10],
-    // lower left
     [x - w - 12, y + 10],
   ]
   const margin = 6
@@ -156,7 +147,7 @@ function TerminalLabel({
         y={by}
         width={w}
         height={h}
-        fill={blue ? "var(--zg-blue)" : "#fff"}
+        fill={blue ? "var(--zg-blue)" : "var(--ground)"}
         stroke="var(--zg-blue)"
         strokeWidth={1}
       />
@@ -167,7 +158,7 @@ function TerminalLabel({
         fontSize={16}
         fontWeight={700}
         fontFamily="var(--font-heros), system-ui, sans-serif"
-        fill={blue ? "#fff" : "var(--ink)"}
+        fill={blue ? "var(--ground)" : "var(--ink)"}
       >
         {name}
       </text>
@@ -299,7 +290,7 @@ function HeroVariant({
           <path
             d={overlay.path}
             fill="none"
-            stroke="#fff"
+            stroke="var(--ground)"
             strokeWidth={11}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -318,16 +309,16 @@ function HeroVariant({
               cx={x}
               cy={y}
               r={4.5}
-              fill="#fff"
+              fill="var(--ground)"
               stroke="var(--zg-blue)"
               strokeWidth={2.5}
             />
           ))}
-          <circle cx={overlay.first[0]} cy={overlay.first[1]} r={7} fill="#fff" stroke="var(--zg-blue)" strokeWidth={3} />
+          <circle cx={overlay.first[0]} cy={overlay.first[1]} r={7} fill="var(--ground)" stroke="var(--zg-blue)" strokeWidth={3} />
           {/* Destination: blue bullseye — the white gap ring needs a blue
               outer ring to stay legible on the white map ground. */}
           <circle cx={overlay.last[0]} cy={overlay.last[1]} r={10.5} fill="none" stroke="var(--zg-blue)" strokeWidth={2} />
-          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={7} fill="var(--zg-blue)" stroke="#fff" strokeWidth={3} />
+          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={7} fill="var(--zg-blue)" stroke="var(--ground)" strokeWidth={3} />
           <TerminalLabel box={overlay.boxA} name={data.terminals[0]} variant="origin" />
           <TerminalLabel box={overlay.boxB} name={data.terminals[1]} variant="destination" />
         </svg>

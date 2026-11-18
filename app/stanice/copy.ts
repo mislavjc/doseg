@@ -31,7 +31,7 @@ export function lineListProse(data: StopPageData): string {
   return [trams, buses].filter(Boolean).join(" te ")
 }
 
-/** "5" when lo == hi, else "5–8". The shared equal-vs-range branch. */
+/** "5" when lo == hi, else "5-8". The shared equal-vs-range branch. */
 function rangeText([lo, hi]: [number, number]): string {
   return lo === hi ? `${lo}` : `${lo}-${hi}`
 }
@@ -68,21 +68,12 @@ export function mostFrequentLine(
   return { line: best, headway, inPeak }
 }
 
-/**
- * Distinct outbound directions the lines leave on. Reads the generator's
- * `directionGroups`; until the next feed regen ships that field, falls back to
- * the legacy binary `bothDirections` so existing pages keep their suffix.
- */
-function directionCount(data: StopPageData): number {
-  const g = (data as { directionGroups?: number }).directionGroups
-  return g ?? (data.bothDirections ? 2 : 1)
-}
-
-/** one-way / two-way / multi-corridor — classify the count once so the chip and
- *  the FAQ phrase can't drift apart. */
+/** one-way / two-way / multi-corridor by the distinct outbound directions the
+ *  lines leave on. Classify the count once so the chip and the FAQ phrase can't
+ *  drift apart. */
 type DirectionKind = "one" | "two" | "multi"
 function directionKind(data: StopPageData): DirectionKind {
-  const g = directionCount(data)
+  const g = data.directionGroups
   return g >= 3 ? "multi" : g === 2 ? "two" : "one"
 }
 

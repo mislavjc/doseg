@@ -594,9 +594,9 @@ export function Zakljucak({
             ? ` ${emptiest.name} je u tom ciklusu prazna ${Math.round((emptiest.emptyShare ?? 0) * 100)} % vremena.`
             : ""}
         </Body>
-        <p className="font-heros text-head font-bold text-zg-blue">
+        <Hook as="p" className="text-zg-blue">
           Prazna stanica u sedam ujutro je propuštena vožnja.
-        </p>
+        </Hook>
       </div>
     </Section>
   )
@@ -656,7 +656,7 @@ function SmjerRow({ row, max }: { row: KvartFlow; max: number }) {
 }
 
 export function Smjer({ flow }: { flow: BajsFlow | null }) {
-  if (!flow || flow.kvartovi.length === 0) return null
+  if (!flow) return null
 
   const shown = flow.kvartovi.filter((k) => Math.abs(k.morningNet) >= 1)
   if (shown.length < 3) return null

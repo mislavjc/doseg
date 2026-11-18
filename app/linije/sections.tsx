@@ -8,9 +8,11 @@ import {
   PrevNext as KitPrevNext,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
+import type { FaqItem } from "@/app/statistika/editorial/faq"
 import {
   Body,
   Eyebrow,
+  MonoLabel,
   PageTitle,
 } from "@/app/statistika/editorial/primitives"
 import type { LinePageData } from "@/lib/generated/LinePageData"
@@ -18,9 +20,10 @@ import { cn } from "@/lib/utils"
 
 import {
   MODE_ADJ,
+  MODE_NOUN,
+  cap,
   clockTime,
   introText,
-  modeNoun,
   numberWord,
   peakRange,
   plural,
@@ -35,10 +38,6 @@ import {
  * Shared chrome (SectionHeader, FactRow, Breadcrumb, chips, JsonLd) comes from
  * the editorial kit; only line-specific copy + layout lives here.
  */
-
-// FAQ rendering + JSON-LD live in the shared kit; re-exported so the line page
-// can keep importing them from one place.
-import type { FaqItem } from "@/app/statistika/editorial/faq"
 
 // ── Naslov (breadcrumb + title + lede) ──────────────────────────────────────
 
@@ -57,7 +56,7 @@ export function Naslov({ data }: { data: LinePageData }) {
         Linija {data.broj}: {data.terminals[0]} - {data.terminals[1]}.
       </PageTitle>
       <Body className="mt-1 text-ink-muted">
-        {modeNoun(data.mode)}
+        {MODE_NOUN[data.mode]}
         {data.via.length > 0 && ` preko ${data.via.join(" i ")}`}
         {data.oneWay && " · kružna linija"}
       </Body>
@@ -145,7 +144,7 @@ export function Frekvencija({ data }: { data: LinePageData }) {
               )}
               style={{ height }}
             />
-            <span className="font-mono text-label text-ink-faint">{h}</span>
+            <MonoLabel>{h}</MonoLabel>
           </div>
         )
       })}
@@ -161,8 +160,7 @@ export function frekvencijaCopy(data: LinePageData): {
   if (status === "none") return null
   const hist = serviceHistogram(data)
   const peak = Math.max(...hist, 0)
-  const word = numberWord(peak)
-  const hook = `${word.charAt(0).toUpperCase()}${word.slice(1)} ${plural(peak, "polazak", "polaska", "polazaka")} na sat u špici.`
+  const hook = `${cap(numberWord(peak))} ${plural(peak, "polazak", "polaska", "polazaka")} na sat u špici.`
   const maxHour = hist.indexOf(peak)
   const dayLabel = status === "weekendOnly" ? "vikendom" : "radnim danom"
   // Single busier direction (the number a rider experiences), not both summed —
@@ -228,7 +226,7 @@ function suspendedFaq(
   if (data.oneWay) {
     items.push({
       q: `Zašto linija ${data.broj} ima samo jedan smjer?`,
-      a: `Linija ${data.broj} vozi kružno: ${modeNoun(data.mode)} kreće s terminala ${data.terminals[0]} i istom se trasom vraća bez zasebnog povratnog smjera.`,
+      a: `Linija ${data.broj} vozi kružno: ${MODE_NOUN[data.mode]} kreće s terminala ${data.terminals[0]} i istom se trasom vraća bez zasebnog povratnog smjera.`,
     })
   }
   return items
@@ -239,7 +237,7 @@ export function buildFaq(data: LinePageData): FaqItem[] {
   if (status !== "weekday") return suspendedFaq(data, status)
 
   const items: FaqItem[] = []
-  const noun = modeNoun(data.mode)
+  const noun = MODE_NOUN[data.mode]
   const range = peakRange(data)
 
   const freqParts: string[] = []
@@ -327,9 +325,8 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
   const related = data.related.sharedTerminal.filter(
     (r) => r.isNight === data.isNight
   )
-  const byTerminal = (t: string) => related.filter((r) => r.terminal === t)
   const describe = (t: string) => {
-    const lines = byTerminal(t)
+    const lines = related.filter((r) => r.terminal === t)
     if (lines.length === 0) return null
     const trams = lines.filter((l) => l.mode === "tram").map((l) => l.broj)
     const buses = lines.filter((l) => l.mode === "bus").map((l) => l.broj)

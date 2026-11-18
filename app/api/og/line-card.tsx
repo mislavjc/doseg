@@ -7,6 +7,8 @@ import { clockTime } from "@/app/linije/copy"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import { loadHeroMeta } from "@/lib/line-data"
 
+import { heroCloudSrc, ogFonts } from "./card"
+
 // Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
 // --ink
 const INK = "#0a0a0a"
@@ -14,8 +16,6 @@ const INK = "#0a0a0a"
 const INK_MUTED = "#6a7178"
 // --zg-blue
 const ZG_BLUE = "#0e51c9"
-
-const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
 
 /** The hero band's intrinsic 1x size — overlay coordinates live in this space. */
 const VIEW_W = 1440
@@ -55,13 +55,6 @@ function overlaySvg(data: LinePageData): string | null {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
 
-function loadFonts() {
-  return {
-    geistMono: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
-    herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-  }
-}
-
 // The full 1200×630 map layer sits vertically centred inside the 1200×470
 // window: offset by (630-470)/2 = 80px, matching the Paper clone offset.
 const MAP_LAYER = {
@@ -77,10 +70,7 @@ const MAP_LAYER = {
 function MapWindow({ data }: { data: LinePageData }) {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  const cloudSrc = existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
+  const cloudSrc = heroCloudSrc()
   const routeSrc = overlaySvg(data)
   return (
     <div
@@ -182,7 +172,6 @@ function InfoBand({ data }: { data: LinePageData }) {
 export function renderLineOgCard(data: LinePageData): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
   if (!existsSync(heroPath)) return null
-  const fonts = loadFonts()
 
   return new ImageResponse(
     (
@@ -204,10 +193,7 @@ export function renderLineOgCard(data: LinePageData): ImageResponse | null {
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Geist Mono", data: fonts.geistMono, weight: 400, style: "normal" },
-        { name: "TeX Gyre Heros", data: fonts.herosBold, weight: 700, style: "normal" },
-      ],
+      fonts: ogFonts(),
     }
   )
 }

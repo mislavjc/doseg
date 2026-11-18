@@ -8,7 +8,7 @@ import { MapTile, MapTileButton } from "@/components/home/ui/controls"
 import { expandStop, INK, OLD, BLUE, KEPT } from "./lib"
 
 /**
- * PROTOTYPE — interactive diff map on real CARTO Positron vector tiles. The
+ * Interactive diff map on real CARTO Positron vector tiles. The
  * basemap is muted (POIs hidden, labels faded, paper tint) so the two routes are
  * the only saturated thing. Retired route = dotted slate on a white track,
  * current route = blue on a white casing. Crisp at any zoom; cooperative scroll
@@ -52,10 +52,10 @@ function endpointMarker(map: maplibregl.Map, p: Pt, kind: "shared" | "new" | "ol
   // station dot already on the line marks the exact spot.
   const onRight = p.lon > centerLon
   const isNew = kind === "new", isOld = kind === "old", slate = isOld || kind === "old-origin"
-  const fg = isNew ? "#fff" : slate ? OLD : INK
+  const fg = isNew ? "var(--ground)" : slate ? OLD : INK
   const pill = document.createElement("div")
   pill.style.cssText = `display:inline-flex;align-items:center;gap:6px;padding:5px 10px;white-space:nowrap;pointer-events:none;color:${fg};font-family:'TeX Gyre Heros',system-ui,sans-serif;font-weight:${slate ? 600 : 700};font-size:16px;line-height:17px;` +
-    (isNew ? `background:${BLUE};box-shadow:0 1px 3px rgba(15,23,42,.2)` : `background:#fff;box-shadow:inset 0 0 0 1px ${slate ? "#C5CAD1" : "#C2C7CD"},0 1px 3px rgba(15,23,42,.16)`)
+    (isNew ? `background:${BLUE};box-shadow:0 1px 3px rgba(15,23,42,.2)` : `background:var(--ground);box-shadow:inset 0 0 0 1px ${slate ? "#C5CAD1" : "#C2C7CD"},0 1px 3px rgba(15,23,42,.16)`)
   const path = isNew ? FLAG : isOld ? BAN : null
   if (path) {
     const ic = document.createElement("span")

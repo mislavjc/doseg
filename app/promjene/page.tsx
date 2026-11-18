@@ -5,6 +5,8 @@ import { IconFlag1, IconCircleBanSign } from "@central-icons-react/square-outlin
 import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Hero } from "@/app/statistika/editorial/hero"
 import { Footer } from "@/app/statistika/editorial/footer"
+import { cap } from "@/app/linije/copy"
+import { parseJson } from "@/lib/json"
 import { Timeline } from "./timeline"
 import {
   INK, MUTE, FAINT, OLD, BLUE, HAIR, KEPT, HEROS, MONO,
@@ -24,9 +26,7 @@ import {
  * a client Timeline adds search + line/stop filtering.
  */
 
-// oxlint-disable-next-line typescript/no-unnecessary-type-parameters, typescript/no-unsafe-type-assertion -- committed pipeline output under data/promjene; its shapes are declared in ./lib
-const read = <T,>(p: string): T => JSON.parse(readFileSync(join(process.cwd(), "data", "promjene", p), "utf8")) as T
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+const readData = (p: string) => readFileSync(join(process.cwd(), "data", "promjene", p), "utf8")
 // ~ marker: the date is an approximate Wayback timestamp, not a body-read effective date.
 const approx = (c: Cand) => !c.datePrecise && c.source === "wayback"
 
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
  * set so the funnel sentence and year tallies always match the list. */
 function buildModel(data: Data, cand: Candidates): TimelineModel {
   // id → { line: stat }
-  const index = read<Record<string, Record<string, Stat>>>("geom/index.json")
+  const index = parseJson<Record<string, Record<string, Stat>>>(readData("geom/index.json"))
   const geoms = new Map<string, Geom>()
-  for (const id in index) for (const line in index[id]) geoms.set(`${id}-${line}`, read<Geom>(`geom/${id}-${line}.json`))
+  for (const id in index) for (const line in index[id]) geoms.set(`${id}-${line}`, parseJson<Geom>(readData(`geom/${id}-${line}.json`)))
   const mapsFor = (id: string): MapEntryData[] =>
     Object.entries(index[id] ?? {}).flatMap(([line, stat]) => {
       const geom = geoms.get(`${id}-${line}`)
@@ -114,8 +114,8 @@ const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria
 const Strong = ({ children }: { children: React.ReactNode }) => <span style={{ color: INK, fontWeight: 500 }}>{children}</span>
 
 export default function Page() {
-  const data = read<Data>("entries.json")
-  const cand = read<Candidates>("candidates.json")
+  const data = parseJson<Data>(readData("entries.json"))
+  const cand = parseJson<Candidates>(readData("candidates.json"))
   const model = buildModel(data, cand)
   const { total, line, stop, maps } = model.counts
   const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
@@ -152,7 +152,7 @@ export default function Page() {
         .diffmap .maplibregl-ctrl-attrib{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;background:rgba(255,255,255,.66)}
         .diffmap .maplibregl-ctrl-attrib.maplibregl-compact,.diffmap .maplibregl-ctrl-attrib-button{border-radius:0}
         .diffmap .maplibregl-cooperative-gesture-screen{font-family:'Geist Mono',ui-monospace,monospace}
-        .pr-search:focus-within{border-color:#0E51C9;box-shadow:inset 0 0 0 1px #0E51C9}
+        .pr-search:focus-within{border-color:var(--zg-blue);box-shadow:inset 0 0 0 1px var(--zg-blue)}
         @media (max-width:640px){.pr-intro{padding-top:30px !important}}
         @media (max-width:520px){
           .pr-row{flex-direction:column !important;gap:5px !important}
@@ -165,7 +165,7 @@ export default function Page() {
 
       <Hero active="promjene" mapPosition="center 40%" />
 
-      <main id="main-content" tabIndex={-1} style={{ background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: 88, paddingInline: 16, boxSizing: "border-box", overflowX: "hidden", maxWidth: "100vw" }}>
+      <main id="main-content" tabIndex={-1} style={{ background: "var(--ground)", display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: 88, paddingInline: 16, boxSizing: "border-box", overflowX: "hidden", maxWidth: "100vw" }}>
         <div className="pr-intro" style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", gap: 16, paddingTop: 64 }}>
           <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "promjene" }]} />
           <span style={{ fontFamily: MONO, fontSize: 12, color: BLUE }}>promjene u mreži</span>

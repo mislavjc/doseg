@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 
+import { responseJson } from "@/lib/json"
 import { isWalkMode, legLineColors } from "@/lib/mode-colors"
 import {
   fetchExactRoute,
   fetchIsochrone,
   type IsochroneResponse,
 } from "@/lib/otp"
+import type { WalkAreaFeature } from "@/lib/generated"
 import { decodePolyline } from "@/lib/polyline"
 import {
   outerBand,
@@ -20,9 +22,8 @@ import {
   type MapPoi,
   type PanelState,
   type Poi,
-  type WalkAreaFeatureLike,
 } from "./reach-state"
-import type { ReachStats } from "./sidebar"
+import type { ReachStats } from "./panel-content"
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -41,9 +42,8 @@ async function reverseName(p: LatLon): Promise<string | null> {
   try {
     const res = await fetch(`/api/reverse?lat=${p.lat}&lon=${p.lon}`)
     if (!res.ok) return null
-    const data: unknown = await res.json()
-    if (typeof data !== "object" || data === null || !("display_name" in data)) return null
-    return typeof data.display_name === "string" ? data.display_name : null
+    const data = await responseJson<{ display_name?: string }>(res)
+    return data.display_name ?? null
   } catch {
     return null
   }
@@ -55,7 +55,7 @@ function useReachDerived(
   iso: IsochroneResponse | null,
   minutes: number,
   districtCtx: DistrictContext | null,
-  band: WalkAreaFeatureLike | null
+  band: WalkAreaFeature | null
 ) {
   const { data: pois } = useSWR<Poi[]>(
     "/api/poi?categories=hospital,school,park",
@@ -148,7 +148,7 @@ function useReachDerived(
 /** District context follows the reach (origin + selected window). */
 function useDistrictContext(
   origin: LatLon | null,
-  band: WalkAreaFeatureLike | null,
+  band: WalkAreaFeature | null,
   seqRef: React.RefObject<number>
 ) {
   const [districtCtx, setDistrictCtx] = useState<DistrictContext | null>(null)
@@ -282,7 +282,7 @@ export function useMapFlow(initial?: FlowInitial) {
 
 type FlowDeps = {
   panel: PanelState
-  band: WalkAreaFeatureLike | null
+  band: WalkAreaFeature | null
   origin: LatLon | null
   dest: LatLon | null
   originName: string | null

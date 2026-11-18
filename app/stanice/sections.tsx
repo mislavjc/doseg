@@ -10,7 +10,7 @@ import {
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
 import { type FaqItem } from "@/app/statistika/editorial/faq"
-import { Body, PageTitle } from "@/app/statistika/editorial/primitives"
+import { Body, Hook, PageTitle } from "@/app/statistika/editorial/primitives"
 import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import { kvartSlug } from "@/lib/kvart-slug"
@@ -28,7 +28,7 @@ import {
   mostFrequentLine,
   subtitle,
 } from "./copy"
-import { numberWordF, plural } from "../linije/copy"
+import { cap, numberWordF, plural } from "../linije/copy"
 
 /**
  * Server sections of the /stanice/[slug] page (Paper "Stanica Reljkovićeva —
@@ -120,7 +120,7 @@ export function LinijeKojeStaju({ data }: { data: StopPageData }) {
     <div>
       <SectionHeader
         eyebrow="linije koje ovdje staju"
-        hook={`${numberWordF(n).charAt(0).toUpperCase() + numberWordF(n).slice(1)} ${plural(n, "linija", "linije", "linija")}${dir ? `, ${dir}.` : "."}`}
+        hook={`${cap(numberWordF(n))} ${plural(n, "linija", "linije", "linija")}${dir ? `, ${dir}.` : "."}`}
       >
         Svaka linija vodi na svoju stranicu s punim voznim redom. Brojke su
         tipičan razmak vozila radnim danom u špici.
@@ -153,9 +153,9 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
         {bands.map(([label, count]) => (
           <div key={label} className="flex-1 border-t-2 border-zg-blue pt-3">
             <p className="font-mono text-label text-ink-faint">{label}</p>
-            <p className="mt-1 font-heros text-head font-bold text-ink">
+            <Hook as="p" className="mt-1">
               {count} <span className="font-normal text-ink-muted">stanica</span>
-            </p>
+            </Hook>
           </div>
         ))}
       </div>

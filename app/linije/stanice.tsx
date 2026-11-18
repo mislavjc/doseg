@@ -137,7 +137,6 @@ export function Stanice({
 
   return (
     <div>
-      {/* Mobile smjer toggle */}
       {directions.length > 1 && (
         <div className="pb-5">
           <SmjerToggle

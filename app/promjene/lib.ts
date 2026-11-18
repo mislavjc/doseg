@@ -98,5 +98,3 @@ export const TALLY: Record<string, { label: string; one: string; color: string; 
   ukinuta: { label: "ukinute", one: "ukinuta", color: OLD, order: 4 },
   stajalište: { label: "stajališta", one: "stajalište", color: MUTE, order: 5 },
 }
-
-export { norm } from "@/lib/normalize"

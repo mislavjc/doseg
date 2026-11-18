@@ -9,17 +9,13 @@ import type { LinePageData } from "@/lib/generated/LinePageData"
  * to avoid needing it.
  */
 
-const MODE_NOUN: Record<LineMode, string> = {
+export const MODE_NOUN: Record<LineMode, string> = {
   tram: "tramvaj",
   bus: "autobus",
 }
 export const MODE_ADJ: Record<LineMode, string> = {
   tram: "tramvajske",
   bus: "autobusne",
-}
-
-export function modeNoun(mode: LineMode): string {
-  return MODE_NOUN[mode]
 }
 
 /** "4:55" — GTFS time string "04:55"/"24:11" → display clock time. */
@@ -176,7 +172,8 @@ export function serviceHistogram(data: LinePageData): number[] {
 /** Weekend service shape, so the three weekend-aware copy spots classify once. */
 export type WeekendKind = "both" | "saturday" | "sunday" | "none"
 export function weekendKind(data: LinePageData): WeekendKind {
-  const { subota, nedjelja } = serviceDays(data)
+  const subota = hasService(data.timetable.subota)
+  const nedjelja = hasService(data.timetable.nedjelja)
   if (subota && nedjelja) return "both"
   if (subota) return "saturday"
   if (nedjelja) return "sunday"
@@ -196,17 +193,6 @@ export function vozniRedNote(data: LinePageData): string {
   return weekendKind(data) === "none"
     ? " Vozi samo radnim danom."
     : " Polasci za radni dan, subotu i nedjelju."
-}
-
-/** Which day types actually have service. Internal — only weekendKind reads it. */
-function serviceDays(data: LinePageData): {
-  subota: boolean
-  nedjelja: boolean
-} {
-  return {
-    subota: hasService(data.timetable.subota),
-    nedjelja: hasService(data.timetable.nedjelja),
-  }
 }
 
 /** Departure-terminal display name per direction (column headers, toggles). */
@@ -231,7 +217,7 @@ export function terminalChips(data: LinePageData): (string | undefined)[] {
 /** Intro paragraph under the title. Doubles as the SEO/OG description, so the
  *  suspended-line cases must read honestly rather than "0 puta / 0:00 / 0 min". */
 export function introText(data: LinePageData): string {
-  const noun = modeNoun(data.mode)
+  const noun = MODE_NOUN[data.mode]
   const stops = data.directions[0].stops.length
   const travel = Math.round(data.stats.travelTimeMin)
   const km = data.stats.distanceKm.toLocaleString("hr-HR", { maximumFractionDigits: 1 })

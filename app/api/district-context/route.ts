@@ -66,8 +66,8 @@ function districtTouchesReach(d: DistrictFeature, reachRing: Ring) {
 }
 
 const RequestBody = z.object({
-  origin: z.object({ lat: z.number(), lon: z.number() }).optional(),
-  rings: z.array(z.array(z.tuple([z.number(), z.number()]))).optional(),
+  origin: z.object({ lat: z.number(), lon: z.number() }),
+  rings: z.array(z.array(z.tuple([z.number(), z.number()]))).default([]),
 })
 
 export async function POST(request: NextRequest) {
@@ -82,13 +82,6 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "missing origin" }, { status: 400 })
   }
   const { origin, rings } = body.data
-  if (
-    !origin ||
-    !Number.isFinite(origin.lat) ||
-    !Number.isFinite(origin.lon)
-  ) {
-    return Response.json({ error: "missing origin" }, { status: 400 })
-  }
 
   const { features, scores, cityAreaKm2 } = loadDistricts()
 
@@ -99,18 +92,13 @@ export async function POST(request: NextRequest) {
     ? (scores.get(originDistrict.properties.name) ?? null)
     : null
 
-  let districtsInReach = 0
-  if (rings !== undefined && rings.length > 0) {
-    districtsInReach = features.filter((d) =>
-      rings.some((ring) => districtTouchesReach(d, ring))
-    ).length
-  }
+  const districtsInReach = features.filter((d) =>
+    rings.some((ring) => districtTouchesReach(d, ring))
+  ).length
 
   const { response } = jsonResponse(
     {
-      district: score
-        ? { name: score.name, rank: score.rank, score: score.score }
-        : null,
+      district: score,
       totalDistricts: features.length,
       districtsInReach,
       cityAreaKm2,

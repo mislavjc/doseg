@@ -178,7 +178,7 @@ function searchPropsFor(
 
 type LayersProps = React.ComponentProps<typeof LayersControl>
 
-/** Alerts + desktop controls + mobile search bar/layers icon over the map. */
+/** Desktop controls + mobile search bar/layers icon over the map. */
 function MapChrome({
   searchProps,
   layersProps,

@@ -12,6 +12,7 @@ import { useRef, useState } from "react"
 import type { AdresaHit } from "@/app/api/adrese/route"
 import type { SearchIndexPayload } from "@/app/api/search-index/route"
 import { LineBadge } from "@/app/statistika/editorial/blocks"
+import { responseJson } from "@/lib/json"
 import { norm } from "@/lib/normalize"
 
 /**
@@ -142,17 +143,11 @@ function search(index: SearchIndex, rawQuery: string): Result[] {
 
 // ── Address lookup (baked DGU index, /api/adrese) ─────────────────────────────
 
-/** Same-origin API body, typed by the payload type its route exports. */
-async function readJson<T>(res: Response): Promise<T> {
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- same-origin route; its exported payload type is the contract
-  return (await res.json()) as T
-}
-
 async function geocode(query: string): Promise<Result[]> {
   try {
     const res = await fetch(`/api/adrese?${new URLSearchParams({ q: query })}`)
     if (!res.ok) return []
-    const data = await readJson<{ hits?: AdresaHit[] }>(res)
+    const data = await responseJson<{ hits?: AdresaHit[] }>(res)
     return (data.hits ?? []).slice(0, ADDR_SLOTS).map((h) => ({
       href: `/adresa/${h.slug}`,
       broj: null,
@@ -188,7 +183,7 @@ function useHomeSearch() {
 
   const loadIndex = () => {
     indexPromiseRef.current ??= fetch("/api/search-index")
-      .then((res) => (res.ok ? readJson<SearchIndexPayload>(res) : null))
+      .then((res) => (res.ok ? responseJson<SearchIndexPayload>(res) : null))
       .then((data) => (indexRef.current = data && buildIndex(data)))
       .catch(() => null)
     return indexPromiseRef.current

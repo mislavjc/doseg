@@ -6,6 +6,8 @@ import { plural } from "@/app/linije/copy"
 import { projector } from "@/lib/geo"
 import { loadHomeHero, type HomeHeroData } from "@/lib/home-hero"
 
+import { heroCloudSrc, ogFonts } from "./card"
+
 // Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
 // --ink
 const INK = "#0a0a0a"
@@ -16,19 +18,10 @@ const SEPARATOR = "#c9c9c9"
 // --zg-blue
 const ZG_BLUE = "#0e51c9"
 
-const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
-
 /** Map window of the card (Paper "OG1e-2 · brojači u liniji"). */
 const MAP_H = 456
 const RULE_H = 4
 const BAND_H = 630 - MAP_H - RULE_H
-
-function loadFonts() {
-  return {
-    geistMono: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
-    herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-  }
-}
 
 /**
  * Whole-Zagreb boundary as a data-URI SVG in the desktop crop's view space —
@@ -65,10 +58,7 @@ const MAP_LAYER = {
 function MapWindow({ hero }: { hero: HomeHeroData }) {
   const heroPath = join(process.cwd(), "public/hero-zagreb.png")
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  const cloudSrc = existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
+  const cloudSrc = heroCloudSrc()
   return (
     <div
       style={{
@@ -201,7 +191,6 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
 export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
   const hero = loadHomeHero()
   if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) return null
-  const fonts = loadFonts()
 
   return new ImageResponse(
     (
@@ -224,10 +213,7 @@ export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Geist Mono", data: fonts.geistMono, weight: 400, style: "normal" },
-        { name: "TeX Gyre Heros", data: fonts.herosBold, weight: 700, style: "normal" },
-      ],
+      fonts: ogFonts(),
     }
   )
 }

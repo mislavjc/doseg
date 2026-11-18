@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og"
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
 // Editorial tokens (globals.css). Satori can't resolve CSS vars, so the
@@ -34,6 +34,23 @@ function getAssets(): OgAssets {
     tramSrc: `data:image/png;base64,${tram.toString("base64")}`,
   }
   return cachedAssets
+}
+
+/** Regular mono + bold Heros, the pair every hero OG card renders with. */
+export function ogFonts() {
+  const { geistMonoRegular, herosBold } = getAssets()
+  return [
+    { name: "Geist Mono", data: geistMonoRegular, weight: 400, style: "normal" },
+    { name: "TeX Gyre Heros", data: herosBold, weight: 700, style: "normal" },
+  ] satisfies NonNullable<ConstructorParameters<typeof ImageResponse>[1]>["fonts"]
+}
+
+/** Cloud-fade layer the hero OG cards lay over their maps; null if unbaked. */
+export function heroCloudSrc(): string | null {
+  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
+  return existsSync(cloudPath)
+    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
+    : null
 }
 
 function MonoCaption({

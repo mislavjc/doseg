@@ -178,10 +178,6 @@ const NominatimResponse = z.array(
   })
 )
 
-function toWildcardPattern(q: string): string {
-  return q.replaceAll('\'', "''").replaceAll(/[cszdCSZD]/gu, "_")
-}
-
 function parseQuery(q: string): { street: string; house?: string } {
   const m = q.match(/^(.+?)\s+(\d+\s*[a-zA-Z]?)$/u)
   return m ? { street: m[1], house: m[2].trim() } : { street: q }
@@ -191,10 +187,9 @@ async function searchDGU(q: string): Promise<Result[]> {
   const { street: rawStreet, house } = parseQuery(q)
   const street = rawStreet.replaceAll(/[%_]/gu, " ")
   const escaped = street.replaceAll('\'', "''")
-  const wildcard = toWildcardPattern(street)
+  const wildcard = escaped.replaceAll(/[cszdCSZD]/gu, "_")
   // Try exact match first; fall back to diacritics-wildcard only if different
-  const exactCql = buildDGUCql(escaped, house)
-  const results = await fetchDGU(exactCql, house)
+  const results = await fetchDGU(buildDGUCql(escaped, house), house)
   if (results.length > 0 || wildcard === escaped) return results
   return fetchDGU(buildDGUCql(wildcard, house), house)
 }

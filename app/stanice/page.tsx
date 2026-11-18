@@ -32,7 +32,6 @@ export const metadata: Metadata = {
   },
 }
 
-
 function StopRow({ stop }: { stop: StopIndexEntry }) {
   return (
     <li>

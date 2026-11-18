@@ -6,6 +6,8 @@ import { plural } from "@/app/linije/copy"
 import type { LineHeroMeta } from "@/lib/line-data"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 
+import { heroCloudSrc, ogFonts } from "./card"
+
 // Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
 // --ink
 const INK = "#0a0a0a"
@@ -14,18 +16,9 @@ const INK_MUTED = "#6a7178"
 // --zg-blue
 const ZG_BLUE = "#0e51c9"
 
-const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
-
 /** Map window of the card (Paper "OG stanica — V1"). */
 const MAP_H = 470
 const BAND_H = 160
-
-function loadFonts() {
-  return {
-    geistMono: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
-    herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-  }
-}
 
 const MAP_LAYER = {
   position: "absolute" as const,
@@ -41,10 +34,7 @@ const MAP_LAYER = {
 function MapWindow({ data }: { data: StopPageData }) {
   const heroPath = join(process.cwd(), "public/stanice", `hero-${data.slug}.png`)
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  const cloudSrc = existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
+  const cloudSrc = heroCloudSrc()
   return (
     <div style={{ position: "relative", width: "1200px", height: `${MAP_H}px`, display: "flex", overflow: "hidden" }}>
       {/* oxlint-disable-next-line nextjs/no-img-element */}
@@ -147,7 +137,6 @@ export function renderStopOgCard(
 ): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/stanice", `hero-${data.slug}.png`)
   if (!meta || !existsSync(heroPath)) return null
-  const fonts = loadFonts()
 
   return new ImageResponse(
     (
@@ -169,10 +158,7 @@ export function renderStopOgCard(
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Geist Mono", data: fonts.geistMono, weight: 400, style: "normal" },
-        { name: "TeX Gyre Heros", data: fonts.herosBold, weight: 700, style: "normal" },
-      ],
+      fonts: ogFonts(),
     }
   )
 }

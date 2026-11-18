@@ -18,16 +18,12 @@ type DistrictFeature = {
   geometry: { type: "Polygon"; coordinates: number[][][] }
 }
 
-let cachedGeoJSON: DistrictFeature[] | null = null
-
 function getDistrictGeoJSON(): DistrictFeature[] {
-  if (cachedGeoJSON) return cachedGeoJSON
   const parsed = readJsonCached<{ features: DistrictFeature[] }>(
     join(process.cwd(), "data/districts.geojson")
   )
   if (!parsed) throw new Error("data/districts.geojson missing or malformed")
-  cachedGeoJSON = parsed.features
-  return cachedGeoJSON
+  return parsed.features
 }
 
 // Same day-filtered scores the kvart pages render (not the pooled legacy file),
@@ -86,8 +82,7 @@ function findDistrict(
  * 3-6s to render (satori rasterizes the full hero PNG). Two layers fix it:
  * a per-process buffer cache (warm after one hit per line, ~60MB ceiling for
  * all 154) and CDN cache headers so the edge serves repeat crawls instantly.
- */
-/**
+ *
  * Minimal LRU for rendered OG card buffers. The valid slug set bounds the key
  * space (154 lines, 604 stops), but holding every card forever pins hundreds of
  * MB on the 1.5 GB box, so cap each cache and evict least-recently-used.

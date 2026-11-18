@@ -136,14 +136,6 @@ const LABEL_POSITIONS: Record<string, LabelLayout> = {
   "zapadni-kolodvor": { dx: 12, dy: 4, anchor: "start" },
 }
 
-function labelPos(s: StopInfo): LabelLayout {
-  return LABEL_POSITIONS[s.id] ?? { dx: 0, dy: 18, anchor: "middle" }
-}
-
-// ---------------------------------------------------------------------------
-// Extracted sub-components
-// ---------------------------------------------------------------------------
-
 function ZoomControls({ onZoomIn, onZoomOut }: { onZoomIn: () => void; onZoomOut: () => void }) {
   return (
     <div
@@ -368,7 +360,7 @@ function StationLabels({ activeLine }: { activeLine: string | null }) {
   return (
     <g>
       {stops.map((s) => {
-        const lp = labelPos(s)
+        const lp = LABEL_POSITIONS[s.id] ?? { dx: 0, dy: 18, anchor: "middle" }
         const tx = s.x + lp.dx, ty = s.y + lp.dy
         return (
           <text

@@ -20,6 +20,7 @@ import {
   EditorialShell,
   Eyebrow,
   Hook,
+  MonoLabel,
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
@@ -75,7 +76,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const adresa = resolveAdresaSlug(slug)
   if (!adresa) return { robots: { index: false } }
   return {
-    title: `${adresa.label} — doseg javnim prijevozom | doseg.hr`,
+    title: `${adresa.label} - doseg javnim prijevozom | doseg.hr`,
     description: `Koliko grada dosežeš za 30 minuta s adrese ${adresa.label}: najbliže stanice, linije u blizini i povezanost kvarta.`,
     robots: { index: false, follow: true },
   }
@@ -130,9 +131,9 @@ function bajsHook(stations: NearestBajs[], nearestStop?: NearbyStop) {
   return `Najbliži Bajs: ${first.name}, ${first.walkMin} min hoda.`
 }
 
-/** "Škola na minutu, park na četiri, bolnica na devet." — sorted by distance. */
 const minutesWord = (n: number) => (n === 1 ? "minutu" : numberWordF(n))
 
+/** "Škola na minutu, park na četiri, bolnica na devet." — sorted by distance. */
 function okolinaHook(pois: NearestPoi[]) {
   return (
     pois
@@ -293,7 +294,7 @@ async function BajsSection({
       <Hook>{bajsHook(stations, nearestStop)}</Hook>
       <BajsGauges stations={stations} />
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="font-mono text-label text-ink-faint">broj bicikala je uživo ·</span>
+        <MonoLabel>broj bicikala je uživo ·</MonoLabel>
         <MonoLink href={karta}>doseg Bajsom vidiš na karti</MonoLink>
       </div>
     </Section>
@@ -330,9 +331,9 @@ function OkolinaSection({
           />
         ))}
       </div>
-      <span className="font-mono text-label text-ink-faint">
+      <MonoLabel>
         najbliže po zračnoj liniji, pješice · izvor: OpenStreetMap
-      </span>
+      </MonoLabel>
     </Section>
   )
 }
@@ -423,7 +424,7 @@ export default async function AdresaPage({ params }: Params) {
         <Body className="mt-3 max-w-[520px]">
           {data.found && typeof data.reachKm2 === "number"
             ? `${data.reachKm2} km² grada za 30 minuta javnim prijevozom (prosjek kvarta). Sve ispod je izračunato za ovu adresu.`
-            : "Ova adresa je izvan kvartova koje mjerimo — točan doseg pokazuje karta."}
+            : "Ova adresa je izvan kvartova koje mjerimo - točan doseg pokazuje karta."}
         </Body>
       </Section>
 

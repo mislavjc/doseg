@@ -8,14 +8,7 @@ export function Segmented<T extends string | number>({
   value,
   onChange,
 }: {
-  options: {
-    value: T
-    label: string
-    disabled?: boolean
-    title?: string
-    /** Small caption under the label — e.g. "uskoro" on a disabled option. */
-    note?: string
-  }[]
+  options: { value: T; label: string }[]
   value: T
   onChange: (v: T) => void
 }) {
@@ -27,26 +20,17 @@ export function Segmented<T extends string | number>({
           <button
             key={String(opt.value)}
             type="button"
-            disabled={opt.disabled}
             aria-pressed={selected}
             onClick={() => onChange(opt.value)}
-            title={opt.title}
             className={`flex grow basis-0 flex-col items-center justify-center gap-px py-3 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
               i > 0 ? "border-l border-hairline-strong" : ""
             } ${
               selected
                 ? "bg-chip-blue text-zg-blue"
-                : opt.disabled
-                  ? "cursor-not-allowed text-ink-faint/60"
-                  : "text-ink-muted hover:text-ink-2"
+                : "text-ink-muted hover:text-ink-2"
             }`}
           >
             {opt.label}
-            {opt.note && (
-              <span className="text-[11px] leading-none tracking-[0.04em] text-ink-faint">
-                {opt.note}
-              </span>
-            )}
           </button>
         )
       })}

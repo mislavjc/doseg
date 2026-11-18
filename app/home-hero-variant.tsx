@@ -94,7 +94,7 @@ export function HomeHeroVariant({
           preserveAspectRatio="xMidYMid slice"
           className="absolute inset-0 h-full w-full"
         >
-          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="#fff" strokeWidth={6} strokeLinejoin="round" />
+          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="var(--ground)" strokeWidth={6} strokeLinejoin="round" />
           <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
           <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
           <text
@@ -104,7 +104,7 @@ export function HomeHeroVariant({
             fontSize={16}
             fontWeight={700}
             fontFamily="var(--font-heros), system-ui, sans-serif"
-            fill="#fff"
+            fill="var(--ground)"
           >
             Zagreb
           </text>

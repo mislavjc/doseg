@@ -62,7 +62,7 @@ export function ZagrebBlockMap() {
         row: d.row,
         bg: connectivityColor(d.score),
         label: LABEL_DARK,
-        title: `${d.name} — ${d.score}/100`,
+        title: `${d.name} - ${d.score}/100`,
         tooltip: `${d.name}: ${d.score}/100`,
       }))}
     />
@@ -84,7 +84,7 @@ export function ZagrebBajsBlockMap({ districts }: { districts: readonly District
       row: g.row,
       bg,
       label: labelForBajs(boost),
-      title: `${g.name} — ${boost > 0 ? `+${boost}%` : "bez utjecaja"}`,
+      title: `${g.name} - ${boost > 0 ? `+${boost}%` : "bez utjecaja"}`,
       tooltip:
         boost > 0
           ? `${g.name}: +${boost}% dosega · ${stations} st.`

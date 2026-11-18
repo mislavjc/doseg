@@ -58,7 +58,6 @@ function cropFromBbox(
   }
 }
 
-
 function path(shape: [number, number][], project: (lon: number, lat: number) => [number, number]): string {
   const pts = shape.map(([lon, lat]) => project(lon, lat))
   return `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
@@ -86,7 +85,7 @@ function StopHeroVariant({
   return (
     <div
       className={className}
-      style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "#fff" }}
+      style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "var(--ground)" }}
     >
       {src && (
         <HeroPicture
@@ -115,7 +114,7 @@ function StopHeroVariant({
             key={`c-${l.broj}`}
             d={path(l.shape, project)}
             fill="none"
-            stroke="#fff"
+            stroke="var(--ground)"
             strokeWidth={9}
             strokeLinecap="round"
             strokeLinejoin="round"

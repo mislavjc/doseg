@@ -10,8 +10,9 @@ import {
   type Stat, type Geom, type Source, type Successor,
   type FeaturedItem, type LineRowItem, type StopRowItem,
   type LineItem, type TimelineModel,
-  num, dateLabel, monthLabel, expandStop, TAG, TALLY, norm,
+  num, dateLabel, monthLabel, expandStop, TAG, TALLY,
 } from "./lib"
+import { norm } from "@/lib/normalize"
 
 // Code-split maplibre-gl out of the initial /promjene bundle; MountWhenNear
 // holds the chunk fetch until the map is 200px from the viewport (the first
@@ -302,7 +303,7 @@ function Finder({ q, setQ, seg, setSeg, counts, resultLabel }: { q: string; setQ
   const n: Record<Seg, number> = { sve: counts.total, linije: counts.line, stajalište: counts.stop }
   return (
     <div style={{ width: "100%", maxWidth: 556, paddingTop: 52, display: "flex", flexDirection: "column", gap: 12 }}>
-      <div className="pr-search" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${HAIR}`, padding: "11px 14px", background: "#fff" }}>
+      <div className="pr-search" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${HAIR}`, padding: "11px 14px", background: "var(--ground)" }}>
         <svg width={15} height={15} viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0, color: FAINT }}>
           <circle cx={11} cy={11} r={7} stroke="currentColor" strokeWidth={2} />
           <path d="M20 20L16 16" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
@@ -404,7 +405,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
           <Fragment key={year}>
             <YearHeader year={year} tally={tallyOf(lineItems, stopItems)} />
             {lineItems.map((it) => renderLineItem(it, it.id === legendId ? legend : undefined))}
-            {showStops && stopItems.length > 0 && <StopLedger items={stopItems} forceOpen={ledgerOpen} />}
+            {stopItems.length > 0 && <StopLedger items={stopItems} forceOpen={ledgerOpen} />}
           </Fragment>
         ))
       )}

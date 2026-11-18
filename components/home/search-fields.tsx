@@ -422,7 +422,6 @@ function SwapButton({ onSwap }: { onSwap: () => void }) {
   )
 }
 
-
 export type SearchFieldsProps = {
   hasOrigin: boolean
   hasDest: boolean
@@ -473,8 +472,9 @@ export function SearchFields({
     showMyLocation: activeRow === "origin",
     onRemoveOrigin:
       activeRow === "origin" && hasOrigin ? onClearOrigin : null,
-    onPick: (p: LatLon, label: string) =>
-      activeRow && pick(activeRow, p, label),
+    onPick: (p: LatLon, label: string) => {
+      if (activeRow) pick(activeRow, p, label)
+    },
     onMyLocation,
   }
   const { activeIndex, onKeyNav } = useDropdownKeyboard({
@@ -503,19 +503,10 @@ export function SearchFields({
       />
       {open && (
         <Dropdown
-          results={results}
-          recents={recents}
+          {...itemArgs}
           query={query}
           loading={loading}
-          showMyLocation={activeRow === "origin"}
           activeIndex={activeIndex}
-          onRemoveOrigin={
-            activeRow === "origin" && hasOrigin ? onClearOrigin : null
-          }
-          onPick={(p, label) => {
-            if (activeRow) pick(activeRow, p, label)
-          }}
-          onMyLocation={onMyLocation}
         />
       )}
     </div>

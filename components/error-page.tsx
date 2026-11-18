@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { FooterMapBand } from "@/app/statistika/editorial/footer"
+import { BodyMuted } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { cn } from "@/lib/utils"
 
@@ -49,9 +50,7 @@ export function ErrorMessage({
         greška {code}
       </p>
       <h1 className="font-heros text-head font-bold text-ink">{title}</h1>
-      <p className="max-w-[520px] font-heros text-body text-ink-muted">
-        {children}
-      </p>
+      <BodyMuted className="max-w-[520px]">{children}</BodyMuted>
     </div>
   )
 }

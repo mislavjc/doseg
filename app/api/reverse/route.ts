@@ -101,8 +101,7 @@ async function reversePhoton(lat: number, lon: number): Promise<string | null> {
     if (!f) return null
     const [flon, flat] = f.geometry.coordinates
     if (!isNearby(flat, flon)) return null
-    const label = photonLabel(f.properties)
-    return label || null
+    return photonLabel(f.properties) || null
   } catch {
     return null
   }

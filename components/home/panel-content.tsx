@@ -136,7 +136,7 @@ export function ReachReadout({
     <div className="flex flex-col gap-[5px]">
       <MonoLabel>doseg · {minutes} min</MonoLabel>
       {!hideHeadline && (
-        <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "—"}</Hook>
+        <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "-"}</Hook>
       )}
       <p className="font-heros text-[16px] leading-[22px] text-ink-muted">
         {stats?.pctCity != null && `${stats.pctCity}% površine grada`}

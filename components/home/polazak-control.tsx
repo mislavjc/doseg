@@ -12,7 +12,7 @@ import { DropdownPanel, DropdownSection, MapTile, MapTileButton } from "./ui"
 
 /**
  * Departure-time control (Paper "Polazak V1b — preseti + točno vrijeme",
- * spec §6). Separate from the 15/30/45 duration — drives the GTFS schedule.
+ * spec §6). Separate from the 15/30 duration — drives the GTFS schedule.
  * Presets are chips; the big mono time box takes direct input or ±15 steps.
  */
 

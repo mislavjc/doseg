@@ -22,7 +22,6 @@ export function DistrictCardV1({
   totalGridCells,
   bandColor,
   cityAvg,
-  bestDistrict,
   mapLink,
 }: DistrictCardProps) {
   const reachPctNum = (d.avgReachableCells / totalGridCells) * 100
@@ -53,7 +52,7 @@ export function DistrictCardV1({
       <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-[13px] text-slate-600 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-          <span>{d.population ? fmtHR(d.population / 1000, 1) + "k stan." : "N/A"}</span>
+          <span>{d.population != null && d.population !== 0 ? fmtHR(d.population / 1000, 1) + "k stan." : "N/A"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
@@ -105,7 +104,7 @@ export function DistrictCardV2({
       <div className="grid grid-cols-2 gap-4 py-4 text-[13px]">
         <div>
           <span className="block text-slate-500 mb-1">Populacija</span>
-          <span className="font-medium text-slate-900 dark:text-slate-200">{d.population ? fmtHR(d.population, 0) : "N/A"}</span>
+          <span className="font-medium text-slate-900 dark:text-slate-200">{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : "N/A"}</span>
         </div>
         <div>
           <span className="block text-slate-500 mb-1">Doseg</span>
@@ -158,7 +157,7 @@ export function DistrictCardV3({
         </div>
         <div className="mt-4 grid grid-cols-3 divide-x divide-[#f2f2f7] text-center dark:divide-[#1c1c1e]">
           <div>
-            <div className="text-[17px] font-medium text-black dark:text-white">{d.population ? fmtHR(d.population / 1000, 1) + "k" : "-"}</div>
+            <div className="text-[17px] font-medium text-black dark:text-white">{d.population != null && d.population !== 0 ? fmtHR(d.population / 1000, 1) + "k" : "-"}</div>
             <div className="text-[11px] text-[#8e8e93]">Stan.</div>
           </div>
           <div>
@@ -202,7 +201,7 @@ export function DistrictCardV4({
         <div className="mt-1 flex flex-wrap gap-3 text-[13px] text-slate-500">
           <span>{pct(d.avgReachableCells, totalGridCells)}% dosega</span>
           <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span>{d.population ? fmtHR(d.population, 0) : 0} stanovnika</span>
+          <span>{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : 0} stanovnika</span>
           <span className="text-slate-300 dark:text-slate-700">•</span>
           <span>{d.stops} stajališta</span>
         </div>
@@ -242,7 +241,7 @@ export function DistrictCardV5({
         </div>
         <div>
           <span className="block text-[9px] text-slate-400">Stanovnika</span>
-          <span className="font-bold text-black dark:text-white">{d.population ? fmtHR(d.population, 0) : "-"}</span>
+          <span className="font-bold text-black dark:text-white">{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : "-"}</span>
         </div>
         <div>
           <span className="block text-[9px] text-slate-400">Linija</span>
@@ -328,7 +327,7 @@ export function DistrictCardV7({
         </div>
         <div className="p-3">
           <span className="block text-slate-500">Stan.</span>
-          <span className="mt-1 block text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
+          <span className="mt-1 block text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
         </div>
         <div className="p-3">
           <span className="block text-slate-500">Linije</span>
@@ -382,7 +381,7 @@ export function DistrictCardV8({
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Stanovništvo
           </span>
-          <span className="text-[#37352f] dark:text-[#ffffffe5]">{d.population ? fmtHR(d.population, 0) : "-"}</span>
+          <span className="text-[#37352f] dark:text-[#ffffffe5]">{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : "-"}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5">
@@ -425,7 +424,7 @@ export function DistrictCardV9({
         </div>
         <div className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm dark:border-slate-700">
           <span className="text-slate-400">Stan.</span>
-          <span className="font-semibold text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000, 1) + 'k' : '-'}</span>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1) + 'k' : '-'}</span>
         </div>
       </div>
 
@@ -520,7 +519,7 @@ export function DistrictCardV11({
       <div className="mt-8 flex items-center justify-between text-[14px]">
         <div className="flex flex-col gap-1">
           <span className="text-slate-500">Stanovnika</span>
-          <span className="font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population, 0) : "-"}</span>
+          <span className="font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : "-"}</span>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-slate-500">Stajališta</span>
@@ -557,7 +556,6 @@ export function DistrictCardV12({
   district: d,
   totalGridCells,
   bandColor,
-  cityAvg,
 }: DistrictCardProps) {
   return (
     <div className="rounded-2xl bg-slate-50 p-[6px] dark:bg-slate-800/40">
@@ -654,7 +652,7 @@ export function DistrictCardV14({
         </div>
         <div className="bg-white p-3 dark:bg-slate-900">
           <span className="block text-[11px] uppercase tracking-wider text-slate-500">Stanovnika</span>
-          <span className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
+          <span className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
         </div>
         <div className="bg-white p-3 dark:bg-slate-900">
           <span className="block text-[11px] uppercase tracking-wider text-slate-500">Interval</span>
@@ -689,7 +687,7 @@ export function DistrictCardV15({
         <div className="text-[13px] leading-relaxed text-slate-500">
           Doseg: <strong className="font-medium text-slate-900 dark:text-slate-200">{pct(d.avgReachableCells, totalGridCells)}%</strong> <br/>
           Stanice: <strong className="font-medium text-slate-900 dark:text-slate-200">{d.stops}</strong> <br/>
-          Populacija: <strong className="font-medium text-slate-900 dark:text-slate-200">{d.population ? fmtHR(d.population/1000, 1) + 'k' : '-'}</strong>
+          Populacija: <strong className="font-medium text-slate-900 dark:text-slate-200">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1) + 'k' : '-'}</strong>
         </div>
         <div className="text-[32px] font-light leading-none tracking-tighter" style={{ color: bandColor }}>
           {d.score}
@@ -730,7 +728,7 @@ export function DistrictCardV16({
           </div>
           <div>
             <span className="text-slate-400">Stanovnika</span>
-            <div className="mt-0.5 font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000,1)+'k' : '-'}</div>
+            <div className="mt-0.5 font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000,1)+'k' : '-'}</div>
           </div>
         </div>
       </div>
@@ -812,7 +810,7 @@ export function DistrictCardV18({
           </div>
           <div className="flex justify-between px-3 py-2">
             <span className="text-slate-500">Stanovnika</span>
-            <span className="font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
+            <span className="font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000,1)+'k' : '-'}</span>
           </div>
           <div className="flex justify-between px-3 py-2">
             <span className="text-slate-500">Čekanje</span>
@@ -967,7 +965,7 @@ export function DistrictCardV21({
       <DenseSpecialBadges d={d} />
 
       <div className="mt-5 flex gap-4 text-[12px] text-slate-600 dark:text-slate-400">
-        <div><strong>{d.population ? fmtHR(d.population/1000, 1)+'k' : '-'}</strong> stan.</div>
+        <div><strong>{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</strong> stan.</div>
         <div><strong>{d.stops}</strong> stajališta</div>
         <div><strong>~{Math.round(d.medianHeadwayMin)}m</strong> int.</div>
       </div>
@@ -1017,7 +1015,7 @@ export function DistrictCardV22({
         <div className="grid grid-cols-3 gap-2 text-center text-[12px] mb-4">
           <div className="rounded bg-slate-50 p-2 dark:bg-slate-800">
             <div className="text-slate-500">Stan.</div>
-            <div className="font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
+            <div className="font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
           </div>
           <div className="rounded bg-slate-50 p-2 dark:bg-slate-800">
             <div className="text-slate-500">Stanice</div>
@@ -1073,7 +1071,7 @@ export function DistrictCardV23({
         <div className="bg-white p-3 dark:bg-slate-900">
           <span className="block text-[10px] uppercase text-slate-500">Populacija / Stanice</span>
           <span className="mt-1 block text-[13px] font-medium text-slate-900 dark:text-slate-100">
-            {d.population ? fmtHR(d.population/1000, 1)+'k' : '-'} / {d.stops}
+            {d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'} / {d.stops}
           </span>
         </div>
         <div className="bg-white p-3 dark:bg-slate-900">
@@ -1132,7 +1130,7 @@ export function DistrictCardV24({
           </div>
           <div className="flex-1 px-3 text-center">
             <span className="block text-[11px] text-slate-400">Stan.</span>
-            <span className="text-[16px] font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000, 1)+'k' : '-'}</span>
+            <span className="text-[16px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</span>
           </div>
           <div className="flex-1 pl-3 text-right">
             <span className="block text-[11px] text-slate-400">Interval</span>
@@ -1190,7 +1188,7 @@ export function DistrictCardV28({
         <div className="flex justify-between gap-3 text-center">
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
             <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stan.</div>
-            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
+            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
           </div>
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
             <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stanice</div>
@@ -1270,7 +1268,7 @@ export function DistrictCardV26({
         <div className="flex justify-between gap-3 text-center">
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
             <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stan.</div>
-            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
+            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
           </div>
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
             <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stanice</div>
@@ -1360,7 +1358,7 @@ export function DistrictCardV27({
         <div className="my-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-            <span>{d.population ? fmtHR(d.population / 1000, 1) + "k stan." : "-"}</span>
+            <span>{d.population != null && d.population !== 0 ? fmtHR(d.population / 1000, 1) + "k stan." : "-"}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
@@ -1422,7 +1420,7 @@ export function DistrictCardV25({
         <div className="mb-4 grid grid-cols-3 gap-4 text-[12px]">
           <div>
             <span className="text-slate-500">Populacija</span>
-            <div className="mt-0.5 font-medium text-slate-900 dark:text-slate-100">{d.population ? fmtHR(d.population, 0) : "-"}</div>
+            <div className="mt-0.5 font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population, 0) : "-"}</div>
           </div>
           <div>
             <span className="text-slate-500">Stajališta</span>

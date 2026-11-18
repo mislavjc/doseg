@@ -35,7 +35,7 @@ function ratioBg(ratio: number | null): string {
 }
 
 export default function SpeedComparisonSection() {
-  const { data, error } = useSWR<SpeedComparisonData>(
+  const { data, error } = useSWR<SpeedComparisonData, Error>(
     "/api/rt/speed-comparison",
     { refreshInterval: 30_000, keepPreviousData: true }
   )
@@ -170,7 +170,7 @@ function SummaryRow({
 function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
   const sorted = [...routes]
     .filter((r) => r.actualSpeedKmh !== null)
-    .sort((a, b) => (a.speedRatio ?? 0) - (b.speedRatio ?? 0))
+    .toSorted((a, b) => (a.speedRatio ?? 0) - (b.speedRatio ?? 0))
 
   return (
     <div className="mt-12">

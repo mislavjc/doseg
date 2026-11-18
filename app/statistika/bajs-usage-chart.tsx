@@ -128,7 +128,7 @@ function fmtTime(ts: number): string {
 // --- Data fetching ---
 
 function useBajsUsageHistory() {
-  const { data, error, isLoading } = useSWR<UsagePoint[]>(
+  const { data, error, isLoading } = useSWR<UsagePoint[], Error>(
     "bajs-usage-history",
     () =>
       fetch("/api/rt/bajs-usage-history").then((r) => {
@@ -139,7 +139,7 @@ function useBajsUsageHistory() {
   )
   return {
     points: data ?? null,
-    error: error ? (error as Error).message : null,
+    error: error ? error.message : null,
     isLoading,
   }
 }

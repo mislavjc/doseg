@@ -1,9 +1,8 @@
-import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
-import type { RouteStatsOutput as RouteStats, RouteStatsRoute as RouteInfo } from "@/lib/generated"
+import type { RouteStatsOutput as RouteStats } from "@/lib/generated"
 import type { TravelMatrix, computeMatrixInsights } from "./stat-data"
-import { districtAbbrev, sortRoutesByName } from "./stat-data"
+import { districtAbbrev, readDataJson, sortRoutesByName } from "./stat-data"
 import RouteAnalysisTables from "./route-analysis-tables"
 import { CollapsibleContent } from "./stat-expandable"
 import { StatModuleTitle } from "./stat-typography"
@@ -102,7 +101,6 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
         <div className="overflow-x-auto">
           <table
           className="w-max border-collapse text-[11px]"
-          role="grid"
           aria-label="Matrica putovanja između kvartova"
         >
           <thead>
@@ -110,9 +108,9 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
               <td className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
                 <span className="sr-only">Iz / U</span>
               </td>
-              {travelMatrix.districts.map((name, ci) => (
+              {travelMatrix.districts.map((name) => (
                 <th
-                  key={ci}
+                  key={name}
                   className="min-w-[44px] p-1 text-center font-medium text-slate-500 dark:text-slate-400"
                   title={name}
                 >
@@ -124,7 +122,7 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
           <tbody>
             {travelMatrix.districts.map((rowName, ri) => (
               <MatrixRow
-                key={ri}
+                key={rowName}
                 travelMatrix={travelMatrix}
                 rowName={rowName}
                 ri={ri}
@@ -158,7 +156,7 @@ function MatrixRow({
       </th>
       {travelMatrix.matrix[ri].map((time, ci) => (
         <MatrixCell
-          key={ci}
+          key={travelMatrix.districts[ci]}
           travelMatrix={travelMatrix}
           ri={ri}
           ci={ci}
@@ -374,7 +372,7 @@ function computeTransferData(travelMatrix: TravelMatrix) {
   const twoPlusPct =
     totalPairs > 0 ? Math.round((buckets["2+"].count / totalPairs) * 100) : 0
   const worstPairs = [...buckets["2+"].pairs]
-    .sort((a, b) => b.time - a.time)
+    .toSorted((a, b) => b.time - a.time)
     .slice(0, 6)
 
   return {
@@ -471,9 +469,9 @@ function TransferWorstCorridors({
         Koridori s 2+ presjedanja
       </h3>
       <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-        {worstPairs.map((pair, i) => (
+        {worstPairs.map((pair) => (
           <div
-            key={i}
+            key={`${pair.from}-${pair.to}`}
             className="flex items-baseline justify-between border-b border-slate-100 pb-2 dark:border-white/5"
           >
             <span className="text-[15px] text-slate-800">
@@ -563,12 +561,7 @@ function loadCentralityStats():
   | import("@/lib/generated").CentralityStats
   | null {
   const statsPath = join(getDataDir(), "centrality-stats.json")
-  if (!existsSync(statsPath)) return null
-  try {
-    return JSON.parse(readFileSync(statsPath, "utf-8"))
-  } catch {
-    return null
-  }
+  return readDataJson<import("@/lib/generated").CentralityStats>(statsPath)
 }
 
 function CentralityRanking({
@@ -752,7 +745,7 @@ export function CentralitySection() {
               Betweenness centralnost
             </strong>{" "}
             otkriva kritične točke mreže.
-            {betweenness[0] && (
+            {betweenness.length > 0 && (
               <>
                 {" "}
                 Stajalište{" "}
@@ -770,7 +763,7 @@ export function CentralitySection() {
               Closeness centralnost
             </strong>{" "}
             pokazuje odakle je najbrže doći svugdje.
-            {closeness[0] && (
+            {closeness.length > 0 && (
               <>
                 {" "}
                 <strong className="font-medium text-slate-900 dark:text-slate-100">

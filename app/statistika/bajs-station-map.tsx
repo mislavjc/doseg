@@ -11,6 +11,28 @@ function getMapStyle(): string {
   return "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 }
 
+interface StationProps {
+  name: string
+  bikesAvailable: number
+  docksAvailable: number
+  capacity: number
+}
+
+function isStationProps(p: unknown): p is StationProps {
+  return (
+    typeof p === "object" &&
+    p !== null &&
+    "name" in p &&
+    typeof p.name === "string" &&
+    "bikesAvailable" in p &&
+    typeof p.bikesAvailable === "number" &&
+    "docksAvailable" in p &&
+    typeof p.docksAvailable === "number" &&
+    "capacity" in p &&
+    typeof p.capacity === "number"
+  )
+}
+
 function addStationLayer(map: maplibregl.Map) {
   map.addSource("bajs-stations", {
     type: "geojson",
@@ -55,20 +77,16 @@ function setupInteractions(
   map.on("click", "bajs-circles", (e) => {
     const feature = e.features?.[0]
     if (!feature || feature.geometry.type !== "Point") return
-    const coords = feature.geometry.coordinates.slice() as [number, number]
-    const p = feature.properties as {
-      name: string
-      bikesAvailable: number
-      docksAvailable: number
-      capacity: number
-    }
+    const [lng, lat] = feature.geometry.coordinates
+    const p: unknown = feature.properties
+    if (!isStationProps(p)) return
     popupRef.current?.remove()
     popupRef.current = new maplibregl.Popup({
       closeButton: true,
       maxWidth: "220px",
       offset: 12,
     })
-      .setLngLat(coords)
+      .setLngLat([lng, lat])
       .setHTML(
         `<div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.5">
           <strong style="font-size:14px">${p.name}</strong>
@@ -113,8 +131,8 @@ export default function BajsStationMap() {
   const updateSource = useCallback(() => {
     const map = mapRef.current
     if (!map || !data) return
-    const src = map.getSource("bajs-stations") as maplibregl.GeoJSONSource | undefined
-    if (src) src.setData(data)
+    const src = map.getSource<maplibregl.GeoJSONSource>("bajs-stations")
+    if (src) void src.setData(data)
   }, [data])
 
   useEffect(() => {

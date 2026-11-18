@@ -149,12 +149,14 @@ function HeatmapCell({
 }) {
   if (!data || data.total === 0) {
     return (
+      // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- a data cell, not a control; the row and column headers label it
       <td className="p-[1px]">
         <div className="h-8 w-full rounded bg-slate-100 transition-colors group-hover:opacity-80 dark:bg-white/5" />
       </td>
     )
   }
   return (
+    // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- a data cell, not a control; the row and column headers label it
     <td className="p-[1px]">
       <div
         className="relative h-8 w-full rounded transition-opacity group-hover:opacity-80"

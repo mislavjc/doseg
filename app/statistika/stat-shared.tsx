@@ -191,9 +191,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
     </>
   ),
   moon: (
-    <>
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </>
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
   ),
   calendar: (
     <>
@@ -219,9 +217,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
     </>
   ),
   bolt: (
-    <>
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-    </>
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
   ),
   "circle-down": (
     <>

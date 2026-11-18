@@ -199,13 +199,19 @@ export function Matrica({
 
   const { dest, minByName, maxMin } = useMemo(() => {
     const oi = districts.indexOf(origin)
-    const minByName = new Map<string, number>()
-    districts.forEach((n, j) => minByName.set(n, Math.round(matrix[oi][j])))
-    const dest = districts
+    const byName = new Map<string, number>()
+    districts.forEach((n, j) => {
+      byName.set(n, Math.round(matrix[oi][j]))
+    })
+    const sorted = districts
       .map((name, j) => ({ name, min: Math.round(matrix[oi][j]) }))
       .filter((_, j) => j !== oi)
-      .sort((a, b) => a.min - b.min)
-    return { dest, minByName, maxMin: Math.max(...dest.map((d) => d.min), 1) }
+      .toSorted((a, b) => a.min - b.min)
+    return {
+      dest: sorted,
+      minByName: byName,
+      maxMin: Math.max(...sorted.map((d) => d.min), 1),
+    }
   }, [origin, districts, matrix])
 
   const paint: Paint = {

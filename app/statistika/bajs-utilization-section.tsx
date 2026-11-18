@@ -30,7 +30,7 @@ function pctColor(pct: number): string {
 }
 
 export default function BajsUtilizationSection() {
-  const { data, error, isLoading } = useSWR<BajsUtilizationData>(
+  const { data, error, isLoading } = useSWR<BajsUtilizationData, Error>(
     "/api/rt/bajs-utilization",
     { refreshInterval: 60_000, keepPreviousData: true }
   )

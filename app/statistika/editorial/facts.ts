@@ -20,7 +20,7 @@ function rankBy(
 ): number {
   return (
     [...districts]
-      .sort((a, b) => value(b) - value(a))
+      .toSorted((a, b) => value(b) - value(a))
       .findIndex((d) => d.name === name) + 1
   )
 }
@@ -45,12 +45,17 @@ export function computeEditorialFacts(data: ScoreData) {
 
   return {
     districtCount: ds.length,
-    ratio, // "7,4"
-    bestKm2: fmtHR(best.avgReachableCells * CELL_KM2, 1), // "95,6"
-    worstKm2: fmtHR(worst.avgReachableCells * CELL_KM2, 1), // "12,8"
-    bestPopPct: Math.round((best.population ?? 0) / Math.max(totalPop, 1) * 100), // 4
+    // "7,4"
+    ratio,
+    // "95,6"
+    bestKm2: fmtHR(best.avgReachableCells * CELL_KM2, 1),
+    // "12,8"
+    worstKm2: fmtHR(worst.avgReachableCells * CELL_KM2, 1),
+    // 4
+    bestPopPct: Math.round((best.population ?? 0) / Math.max(totalPop, 1) * 100),
     sesvete: sesvete && {
-      population: fmtPop(sesvete.population ?? 0), // "70.800"
+      // "70.800"
+      population: fmtPop(sesvete.population ?? 0),
       populationRank: rankBy(ds, "Sesvete", (d) => d.population ?? 0),
       populationBarPct: Math.round(((sesvete.population ?? 0) / maxPop) * 100),
       stops: sesvete.stops,
@@ -64,6 +69,11 @@ export function computeEditorialFacts(data: ScoreData) {
 
 export type EditorialFacts = ReturnType<typeof computeEditorialFacts>
 
+const cv = (d: DistrictScore) =>
+  d.avgReachableCells > 0
+    ? (d.stddevReachableCells ?? 0) / d.avgReachableCells
+    : 0
+
 /**
  * Povezanost ranking + summary stats. `spread` is the within-district
  * coefficient of variation (stddev / mean reach), normalised to [0,1] — the
@@ -71,11 +81,7 @@ export type EditorialFacts = ReturnType<typeof computeEditorialFacts>
  */
 export function computePovezanost(data: ScoreData) {
   const ds = data.districts
-  const cv = (d: DistrictScore) =>
-    d.avgReachableCells > 0
-      ? (d.stddevReachableCells ?? 0) / d.avgReachableCells
-      : 0
-  const maxCv = Math.max(...ds.map(cv), 1e-9)
+  const maxCv = Math.max(...ds.map((d) => cv(d)), 1e-9)
 
   const rows = ds.map((d, i) => ({
     rank: i + 1,
@@ -117,16 +123,17 @@ const SHORT_NAME: Record<string, string> = {
 }
 const shortName = (n: string) => SHORT_NAME[n] ?? n
 
+const m = (d: DistrictScore) => Math.round(d.avgNearestStopM ?? 0)
+
 /** Pristup — walk-to-nearest-stop: best vs city average vs worst (metres). */
 export function computeWalk(data: ScoreData) {
   const ds = data.districts.filter((d) => d.avgNearestStopM !== undefined)
   if (ds.length === 0) return null
-  const sorted = [...ds].sort(
+  const sorted = ds.toSorted(
     (a, b) => (a.avgNearestStopM ?? 0) - (b.avgNearestStopM ?? 0)
   )
   const best = sorted[0]
   const worst = sorted[sorted.length - 1]
-  const m = (d: DistrictScore) => Math.round(d.avgNearestStopM ?? 0)
   const avg = Math.round(
     ds.reduce((s, d) => s + (d.avgNearestStopM ?? 0), 0) / Math.max(ds.length, 1)
   )
@@ -149,6 +156,6 @@ export function computeEvening(data: ScoreData) {
       short: shortName(d.name),
       drop: Math.round(d.peakOffpeakDrop ?? 0),
     }))
-    .sort((a, b) => b.drop - a.drop)
+    .toSorted((a, b) => b.drop - a.drop)
 }
 export type EveningRow = ReturnType<typeof computeEvening>[number]

@@ -19,6 +19,8 @@ interface AlertStatsData {
 
 type TimeRange = "7d" | "30d" | "90d"
 
+const TIME_RANGES: TimeRange[] = ["7d", "30d", "90d"]
+
 const TIME_RANGE_SECONDS: Record<TimeRange, number> = {
   "7d": 7 * 86400,
   "30d": 30 * 86400,
@@ -193,7 +195,7 @@ function TimeRangeSelector({
 }) {
   return (
     <div className="flex gap-1 rounded-full border border-slate-200 bg-white/50 p-1 dark:border-white/10 dark:bg-zinc-900/50">
-      {(Object.keys(TIME_RANGE_SECONDS) as TimeRange[]).map((r) => (
+      {TIME_RANGES.map((r) => (
         <button
           key={r}
           type="button"
@@ -213,7 +215,7 @@ function TimeRangeSelector({
 
 export default function AlertStatsSection() {
   const [range, setRange] = useState<TimeRange>("30d")
-  const { data, error, isLoading } = useSWR<AlertStatsData>(
+  const { data, error, isLoading } = useSWR<AlertStatsData, Error>(
     `rt-alerts:${range}`,
     () => {
       const now = Math.floor(Date.now() / 1000)

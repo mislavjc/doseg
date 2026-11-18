@@ -18,7 +18,8 @@ import { Eyebrow, MonoLabel, Section } from "./primitives"
  * scoreColor ramp (data-viz), not hardcoded.
  */
 
-const BAR_W = 84 // px, the "raspon iznutra" column (w-21)
+// px, the "raspon iznutra" column (w-21)
+const BAR_W = 84
 const BAR_MAX_HALF = 38
 const BAR_CENTER = BAR_W / 2
 

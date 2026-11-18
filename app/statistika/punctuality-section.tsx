@@ -39,6 +39,8 @@ interface RouteOption {
 
 type TimeRange = "24h" | "7d" | "30d"
 
+const TIME_RANGES: TimeRange[] = ["24h", "7d", "30d"]
+
 const TIME_RANGE_LABELS: Record<TimeRange, string> = {
   "24h": "24 sata",
   "7d": "7 dana",
@@ -71,7 +73,7 @@ function aggregateBucket(chunk: HistoryPoint[]): HistoryPoint {
     }
   }
 
-  const weight = sumTrips || chunk.length
+  const weight = sumTrips > 0 ? sumTrips : chunk.length
   return {
     ts,
     avgDelay: sumDelay / weight,
@@ -100,7 +102,7 @@ function downsamplePoints(points: HistoryPoint[], maxPoints: number): HistoryPoi
     buckets[idx].push(p)
   }
 
-  return buckets.filter((b) => b.length > 0).map(aggregateBucket)
+  return buckets.filter((b) => b.length > 0).map((b) => aggregateBucket(b))
 }
 
 /** Detailed delay format with seconds remainder: "3 min 12 s" (for stat headers). */
@@ -130,7 +132,7 @@ function fmtTooltipTime(ts: number, range: TimeRange): string {
 
 function useHistoryFetch(route: string, timeRange: TimeRange) {
   const key = route ? `rt-history:${route}:${timeRange}` : null
-  const { data, error, isLoading } = useSWR<HistoryResponse>(
+  const { data, error, isLoading } = useSWR<HistoryResponse, Error>(
     key,
     () => {
       const now = Math.floor(Date.now() / 1000)
@@ -146,7 +148,7 @@ function useHistoryFetch(route: string, timeRange: TimeRange) {
   )
   return {
     data: data ?? null,
-    error: error ? (error as Error).message : null,
+    error: error ? error.message : null,
     isLoading,
   }
 }
@@ -310,7 +312,7 @@ function TimeRangeSelector({
 }) {
   return (
     <div className="flex gap-1 rounded-full border border-slate-200 bg-white/50 p-1 dark:border-white/10 dark:bg-zinc-900/50">
-      {(Object.keys(TIME_RANGE_LABELS) as TimeRange[]).map((range) => (
+      {TIME_RANGES.map((range) => (
         <button
           type="button"
           key={range}
@@ -632,7 +634,6 @@ function HeadwayChartBody({
   yScale,
   xTicks,
   yTicks,
-  maxTrips,
 }: {
   pts: HistoryPoint[]
   timeRange: TimeRange
@@ -686,7 +687,7 @@ function HeadwayChartBody({
           y={(yScale(hovered.headwayCv ?? 0) ?? 0) - 10} 
           title={fmtTooltipTime(hovered.ts, timeRange)} 
           value={`CV ${hovered.headwayCv?.toFixed(2)}`} 
-          subtitle={hovered.headwaySec ? `razmak ${Math.round(hovered.headwaySec / 60)} min` : undefined}
+          subtitle={hovered.headwaySec != null && hovered.headwaySec !== 0 ? `razmak ${Math.round(hovered.headwaySec / 60)} min` : undefined}
           color={(hovered.headwayCv ?? 0) < 0.3 ? "#10b981" : (hovered.headwayCv ?? 0) < 0.5 ? "#f59e0b" : "#ef4444"}
         />
       )}

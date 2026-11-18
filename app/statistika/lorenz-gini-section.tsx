@@ -131,8 +131,8 @@ function LorenzGridAndCurve({
       <polygon
         points={[
           ...lorenzPoints.map((p) => `${lxScale(p.x)},${lyScale(p.x)}`),
-          ...[...lorenzPoints]
-            .reverse()
+          ...lorenzPoints
+            .toReversed()
             .map((p) => `${lxScale(p.x)},${lyScale(p.y)}`),
         ].join(" ")}
         fill="#6ee7b7"

@@ -37,6 +37,11 @@ type Block = {
   baseEdge: number
 }
 
+const hasGeometry = (
+  obj: THREE.Object3D
+): obj is THREE.Mesh | THREE.LineSegments =>
+  obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments
+
 export function TerrainView({
   hovered,
   onHover,
@@ -71,7 +76,7 @@ export function TerrainView({
     renderer.setPixelRatio(Math.min((window.devicePixelRatio || 1) * 1.5, 3))
     renderer.setClearColor(0xffffff, 0)
     renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.shadowMap.type = THREE.PCFShadowMap
     mount.append(renderer.domElement)
     Object.assign(renderer.domElement.style, {
       width: "100%",
@@ -94,8 +99,12 @@ export function TerrainView({
       activeHover = name
       blocks.forEach((b) => {
         const lit = b.name === name
-        b.caps.forEach((m) => m.color.copy(lit ? HILITE : b.baseCap))
-        b.walls.forEach((m) => m.color.copy(lit ? HILITE_WALL : b.baseWall))
+        b.caps.forEach((m) => {
+          m.color.copy(lit ? HILITE : b.baseCap)
+        })
+        b.walls.forEach((m) => {
+          m.color.copy(lit ? HILITE_WALL : b.baseWall)
+        })
         b.edges.forEach((m) => {
           m.color.setHex(lit ? HILITE_EDGE : b.baseEdge)
           m.opacity = lit ? 0.9 : 0.45
@@ -110,7 +119,8 @@ export function TerrainView({
       const h = mount.clientHeight || 1
       renderer.setSize(w, h, false)
       const aspect = w / h
-      const fr = Math.max(sizeVec.x, sizeVec.y) * 0.46 // zoom in → crisper
+      // zoom in → crisper
+      const fr = Math.max(sizeVec.x, sizeVec.y) * 0.46
       camera.left = -fr * aspect
       camera.right = fr * aspect
       camera.top = fr
@@ -132,7 +142,8 @@ export function TerrainView({
       data.paths.forEach((path, i) => {
         const depth = 10 + ((scores[i] ?? 0) / maxS) * 135
         const cap = new THREE.Color(scoreColor(scores[i] ?? 0))
-        const wall = cap.clone().multiplyScalar(0.92) // gentle shading → reads close to the flat board swatch
+        // gentle shading → reads close to the flat board swatch
+        const wall = cap.clone().multiplyScalar(0.92)
         const edgeHex = cap.clone().multiplyScalar(0.62).getHex()
         const name = names[i]
         const block: Block =
@@ -146,7 +157,7 @@ export function TerrainView({
             baseWall: wall.clone(),
             baseEdge: edgeHex,
           }
-        SVGLoader.createShapes(path).forEach((shape) => {
+        path.toShapes().forEach((shape) => {
           const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false })
           const capMat = new THREE.MeshBasicMaterial({ color: cap, side: THREE.DoubleSide })
           const wallMat = new THREE.MeshBasicMaterial({ color: wall, side: THREE.DoubleSide })
@@ -212,7 +223,8 @@ export function TerrainView({
       pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
       raycaster.setFromCamera(pointer, camera)
       const hit = raycaster.intersectObjects(capMeshes, false)[0]
-      const name = (hit?.object.userData.name as string) ?? null
+      const hitName: unknown = hit?.object.userData.name
+      const name = typeof hitName === "string" ? hitName : null
       if (name !== activeHover) {
         highlight(name)
         onHoverRef.current(name)
@@ -240,10 +252,12 @@ export function TerrainView({
       // navigations to /statistika don't leak GPU memory (and exhaust WebGL
       // contexts).
       scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments) {
+        if (hasGeometry(obj)) {
           obj.geometry.dispose()
           const mat = obj.material
-          if (Array.isArray(mat)) mat.forEach((m) => m.dispose())
+          if (Array.isArray(mat)) mat.forEach((m) => {
+            m.dispose()
+          })
           else mat.dispose()
         }
         if (obj instanceof THREE.DirectionalLight) obj.shadow.map?.dispose()
@@ -251,7 +265,8 @@ export function TerrainView({
       renderer.dispose()
       renderer.domElement.remove()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- mount-only: the scene is built once, later hover changes go through apiRef in the effect below
+  }, [])
 
   useEffect(() => {
     apiRef.current?.highlight(hovered)

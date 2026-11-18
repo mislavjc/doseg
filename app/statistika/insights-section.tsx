@@ -82,11 +82,13 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
     setCanScrollRight(maxScroll > 6 && scrollLeft < maxScroll - 6)
 
     const pad = Number.parseFloat(getComputedStyle(el).paddingLeft) || 0
-    const children = [...el.children] as HTMLElement[]
+    const children = [...el.children]
     let best = 0
     let bestDist = Infinity
     for (let i = 0; i < children.length; i++) {
-      const dist = Math.abs(children[i].offsetLeft - pad - scrollLeft)
+      const child = children[i]
+      if (!(child instanceof HTMLElement)) continue
+      const dist = Math.abs(child.offsetLeft - pad - scrollLeft)
       if (dist < bestDist) {
         bestDist = dist
         best = i
@@ -116,8 +118,7 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
 
   const scrollToIndex = (i: number) => {
     const el = scrollRef.current
-    const child = el?.children[i] as HTMLElement | undefined
-    child?.scrollIntoView({
+    el?.children.item(i)?.scrollIntoView({
       behavior: "smooth",
       inline: "start",
       block: "nearest",

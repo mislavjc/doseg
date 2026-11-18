@@ -11,6 +11,7 @@ import type { ComponentPropsWithoutRef, ElementType, HTMLAttributes } from "reac
 
 export function StatPageTitle({
   className,
+  children,
   ...props
 }: ComponentPropsWithoutRef<"h1">) {
   return (
@@ -20,7 +21,9 @@ export function StatPageTitle({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </h1>
   )
 }
 
@@ -55,6 +58,7 @@ export function StatHeroMetaText({
 
 export function StatGroupTitle({
   className,
+  children,
   ...props
 }: ComponentPropsWithoutRef<"h2">) {
   return (
@@ -64,7 +68,9 @@ export function StatGroupTitle({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   )
 }
 
@@ -124,6 +130,7 @@ export function StatModuleLead({
 
 export function StatDisplayHeading({
   className,
+  children,
   ...props
 }: ComponentPropsWithoutRef<"h2">) {
   return (
@@ -133,7 +140,9 @@ export function StatDisplayHeading({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   )
 }
 
@@ -353,6 +362,7 @@ export function StatInsightBody({
 
 export function StatCardTitle({
   className,
+  children,
   ...props
 }: ComponentPropsWithoutRef<"h4">) {
   return (
@@ -362,6 +372,8 @@ export function StatCardTitle({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </h4>
   )
 }

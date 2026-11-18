@@ -527,7 +527,7 @@ function TramlessScores({ districts }: { districts: DistrictScore[] }) {
   return (
     <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-slate-600 dark:text-slate-400">
       {[...districts]
-        .sort((a, b) => b.score - a.score)
+        .toSorted((a, b) => b.score - a.score)
         .map((d) => (
           <span key={d.name}>
             {d.name}:{" "}
@@ -666,7 +666,7 @@ function HzTrainBody({
 }
 
 function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
-  const sorted = [...withTrains].sort((a, b) => b.score - a.score)
+  const sorted = withTrains.toSorted((a, b) => b.score - a.score)
   const maxScore = sorted.length > 0 ? sorted[0].score : 1
   return (
     <div className="space-y-3">

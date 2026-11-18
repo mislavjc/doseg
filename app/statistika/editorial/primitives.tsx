@@ -31,9 +31,12 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 }
 
 const COLUMN = {
-  article: "max-w-[620px]", // prose + 1-D bar charts (pristup, jutro, sesvete)
-  wide: "max-w-[840px]", // side-by-side map sections (povezanost, matrica) + footer
-  full: "max-w-none", // section manages its own width (maps, etc.)
+  // prose + 1-D bar charts (pristup, jutro, sesvete)
+  article: "max-w-[620px]",
+  // side-by-side map sections (povezanost, matrica) + footer
+  wide: "max-w-[840px]",
+  // section manages its own width (maps, etc.)
+  full: "max-w-none",
 } as const
 
 /**

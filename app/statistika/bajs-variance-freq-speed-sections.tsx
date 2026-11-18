@@ -207,9 +207,9 @@ function BajsTotalImpactCard({
         </div>
         <div className="flex flex-col">
           <div className="font-sans text-[36px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
-            {bajs.topBajsBeneficiary
-              ? `+${bajs.topBajsBeneficiary.bajsBoostPct}%`
-              : "-"}
+            {bajs.topBajsBeneficiary === undefined
+              ? "-"
+              : `+${bajs.topBajsBeneficiary.bajsBoostPct}%`}
           </div>
           <div className="mt-2 text-[15px] text-slate-500 dark:text-slate-400">
             max. dobitak
@@ -333,7 +333,7 @@ function BajsDensityCard({
           bar: "bg-amber-500",
         }}
       />
-      {bajs.topDensity && lastDistrict && (
+      {bajs.topDensity !== undefined && lastDistrict && (
         <div className="mt-6 rounded-md bg-amber-50/50 px-4 py-3 dark:bg-amber-950/10">
           <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
             <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -478,7 +478,7 @@ function VarianceInterpretation({
   const mostUnequal = variance.varianceRanked[0]
   const mostEqual = variance.varianceRanked.at(-1)
 
-  if (!mostUnequal || !mostEqual) return null
+  if (mostUnequal === undefined || mostEqual === undefined) return null
 
   return (
     <div className="flex flex-col gap-6">
@@ -528,9 +528,9 @@ function VarianceStatCards({
   variance: VarianceInsightsData
 }) {
   const d = variance.varianceRanked[0]
-  const rangeVal = d
-    ? (d.maxReachableCells ?? 0) - (d.minReachableCells ?? 0)
-    : 0
+  const rangeVal = d === undefined
+    ? 0
+    : (d.maxReachableCells ?? 0) - (d.minReachableCells ?? 0)
   return (
     <div className="mb-4 grid grid-cols-1 gap-8 sm:grid-cols-2">
       <div className="flex flex-col">
@@ -544,7 +544,7 @@ function VarianceStatCards({
       </div>
       <div className="flex flex-col">
         <div className="font-sans text-[36px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
-          {d ? rangeVal.toLocaleString("hr-HR") : "-"}
+          {d === undefined ? "-" : rangeVal.toLocaleString("hr-HR")}
         </div>
         <div className="mt-2 text-[15px] text-slate-500 dark:text-slate-400">
           max raspon ćelija

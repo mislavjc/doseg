@@ -35,7 +35,7 @@ export function SectionHeader({
     <header className={cn("pb-8", className)}>
       <Eyebrow className={accent ? "text-zg-blue" : undefined}>{eyebrow}</Eyebrow>
       <Hook className="mt-4">{hook}</Hook>
-      {children && (
+      {Boolean(children) && (
         <Body className="mt-3 max-w-[520px] text-ink-muted">{children}</Body>
       )}
     </header>
@@ -90,6 +90,7 @@ export function Breadcrumb({
   return (
     <p className="font-mono text-label text-ink-faint">
       {trail.map((seg, i) => (
+        // oxlint-disable-next-line react/no-array-index-key -- labels can repeat within a trail and the trail is static, so position is the identity
         <span key={`${seg.label}-${i}`}>
           {i > 0 && " / "}
           {seg.href ? (

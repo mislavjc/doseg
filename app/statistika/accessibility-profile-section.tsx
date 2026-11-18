@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { readDataJson } from "./stat-data"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
 import { scaleLinear } from "@visx/scale"
@@ -14,12 +14,7 @@ import type {
 
 function loadAccessibilityProfile(): AccessibilityProfileOutput | null {
   const profilePath = join(getDataDir(), "accessibility-profile.json")
-  if (!existsSync(profilePath)) return null
-  try {
-    return JSON.parse(readFileSync(profilePath, "utf-8"))
-  } catch {
-    return null
-  }
+  return readDataJson<AccessibilityProfileOutput>(profilePath)
 }
 
 const DISTRICT_COLORS: Record<string, string> = {
@@ -75,9 +70,9 @@ function computeInsights(data: AccessibilityProfileOutput): ProfileInsights {
   const districts = data.districts
   const hours = districts[0]?.hours ?? []
 
-  const sorted = [...districts].sort((a, b) => b.peakCells - a.peakCells)
+  const sorted = districts.toSorted((a, b) => b.peakCells - a.peakCells)
   const top3 = sorted.slice(0, 3)
-  const bottom3 = sorted.slice(-3).reverse()
+  const bottom3 = sorted.slice(-3).toReversed()
 
   const cityAvgByHour = hours.map((_, hi) => {
     const sum = districts.reduce((s, d) => s + d.reachableCells[hi], 0)
@@ -98,7 +93,7 @@ function computeInsights(data: AccessibilityProfileOutput): ProfileInsights {
         10
       : 0
 
-  const dropSorted = [...districts].sort(
+  const dropSorted = districts.toSorted(
     (a, b) => b.serviceDropPct - a.serviceDropPct
   )
 
@@ -618,7 +613,7 @@ function ProfileTable({
   data: AccessibilityProfileOutput
   insights: ProfileInsights
 }) {
-  const sorted = [...data.districts].sort(
+  const sorted = data.districts.toSorted(
     (a, b) => b.serviceDropPct - a.serviceDropPct
   )
 

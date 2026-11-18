@@ -761,7 +761,7 @@ function WeekendPositiveText({
   cityWeekendChange: number
 }) {
   const worst = [...weekendComparison]
-    .sort((a, b) => a.change - b.change)
+    .toSorted((a, b) => a.change - b.change)
     .slice(0, 3)
   const hasNegative = worst.some((p) => p.change < 0)
   return (

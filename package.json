@@ -30,7 +30,7 @@
     "calligraph": "^1.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "gtfs-realtime-bindings": "^1.1.1",
+    "gtfs-realtime-bindings": "^3.0.0",
     "maplibre-gl": "~5.20.2",
     "motion": "^14.14.0",
     "next": "16.4.6",

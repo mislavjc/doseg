@@ -78,7 +78,7 @@ function poiParamFromLayers(poi: LayersState["poi"]): string | null {
   const on = Object.entries(poi)
     .filter(([, v]) => v)
     .map(([k]) => k)
-  return on.length ? on.join(",") : null
+  return on.length > 0 ? on.join(",") : null
 }
 
 

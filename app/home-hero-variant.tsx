@@ -44,7 +44,7 @@ export function HomeHeroVariant({
   const viewH = crop.height / 2
   const project = projector(crop, viewW, viewH)
   const pts = hero.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length
+  const path = pts.length > 0
     ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
     : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)

@@ -77,7 +77,7 @@ interface ComputeTravelTimesOptions {
 }
 
 let cachedGraph: TransitGraph | null = null
-let cachedGraphDate: string | undefined = undefined
+let cachedGraphDate: string | undefined
 let graphPromise: Promise<TransitGraph> | null = null
 
 /**
@@ -450,7 +450,7 @@ export function computeTransitLegDuration(
 
   return {
     durationSeconds: Math.round(durationSeconds),
-    ...(delaySeconds !== undefined ? { delaySeconds } : {}),
+    ...(delaySeconds === undefined ? {} : { delaySeconds }),
   }
 }
 

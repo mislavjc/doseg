@@ -60,7 +60,7 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
       // announcement). Title uses the body-grounded displayTitle (honest about partial /
       // re-established changes), falling back to the terse autoHeadline.
       const maps = mapsFor(c.id)
-      const lines = maps.length ? maps.map((m) => m.line) : c.lines
+      const lines = maps.length > 0 ? maps.map((m) => m.line) : c.lines
       return {
         kind: "featured", id: c.id, date: c.date!, approxDate: approx(c), category: c.category,
         mode: lines.length === 1 ? (isTram(lines[0]) ? "Tramvaj" : "Autobus") : "Linije",

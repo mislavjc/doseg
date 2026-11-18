@@ -27,7 +27,7 @@ export const lenM = (line: LonLat[]) => { let s = 0; for (let i = 1; i < line.le
 export function dp(points: LonLat[], tol: number): LonLat[] {
   if (points.length <= 2) return points
   let maxD = 0, maxI = 0
-  const a = points[0], b = points[points.length - 1]
+  const a = points[0], b = points.at(-1)
   for (let i = 1; i < points.length - 1; i++) { const d = ptSegM(points[i], a, b); if (d > maxD) { maxD = d; maxI = i } }
   return maxD > tol ? [...dp(points.slice(0, maxI + 1), tol).slice(0, -1), ...dp(points.slice(maxI), tol)] : [a, b]
 }

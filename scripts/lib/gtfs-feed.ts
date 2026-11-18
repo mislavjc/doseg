@@ -75,7 +75,7 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
 
   const wantShapes = new Set([...rep.values()].map((v) => v.shape).filter(Boolean))
   const shapePts = new Map<string, [number, number, number][]>()
-  if (wantShapes.size) await streamCsv(join(dir, "shapes.txt"), (c, col) => {
+  if (wantShapes.size > 0) await streamCsv(join(dir, "shapes.txt"), (c, col) => {
     const s = c[col("shape_id")]
     if (!wantShapes.has(s)) return
     shapePts.set(s, [...(shapePts.get(s) ?? []), [Number(c[col("shape_pt_sequence")]), Number(c[col("shape_pt_lon")]), Number(c[col("shape_pt_lat")])]])
@@ -167,12 +167,12 @@ export function genDiff(line: string, o: Line, n: Line): Result | null {
 export function genOneSided(line: string, mode: "new" | "removed", L: Line): Result | null {
   const d = L.dirs[0] ?? L.dirs[1]
   if (!d?.stops.length) return null
-  const drawn = d.shape.length ? simplify(d.shape) : stopLine(d)
+  const drawn = d.shape.length > 0 ? simplify(d.shape) : stopLine(d)
   const stops = d.stops.map((s) => snapStop(s, drawn))
   const origin = stops[0], terminus = snapStop(relabel(d.stops.at(-1)!, d.headsign), drawn)
   return {
     geom: {
-      line, mode, stopConnected: !d.shape.length, shared: origin, newTip: terminus, oldTip: terminus,
+      line, mode, stopConnected: d.shape.length === 0, shared: origin, newTip: terminus, oldTip: terminus,
       old: { shape: mode === "removed" ? drawn : [] }, new: { shape: mode === "new" ? drawn : [] },
       newStops: mode === "new" ? stops : [], addedStops: [], removedStops: mode === "removed" ? stops : [],
     },

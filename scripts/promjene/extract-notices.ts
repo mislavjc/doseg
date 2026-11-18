@@ -59,8 +59,8 @@ async function main() {
   if (existsSync(SEED)) for (const [k, v] of Object.entries(JSON.parse(readFileSync(SEED, "utf8")))) bodies[k] ??= v as string
 
   const targets = cands.filter((c) =>
-    only.size ? only.has(c.id)
-      : sweep ? (!c.classifiedBy && /web\.archive\.org/.test(c.url))
+    only.size > 0 ? only.has(c.id)
+      : sweep ? (!c.classifiedBy && c.url.includes('web.archive.org'))
         : c.listWorthy)
   console.error(`classifying ${targets.length} notices with ${MODEL}…`)
   let done = 0, noBody = 0, perm = 0, temp = 0, flagged = 0
@@ -76,7 +76,7 @@ async function main() {
     const lineNums = n.lines.map((l) => l.number)
     c.permanence = n.permanence
     c.category = n.category
-    c.lines = n.category === "stajalište" ? lineNums : (changed.length ? changed : lineNums)
+    c.lines = n.category === "stajalište" ? lineNums : (changed.length > 0 ? changed : lineNums)
     c.displayTitle = displayTitleFor(n, c.lines)
     c.classifiedBy = MODEL
     c.extracted = n
@@ -86,7 +86,7 @@ async function main() {
     c.review = conflict
     c.listWorthy = n.permanence === "permanent" && LIST_CATS.has(n.category) && (n.category === "stajalište" || c.lines.length <= 7) && !conflict
 
-    if (n.permanence === "permanent") perm++; else { temp++; if (!only.size && !sweep) drops.push(`${c.id} ${c.category} "${(c.displayTitle ?? c.title).slice(0, 48)}"`) }
+    if (n.permanence === "permanent") perm++; else { temp++; if (only.size === 0 && !sweep) drops.push(`${c.id} ${c.category} "${(c.displayTitle ?? c.title).slice(0, 48)}"`) }
     if (conflict) { flagged++; reviews.push(`${c.id} ${c.category} "${n.cleanTitle.slice(0, 56)}"`) }
     if (++done % 20 === 0) console.error(`  …${done}/${targets.length}`)
   })
@@ -100,11 +100,11 @@ async function main() {
   const stop = lw.filter((c) => c.category === "stajalište").length
   console.error(`\nclassified ${done} · ${perm} permanent / ${temp} temporary · ${noBody} no-body(held) · ${flagged} review-flagged`)
   console.error(`listWorthy now ${lw.length} (line ${lw.length - stop}, stop ${stop})`)
-  if (reviews.length) { console.error(`\nREVIEW (model=permanent but has a bounded end-marker — verify by hand):`); for (const r of reviews) console.error(`  ${r}`) }
+  if (reviews.length > 0) { console.error(`\nREVIEW (model=permanent but has a bounded end-marker — verify by hand):`); for (const r of reviews) console.error(`  ${r}`) }
   if (sweep) {
     const surfaced = targets.filter((c) => c.listWorthy)
     console.error(`\nSURFACED ${surfaced.length} false-negatives (slug excluded them, but they're permanent network changes — AUDIT):`)
     for (const c of surfaced.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))) console.error(`  ${c.id}  ${c.date}  ${c.category.padEnd(11)} "${c.displayTitle}"`)
-  } else if (drops.length) { console.error(`\nDROPPED as temporary (${drops.length}):`); for (const d of drops.slice(0, 60)) console.error(`  ${d}`) }
+  } else if (drops.length > 0) { console.error(`\nDROPPED as temporary (${drops.length}):`); for (const d of drops.slice(0, 60)) console.error(`  ${d}`) }
 }
 main()

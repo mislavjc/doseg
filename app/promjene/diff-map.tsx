@@ -54,11 +54,11 @@ function endpointMarker(map: maplibregl.Map, p: Pt, kind: "shared" | "new" | "ol
     const ic = document.createElement("span")
     ic.style.cssText = `display:flex;flex:0 0 auto;color:${fg}`
     ic.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="${path}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    pill.appendChild(ic)
+    pill.append(ic)
   }
   const t = document.createElement("span")
   t.textContent = expandStop(p.name)
-  pill.appendChild(t)
+  pill.append(t)
   new maplibregl.Marker({ element: pill, anchor: onRight ? "right" : "left", offset: onRight ? [-12, 0] : [12, 0] }).setLngLat([p.lon, p.lat]).addTo(map)
 }
 
@@ -118,7 +118,7 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       const newWidth = stopConnected ? Z(2.6, 4, 5) : Z(3.5, 6, 7.5)
       map.addLayer({ id: "new-casing", type: "line", source: "new", paint: { "line-color": "#fff", "line-width": newCasing, "line-blur": 0.4 }, layout: round })
       const newPaint: maplibregl.LineLayerSpecification["paint"] = { "line-color": BLUE, "line-width": newWidth }
-      if (stopConnected) newPaint!["line-dasharray"] = [1.8, 1.3]
+      if (stopConnected) newPaint["line-dasharray"] = [1.8, 1.3]
       map.addLayer({ id: "new-line", type: "line", source: "new", paint: newPaint, layout: round })
       // every station: white halo under each, then the ringed dot.
       // kept = hollow gray · removed = hollow slate · added = solid blue (on top)

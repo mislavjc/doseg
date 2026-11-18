@@ -333,8 +333,8 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
       // treat them as a bare map click that would silently start a route.
       const dotLayers = DOT_LAYERS.filter((l) => map.getLayer(l))
       if (
-        dotLayers.length &&
-        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length
+        dotLayers.length > 0 &&
+        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length > 0
       )
         return
       onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
@@ -488,7 +488,7 @@ function dotPopupEl(
     img.alt = info.name ?? ""
     img.loading = "lazy"
     img.className = "block h-[120px] w-full bg-surface object-cover"
-    root.appendChild(img)
+    root.append(img)
   }
 
   const body = document.createElement("div")
@@ -496,12 +496,12 @@ function dotPopupEl(
   const title = document.createElement("span")
   title.className = "font-heros text-[16px] leading-5 text-ink"
   title.textContent = info.name ?? fallbackTitle
-  body.appendChild(title)
+  body.append(title)
   if (info.sub) {
     const sub = document.createElement("span")
     sub.className = "mt-0.5 font-mono text-label text-ink-faint"
     sub.textContent = info.sub
-    body.appendChild(sub)
+    body.append(sub)
   }
   if (opts.action) {
     const btn = document.createElement("button")
@@ -510,7 +510,7 @@ function dotPopupEl(
       "mt-2.5 border border-hairline-strong px-3 py-2 text-left font-mono text-label text-zg-blue transition-colors duration-150 hover:bg-row-tint"
     btn.textContent = opts.action.label
     btn.addEventListener("click", opts.action.onClick)
-    body.appendChild(btn)
+    body.append(btn)
   }
   if (photo && photo.credit) {
     const credit = document.createElement("a")
@@ -521,10 +521,10 @@ function dotPopupEl(
     credit.className =
       "mt-2 block max-w-full truncate font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink-muted"
     credit.textContent = `© ${photo.credit}`
-    body.appendChild(credit)
+    body.append(credit)
   }
 
-  root.appendChild(body)
+  root.append(body)
   return root
 }
 

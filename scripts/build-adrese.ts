@@ -57,7 +57,7 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).sort
   for (const f of page.features) {
     total++
     const p = f.properties
-    const hn = p.kucni_broj?.toLowerCase().replace(/\s+/g, "")
+    const hn = p.kucni_broj?.toLowerCase().replaceAll(/\s+/g, "")
     // Rural naselja address by settlement name alone — use it as the street.
     const name = p.ulica ?? p.naselje
     const coords = f.geometry?.coordinates

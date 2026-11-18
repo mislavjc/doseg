@@ -149,7 +149,7 @@ export function serviceStatus(data: LinePageData): ServiceStatus {
 /** First/last departure (minutes-of-day) across the given day rows, or null. */
 function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
   const mins = rows.flatMap(flatDepartures)
-  return mins.length ? [Math.min(...mins), Math.max(...mins)] : null
+  return mins.length > 0 ? [Math.min(...mins), Math.max(...mins)] : null
 }
 
 /**
@@ -193,9 +193,9 @@ export function vozniRedNote(data: LinePageData): string {
       none: "",
     }[weekendKind(data)]
   }
-  return weekendKind(data) !== "none"
-    ? " Polasci za radni dan, subotu i nedjelju."
-    : " Vozi samo radnim danom."
+  return weekendKind(data) === "none"
+    ? " Vozi samo radnim danom."
+    : " Polasci za radni dan, subotu i nedjelju."
 }
 
 /** Which day types actually have service. Internal — only weekendKind reads it. */

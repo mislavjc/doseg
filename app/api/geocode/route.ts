@@ -57,7 +57,7 @@ function titleKey(name: string): string {
     .trim()
     .toLowerCase()
     .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
+    .replaceAll(/\p{Diacritic}/gu, "")
 }
 
 function dedup(results: Result[]): Result[] {
@@ -165,7 +165,7 @@ type NominatimResult = {
 }
 
 function toWildcardPattern(q: string): string {
-  return q.replace(/'/g, "''").replace(/[cszdCSZD]/g, "_")
+  return q.replaceAll('\'', "''").replaceAll(/[cszdCSZD]/g, "_")
 }
 
 function parseQuery(q: string): { street: string; house?: string } {
@@ -175,8 +175,8 @@ function parseQuery(q: string): { street: string; house?: string } {
 
 async function searchDGU(q: string): Promise<Result[]> {
   const { street: rawStreet, house } = parseQuery(q)
-  const street = rawStreet.replace(/[%_]/g, " ")
-  const escaped = street.replace(/'/g, "''")
+  const street = rawStreet.replaceAll(/[%_]/g, " ")
+  const escaped = street.replaceAll('\'', "''")
   const wildcard = toWildcardPattern(street)
   // Try exact match first; fall back to diacritics-wildcard only if different
   const exactCql = buildDGUCql(escaped, house)

@@ -48,7 +48,7 @@ function peekSnap(): string {
   const probe = document.createElement("div")
   probe.style.cssText =
     "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
-  document.body.appendChild(probe)
+  document.body.append(probe)
   const inset = parseFloat(getComputedStyle(probe).paddingBottom) || 0
   probe.remove()
   return `${ANSWER_BAR_PX + inset}px`

@@ -228,7 +228,7 @@ export function Ritam({ rides }: { rides: BajsRides }) {
 
 export function Dani({ rides }: { rides: BajsRides }) {
   const { fullDays, avgPerDay, busiestDay, partialDay } = rides
-  if (!fullDays.length || !avgPerDay || !busiestDay) return null
+  if (fullDays.length === 0 || !avgPerDay || !busiestDay) return null
 
   const max = Math.max(...fullDays.map((d) => d.starts))
   const totalBulk = fullDays.reduce(

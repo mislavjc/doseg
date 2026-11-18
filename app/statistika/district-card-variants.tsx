@@ -913,7 +913,7 @@ function DenseBoostBars({ d, totalGridCells }: { d: DistrictScore; totalGridCell
 
   return (
     <>
-      {(d.trainBoostPct ?? 0) > 0 && renderBoost("S HŽ Vlakovima", d.trainBoostPct!, d.trainAvgReachableCells ?? d.avgReachableCells, "text-teal-600 dark:text-teal-400", "bg-teal-100 dark:bg-teal-900/30", "bg-teal-500 dark:bg-teal-400")}
+      {(d.trainBoostPct ?? 0) > 0 && renderBoost("S HŽ Vlakovima", d.trainBoostPct, d.trainAvgReachableCells ?? d.avgReachableCells, "text-teal-600 dark:text-teal-400", "bg-teal-100 dark:bg-teal-900/30", "bg-teal-500 dark:bg-teal-400")}
       {(d.bajsBoostPct ?? 0) > 0 && renderBoost("S BAJS Biciklima", d.bajsBoostPct, d.bajsAvgReachableCells ?? d.avgReachableCells, "text-amber-600 dark:text-amber-400", "bg-amber-100 dark:bg-amber-900/30", "bg-amber-500 dark:bg-amber-400")}
     </>
   )

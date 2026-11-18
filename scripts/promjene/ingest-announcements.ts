@@ -41,7 +41,7 @@ function permanence(t: string): "permanent" | "temporary" | "review" {
 }
 
 const slugOf = (url: string) => { const m = url.match(/izmjene-u-prometu\/([a-z0-9-]+)\/\d+/i); return m ? m[1] : "" }
-const titleFromSlug = (slug: string) => slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+const titleFromSlug = (slug: string) => slug.replaceAll('-', " ").replaceAll(/\b\w/g, (c) => c.toUpperCase())
 
 interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; illustratable: boolean }
 
@@ -55,7 +55,7 @@ async function fromLiveListing(): Promise<Map<string, { title: string; url: stri
     const links = [...html.matchAll(/<a[^>]+href="(\/aktualnosti\/izmjene-u-prometu\/[a-z0-9-]+\/\d+)"[^>]*>([^<]+)<\/a>/gi)]
     const fresh = links.filter(([, href]) => !out.has(idOf(href)))
     for (const [, href, title] of links) { const id = idOf(href); if (id) out.set(id, { title: strip(title), url: `https://www.zet.hr${href}` }) }
-    if (!fresh.length) break // no new articles → past the last page
+    if (fresh.length === 0) break // no new articles → past the last page
   }
   console.error(`  live listing: ${out.size} articles`)
   return out
@@ -111,7 +111,7 @@ async function main() {
     const title = r?.title || l?.title || (slug ? titleFromSlug(slug) : "")
     const date = r?.date ?? (w ? tsDate(w.ts) : null)
     // space-normalized so slug ("u-ponedjeljak") and title ("U Ponedjeljak") match the same patterns
-    const basis = `${title} ${slug} ${r?.body ?? ""}`.toLowerCase().replace(/[-_]+/g, " ").replace(/\s+/g, " ")
+    const basis = `${title} ${slug} ${r?.body ?? ""}`.toLowerCase().replaceAll(/[-_]+/g, " ").replaceAll(/\s+/g, " ")
     const category = classify(basis)
     const perm = permanence(basis)
     cands.push({

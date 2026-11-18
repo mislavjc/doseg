@@ -185,7 +185,7 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
       label: "linije na 5 min hoda",
     },
   ].filter((c) => !!c)
-  if (!cells.length) return null
+  if (cells.length === 0) return null
 
   const rows = []
   for (let i = 0; i < cells.length; i += 2) rows.push(cells.slice(i, i + 2))
@@ -286,7 +286,7 @@ async function BajsSection({
   karta: string
 }) {
   const stations = await nearestBajs(lon, lat)
-  if (!stations.length) return null
+  if (stations.length === 0) return null
   return (
     <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
       <Eyebrow>bajs</Eyebrow>

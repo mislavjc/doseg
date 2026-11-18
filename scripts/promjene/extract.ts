@@ -25,7 +25,7 @@ export function bodyFromHtml(html: string): string {
   const og = html.match(/og:description"\s+content="([^"]*)"/i)?.[1]?.trim() ?? ""
   const i = html.indexOf('class="news-text"')
   const start = i >= 0 ? html.indexOf(">", i) + 1 : 0 // skip the opening tag itself, not just the attribute
-  const body = i >= 0 ? html.slice(start, start + 4000).replace(/<img[\s\S]*$/i, "").replace(/<[^>]+>/g, " ").replace(/&nbsp;|&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim() : ""
+  const body = i >= 0 ? html.slice(start, start + 4000).replace(/<img[\s\S]*$/i, "").replaceAll(/<[^>]+>/g, " ").replaceAll(/&nbsp;|&[a-z]+;/gi, " ").replaceAll(/\s+/g, " ").trim() : ""
   return [og && `Sažetak: ${og}`, body && `Tekst: ${body}`].filter(Boolean).join("\n")
 }
 
@@ -66,7 +66,7 @@ export async function get(url: string, timeoutMs = 45000): Promise<string> {
 
 /** True when bodyFromHtml produced real article text, not an empty shell (older
  * notice URLs now 302 → homepage, which yields a sub-threshold body). */
-export const isRealBody = (b: string) => b.replace(/Sažetak:|Tekst:/g, "").trim().length > 40
+export const isRealBody = (b: string) => b.replaceAll(/Sažetak:|Tekst:/g, "").trim().length > 40
 
 /** Fetch + extract + validate one archived notice body, caching it into `bodies[id]`.
  * Returns the body, or null if unrecoverable after 3 attempts with backoff. */

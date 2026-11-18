@@ -89,7 +89,7 @@ export function deShout(name: string): string {
   if (name !== name.toUpperCase()) return name
   return name
     .toLowerCase()
-    .replace(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
+    .replaceAll(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
 }
 
 /** "1 presjedanje" / "2 presjedanja" / "bez presjedanja". */

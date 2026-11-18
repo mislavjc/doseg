@@ -61,7 +61,7 @@ function KvartHeroVariant({
   const viewH = crop.height / 2
   const project = kvartProjector(crop, viewW, viewH)
   const pts = data.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length
+  const path = pts.length > 0
     ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
     : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
@@ -289,7 +289,7 @@ export function IzvanSpice({ data }: { data: KvartData }) {
         ))}
         <MonoLabel className="mt-1 text-[12px]">
           interval: radnim danom ~{data.weekdayHeadwayMin} min
-          {data.weekendHeadwayMin != null ? `, vikendom ~${data.weekendHeadwayMin} min` : ""}
+          {data.weekendHeadwayMin == null ? "" : `, vikendom ~${data.weekendHeadwayMin} min`}
           {data.nightLines.length > 0
             ? ` · noćne linije ${data.nightLines.join(" · ")}`
             : " · nema noćnih linija"}
@@ -446,7 +446,7 @@ export function Blizina({ data }: { data: KvartData }) {
             title={POI_LABEL[c.key]}
             detail={
               c.nearestName
-                ? `najbliža/i ${c.nearestName}${c.nearestKm != null ? ` · ${c.nearestKm.toLocaleString("hr")} km` : ""}`
+                ? `najbliža/i ${c.nearestName}${c.nearestKm == null ? "" : ` · ${c.nearestKm.toLocaleString("hr")} km`}`
                 : null
             }
             value={c.count}
@@ -501,8 +501,8 @@ export function buildFaq(data: KvartData): FaqItem[] {
   // Only name the modes the kvart actually has — gluing an empty list left a
   // dangling "te autobusi —." (broken Croatian + a forbidden em-dash).
   const lineParts: string[] = []
-  if (tram.length) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
-  if (bus.length) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
+  if (tram.length > 0) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
+  if (bus.length > 0) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
   const joined = lineParts.join(" te ")
   const linesAnswer = joined
     ? `${joined.charAt(0).toUpperCase()}${joined.slice(1)}.`

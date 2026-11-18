@@ -97,7 +97,7 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
 
   const mean = (hours: number[]) => {
     const seen = hours.map((h) => data.observedDays[h] ?? 0).filter((d) => d > 0)
-    return seen.length ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
+    return seen.length > 0 ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
   }
   const morningDays = mean(MORNING)
   const afternoonDays = mean(AFTERNOON)

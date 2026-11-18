@@ -110,7 +110,7 @@ export const STATIONS: Record<string, TramStation> = Object.fromEntries(
 )
 
 function ids(...list: (keyof typeof STATIONS)[]): string[] {
-  return list as string[]
+  return list
 }
 
 // ---- Line definitions (simplified to key stations) --------------------------

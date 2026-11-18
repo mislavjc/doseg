@@ -80,20 +80,20 @@ export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
   const last = data.days.at(-1)
   const partialDay = last && last.minutes < FULL_DAY_MINUTES ? last : null
 
-  const avgPerDay = complete.length
+  const avgPerDay = complete.length > 0
     ? complete.reduce((sum, d) => sum + d.starts, 0) / complete.length
     : null
 
-  const busiestDay = complete.length
+  const busiestDay = complete.length > 0
     ? complete.reduce((best, d) => (d.starts > best.starts ? d : best))
     : null
 
   const hourly = data.hourly
-  const peakHour = hourly.length
+  const peakHour = hourly.length > 0
     ? hourly.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
     : null
   const morning = hourly.filter((h) => h.hour < 12)
-  const morningPeak = morning.length
+  const morningPeak = morning.length > 0
     ? morning.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
     : null
 

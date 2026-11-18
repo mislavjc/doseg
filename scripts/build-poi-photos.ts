@@ -90,9 +90,9 @@ async function fetchP18(qids: string[]): Promise<Map<string, string>> {
  * author") — collapse an exact full-string duplication. */
 function plain(html: string): string {
   const s = html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&[^;]+;/g, " ")
-    .replace(/\s+/g, " ")
+    .replaceAll(/<[^>]*>/g, "")
+    .replaceAll(/&[^;]+;/g, " ")
+    .replaceAll(/\s+/g, " ")
     .trim()
   if (s.length % 2 === 0) {
     const half = s.slice(0, s.length / 2)
@@ -159,7 +159,7 @@ async function main() {
   for (const [osmId, qid] of osmToQid) {
     const file = qidToFile.get(qid)
     if (!file) continue
-    const encoded = encodeURIComponent(file.replace(/ /g, "_"))
+    const encoded = encodeURIComponent(file.replaceAll(' ', "_"))
     map[String(osmId)] = {
       thumb: `https://commons.wikimedia.org/wiki/Special:FilePath/${encoded}?width=${THUMB_WIDTH}`,
       page: `https://commons.wikimedia.org/wiki/File:${encoded}`,

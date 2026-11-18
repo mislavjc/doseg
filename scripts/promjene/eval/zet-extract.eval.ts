@@ -23,7 +23,7 @@ const MODELS = ["google/gemini-3.1-flash-lite", "google/gemini-3-flash", "alibab
 const JUDGE = "anthropic/claude-opus-4.8"
 
 type In = { id: string; body: string; published?: string }
-const fold = (s: string) => s.toLowerCase().replace(/\s/g, "")
+const fold = (s: string) => s.toLowerCase().replaceAll(/\s/g, "")
 
 const permanence = createScorer<In, Notice, Notice>({ name: "permanence", description: "keep/drop decision matches gold", scorer: ({ output, expected }) => (output.permanence === expected.permanence ? 1 : 0) })
 const category = createScorer<In, Notice, Notice>({ name: "category", scorer: ({ output, expected }) => (output.category === expected.category ? 1 : 0) })
@@ -33,7 +33,7 @@ const roleF1 = createScorer<In, Notice, Notice>({
   scorer: ({ output, expected }) => {
     const A = new Set(output.lines.map((x) => fold(x.number) + ":" + x.role)), B = new Set(expected.lines.map((x) => fold(x.number) + ":" + x.role))
     let tp = 0; for (const x of A) if (B.has(x)) tp++
-    const p = A.size ? tp / A.size : 1, r = B.size ? tp / B.size : 1
+    const p = A.size > 0 ? tp / A.size : 1, r = B.size > 0 ? tp / B.size : 1
     return p + r ? (2 * p * r) / (p + r) : 1
   },
 })

@@ -94,7 +94,7 @@ export function distMeters(
 }
 
 function appendCoord(coords: [number, number][], lon: number, lat: number) {
-  const last = coords[coords.length - 1]
+  const last = coords.at(-1)
   if (last && last[0] === lon && last[1] === lat) return
   coords.push([lon, lat])
 }
@@ -205,7 +205,7 @@ function tracePathChain(
     current = prev[current]
   }
 
-  if (chain[chain.length - 1] !== startNode) return null
+  if (chain.at(-1) !== startNode) return null
 
   chain.reverse()
   return chain.map((nodeIdx) => {

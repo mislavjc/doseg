@@ -67,7 +67,7 @@ export function Jutro({ rows }: { rows: EveningRow[] }) {
   // trećinu" and survived a feed roll that inverted the story, contradicting the
   // chart right below it.
   const worst = rows.slice(0, 3)
-  const least = rows[rows.length - 1]
+  const least = rows.at(-1)
   return (
     <Section id="jutro">
       <div className="flex flex-col gap-6">

@@ -83,10 +83,10 @@ export async function GET(request: Request) {
   // Trailing house number ("savska 25", "ilica 5a") splits off; a digits-only
   // query is a line lookup, not an address — the client never sends one.
   const tokens = q.split(/\s+/)
-  const last = tokens[tokens.length - 1]
+  const last = tokens.at(-1)
   const houseNum = /^\d+[a-z]?$/.test(last ?? "") ? last : null
   const streetTokens = houseNum ? tokens.slice(0, -1) : tokens
-  if (!streetTokens.length)
+  if (streetTokens.length === 0)
     return NextResponse.json({ hits: [] as AdresaHit[] })
 
   const joined = streetTokens.join(" ")
@@ -133,7 +133,7 @@ export async function GET(request: Request) {
   // The number doesn't exist on any matched street ("tratinska 40" — Tratinska
   // has no 40): dead air is worse than the street itself, so fall back to
   // ulica rows for the top matches.
-  if (!hits.length && houseNum) {
+  if (hits.length === 0 && houseNum) {
     for (const street of matched.slice(0, MAX_HITS)) hits.push(streetHit(street))
   }
 

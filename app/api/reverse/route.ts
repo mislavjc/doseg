@@ -36,8 +36,8 @@ function photonLabel(p: PhotonFeature["properties"]): string {
 export async function GET(req: NextRequest) {
   const latStr = req.nextUrl.searchParams.get("lat")
   const lonStr = req.nextUrl.searchParams.get("lon")
-  const lat = latStr != null ? Number(latStr) : NaN
-  const lon = lonStr != null ? Number(lonStr) : NaN
+  const lat = latStr == null ? NaN : Number(latStr)
+  const lon = lonStr == null ? NaN : Number(lonStr)
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     return NextResponse.json({ error: "invalid lat/lon" }, { status: 400 })
   }

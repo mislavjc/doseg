@@ -188,9 +188,9 @@ function SpeedTable({ routes }: { routes: SpeedRouteComparison[] }) {
 
 function SpeedRow({ r }: { r: SpeedRouteComparison }) {
   const barPct =
-    r.speedRatio !== null
-      ? Math.min(r.speedRatio * 100, MAX_RATIO_SCALE * 100)
-      : 0
+    r.speedRatio === null
+      ? 0
+      : Math.min(r.speedRatio * 100, MAX_RATIO_SCALE * 100)
 
   return (
     <div className="flex items-center gap-3 border-b border-slate-100 py-2 dark:border-white/5">
@@ -214,14 +214,14 @@ function SpeedRow({ r }: { r: SpeedRouteComparison }) {
         />
       </div>
       <span className="w-24 text-right font-mono text-[13px] text-slate-600 tabular-nums dark:text-slate-400">
-        {r.actualSpeedKmh !== null
-          ? `${r.actualSpeedKmh.toFixed(1)} / ${r.scheduledSpeedKmh.toFixed(1)}`
-          : `— / ${r.scheduledSpeedKmh.toFixed(1)}`}
+        {r.actualSpeedKmh === null
+          ? `— / ${r.scheduledSpeedKmh.toFixed(1)}`
+          : `${r.actualSpeedKmh.toFixed(1)} / ${r.scheduledSpeedKmh.toFixed(1)}`}
       </span>
       <span
         className={`w-12 text-right font-mono text-[13px] font-medium tabular-nums ${ratioColor(r.speedRatio)}`}
       >
-        {r.speedRatio !== null ? `${Math.round(r.speedRatio * 100)}%` : "—"}
+        {r.speedRatio === null ? "—" : `${Math.round(r.speedRatio * 100)}%`}
       </span>
     </div>
   )

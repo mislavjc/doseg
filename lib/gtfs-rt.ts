@@ -110,7 +110,7 @@ function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
     speed: vp.position.speed ?? null,
     status: VehicleStopStatusName[statusNum] ?? "IN_TRANSIT_TO",
     occupancyStatus:
-      occNum != null ? (OccupancyStatusName[occNum] ?? null) : null,
+      occNum == null ? null : (OccupancyStatusName[occNum] ?? null),
   })
 }
 

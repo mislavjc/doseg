@@ -69,7 +69,7 @@ function Row({
  */
 function Summary({ kvartovi }: { kvartovi: KvartRides[] }) {
   const topThree = kvartovi.slice(0, 3).reduce((n, k) => n + k.share, 0)
-  const quietest = kvartovi[kvartovi.length - 1]
+  const quietest = kvartovi.at(-1)
   const rows: [string, string][] = [
     ["kvartova sa stanicom", `${kvartovi.length} / 17`],
     ["u tri najveća", `${Math.round(topThree * 100)}%`],

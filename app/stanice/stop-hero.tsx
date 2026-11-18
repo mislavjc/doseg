@@ -113,7 +113,7 @@ function StopHeroVariant({
         {lines.map((l) => (
           <path
             key={`c-${l.broj}`}
-            d={path(l.shape as [number, number][], project)}
+            d={path(l.shape, project)}
             fill="none"
             stroke="#fff"
             strokeWidth={9}
@@ -124,7 +124,7 @@ function StopHeroVariant({
         {lines.map((l) => (
           <path
             key={`l-${l.broj}`}
-            d={path(l.shape as [number, number][], project)}
+            d={path(l.shape, project)}
             fill="none"
             stroke="var(--zg-blue)"
             strokeWidth={4.5}

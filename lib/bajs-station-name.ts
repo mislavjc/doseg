@@ -119,7 +119,7 @@ function caseWord(word: string, first: boolean) {
 }
 
 export function formatStationName(raw: string): string {
-  const trimmed = raw.trim().replace(/\s+/g, " ")
+  const trimmed = raw.trim().replaceAll(/\s+/g, " ")
   if (!trimmed) return trimmed
   // Anything that is not already caps is left alone: the feed occasionally
   // carries a properly-cased name and re-casing it would only lose detail.

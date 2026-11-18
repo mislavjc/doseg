@@ -71,7 +71,7 @@ function densify(pts: [number, number][], step = 8): [number, number][] {
       out.push([ax + ((bx - ax) * k) / n, ay + ((by - ay) * k) / n])
     }
   }
-  if (pts.length) out.push(pts[pts.length - 1])
+  if (pts.length > 0) out.push(pts[pts.length - 1])
   return out
 }
 
@@ -200,7 +200,7 @@ export function buildOverlay(
   const stopPts = dir0.stops.map((s) => project(s.lon, s.lat))
   const first = stopPts[0]
   const last = stopPts[stopPts.length - 1]
-  if (!shapePts.length || !first || !last) return null
+  if (shapePts.length === 0 || !first || !last) return null
   const path = `M ${shapePts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
 
   // Thin crowded stop dots: on dense or zoomed-out routes adjacent dots melt

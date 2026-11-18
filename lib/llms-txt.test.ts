@@ -67,7 +67,7 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
   it("makes every link absolute on the canonical origin", () => {
     const urls = [...txt.matchAll(/\]\(([^)]+)\)/g)].map((m) => m[1])
     expect(urls.length).toBeGreaterThan(5)
-    for (const url of urls) expect(url.startsWith(`${ORIGIN}`)).toBe(true)
+    for (const url of urls) expect(url.startsWith(ORIGIN)).toBe(true)
   })
 })
 

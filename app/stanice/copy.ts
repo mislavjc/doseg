@@ -15,7 +15,7 @@ import { numberWordF, plural } from "../linije/copy"
 /** "3, 9, 12 i 17" — comma list with Croatian "i" before the last item. */
 function joinHr(items: string[]): string {
   if (items.length <= 1) return items.join("")
-  return `${items.slice(0, -1).join(", ")} i ${items[items.length - 1]}`
+  return `${items.slice(0, -1).join(", ")} i ${items.at(-1)}`
 }
 
 /** "tramvaji 3, 9, 12 i 17" / "tramvaj 3" — null when none of that mode. */

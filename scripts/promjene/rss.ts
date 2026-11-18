@@ -18,14 +18,14 @@ export function classify(t: string): string {
   if (/skrać|skrac/.test(s)) return "skraćena"
   if (/stajališt|stajalist/.test(s)) return "stajalište"
   if (/trasu|trase|preusmjer|mijenja tras|izmjena tras|izmijenjen/.test(s)) return "trasa"
-  if (/vozni red/.test(s)) return "vozni red"
+  if (s.includes('vozni red')) return "vozni red"
   return "ostalo"
 }
 
 /** Pull line numbers that follow a "linij…" token (so dates like "15. lipnja" or
  * the article id don't leak in). Handles "linijama 275, 277, 279, 282 i 284". */
 export function extractLines(text: string): string[] {
-  const norm = text.replace(/-/g, " ").toLowerCase()
+  const norm = text.replaceAll('-', " ").toLowerCase()
   const out = new Set<string>()
   for (const m of norm.matchAll(/linij\w*\s+([0-9][0-9\s,i]*)/g)) {
     for (const n of m[1].matchAll(/\d{1,3}[a-d]?/g)) out.add(n[0])
@@ -37,7 +37,7 @@ export function extractLines(text: string): string[] {
 // and "default.aspx?id=9564" (RSS).
 export const idOf = (url: string) => { const m = url.match(/[?&]id=(\d+)/) ?? url.match(/\/(\d+)\/?$/); return m ? m[1] : "" }
 
-export const strip = (s: string) => s.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ").trim()
+export const strip = (s: string) => s.replaceAll(/<[^>]+>/g, " ").replaceAll('&nbsp;', " ").replaceAll(/&[a-z]+;/g, " ").replaceAll(/\s+/g, " ").trim()
 export const tag = (block: string, t: string) => { const m = block.match(new RegExp(`<${t}>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${t}>`)); return m ? m[1].trim() : "" }
 const RSS_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 export function rssDate(d: string): string | null { const m = d.match(/(\d{1,2}) (\w{3}) (\d{4})/); if (!m) return null; const mo = RSS_MONTHS.indexOf(m[2]); return mo < 0 ? null : `${m[3]}-${String(mo + 1).padStart(2, "0")}-${m[1].padStart(2, "0")}` }

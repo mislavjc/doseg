@@ -410,7 +410,7 @@ function HealthRow({ route: r }: { route: RouteHealth }) {
       <td
         className={`py-2.5 pr-3 text-right font-mono tabular-nums ${r.headwayCv === null ? "text-slate-300 dark:text-slate-600" : r.headwayCv > 0.5 ? "text-red-600 dark:text-red-400" : r.headwayCv > 0.3 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}
       >
-        {r.headwayCv !== null ? r.headwayCv.toFixed(2) : "\u2014"}
+        {r.headwayCv === null ? "\u2014" : r.headwayCv.toFixed(2)}
       </td>
       <td className="py-2.5 text-right">
         <SeverityBar score={r.severityScore} />

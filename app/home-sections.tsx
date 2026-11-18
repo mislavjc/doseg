@@ -147,7 +147,7 @@ export function StatistikaTeaser() {
     ? [...scores.districts].sort((a, b) => a.rank - b.rank)
     : []
   const best = ranked[0]
-  const worst = ranked[ranked.length - 1]
+  const worst = ranked.at(-1)
   return (
     <Section width="article" className="pb-4 sm:pb-6">
       <Eyebrow>statistika · 17 kvartova</Eyebrow>

@@ -72,7 +72,7 @@ export function TerrainView({
     renderer.setClearColor(0xffffff, 0)
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    mount.appendChild(renderer.domElement)
+    mount.append(renderer.domElement)
     Object.assign(renderer.domElement.style, {
       width: "100%",
       height: "100%",

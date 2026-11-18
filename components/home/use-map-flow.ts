@@ -68,7 +68,7 @@ function useReachDerived(
   )
 
   const walkAreaFC = useMemo<GeoJSON.FeatureCollection | null>(() => {
-    if (!walkFeatures.length) return null
+    if (walkFeatures.length === 0) return null
     return {
       type: "FeatureCollection",
       features: walkFeatures.filter((f) => f.properties.time <= minutes * 60),

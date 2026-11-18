@@ -534,9 +534,9 @@ function FieldRows({
   return (
     <div
       className={
-        !resting
-          ? "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
-          : "border border-hairline-strong"
+        resting
+          ? "border border-hairline-strong"
+          : "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
       }
     >
       <SearchRow

@@ -349,7 +349,7 @@ function computeTransferData(travelMatrix: TravelMatrix) {
       if (i === j) continue
       const time = travelMatrix.matrix[i]?.[j] ?? -1
       if (time <= 0) continue
-      const transfers = travelMatrix.transferMatrix![i]?.[j] ?? 0
+      const transfers = travelMatrix.transferMatrix[i]?.[j] ?? 0
       totalPairs++
       totalTransfers += transfers
       if (transfers === 0) {

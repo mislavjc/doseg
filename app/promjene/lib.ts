@@ -61,7 +61,7 @@ export const joinLines = (ls: string[]) => (ls.length <= 1 ? ls[0] ?? "" : `${ls
 
 /** Expand the jarring GTFS abbreviation in endpoint labels ("Ivanja Reka-okret."
  * → "Ivanja Reka-okretište"). Only the unambiguous one. */
-export const expandStop = (s: string) => s.replace(/okret\./gi, "okretište").replace(/\bokr\./gi, "okretište")
+export const expandStop = (s: string) => s.replaceAll(/okret\./gi, "okretište").replaceAll(/\bokr\./gi, "okretište")
 
 /** entries.json uses plural kinds ("ukinute"); candidates use singular category
  * ("ukinuta"). Normalise to the candidate vocabulary for tally + styling. */
@@ -70,7 +70,7 @@ export const normCategory = (k: string): string => ({ ukinute: "ukinuta", produl
 /** Clean Croatian headline for an auto-featured / un-curated change (wayback slug
  * titles lack diacritics + casing, so generate from line numbers + category). */
 export function autoHeadline(lines: string[], category: string): string {
-  if (!lines.length) return category === "nova" ? "Nova linija." : category === "ukinuta" ? "Ukinuta linija." : "Izmjena u mreži."
+  if (lines.length === 0) return category === "nova" ? "Nova linija." : category === "ukinuta" ? "Ukinuta linija." : "Izmjena u mreži."
   const single = lines.length === 1, trams = lines.every(isTram)
   const noun = trams ? "Tramvaj" : "Autobus"
   if (category === "nova") return single ? `Nova ${trams ? "tramvajska" : "autobusna"} linija ${lines[0]}.` : `Nove linije ${joinLines(lines)}.`

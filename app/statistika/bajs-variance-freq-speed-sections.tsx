@@ -313,7 +313,7 @@ function BajsDensityCard({
 }: {
   bajs: BajsInsights
 }) {
-  const lastDistrict = bajs.densityRanked[bajs.densityRanked.length - 1]
+  const lastDistrict = bajs.densityRanked.at(-1)
   return (
     <div className="flex flex-col rounded-lg bg-white/60 p-6 shadow-sm shadow-amber-900/5 ring-1 ring-slate-200/60 dark:bg-white/[0.03] dark:shadow-none dark:ring-white/10">
       <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">
@@ -476,7 +476,7 @@ function VarianceInterpretation({
   variance: VarianceInsightsData
 }) {
   const mostUnequal = variance.varianceRanked[0]
-  const mostEqual = variance.varianceRanked[variance.varianceRanked.length - 1]
+  const mostEqual = variance.varianceRanked.at(-1)
 
   if (!mostUnequal || !mostEqual) return null
 
@@ -901,7 +901,7 @@ function SpeedModeRow({
   note: string
   pct: number
 }) {
-  const c = speedModeColorMap[color]!
+  const c = speedModeColorMap[color]
   const barColorFull = speedModeBarColor[color] ?? "bg-teal-500"
   return (
     <div className="flex items-center gap-4">

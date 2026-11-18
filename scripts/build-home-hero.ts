@@ -112,7 +112,7 @@ function dissolveBoundary(inputRings: Ring[]): Ring {
     let cur: string | undefined = start
     let closed = false
     while (cur) {
-      if (cur === start && loop.length) {
+      if (cur === start && loop.length > 0) {
         closed = true
         break
       }
@@ -139,7 +139,7 @@ function simplify(ring: Ring, tolerance: number): Ring {
   const keep = new Array<boolean>(ring.length).fill(false)
   keep[0] = keep[ring.length - 1] = true
   const stack: [number, number][] = [[0, ring.length - 1]]
-  while (stack.length) {
+  while (stack.length > 0) {
     const [a, b] = stack.pop()!
     if (b - a < 2) continue
     const [ax, ay] = ring[a]

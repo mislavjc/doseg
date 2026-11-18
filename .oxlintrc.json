@@ -54,7 +54,11 @@
     // Duplicate of unicorn/no-negated-condition, which stays on.
     "no-negated-condition": "off",
     // role="status" on a div is the right live region; <output> is inline and form-associated, so swapping changes layout.
-    "jsx-a11y/prefer-tag-over-role": "off"
+    "jsx-a11y/prefer-tag-over-role": "off",
+    // Without noUncheckedIndexedAccess only .at() types as T | undefined, so it forces guards [0] never needs on the same arrays.
+    "unicorn/prefer-at": "off",
+    // getElementById takes an id as-is; the querySelector rewrite needs CSS escaping for ids that start with a digit.
+    "unicorn/prefer-query-selector": "off"
   },
   "ignorePatterns": [
     ".next/**",

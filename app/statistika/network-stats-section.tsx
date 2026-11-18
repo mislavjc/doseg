@@ -43,7 +43,7 @@ function loadRouteStatsForInsights(): RouteStatsOutput | null {
 function fmtDots(n: number): string {
   return Math.round(n)
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    .replaceAll(/\B(?=(\d{3})+(?!\d))/g, ".")
 }
 
 function fmtDec(n: number, decimals = 2): string {
@@ -520,7 +520,7 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="Tortuoznost"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.tortuosity !== null ? fmtDec(r.tortuosity) : "-"}
+        {r.tortuosity === null ? "-" : fmtDec(r.tortuosity)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Razmak"
@@ -532,13 +532,13 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="CV takta"
         valueClassName={cvColor(r.headwayCv) + " font-medium"}
       >
-        {r.headwayCv !== null ? fmtDec(r.headwayCv) : "-"}
+        {r.headwayCv === null ? "-" : fmtDec(r.headwayCv)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Vrh:baza"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.peakToBaseRatio !== null ? fmtDec(r.peakToBaseRatio) : "-"}
+        {r.peakToBaseRatio === null ? "-" : fmtDec(r.peakToBaseRatio)}
       </RouteQualityCardStatRow>
     </div>
   )

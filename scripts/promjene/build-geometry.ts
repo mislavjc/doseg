@@ -44,7 +44,7 @@ async function main() {
   // Include shapeless feeds too — genDiff/genOneSided fall back to stop-connected
   // drawing when a feed ships no shapes.txt (ZET feeds before ~2024-10).
   const registry: Reg[] = JSON.parse(readFileSync(REGISTRY, "utf8")).sort((a: Reg, b: Reg) => a.validFrom.localeCompare(b.validFrom))
-  if (!registry.length) throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")
+  if (registry.length === 0) throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")
 
   // Build the change list: curated entries (always mapped) + scraped line-changes.
   const entries: Entry[] = JSON.parse(readFileSync(join(dataDir, "entries.json"), "utf8")).entries
@@ -54,7 +54,7 @@ async function main() {
   const curated: Spec[] = entries.map((e) => ({ id: entryId(e), date: e.date, lines: e.maps, mode: kindMode(e.kind), curated: true }))
   const curatedIds = new Set(curated.map((s) => s.id))
   const auto: Spec[] = cands
-    .filter((c) => c.listWorthy && c.date && c.lines.length >= 1 && LINE_CATS.has(c.category) && !curatedIds.has(c.id))
+    .filter((c) => c.listWorthy && c.date && c.lines.length > 0 && LINE_CATS.has(c.category) && !curatedIds.has(c.id))
     .map((c) => ({ id: c.id, date: c.date!, lines: c.lines, mode: catMode(c.category), curated: false }))
   const specs = [...curated, ...auto]
 

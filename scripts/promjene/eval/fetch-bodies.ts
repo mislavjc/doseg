@@ -38,7 +38,7 @@ const stopSample = [...stops.filter((c) => already.has(c.id)), ...stopPool.filte
 
 // Always include the already-cached ids; union with the stratified sample.
 const wantIds = new Set<string>([...already, ...lineCands.map((c) => c.id), ...stopSample.map((c) => c.id)])
-const toFetch = listWorthy.filter((c) => wantIds.has(c.id) && !already.has(c.id) && /web\.archive\.org/.test(c.url))
+const toFetch = listWorthy.filter((c) => wantIds.has(c.id) && !already.has(c.id) && c.url.includes('web.archive.org'))
 console.error(`have ${already.size} cached · selecting ${wantIds.size} (${lineCands.length} line-changes + ${stopSample.length} stops) · fetching ${toFetch.length} new`)
 
 let ok = 0, fail = 0

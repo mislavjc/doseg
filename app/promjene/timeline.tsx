@@ -76,7 +76,7 @@ function SuccessorNote({ successor }: { successor: Successor }) {
 }
 
 function LineChips({ lines }: { lines: string[] }) {
-  if (!lines.length) return null
+  if (lines.length === 0) return null
   const shown = lines.slice(0, 6)
   return (
     <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 4, verticalAlign: "middle" }}>
@@ -352,7 +352,7 @@ function renderLineItem(it: LineItem, legend?: ReactNode) {
 function tallyOf(lineItems: LineItem[], stopItems: StopRowItem[]): { category: string; count: number }[] {
   const counts: Record<string, number> = {}
   for (const it of lineItems) counts[it.category] = (counts[it.category] ?? 0) + 1
-  if (stopItems.length) counts["stajalište"] = stopItems.length
+  if (stopItems.length > 0) counts["stajalište"] = stopItems.length
   return Object.entries(counts).map(([category, count]) => ({ category, count }))
 }
 

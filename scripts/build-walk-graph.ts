@@ -186,8 +186,7 @@ function buildEdges(
 
       if (!hasElevation || d < 0.01) {
         const distCm = Math.round(d * 100000)
-        edges.push({ from: fromIdx, to: toIdx, distCm })
-        edges.push({ from: toIdx, to: fromIdx, distCm })
+        edges.push({ from: fromIdx, to: toIdx, distCm }, { from: toIdx, to: fromIdx, distCm })
       } else {
         const elevFrom = getElevation(fromCoord.lat, fromCoord.lon, srtmTiles)
         const elevTo = getElevation(toCoord.lat, toCoord.lon, srtmTiles)
@@ -198,8 +197,7 @@ function buildEdges(
         const fwd = Math.round((d / toblerFactor(slope)) * 100000)
         const rev = Math.round((d / toblerFactor(-slope)) * 100000)
 
-        edges.push({ from: fromIdx, to: toIdx, distCm: fwd })
-        edges.push({ from: toIdx, to: fromIdx, distCm: rev })
+        edges.push({ from: fromIdx, to: toIdx, distCm: fwd }, { from: toIdx, to: fromIdx, distCm: rev })
       }
     }
   }

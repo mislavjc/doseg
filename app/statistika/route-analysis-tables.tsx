@@ -69,7 +69,7 @@ function ExpandableRouteTable({
   mode: "TRAM" | "BUS"
 }) {
   const [expanded, setExpanded] = useState(false)
-  const tableId = useId().replace(/:/g, "")
+  const tableId = useId().replaceAll(':', "")
   const regionId = `route-table-${mode}-${tableId}`
   const needsToggle = routes.length > INITIAL_VISIBLE
   const visible = expanded ? routes : routes.slice(0, INITIAL_VISIBLE)

@@ -136,7 +136,7 @@ function PanelBody({
       <LayerRow
         state={layers.doseg ? "on" : "off"}
         label="Doseg"
-        meta={km2 != null ? `${Math.round(km2)} km²` : undefined}
+        meta={km2 == null ? undefined : `${Math.round(km2)} km²`}
         onToggle={() => onChange({ ...layers, doseg: !layers.doseg })}
       />
       <LayerRow

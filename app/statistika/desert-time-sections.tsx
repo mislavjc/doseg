@@ -628,10 +628,10 @@ function WeekendBarChart({
       <div className="flex flex-col gap-2">
         {(() => {
           const maxAbsChange = Math.max(
-            ...weekend.weekendComparison!.map((x) => Math.abs(x.change)),
+            ...weekend.weekendComparison.map((x) => Math.abs(x.change)),
             1
           )
-          return weekend.weekendComparison!.map((p, i) => (
+          return weekend.weekendComparison.map((p, i) => (
             <WeekendBarRow
               key={p.name}
               p={p}

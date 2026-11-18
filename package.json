@@ -8,6 +8,7 @@
     "build": "bun scripts/build-district-map-svg.ts && next build",
     "start": "next start",
     "lint": "oxlint --deny-warnings",
+    "knip": "knip",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "build:district-map": "bun scripts/build-district-map-svg.ts",

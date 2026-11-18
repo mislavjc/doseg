@@ -16,15 +16,10 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - uses: actions/cache@v4
         with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - uses: actions/cache@v4
-        with:
           path: tsconfig.tsbuildinfo
           key: tsc-${{ runner.os }}-${{ hashFiles('bun.lock', 'tsconfig.json') }}-${{ github.sha }}
           restore-keys: tsc-${{ runner.os }}-${{ hashFiles('bun.lock', 'tsconfig.json') }}-
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run typecheck
       - run: bun run test
 
@@ -33,12 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
+      - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run lint
 
   rust-check:
@@ -54,5 +44,12 @@ jobs:
       - run: cargo fmt --manifest-path transit/Cargo.toml -- --check
       - run: cargo clippy --manifest-path transit/Cargo.toml -- -D warnings
       - run: cargo test --manifest-path transit/Cargo.toml
-      - run: cargo install cargo-audit --quiet
+
+  rust-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
       - run: cargo audit --file transit/Cargo.lock

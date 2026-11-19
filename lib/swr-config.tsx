@@ -1,7 +1,6 @@
 "use client"
 
 import { SWRConfig } from "swr"
-import { LazyMotion, domAnimation } from "motion/react"
 
 import { responseJson } from "./json"
 
@@ -21,9 +20,7 @@ export default function SwrProvider({ children }: { children: React.ReactNode })
         dedupingInterval: 5000,
       }}
     >
-      <LazyMotion features={domAnimation}>
-        {children}
-      </LazyMotion>
+      {children}
     </SWRConfig>
   )
 }

@@ -31,9 +31,12 @@ export function EditorialShell({ children }: { children: React.ReactNode }) {
 }
 
 const COLUMN = {
-  article: "max-w-[620px]", // prose + 1-D bar charts (pristup, jutro, sesvete)
-  wide: "max-w-[840px]", // side-by-side map sections (povezanost, matrica) + footer
-  full: "max-w-none", // section manages its own width (maps, etc.)
+  // prose + 1-D bar charts (pristup, jutro, sesvete)
+  article: "max-w-[620px]",
+  // side-by-side map sections (povezanost, matrica) + footer
+  wide: "max-w-[840px]",
+  // section manages its own width (maps, etc.)
+  full: "max-w-none",
 } as const
 
 /**
@@ -159,19 +162,6 @@ export function MonoLabel({
   return (
     <span
       className={cn("font-mono text-label text-ink-faint", className)}
-      {...props}
-    />
-  )
-}
-
-/** Mono value — tabular figures, primary ink (scores, minutes, metres). */
-export function MonoValue({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn("font-mono text-label tabular-nums text-ink", className)}
       {...props}
     />
   )

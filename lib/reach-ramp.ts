@@ -4,7 +4,6 @@ import type * as maplibregl from "maplibre-gl"
  * Reach (isochrone) ramp, near → far — docs/map-redesign-spec.md §1.
  * Near end matches --navy / --rank-100; the far end stays a visible pale blue
  * (not the rank-0 near-white) so the reach edge reads over the basemap.
- * Replaces the old ISOCHRONE_COLORS when the /new map ships.
  */
 export const REACH_RAMP = [
   "#0e3fb0",

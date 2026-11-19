@@ -6,21 +6,6 @@ import type { DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import { readJsonCached } from "@/lib/page-data"
 
 /**
- * Canonical weekday district-scores loader, shared by /statistika, /kvartovi,
- * the OG cards, and /api/district-context so every surface shows the SAME
- * numbers.
- *
- * The legacy `district-scores.json` is built WITHOUT a --day filter, so ~7
- * service days pile up at the same clock time: the median headway collapses to a
- * fake "~1 min" (a kvart then reads "radnim danom ~1 min, vikendom ~12 min" —
- * impossible) and the reach/score roughly double. We serve the day-filtered
- * weekday build instead, backfilling only the day-INDEPENDENT spatial fields
- * (area, BAJS density/coverage) that the older day build predates. Falls back to
- * the legacy file if the day build is missing. Both reads are cached per path by
- * readJsonCached and the `??=` backfill is idempotent, so the repeated merge is
- * cheap.
- */
-/**
  * Reachable grid cells → km², rounded.
  *
  * NOT gridSpacingM². That field is the spacing of the sample ORIGIN points
@@ -37,13 +22,29 @@ import { readJsonCached } from "@/lib/page-data"
  *
  * Keep these mirrored with transit/src/geo.rs.
  */
-const REACH_CELL_DEG = 0.002 // walk_graph.rs GRID_CELL_SIZE
+// walk_graph.rs GRID_CELL_SIZE
+const REACH_CELL_DEG = 0.002
 const REACH_CELL_KM2 = REACH_CELL_DEG * KM_PER_DEG_LAT * (REACH_CELL_DEG * KM_PER_DEG_LON)
 
-export function reachKm2(_scores: ScoreData, cells: number): number {
+export function reachKm2(cells: number): number {
   return Math.round(cells * REACH_CELL_KM2)
 }
 
+/**
+ * Canonical weekday district-scores loader, shared by /statistika, /kvartovi,
+ * the OG cards, and /api/district-context so every surface shows the SAME
+ * numbers.
+ *
+ * The legacy `district-scores.json` is built WITHOUT a --day filter, so ~7
+ * service days pile up at the same clock time: the median headway collapses to a
+ * fake "~1 min" (a kvart then reads "radnim danom ~1 min, vikendom ~12 min" —
+ * impossible) and the reach/score roughly double. We serve the day-filtered
+ * weekday build instead, backfilling only the day-INDEPENDENT spatial fields
+ * (area, BAJS density/coverage) that the older day build predates. Falls back to
+ * the legacy file if the day build is missing. Both reads are cached per path by
+ * readJsonCached and the `??=` backfill is idempotent, so the repeated merge is
+ * cheap.
+ */
 export function loadScores(): ScoreData | null {
   const dir = getDataDir()
   const day = readJsonCached<ScoreData>(join(dir, "district-scores-wednesday.json"))

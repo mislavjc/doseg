@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react"
 import * as maplibregl from "@/lib/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
-import { getMapStyleUrl } from "@/lib/map-styles"
+import { MAP_STYLE_URL } from "@/lib/map-styles"
 import { MapTile, MapTileButton } from "@/components/home/ui/controls"
 import { expandStop, INK, OLD, BLUE, KEPT } from "./lib"
 
 /**
- * PROTOTYPE — interactive diff map on real CARTO Positron vector tiles. The
+ * Interactive diff map on real CARTO Positron vector tiles. The
  * basemap is muted (POIs hidden, labels faded, paper tint) so the two routes are
  * the only saturated thing. Retired route = dotted slate on a white track,
  * current route = blue on a white casing. Crisp at any zoom; cooperative scroll
@@ -22,6 +22,11 @@ const BAN = "M21 12C21 16.9706 16.9706 21 12 21C9.51472 21 7.26472 19.9926 5.636
 type LonLat = [number, number]
 type Pt = { lat: number; lon: number; name: string }
 
+const near = (a: Pt, b: Pt) => {
+  const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111320
+  const dy = (a.lat - b.lat) * 110540
+  return Math.hypot(dx, dy) < 220
+}
 
 const fcLine = (coords: LonLat[]) => ({ type: "FeatureCollection" as const, features: [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: coords } }] })
 const fcPts = (pts: Pt[]) => ({ type: "FeatureCollection" as const, features: pts.map((p) => ({ type: "Feature" as const, properties: {}, geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] } })) })
@@ -32,11 +37,13 @@ function muteBasemap(map: maplibregl.Map) {
   if (map.getLayer("background")) map.setPaintProperty("background", "background-color", "#F6F7F9")
   for (const l of map.getStyle().layers ?? []) {
     try {
-      if (/poi|airport|housenum|aeroway|ferry/i.test(l.id)) { map.setLayoutProperty(l.id, "visibility", "none"); continue }
+      if (/poi|airport|housenum|aeroway|ferry/iu.test(l.id)) { map.setLayoutProperty(l.id, "visibility", "none"); continue }
       if (l.type === "symbol") { map.setPaintProperty(l.id, "text-opacity", 0.6); map.setPaintProperty(l.id, "icon-opacity", 0) }
       if (l.id === "water") map.setPaintProperty(l.id, "fill-color", "#E7EDF3")
-      if (/^(park|landcover|wood|grass|wetland)/i.test(l.id) && l.type === "fill") map.setPaintProperty(l.id, "fill-opacity", 0.5)
-    } catch { /* layer lacks that property — fine */ }
+      if (/^(park|landcover|wood|grass|wetland)/iu.test(l.id) && l.type === "fill") map.setPaintProperty(l.id, "fill-opacity", 0.5)
+    } catch {
+      // layer lacks that property, fine
+    }
   }
 }
 
@@ -45,24 +52,24 @@ function endpointMarker(map: maplibregl.Map, p: Pt, kind: "shared" | "new" | "ol
   // station dot already on the line marks the exact spot.
   const onRight = p.lon > centerLon
   const isNew = kind === "new", isOld = kind === "old", slate = isOld || kind === "old-origin"
-  const fg = isNew ? "#fff" : slate ? OLD : INK
+  const fg = isNew ? "var(--ground)" : slate ? OLD : INK
   const pill = document.createElement("div")
   pill.style.cssText = `display:inline-flex;align-items:center;gap:6px;padding:5px 10px;white-space:nowrap;pointer-events:none;color:${fg};font-family:'TeX Gyre Heros',system-ui,sans-serif;font-weight:${slate ? 600 : 700};font-size:16px;line-height:17px;` +
-    (isNew ? `background:${BLUE};box-shadow:0 1px 3px rgba(15,23,42,.2)` : `background:#fff;box-shadow:inset 0 0 0 1px ${slate ? "#C5CAD1" : "#C2C7CD"},0 1px 3px rgba(15,23,42,.16)`)
+    (isNew ? `background:${BLUE};box-shadow:0 1px 3px rgba(15,23,42,.2)` : `background:var(--ground);box-shadow:inset 0 0 0 1px ${slate ? "#C5CAD1" : "#C2C7CD"},0 1px 3px rgba(15,23,42,.16)`)
   const path = isNew ? FLAG : isOld ? BAN : null
   if (path) {
     const ic = document.createElement("span")
     ic.style.cssText = `display:flex;flex:0 0 auto;color:${fg}`
     ic.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="${path}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    pill.appendChild(ic)
+    pill.append(ic)
   }
   const t = document.createElement("span")
   t.textContent = expandStop(p.name)
-  pill.appendChild(t)
+  pill.append(t)
   new maplibregl.Marker({ element: pill, anchor: onRight ? "right" : "left", offset: onRight ? [-12, 0] : [12, 0] }).setLngLat([p.lon, p.lat]).addTo(map)
 }
 
-export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode = "diff", change = "terminus", stopConnected = false, label }: {
+function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode = "diff", change = "terminus", stopConnected = false, label }: {
   oldShape: LonLat[]; newShape: LonLat[]; shared: Pt; newTip: Pt; oldTip: Pt; allStops: Pt[]; added: Pt[]; removed: Pt[]; mode?: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; label?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -75,7 +82,7 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
 
     const map = new maplibregl.Map({
       container: ref.current,
-      style: getMapStyleUrl(),
+      style: MAP_STYLE_URL,
       center: bounds.getCenter(),
       zoom: 11,
       attributionControl: false,
@@ -118,7 +125,7 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       const newWidth = stopConnected ? Z(2.6, 4, 5) : Z(3.5, 6, 7.5)
       map.addLayer({ id: "new-casing", type: "line", source: "new", paint: { "line-color": "#fff", "line-width": newCasing, "line-blur": 0.4 }, layout: round })
       const newPaint: maplibregl.LineLayerSpecification["paint"] = { "line-color": BLUE, "line-width": newWidth }
-      if (stopConnected) newPaint!["line-dasharray"] = [1.8, 1.3]
+      if (stopConnected) newPaint["line-dasharray"] = [1.8, 1.3]
       map.addLayer({ id: "new-line", type: "line", source: "new", paint: newPaint, layout: round })
       // every station: white halo under each, then the ringed dot.
       // kept = hollow gray · removed = hollow slate · added = solid blue (on top)
@@ -130,11 +137,6 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       const cl = bounds.getCenter().lng
       // On loop lines the origin and terminus are the same stop, so the plain
       // origin pill would stack under the icon pill. Drop it when they coincide.
-      const near = (a: Pt, b: Pt) => {
-        const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111320
-        const dy = (a.lat - b.lat) * 110540
-        return Math.hypot(dx, dy) < 220
-      }
       if (mode === "removed") {
         endpointMarker(map, oldTip, "old", cl)
         if (!near(shared, oldTip)) endpointMarker(map, shared, "old-origin", cl)
@@ -154,7 +156,7 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
       fit()
     })
 
-    const ro = new ResizeObserver(() => map.resize())
+    const ro = new ResizeObserver(() => { map.resize() })
     ro.observe(ref.current)
     return () => { ro.disconnect(); mapRef.current = null; map.remove() }
   }, [oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode, change, stopConnected])
@@ -163,8 +165,8 @@ export function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, 
     <div role="img" aria-label={label} style={{ position: "relative", width: "100%", height: "clamp(360px, 44vw, 580px)", overflow: "hidden" }}>
       <div ref={ref} className="diffmap" style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 0 1px #E5E8EC, inset 0 0 60px rgba(15,23,42,.05)" }} />
       <MapTile className="absolute bottom-3 right-3 z-[2] flex flex-col">
-        <MapTileButton label="Približi kartu" onClick={() => mapRef.current?.zoomIn()} className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2">+</MapTileButton>
-        <MapTileButton label="Udalji kartu" onClick={() => mapRef.current?.zoomOut()} className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2">−</MapTileButton>
+        <MapTileButton label="Približi kartu" onClick={() => { mapRef.current?.zoomIn() }} className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2">+</MapTileButton>
+        <MapTileButton label="Udalji kartu" onClick={() => { mapRef.current?.zoomOut() }} className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2">−</MapTileButton>
       </MapTile>
     </div>
   )

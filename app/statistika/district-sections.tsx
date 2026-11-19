@@ -1,7 +1,7 @@
 import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import type { DistrictEmblems, computeBaseInsights, computeBajsInsights, computeBands } from "./stat-data"
 import { StatModuleTitle } from "./stat-typography"
-import { DistrictCardV28 } from "./district-card-variants"
+import { DistrictCard } from "./district-card"
 
 type BaseInsights = ReturnType<typeof computeBaseInsights>
 type BajsInsights = ReturnType<typeof computeBajsInsights>
@@ -25,14 +25,13 @@ export function DistrictBandsSection({
           <BandHeader band={band} />
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {band.districts.map((d) => (
-              <DistrictCardV28
+              <DistrictCard
                 key={d.osmId}
                 district={d}
                 emblemPath={districtEmblems[String(d.osmId)]}
                 totalGridCells={data.totalGridCells}
                 bandColor={band.color}
                 cityAvg={base.cityAvg}
-                bestDistrict={base.best.name}
                 mapLink={`/karta?lat=${d.bestPoint.lat}&lon=${d.bestPoint.lon}&time=08:00${d.bajsStations > 0 ? "&bajs=1" : ""}`}
               />
             ))}
@@ -157,7 +156,7 @@ function MethodologyGridItems({
       <MethodologyItem color="purple" title="Vozni red">
         Prosjek od{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {data.departureCount ?? 1} polazaka
+          {data.departureCount} polazaka
         </strong>{" "}
         u prozoru{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">

@@ -3,7 +3,6 @@ export {
   BlueLink,
   Eyebrow,
   Hook,
-  MonoCaption,
   MonoLabel,
   NumberedStep,
   Skeleton,

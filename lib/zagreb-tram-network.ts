@@ -21,7 +21,7 @@ export interface TramLine {
 
 // ---- Official ZET line-colour groups ----------------------------------------
 
-export const LINE_COLORS = {
+const LINE_COLORS = {
   blue: "#0072CE",
   darkGreen: "#00843D",
   yellow: "#FFB81C",
@@ -110,7 +110,7 @@ export const STATIONS: Record<string, TramStation> = Object.fromEntries(
 )
 
 function ids(...list: (keyof typeof STATIONS)[]): string[] {
-  return list as string[]
+  return list
 }
 
 // ---- Line definitions (simplified to key stations) --------------------------

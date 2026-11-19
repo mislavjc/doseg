@@ -10,11 +10,10 @@ import {
 
 import {
   applyBasemapBackgroundTint,
-  DEFAULT_MAP_STYLE,
-  getMapStyleUrl,
+  MAP_STYLE_URL,
 } from "@/lib/map-styles"
 import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
-import { GEOCODE_KIND_META } from "@/lib/poi"
+import { GEOCODE_KIND_META, POI_CATEGORIES } from "@/lib/poi"
 import { reachColorStops } from "@/lib/reach-ramp"
 import type { LayersState } from "./layers-panel"
 import { deShout, type LatLon, type MapPoi } from "./reach-state"
@@ -265,9 +264,9 @@ function dataBounds(
     const g = f.geometry
     if (g.type === "MultiPolygon") {
       for (const poly of g.coordinates)
-        for (const pt of poly[0]) bounds.extend(pt as [number, number])
+        for (const pt of poly[0]) bounds.extend([pt[0], pt[1]])
     } else if (g.type === "LineString") {
-      for (const pt of g.coordinates) bounds.extend(pt as [number, number])
+      for (const pt of g.coordinates) bounds.extend([pt[0], pt[1]])
     }
   }
   return bounds.isEmpty() ? null : bounds
@@ -311,7 +310,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
     if (!containerRef.current) return
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: getMapStyleUrl(),
+      style: MAP_STYLE_URL,
       center: ZAGREB,
       zoom: 12.4,
       attributionControl: false,
@@ -322,7 +321,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
       "bottom-right"
     )
     map.on("load", () => {
-      applyBasemapBackgroundTint(map, DEFAULT_MAP_STYLE)
+      applyBasemapBackgroundTint(map)
       addWalkAreaLayers(map)
       addRouteLayers(map)
       addPoiBajsLayers(map)
@@ -333,8 +332,8 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
       // treat them as a bare map click that would silently start a route.
       const dotLayers = DOT_LAYERS.filter((l) => map.getLayer(l))
       if (
-        dotLayers.length &&
-        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length
+        dotLayers.length > 0 &&
+        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length > 0
       )
         return
       onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
@@ -364,9 +363,9 @@ function useMarker(
       markerRef.current = null
       return
     }
-    if (!markerRef.current) markerRef.current = make()
+    markerRef.current ??= make()
     markerRef.current.setLngLat([point.lon, point.lat]).addTo(map)
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- make is stable
+    // oxlint-disable-next-line react/exhaustive-deps -- make is stable
   }, [mapRef, point])
 }
 
@@ -383,8 +382,8 @@ function useLayerSync(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !ready) return
-    const src = map.getSource("poi") as maplibregl.GeoJSONSource | undefined
-    src?.setData(
+    const src = map.getSource<maplibregl.GeoJSONSource>("poi")
+    void src?.setData(
       pois
         ? {
             type: "FeatureCollection",
@@ -413,9 +412,9 @@ function useLayerSync(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !ready) return
-    const enabled = (
-      Object.keys(layers.poi) as (keyof LayersState["poi"])[]
-    ).filter((k) => layers.poi[k])
+    const enabled = POI_CATEGORIES.map((c) => c.key).filter(
+      (k) => layers.poi[k]
+    )
     map.setFilter("poi-dots", ["in", ["get", "category"], ["literal", enabled]])
     map.setLayoutProperty(
       "poi-dots",
@@ -427,8 +426,8 @@ function useLayerSync(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !ready) return
-    const src = map.getSource("bajs") as maplibregl.GeoJSONSource | undefined
-    src?.setData(bajs ?? EMPTY_FC)
+    const src = map.getSource<maplibregl.GeoJSONSource>("bajs")
+    void src?.setData(bajs ?? EMPTY_FC)
     map.setLayoutProperty(
       "bajs-dots",
       "visibility",
@@ -440,26 +439,34 @@ function useLayerSync(
 type DotPhoto = { thumb: string; page: string; credit: string }
 type DotInfo = { name: string | null; sub: string; photo: DotPhoto | null }
 
+/** Feature props are flat strings/numbers; anything else reads as empty. */
+function propText(v: unknown): string {
+  return typeof v === "string" || typeof v === "number" ? String(v) : ""
+}
+
 /** Title + context line (+ photo) for a clicked/hovered dot. */
 function describeDot(f: maplibregl.MapGeoJSONFeature): DotInfo {
-  const p = f.properties as Record<string, unknown>
-  const photo = p.photoThumb
+  const p: Record<string, unknown> = f.properties
+  const thumb = propText(p.photoThumb)
+  const name = propText(p.name)
+  const photo = thumb
     ? {
-        thumb: String(p.photoThumb),
-        page: String(p.photoPage ?? ""),
-        credit: String(p.photoCredit ?? ""),
+        thumb,
+        page: propText(p.photoPage),
+        credit: propText(p.photoCredit),
       }
     : null
   if (f.layer.id === "bajs-dots") {
+    const bikes = p.bikesAvailable == null ? "?" : propText(p.bikesAvailable)
     return {
-      name: p.name ? deShout(String(p.name)) : null,
-      sub: `bajs stanica · ${p.bikesAvailable ?? "?"} bic.`,
+      name: name ? deShout(name) : null,
+      sub: `bajs stanica · ${bikes} bic.`,
       photo,
     }
   }
   const meta = GEOCODE_KIND_META[String(p.category)]
   return {
-    name: p.name ? String(p.name) : null,
+    name: name || null,
     sub: (meta?.label ?? "") + (p.inReach === false ? " · izvan dosega" : ""),
     photo,
   }
@@ -488,7 +495,7 @@ function dotPopupEl(
     img.alt = info.name ?? ""
     img.loading = "lazy"
     img.className = "block h-[120px] w-full bg-surface object-cover"
-    root.appendChild(img)
+    root.append(img)
   }
 
   const body = document.createElement("div")
@@ -496,12 +503,12 @@ function dotPopupEl(
   const title = document.createElement("span")
   title.className = "font-heros text-[16px] leading-5 text-ink"
   title.textContent = info.name ?? fallbackTitle
-  body.appendChild(title)
+  body.append(title)
   if (info.sub) {
     const sub = document.createElement("span")
     sub.className = "mt-0.5 font-mono text-label text-ink-faint"
     sub.textContent = info.sub
-    body.appendChild(sub)
+    body.append(sub)
   }
   if (opts.action) {
     const btn = document.createElement("button")
@@ -510,7 +517,7 @@ function dotPopupEl(
       "mt-2.5 border border-hairline-strong px-3 py-2 text-left font-mono text-label text-zg-blue transition-colors duration-150 hover:bg-row-tint"
     btn.textContent = opts.action.label
     btn.addEventListener("click", opts.action.onClick)
-    body.appendChild(btn)
+    body.append(btn)
   }
   if (photo && photo.credit) {
     const credit = document.createElement("a")
@@ -521,10 +528,10 @@ function dotPopupEl(
     credit.className =
       "mt-2 block max-w-full truncate font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink-muted"
     credit.textContent = `© ${photo.credit}`
-    body.appendChild(credit)
+    body.append(credit)
   }
 
-  root.appendChild(body)
+  root.append(body)
   return root
 }
 
@@ -544,7 +551,9 @@ const POPUP_OPTS = {
 function dotFeatureAt(e: maplibregl.MapLayerMouseEvent) {
   const f = e.features?.[0]
   if (!f) return null
-  const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number]
+  if (f.geometry.type !== "Point") return null
+  const [lon, lat] = f.geometry.coordinates
+  const coords: [number, number] = [lon, lat]
   return { f, coords }
 }
 
@@ -576,15 +585,17 @@ function bindDotPopups(
     const hit = dotFeatureAt(e)
     if (!hit) return
     const key = hit.coords.join(",")
-    if (key === hoverKey) return // already shown/pending for this dot
+    // already shown/pending for this dot
+    if (key === hoverKey) return
     hoverKey = key
     clearDwell()
     const info = describeDot(hit.f)
-    const show = () =>
+    const show = () => {
       hover
         .setLngLat(hit.coords)
         .setDOMContent(dotPopupEl(info, "bez imena", { withPhoto: true }))
         .addTo(map)
+    }
     // Instant for plain dots; brief dwell only when a photo would load.
     if (info.photo) dwellTimer = setTimeout(show, 150)
     else show()
@@ -683,12 +694,10 @@ function useDataSync(
   useEffect(() => {
     const map = mapRef.current
     if (!map || !ready) return
-    const src = map.getSource("walk-area") as
-      | maplibregl.GeoJSONSource
-      | undefined
-    src?.setData(walkArea ?? EMPTY_FC)
+    const src = map.getSource<maplibregl.GeoJSONSource>("walk-area")
+    void src?.setData(walkArea ?? EMPTY_FC)
     tweakBasemapForIsochrone(map, Boolean(walkArea?.features.length))
-    if (walkArea?.features.length && !route) {
+    if (walkArea && walkArea.features.length > 0 && !route) {
       const bounds = dataBounds(walkArea)
       if (bounds) {
         map.fitBounds(bounds, {
@@ -722,9 +731,9 @@ function useDataSync(
         ? 0.15
         : ["interpolate", ["linear"], ["get", "time"], 600, 0.7, 2700, 0.4]
     )
-    const src = map.getSource("route") as maplibregl.GeoJSONSource | undefined
-    src?.setData(route ?? EMPTY_FC)
-    if (route?.features.length) {
+    const src = map.getSource<maplibregl.GeoJSONSource>("route")
+    void src?.setData(route ?? EMPTY_FC)
+    if (route && route.features.length > 0) {
       const bounds = dataBounds(route)
       if (bounds) {
         map.fitBounds(bounds, {
@@ -746,14 +755,18 @@ function ZoomControl({
     <MapTile className="absolute bottom-6 left-6 z-20 hidden flex-col md:flex md:left-[404px]">
       <MapTileButton
         label="Približi kartu"
-        onClick={() => mapRef.current?.zoomIn()}
+        onClick={() => {
+          mapRef.current?.zoomIn()
+        }}
         className="size-[34px] border-b border-hairline text-ink-2"
       >
         <IconPlusMedium size={18} />
       </MapTileButton>
       <MapTileButton
         label="Udalji kartu"
-        onClick={() => mapRef.current?.zoomOut()}
+        onClick={() => {
+          mapRef.current?.zoomOut()
+        }}
         className="size-[34px] text-ink-2"
       >
         <IconMinusMedium size={18} />

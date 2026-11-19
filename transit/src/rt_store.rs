@@ -1,6 +1,6 @@
 //! GTFS-RT persistence to SQLite.
 //!
-//! Receives RtSnapshot messages from the GTFS-RT refresh task and writes
+//! Receives `RtSnapshot` messages from the GTFS-RT refresh task and writes
 //! aggregated route-level and stop-level data to a local SQLite database.
 //!
 //! Retention policy:
@@ -26,7 +26,7 @@ const ON_TIME_LATE: i32 = 300;
 const STALE_GRACE_SEC: i64 = 120;
 
 /// Compute mean headway and coefficient of variation from a set of arrival times.
-/// Returns (mean_headway_sec, cv) or (None, None) if fewer than 3 vehicles.
+/// Returns (`mean_headway_sec`, cv) or (None, None) if fewer than 3 vehicles.
 fn compute_headway(times: &mut Vec<i64>) -> (Option<f64>, Option<f64>) {
     if times.len() < 3 {
         return (None, None);
@@ -222,7 +222,7 @@ impl RtDb {
         let write_stops = ts % 300 == 0;
 
         if let Err(e) = self.ingest_inner(ts, snap, write_stops) {
-            eprintln!("RT DB: ingest error: {}", e);
+            eprintln!("RT DB: ingest error: {e}");
         }
     }
 
@@ -255,9 +255,8 @@ impl RtDb {
                 for trip in trips {
                     // Use first stop_time_update: nearest to vehicle's
                     // current position, most reliable delay value.
-                    let first = match trip.stop_times.first() {
-                        Some(st) => st,
-                        None => continue,
+                    let Some(first) = trip.stop_times.first() else {
+                        continue;
                     };
 
                     // Filter stale/completed trips: if the latest predicted
@@ -274,7 +273,7 @@ impl RtDb {
                     // avg_delay: clamp negatives to 0 — schedule padding
                     // makes raw negative delays meaningless to passengers.
                     // Only lateness (positive delay) is shown.
-                    total_delay += d.max(0) as i64;
+                    total_delay += i64::from(d.max(0));
 
                     if d.abs() > max_delay.abs() {
                         max_delay = d;
@@ -298,8 +297,8 @@ impl RtDb {
                     continue;
                 }
 
-                let avg = total_delay as f64 / count as f64;
-                let pct = on_time as f64 / count as f64;
+                let avg = total_delay as f64 / f64::from(count);
+                let pct = f64::from(on_time) / f64::from(count);
 
                 // Headway: compute mean and CV from inter-vehicle time gaps.
                 // Sort arrival times and compute intervals between consecutive
@@ -335,7 +334,7 @@ impl RtDb {
                         ts,
                         &trip.trip_id,
                         &trip.route_id,
-                        st.stop_sequence as i32,
+                        i32::from(st.stop_sequence),
                         st.delay,
                     ])?;
                 }
@@ -390,7 +389,7 @@ impl RtDb {
                 )?;
                 for (route_id, speeds) in &by_route {
                     let avg = speeds.iter().sum::<f32>() / speeds.len() as f32;
-                    stmt.execute(params![ts, route_id, avg as f64, speeds.len() as i32])?;
+                    stmt.execute(params![ts, route_id, f64::from(avg), speeds.len() as i32])?;
                 }
             }
         }
@@ -420,13 +419,13 @@ impl RtDb {
         Ok(())
     }
 
-    /// Delete stop_delays older than cutoff.
+    /// Delete `stop_delays` older than cutoff.
     fn cleanup_old_stops(&self, cutoff_ts: i64) -> rusqlite::Result<usize> {
         self.conn
             .execute("DELETE FROM stop_delays WHERE ts < ?1", params![cutoff_ts])
     }
 
-    /// Compact snapshots older than cutoff into hourly_agg, then delete raw rows.
+    /// Compact snapshots older than cutoff into `hourly_agg`, then delete raw rows.
     fn compact(&self, cutoff_ts: i64) -> rusqlite::Result<usize> {
         let tx = self.conn.unchecked_transaction()?;
 
@@ -436,10 +435,7 @@ impl RtDb {
             |row| row.get(0),
         )?;
 
-        let min_ts = match min_ts {
-            Some(ts) => ts,
-            None => return Ok(0),
-        };
+        let Some(min_ts) = min_ts else { return Ok(0) };
 
         let mut hour = (min_ts / 3600) * 3600;
         let mut compacted = 0usize;
@@ -472,7 +468,7 @@ impl RtDb {
         Ok(compacted)
     }
 
-    /// Delete speed_snapshots and occupancy_snapshots older than cutoff.
+    /// Delete `speed_snapshots` and `occupancy_snapshots` older than cutoff.
     fn cleanup_old_vehicle_data(&self, cutoff_ts: i64) -> rusqlite::Result<usize> {
         let a = self.conn.execute(
             "DELETE FROM speed_snapshots WHERE ts < ?1",
@@ -490,28 +486,28 @@ impl RtDb {
         let six_months_ago = now_ts - 180 * 86400;
         match self.cleanup_old_stops(six_months_ago) {
             Ok(0) => {}
-            Ok(n) => eprintln!("RT DB: cleaned {} old stop delay rows", n),
-            Err(e) => eprintln!("RT DB: stop cleanup failed: {}", e),
+            Ok(n) => eprintln!("RT DB: cleaned {n} old stop delay rows"),
+            Err(e) => eprintln!("RT DB: stop cleanup failed: {e}"),
         }
         match self.cleanup_old_vehicle_data(six_months_ago) {
             Ok(0) => {}
-            Ok(n) => eprintln!("RT DB: cleaned {} old speed/occupancy rows", n),
-            Err(e) => eprintln!("RT DB: vehicle data cleanup failed: {}", e),
+            Ok(n) => eprintln!("RT DB: cleaned {n} old speed/occupancy rows"),
+            Err(e) => eprintln!("RT DB: vehicle data cleanup failed: {e}"),
         }
 
         let one_year_ago = now_ts - 365 * 86400;
         match self.compact(one_year_ago) {
             Ok(0) => {}
-            Ok(n) => eprintln!("RT DB: compacted {} old snapshot rows", n),
-            Err(e) => eprintln!("RT DB: compaction failed: {}", e),
+            Ok(n) => eprintln!("RT DB: compacted {n} old snapshot rows"),
+            Err(e) => eprintln!("RT DB: compaction failed: {e}"),
         }
 
         // Minute-level bike flow folds into the hourly table, so only the
         // hourly aggregates and trips are worth keeping for a full year.
         match self.cleanup_old_bajs_flow(one_year_ago) {
             Ok(0) => {}
-            Ok(n) => eprintln!("RT DB: cleaned {} old bajs flow rows", n),
-            Err(e) => eprintln!("RT DB: bajs flow cleanup failed: {}", e),
+            Ok(n) => eprintln!("RT DB: cleaned {n} old bajs flow rows"),
+            Err(e) => eprintln!("RT DB: bajs flow cleanup failed: {e}"),
         }
     }
 
@@ -856,13 +852,6 @@ pub struct DelayProfilePoint {
     pub samples: i64,
 }
 
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DelayProfileResponse {
-    pub route: String,
-    pub points: Vec<DelayProfilePoint>,
-}
-
 pub fn query_delay_profile(
     conn: &Connection,
     route: &str,
@@ -891,7 +880,7 @@ pub fn query_delay_profile(
         .map(|(seq, mut delays)| {
             delays.sort_unstable();
             let samples = delays.len() as i64;
-            let avg_delay = delays.iter().map(|&d| d as f64).sum::<f64>() / samples as f64;
+            let avg_delay = delays.iter().map(|&d| f64::from(d)).sum::<f64>() / samples as f64;
             let p90_idx = ((samples as f64 * 0.9).ceil() as usize)
                 .min(delays.len())
                 .saturating_sub(1);
@@ -928,42 +917,6 @@ pub fn query_summary(conn: &Connection) -> rusqlite::Result<SummaryResponse> {
         last_ts,
         alert_count,
     })
-}
-
-// --- Speed comparison query (feature 2.2) ---
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SpeedSnapshotPoint {
-    pub ts: i64,
-    pub avg_speed_kmh: f64,
-    pub sample_count: i32,
-}
-
-pub fn query_speed_history(
-    conn: &Connection,
-    route: &str,
-    from: i64,
-    to: i64,
-) -> rusqlite::Result<Vec<SpeedSnapshotPoint>> {
-    let mut stmt = conn.prepare_cached(
-        "SELECT ts, avg_speed_mps, sample_count
-         FROM speed_snapshots WHERE route_id = ?1 AND ts >= ?2 AND ts < ?3
-         ORDER BY ts",
-    )?;
-    let mut points = Vec::new();
-    let rows = stmt.query_map(params![route, from, to], |row| {
-        let avg_mps: f64 = row.get(1)?;
-        Ok(SpeedSnapshotPoint {
-            ts: row.get(0)?,
-            avg_speed_kmh: (avg_mps * 3.6 * 10.0).round() / 10.0,
-            sample_count: row.get(2)?,
-        })
-    })?;
-    for row in rows {
-        points.push(row?);
-    }
-    Ok(points)
 }
 
 // --- Occupancy query (feature 2.4) ---
@@ -1101,6 +1054,7 @@ pub fn query_bajs_usage(
 
 // --- BAJS measured ride flow ---
 
+#[cfg(test)]
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BajsFlowPoint {
@@ -1268,6 +1222,7 @@ pub fn insert_bajs_trips(
 
 /// Minute-level ride flow. `max_gap_sec` drops intervals where polling
 /// stalled, so a feed outage reads as missing rather than as zero rides.
+#[cfg(test)]
 pub fn query_bajs_flow(
     conn: &Connection,
     from: i64,
@@ -1482,7 +1437,7 @@ pub fn spawn_writer_thread(db_path: std::path::PathBuf, rx: std::sync::mpsc::Rec
 
         let mut ingest_count = 0u64;
 
-        for snapshot in rx.iter() {
+        for snapshot in &rx {
             db.ingest(&snapshot);
             ingest_count += 1;
 
@@ -1564,7 +1519,7 @@ mod tests {
         let mut db = RtDb::open(&db_path).unwrap();
 
         // Ingest a snapshot at a 5-min boundary (writes both route + stop level)
-        let ts = 1710720000; // divisible by 300
+        let ts = 1_710_720_000; // divisible by 300
         db.ingest(&make_snapshot(ts));
 
         // Check route-level snapshots
@@ -1628,7 +1583,7 @@ mod tests {
 
         // Insert snapshots across 2 hours
         for i in 0..120 {
-            db.ingest(&make_snapshot(1710720000 + i * 60));
+            db.ingest(&make_snapshot(1_710_720_000 + i * 60));
         }
 
         let before: i64 = db
@@ -1638,7 +1593,7 @@ mod tests {
         assert!(before > 0);
 
         // Compact everything before the end
-        let compacted = db.compact(1710720000 + 120 * 60).unwrap();
+        let compacted = db.compact(1_710_720_000 + 120 * 60).unwrap();
         assert!(compacted > 0);
 
         // Hourly aggregates should exist
@@ -1678,7 +1633,7 @@ mod tests {
     fn test_bajs_flow_round_trip() {
         let dir = tempfile::tempdir().unwrap();
         let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
-        let hour = 1710720000;
+        let hour = 1_710_720_000;
 
         let flush = crate::bajs_flow::HourFlush {
             hour_ts: hour,
@@ -1707,7 +1662,7 @@ mod tests {
     fn test_bajs_start_retraction_lands_on_the_dated_bucket() {
         let dir = tempfile::tempdir().unwrap();
         let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
-        let hour = 1710720000;
+        let hour = 1_710_720_000;
         let counted_ts = hour + 1830; // 30 min 30 s into the hour
 
         insert_bajs_flow_minute(
@@ -1768,7 +1723,7 @@ mod tests {
     fn test_bajs_flow_minute_filters_stalled_polls() {
         let dir = tempfile::tempdir().unwrap();
         let db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
-        let ts = 1710720000;
+        let ts = 1_710_720_000;
 
         let fresh = crate::bajs_flow::PollDelta {
             ts,
@@ -1802,7 +1757,7 @@ mod tests {
     fn test_bajs_hourly_totals_report_observed_minutes() {
         let dir = tempfile::tempdir().unwrap();
         let db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
-        let hour = 1710720000; // exactly on an hour boundary
+        let hour = 1_710_720_000; // exactly on an hour boundary
 
         // 40 good minutes in the first hour, one of them stalled.
         for i in 0..40 {
@@ -1854,7 +1809,7 @@ mod tests {
     fn test_bajs_retention_drops_old_rows() {
         let dir = tempfile::tempdir().unwrap();
         let mut db = RtDb::open(&dir.path().join("test-rt.db")).unwrap();
-        let now = 1710720000;
+        let now = 1_710_720_000;
         let ancient = now - 400 * 86400;
 
         insert_bajs_flow_minute(

@@ -108,7 +108,7 @@ pub(crate) fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
         let mut shift = 0u32;
         let mut result = 0i64;
         loop {
-            let b = (bytes[idx] as i64) - 63;
+            let b = i64::from(bytes[idx]) - 63;
             idx += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
@@ -126,7 +126,7 @@ pub(crate) fn decode_polyline(encoded: &str) -> Vec<(f64, f64)> {
         shift = 0;
         result = 0;
         loop {
-            let b = (bytes[idx] as i64) - 63;
+            let b = i64::from(bytes[idx]) - 63;
             idx += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
@@ -204,7 +204,7 @@ pub fn compute_and_write(graph: &TransitGraphJson, out_path: &std::path::Path, d
         }
         // Keep the pattern with the most departures as representative
         if pattern.departures.len() > agg.best_departures.len() {
-            agg.best_departures = pattern.departures.clone();
+            agg.best_departures.clone_from(&pattern.departures);
         }
         agg.pattern_count += 1;
     }
@@ -472,7 +472,7 @@ pub fn format_time(seconds: f64) -> String {
     let total = seconds as u32;
     let h = total / 3600;
     let m = (total % 3600) / 60;
-    format!("{:02}:{:02}", h, m)
+    format!("{h:02}:{m:02}")
 }
 
 pub(crate) fn round1(v: f64) -> f64 {

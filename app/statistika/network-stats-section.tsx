@@ -1,6 +1,8 @@
-import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
+import { readJsonCached } from "@/lib/page-data"
+import { fmtHR } from "@/lib/format"
+import { loadRouteStats } from "./stat-data"
 import { scaleLinear } from "@visx/scale"
 import type {
   NetworkStatsOutput,
@@ -20,34 +22,10 @@ import {
 } from "./stat-typography"
 import { CollapsibleContent } from "./stat-expandable"
 
-function loadNetworkStats(): NetworkStatsOutput | null {
-  const statsPath = join(getDataDir(), "network-stats.json")
-  if (!existsSync(statsPath)) return null
-  try {
-    return JSON.parse(readFileSync(statsPath, "utf-8"))
-  } catch {
-    return null
-  }
-}
-
-function loadRouteStatsForInsights(): RouteStatsOutput | null {
-  const statsPath = join(getDataDir(), "route-stats.json")
-  if (!existsSync(statsPath)) return null
-  try {
-    return JSON.parse(readFileSync(statsPath, "utf-8"))
-  } catch {
-    return null
-  }
-}
-
 function fmtDots(n: number): string {
   return Math.round(n)
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-}
-
-function fmtDec(n: number, decimals = 2): string {
-  return n.toFixed(decimals).replace(".", ",")
+    .replaceAll(/\B(?=(\d{3})+(?!\d))/gu, ".")
 }
 
 function tramSort(a: string, b: string): number {
@@ -70,7 +48,7 @@ function computeHeatmapInsights(
   dayTrams: NetworkRoute[],
   nightTrams: NetworkRoute[]
 ) {
-  const hourlySystem = Array(24).fill(0)
+  const hourlySystem = Array.from({ length: 24 }, () => 0)
   for (const r of trams) {
     r.hourlyDepartures.forEach((d, h) => {
       hourlySystem[h] += d
@@ -78,7 +56,7 @@ function computeHeatmapInsights(
   }
   const peakHour = hourlySystem.indexOf(Math.max(...hourlySystem))
   const peakDeps = hourlySystem[peakHour]
-  const busiestTram = [...dayTrams].sort(
+  const busiestTram = dayTrams.toSorted(
     (a, b) =>
       b.hourlyDepartures.reduce((s, v) => s + v, 0) -
       a.hourlyDepartures.reduce((s, v) => s + v, 0)
@@ -114,20 +92,20 @@ function computeQualityInsights(
   )
   const mostDirect =
     withTort.length > 0
-      ? [...withTort].sort(
+      ? withTort.toSorted(
           (a, b) => (a.tortuosity ?? 99) - (b.tortuosity ?? 99)
         )[0]
       : null
   const mostWinding =
     withTort.length > 0
-      ? [...withTort].sort(
+      ? withTort.toSorted(
           (a, b) => (b.tortuosity ?? 0) - (a.tortuosity ?? 0)
         )[0]
       : null
   const mostRegular =
     dayTrams
       .filter((r) => r.headwayCv !== null && r.headwayCv > 0)
-      .sort((a, b) => (a.headwayCv ?? 99) - (b.headwayCv ?? 99))[0] ?? null
+      .toSorted((a, b) => (a.headwayCv ?? 99) - (b.headwayCv ?? 99))[0] ?? null
 
   const speedData: { name: string; spacing: number; speed: number }[] = []
   if (routeStats) {
@@ -146,11 +124,11 @@ function computeQualityInsights(
   }
   const slowest =
     speedData.length > 0
-      ? [...speedData].sort((a, b) => a.speed - b.speed)[0]
+      ? speedData.toSorted((a, b) => a.speed - b.speed)[0]
       : null
   const fastest =
     speedData.length > 0
-      ? [...speedData].sort((a, b) => b.speed - a.speed)[0]
+      ? speedData.toSorted((a, b) => b.speed - a.speed)[0]
       : null
   return { mostDirect, mostWinding, mostRegular, slowest, fastest, speedData }
 }
@@ -166,7 +144,7 @@ function computeFleetInsights(fleet: Fleet | null) {
       ? Math.round((fleet.interlinedBlocks / fleet.busBlocks) * 100)
       : 0
   const biggestBlock = fleet
-    ? ([...fleet.interlinedExamples].sort(
+    ? (fleet.interlinedExamples.toSorted(
         (a, b) => b.routes.length - a.routes.length
       )[0] ?? null)
     : null
@@ -356,6 +334,7 @@ function HeatmapCells({
       {tramRoutes.map((r, ri) =>
         r.hourlyDepartures.map((dep, ci) => (
           <rect
+            // oxlint-disable-next-line react/no-array-index-key -- ci is the hour of day, a stable column identity
             key={`cell-${r.name}-${ci}`}
             x={HEATMAP_LABEL_W + ci * (HEATMAP_CELL_W + HEATMAP_GAP)}
             y={ri * (HEATMAP_CELL_H + HEATMAP_GAP)}
@@ -373,6 +352,7 @@ function HeatmapCells({
         r.hourlyDepartures.map((dep, ci) =>
           dep > 0 ? (
             <text
+              // oxlint-disable-next-line react/no-array-index-key -- ci is the hour of day, a stable column identity
               key={`txt-${r.name}-${ci}`}
               x={
                 HEATMAP_LABEL_W +
@@ -411,17 +391,17 @@ function HeatmapInsight({
         Broj polazaka po satu za svaku tramvajsku liniju. Svjetlija boja znači
         više polazaka. Vršni sat je <strong>{insights.peakHour}:00</strong> s{" "}
         {insights.peakDeps} tramvajskih polazaka.
-        {insights.busiestTram && (
+        {insights.busiestTram !== undefined && (
           <>
             {" "}
             Najfrekventnija linija {insights.busiestTram.name} ima{" "}
             {insights.busiestPeakDep} polazaka u vršnom satu - tramvaj svakih{" "}
-            <strong>{fmtDec(insights.busiestInterval, 1)} minuta</strong>.
+            <strong>{fmtHR(insights.busiestInterval, 1)} minuta</strong>.
           </>
         )}{" "}
         Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} polazaka -
         tek{" "}
-        {fmtDec(
+        {fmtHR(
           (insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100,
           1
         )}
@@ -440,7 +420,7 @@ function HourlyHeatmap({
 }) {
   const tramRoutes = routes
     .filter((r) => r.mode === "TRAM")
-    .sort((a, b) => {
+    .toSorted((a, b) => {
       const totalA = a.hourlyDepartures.reduce((s, v) => s + v, 0)
       const totalB = b.hourlyDepartures.reduce((s, v) => s + v, 0)
       return totalB - totalA
@@ -520,7 +500,7 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="Tortuoznost"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.tortuosity !== null ? fmtDec(r.tortuosity) : "-"}
+        {r.tortuosity === null ? "-" : fmtHR(r.tortuosity, 2)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Razmak"
@@ -532,13 +512,13 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
         label="CV takta"
         valueClassName={cvColor(r.headwayCv) + " font-medium"}
       >
-        {r.headwayCv !== null ? fmtDec(r.headwayCv) : "-"}
+        {r.headwayCv === null ? "-" : fmtHR(r.headwayCv, 2)}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
         label="Vrh:baza"
         valueClassName="text-slate-900 dark:text-slate-100"
       >
-        {r.peakToBaseRatio !== null ? fmtDec(r.peakToBaseRatio) : "-"}
+        {r.peakToBaseRatio === null ? "-" : fmtHR(r.peakToBaseRatio, 2)}
       </RouteQualityCardStatRow>
     </div>
   )
@@ -588,12 +568,12 @@ function RouteQualityInsight({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostDirect.name}
             </strong>{" "}
-            (tortuoznost {fmtDec(insights.mostDirect.tortuosity!, 2)}), a
+            (tortuoznost {fmtHR(insights.mostDirect.tortuosity!, 2)}), a
             najkrivudavija{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostWinding.name}
             </strong>{" "}
-            ({fmtDec(insights.mostWinding.tortuosity!, 2)} -{" "}
+            ({fmtHR(insights.mostWinding.tortuosity!, 2)} -{" "}
             {Math.round((insights.mostWinding.tortuosity! - 1) * 100)}% duža od
             ravne linije).
           </>
@@ -606,12 +586,12 @@ function RouteQualityInsight({
               Tramvaj {insights.fastest.name}
             </strong>{" "}
             ({Math.round(insights.fastest.spacing)} m razmak) postiže{" "}
-            {fmtDec(insights.fastest.speed, 1)} km/h, dok{" "}
+            {fmtHR(insights.fastest.speed, 1)} km/h, dok{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.slowest.name}
             </strong>{" "}
             ({Math.round(insights.slowest.spacing)} m) ide samo{" "}
-            {fmtDec(insights.slowest.speed, 1)} km/h.
+            {fmtHR(insights.slowest.speed, 1)} km/h.
           </>
         )}
       </p>
@@ -628,7 +608,7 @@ function RouteQualityCards({
 }) {
   const tramRoutes = routes
     .filter((r) => r.mode === "TRAM")
-    .sort((a, b) => tramSort(a.name, b.name))
+    .toSorted((a, b) => tramSort(a.name, b.name))
 
   if (tramRoutes.length === 0) return null
 
@@ -706,8 +686,8 @@ function FleetNumbers({ fleet }: { fleet: Fleet }) {
 }
 
 function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
-  const topBlocks = [...fleet.interlinedExamples]
-    .sort((a, b) => b.routes.length - a.routes.length)
+  const topBlocks = fleet.interlinedExamples
+    .toSorted((a, b) => b.routes.length - a.routes.length)
     .slice(0, 5)
 
   return (
@@ -808,7 +788,7 @@ function WeekdayOnlyCard({
       </div>
       <div className="flex flex-wrap gap-1.5">
         {weekendService.weekdayOnlyRoutes
-          .sort((a, b) => {
+          .toSorted((a, b) => {
             const na = parseInt(a, 10),
               nb = parseInt(b, 10)
             if (isNaN(na) && isNaN(nb)) return a.localeCompare(b)
@@ -939,7 +919,7 @@ function WeekendAsymmetrySection({
   if (!weekendService && !asymmetry) return null
 
   const topAsymmetric = asymmetry
-    ? [...asymmetry].sort((a, b) => a.ratio - b.ratio).slice(0, 5)
+    ? asymmetry.toSorted((a, b) => a.ratio - b.ratio).slice(0, 5)
     : []
 
   const weekdayTrams =
@@ -1315,7 +1295,7 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
         <span
           className={`inline-flex h-6 items-center rounded-full px-2 text-[13px] font-semibold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
         >
-          {fmtDec(hub.avgTransferWaitMin, 1)} min
+          {fmtHR(hub.avgTransferWaitMin, 1)} min
         </span>
       </td>
       <td className="py-3 text-center">
@@ -1325,7 +1305,7 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
         <span
           className={`ml-1.5 text-[11px] font-medium tabular-nums ${pulseWaitColor(hub.bestHourWaitMin)}`}
         >
-          ({fmtDec(hub.bestHourWaitMin, 1)} min)
+          ({fmtHR(hub.bestHourWaitMin, 1)} min)
         </span>
       </td>
     </tr>
@@ -1358,6 +1338,7 @@ function PulseHeatmapCells({
       {topHubs.map((hub, ri) =>
         hub.hourlyWait.map((wait, ci) => (
           <rect
+            // oxlint-disable-next-line react/no-array-index-key -- ci is the hour of day, a stable column identity
             key={`cell-${hub.stopKey}-${ci}`}
             x={PULSE_LABEL_W + ci * (PULSE_CELL_W + PULSE_GAP)}
             y={ri * (PULSE_CELL_H + PULSE_GAP)}
@@ -1373,6 +1354,7 @@ function PulseHeatmapCells({
         hub.hourlyWait.map((wait, ci) =>
           wait >= 0 ? (
             <text
+              // oxlint-disable-next-line react/no-array-index-key -- ci is the hour of day, a stable column identity
               key={`txt-${hub.stopKey}-${ci}`}
               x={
                 PULSE_LABEL_W +
@@ -1508,8 +1490,8 @@ function PulseInsight({
         analiziranih čvorišta (prosječno čekanje na presjedanje &lt;5 min u
         vršnom satu). Najbolje sinkronizirano čvorište je{" "}
         <strong>{bestHub.stopName}</strong> s prosječnim čekanjem od samo{" "}
-        {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta. Ukupni prosjek od{" "}
-        {fmtDec(avgWait, 1)} minuta sugerira da postoji određena koordinacija,
+        {fmtHR(bestHub.avgTransferWaitMin, 1)} minuta. Ukupni prosjek od{" "}
+        {fmtHR(avgWait, 1)} minuta sugerira da postoji određena koordinacija,
         ali ne sustavni pulse.
       </Insight>
     )
@@ -1517,11 +1499,11 @@ function PulseInsight({
   return (
     <Insight>
       Zagreb ne koristi pulse scheduling - prosječno čekanje na presjedanje na
-      velikim čvorištima iznosi <strong>{fmtDec(avgWait, 1)} minuta</strong>.
+      velikim čvorištima iznosi <strong>{fmtHR(avgWait, 1)} minuta</strong>.
       Presjedanja su uglavnom prepuštena slučaju, što je tipično za mreže s
       kratkim intervalima. Najbolje sinkronizirano čvorište je{" "}
       <strong>{bestHub.stopName}</strong> s prosječnim čekanjem od{" "}
-      {fmtDec(bestHub.avgTransferWaitMin, 1)} minuta.
+      {fmtHR(bestHub.avgTransferWaitMin, 1)} minuta.
     </Insight>
   )
 }
@@ -1531,7 +1513,7 @@ function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
 
   const avgWait =
     hubs.reduce((s, h) => s + h.avgTransferWaitMin, 0) / hubs.length
-  const bestHub = [...hubs].sort(
+  const bestHub = hubs.toSorted(
     (a, b) => a.avgTransferWaitMin - b.avgTransferWaitMin
   )[0]
   const pulsedCount = hubs.filter((h) => h.bestHourWaitMin < 5).length
@@ -1565,10 +1547,12 @@ function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
 // Main component
 // ---------------------------------------------------------------------------
 export default function NetworkStatsSection() {
-  const data = loadNetworkStats()
+  const data = readJsonCached<NetworkStatsOutput>(
+    join(getDataDir(), "network-stats.json")
+  )
   if (!data) return null
 
-  const routeStats = loadRouteStatsForInsights()
+  const routeStats = loadRouteStats()
   const insights = computeInsights(data, routeStats)
 
   return (
@@ -1602,7 +1586,7 @@ export default function NetworkStatsSection() {
               asymmetry={data.directionalAsymmetry}
             />
             {data.serviceSpan && <ServiceSpanSection span={data.serviceSpan} />}
-            {data.pulseHubs && data.pulseHubs.length > 0 && (
+            {data.pulseHubs.length > 0 && (
               <PulseSchedulingSection hubs={data.pulseHubs} />
             )}
           </div>

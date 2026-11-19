@@ -12,7 +12,7 @@ import { DropdownPanel, DropdownSection, MapTile, MapTileButton } from "./ui"
 
 /**
  * Departure-time control (Paper "Polazak V1b — preseti + točno vrijeme",
- * spec §6). Separate from the 15/30/45 duration — drives the GTFS schedule.
+ * spec §6). Separate from the 15/30 duration — drives the GTFS schedule.
  * Presets are chips; the big mono time box takes direct input or ±15 steps.
  */
 
@@ -24,7 +24,7 @@ const PRESETS = [
 ] as const
 
 function parseTime(t: string): number | null {
-  const m = t.trim().match(/^(\d{1,2})[:.]?(\d{2})$/)
+  const m = t.trim().match(/^(\d{1,2})[:.]?(\d{2})$/u)
   if (!m) return null
   const h = Number(m[1])
   const min = Number(m[2])
@@ -85,7 +85,7 @@ function ExactTimeRow({
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commitDraft}
           onKeyDown={(e) => {
-            if (e.key === "Enter") (e.target as HTMLInputElement).blur()
+            if (e.key === "Enter") e.currentTarget.blur()
           }}
           aria-label="Točno vrijeme polaska"
           className={`w-[72px] bg-transparent text-center font-mono text-[22px] leading-[26px] outline-none ${
@@ -204,6 +204,7 @@ export function PolazakControl({
   compact?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  // oxlint-disable-next-line react/purity -- the "Sada" label is meant to show the clock as of each render
   const now = formatClock(new Date())
   useCloseOnEscape(open, () => setOpen(false))
 

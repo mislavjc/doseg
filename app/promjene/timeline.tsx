@@ -10,8 +10,9 @@ import {
   type Stat, type Geom, type Source, type Successor,
   type FeaturedItem, type LineRowItem, type StopRowItem,
   type LineItem, type TimelineModel,
-  num, dateLabel, monthLabel, expandStop, TAG, TALLY, norm,
+  num, dateLabel, monthLabel, expandStop, TAG, TALLY,
 } from "./lib"
+import { norm } from "@/lib/normalize"
 
 // Code-split maplibre-gl out of the initial /promjene bundle; MountWhenNear
 // holds the chunk fetch until the map is 200px from the viewport (the first
@@ -76,7 +77,7 @@ function SuccessorNote({ successor }: { successor: Successor }) {
 }
 
 function LineChips({ lines }: { lines: string[] }) {
-  if (!lines.length) return null
+  if (lines.length === 0) return null
   const shown = lines.slice(0, 6)
   return (
     <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 4, verticalAlign: "middle" }}>
@@ -91,7 +92,7 @@ function LineChips({ lines }: { lines: string[] }) {
 /** "Borongaj – Borongaj" (loop) reads as a no-op; collapse it to "kružna · X". */
 function relacijaLabel(r: string): string {
   const parts = r.split(" – ")
-  return parts[0] && parts[0] === parts[1] ? `kružna · ${expandStop(parts[0])}` : parts.map(expandStop).join(" – ")
+  return parts[0] && parts[0] === parts[1] ? `kružna · ${expandStop(parts[0])}` : parts.map((p) => expandStop(p)).join(" – ")
 }
 
 function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
@@ -107,8 +108,8 @@ function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
   if (approx) rows[0][0] += " (procjena)"
   return (
     <div style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", paddingTop: 24 }}>
-      {rows.map(([label, a, b], i) => (
-        <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 12, paddingBlock: 9 }}>
+      {rows.map(([label, a, b]) => (
+        <div key={label} style={{ display: "flex", alignItems: "baseline", gap: 12, paddingBlock: 9 }}>
           <span style={{ flexShrink: 0, fontFamily: HEROS, fontSize: 16, lineHeight: "22px", color: MUTE }}>{label}</span>
           <div style={{ flexGrow: 1, height: 13, borderBottom: `1px dotted ${DOT}` }} />
           <span style={{ flexShrink: 1, minWidth: 0, whiteSpace: "normal", overflowWrap: "anywhere", fontFamily: MONO, fontSize: 16, lineHeight: "22px", color: INK, textAlign: "right" }}><span style={{ color: FAINT }}>{a}</span> {b}</span>
@@ -241,7 +242,7 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
       const ym = it.date.slice(0, 7)
       ;(by.get(ym) ?? by.set(ym, []).get(ym)!).push(it)
     }
-    return [...by.entries()].sort((a, b) => b[0].localeCompare(a[0]))
+    return [...by.entries()].toSorted((a, b) => b[0].localeCompare(a[0]))
   }, [items])
   const headBase: CSSProperties = { width: "100%", boxSizing: "border-box", display: "flex", gap: 8, alignItems: "center", paddingBlock: 14, borderTop: `1px solid ${HAIR}`, color: MUTE }
   const label = <span style={{ fontFamily: MONO, fontSize: 12, color: MUTE }}>izmještena stajališta ({items.length})</span>
@@ -271,14 +272,14 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
 }
 
 function YearHeader({ year, tally }: { year: string; tally: { category: string; count: number }[] }) {
-  const tokens = [...tally].sort((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
+  const tokens = tally.toSorted((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
   return (
     <div style={{ width: "100%", maxWidth: 556, paddingTop: 56, paddingBottom: 10, display: "flex", flexDirection: "column", gap: 8 }}>
       <h2 style={{ margin: 0, fontFamily: MONO, fontWeight: 400, fontSize: 16, color: INK }}>{year}.</h2>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8 }}>
         {tokens.map((t, i) => {
+          if (!Object.hasOwn(TALLY, t.category)) return null
           const m = TALLY[t.category]
-          if (!m) return null
           return (
             <Fragment key={t.category}>
               {i > 0 && <Sep />}
@@ -302,7 +303,7 @@ function Finder({ q, setQ, seg, setSeg, counts, resultLabel }: { q: string; setQ
   const n: Record<Seg, number> = { sve: counts.total, linije: counts.line, stajalište: counts.stop }
   return (
     <div style={{ width: "100%", maxWidth: 556, paddingTop: 52, display: "flex", flexDirection: "column", gap: 12 }}>
-      <div className="pr-search" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${HAIR}`, padding: "11px 14px", background: "#fff" }}>
+      <div className="pr-search" style={{ display: "flex", alignItems: "center", gap: 10, border: `1px solid ${HAIR}`, padding: "11px 14px", background: "var(--ground)" }}>
         <svg width={15} height={15} viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0, color: FAINT }}>
           <circle cx={11} cy={11} r={7} stroke="currentColor" strokeWidth={2} />
           <path d="M20 20L16 16" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
@@ -352,7 +353,7 @@ function renderLineItem(it: LineItem, legend?: ReactNode) {
 function tallyOf(lineItems: LineItem[], stopItems: StopRowItem[]): { category: string; count: number }[] {
   const counts: Record<string, number> = {}
   for (const it of lineItems) counts[it.category] = (counts[it.category] ?? 0) + 1
-  if (stopItems.length) counts["stajalište"] = stopItems.length
+  if (stopItems.length > 0) counts["stajalište"] = stopItems.length
   return Object.entries(counts).map(([category, count]) => ({ category, count }))
 }
 
@@ -375,7 +376,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
   const segCounts = { total: qLine + qStop, line: qLine, stop: qStop }
   const sections = matched
     .map((y) => ({ year: y.year, lineItems: showLines ? y.line : [], stopItems: showStops ? y.stop : [] }))
-    .filter((s) => s.lineItems.length || s.stopItems.length)
+    .filter((s) => s.lineItems.length > 0 || s.stopItems.length > 0)
   const shown = sections.reduce((a, s) => a + s.lineItems.length + s.stopItems.length, 0)
   const resultLabel = nq ? `${num(shown)} ${shown === 1 ? "rezultat" : "rezultata"}` : "najnovije gore"
   const ledgerOpen = nq !== "" || seg === "stajalište"
@@ -404,7 +405,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
           <Fragment key={year}>
             <YearHeader year={year} tally={tallyOf(lineItems, stopItems)} />
             {lineItems.map((it) => renderLineItem(it, it.id === legendId ? legend : undefined))}
-            {showStops && stopItems.length > 0 && <StopLedger items={stopItems} forceOpen={ledgerOpen} />}
+            {stopItems.length > 0 && <StopLedger items={stopItems} forceOpen={ledgerOpen} />}
           </Fragment>
         ))
       )}

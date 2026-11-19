@@ -1,3 +1,4 @@
+import { readRtJson } from "./bajs-rides"
 import { formatStationName } from "./bajs-station-name"
 import { districtAt } from "./district-at"
 import type {
@@ -22,10 +23,6 @@ import type {
  * unavailable state when the RT server is down.
  */
 
-const ISOCHRONE_URL = process.env.ISOCHRONE_URL || "http://localhost:3002"
-
-const REVALIDATE_SEC = 300
-
 /**
  * The hours that separate a commute from ordinary traffic. Taken from the
  * measured profile: a narrow 07h departure spike, and a much broader afternoon
@@ -39,18 +36,6 @@ const AFTERNOON = [16, 17, 18]
  * trip or one van run flips the sign.
  */
 const MIN_NET_PER_DAY = 3
-
-async function readJson<T>(path: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${ISOCHRONE_URL}${path}`, {
-      next: { revalidate: REVALIDATE_SEC },
-    })
-    if (!res.ok) return null
-    return (await res.json()) as T
-  } catch {
-    return null
-  }
-}
 
 /**
  * Net bikes gained across `hours`, counting riders only: the van's own moves
@@ -90,14 +75,14 @@ export type BajsFlow = {
 }
 
 export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
-  const data = await readJson<BajsStationFlowResponse>(
+  const data = await readRtJson<BajsStationFlowResponse>(
     `/api/rt/bajs-station-flow?days=${days}`
   )
   if (!data || data.stations.length === 0) return null
 
   const mean = (hours: number[]) => {
     const seen = hours.map((h) => data.observedDays[h] ?? 0).filter((d) => d > 0)
-    return seen.length ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
+    return seen.length > 0 ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
   }
   const morningDays = mean(MORNING)
   const afternoonDays = mean(AFTERNOON)
@@ -133,7 +118,7 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
           Math.abs(afternoonNet) >= MIN_NET_PER_DAY,
       }
     })
-    .sort((a, b) => a.morningNet - b.morningNet)
+    .toSorted((a, b) => a.morningNet - b.morningNet)
 
   const strong = kvartovi.filter((k) => Math.abs(k.morningNet) >= MIN_NET_PER_DAY)
 
@@ -142,7 +127,7 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
     drains: strong.filter((k) => k.morningNet < 0).slice(0, 5),
     fills: strong
       .filter((k) => k.morningNet > 0)
-      .sort((a, b) => b.morningNet - a.morningNet)
+      .toSorted((a, b) => b.morningNet - a.morningNet)
       .slice(0, 5),
     morningDays,
   }
@@ -170,16 +155,16 @@ export async function loadBajsRelocations(
   days = 30,
   fullDays?: { date: string }[]
 ): Promise<BajsRelocations | null> {
-  const data = await readJson<BajsRelocationsResponse>(
+  const data = await readRtJson<BajsRelocationsResponse>(
     `/api/rt/bajs-relocations?days=${days}`
   )
   if (!data || data.days.length === 0) return null
 
   const observed = fullDays && new Set(fullDays.map((d) => d.date))
+  // Without a ride window to lean on, drop the ends, which are always partial.
   const complete = observed
     ? data.days.filter((d) => observed.has(d.date))
-    : // No ride window to lean on: drop the ends, which are always partial.
-      data.days.slice(1, -1)
+    : data.days.slice(1, -1)
   if (complete.length === 0) return null
   const perDay =
     complete.reduce((sum, d) => sum + d.moves, 0) / complete.length

@@ -6,6 +6,7 @@ import type {
   BajsRideHour,
   BajsRidesResponse,
 } from "@/lib/generated"
+import { responseJson } from "@/lib/json"
 
 /**
  * Server-side reader for the measured BAJS ride flow.
@@ -28,7 +29,7 @@ const REVALIDATE_SEC = 300
  * A day is only worth quoting if we saw nearly all of it. Below this the total
  * is a floor, not a count, so headline copy must skip it.
  */
-export const FULL_DAY_MINUTES = 1400
+const FULL_DAY_MINUTES = 1400
 
 /**
  * Ranking order below this much measurement is noise: a single event weekend
@@ -36,7 +37,8 @@ export const FULL_DAY_MINUTES = 1400
  */
 export const RANKING_MIN_DAYS = 14
 
-async function readJson<T>(
+/** GET an isochrone-server RT endpoint; null on any failure so pages degrade. */
+export async function readRtJson<T>(
   path: string,
   revalidate = REVALIDATE_SEC
 ): Promise<T | null> {
@@ -45,10 +47,15 @@ async function readJson<T>(
       next: { revalidate },
     })
     if (!res.ok) return null
-    return (await res.json()) as T
+    return await responseJson<T>(res)
   } catch {
     return null
   }
+}
+
+/** The endpoint reports 0 (or null) before anything has been measured. */
+function epochDate(seconds: number | null): Date | null {
+  return seconds != null && seconds !== 0 ? new Date(seconds * 1000) : null
 }
 
 export type BajsRides = {
@@ -71,7 +78,7 @@ export type BajsRides = {
 }
 
 export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
-  const data = await readJson<BajsRidesResponse>(
+  const data = await readRtJson<BajsRidesResponse>(
     `/api/rt/bajs-rides?days=${days}`
   )
   if (!data) return null
@@ -80,20 +87,20 @@ export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
   const last = data.days.at(-1)
   const partialDay = last && last.minutes < FULL_DAY_MINUTES ? last : null
 
-  const avgPerDay = complete.length
+  const avgPerDay = complete.length > 0
     ? complete.reduce((sum, d) => sum + d.starts, 0) / complete.length
     : null
 
-  const busiestDay = complete.length
+  const busiestDay = complete.length > 0
     ? complete.reduce((best, d) => (d.starts > best.starts ? d : best))
     : null
 
   const hourly = data.hourly
-  const peakHour = hourly.length
+  const peakHour = hourly.length > 0
     ? hourly.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
     : null
   const morning = hourly.filter((h) => h.hour < 12)
-  const morningPeak = morning.length
+  const morningPeak = morning.length > 0
     ? morning.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
     : null
 
@@ -105,8 +112,8 @@ export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
     hourly,
     peakHour,
     morningPeak,
-    measuredFrom: data.measuredFrom ? new Date(data.measuredFrom * 1000) : null,
-    measuredTo: data.measuredTo ? new Date(data.measuredTo * 1000) : null,
+    measuredFrom: epochDate(data.measuredFrom),
+    measuredTo: epochDate(data.measuredTo),
   }
 }
 
@@ -120,7 +127,7 @@ export type BajsLive = {
 
 /** Current fleet position. Short cache: this is the "right now" reading. */
 export async function loadBajsLive(): Promise<BajsLive | null> {
-  const data = await readJson<{
+  const data = await readRtJson<{
     total_stations?: number
     totalStations?: number
     total_bikes_available?: number
@@ -156,7 +163,7 @@ export async function loadBajsRanking(
   days = 30,
   limit = 10
 ): Promise<BajsRanking | null> {
-  const data = await readJson<BajsRankingResponse>(
+  const data = await readRtJson<BajsRankingResponse>(
     `/api/rt/bajs-station-ranking?days=${days}&limit=200`
   )
   if (!data || data.stations.length === 0) return null
@@ -169,8 +176,8 @@ export async function loadBajsRanking(
 
   // The endpoint already orders by measured starts.
   const busiest = stations.slice(0, limit)
-  const emptiest = [...stations]
-    .sort((a, b) => b.emptyShare - a.emptyShare)
+  const emptiest = stations
+    .toSorted((a, b) => b.emptyShare - a.emptyShare)
     .slice(0, limit)
 
   return {

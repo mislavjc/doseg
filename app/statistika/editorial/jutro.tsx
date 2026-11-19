@@ -8,8 +8,10 @@ import { BodyMuted, Eyebrow, Hook, Section } from "./primitives"
  * (blue) pulled left by the drop. Top 3 (biggest losses) emphasised.
  */
 
-const MORNING = 95 // % — morning dot near the right edge of the track
-const SCALE = 0.95 // % leftward per 1% drop
+// % — morning dot near the right edge of the track
+const MORNING = 95
+// % leftward per 1% drop
+const SCALE = 0.95
 
 function DumbbellRow({ row, top }: { row: EveningRow; top: boolean }) {
   const evening = Math.max(4, MORNING - row.drop * SCALE)
@@ -67,13 +69,13 @@ export function Jutro({ rows }: { rows: EveningRow[] }) {
   // trećinu" and survived a feed roll that inverted the story, contradicting the
   // chart right below it.
   const worst = rows.slice(0, 3)
-  const least = rows[rows.length - 1]
+  const least = rows.at(-1)
   return (
     <Section id="jutro">
       <div className="flex flex-col gap-6">
         <Eyebrow>jutro vs. večer</Eyebrow>
         <Hook>
-          {worst[0]
+          {worst.length > 0
             ? `Kad padne mrak, ${worst[0].name} ostaje bez ${worst[0].drop}% grada.`
             : "Kad padne mrak, grad se skupi."}
         </Hook>

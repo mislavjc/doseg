@@ -16,10 +16,13 @@
  *   bun scripts/build-stop-heroes.ts [--stop reljkoviceva] [--min-lines 3] [--cutoff 80]
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { createDitherCropper, type HeroCrop, mapConcurrent } from "./lib/dither-crop"
+import { argValue } from "./lib/args"
+import { mapConcurrent } from "./lib/concurrency"
+import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
+import { readJson } from "./lib/json"
 
 const DESKTOP = { suffix: "", outW: 2880, outH: 1120, pad: 0.18 }
 const MOBILE = { suffix: "-m", outW: 1500, outH: 1180, pad: 0.22 }
@@ -29,20 +32,10 @@ const dataDir = join(root, "data", "stanice")
 const outDir = join(root, "public", "stanice")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
-const args = process.argv.slice(2)
-function argValue(name: string): string | undefined {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const onlyStop = argValue("--stop")
 const minLines = Number(argValue("--min-lines") ?? 3)
 const cutoff = Number(argValue("--cutoff") ?? 80)
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
-
-interface HeroMeta {
-  desktop: HeroCrop
-  mobile: HeroCrop
-}
 
 // Stops crop a junction window, deeper than the line heroes (km-wide routes).
 // zoomMax 17 → a ~2.4 km-wide crop centred on the stop: enough surrounding city
@@ -53,23 +46,21 @@ const cropper = createDitherCropper({ cacheDir, cutoff, zoomOverride, zoomMax: 1
 async function main() {
   mkdirSync(outDir, { recursive: true })
 
-  const index = JSON.parse(readFileSync(join(dataDir, "index.json"), "utf-8")) as {
-    stops: { slug: string; lineCount: number }[]
-  }
+  const index = readJson<{ stops: { slug: string; lineCount: number }[] }>(
+    join(dataDir, "index.json")
+  )
   const slugs = index.stops
     .filter((s) => (onlyStop ? s.slug === onlyStop : s.lineCount >= minLines))
     .map((s) => s.slug)
 
   const metaPath = join(dataDir, "hero-meta.json")
   const meta: Record<string, HeroMeta> = existsSync(metaPath)
-    ? JSON.parse(readFileSync(metaPath, "utf-8"))
+    ? readJson<Record<string, HeroMeta>>(metaPath)
     : {}
 
   let done = 0
   await mapConcurrent(slugs, 4, async (slug) => {
-    const { hero } = JSON.parse(readFileSync(join(dataDir, `${slug}.json`), "utf-8")) as {
-      hero: { bbox: number[] }
-    }
+    const { hero } = readJson<{ hero: { bbox: number[] } }>(join(dataDir, `${slug}.json`))
     const t0 = Date.now()
     const prev = meta[slug]
     const [desktop, mobile] = await Promise.all([
@@ -88,7 +79,4 @@ async function main() {
   console.error(`Done: ${slugs.length} stop heroes, meta → ${metaPath}`)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+await main()

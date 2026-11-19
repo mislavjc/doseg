@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
+import { fmtHR } from "@/lib/format"
+import { readJsonCached } from "@/lib/page-data"
 import type {
   District as DistrictScore,
   DistrictScoresOutput as ScoreData,
@@ -17,17 +18,12 @@ export type DistrictEmblems = Record<string, string>
 // /api/district-context share it without importing this whole insights module.
 export { loadScores } from "@/lib/district-scores"
 
-export function loadDistrictEmblems(): DistrictEmblems {
-  try {
-    return JSON.parse(
-      readFileSync(
-        join(process.cwd(), "public", "district-emblems.json"),
-        "utf-8"
-      )
-    ) as DistrictEmblems
-  } catch {
-    return {}
-  }
+function loadDistrictEmblems(): DistrictEmblems {
+  return (
+    readJsonCached<DistrictEmblems>(
+      join(process.cwd(), "public", "district-emblems.json")
+    ) ?? {}
+  )
 }
 
 export interface TravelMatrix {
@@ -41,40 +37,17 @@ export interface TravelMatrix {
 }
 
 export function loadTravelMatrix(): TravelMatrix | null {
-  const matrixPath = join(getDataDir(), "travel-matrix.json")
-  if (!existsSync(matrixPath)) return null
-  try {
-    return JSON.parse(readFileSync(matrixPath, "utf-8"))
-  } catch {
-    return null
-  }
+  return readJsonCached<TravelMatrix>(join(getDataDir(), "travel-matrix.json"))
 }
 
 export function loadRouteStats(): RouteStats | null {
-  const statsPath = join(getDataDir(), "route-stats.json")
-  if (!existsSync(statsPath)) return null
-  try {
-    return JSON.parse(readFileSync(statsPath, "utf-8"))
-  } catch {
-    return null
-  }
+  return readJsonCached<RouteStats>(join(getDataDir(), "route-stats.json"))
 }
 
 export function loadSaturdayScores(): ScoreData | null {
-  const satPath = join(getDataDir(), "district-scores-saturday.json")
-  if (!existsSync(satPath)) return null
-  try {
-    return JSON.parse(readFileSync(satPath, "utf-8"))
-  } catch {
-    return null
-  }
-}
-
-/** Format number with Croatian decimal comma. */
-export function fmtHR(n: number, decimals = 0): string {
-  return decimals > 0
-    ? n.toFixed(decimals).replace(".", ",")
-    : Math.round(n).toString()
+  return readJsonCached<ScoreData>(
+    join(getDataDir(), "district-scores-saturday.json")
+  )
 }
 
 export function pct(cells: number, total: number): string {
@@ -90,9 +63,9 @@ function computeGini(
   districts: DistrictScore[],
   accessor: (d: DistrictScore) => number
 ): number {
-  const sorted = [...districts]
+  const sorted = districts
     .filter((d) => (d.population ?? 0) > 0)
-    .sort((a, b) => accessor(a) - accessor(b))
+    .toSorted((a, b) => accessor(a) - accessor(b))
   if (sorted.length === 0) return 0
   const totalPop = sorted.reduce((s, d) => s + (d.population ?? 0), 0)
   const totalWeighted = sorted.reduce(
@@ -187,7 +160,7 @@ export function computeBaseInsights(data: ScoreData) {
     "hr-HR",
     { day: "numeric", month: "long", year: "numeric" }
   )
-  const displayDepartureTime = data.departureWindow ?? "08:00"
+  const displayDepartureTime = data.departureWindow
   const weightedSum = data.districts.reduce(
     (s, d) => s + d.avgReachableCells * d.sampleCount,
     0
@@ -218,36 +191,36 @@ export function computeBaseInsights(data: ScoreData) {
 }
 
 export function computeBajsInsights(data: ScoreData) {
-  const hasBajs = (data.bajsTotalStations ?? 0) > 0
-  const bajsTotalStations = data.bajsTotalStations ?? 0
+  const hasBajs = data.bajsTotalStations > 0
+  const bajsTotalStations = data.bajsTotalStations
   const cityBajsBoost = hasBajs
     ? weightedPctChange(
         data.districts,
-        (d) => d.trainAvgReachableCells ?? d.avgReachableCells,
-        (d) => d.bajsAvgReachableCells ?? d.avgReachableCells
+        (d) => d.trainAvgReachableCells,
+        (d) => d.bajsAvgReachableCells
       )
     : 0
   const bajsRankedByBoost = hasBajs
-    ? [...data.districts].sort(
-        (a, b) => (b.bajsBoostPct ?? 0) - (a.bajsBoostPct ?? 0)
+    ? data.districts.toSorted(
+        (a, b) => b.bajsBoostPct - a.bajsBoostPct
       )
     : []
   const topBajsBeneficiary = bajsRankedByBoost[0]
 
   // 2.6: Coverage - % of transit stops within 350m of a BAJS station
-  const coveragePct = data.bajsStopCoveragePct ?? 0
-  const coveredStops = data.bajsCoveredStops ?? 0
+  const coveragePct = data.bajsStopCoveragePct
+  const coveredStops = data.bajsCoveredStops
   const totalStops = data.districts.reduce((s, d) => s + d.stops, 0)
 
   // 2.7: Density - stations per km² and per 10k residents
   const densityRanked = hasBajs
-    ? [...data.districts]
-        .filter((d) => (d.bajsStations ?? 0) > 0)
-        .sort((a, b) => (b.bajsDensityPerKm2 ?? 0) - (a.bajsDensityPerKm2 ?? 0))
+    ? data.districts
+        .filter((d) => d.bajsStations > 0)
+        .toSorted((a, b) => b.bajsDensityPerKm2 - a.bajsDensityPerKm2)
     : []
   const topDensity = densityRanked[0]
   const zeroBajsDistricts = data.districts.filter(
-    (d) => (d.bajsStations ?? 0) === 0
+    (d) => d.bajsStations === 0
   )
 
   return {
@@ -266,35 +239,25 @@ export function computeBajsInsights(data: ScoreData) {
 }
 
 export function computeDesertInsights(data: ScoreData) {
-  const hasDesertData = data.districts.some((d) => d.desertPct !== undefined)
-  const desertDistricts = hasDesertData
-    ? [...data.districts]
-        .filter((d) => (d.desertPct ?? 0) > 0)
-        .sort((a, b) => (b.desertPct ?? 0) - (a.desertPct ?? 0))
-    : []
+  const desertDistricts = data.districts
+    .filter((d) => d.desertPct > 0)
+    .toSorted((a, b) => b.desertPct - a.desertPct)
   const lowFreqDistricts = data.districts.filter(
     (d) => d.medianHeadwayMin >= 30
   )
-  const hasStopDistData = data.districts.some(
-    (d) => d.avgNearestStopM !== undefined
+  const stopDistSorted = data.districts.toSorted(
+    (a, b) => a.avgNearestStopM - b.avgNearestStopM
   )
-  const stopDistSorted = hasStopDistData
-    ? [...data.districts]
-        .filter((d) => d.avgNearestStopM !== undefined)
-        .sort((a, b) => (a.avgNearestStopM ?? 0) - (b.avgNearestStopM ?? 0))
-    : []
   const maxStopDist = Math.max(
-    ...stopDistSorted.map((d) => d.avgNearestStopM ?? 0),
+    ...stopDistSorted.map((d) => d.avgNearestStopM),
     1
   )
   const stopDistOver400 = stopDistSorted.filter(
-    (d) => (d.avgNearestStopM ?? 0) > 400
+    (d) => d.avgNearestStopM > 400
   )
   return {
-    hasDesertData,
     desertDistricts,
     lowFreqDistricts,
-    hasStopDistData,
     stopDistSorted,
     maxStopDist,
     stopDistOver400,
@@ -302,41 +265,26 @@ export function computeDesertInsights(data: ScoreData) {
 }
 
 export function computeEveningInsights(data: ScoreData) {
-  const hasEveningData = data.districts.some(
-    (d) => d.eveningAvgReachableCells !== undefined
+  const eveningRankedByDrop = data.districts
+    .filter((d) => d.peakOffpeakDrop > 0)
+    .toSorted((a, b) => b.peakOffpeakDrop - a.peakOffpeakDrop)
+  const cityEveningDrop = -weightedPctChange(
+    data.districts,
+    (d) => d.avgReachableCells,
+    (d) => d.eveningAvgReachableCells
   )
-  const eveningRankedByDrop = hasEveningData
-    ? [...data.districts]
-        .filter((d) => (d.peakOffpeakDrop ?? 0) > 0)
-        .sort((a, b) => (b.peakOffpeakDrop ?? 0) - (a.peakOffpeakDrop ?? 0))
-    : []
-  const cityEveningDrop = hasEveningData
-    ? -weightedPctChange(
-        data.districts,
-        (d) => d.avgReachableCells,
-        (d) => d.eveningAvgReachableCells ?? d.avgReachableCells
-      )
-    : 0
-  return { hasEveningData, eveningRankedByDrop, cityEveningDrop }
+  return { eveningRankedByDrop, cityEveningDrop }
 }
 
 export function computeVarianceInsights(data: ScoreData) {
-  const hasVarianceData = data.districts.some(
-    (d) => d.stddevReachableCells !== undefined
-  )
-  const varianceRanked = hasVarianceData
-    ? [...data.districts]
-        .filter((d) => (d.stddevReachableCells ?? 0) > 0)
-        .sort(
-          (a, b) =>
-            (b.stddevReachableCells ?? 0) - (a.stddevReachableCells ?? 0)
-        )
-    : []
-  return { hasVarianceData, varianceRanked }
+  const varianceRanked = data.districts
+    .filter((d) => d.stddevReachableCells > 0)
+    .toSorted((a, b) => b.stddevReachableCells - a.stddevReachableCells)
+  return { varianceRanked }
 }
 
 export function computeFrequencyInsights(data: ScoreData) {
-  const freqRanked = [...data.districts].sort(
+  const freqRanked = data.districts.toSorted(
     (a, b) => a.medianHeadwayMin - b.medianHeadwayMin
   )
   const allTramLines = new Set(data.districts.flatMap((d) => d.tramLines))
@@ -392,7 +340,7 @@ export function computeLineSpeedInsights(data: ScoreData) {
         lineDistrictMap.set(line, { type: "bus", districts: [] })
       lineDistrictMap.get(line)!.districts.push(d.name)
     }
-    for (const line of d.trainLines ?? []) {
+    for (const line of d.trainLines) {
       const short = line.split(" - ").pop() ?? line
       if (!lineDistrictMap.has(short))
         lineDistrictMap.set(short, { type: "train", districts: [] })
@@ -411,7 +359,7 @@ export function computeLineSpeedInsights(data: ScoreData) {
             : BUS_SPEED_KMH,
       districtCount: info.districts.length,
     }))
-    .sort((a, b) => b.speed - a.speed || b.districtCount - a.districtCount)
+    .toSorted((a, b) => b.speed - a.speed || b.districtCount - a.districtCount)
   const tramLineCount = lineSpeedRows.filter((l) => l.type === "tram").length
   const busLineCount = lineSpeedRows.filter((l) => l.type === "bus").length
   const trainLineCount = lineSpeedRows.filter((l) => l.type === "train").length
@@ -479,14 +427,14 @@ export function computeGiniData(data: ScoreData) {
   const gini = computeGini(data.districts, (d) => d.avgReachableCells)
   const bajsGini = computeGini(
     data.districts,
-    (d) => d.bajsAvgReachableCells ?? d.avgReachableCells
+    (d) => d.bajsAvgReachableCells
   )
   const eveningGini = computeGini(
     data.districts,
-    (d) => d.eveningAvgReachableCells ?? d.avgReachableCells
+    (d) => d.eveningAvgReachableCells
   )
   const giniDiff = bajsGini - gini
-  const popSorted = [...data.districts].sort(
+  const popSorted = data.districts.toSorted(
     (a, b) => a.avgReachableCells - b.avgReachableCells
   )
   const lorenzPoints: { x: number; y: number }[] = [{ x: 0, y: 0 }]
@@ -593,14 +541,14 @@ function findUnderservedGaps(data: ScoreData): {
   underserved: DistrictScore[]
 } {
   const gaps: ConnectivityGap[] = []
-  const underserved = [...data.districts]
+  const underserved = data.districts
     .filter((d) => d.score < 25 && (d.population ?? 0) > 20000)
-    .sort((a, b) => (b.population ?? 0) - (a.population ?? 0))
+    .toSorted((a, b) => (b.population ?? 0) - (a.population ?? 0))
   for (const d of underserved.slice(0, 2)) {
     const noTram = d.tramLines.length === 0
     gaps.push({
       severity: "critical",
-      issue: `${d.name} (${fmtPop(d.population ?? 0)} stan.) \u2014 rezultat povezanosti ${d.score}/100${noTram ? ", bez tramvajske veze" : ""}`,
+      issue: `${d.name} (${fmtPop(d.population ?? 0)} stan.) - rezultat povezanosti ${d.score}/100${noTram ? ", bez tramvajske veze" : ""}`,
       impact: `Velika populacija s ograničenim pristupom ostatku grada. Doseže samo ${pct(d.avgReachableCells, data.totalGridCells)}% gradske površine u ${data.maxMinutes} min.`,
       recommendation: noTram
         ? "Brza autobusna linija (BRT) ili produljenje tramvajske mreže"
@@ -637,7 +585,7 @@ function findMatrixGaps(
       severity: p.time > 100 ? "critical" : "warning",
       issue: `${p.from} \u2194 ${p.to}: ${Math.round(p.time)} min putovanja`,
       impact:
-        "Nema izravne veze \u2014 zahtijeva presjedanje kroz centar, što udvostručuje vrijeme putovanja",
+        "Nema izravne veze - zahtijeva presjedanje kroz centar, što udvostručuje vrijeme putovanja",
       recommendation:
         "Razmotriti dijagonalnu ili kružnu liniju koja povezuje rubne kvartove bez prolaska kroz centar",
     })
@@ -646,7 +594,7 @@ function findMatrixGaps(
   return gaps
 }
 
-export function computeConnectivityGaps(
+function computeConnectivityGaps(
   data: ScoreData,
   travelMatrix: TravelMatrix | null
 ): ConnectivityGap[] {
@@ -657,11 +605,10 @@ export function computeConnectivityGaps(
     gaps.push(...findMatrixGaps(travelMatrix, usedNames))
   }
 
-  // 3. Districts without tram but large population
   const tramless = data.districts
     .filter((d) => d.tramLines.length === 0 && (d.population ?? 0) > 40000)
     .filter((d) => !underserved.some((u) => u.name === d.name))
-    .sort((a, b) => (b.population ?? 0) - (a.population ?? 0))
+    .toSorted((a, b) => (b.population ?? 0) - (a.population ?? 0))
 
   for (const d of tramless.slice(0, 1)) {
     gaps.push({
@@ -739,33 +686,33 @@ export function computeWeekendData(data: ScoreData, saturdayData: ScoreData | nu
   return { weekendComparison: items, cityWeekendChange }
 }
 
-export function computeRouteInsights(routeStats: RouteStats | null) {
+function computeRouteInsights(routeStats: RouteStats | null) {
   const urbanRoutes = routeStats?.routes.filter((r) => r.mode !== "RAIL") ?? []
   const tramRoutes = urbanRoutes.filter((r) => r.mode === "TRAM")
   const busRoutes = urbanRoutes.filter((r) => r.mode === "BUS")
-  const longestTram = [...tramRoutes].sort(
+  const longestTram = tramRoutes.toSorted(
     (a, b) => b.distanceKm - a.distanceKm
   )[0]
-  const shortestTram = [...tramRoutes].sort(
+  const shortestTram = tramRoutes.toSorted(
     (a, b) => a.distanceKm - b.distanceKm
   )[0]
-  const longestBus = [...busRoutes].sort(
+  const longestBus = busRoutes.toSorted(
     (a, b) => b.distanceKm - a.distanceKm
   )[0]
-  const shortestBus = [...busRoutes].sort(
+  const shortestBus = busRoutes.toSorted(
     (a, b) => a.distanceKm - b.distanceKm
   )[0]
-  const busiestRoute = [...urbanRoutes].sort(
+  const busiestRoute = urbanRoutes.toSorted(
     (a, b) => b.dailyDepartures - a.dailyDepartures
   )[0]
-  const mostStopsTram = [...tramRoutes].sort((a, b) => b.stops - a.stops)[0]
-  const mostStopsBus = [...busRoutes].sort((a, b) => b.stops - a.stops)[0]
-  const fastestBus = [...busRoutes].sort(
+  const mostStopsTram = tramRoutes.toSorted((a, b) => b.stops - a.stops)[0]
+  const mostStopsBus = busRoutes.toSorted((a, b) => b.stops - a.stops)[0]
+  const fastestBus = busRoutes.toSorted(
     (a, b) => b.commercialSpeedKmh - a.commercialSpeedKmh
   )[0]
-  const slowestBus = [...busRoutes]
+  const slowestBus = busRoutes
     .filter((r) => r.commercialSpeedKmh > 0)
-    .sort((a, b) => a.commercialSpeedKmh - b.commercialSpeedKmh)[0]
+    .toSorted((a, b) => a.commercialSpeedKmh - b.commercialSpeedKmh)[0]
   return {
     urbanRoutes,
     tramRoutes,
@@ -825,7 +772,7 @@ export function loadAllData(data: ScoreData) {
 export type AllData = ReturnType<typeof loadAllData>
 
 export function sortRoutesByName(routes: RouteInfo[]): RouteInfo[] {
-  return [...routes].sort((a, b) => {
+  return routes.toSorted((a, b) => {
     const na = parseInt(a.name, 10),
       nb = parseInt(b.name, 10)
     if (!isNaN(na) && !isNaN(nb)) return na - nb

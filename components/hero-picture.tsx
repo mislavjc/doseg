@@ -23,7 +23,6 @@ export function HeroPicture({
         }
         srcSet={src}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={TRANSPARENT_PX}
         alt={alt}

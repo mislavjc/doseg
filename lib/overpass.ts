@@ -1,8 +1,11 @@
 import { readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
+import { getDataDir } from "./data-dir"
+import { parseJson, responseJson } from "./json"
+
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter"
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 /** Zagreb bounding box — shared with scripts/build-poi-photos.ts. */
 export const ZAGREB_BBOX = { south: 45.72, west: 15.82, north: 45.9, east: 16.14 }
@@ -137,15 +140,14 @@ const OVERPASS_MIRRORS = [
  * a stale list beats an empty map.
  */
 function snapshotPath() {
-  const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
-  return join(dataDir, "poi-snapshot.json")
+  return join(getDataDir(), "poi-snapshot.json")
 }
 
 function readSnapshot(categories: POICategory[]): POI[] | null {
   try {
-    const data = JSON.parse(readFileSync(snapshotPath(), "utf-8")) as {
-      pois: POI[]
-    }
+    const data = parseJson<{ pois: POI[] }>(
+      readFileSync(snapshotPath(), "utf-8")
+    )
     const wanted = new Set(categories)
     return data.pois.filter((p) => wanted.has(p.category))
   } catch {
@@ -169,6 +171,7 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
   let lastError: Error | null = null
   for (const url of OVERPASS_MIRRORS) {
     try {
+      // oxlint-disable-next-line no-await-in-loop -- mirrors are fallbacks, tried one at a time until one answers
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -181,7 +184,8 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
         lastError = new Error(`Overpass API request failed: ${response.status}`)
         continue
       }
-      const json = (await response.json()) as OverpassResponse
+      // oxlint-disable-next-line no-await-in-loop -- same sequential fallback as the fetch above
+      const json = await responseJson<OverpassResponse>(response)
       const pois = parseElements(json.elements, categories)
       writeSnapshot(pois)
       return pois
@@ -199,16 +203,14 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
  * generated offline by scripts/build-poi-photos.ts. Loaded once; absence is
  * fine, the popup just shows no photo.
  */
-// Loaded from data/poi-photos.json on first use; reset on module reload.
-let photoMap: Record<string, PoiPhoto> | null = null
+let photoMap: Partial<Record<string, PoiPhoto>> | null = null
 
-function loadPhotoMap(): Record<string, PoiPhoto> {
+function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
   if (photoMap) return photoMap
   try {
-    const dataDir = process.env.DATA_DIR || join(process.cwd(), "data")
-    photoMap = JSON.parse(
-      readFileSync(join(dataDir, "poi-photos.json"), "utf-8")
-    ) as Record<string, PoiPhoto>
+    photoMap = parseJson<Partial<Record<string, PoiPhoto>>>(
+      readFileSync(join(getDataDir(), "poi-photos.json"), "utf-8")
+    )
   } catch {
     photoMap = {}
   }
@@ -224,10 +226,10 @@ function withPhotos(pois: POI[]): POI[] {
   })
 }
 
-export async function fetchPOIs(categories: POICategory[]): Promise<POI[]> {
-  const key = [...categories].sort().join(",")
+export function fetchPOIs(categories: POICategory[]): Promise<POI[]> {
+  const key = categories.toSorted().join(",")
   const cached = poiCache.get(key)
-  if (cached && Date.now() < cached.expiresAt) return cached.pois
+  if (cached && Date.now() < cached.expiresAt) return Promise.resolve(cached.pois)
 
   let pending = pendingFetches.get(key)
   if (!pending) {

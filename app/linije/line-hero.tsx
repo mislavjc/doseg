@@ -16,6 +16,23 @@ import { cn } from "@/lib/utils"
  * visible at any viewport.
  */
 
+function cut(points: [number, number][], trim: number): [number, number][] {
+  let remaining = trim
+  const out = [...points]
+  while (out.length > 1) {
+    const [ax, ay] = out[0]
+    const [bx, by] = out[1]
+    const seg = Math.hypot(bx - ax, by - ay)
+    if (seg > remaining) {
+      const t = remaining / seg
+      out[0] = [ax + (bx - ax) * t, ay + (by - ay) * t]
+      return out
+    }
+    remaining -= seg
+    out.shift()
+  }
+  return out
+}
 
 /**
  * Shorten a polyline by `trim` units at each end so the route line (and its
@@ -27,29 +44,12 @@ function trimPolyline(
   trimStart: number,
   trimEnd: number
 ): [number, number][] {
-  const cut = (points: [number, number][], trim: number): [number, number][] => {
-    let remaining = trim
-    const out = [...points]
-    while (out.length > 1) {
-      const [ax, ay] = out[0]
-      const [bx, by] = out[1]
-      const seg = Math.hypot(bx - ax, by - ay)
-      if (seg > remaining) {
-        const t = remaining / seg
-        out[0] = [ax + (bx - ax) * t, ay + (by - ay) * t]
-        return out
-      }
-      remaining -= seg
-      out.shift()
-    }
-    return out
-  }
   const total = pts
     .slice(1)
     .reduce((s, p, i) => s + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0)
   if (total <= (trimStart + trimEnd) * 2) return pts
   const fromStart = cut(pts, trimStart)
-  return cut(fromStart.reverse(), trimEnd).reverse()
+  return cut(fromStart.toReversed(), trimEnd).toReversed()
 }
 
 interface Box {
@@ -71,7 +71,7 @@ function densify(pts: [number, number][], step = 8): [number, number][] {
       out.push([ax + ((bx - ax) * k) / n, ay + ((by - ay) * k) / n])
     }
   }
-  if (pts.length) out.push(pts[pts.length - 1])
+  if (pts.length > 0) out.push(pts[pts.length - 1])
   return out
 }
 
@@ -93,14 +93,14 @@ function placeLabel(
 ): Box {
   const gap = 16
   const candidates: [number, number][] = [
-    [x + gap, y - h / 2], // right
-    [x - w - gap, y - h / 2], // left
-    [x - w / 2, y - h - 14], // above
-    [x - w / 2, y + 14], // below
-    [x + 12, y - h - 10], // upper right
-    [x - w - 12, y - h - 10], // upper left
-    [x + 12, y + 10], // lower right
-    [x - w - 12, y + 10], // lower left
+    [x + gap, y - h / 2],
+    [x - w - gap, y - h / 2],
+    [x - w / 2, y - h - 14],
+    [x - w / 2, y + 14],
+    [x + 12, y - h - 10],
+    [x - w - 12, y - h - 10],
+    [x + 12, y + 10],
+    [x - w - 12, y + 10],
   ]
   const margin = 6
   let best: Box = { bx: 0, by: 0, w, h }
@@ -147,7 +147,7 @@ function TerminalLabel({
         y={by}
         width={w}
         height={h}
-        fill={blue ? "var(--zg-blue)" : "#fff"}
+        fill={blue ? "var(--zg-blue)" : "var(--ground)"}
         stroke="var(--zg-blue)"
         strokeWidth={1}
       />
@@ -158,7 +158,7 @@ function TerminalLabel({
         fontSize={16}
         fontWeight={700}
         fontFamily="var(--font-heros), system-ui, sans-serif"
-        fill={blue ? "#fff" : "var(--ink)"}
+        fill={blue ? "var(--ground)" : "var(--ink)"}
       >
         {name}
       </text>
@@ -198,9 +198,9 @@ export function buildOverlay(
     14
   )
   const stopPts = dir0.stops.map((s) => project(s.lon, s.lat))
-  const first = stopPts[0]
-  const last = stopPts[stopPts.length - 1]
-  if (!shapePts.length || !first || !last) return null
+  const first = stopPts.at(0)
+  const last = stopPts.at(-1)
+  if (shapePts.length === 0 || !first || !last) return null
   const path = `M ${shapePts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
 
   // Thin crowded stop dots: on dense or zoomed-out routes adjacent dots melt
@@ -273,7 +273,7 @@ function HeroVariant({
         alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
         variant={variant}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -290,7 +290,7 @@ function HeroVariant({
           <path
             d={overlay.path}
             fill="none"
-            stroke="#fff"
+            stroke="var(--ground)"
             strokeWidth={11}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -303,22 +303,22 @@ function HeroVariant({
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {overlay.innerDots.map(([x, y], i) => (
+          {overlay.innerDots.map(([x, y]) => (
             <circle
-              key={i}
+              key={`${x}-${y}`}
               cx={x}
               cy={y}
               r={4.5}
-              fill="#fff"
+              fill="var(--ground)"
               stroke="var(--zg-blue)"
               strokeWidth={2.5}
             />
           ))}
-          <circle cx={overlay.first[0]} cy={overlay.first[1]} r={7} fill="#fff" stroke="var(--zg-blue)" strokeWidth={3} />
+          <circle cx={overlay.first[0]} cy={overlay.first[1]} r={7} fill="var(--ground)" stroke="var(--zg-blue)" strokeWidth={3} />
           {/* Destination: blue bullseye — the white gap ring needs a blue
               outer ring to stay legible on the white map ground. */}
           <circle cx={overlay.last[0]} cy={overlay.last[1]} r={10.5} fill="none" stroke="var(--zg-blue)" strokeWidth={2} />
-          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={7} fill="var(--zg-blue)" stroke="#fff" strokeWidth={3} />
+          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={7} fill="var(--zg-blue)" stroke="var(--ground)" strokeWidth={3} />
           <TerminalLabel box={overlay.boxA} name={data.terminals[0]} variant="origin" />
           <TerminalLabel box={overlay.boxB} name={data.terminals[1]} variant="destination" />
         </svg>

@@ -6,25 +6,22 @@ import { plural } from "@/app/linije/copy"
 import { projector } from "@/lib/geo"
 import { loadHomeHero, type HomeHeroData } from "@/lib/home-hero"
 
-// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-const INK = "#0a0a0a" // --ink
-const INK_MUTED = "#6a7178" // --ink-muted
-const SEPARATOR = "#c9c9c9" // dot separators (Paper OG1e-2)
-const ZG_BLUE = "#0e51c9" // --zg-blue
+import { heroCloudSrc, ogFonts } from "./card"
 
-const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
+// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
+// --ink
+const INK = "#0a0a0a"
+// --ink-muted
+const INK_MUTED = "#6a7178"
+// dot separators (Paper OG1e-2)
+const SEPARATOR = "#c9c9c9"
+// --zg-blue
+const ZG_BLUE = "#0e51c9"
 
 /** Map window of the card (Paper "OG1e-2 · brojači u liniji"). */
 const MAP_H = 456
 const RULE_H = 4
 const BAND_H = 630 - MAP_H - RULE_H
-
-function loadFonts() {
-  return {
-    geistMono: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
-    herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-  }
-}
 
 /**
  * Whole-Zagreb boundary as a data-URI SVG in the desktop crop's view space —
@@ -61,10 +58,7 @@ const MAP_LAYER = {
 function MapWindow({ hero }: { hero: HomeHeroData }) {
   const heroPath = join(process.cwd(), "public/hero-zagreb.png")
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  const cloudSrc = existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
+  const cloudSrc = heroCloudSrc()
   return (
     <div
       style={{
@@ -77,11 +71,11 @@ function MapWindow({ hero }: { hero: HomeHeroData }) {
         overflow: "hidden",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={boundarySvg(hero)} alt="" style={MAP_LAYER} />
       <div
         style={{
@@ -197,7 +191,6 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
 export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
   const hero = loadHomeHero()
   if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) return null
-  const fonts = loadFonts()
 
   return new ImageResponse(
     (
@@ -220,10 +213,7 @@ export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Geist Mono", data: fonts.geistMono, weight: 400, style: "normal" },
-        { name: "TeX Gyre Heros", data: fonts.herosBold, weight: 700, style: "normal" },
-      ],
+      fonts: ogFonts(),
     }
   )
 }

@@ -1,3 +1,4 @@
+import type { WalkAreaFeature } from "@/lib/generated"
 import type { Itinerary } from "@/lib/otp"
 import type { PoiPhoto, POICategory } from "@/lib/overpass"
 import {
@@ -39,17 +40,12 @@ export type Poi = {
 /** POI annotated against the current reach band (null = no origin yet). */
 export type MapPoi = Poi & { inReach: boolean | null }
 
-export type WalkAreaFeatureLike = {
-  properties: { time: number }
-  geometry: { type: "MultiPolygon"; coordinates: Ring[][] }
-}
-
 /** The widest band at or under `maxSeconds` — the reach outline. */
 export function outerBand(
-  features: WalkAreaFeatureLike[],
+  features: WalkAreaFeature[],
   maxSeconds: number
-): WalkAreaFeatureLike | null {
-  let best: WalkAreaFeatureLike | null = null
+): WalkAreaFeature | null {
+  let best: WalkAreaFeature | null = null
   for (const f of features) {
     const t = f.properties.time
     if (t <= maxSeconds && (!best || t > best.properties.time)) best = f
@@ -57,16 +53,16 @@ export function outerBand(
   return best
 }
 
-export function reachAreaKm2(band: WalkAreaFeatureLike): number {
+export function reachAreaKm2(band: WalkAreaFeature): number {
   return multiPolygonAreaKm2(band.geometry.coordinates)
 }
 
-export function pointInReach(p: LatLon, band: WalkAreaFeatureLike): boolean {
+export function pointInReach(p: LatLon, band: WalkAreaFeature): boolean {
   return pointInMultiPolygon(p.lon, p.lat, band.geometry.coordinates)
 }
 
 /** Outer rings, downsampled, for the district-context API payload. */
-export function outerRingsForApi(band: WalkAreaFeatureLike): Ring[] {
+export function outerRingsForApi(band: WalkAreaFeature): Ring[] {
   return band.geometry.coordinates.map((polygon) => {
     const ring = polygon[0]
     const step = Math.max(1, Math.floor(ring.length / 200))
@@ -89,7 +85,7 @@ export function deShout(name: string): string {
   if (name !== name.toUpperCase()) return name
   return name
     .toLowerCase()
-    .replace(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
+    .replaceAll(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
 }
 
 /** "1 presjedanje" / "2 presjedanja" / "bez presjedanja". */

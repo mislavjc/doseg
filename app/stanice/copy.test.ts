@@ -11,20 +11,20 @@ import { dosegCopy, lineHeadway, lineModeNoun } from "./copy"
 
 describe("lineHeadway()", () => {
   it("returns null when both headway fields are null", () => {
-    const line = {
+    const line: Pick<StopLine, "peakRangeMin" | "peakHeadwayMin" | "allDayHeadwayMin"> = {
       peakRangeMin: null,
       peakHeadwayMin: null,
       allDayHeadwayMin: null,
-    } as unknown as StopLine
+    }
     expect(lineHeadway(line)).toBeNull()
   })
 
   it("uses peakRangeMin when present (range branch)", () => {
-    const line = {
-      peakRangeMin: [5, 8] as [number, number],
+    const line: Pick<StopLine, "peakRangeMin" | "peakHeadwayMin" | "allDayHeadwayMin"> = {
+      peakRangeMin: [5, 8],
       peakHeadwayMin: null,
       allDayHeadwayMin: null,
-    } as unknown as StopLine
+    }
     const result = lineHeadway(line)
     expect(result).not.toBeNull()
     expect(result!.startsWith("svakih ")).toBe(true)
@@ -32,30 +32,30 @@ describe("lineHeadway()", () => {
   })
 
   it("uses peakRangeMin equal range → single number", () => {
-    const line = {
-      peakRangeMin: [7, 7] as [number, number],
+    const line: Pick<StopLine, "peakRangeMin" | "peakHeadwayMin" | "allDayHeadwayMin"> = {
+      peakRangeMin: [7, 7],
       peakHeadwayMin: null,
       allDayHeadwayMin: null,
-    } as unknown as StopLine
+    }
     expect(lineHeadway(line)).toBe("svakih 7 min")
   })
 
   it("uses allDayHeadwayMin when peakRangeMin is null", () => {
-    const line = {
+    const line: Pick<StopLine, "peakRangeMin" | "peakHeadwayMin" | "allDayHeadwayMin"> = {
       peakRangeMin: null,
       peakHeadwayMin: null,
       allDayHeadwayMin: 7.4,
-    } as unknown as StopLine
+    }
     // Math.round(7.4) = 7
     expect(lineHeadway(line)).toBe("svakih 7 min")
   })
 
   it("rounds allDayHeadwayMin (7.6 → 8)", () => {
-    const line = {
+    const line: Pick<StopLine, "peakRangeMin" | "peakHeadwayMin" | "allDayHeadwayMin"> = {
       peakRangeMin: null,
       peakHeadwayMin: null,
       allDayHeadwayMin: 7.6,
-    } as unknown as StopLine
+    }
     expect(lineHeadway(line)).toBe("svakih 8 min")
   })
 })
@@ -66,12 +66,12 @@ describe("lineHeadway()", () => {
 
 describe("lineModeNoun()", () => {
   it("tram → 'tramvaj'", () => {
-    const line = { mode: "tram" } as unknown as StopLine
+    const line: Pick<StopLine, "mode"> = { mode: "tram" }
     expect(lineModeNoun(line)).toBe("tramvaj")
   })
 
   it("bus → 'autobus'", () => {
-    const line = { mode: "bus" } as unknown as StopLine
+    const line: Pick<StopLine, "mode"> = { mode: "bus" }
     expect(lineModeNoun(line)).toBe("autobus")
   })
 })
@@ -81,15 +81,15 @@ describe("lineModeNoun()", () => {
 // ---------------------------------------------------------------------------
 
 // Minimal StopPageData with just the reach field
-function makeStopData(reach: { stations15: number; stations30: number; stations45: number } | undefined): StopPageData {
+function makeStopData(reach?: { stations15: number; stations30: number; stations45: number }): Pick<StopPageData, "reach"> {
   return {
     reach,
-  } as unknown as StopPageData
+  }
 }
 
 describe("dosegCopy()", () => {
   it("returns null when reach is undefined", () => {
-    expect(dosegCopy(makeStopData(undefined))).toBeNull()
+    expect(dosegCopy(makeStopData())).toBeNull()
   })
 
   it("stations30: 1 → hook contains '1 stanicu'", () => {

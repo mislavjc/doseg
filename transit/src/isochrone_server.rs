@@ -17,7 +17,7 @@ mod walk_expand;
 mod walk_graph;
 
 // Stub needed by route_stats module
-pub fn chrono_now_iso() -> String {
+pub(crate) fn chrono_now_iso() -> String {
     String::new()
 }
 
@@ -65,8 +65,8 @@ const MAX_WAIT: f64 = 3600.0;
 /// Bounds on the applied RT adjustment (delay at destination minus delay at
 /// boarding). The adjustment is relative, so legitimate values are small even
 /// for badly delayed trips; clamping keeps a single garbage RT entry from
-/// teleporting or stranding an entire pattern (see MIN/MAX_PLAUSIBLE_DELAY in
-/// gtfs_rt.rs for the first line of defense).
+/// teleporting or stranding an entire pattern (see `MIN/MAX_PLAUSIBLE_DELAY` in
+/// `gtfs_rt.rs` for the first line of defense).
 const RT_ADJUSTMENT_MIN: f64 = -300.0;
 const RT_ADJUSTMENT_MAX: f64 = 900.0;
 /// Straight-line → road distance multiplier (urban street grid detour).
@@ -102,7 +102,7 @@ struct AppState {
     scheduled_speeds: HashMap<String, f64>,
     /// Route name → mode ("TRAM", "BUS", etc.), precomputed from transit graph
     route_mode_map: HashMap<String, String>,
-    /// Stop key → index into transit_graph.stops, precomputed for O(1) lookup
+    /// Stop key → index into `transit_graph.stops`, precomputed for O(1) lookup
     stop_key_to_idx: HashMap<String, usize>,
     /// Live BAJS station status (refreshed every 60s)
     bajs_status_store: BajsStatusStore,
@@ -249,7 +249,7 @@ fn decode_polyline(encoded: &str) -> Vec<[f64; 2]> {
         let mut shift = 0;
         let mut result: i64 = 0;
         loop {
-            let b = (bytes[index] as i64) - 63;
+            let b = i64::from(bytes[index]) - 63;
             index += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
@@ -266,7 +266,7 @@ fn decode_polyline(encoded: &str) -> Vec<[f64; 2]> {
         shift = 0;
         result = 0;
         loop {
-            let b = (bytes[index] as i64) - 63;
+            let b = i64::from(bytes[index]) - 63;
             index += 1;
             result |= (b & 0x1f) << shift;
             shift += 5;
@@ -315,7 +315,7 @@ const FIRST_BOARDING_WAIT: f64 = 120.0;
 /// Wait for the FIRST boarding of a journey: the exact next-departure wait,
 /// capped by the access buffer (the rider re-times their departure rather
 /// than stand at the stop). None when the line has no departure within
-/// MAX_WAIT — a line that isn't running can't be timed.
+/// `MAX_WAIT` — a line that isn't running can't be timed.
 fn get_first_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Option<(f64, usize)> {
     if departures.is_empty() {
         return None;
@@ -343,7 +343,7 @@ fn get_first_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Opti
 /// ±40% between adjacent 5-minute buckets (07:00 = 53 km², 07:30 = 30 km²)
 /// while the real schedule was flat. Expected wait keeps genuine time-of-day
 /// service levels (night vs peak headways) without the fake-tight-connection
-/// luck. The first boarding of a journey uses get_next_wait instead.
+/// luck. The first boarding of a journey uses `get_next_wait` instead.
 fn get_expected_wait(
     departures: &[f64],
     stop_offset: f64,
@@ -437,7 +437,7 @@ fn compute_travel_times(
         let ee = wg_offsets[node as usize + 1] as usize;
         for e in es..ee {
             let to = wg_targets[e];
-            let arr = time + wg_dist[e] as f64 * CM_TO_SECONDS;
+            let arr = time + f64::from(wg_dist[e]) * CM_TO_SECONDS;
             if arr < walk_cap && arr < wg_best[to as usize] {
                 wg_best[to as usize] = arr;
                 wg_heap.push(arr, to);
@@ -447,9 +447,8 @@ fn compute_travel_times(
 
     // Seed transit stops using real walk-graph times (via stop_snaps)
     for (si, stop) in graph.stops.iter().enumerate() {
-        let snap = match &stop_snaps[si] {
-            Some(s) => s,
-            None => continue,
+        let Some(snap) = &stop_snaps[si] else {
+            continue;
         };
         let walk_time = wg_best[snap.node_idx as usize];
         if walk_time < f64::INFINITY {
@@ -535,9 +534,8 @@ fn compute_travel_times(
                         clock_time,
                     )
                 };
-                let (wait_seconds, trip_index) = match wait_lookup {
-                    Some(r) => r,
-                    None => continue,
+                let Some((wait_seconds, trip_index)) = wait_lookup else {
+                    continue;
                 };
 
                 let board_time = time + wait_seconds;
@@ -558,9 +556,9 @@ fn compute_travel_times(
                     None
                 };
 
-                let board_delay = trip_rt
-                    .map(|rt| gtfs_rt::get_stop_delay(rt, sp.stop_idx) as f64)
-                    .unwrap_or(0.0);
+                let board_delay = trip_rt.map_or(0.0, |rt| {
+                    f64::from(gtfs_rt::get_stop_delay(rt, sp.stop_idx))
+                });
 
                 // Use stop_indices to get destination stop keys
                 for i in (sp.stop_idx + 1)..pattern.stop_indices.len() {
@@ -571,7 +569,7 @@ fn compute_travel_times(
                     // Apply real-time delay adjustment; clamped, and never
                     // earlier than the boarding itself.
                     if let Some(rt) = trip_rt {
-                        let adjustment = (gtfs_rt::get_stop_delay(rt, i) as f64 - board_delay)
+                        let adjustment = (f64::from(gtfs_rt::get_stop_delay(rt, i)) - board_delay)
                             .clamp(RT_ADJUSTMENT_MIN, RT_ADJUSTMENT_MAX);
                         travel_time = (travel_time + adjustment).max(board_time);
                     }
@@ -708,6 +706,7 @@ fn compute_travel_times(
 // --- GeoJSON feature generation ---
 
 /// Snap GTFS polyline vertices onto OSM walk-graph nodes.
+#[allow(clippy::float_cmp, reason = "exact dedupe of repeated snapped points")]
 fn snap_polyline_to_walk_graph(graph: &WalkGraph, line: Vec<[f64; 2]>) -> Vec<[f64; 2]> {
     let mut out: Vec<[f64; 2]> = Vec::with_capacity(line.len());
     for [lon, lat] in line {
@@ -731,6 +730,10 @@ fn round_coord(value: f64) -> f64 {
     (value * TRANSIT_COORD_SCALE).round() / TRANSIT_COORD_SCALE
 }
 
+#[allow(
+    clippy::float_cmp,
+    reason = "exact dedupe of already-rounded coordinates"
+)]
 fn quantize_transit_line(coords: &[[f64; 2]]) -> Vec<[f64; 2]> {
     let mut quantized = Vec::new();
     let mut last_lon = f64::NAN;
@@ -892,11 +895,10 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
     let mut visited: HashSet<((i32, i32), (i32, i32))> = HashSet::new();
     let mut rings: Vec<Vec<[f64; 2]>> = Vec::new();
 
-    let corners: Vec<(i32, i32)> = edge_map.keys().cloned().collect();
+    let corners: Vec<(i32, i32)> = edge_map.keys().copied().collect();
     for start in corners {
-        let dests = match edge_map.get(&start) {
-            Some(d) => d,
-            None => continue,
+        let Some(dests) = edge_map.get(&start) else {
+            continue;
         };
         for &first_dest in dests {
             if visited.contains(&(start, first_dest)) {
@@ -909,7 +911,10 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
 
             loop {
                 visited.insert((current, next));
-                ring.push([current.0 as f64 * cell_size, current.1 as f64 * cell_size]);
+                ring.push([
+                    f64::from(current.0) * cell_size,
+                    f64::from(current.1) * cell_size,
+                ]);
 
                 let dir = (next.0 - current.0, next.1 - current.1);
                 current = next;
@@ -918,9 +923,8 @@ fn trace_grid_boundary(cells: &HashSet<(i32, i32)>, cell_size: f64) -> Vec<Vec<V
                     break;
                 }
 
-                let outgoing = match edge_map.get(&current) {
-                    Some(o) => o,
-                    None => break,
+                let Some(outgoing) = edge_map.get(&current) else {
+                    break;
                 };
 
                 // Prefer right turns to stay on exterior boundary (CCW winding)
@@ -1009,8 +1013,8 @@ fn chaikin_smooth(
                 let ny = gy + ddy;
                 if nx >= 0 && nx < w_i && ny >= 0 && ny < h_i && grid[nx as usize * h + ny as usize]
                 {
-                    let abs_nx = (nx + ox) as f64;
-                    let abs_ny = (ny + oy) as f64;
+                    let abs_nx = f64::from(nx + ox);
+                    let abs_ny = f64::from(ny + oy);
                     let clamped_x = cx.max(abs_nx).min(abs_nx + 1.0);
                     let clamped_y = cy.max(abs_ny).min(abs_ny + 1.0);
                     let d = (clamped_x - cx).powi(2) + (clamped_y - cy).powi(2);
@@ -1047,7 +1051,7 @@ fn rasterize_edge_timed_grid(
     let dy = (y1 - y0).abs();
     let total_steps = dx.max(dy);
     let inv_steps = if total_steps > 0 {
-        1.0 / total_steps as f64
+        1.0 / f64::from(total_steps)
     } else {
         0.0
     };
@@ -1058,7 +1062,7 @@ fn rasterize_edge_timed_grid(
     let mut y = y0;
     let mut step = 0;
     loop {
-        let t = step as f64 * inv_steps;
+        let t = f64::from(step) * inv_steps;
         let time = time0 + (time1 - time0) * t;
         let idx = (x - ox) as usize * h + (y - oy) as usize;
         if time < grid[idx] {
@@ -1081,7 +1085,9 @@ fn rasterize_edge_timed_grid(
 }
 
 fn grid_dilate(src: &[bool], dst: &mut [bool], w: usize, h: usize) {
-    dst.iter_mut().for_each(|b| *b = false);
+    for b in dst.iter_mut() {
+        *b = false;
+    }
     for x in 0..w {
         for y in 0..h {
             if src[x * h + y] {
@@ -1100,7 +1106,9 @@ fn grid_dilate(src: &[bool], dst: &mut [bool], w: usize, h: usize) {
 }
 
 fn grid_erode(src: &[bool], dst: &mut [bool], w: usize, h: usize) {
-    dst.iter_mut().for_each(|b| *b = false);
+    for b in dst.iter_mut() {
+        *b = false;
+    }
     for x in 1..w.saturating_sub(1) {
         for y in 1..h.saturating_sub(1) {
             if !src[x * h + y] {
@@ -1149,9 +1157,8 @@ fn generate_walk_area(
             Some(&t) if t < MAX_SECONDS => t,
             _ => continue,
         };
-        let snap = match &stop_snaps[si] {
-            Some(s) => s,
-            None => continue,
+        let Some(snap) = &stop_snaps[si] else {
+            continue;
         };
         let total_time = time + snap.walk_seconds;
         if total_time < MAX_SECONDS && total_time < best[snap.node_idx as usize] {
@@ -1181,7 +1188,7 @@ fn generate_walk_area(
         let ee = offsets[node_idx as usize + 1] as usize;
         for e in es..ee {
             let to_idx = edge_targets[e];
-            let arrival_time = time + edge_dist_cm[e] as f64 * CM_TO_SECONDS;
+            let arrival_time = time + f64::from(edge_dist_cm[e]) * CM_TO_SECONDS;
             if arrival_time < MAX_SECONDS && arrival_time < best[to_idx as usize] {
                 best[to_idx as usize] = arrival_time;
                 heap.push(arrival_time, to_idx);
@@ -1589,7 +1596,9 @@ async fn handle_isochrone(
     let t_walk = Instant::now();
 
     // 3. Build routing payload
-    let routing = if routing_mode != "0" {
+    let routing = if routing_mode == "0" {
+        None
+    } else {
         Some(build_routing_payload(
             &state.transit_graph,
             &result.times,
@@ -1597,18 +1606,16 @@ async fn handle_isochrone(
             state.bajs_adjacency.as_ref(),
             &state.stop_key_to_idx,
         ))
-    } else {
-        None
     };
     let t_payload = Instant::now();
 
-    let walk_area = if !walk_area_features.is_empty() {
+    let walk_area = if walk_area_features.is_empty() {
+        None
+    } else {
         Some(WalkAreaResponse {
             kind: "FeatureCollection",
             features: walk_area_features,
         })
-    } else {
-        None
     };
 
     let json = if routing_mode == "only" {
@@ -1636,8 +1643,7 @@ async fn handle_isochrone(
     let total_ms = t_serial.duration_since(t0).as_millis();
 
     let timing = format!(
-        "state;dur={}, walk;dur={}, payload;dur={}, serial;dur={}, total;dur={}",
-        state_ms, walk_ms, payload_ms, serial_ms, total_ms
+        "state;dur={state_ms}, walk;dur={walk_ms}, payload;dur={payload_ms}, serial;dur={serial_ms}, total;dur={total_ms}"
     );
 
     let mut response = (
@@ -1809,7 +1815,7 @@ async fn handle_rt_history(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -1846,7 +1852,7 @@ async fn handle_rt_stops(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -1887,7 +1893,7 @@ async fn handle_rt_alerts(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -2043,7 +2049,7 @@ async fn handle_alert_stats(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -2105,8 +2111,7 @@ async fn handle_delay_profile(
                                 .transit_graph
                                 .stops
                                 .get(stop_idx)
-                                .map(|s| s.name.clone())
-                                .unwrap_or_default()
+                                .map_or_default(|s| s.name.clone())
                         });
                     }
                     break; // Use first matching pattern
@@ -2146,7 +2151,7 @@ async fn handle_delay_profile(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -2174,7 +2179,7 @@ async fn handle_rt_summary(State(state): State<Arc<AppState>>) -> Response {
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -2220,7 +2225,7 @@ async fn handle_route_health(State(state): State<Arc<AppState>>) -> Response {
             return (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 [(header::CONTENT_TYPE, "application/json")],
-                format!(r#"{{"error":"{}"}}"#, e),
+                format!(r#"{{"error":"{e}"}}"#),
             )
                 .into_response();
         }
@@ -2264,7 +2269,7 @@ async fn handle_route_health(State(state): State<Arc<AppState>>) -> Response {
             avg_delay: (row.avg_delay * 10.0).round() / 10.0,
             on_time_pct: (row.on_time_pct * 1000.0).round() / 1000.0,
             headway_cv: row.headway_cv.map(|v| (v * 100.0).round() / 100.0),
-            headway_sec: row.headway_sec.map(|v| v.round()),
+            headway_sec: row.headway_sec.map(f64::round),
             scheduled_speed_kmh: scheduled_speed,
             severity_score: (score * 10.0).round() / 10.0,
             label: label.to_string(),
@@ -2354,12 +2359,12 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
     for s in &active {
         let cap = info_map
             .get(s.station_id.as_str())
-            .map(|i| i.capacity)
-            .unwrap_or(s.num_bikes_available + s.num_docks_available);
+            .map_or(s.num_bikes_available + s.num_docks_available, |i| {
+                i.capacity
+            });
         let name = info_map
             .get(s.station_id.as_str())
-            .map(|i| i.name.clone())
-            .unwrap_or_else(|| s.station_id.clone());
+            .map_or_else(|| s.station_id.clone(), |i| i.name.clone());
 
         total_capacity += cap;
         total_bikes += s.num_bikes_available;
@@ -2395,7 +2400,8 @@ async fn handle_bajs_utilization(State(state): State<Arc<AppState>>) -> Response
     } else {
         total_capacity.max(1)
     };
-    let utilization_pct = (bikes_in_use as f64 / utilization_denom as f64 * 1000.0).round() / 10.0;
+    let utilization_pct =
+        (f64::from(bikes_in_use) / f64::from(utilization_denom) * 1000.0).round() / 10.0;
 
     let resp = BajsUtilizationResponse {
         total_stations,
@@ -2457,7 +2463,7 @@ async fn handle_bajs_usage_history(
         Err(e) => (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             [(header::CONTENT_TYPE, "application/json")],
-            format!(r#"{{"error":"{}"}}"#, e),
+            format!(r#"{{"error":"{e}"}}"#),
         )
             .into_response(),
     }
@@ -2532,7 +2538,7 @@ fn zagreb_hour_bucket(hour_ts: i64) -> (String, i32) {
     let local = hour_ts + zagreb_offset(hour_ts);
     let (y, m, d) = days_to_ymd(local.div_euclid(86400) as u64);
     let hour = (local.rem_euclid(86400) / 3600) as i32;
-    (format!("{:04}-{:02}-{:02}", y, m, d), hour)
+    (format!("{y:04}-{m:02}-{d:02}"), hour)
 }
 
 async fn handle_bajs_rides(
@@ -2560,7 +2566,7 @@ async fn handle_bajs_rides(
             return (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 [(header::CONTENT_TYPE, "application/json")],
-                format!(r#"{{"error":"{}"}}"#, e),
+                format!(r#"{{"error":"{e}"}}"#),
             )
                 .into_response();
         }
@@ -2669,8 +2675,8 @@ fn fold_bajs_rides(
         .into_iter()
         .map(|(hour, (starts, returns, count))| BajsRideHour {
             hour,
-            avg_starts: starts as f64 / count as f64,
-            avg_returns: returns as f64 / count as f64,
+            avg_starts: starts as f64 / f64::from(count),
+            avg_returns: returns as f64 / f64::from(count),
             days: count,
         })
         .collect();
@@ -2744,7 +2750,7 @@ async fn handle_bajs_station_ranking(
             return (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 [(header::CONTENT_TYPE, "application/json")],
-                format!(r#"{{"error":"{}"}}"#, e),
+                format!(r#"{{"error":"{e}"}}"#),
             )
                 .into_response();
         }
@@ -2763,8 +2769,7 @@ async fn handle_bajs_station_ranking(
         .iter()
         .map(|s| s.samples)
         .max()
-        .map(|samples| samples as f64 / 1440.0)
-        .unwrap_or(0.0);
+        .map_or(0.0, |samples| samples as f64 / 1440.0);
 
     let limit = params.limit.unwrap_or(200).clamp(1, 500);
     // A station can leave the network and still have history on file. Dropping
@@ -2896,7 +2901,7 @@ async fn handle_bajs_station_flow(
             return (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 [(header::CONTENT_TYPE, "application/json")],
-                format!(r#"{{"error":"{}"}}"#, e),
+                format!(r#"{{"error":"{e}"}}"#),
             )
                 .into_response();
         }
@@ -3033,7 +3038,7 @@ async fn handle_bajs_relocations(
             return (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 [(header::CONTENT_TYPE, "application/json")],
-                format!(r#"{{"error":"{}"}}"#, e),
+                format!(r#"{{"error":"{e}"}}"#),
             )
                 .into_response();
         }
@@ -3049,7 +3054,7 @@ async fn handle_bajs_relocations(
         .iter()
         .map(|s| (s.station_id.as_str(), s.name.as_str()))
         .collect();
-    let name_of = |id: &str| names.get(id).map(|n| n.to_string());
+    let name_of = |id: &str| names.get(id).map(ToString::to_string);
 
     let mut days: Vec<BajsRelocationDay> = Vec::new();
     let mut hour_totals = [0i64; 24];
@@ -3181,8 +3186,7 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
 
                 let bikes_in_use = (peak - total_at_stations).max(0);
                 eprintln!(
-                    "BAJS status: {} stations, {} bikes at stations, ~{} in use (peak {})",
-                    count, total_at_stations, bikes_in_use, peak
+                    "BAJS status: {count} stations, {total_at_stations} bikes at stations, ~{bikes_in_use} in use (peak {peak})"
                 );
             }
 
@@ -3196,7 +3200,7 @@ fn spawn_bajs_status_task(config: BajsTaskConfig) {
 /// Poll the per-bike feed and record measured ride events.
 ///
 /// Every bike physically at a station is tracked, including reserved and
-/// out-of-service ones: a bike_id leaves the feed when the bike leaves the
+/// out-of-service ones: a `bike_id` leaves the feed when the bike leaves the
 /// dock, which is the event we want. Rentability only affects the availability
 /// figure, which `bajs_usage` already covers.
 async fn track_bajs_bike_flow(
@@ -3204,9 +3208,8 @@ async fn track_bajs_bike_flow(
     tracker: &mut bajs_flow::BikeTracker,
     now: i64,
 ) {
-    let snapshot = match tokio::task::spawn_blocking(otp::fetch_free_bike_status).await {
-        Ok(Some(s)) => s,
-        _ => return,
+    let Ok(Some(snapshot)) = tokio::task::spawn_blocking(otp::fetch_free_bike_status).await else {
+        return;
     };
 
     let observations: Vec<bajs_flow::BikeObservation> = snapshot
@@ -3238,10 +3241,10 @@ async fn track_bajs_bike_flow(
 
     if let Some(ref delta) = outcome.delta {
         if let Err(e) = rt_store::insert_bajs_flow_minute(&conn, delta) {
-            eprintln!("BAJS flow: minute write failed: {}", e);
+            eprintln!("BAJS flow: minute write failed: {e}");
         }
         if let Err(e) = rt_store::insert_bajs_trips(&mut conn, &delta.trips) {
-            eprintln!("BAJS flow: trip write failed: {}", e);
+            eprintln!("BAJS flow: trip write failed: {e}");
         }
         if delta.starts + delta.returns + delta.bulk_out + delta.bulk_in > 0 {
             eprintln!(
@@ -3264,7 +3267,7 @@ async fn track_bajs_bike_flow(
     if let Some(ref flush) = outcome.flush {
         match rt_store::upsert_bajs_station_hourly(&mut conn, flush) {
             Ok(n) => eprintln!("BAJS flow: wrote hour {} for {} stations", flush.hour_ts, n),
-            Err(e) => eprintln!("BAJS flow: hourly write failed: {}", e),
+            Err(e) => eprintln!("BAJS flow: hourly write failed: {e}"),
         }
     }
 
@@ -3278,7 +3281,7 @@ async fn track_bajs_bike_flow(
                 "BAJS flow: withdrew {} start(s) from bikes that came back to their own dock",
                 delta.retractions.len()
             ),
-            Err(e) => eprintln!("BAJS flow: retraction failed: {}", e),
+            Err(e) => eprintln!("BAJS flow: retraction failed: {e}"),
         }
     }
 }
@@ -3311,7 +3314,7 @@ fn load_scheduled_speeds(path: &Path) -> HashMap<String, f64> {
     let parsed: RouteStatsFile = match serde_json::from_str(&data) {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("Warning: could not parse route-stats.json: {}", e);
+            eprintln!("Warning: could not parse route-stats.json: {e}");
             return HashMap::new();
         }
     };
@@ -3369,7 +3372,7 @@ async fn handle_speed_comparison(State(state): State<Arc<AppState>>) -> Response
             let (actual, ratio, count) = match speeds {
                 Some(s) if !s.is_empty() => {
                     let avg_mps = s.iter().sum::<f32>() / s.len() as f32;
-                    let avg_kmh = (avg_mps as f64) * 3.6;
+                    let avg_kmh = f64::from(avg_mps) * 3.6;
                     let avg_kmh_rounded = (avg_kmh * 10.0).round() / 10.0;
                     let ratio = if sched_speed > 0.0 {
                         Some((avg_kmh_rounded / sched_speed * 100.0).round() / 100.0)
@@ -3459,23 +3462,20 @@ async fn handle_occupancy(
             .any(|v| v.occupancy_status.is_some() && v.occupancy_status != Some(0))
     };
 
-    let db = match require_db(&state) {
-        Ok(db) => db,
-        Err(_) => {
-            // No DB — return hasData: false (occupancy needs historical data)
-            let resp = OccupancyResponse {
-                has_data: false,
-                routes: vec![],
-            };
-            return (
-                [
-                    (header::CONTENT_TYPE, "application/json"),
-                    (header::CACHE_CONTROL, "public, max-age=60"),
-                ],
-                serde_json::to_string(&resp).unwrap(),
-            )
-                .into_response();
-        }
+    let Ok(db) = require_db(&state) else {
+        // No DB — return hasData: false (occupancy needs historical data)
+        let resp = OccupancyResponse {
+            has_data: false,
+            routes: vec![],
+        };
+        return (
+            [
+                (header::CONTENT_TYPE, "application/json"),
+                (header::CACHE_CONTROL, "public, max-age=60"),
+            ],
+            serde_json::to_string(&resp).unwrap(),
+        )
+            .into_response();
     };
 
     let now = unix_now();
@@ -3557,7 +3557,7 @@ async fn handle_occupancy(
 /// best-effort signal, never a startup blocker.
 fn fetch_feed_end_epoch(otp_url: &str) -> Option<i64> {
     let body = serde_json::json!({ "query": "{ serviceTimeRange { end } }" });
-    let resp: serde_json::Value = ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+    let resp: serde_json::Value = ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
         .header("Content-Type", "application/json")
         .send_json(&body)
         .ok()?
@@ -3595,11 +3595,8 @@ async fn main() {
     let mut svc_days = today_days;
     loop {
         let (y, m, d) = days_to_ymd(svc_days);
-        let date = format!("{:04}-{:02}-{:02}", y, m, d);
-        println!(
-            "Loading transit graph from OTP at {} for {}...",
-            otp_url, date
-        );
+        let date = format!("{y:04}-{m:02}-{d:02}");
+        println!("Loading transit graph from OTP at {otp_url} for {date}...");
         transit_graph = otp::fetch_and_build_graph(&otp_url, Some(&date));
         let departures: usize = transit_graph
             .patterns
@@ -3609,8 +3606,7 @@ async fn main() {
         if departures > 0 {
             if svc_days != today_days {
                 println!(
-                    "  today has no scheduled service — fell back to {} ({} departures). Refresh the GTFS feed.",
-                    date, departures
+                    "  today has no scheduled service — fell back to {date} ({departures} departures). Refresh the GTFS feed."
                 );
             }
             break;
@@ -3628,17 +3624,16 @@ async fn main() {
     // Freshness signals for /health: the date actually used, whether it's a
     // fallback, and how many days of schedule the feed still has.
     let (sy, sm, sd) = days_to_ymd(svc_days);
-    let feed_service_date = format!("{:04}-{:02}-{:02}", sy, sm, sd);
+    let feed_service_date = format!("{sy:04}-{sm:02}-{sd:02}");
     let feed_fallback = svc_days != today_days;
     let feed_runway_days = fetch_feed_end_epoch(&otp_url).map(|end| (end - unix_now()) / 86400);
     if let Some(days) = feed_runway_days {
         if days < 14 {
             eprintln!(
-                "Warning: GTFS feed has only {} day(s) of schedule left — refresh it before isochrones go walk-only",
-                days
+                "Warning: GTFS feed has only {days} day(s) of schedule left — refresh it before isochrones go walk-only"
             );
         } else {
-            println!("GTFS feed runway: {} days", days);
+            println!("GTFS feed runway: {days} days");
         }
     }
     transit_graph.bajs_stations = otp::fetch_bajs_stations();
@@ -3658,8 +3653,7 @@ async fn main() {
         .map(|p| {
             p.geometry_encoded
                 .as_deref()
-                .map(decode_polyline)
-                .unwrap_or_default()
+                .map_or_default(decode_polyline)
         })
         .collect();
 
@@ -3853,15 +3847,12 @@ async fn main() {
         .layer(CompressionLayer::new())
         .with_state(state);
 
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
         .unwrap_or_else(|_| {
-            panic!(
-                "Failed to bind to port {} — is another instance already running?",
-                port
-            )
+            panic!("Failed to bind to port {port} — is another instance already running?")
         });
-    println!("Isochrone server listening on port {}", port);
+    println!("Isochrone server listening on port {port}");
     axum::serve(listener, app).await.unwrap();
 }
 
@@ -3888,17 +3879,17 @@ mod tests {
     fn zagreb_buckets_shift_utc_hours_into_local_days() {
         // 2026-08-19 21:00 UTC is 23:00 local (CEST), still the 19th.
         assert_eq!(
-            zagreb_hour_bucket(1787173200),
+            zagreb_hour_bucket(1_787_173_200),
             ("2026-08-19".to_string(), 23)
         );
         // One hour later crosses local midnight into the 20th.
         assert_eq!(
-            zagreb_hour_bucket(1787176800),
+            zagreb_hour_bucket(1_787_176_800),
             ("2026-08-20".to_string(), 0)
         );
         // In January the offset is +1, so 23:00 UTC is 00:00 the next day.
         assert_eq!(
-            zagreb_hour_bucket(1767222000),
+            zagreb_hour_bucket(1_767_222_000),
             ("2026-01-01".to_string(), 0)
         );
     }
@@ -3907,9 +3898,9 @@ mod tests {
     fn rides_fold_into_local_days_not_utc_days() {
         // Three consecutive hours straddling local midnight on 19/20 Aug.
         let hours = vec![
-            hour_totals(1787169600, 10, 60), // 22:00 local, 19 Aug
-            hour_totals(1787173200, 20, 60), // 23:00 local, 19 Aug
-            hour_totals(1787176800, 30, 60), // 00:00 local, 20 Aug
+            hour_totals(1_787_169_600, 10, 60), // 22:00 local, 19 Aug
+            hour_totals(1_787_173_200, 20, 60), // 23:00 local, 19 Aug
+            hour_totals(1_787_176_800, 30, 60), // 00:00 local, 20 Aug
         ];
         let (days, _) = fold_bajs_rides(&hours, &HashMap::new());
 
@@ -3926,8 +3917,8 @@ mod tests {
         // Same local hour on two days: one fully observed, one a stub from a
         // restart. Averaging both would halve the hour.
         let hours = vec![
-            hour_totals(1787173200, 200, 60),
-            hour_totals(1787259600, 4, 2),
+            hour_totals(1_787_173_200, 200, 60),
+            hour_totals(1_787_259_600, 4, 2),
         ];
         let (_, hourly) = fold_bajs_rides(&hours, &HashMap::new());
 
@@ -3946,7 +3937,7 @@ mod tests {
 
     #[test]
     fn van_runs_come_out_of_the_ride_count() {
-        let hour = 1787173200;
+        let hour = 1_787_173_200;
         let mut hours = vec![hour_totals(hour, 100, 60)];
         hours[0].returns = 100;
         let moves = vec![
@@ -3976,7 +3967,7 @@ mod tests {
 
     #[test]
     fn subtracting_van_runs_never_drives_an_hour_negative() {
-        let hour = 1787173200;
+        let hour = 1_787_173_200;
         // The ride query drops hours with a bad poll gap, but the relocations
         // in that hour are still on file.
         let mut hours = vec![hour_totals(hour, 1, 60)];

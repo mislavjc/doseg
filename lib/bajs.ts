@@ -1,6 +1,7 @@
 import type { FeatureCollection, Point } from "geojson"
 
 import { formatStationName } from "@/lib/bajs-station-name"
+import { responseJson } from "@/lib/json"
 
 const GBFS_BASE_URL = "https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_hd/hr"
 const STATION_INFORMATION_URL = `${GBFS_BASE_URL}/station_information.json`
@@ -78,7 +79,7 @@ let cacheExpiresAt = 0
 let pendingLoad: Promise<BajsData> | null = null
 
 function clampTtl(ttl: number | undefined): number {
-  if (!ttl || Number.isNaN(ttl)) return FALLBACK_TTL_SECONDS
+  if (ttl === undefined || ttl === 0 || Number.isNaN(ttl)) return FALLBACK_TTL_SECONDS
   return Math.max(15, Math.min(ttl, FALLBACK_TTL_SECONDS))
 }
 
@@ -90,15 +91,7 @@ async function fetchJson<T>(url: string): Promise<T> {
   if (!response.ok) {
     throw new Error(`BAJS feed request failed: ${response.status}`)
   }
-  return response.json() as Promise<T>
-}
-
-function bajsStationKey(stationId: string): string {
-  return `bajs:${stationId}`
-}
-
-function isBajsKey(key: string): boolean {
-  return key.startsWith("bajs:")
+  return responseJson<T>(response)
 }
 
 async function loadBajsData(): Promise<BajsData> {
@@ -126,7 +119,7 @@ async function loadBajsData(): Promise<BajsData> {
     if (!stationStatus) continue
 
     stations.push({
-      key: bajsStationKey(stationInfo.station_id),
+      key: `bajs:${stationInfo.station_id}`,
       stationId: stationInfo.station_id,
       shortName: stationInfo.short_name ?? "",
       name: formatStationName(stationInfo.name),
@@ -156,28 +149,26 @@ async function loadBajsData(): Promise<BajsData> {
 }
 
 function startRefresh(): Promise<BajsData> {
-  if (!pendingLoad) {
-    pendingLoad = loadBajsData()
-      .then((data) => {
-        cachedData = data
-        cacheExpiresAt = Date.now() + data.ttlSeconds * 1000
-        return data
-      })
-      .finally(() => {
-        pendingLoad = null
-      })
-  }
+  pendingLoad ??= loadBajsData()
+    .then((data) => {
+      cachedData = data
+      cacheExpiresAt = Date.now() + data.ttlSeconds * 1000
+      return data
+    })
+    .finally(() => {
+      pendingLoad = null
+    })
   return pendingLoad
 }
 
-export async function getBajsData(): Promise<BajsData> {
+export function getBajsData(): Promise<BajsData> {
   // Same stale-while-revalidate shape as lib/gtfs-rt.ts: an expired snapshot
   // is served immediately while a deduped refresh lands in the background, so
   // only the first request of a process lifetime waits on the GBFS feed. A
   // refresh failure keeps the last-good snapshot in place.
   if (cachedData) {
     if (Date.now() >= cacheExpiresAt) startRefresh().catch(() => {})
-    return cachedData
+    return Promise.resolve(cachedData)
   }
   return startRefresh()
 }

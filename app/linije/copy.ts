@@ -18,10 +18,6 @@ export const MODE_ADJ: Record<LineMode, string> = {
   bus: "autobusne",
 }
 
-export function modeNoun(mode: LineMode): string {
-  return MODE_NOUN[mode]
-}
-
 /** "4:55" — GTFS time string "04:55"/"24:11" → display clock time. */
 export function clockTime(hhmm: string): string {
   const [h, m] = hhmm.split(":").map(Number)
@@ -107,7 +103,7 @@ export function peakRange(data: LinePageData): [number, number] | null {
   const gaps = deps
     .slice(1)
     .map((t, i) => t - deps[i])
-    .sort((a, b) => a - b)
+    .toSorted((a, b) => a - b)
   const lo = Math.round(gaps[Math.floor(gaps.length * 0.2)])
   const hi = Math.round(gaps[Math.floor(gaps.length * 0.8)])
   return [lo, hi]
@@ -148,8 +144,8 @@ export function serviceStatus(data: LinePageData): ServiceStatus {
 
 /** First/last departure (minutes-of-day) across the given day rows, or null. */
 function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
-  const mins = rows.flatMap(flatDepartures)
-  return mins.length ? [Math.min(...mins), Math.max(...mins)] : null
+  const mins = rows.flatMap((dir) => flatDepartures(dir))
+  return mins.length > 0 ? [Math.min(...mins), Math.max(...mins)] : null
 }
 
 /**
@@ -168,7 +164,7 @@ export function serviceHistogram(data: LinePageData): number[] {
       best = dir
     }
   }
-  const hist = new Array<number>(24).fill(0)
+  const hist = Array.from({ length: 24 }, () => 0)
   for (const r of best) hist[r.hour % 24] += r.minutes.length
   return hist
 }
@@ -176,7 +172,8 @@ export function serviceHistogram(data: LinePageData): number[] {
 /** Weekend service shape, so the three weekend-aware copy spots classify once. */
 export type WeekendKind = "both" | "saturday" | "sunday" | "none"
 export function weekendKind(data: LinePageData): WeekendKind {
-  const { subota, nedjelja } = serviceDays(data)
+  const subota = hasService(data.timetable.subota)
+  const nedjelja = hasService(data.timetable.nedjelja)
   if (subota && nedjelja) return "both"
   if (subota) return "saturday"
   if (nedjelja) return "sunday"
@@ -193,20 +190,9 @@ export function vozniRedNote(data: LinePageData): string {
       none: "",
     }[weekendKind(data)]
   }
-  return weekendKind(data) !== "none"
-    ? " Polasci za radni dan, subotu i nedjelju."
-    : " Vozi samo radnim danom."
-}
-
-/** Which day types actually have service. Internal — only weekendKind reads it. */
-function serviceDays(data: LinePageData): {
-  subota: boolean
-  nedjelja: boolean
-} {
-  return {
-    subota: hasService(data.timetable.subota),
-    nedjelja: hasService(data.timetable.nedjelja),
-  }
+  return weekendKind(data) === "none"
+    ? " Vozi samo radnim danom."
+    : " Polasci za radni dan, subotu i nedjelju."
 }
 
 /** Departure-terminal display name per direction (column headers, toggles). */
@@ -231,7 +217,7 @@ export function terminalChips(data: LinePageData): (string | undefined)[] {
 /** Intro paragraph under the title. Doubles as the SEO/OG description, so the
  *  suspended-line cases must read honestly rather than "0 puta / 0:00 / 0 min". */
 export function introText(data: LinePageData): string {
-  const noun = modeNoun(data.mode)
+  const noun = MODE_NOUN[data.mode]
   const stops = data.directions[0].stops.length
   const travel = Math.round(data.stats.travelTimeMin)
   const km = data.stats.distanceKm.toLocaleString("hr-HR", { maximumFractionDigits: 1 })

@@ -93,8 +93,8 @@ export function distMeters(
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
-function appendCoord(coords: [number, number][], lon: number, lat: number) {
-  const last = coords[coords.length - 1]
+export function appendCoord(coords: [number, number][], lon: number, lat: number) {
+  const last = coords.at(-1)
   if (last && last[0] === lon && last[1] === lat) return
   coords.push([lon, lat])
 }
@@ -205,7 +205,7 @@ function tracePathChain(
     current = prev[current]
   }
 
-  if (chain[chain.length - 1] !== startNode) return null
+  if (chain.at(-1) !== startNode) return null
 
   chain.reverse()
   return chain.map((nodeIdx) => {
@@ -245,8 +245,6 @@ interface StreetPathResult {
   coords: [number, number][]
   distanceMeters: number
   durationSeconds: number
-  startNodeIdx: number
-  endNodeIdx: number
 }
 
 function resolvePathNodes(
@@ -264,7 +262,7 @@ function resolvePathNodes(
   return findPathBetweenNodes(graph, startNodeIdx, endNodeIdx)
 }
 
-function sumCoordDistance(coords: [number, number][]): number {
+export function sumCoordDistance(coords: [number, number][]): number {
   let total = 0
   for (let i = 1; i < coords.length; i++) {
     const [prevLon, prevLat] = coords[i - 1]
@@ -308,7 +306,5 @@ export function findStreetPath(
     coords,
     distanceMeters: Math.round(sumCoordDistance(coords)),
     durationSeconds: Math.round(durationSeconds),
-    startNodeIdx,
-    endNodeIdx,
   }
 }

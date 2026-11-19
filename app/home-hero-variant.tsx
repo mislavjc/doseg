@@ -44,7 +44,7 @@ export function HomeHeroVariant({
   const viewH = crop.height / 2
   const project = projector(crop, viewW, viewH)
   const pts = hero.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length
+  const path = pts.length > 0
     ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
     : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
@@ -80,7 +80,7 @@ export function HomeHeroVariant({
       >
         <HeroPicture src={src} alt="Karta Zagreba s granicom grada" variant={variant} />
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -94,7 +94,7 @@ export function HomeHeroVariant({
           preserveAspectRatio="xMidYMid slice"
           className="absolute inset-0 h-full w-full"
         >
-          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="#fff" strokeWidth={6} strokeLinejoin="round" />
+          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="var(--ground)" strokeWidth={6} strokeLinejoin="round" />
           <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
           <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
           <text
@@ -104,7 +104,7 @@ export function HomeHeroVariant({
             fontSize={16}
             fontWeight={700}
             fontFamily="var(--font-heros), system-ui, sans-serif"
-            fill="#fff"
+            fill="var(--ground)"
           >
             Zagreb
           </text>

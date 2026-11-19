@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { loadScores } from "@/lib/district-scores"
 import { loadLineData, loadLineIndex } from "@/lib/line-data"
+import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopHeroMeta, loadStopIndex } from "@/lib/stop-data"
 
 import { renderOgCard } from "./card"
@@ -18,17 +18,12 @@ type DistrictFeature = {
   geometry: { type: "Polygon"; coordinates: number[][][] }
 }
 
-let cachedGeoJSON: DistrictFeature[] | null = null
-
 function getDistrictGeoJSON(): DistrictFeature[] {
-  if (cachedGeoJSON) return cachedGeoJSON
-  const raw = readFileSync(
-    join(process.cwd(), "data/districts.geojson"),
-    "utf8"
+  const parsed = readJsonCached<{ features: DistrictFeature[] }>(
+    join(process.cwd(), "data/districts.geojson")
   )
-  const parsed = JSON.parse(raw)
-  cachedGeoJSON = parsed.features as DistrictFeature[]
-  return cachedGeoJSON
+  if (!parsed) throw new Error("data/districts.geojson missing or malformed")
+  return parsed.features
 }
 
 // Same day-filtered scores the kvart pages render (not the pooled legacy file),
@@ -87,8 +82,7 @@ function findDistrict(
  * 3-6s to render (satori rasterizes the full hero PNG). Two layers fix it:
  * a per-process buffer cache (warm after one hit per line, ~60MB ceiling for
  * all 154) and CDN cache headers so the edge serves repeat crawls instantly.
- */
-/**
+ *
  * Minimal LRU for rendered OG card buffers. The valid slug set bounds the key
  * space (154 lines, 604 stops), but holding every card forever pins hundreds of
  * MB on the 1.5 GB box, so cap each cache and evict least-recently-used.
@@ -192,7 +186,7 @@ export async function GET(request: Request) {
     const peak = line.stats.peakHeadwayMin
     return renderOgCard({
       headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,
-      sub: peak
+      sub: peak !== null && peak !== 0
         ? `vozni red · u špici svakih ${Math.round(peak)} min`
         : "vozni red i stanice",
     })
@@ -211,8 +205,7 @@ export async function GET(request: Request) {
   }
 
   const hasCoords = latStr && lonStr
-  const lat = hasCoords ? parseFloat(latStr) : NaN
-  const lon = hasCoords ? parseFloat(lonStr) : NaN
+  const [lat, lon] = hasCoords ? [parseFloat(latStr), parseFloat(lonStr)] : [NaN, NaN]
 
   if (hasCoords && (Number.isNaN(lat) || Number.isNaN(lon))) {
     return new Response("Invalid coordinates", { status: 400 })

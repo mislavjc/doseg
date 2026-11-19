@@ -7,7 +7,7 @@ import type { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-import { Body, Eyebrow, Hook } from "./primitives"
+import { Body, Eyebrow, Hook, MonoLabel } from "./primitives"
 
 /**
  * Composite blocks shared across the editorial pSEO pages (linije, kvartovi,
@@ -35,7 +35,7 @@ export function SectionHeader({
     <header className={cn("pb-8", className)}>
       <Eyebrow className={accent ? "text-zg-blue" : undefined}>{eyebrow}</Eyebrow>
       <Hook className="mt-4">{hook}</Hook>
-      {children && (
+      {Boolean(children) && (
         <Body className="mt-3 max-w-[520px] text-ink-muted">{children}</Body>
       )}
     </header>
@@ -90,6 +90,7 @@ export function Breadcrumb({
   return (
     <p className="font-mono text-label text-ink-faint">
       {trail.map((seg, i) => (
+        // oxlint-disable-next-line react/no-array-index-key -- labels can repeat within a trail and the trail is static, so position is the identity
         <span key={`${seg.label}-${i}`}>
           {i > 0 && " / "}
           {seg.href ? (
@@ -190,7 +191,7 @@ export function PrevNext({
     <nav className="flex items-start justify-between">
       {prev ? (
         <Link href={prev.href} className="group flex flex-col gap-0.5">
-          <span className="font-mono text-label text-ink-faint">{prev.label}</span>
+          <MonoLabel>{prev.label}</MonoLabel>
           <span className={value}>
             <IconArrowLeft size={16} className="shrink-0" />
             {prev.value}
@@ -204,7 +205,7 @@ export function PrevNext({
           href={next.href}
           className="group flex flex-col items-end gap-0.5"
         >
-          <span className="font-mono text-label text-ink-faint">{next.label}</span>
+          <MonoLabel>{next.label}</MonoLabel>
           <span className={value}>
             {next.value}
             <IconArrowRight size={16} className="shrink-0" />

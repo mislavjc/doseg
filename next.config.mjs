@@ -12,7 +12,7 @@ const nextConfig = {
       "@central-icons-react/square-outlined-radius-0-stroke-2",
     ],
   },
-  async redirects() {
+  redirects() {
     // The interactive map moved from / to /karta; shared map links carry
     // ?lat (origin) or ?dlat (destination) — send both to the new home.
     // Unlisted query params pass through to the destination automatically.
@@ -31,7 +31,7 @@ const nextConfig = {
       },
     ]
   },
-  async rewrites() {
+  rewrites() {
     return [
       {
         source: "/api/isochrone",

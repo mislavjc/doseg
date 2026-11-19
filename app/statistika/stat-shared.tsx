@@ -73,7 +73,7 @@ export function SectionGroup({
         <p
           className={`mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.15em] ${accent.eyebrowColor}`}
         >
-          {numLabel} &mdash; {eyebrow}
+          {numLabel} - {eyebrow}
         </p>
 
         <div className="mb-4">
@@ -114,7 +114,7 @@ export function EditorialStat({
   )
 }
 
-export const sectionColorMap: Record<string, string> = {
+const sectionColorMap: Record<string, string> = {
   slate: "text-slate-800 dark:text-slate-200",
   rose: "text-rose-800 dark:text-rose-200",
   emerald: "text-emerald-800 dark:text-emerald-200",
@@ -128,7 +128,7 @@ export const sectionColorMap: Record<string, string> = {
   indigo: "text-indigo-800 dark:text-indigo-200",
 }
 
-export const sectionBgMap: Record<string, string> = {
+const sectionBgMap: Record<string, string> = {
   slate: "dark:bg-white/10",
   rose: "dark:bg-rose-500/20",
   emerald: "dark:bg-emerald-500/20",
@@ -191,9 +191,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
     </>
   ),
   moon: (
-    <>
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </>
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
   ),
   calendar: (
     <>
@@ -219,9 +217,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
     </>
   ),
   bolt: (
-    <>
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-    </>
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
   ),
   "circle-down": (
     <>
@@ -231,7 +227,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
   ),
 }
 
-export function SectionIconSvg({ icon }: { icon: string }) {
+function SectionIconSvg({ icon }: { icon: string }) {
   return (
     <svg
       aria-hidden="true"
@@ -274,7 +270,7 @@ export function SectionIcon({
   )
 }
 
-export function RankingListItem({
+function RankingListItem({
   d,
   i,
   maxVal,
@@ -363,66 +359,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function ScoreRing({
-  score,
-  accent,
-  size,
-}: {
-  score: number
-  accent: string
-  size: "sm" | "lg"
-}) {
-  const radius = size === "sm" ? 16 : 24
-  const circumference = 2 * Math.PI * radius
-  const strokeDashoffset = circumference - (score / 100) * circumference
-  const viewBox = size === "sm" ? "0 0 40 40" : "0 0 64 64"
-  const cx = size === "sm" ? 20 : 32
-  const cy = size === "sm" ? 20 : 32
-  const sw = size === "sm" ? 3 : 4
-  const containerClass =
-    size === "sm"
-      ? "relative flex h-11 w-11 shrink-0 items-center justify-center"
-      : "relative flex h-16 w-16 shrink-0 items-center justify-center"
-  const textClass =
-    size === "sm"
-      ? "block font-sans tracking-tight text-[15px] leading-none text-slate-900 dark:text-white"
-      : "block font-sans tracking-tight text-[20px] leading-none text-slate-900 dark:text-white"
-  return (
-    <div className={containerClass}>
-      <svg
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full -rotate-90"
-        viewBox={viewBox}
-      >
-        <circle
-          cx={cx}
-          cy={cy}
-          r={radius}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={sw}
-          className="text-black/5 dark:text-white/10"
-        />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={radius}
-          fill="none"
-          stroke={accent}
-          strokeWidth={sw}
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          className="transition-[stroke-dashoffset] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
-        />
-      </svg>
-      <div className="flex flex-col items-center text-center">
-        <span className={textClass}>{score}</span>
-      </div>
-    </div>
-  )
-}
-
 export function BackLink() {
   return (
     <Link
@@ -473,7 +409,7 @@ export function DistrictEmblem({
   )
 }
 
-export function DistrictEmblemSvg({
+function DistrictEmblemSvg({
   pathData,
   color,
 }: {

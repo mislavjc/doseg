@@ -45,12 +45,14 @@ function pruneCache(now: number): void {
   }
 }
 
-function makeKey(params: {
+interface ReachabilityParams {
   originLat: number
   originLon: number
   departureTime: number
   useBajs: boolean
-}) {
+}
+
+function makeKey(params: ReachabilityParams) {
   return [
     params.originLat.toFixed(5),
     params.originLon.toFixed(5),
@@ -61,12 +63,7 @@ function makeKey(params: {
 
 async function computeState(
   key: string,
-  params: {
-    originLat: number
-    originLon: number
-    departureTime: number
-    useBajs: boolean
-  }
+  params: ReachabilityParams
 ): Promise<ReachabilityState> {
   // Filter to the same schedule day the isochrone paint uses. Without a
   // service date, OTP's `trips` field pools every service day in the feed
@@ -114,12 +111,7 @@ async function computeState(
   }
 }
 
-export async function getReachabilityState(params: {
-  originLat: number
-  originLon: number
-  departureTime: number
-  useBajs: boolean
-}): Promise<ReachabilityState> {
+export function getReachabilityState(params: ReachabilityParams): Promise<ReachabilityState> {
   const key = makeKey(params)
   const now = Date.now()
   const cached = cache.get(key)

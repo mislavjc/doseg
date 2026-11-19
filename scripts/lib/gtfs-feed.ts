@@ -12,12 +12,12 @@ import { join } from "node:path"
 import { idx, readCsv, streamCsv } from "./gtfs-csv"
 import { distM, lenM, simplify, snapStop, type LonLat } from "./geo-line"
 
-export interface Stop { id: string; name: string; lat: number; lon: number }
+interface Stop { id: string; name: string; lat: number; lon: number }
 // shape = real GTFS polyline ([] when the feed ships none); headsign = ZET's own
 // destination text for that direction (the right terminus label — GTFS last-stop
 // names drift from it, e.g. line 145's terminus stop is "Ratarska" but ZET calls
 // the destination "Oranice").
-export interface DirData { shape: LonLat[]; stops: Stop[]; headsign: string }
+interface DirData { shape: LonLat[]; stops: Stop[]; headsign: string }
 export interface Line { short: string; type: number; dirs: Record<number, DirData> }
 
 /** Load a feed, picking per line+direction the trip that visits the MOST stops —
@@ -58,9 +58,11 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
   // the most-stops trip within it. Headsign-first avoids both short-turns (few
   // trips) and depot runs (few trips, but the most stops — tram 8's rare
   // "Spr.Dubrava" depot leg fooled a plain most-stops pick).
-  const headCount = new Map<string, number>() // route|dir|headsign -> trips
+  // route|dir|headsign -> trips
+  const headCount = new Map<string, number>()
   for (const info of tripInfo.values()) headCount.set(`${info.route}|${info.dir}|${info.headsign}`, (headCount.get(`${info.route}|${info.dir}|${info.headsign}`) ?? 0) + 1)
-  const domHead = new Map<string, { head: string; n: number }>() // route|dir -> dominant headsign
+  // route|dir -> dominant headsign
+  const domHead = new Map<string, { head: string; n: number }>()
   for (const [gk, n] of headCount) {
     const i = gk.lastIndexOf("|"), rk = gk.slice(0, i), head = gk.slice(i + 1)
     if (n > (domHead.get(rk)?.n ?? -1)) domHead.set(rk, { head, n })
@@ -75,7 +77,7 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
 
   const wantShapes = new Set([...rep.values()].map((v) => v.shape).filter(Boolean))
   const shapePts = new Map<string, [number, number, number][]>()
-  if (wantShapes.size) await streamCsv(join(dir, "shapes.txt"), (c, col) => {
+  if (wantShapes.size > 0) await streamCsv(join(dir, "shapes.txt"), (c, col) => {
     const s = c[col("shape_id")]
     if (!wantShapes.has(s)) return
     shapePts.set(s, [...(shapePts.get(s) ?? []), [Number(c[col("shape_pt_sequence")]), Number(c[col("shape_pt_lon")]), Number(c[col("shape_pt_lat")])]])
@@ -92,8 +94,11 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
   for (const [rk, r] of rep) {
     const [route, dir2] = rk.split("|")
     const meta = routeMeta.get(route)!
-    const seq = (tripStops.get(r.trip) ?? []).sort((a, b) => a[0] - b[0])
-    const stopList: Stop[] = seq.map(([, id]) => ({ id, ...(stopInfo.get(id) ?? { name: id, lat: 0, lon: 0 }) }))
+    const seq = (tripStops.get(r.trip) ?? []).toSorted((a, b) => a[0] - b[0])
+    const stopList: Stop[] = seq.map(([, id]) => {
+      const info = stopInfo.get(id) ?? { name: id, lat: 0, lon: 0 }
+      return { id, name: info.name, lat: info.lat, lon: info.lon }
+    })
     if (!lines.has(meta.short)) lines.set(meta.short, { short: meta.short, type: meta.type, dirs: {} })
     lines.get(meta.short)!.dirs[Number(dir2)] = { shape: shapeLine.get(r.shape) ?? [], stops: stopList, headsign: r.headsign }
   }
@@ -102,11 +107,12 @@ export async function loadFeed(dir: string, wanted?: Set<string>): Promise<Map<s
 
 const dist = (a: Stop, b: Stop) => distM([a.lon, a.lat], [b.lon, b.lat])
 
-export const TERMINUS_M = 300 // a tip that moved more than this = a terminus change, not a mid-route reroute
+// a tip that moved more than this = a terminus change, not a mid-route reroute
+const TERMINUS_M = 300
 
 /** Pick the direction with the most visible change: terminus move + how many stops
  * differ by name (a mid-route reroute keeps termini but swaps stops). */
-export function pickChangedDir(o: Line, n: Line): number {
+function pickChangedDir(o: Line, n: Line): number {
   let bestDir = 0, bestScore = -1
   for (const dir of [0, 1]) {
     const od = o.dirs[dir], nd = n.dirs[dir]
@@ -126,10 +132,16 @@ const km = (line: LonLat[]) => +(lenM(line) / 1000).toFixed(1)
 const relabel = (s: Stop, name: string): Stop => ({ ...s, name })
 
 export type Mode = "diff" | "new" | "removed"
-export interface Result { geom: object; stat: Record<string, unknown> }
+interface DiffStat {
+  mode: "diff"; change: "terminus" | "midroute"; len_old_km: number; len_new_km: number; added: number; removed: number
+  oldTipName: string; newTipName: string; relacija: string
+}
+interface OneSidedStat { mode: "new" | "removed"; len_km: number; stops_count: number; terminusName: string; originName: string }
+export interface Result { geom: object; stat: DiffStat | OneSidedStat }
+export interface DiffResult extends Result { stat: DiffStat }
 
 /** Before/after reroute geometry for one line between two loaded feeds. */
-export function genDiff(line: string, o: Line, n: Line): Result | null {
+export function genDiff(line: string, o: Line, n: Line): DiffResult | null {
   const dir = pickChangedDir(o, n)
   const od = o.dirs[dir], nd = n.dirs[dir]
   if (!od?.stops.length || !nd?.stops.length) return null
@@ -167,12 +179,12 @@ export function genDiff(line: string, o: Line, n: Line): Result | null {
 export function genOneSided(line: string, mode: "new" | "removed", L: Line): Result | null {
   const d = L.dirs[0] ?? L.dirs[1]
   if (!d?.stops.length) return null
-  const drawn = d.shape.length ? simplify(d.shape) : stopLine(d)
+  const drawn = d.shape.length > 0 ? simplify(d.shape) : stopLine(d)
   const stops = d.stops.map((s) => snapStop(s, drawn))
   const origin = stops[0], terminus = snapStop(relabel(d.stops.at(-1)!, d.headsign), drawn)
   return {
     geom: {
-      line, mode, stopConnected: !d.shape.length, shared: origin, newTip: terminus, oldTip: terminus,
+      line, mode, stopConnected: d.shape.length === 0, shared: origin, newTip: terminus, oldTip: terminus,
       old: { shape: mode === "removed" ? drawn : [] }, new: { shape: mode === "new" ? drawn : [] },
       newStops: mode === "new" ? stops : [], addedStops: [], removedStops: mode === "removed" ? stops : [],
     },

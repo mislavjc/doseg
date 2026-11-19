@@ -1,6 +1,6 @@
 /**
  * Mode-color map — docs/map-redesign-spec.md §1 (LOCK, single source).
- * Keyed by GTFS/OTP mode. Replaces lib/transit.ts `modeColor` when /new ships.
+ * Keyed by GTFS/OTP mode.
  */
 export const MODE_COLORS = {
   walk: "#9aa0a6",
@@ -52,13 +52,19 @@ export function isBikeMode(otpMode: string): boolean {
  * strip, leg list, and map polylines all share them so each line is
  * traceable from sidebar to map. Walks stay grey.
  */
-export const LINE_PALETTE = [
-  "#0e51c9", // zg-blue
-  "#2ba88a", // rail green
-  "#7b68b8", // purple
-  "#e05b4f", // red
-  "#16949e", // teal
-] as const // amber (#e8883c) is reserved for BAJS legs
+const LINE_PALETTE = [
+  // zg-blue
+  "#0e51c9",
+  // rail green
+  "#2ba88a",
+  // purple
+  "#7b68b8",
+  // red
+  "#e05b4f",
+  // teal
+  "#16949e",
+  // amber (#e8883c) is reserved for BAJS legs
+] as const
 
 /** Color per leg: same line → same color, new line → next palette slot.
  *  Walks stay grey; BAJS legs always get the brand amber (matches the map). */

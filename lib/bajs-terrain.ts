@@ -63,7 +63,7 @@ export function buildBajsTerrain(ranking: BajsRanking | null): BajsTerrain | nul
       share: cityRides > 0 ? t.rides / cityRides : 0,
       value: busiest > 0 ? (t.rides / busiest) * 100 : 0,
     }))
-    .sort((a, b) => b.rides - a.rides)
+    .toSorted((a, b) => b.rides - a.rides)
 
   return {
     kvartovi,

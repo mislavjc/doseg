@@ -11,6 +11,7 @@ import {
 } from "nuqs"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 
+import type { MapPoiCategory } from "@/lib/poi"
 import { DEFAULT_LAYERS, LayersControl, type LayersState } from "./layers-panel"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { MobileSheet } from "./mobile-sheet"
@@ -58,7 +59,7 @@ function toFlowInitial(q: UrlState): FlowInitial {
       origin && q.dlat != null && q.dlon != null
         ? { lat: q.dlat, lon: q.dlon }
         : undefined,
-    time: q.t && /^\d{1,2}:\d{2}$/.test(q.t) ? q.t : null,
+    time: q.t && /^\d{1,2}:\d{2}$/u.test(q.t) ? q.t : null,
     bajs: q.bajs === "1",
     minutes: q.m === 15 || q.m === 30 ? q.m : undefined,
   }
@@ -78,7 +79,7 @@ function poiParamFromLayers(poi: LayersState["poi"]): string | null {
   const on = Object.entries(poi)
     .filter(([, v]) => v)
     .map(([k]) => k)
-  return on.length ? on.join(",") : null
+  return on.length > 0 ? on.join(",") : null
 }
 
 
@@ -106,7 +107,7 @@ function useUrlFlowSync(
   setUrlState: (
     values: Partial<UrlState>,
     options?: { history?: "push" | "replace" }
-  ) => void
+  ) => Promise<unknown>
 ) {
   const { origin, dest, departTime, minutes, applyHistoryState } = flow
   useEffect(() => {
@@ -124,15 +125,16 @@ function useUrlFlowSync(
       return (v == null ? null : Number(v)) === next[k]
     })
     if (sameAsUrl) return
-    setUrlState(next, { history: "push" })
+    void setUrlState(next, { history: "push" })
   }, [origin, dest, setUrlState])
   // Settings replace in place (no history spam from a slider or a toggle).
   const poiParam = poiParamFromLayers(layers.poi)
   useEffect(() => {
-    setUrlState({
+    void setUrlState({
       t: departTime,
       bajs: layers.bajs ? "1" : null,
-      m: minutes === 30 ? null : minutes, // 30 is the default — omit
+      // 30 is the default — omit
+      m: minutes === 30 ? null : minutes,
       poi: poiParam,
     })
   }, [departTime, minutes, layers.bajs, poiParam, setUrlState])
@@ -176,7 +178,7 @@ function searchPropsFor(
 
 type LayersProps = React.ComponentProps<typeof LayersControl>
 
-/** Alerts + desktop controls + mobile search bar/layers icon over the map. */
+/** Desktop controls + mobile search bar/layers icon over the map. */
 function MapChrome({
   searchProps,
   layersProps,
@@ -260,10 +262,10 @@ function ClientInner() {
   }
 
   // Sidebar/sheet POI count rows double as map-layer toggles (#7).
-  const togglePoi = (key: string) =>
+  const togglePoi = (key: MapPoiCategory) =>
     handleLayersChange({
       ...layers,
-      poi: { ...layers.poi, [key]: !layers.poi[key as keyof LayersState["poi"]] },
+      poi: { ...layers.poi, [key]: !layers.poi[key] },
     })
 
   const searchProps = searchPropsFor(flow)

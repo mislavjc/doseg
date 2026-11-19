@@ -7,12 +7,15 @@ import { clockTime } from "@/app/linije/copy"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import { loadHeroMeta } from "@/lib/line-data"
 
-// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-const INK = "#0a0a0a" // --ink
-const INK_MUTED = "#6a7178" // --ink-muted
-const ZG_BLUE = "#0e51c9" // --zg-blue
+import { heroCloudSrc, ogFonts } from "./card"
 
-const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
+// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
+// --ink
+const INK = "#0a0a0a"
+// --ink-muted
+const INK_MUTED = "#6a7178"
+// --zg-blue
+const ZG_BLUE = "#0e51c9"
 
 /** The hero band's intrinsic 1x size — overlay coordinates live in this space. */
 const VIEW_W = 1440
@@ -52,13 +55,6 @@ function overlaySvg(data: LinePageData): string | null {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
 
-function loadFonts() {
-  return {
-    geistMono: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
-    herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-  }
-}
-
 // The full 1200×630 map layer sits vertically centred inside the 1200×470
 // window: offset by (630-470)/2 = 80px, matching the Paper clone offset.
 const MAP_LAYER = {
@@ -74,10 +70,7 @@ const MAP_LAYER = {
 function MapWindow({ data }: { data: LinePageData }) {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  const cloudSrc = existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
+  const cloudSrc = heroCloudSrc()
   const routeSrc = overlaySvg(data)
   return (
     <div
@@ -89,11 +82,11 @@ function MapWindow({ data }: { data: LinePageData }) {
         overflow: "hidden",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {routeSrc && <img src={routeSrc} alt="" style={MAP_LAYER} />}
     </div>
   )
@@ -103,7 +96,7 @@ function MapWindow({ data }: { data: LinePageData }) {
 function InfoBand({ data }: { data: LinePageData }) {
   const peak = data.stats.peakHeadwayMin
   const facts = [
-    peak ? `u špici svakih ${Math.round(peak)} min` : null,
+    peak !== null && peak !== 0 ? `u špici svakih ${Math.round(peak)} min` : null,
     `${clockTime(data.stats.firstDeparture)} - ${clockTime(data.stats.lastDeparture)}`,
   ]
     .filter(Boolean)
@@ -179,7 +172,6 @@ function InfoBand({ data }: { data: LinePageData }) {
 export function renderLineOgCard(data: LinePageData): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
   if (!existsSync(heroPath)) return null
-  const fonts = loadFonts()
 
   return new ImageResponse(
     (
@@ -201,10 +193,7 @@ export function renderLineOgCard(data: LinePageData): ImageResponse | null {
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: "Geist Mono", data: fonts.geistMono, weight: 400, style: "normal" },
-        { name: "TeX Gyre Heros", data: fonts.herosBold, weight: 700, style: "normal" },
-      ],
+      fonts: ogFonts(),
     }
   )
 }

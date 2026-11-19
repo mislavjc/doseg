@@ -148,7 +148,7 @@ export default function LinijeIndexPage() {
         <Hook className="mt-4">Grad ne spava skroz.</Hook>
         <Body className="mt-3 max-w-[520px] text-ink-muted">
           Noćni tramvaji 31 do 34 preuzimaju mrežu dok dnevne linije spavaju
-          {nightHeadway
+          {nightHeadway != null && nightHeadway !== 0
             ? `, s polascima otprilike svakih ${Math.round(nightHeadway)} minuta`
             : ""}
           .

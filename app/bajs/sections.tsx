@@ -187,6 +187,7 @@ export function Ritam({ rides }: { rides: BajsRides }) {
         >
           {columns.map((h, hour) => (
             <div
+              // oxlint-disable-next-line react/no-array-index-key -- the index is the hour of day, the column's identity
               key={hour}
               title={h ? `${hourLabel(hour)} · ${num(h.avgStarts)}` : undefined}
               className={cn(
@@ -228,7 +229,7 @@ export function Ritam({ rides }: { rides: BajsRides }) {
 
 export function Dani({ rides }: { rides: BajsRides }) {
   const { fullDays, avgPerDay, busiestDay, partialDay } = rides
-  if (!fullDays.length || !avgPerDay || !busiestDay) return null
+  if (fullDays.length === 0 || avgPerDay === null || avgPerDay === 0 || !busiestDay) return null
 
   const max = Math.max(...fullDays.map((d) => d.starts))
   const totalBulk = fullDays.reduce(
@@ -380,7 +381,7 @@ export function Reljef({ ranking }: { ranking: BajsRanking | null }) {
   const terrain = buildBajsTerrain(ranking)
   if (!ranking || !terrain) return null
 
-  const top = terrain.kvartovi[0]
+  const top = terrain.kvartovi.at(0)
   const covered = terrain.kvartovi.length
   // The share the busiest three carry says more than any single number: it is
   // the whole point of the shape below. Names stay in the nominative: Croatian
@@ -593,9 +594,9 @@ export function Zakljucak({
             ? ` ${emptiest.name} je u tom ciklusu prazna ${Math.round((emptiest.emptyShare ?? 0) * 100)} % vremena.`
             : ""}
         </Body>
-        <p className="font-heros text-head font-bold text-zg-blue">
+        <Hook as="p" className="text-zg-blue">
           Prazna stanica u sedam ujutro je propuštena vožnja.
-        </p>
+        </Hook>
       </div>
     </Section>
   )
@@ -655,14 +656,14 @@ function SmjerRow({ row, max }: { row: KvartFlow; max: number }) {
 }
 
 export function Smjer({ flow }: { flow: BajsFlow | null }) {
-  if (!flow || flow.kvartovi.length === 0) return null
+  if (!flow) return null
 
   const shown = flow.kvartovi.filter((k) => Math.abs(k.morningNet) >= 1)
   if (shown.length < 3) return null
 
   const max = Math.max(1, ...shown.map((k) => Math.abs(k.morningNet)))
-  const drain = flow.drains[0]
-  const fill = flow.fills[0]
+  const drain = flow.drains.at(0)
+  const fill = flow.fills.at(0)
   const reversing = flow.kvartovi.filter((k) => k.reverses)
 
   return (
@@ -787,6 +788,7 @@ export function Kombi({
         >
           {hourly.map((moves, hour) => (
             <div
+              // oxlint-disable-next-line react/no-array-index-key -- the index is the hour of day, the column's identity
               key={hour}
               title={`${hourLabel(hour)} · ${num(moves)}`}
               className={cn(

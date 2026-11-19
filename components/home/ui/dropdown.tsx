@@ -1,6 +1,6 @@
 /**
- * Dropdown/popover primitives — shared by the autocomplete, and the
- * upcoming Slojevi panel and polazak time picker (spec §5–7).
+ * Dropdown/popover primitives — shared by the autocomplete, the Slojevi
+ * panel and the polazak time picker (spec §5–7).
  */
 
 /** White floating panel under an anchor (field, map control). */

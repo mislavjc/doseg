@@ -17,13 +17,13 @@ import { PoiRow } from "@/app/statistika/editorial/poi"
 import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { HeroPicture } from "@/components/hero-picture"
-import { mercatorY } from "@/lib/geo"
+import { projector } from "@/lib/geo"
 import type { LineHeroCrop } from "@/lib/line-data"
 import { scoreColor, scoreTextColor } from "@/lib/score-color"
 import { cn } from "@/lib/utils"
 import type { KvartData } from "@/lib/kvart-data"
 
-import { plural } from "../linije/copy"
+import { cap, plural } from "../linije/copy"
 
 /**
  * Kvart scorecard sections. Visual language is the statistika editorial kit
@@ -34,15 +34,6 @@ import { plural } from "../linije/copy"
  */
 
 // ── Hero: dithered map cropped to the kvart, with its border ────────────────
-
-function kvartProjector(crop: LineHeroCrop, viewW: number, viewH: number) {
-  const yTop = mercatorY(crop.north)
-  const yBottom = mercatorY(crop.south)
-  return (lon: number, lat: number): [number, number] => [
-    ((lon - crop.west) / (crop.east - crop.west)) * viewW,
-    ((mercatorY(lat) - yTop) / (yBottom - yTop)) * viewH,
-  ]
-}
 
 function KvartHeroVariant({
   data,
@@ -59,9 +50,9 @@ function KvartHeroVariant({
 }) {
   const viewW = crop.width / 2
   const viewH = crop.height / 2
-  const project = kvartProjector(crop, viewW, viewH)
+  const project = projector(crop, viewW, viewH)
   const pts = data.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length
+  const path = pts.length > 0
     ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
     : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
@@ -80,7 +71,7 @@ function KvartHeroVariant({
         alt={`Karta kvarta ${data.name} u Zagrebu`}
         variant={variant}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -94,7 +85,7 @@ function KvartHeroVariant({
           preserveAspectRatio="xMidYMid slice"
           className="absolute inset-0 h-full w-full"
         >
-          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="#fff" strokeWidth={6} strokeLinejoin="round" />
+          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="var(--ground)" strokeWidth={6} strokeLinejoin="round" />
           <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
           <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
           <text
@@ -104,7 +95,7 @@ function KvartHeroVariant({
             fontSize={16}
             fontWeight={700}
             fontFamily="var(--font-heros), system-ui, sans-serif"
-            fill="#fff"
+            fill="var(--ground)"
           >
             {data.name}
           </text>
@@ -160,7 +151,7 @@ export function Naslov({ data }: { data: KvartData }) {
       </Hook>
       <Body className="mt-1 text-ink-muted">
         {data.rank}. od {data.total} po povezanosti javnim prijevozom
-        {data.population ? ` · ${data.population.toLocaleString("hr")} stanovnika` : ""}
+        {data.population !== null && data.population !== 0 ? ` · ${data.population.toLocaleString("hr")} stanovnika` : ""}
       </Body>
     </>
   )
@@ -182,7 +173,7 @@ export function Scorecard({ data }: { data: KvartData }) {
       <div className="flex flex-col gap-[18px]">
         {data.bars.map((b) => {
           const self = b.kind === "self"
-          const fill = self ? "#0e51c9" : b.kind === "city" ? "#c9cdd3" : "#a9c2ec"
+          const fill = self ? "var(--zg-blue)" : b.kind === "city" ? "var(--ink-ghost)" : "#a9c2ec"
           return (
             <div key={b.kind} className="flex items-center gap-3.5">
               <span
@@ -289,7 +280,7 @@ export function IzvanSpice({ data }: { data: KvartData }) {
         ))}
         <MonoLabel className="mt-1 text-[12px]">
           interval: radnim danom ~{data.weekdayHeadwayMin} min
-          {data.weekendHeadwayMin != null ? `, vikendom ~${data.weekendHeadwayMin} min` : ""}
+          {data.weekendHeadwayMin == null ? "" : `, vikendom ~${data.weekendHeadwayMin} min`}
           {data.nightLines.length > 0
             ? ` · noćne linije ${data.nightLines.join(" · ")}`
             : " · nema noćnih linija"}
@@ -446,7 +437,7 @@ export function Blizina({ data }: { data: KvartData }) {
             title={POI_LABEL[c.key]}
             detail={
               c.nearestName
-                ? `najbliža/i ${c.nearestName}${c.nearestKm != null ? ` · ${c.nearestKm.toLocaleString("hr")} km` : ""}`
+                ? `najbliža/i ${c.nearestName}${c.nearestKm == null ? "" : ` · ${c.nearestKm.toLocaleString("hr")} km`}`
                 : null
             }
             value={c.count}
@@ -495,17 +486,17 @@ export function Promjene({ data }: { data: KvartData }) {
 // ── FAQ + JSON-LD ────────────────────────────────────────────────────────────
 
 export function buildFaq(data: KvartData): FaqItem[] {
-  const top = data.commute[0]
+  const top = data.commute.at(0)
   const tram = data.lines.filter((l) => l.mode === "tram").map((l) => l.broj)
   const bus = data.lines.filter((l) => l.mode === "bus").map((l) => l.broj)
   // Only name the modes the kvart actually has — gluing an empty list left a
   // dangling "te autobusi —." (broken Croatian + a forbidden em-dash).
   const lineParts: string[] = []
-  if (tram.length) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
-  if (bus.length) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
+  if (tram.length > 0) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
+  if (bus.length > 0) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
   const joined = lineParts.join(" te ")
   const linesAnswer = joined
-    ? `${joined.charAt(0).toUpperCase()}${joined.slice(1)}.`
+    ? `${cap(joined)}.`
     : "Kroz kvart trenutno ne vozi nijedna linija."
   const n = data.lines.length
   return [
@@ -540,12 +531,11 @@ export function KvartJsonLd({ data, faq }: { data: KvartData; faq: FaqItem[] }) 
     address: { "@type": "PostalAddress", addressLocality: "Zagreb", addressCountry: "HR" },
     geo: { "@type": "GeoCoordinates", latitude: data.bestPoint.lat, longitude: data.bestPoint.lon },
   }
-  const faqLd = faqJsonLd(faq)
   return (
     <>
       <JsonLd data={breadcrumb} />
       <JsonLd data={place} />
-      <JsonLd data={faqLd} />
+      <JsonLd data={faqJsonLd(faq)} />
     </>
   )
 }

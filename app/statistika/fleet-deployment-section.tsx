@@ -33,7 +33,7 @@ function pctBg(pct: number): string {
 // --- Main component ---
 
 export default function FleetDeploymentSection() {
-  const { data, error, isLoading } = useSWR<FleetDeploymentData>(
+  const { data, error, isLoading } = useSWR<FleetDeploymentData, Error>(
     "/api/rt/fleet-deployment",
     { refreshInterval: 30_000, keepPreviousData: true }
   )
@@ -140,7 +140,7 @@ function SummaryRow({
 // --- Active routes table ---
 
 function ActiveRoutesTable({ routes }: { routes: FleetRouteDeployment[] }) {
-  const sorted = [...routes].sort((a, b) => b.deploymentPct - a.deploymentPct)
+  const sorted = routes.toSorted((a, b) => b.deploymentPct - a.deploymentPct)
   return (
     <div className="mt-8 border-t border-slate-100 pt-6 dark:border-white/5">
       <div className="mb-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">

@@ -10,15 +10,14 @@
  * Usage: bun scripts/build-travel-matrix.ts [--time HH:MM] [--date YYYY-MM-DD] [--concurrency N]
  */
 
-import { readFileSync, writeFileSync } from "fs"
+import { writeFileSync } from "fs"
 import { join } from "path"
-
-// --- Config ---
+import { responseJson } from "../lib/json"
+import { mapConcurrent } from "./lib/concurrency"
+import { readJson } from "./lib/json"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const DEFAULT_CONCURRENCY = 5
-
-// --- CLI args ---
 
 function parseArgs() {
   const args = process.argv.slice(2)
@@ -30,13 +29,11 @@ function parseArgs() {
     if (args[i] === "--time" && args[i + 1]) time = args[++i]
     else if (args[i] === "--date" && args[i + 1]) date = args[++i]
     else if (args[i] === "--concurrency" && args[i + 1])
-      concurrency = parseInt(args[++i])
+      concurrency = Math.trunc(Number(args[++i]))
   }
 
-  // If no date given, find the next weekday
   if (!date) {
     const d = new Date()
-    // Advance to next weekday (Mon-Fri)
     while (d.getDay() === 0 || d.getDay() === 6) {
       d.setDate(d.getDate() + 1)
     }
@@ -48,18 +45,24 @@ function parseArgs() {
 
 import type { District, DistrictScoresOutput } from "../lib/generated"
 
-// --- District data ---
-
 function loadDistricts(): District[] {
-  const raw = readFileSync(
-    join(process.cwd(), "data/district-scores.json"),
-    "utf-8"
+  const data = readJson<DistrictScoresOutput>(
+    join(process.cwd(), "data/district-scores.json")
   )
-  const data = JSON.parse(raw) as DistrictScoresOutput
   return data.districts
 }
 
-// --- OTP plan query ---
+interface PlanResponse {
+  data?: {
+    plan?: {
+      itineraries?: {
+        duration: number
+        numberOfTransfers: number
+        walkDistance: number
+      }[]
+    } | null
+  } | null
+}
 
 interface PlanResult {
   durationMin: number
@@ -124,7 +127,7 @@ async function queryPlan(
     return null
   }
 
-  const json = await res.json()
+  const json = await responseJson<PlanResponse>(res)
   const itineraries = json.data?.plan?.itineraries
   if (!itineraries || itineraries.length === 0) {
     return null
@@ -138,35 +141,6 @@ async function queryPlan(
   }
 }
 
-// --- Concurrency limiter ---
-
-async function runWithConcurrency<T>(
-  tasks: (() => Promise<T>)[],
-  limit: number,
-  onProgress?: (done: number, total: number) => void
-): Promise<T[]> {
-  const results: T[] = new Array(tasks.length)
-  let nextIdx = 0
-  let doneCount = 0
-
-  async function runNext(): Promise<void> {
-    while (nextIdx < tasks.length) {
-      const idx = nextIdx++
-      results[idx] = await tasks[idx]()
-      doneCount++
-      onProgress?.(doneCount, tasks.length)
-    }
-  }
-
-  const workers = Array.from({ length: Math.min(limit, tasks.length) }, () =>
-    runNext()
-  )
-  await Promise.all(workers)
-  return results
-}
-
-// --- Main ---
-
 interface PairResult {
   i: number
   j: number
@@ -174,7 +148,7 @@ interface PairResult {
 }
 
 function buildPairTasks(
-  districts: DistrictScore[],
+  districts: District[],
   date: string,
   time: string
 ): (() => Promise<PairResult>)[] {
@@ -185,11 +159,13 @@ function buildPairTasks(
       const fromD = districts[i]
       const toD = districts[j]
       if (i === j) {
-        tasks.push(async () => ({
-          i,
-          j,
-          result: { durationMin: 0, transfers: 0, walkDistanceM: 0 },
-        }))
+        tasks.push(() =>
+          Promise.resolve({
+            i,
+            j,
+            result: { durationMin: 0, transfers: 0, walkDistanceM: 0 },
+          })
+        )
       } else {
         tasks.push(async () => {
           const result = await queryPlan(
@@ -212,9 +188,9 @@ function fillMatrices(
   results: PairResult[],
   n: number
 ): { matrix: number[][]; transferMatrix: number[][]; walkMatrix: number[][]; noRouteCount: number } {
-  const matrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
-  const transferMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
-  const walkMatrix: number[][] = Array.from({ length: n }, () => new Array(n).fill(-1))
+  const matrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const transferMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const walkMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
   let noRouteCount = 0
 
   for (const { i, j, result } of results) {
@@ -256,13 +232,13 @@ async function main() {
   console.error(`\nComputing ${n * n} district pairs...`)
   const t0 = performance.now()
 
-  const results = await runWithConcurrency(
-    tasks,
-    concurrency,
-    (done, total) => {
-      process.stderr.write(`\r  Computing ${done}/${total}...`)
-    }
-  )
+  let done = 0
+  const results = await mapConcurrent(tasks, concurrency, async (task) => {
+    const result = await task()
+    done++
+    process.stderr.write(`\r  Computing ${done}/${tasks.length}...`)
+    return result
+  })
   console.error()
 
   const { matrix, transferMatrix, walkMatrix, noRouteCount } = fillMatrices(results, n)
@@ -290,7 +266,4 @@ async function main() {
   printSummaryTable(names, matrix)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+await main()

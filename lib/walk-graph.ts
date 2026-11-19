@@ -23,7 +23,8 @@ export interface WalkingGraph {
 
 const WALK_GRAPH_PATH = join(process.cwd(), "data/walk-graph.bin")
 const BIKE_GRAPH_PATH = join(process.cwd(), "data/bike-graph.bin")
-const GRID_CELL_SIZE = 0.002 // ~200m in degrees
+// ~200m in degrees
+const GRID_CELL_SIZE = 0.002
 
 const cached = new Map<string, WalkingGraph>()
 

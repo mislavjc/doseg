@@ -19,7 +19,19 @@ import { join } from "node:path"
 
 import sharp from "sharp"
 
-import { mercatorX, mercatorY } from "../lib/geo"
+import { argValue } from "./lib/args"
+import { mapConcurrent } from "./lib/concurrency"
+import {
+  countBelow,
+  type HeroCrop,
+  type HeroMeta,
+  invMercX,
+  invMercY,
+  mercX,
+  mercY,
+  rawChannels,
+} from "./lib/dither-crop"
+import { readJson } from "./lib/json"
 
 const TILE_URL = "https://basemaps.cartocdn.com/dark_nolabels"
 const TILE_SIZE = 256
@@ -33,8 +45,10 @@ const TILE_SIZE = 256
  * Contract with app/linije/line-hero.tsx: the desktop crop renders at
  * viewports ≥640px (Tailwind `sm`), the mobile crop below.
  */
-const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 1320, pad: 0.15 } // 1440×660 @2x
-const MOBILE_W = 840 // 420 @2x
+// 1440×660 @2x
+const DESKTOP_CROP = { suffix: "", outW: 2880, outH: 1320, pad: 0.15 }
+// 420 @2x
+const MOBILE_W = 840
 const MOBILE_H_MIN = 460
 const MOBILE_H_MAX = 1120
 const MOBILE_PAD = 0.24
@@ -53,47 +67,10 @@ const dataDir = join(root, "data", "linije")
 const outDir = join(root, "public", "linije")
 const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
-// --- args ---
-const args = process.argv.slice(2)
-function argValue(name: string): string | undefined {
-  const i = args.indexOf(name)
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
-}
 const onlyLine = argValue("--line")
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 /** Coverage cutoff 0–255: how much of a display pixel must be building to turn blue. */
 const cutoff = Number(argValue("--cutoff") ?? 80)
-
-// --- Web Mercator (normalized helpers from lib/geo, scaled to world pixels) ---
-function mercX(lon: number, worldPx: number): number {
-  return mercatorX(lon) * worldPx
-}
-function mercY(lat: number, worldPx: number): number {
-  return mercatorY(lat) * worldPx
-}
-function invMercX(x: number, worldPx: number): number {
-  return (x / worldPx) * 360 - 180
-}
-function invMercY(y: number, worldPx: number): number {
-  return (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldPx))) * 180) / Math.PI
-}
-
-interface HeroCrop {
-  west: number
-  south: number
-  east: number
-  north: number
-  width: number
-  height: number
-  zoom: number
-  /** Parameter signature — crops with a matching sig are skipped on re-runs. */
-  sig?: string
-}
-
-interface HeroMeta {
-  desktop: HeroCrop
-  mobile: HeroCrop
-}
 
 async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
   const max = 2 ** z
@@ -112,24 +89,6 @@ async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
   mkdirSync(join(cacheDir, String(z), String(x)), { recursive: true })
   writeFileSync(cachePath, buf)
   return buf
-}
-
-async function mapConcurrent<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T) => Promise<R>
-): Promise<R[]> {
-  const results: R[] = new Array(items.length)
-  let next = 0
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) {
-        const i = next++
-        results[i] = await fn(items[i])
-      }
-    })
-  )
-  return results
 }
 
 /** Fetch + stitch tiles covering a native crop rect, return grayscale pixels. */
@@ -176,7 +135,7 @@ async function stitchGrayCrop(
     .toBuffer({ resolveWithObject: true })
 
   const { data } = await sharp(stitched.data, {
-    raw: { width: canvasW, height: stitched.info.height, channels: stitched.info.channels as 3 },
+    raw: { width: canvasW, height: stitched.info.height, channels: rawChannels(stitched.info.channels) },
     limitInputPixels: false,
   })
     .extract({ left: x0 - tx0 * TILE_SIZE, top: y0 - ty0 * TILE_SIZE, width: natW, height: natH })
@@ -206,7 +165,6 @@ async function buildCrop(
   pad: number,
   prev?: HeroCrop
 ): Promise<HeroCrop> {
-  // Skip work when this exact crop already exists on disk.
   const sig = cropSig(bbox, outW, outH, pad)
   if (
     prev?.sig === sig &&
@@ -257,10 +215,7 @@ async function buildCrop(
       const baseY = oy * scale
       const baseX = ox * scale
       for (let dy = 0; dy < scale; dy++) {
-        const row = (baseY + dy) * natW + baseX
-        for (let dx = 0; dx < scale; dx++) {
-          if (data[row + dx] < BUILDING_GRAY) sub++
-        }
+        sub += countBelow(data, (baseY + dy) * natW + baseX, scale, BUILDING_GRAY)
       }
       const blue = sub >= minSub
       const i = (oy * outW + ox) * 3
@@ -293,7 +248,8 @@ async function buildHero(
 ): Promise<HeroMeta> {
   // Mobile band height follows the route's mercator aspect, clamped.
   const [w, s, e, n] = bbox
-  const worldPx = TILE_SIZE * 2 ** 14 // any zoom — only the ratio matters
+  // any zoom — only the ratio matters
+  const worldPx = TILE_SIZE * 2 ** 14
   const routeAspect =
     (mercY(s, worldPx) - mercY(n, worldPx)) /
     Math.max(mercX(e, worldPx) - mercX(w, worldPx), 1e-9)
@@ -312,19 +268,19 @@ async function buildHero(
 async function main() {
   mkdirSync(outDir, { recursive: true })
   const lines = readdirSync(dataDir)
-    .filter((f) => /^\d+\.json$/.test(f))
+    .filter((f) => /^\d+\.json$/u.test(f))
     .map((f) => f.replace(".json", ""))
     .filter((b) => !onlyLine || b === onlyLine)
-    .sort((a, b) => Number(a) - Number(b))
+    .toSorted((a, b) => Number(a) - Number(b))
 
   const metaPath = join(dataDir, "hero-meta.json")
   const meta: Record<string, HeroMeta> = existsSync(metaPath)
-    ? JSON.parse(readFileSync(metaPath, "utf-8"))
+    ? readJson<Record<string, HeroMeta>>(metaPath)
     : {}
 
   let done = 0
   await mapConcurrent(lines, 4, async (broj) => {
-    const { bbox } = JSON.parse(readFileSync(join(dataDir, `${broj}.json`), "utf-8"))
+    const { bbox } = readJson<{ bbox: number[] }>(join(dataDir, `${broj}.json`))
     const t0 = Date.now()
     const built = await buildHero(broj, bbox, meta[broj])
     meta[broj] = built
@@ -339,7 +295,4 @@ async function main() {
   console.error(`Done: ${lines.length} heroes, meta → ${metaPath}`)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+await main()

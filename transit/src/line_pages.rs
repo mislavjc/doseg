@@ -35,7 +35,7 @@ pub(crate) const DAY_NEDJELJA: usize = 2;
 
 /// Interchange radius — stops this close count as the same boarding place.
 const NEAR_KM: f64 = 0.15;
-/// Terminal clustering radius (matches the hub clustering in route_stats).
+/// Terminal clustering radius (matches the hub clustering in `route_stats`).
 const TERMINAL_NEAR_KM: f64 = 0.2;
 /// Max points in a simplified shape polyline.
 const MAX_SHAPE_POINTS: usize = 200;
@@ -247,10 +247,10 @@ fn fetch_patterns(otp_url: &str, date: &str) -> Vec<get_line_patterns::GetLinePa
     };
     let body = GetLinePatterns::build_query(body);
     let resp: graphql_client::Response<get_line_patterns::ResponseData> =
-        ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
             .header("Content-Type", "application/json")
             .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {}", e))
+            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
             .body_mut()
             .read_json()
             .expect("Failed to parse OTP response");
@@ -267,7 +267,7 @@ fn fetch_patterns(otp_url: &str, date: &str) -> Vec<get_line_patterns::GetLinePa
 fn total_trips(patterns: &[get_line_patterns::GetLinePatternsPatterns]) -> usize {
     patterns
         .iter()
-        .map(|p| p.trips_for_date.as_ref().map_or(0, |t| t.len()))
+        .map(|p| p.trips_for_date.as_ref().map_or(0, Vec::len))
         .sum()
 }
 
@@ -281,10 +281,10 @@ pub(crate) enum DayKind {
 
 /// Feed validity window in epoch days, from OTP's serviceTimeRange.
 pub(crate) fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
-    let mut resp = ureq::post(&format!("{}/otp/gtfs/v1", otp_url))
+    let mut resp = ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
         .header("Content-Type", "application/json")
         .send_json(serde_json::json!({"query": "{ serviceTimeRange { start end } }"}))
-        .unwrap_or_else(|e| panic!("OTP serviceTimeRange request failed: {}", e));
+        .unwrap_or_else(|e| panic!("OTP serviceTimeRange request failed: {e}"));
     let json: serde_json::Value = resp
         .body_mut()
         .read_json()
@@ -308,7 +308,7 @@ pub(crate) fn epoch_days_today() -> i64 {
 
 pub(crate) fn format_epoch_days(days: i64) -> String {
     let (y, m, d) = crate::days_to_ymd(days);
-    format!("{:04}-{:02}-{:02}", y, m, d)
+    format!("{y:04}-{m:02}-{d:02}")
 }
 
 /// Candidate dates for a day kind inside the feed window, preference-ordered.
@@ -349,7 +349,7 @@ pub(crate) fn pick_date_and_fetch(
     for date in candidate_dates(kind, today, last_day) {
         let patterns = fetch_patterns(otp_url, &date);
         let n = total_trips(&patterns);
-        eprintln!("  {}: {} ({} trips)", label, date, n);
+        eprintln!("  {label}: {date} ({n} trips)");
         match best {
             Some((_, _, best_n)) => {
                 if n > best_n {
@@ -361,12 +361,11 @@ pub(crate) fn pick_date_and_fetch(
             None => {}
         }
     }
-    match best {
-        Some((date, patterns, _)) => (date, patterns),
-        None => {
-            eprintln!("  {}: no service found in feed window!", label);
-            ("".to_string(), Vec::new())
-        }
+    if let Some((date, patterns, _)) = best {
+        (date, patterns)
+    } else {
+        eprintln!("  {label}: no service found in feed window!");
+        (String::new(), Vec::new())
     }
 }
 
@@ -391,8 +390,7 @@ pub(crate) fn merge_patterns(
             let mode = route
                 .mode
                 .as_ref()
-                .map(|m| format!("{:?}", m))
-                .unwrap_or_else(|| "BUS".into());
+                .map_or_else(|| "BUS".into(), |m| format!("{m:?}"));
             if mode != "TRAM" && mode != "BUS" {
                 continue;
             }
@@ -416,7 +414,7 @@ pub(crate) fn merge_patterns(
             let entry = merged.entry(code).or_insert_with(|| MergedPattern {
                 mode,
                 broj,
-                direction: direction_id.map_or(0, |d| if d == 1 { 1 } else { 0 }),
+                direction: direction_id.map_or(0, |d| usize::from(d == 1)),
                 headsign,
                 stops,
                 geometry: pattern_geometry.and_then(|g| g.points),
@@ -598,10 +596,10 @@ pub(crate) fn line_is_night(patterns: &[&MergedPattern], pattern_idxs: &[usize])
             for st in trips {
                 if let Some(Some(dep)) = st.first() {
                     let h = (dep / 3600) % 24;
-                    if !(4..23).contains(&h) {
-                        night += 1
+                    if (4..23).contains(&h) {
+                        day += 1;
                     } else {
-                        day += 1
+                        night += 1;
                     }
                 }
             }
@@ -668,7 +666,7 @@ pub(crate) fn dominant_lines(patterns: &[&MergedPattern]) -> Vec<LineBuild> {
                     let p = patterns[pi];
                     (
                         p.trips[DAY_RADNI].len(),
-                        p.trips.iter().map(|t| t.len()).sum::<usize>(),
+                        p.trips.iter().map(Vec::len).sum::<usize>(),
                         p.stops.len(),
                     )
                 });
@@ -779,8 +777,7 @@ enum ReachError {
 /// Fetch the 30-minute reach polygon area for a stop from the isochrone server.
 fn fetch_reach_km2(isochrone_url: &str, lat: f64, lon: f64) -> Result<f64, ReachError> {
     let url = format!(
-        "{}/api/isochrone?lat={:.5}&lon={:.5}&time=08:00&routing=0&realtime=0",
-        isochrone_url, lat, lon
+        "{isochrone_url}/api/isochrone?lat={lat:.5}&lon={lon:.5}&time=08:00&routing=0&realtime=0"
     );
     let mut resp = ureq::get(&url)
         .call()
@@ -810,7 +807,7 @@ pub fn generate(
     line_filter: Option<&str>,
     data_dir: &Path,
 ) {
-    eprintln!("Fetching line patterns from OTP ({})...", otp_url);
+    eprintln!("Fetching line patterns from OTP ({otp_url})...");
     let (service_dates, merged) = fetch_and_merge(otp_url);
     let patterns: Vec<&MergedPattern> = merged.values().collect();
 
@@ -1088,10 +1085,7 @@ pub fn generate(
                     None
                 }
                 Err(ReachError::Transport(e)) => {
-                    eprintln!(
-                        "  isochrone unreachable ({}), omitting reach for remaining lines",
-                        e
-                    );
+                    eprintln!("  isochrone unreachable ({e}), omitting reach for remaining lines");
                     isochrone_alive = false;
                     None
                 }
@@ -1168,10 +1162,7 @@ pub fn generate(
         keep.insert("hero-meta.json".to_string());
         let pruned = crate::prune_orphan_json(&out_dir, &keep);
         if pruned > 0 {
-            eprintln!(
-                "  pruned {} orphan line page(s) no longer in the feed",
-                pruned
-            );
+            eprintln!("  pruned {pruned} orphan line page(s) no longer in the feed");
         }
     } else {
         eprintln!("  (single-line filter active — index.json not rewritten)");

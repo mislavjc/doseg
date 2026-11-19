@@ -15,7 +15,7 @@ const BAJS_PICKUP_SECONDS: f64 = 60.0;
 const BAJS_DROPOFF_SECONDS: f64 = 30.0;
 #[allow(dead_code)]
 const BAJS_BIKE_SPEED: f64 = 14.0; // km/h
-/// Grid cell size for stop spatial index (~1.5km, must be >= WALK_MAX_KM in degrees)
+/// Grid cell size for stop spatial index (~1.5km, must be >= `WALK_MAX_KM` in degrees)
 const STOP_GRID_CELL: f64 = 0.015; // ~1.5km in degrees
 
 /// Transit mode as u8 for fast comparison instead of String.
@@ -58,7 +58,6 @@ pub struct NearbyStopIndex {
 }
 
 /// Transit stop node.
-#[allow(dead_code)]
 #[derive(Deserialize, Clone)]
 pub struct StopNode {
     pub lat: f64,
@@ -82,7 +81,7 @@ pub struct PatternData {
     pub departures: Vec<f64>,
     #[serde(rename = "stopOffsets")]
     pub stop_offsets: Vec<f64>,
-    /// Pre-computed mode enum (populated by build_mode_enums)
+    /// Pre-computed mode enum (populated by `build_mode_enums`)
     #[serde(skip)]
     pub mode_enum: Mode,
     /// Encoded polyline geometry from OTP (for route distance calculation)
@@ -103,7 +102,7 @@ pub struct TransitGraphJson {
     pub stop_count: usize,
     #[serde(rename = "bajsStations")]
     pub bajs_stations: Vec<BajsStation>,
-    /// Spatial grid for fast stop lookup within WALK_MAX_KM (built after deser)
+    /// Spatial grid for fast stop lookup within `WALK_MAX_KM` (built after deser)
     #[serde(skip)]
     pub stop_grid: HashMap<(i32, i32), Vec<usize>>,
 }
@@ -155,7 +154,7 @@ pub fn get_avg_wait(departures: &[f64], stop_offset: f64, clock_time: f64) -> Op
 }
 
 /// Scoring-optimized transit Dijkstra that uses average wait (headway/2).
-/// Writes best travel times into `best_buf` (indexed by stop idx, and BAJS station idx after stop_count).
+/// Writes best travel times into `best_buf` (indexed by stop idx, and BAJS station idx after `stop_count`).
 /// `best_buf` must be pre-filled with INFINITY and will be reset before returning.
 /// Returns a Vec with the results (reuses `best_buf` internally but copies out).
 #[allow(dead_code, clippy::too_many_arguments)]
@@ -244,13 +243,12 @@ pub fn compute_avg_travel_times(
                 }
 
                 let clock_time = departure_time + time;
-                let avg_wait = match get_avg_wait(
+                let Some(avg_wait) = get_avg_wait(
                     &pattern.departures,
                     pattern.stop_offsets[sp.stop_idx],
                     clock_time,
-                ) {
-                    Some(w) => w,
-                    None => continue,
+                ) else {
+                    continue;
                 };
 
                 let board_time = time + avg_wait;

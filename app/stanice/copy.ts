@@ -15,7 +15,7 @@ import { numberWordF, plural } from "../linije/copy"
 /** "3, 9, 12 i 17" — comma list with Croatian "i" before the last item. */
 function joinHr(items: string[]): string {
   if (items.length <= 1) return items.join("")
-  return `${items.slice(0, -1).join(", ")} i ${items[items.length - 1]}`
+  return `${items.slice(0, -1).join(", ")} i ${items.at(-1)}`
 }
 
 /** "tramvaji 3, 9, 12 i 17" / "tramvaj 3" — null when none of that mode. */
@@ -31,8 +31,8 @@ export function lineListProse(data: StopPageData): string {
   return [trams, buses].filter(Boolean).join(" te ")
 }
 
-/** "5" when lo == hi, else "5–8". The shared equal-vs-range branch. */
-export function rangeText([lo, hi]: [number, number]): string {
+/** "5" when lo == hi, else "5-8". The shared equal-vs-range branch. */
+function rangeText([lo, hi]: [number, number]): string {
   return lo === hi ? `${lo}` : `${lo}-${hi}`
 }
 
@@ -68,21 +68,12 @@ export function mostFrequentLine(
   return { line: best, headway, inPeak }
 }
 
-/**
- * Distinct outbound directions the lines leave on. Reads the generator's
- * `directionGroups`; until the next feed regen ships that field, falls back to
- * the legacy binary `bothDirections` so existing pages keep their suffix.
- */
-function directionCount(data: StopPageData): number {
-  const g = (data as { directionGroups?: number }).directionGroups
-  return g ?? (data.bothDirections ? 2 : 1)
-}
-
-/** one-way / two-way / multi-corridor — classify the count once so the chip and
- *  the FAQ phrase can't drift apart. */
+/** one-way / two-way / multi-corridor by the distinct outbound directions the
+ *  lines leave on. Classify the count once so the chip and the FAQ phrase can't
+ *  drift apart. */
 type DirectionKind = "one" | "two" | "multi"
 function directionKind(data: StopPageData): DirectionKind {
-  const g = directionCount(data)
+  const g = data.directionGroups
   return g >= 3 ? "multi" : g === 2 ? "two" : "one"
 }
 
@@ -93,27 +84,19 @@ function directionKind(data: StopPageData): DirectionKind {
  * like Glavni kolodvor, where the lines actually fan out several ways.
  */
 export function directionLabel(data: StopPageData): string | null {
-  switch (directionKind(data)) {
-    case "multi":
-      return data.lineCount >= 5 ? "čvorište" : "više smjerova"
-    case "two":
-      return "oba smjera"
-    default:
-      return null
-  }
+  const kind = directionKind(data)
+  if (kind === "multi") return data.lineCount >= 5 ? "čvorište" : "više smjerova"
+  if (kind === "two") return "oba smjera"
+  return null
 }
 
 /** FAQ fragment for the line-count sentence, derived from the same direction
  *  kind as the chip (not by string-matching directionLabel's output). */
 export function directionNote(data: StopPageData): string {
-  switch (directionKind(data)) {
-    case "multi":
-      return ", iz više smjerova"
-    case "two":
-      return ", u oba smjera"
-    default:
-      return ""
-  }
+  const kind = directionKind(data)
+  if (kind === "multi") return ", iz više smjerova"
+  if (kind === "two") return ", u oba smjera"
+  return ""
 }
 
 /** Lede paragraph under the title. */
@@ -160,22 +143,25 @@ export function stopTitle(data: StopPageData): string {
 }
 
 /** "tramvaj" / "autobus" for one line's row. */
-export function lineModeNoun(line: StopLine): string {
+export function lineModeNoun(line: Pick<StopLine, "mode">): string {
   return line.mode === "tram" ? "tramvaj" : "autobus"
 }
 
 /** Headway for one line's row — peak range, else all-day interval. */
-export function lineHeadway(line: StopLine): string | null {
+export function lineHeadway(
+  line: Pick<StopLine, "peakRangeMin" | "allDayHeadwayMin">
+): string | null {
   if (line.peakRangeMin) return `svakih ${rangeText(line.peakRangeMin)} min`
   if (line.allDayHeadwayMin != null) return `svakih ${Math.round(line.allDayHeadwayMin)} min`
   return null
 }
 
+const stanica = (n: number) => `${n} ${plural(n, "stanicu", "stanice", "stanica")}`
+
 /** Doseg hook + lede, templated from the real 15/30/45 station counts. */
-export function dosegCopy(data: StopPageData): { hook: string; lede: string } | null {
+export function dosegCopy(data: Pick<StopPageData, "reach">): { hook: string; lede: string } | null {
   const r = data.reach
   if (!r) return null
-  const stanica = (n: number) => `${n} ${plural(n, "stanicu", "stanice", "stanica")}`
   return {
     hook: `Za pola sata dosegneš ${stanica(r.stations30)}.`,
     lede: `Odavde javnim prijevozom i pješice za 15 minuta dosegneš ${stanica(

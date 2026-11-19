@@ -1,3 +1,5 @@
+import { responseJson } from "./json"
+
 const TZ = "Europe/Zagreb"
 
 /** Current time in Zagreb as seconds since midnight. */
@@ -22,7 +24,7 @@ export function formatTime(): string {
 /** Current date in Zagreb as a GTFS service date, "YYYY-MM-DD". Matches the
  * plain-calendar-date rule the Rust isochrone server uses to pick its service
  * day, so both engines route on the same schedule. */
-export function serviceDate(): string {
+function serviceDate(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: TZ })
 }
 
@@ -47,8 +49,9 @@ export async function engineServiceDate(): Promise<string> {
     const res = await fetch(`${ISOCHRONE_URL}/health`, {
       signal: AbortSignal.timeout(2000),
     })
-    const date = (await res.json())?.feed?.serviceDate
-    if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const health = await responseJson<{ feed?: { serviceDate?: unknown } } | null>(res)
+    const date = health?.feed?.serviceDate
+    if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(date)) {
       cachedHealthDate = { value: date, expiresAt: now + HEALTH_TTL_MS }
       return date
     }

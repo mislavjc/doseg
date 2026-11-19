@@ -1,9 +1,7 @@
-import { join } from "node:path"
-
+import { districtAt } from "@/lib/district-at"
 import { loadScores, reachKm2 } from "@/lib/district-scores"
-import { fastDistKm, pointInRing, walkMin, type Ring } from "@/lib/geo"
+import { fastDistKm, walkMin } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
-import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopIndex, serviceWindow } from "@/lib/stop-data"
 
 /**
@@ -20,25 +18,6 @@ const NEARBY_MAX = 3
 const NEARBY_RADIUS_KM = 0.8
 /** Lines are aggregated over stops within this radius (~5 min walk). */
 const LINES_RADIUS_KM = 0.45
-
-interface GeoFeature {
-  properties: { name: string }
-  geometry: { type: string; coordinates: Ring[] }
-}
-
-/** Name of the gradska četvrt containing the point (holes respected). */
-export function districtAt(lon: number, lat: number): string | null {
-  const features =
-    readJsonCached<{ features: GeoFeature[] }>(
-      join(process.cwd(), "data/districts.geojson")
-    )?.features ?? []
-  for (const f of features) {
-    const [outer, ...holes] = f.geometry.coordinates
-    if (pointInRing(lon, lat, outer) && !holes.some((h) => pointInRing(lon, lat, h)))
-      return f.properties.name
-  }
-  return null
-}
 
 export interface NearbyStop {
   slug: string
@@ -101,7 +80,7 @@ function nearbyBlock(
   const inRange = stops
     .map((s) => ({ s, km: fastDistKm(lat, lon, s.lat, s.lon) }))
     .filter((x) => x.km <= NEARBY_RADIUS_KM)
-    .sort((a, b) => a.km - b.km)
+    .toSorted((a, b) => a.km - b.km)
 
   // Platform pairs share a name — keep only the nearest of each.
   const seen = new Set<string>()
@@ -129,9 +108,9 @@ function nearbyBlock(
     if (km > LINES_RADIUS_KM) break
     const data = loadStopData(s.slug)
     for (const l of data?.lines ?? []) {
-      const seen = lineMap.get(l.broj)
+      const existing = lineMap.get(l.broj)
       const peakMin = l.peakHeadwayMin ?? null
-      if (!seen) {
+      if (!existing) {
         lineMap.set(l.broj, {
           broj: l.broj,
           mode: l.mode,
@@ -139,13 +118,13 @@ function nearbyBlock(
           peakMin,
           headsign: l.headsign ?? null,
         })
-      } else if (peakMin !== null && (seen.peakMin === null || peakMin < seen.peakMin)) {
-        seen.peakMin = peakMin
-        seen.headsign = l.headsign ?? seen.headsign
+      } else if (peakMin !== null && (existing.peakMin === null || peakMin < existing.peakMin)) {
+        existing.peakMin = peakMin
+        existing.headsign = l.headsign ?? existing.headsign
       }
     }
   }
-  const lines = [...lineMap.values()].sort(
+  const lines = [...lineMap.values()].toSorted(
     (a, b) =>
       (a.mode === "tram" ? 0 : 1) - (b.mode === "tram" ? 0 : 1) ||
       Number(a.broj) - Number(b.broj)
@@ -175,7 +154,7 @@ function nearbyBlock(
 
 export function dosegAt(lon: number, lat: number): DosegAtPayload {
   const scores = loadScores()
-  const name = districtAt(lon, lat)
+  const name = districtAt(lat, lon)
   const d = name ? scores?.districts.find((x) => x.name === name) : null
   if (!scores || !d) return { found: false }
 
@@ -188,7 +167,7 @@ export function dosegAt(lon: number, lat: number): DosegAtPayload {
       total: scores.districts.length,
       score: d.score,
     },
-    reachKm2: reachKm2(scores, d.avgReachableCells),
+    reachKm2: reachKm2(d.avgReachableCells),
     basis: "kvart",
     ...nearbyBlock(lon, lat),
   }

@@ -58,7 +58,6 @@ function cropFromBbox(
   }
 }
 
-
 function path(shape: [number, number][], project: (lon: number, lat: number) => [number, number]): string {
   const pts = shape.map(([lon, lat]) => project(lon, lat))
   return `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
@@ -86,7 +85,7 @@ function StopHeroVariant({
   return (
     <div
       className={className}
-      style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "#fff" }}
+      style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "var(--ground)" }}
     >
       {src && (
         <HeroPicture
@@ -95,7 +94,7 @@ function StopHeroVariant({
           variant={variant}
         />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -113,9 +112,9 @@ function StopHeroVariant({
         {lines.map((l) => (
           <path
             key={`c-${l.broj}`}
-            d={path(l.shape as [number, number][], project)}
+            d={path(l.shape, project)}
             fill="none"
-            stroke="#fff"
+            stroke="var(--ground)"
             strokeWidth={9}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -124,7 +123,7 @@ function StopHeroVariant({
         {lines.map((l) => (
           <path
             key={`l-${l.broj}`}
-            d={path(l.shape as [number, number][], project)}
+            d={path(l.shape, project)}
             fill="none"
             stroke="var(--zg-blue)"
             strokeWidth={4.5}

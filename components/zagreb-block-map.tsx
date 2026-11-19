@@ -6,7 +6,7 @@ const LABEL_DARK = "#0f172a"
 const LABEL_LIGHT = "#fafaf9"
 
 /** Same grid positions as connectivity map; scores are static snapshot from district-scores. */
-export const ZAGREB_DISTRICTS_GRID = [
+const ZAGREB_DISTRICTS_GRID = [
   { id: "podsljeme", name: "Podsljeme", short: "POD", col: 2, row: 0, score: 13 },
   { id: "podsused-vrapce", name: "Podsused - Vrapče", short: "POV", col: 0, row: 1, score: 31 },
   { id: "crnomerec", name: "Črnomerec", short: "ČRN", col: 1, row: 1, score: 31 },
@@ -38,7 +38,6 @@ function connectivityColor(score: number) {
   return "#c4f8ea"
 }
 
-/** Matches `bajsBoostColor` in scripts/build-district-map-svg.ts */
 function bajsBoostColor(boostPct: number) {
   if (boostPct >= 40) return "#d97706"
   if (boostPct >= 25) return "#f59e0b"
@@ -62,7 +61,7 @@ export function ZagrebBlockMap() {
         row: d.row,
         bg: connectivityColor(d.score),
         label: LABEL_DARK,
-        title: `${d.name} — ${d.score}/100`,
+        title: `${d.name} - ${d.score}/100`,
         tooltip: `${d.name}: ${d.score}/100`,
       }))}
     />
@@ -84,7 +83,7 @@ export function ZagrebBajsBlockMap({ districts }: { districts: readonly District
       row: g.row,
       bg,
       label: labelForBajs(boost),
-      title: `${g.name} — ${boost > 0 ? `+${boost}%` : "bez utjecaja"}`,
+      title: `${g.name} - ${boost > 0 ? `+${boost}%` : "bez utjecaja"}`,
       tooltip:
         boost > 0
           ? `${g.name}: +${boost}% dosega · ${stations} st.`

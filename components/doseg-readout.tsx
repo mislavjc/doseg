@@ -95,7 +95,7 @@ export function StopGauges({
   stops: NearbyStop[]
   cityAvgM: number | null
 }) {
-  if (!stops.length) return null
+  if (stops.length === 0) return null
   const maxM = Math.max(...stops.map((s) => s.distM), cityAvgM ?? 0)
   return (
     <div className="flex flex-col gap-4">
@@ -123,7 +123,7 @@ export function StopGauges({
 
 /** Nearest Bajs stations in the stop-gauge grammar; bike counts are live. */
 export function BajsGauges({ stations }: { stations: NearestBajs[] }) {
-  if (!stations.length) return null
+  if (stations.length === 0) return null
   const maxM = Math.max(...stations.map((s) => s.distM))
   return (
     <div className="flex flex-col gap-4">
@@ -177,7 +177,7 @@ export function LineTable({
 }
 
 export function NearbyLines({ lines }: { lines: NearbyLine[] }) {
-  if (!lines.length) return null
+  if (lines.length === 0) return null
   const day = lines.filter((l) => !l.isNight)
   const night = lines.filter((l) => l.isNight)
   const shown = day.slice(0, BADGE_CAP)

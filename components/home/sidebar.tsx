@@ -8,13 +8,10 @@ import {
   ReachContent,
   RouteContent,
   type PanelContentProps,
-  type ReachStats,
 } from "./panel-content"
 import { SearchFields, type SearchFieldsProps } from "./search-fields"
 import { ReachIllustration, RouteIllustration } from "./step-illustrations"
 import { BlueAction, Eyebrow, NumberedStep } from "./ui"
-
-export type { ReachStats }
 
 function EmptyContent({ onUseMyLocation }: { onUseMyLocation: () => void }) {
   return (

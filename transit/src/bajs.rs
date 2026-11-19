@@ -14,8 +14,6 @@ pub struct BajsStation {
     pub key: String,
     #[serde(rename = "stationId")]
     pub station_id: String,
-    #[serde(rename = "shortName")]
-    pub short_name: String,
     pub name: String,
     pub lat: f64,
     pub lon: f64,
@@ -35,11 +33,11 @@ pub struct IndexedLink {
 pub struct IndexedBajsAdjacency {
     pub bajs_count: usize,
     pub stations: Vec<BajsStation>,
-    /// stop_idx → links to BAJS nodes (indexed as stop_count + bi)
+    /// `stop_idx` → links to BAJS nodes (indexed as `stop_count` + bi)
     pub stop_to_station_links: Vec<Option<Vec<IndexedLink>>>,
     /// bajs local idx → links to stop nodes
     pub station_to_stop_links: Vec<Vec<IndexedLink>>,
-    /// bajs local idx → links to other BAJS nodes (indexed as stop_count + bj)
+    /// bajs local idx → links to other BAJS nodes (indexed as `stop_count` + bj)
     pub station_bike_links: Vec<Vec<IndexedLink>>,
 }
 

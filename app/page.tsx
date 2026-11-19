@@ -46,8 +46,8 @@ export const metadata: Metadata = pseoMetadata({
 
 /** Busiest lines first — the rows a first-time visitor most likely wants. */
 function busiest(lines: LineIndexEntry[], count: number): LineIndexEntry[] {
-  return [...lines]
-    .sort((a, b) => b.dailyDepartures - a.dailyDepartures)
+  return lines
+    .toSorted((a, b) => b.dailyDepartures - a.dailyDepartures)
     .slice(0, count)
 }
 

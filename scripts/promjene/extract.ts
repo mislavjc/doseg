@@ -2,8 +2,10 @@
  * faithful structured record via an LLM through the Vercel AI Gateway. Used by the
  * production ingest, the eval harness, and the evalite suite — one source of truth. */
 import { readFileSync } from "node:fs"
+import { setTimeout as sleep } from "node:timers/promises"
 import { generateObject } from "ai"
 import { z } from "zod"
+import { get } from "./rss"
 
 export const noticeSchema = z.object({
   permanence: z.enum(["permanent", "temporary"]).describe("temporary = roadworks/event/closure/seasonal/one-off ('zbog radova','do završetka radova','privremen','prometuje skraćeno','tijekom', događanje); permanent = a lasting network change"),
@@ -22,10 +24,11 @@ export const extractPrompt = (text: string, publishedHint?: string) =>
 /** Extract the article text (og:description + the news-text div) from an archived
  * ZET notice page — the LLM input. */
 export function bodyFromHtml(html: string): string {
-  const og = html.match(/og:description"\s+content="([^"]*)"/i)?.[1]?.trim() ?? ""
+  const og = html.match(/og:description"\s+content="([^"]*)"/iu)?.[1]?.trim() ?? ""
   const i = html.indexOf('class="news-text"')
-  const start = i >= 0 ? html.indexOf(">", i) + 1 : 0 // skip the opening tag itself, not just the attribute
-  const body = i >= 0 ? html.slice(start, start + 4000).replace(/<img[\s\S]*$/i, "").replace(/<[^>]+>/g, " ").replace(/&nbsp;|&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim() : ""
+  // skip the opening tag itself, not just the attribute
+  const start = i >= 0 ? html.indexOf(">", i) + 1 : 0
+  const body = i >= 0 ? html.slice(start, start + 4000).replace(/<img[\s\S]*$/iu, "").replaceAll(/<[^>]+>/gu, " ").replaceAll(/&nbsp;|&[a-z]+;/giu, " ").replaceAll(/\s+/gu, " ").trim() : ""
   return [og && `Sažetak: ${og}`, body && `Tekst: ${body}`].filter(Boolean).join("\n")
 }
 
@@ -33,7 +36,7 @@ export function bodyFromHtml(html: string): string {
  * (more reliable) per-line roles instead of trusting the model's separate guess —
  * an extension is also a reroute, which is where model/gold disagree. Stop notices
  * (model said stajalište, no line role implies a category) keep their category. */
-export function categoryFromRoles(lines: { role: string }[], fallback: string): string {
+export function categoryFromRoles<C extends string>(lines: { role: string }[], fallback: C): "nova" | "ukinuta" | "produljena" | "skraćena" | "trasa" | "vozni red" | C {
   const r = new Set(lines.map((l) => l.role))
   if (r.has("new")) return "nova"
   if (r.has("removed")) return "ukinuta"
@@ -45,28 +48,26 @@ export function categoryFromRoles(lines: { role: string }[], fallback: string): 
 }
 
 export async function extractNotice(model: string, body: string, publishedHint?: string): Promise<Notice> {
+  // oxlint-disable-next-line typescript/no-deprecated -- moving to generateText + Output.object changes the gateway request; re-run the gold eval before switching
   const { object } = await generateObject({ model, schema: noticeSchema, prompt: extractPrompt(body, publishedHint) })
-  if (object.category !== "stajalište") object.category = categoryFromRoles(object.lines, object.category) as Notice["category"]
+  if (object.category !== "stajalište") object.category = categoryFromRoles(object.lines, object.category)
   return object
 }
 
 // ───────── pipeline plumbing, shared by the ingest + eval scripts ─────────
-const UA = { "User-Agent": "Mozilla/5.0 doseg-promjene" }
 
 /** Load .env.local into process.env (scripts + vitest don't auto-load it). */
 export function loadEnvLocal(): void {
-  try { for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2] } } catch { /* no .env.local */ }
-}
-
-/** GET text with an abort timeout. */
-export async function get(url: string, timeoutMs = 45000): Promise<string> {
-  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), timeoutMs)
-  try { return await (await fetch(url, { headers: UA, signal: ctrl.signal })).text() } finally { clearTimeout(t) }
+  try {
+    for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/u); if (m && !process.env[m[1]]) process.env[m[1]] = m[2] }
+  } catch {
+    // no .env.local
+  }
 }
 
 /** True when bodyFromHtml produced real article text, not an empty shell (older
  * notice URLs now 302 → homepage, which yields a sub-threshold body). */
-export const isRealBody = (b: string) => b.replace(/Sažetak:|Tekst:/g, "").trim().length > 40
+export const isRealBody = (b: string) => b.replaceAll(/Sažetak:|Tekst:/gu, "").trim().length > 40
 
 /** Fetch + extract + validate one archived notice body, caching it into `bodies[id]`.
  * Returns the body, or null if unrecoverable after 3 attempts with backoff. */
@@ -74,16 +75,14 @@ export async function loadBody(id: string, url: string, bodies: Record<string, s
   if (bodies[id]) return bodies[id]
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
+      // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
       const body = bodyFromHtml(await get(url))
       if (isRealBody(body)) { bodies[id] = body; return body }
       return null
-    } catch { if (attempt < 3) await new Promise((r) => setTimeout(r, attempt * 3000)) }
+    } catch {
+      // oxlint-disable-next-line no-await-in-loop -- backoff between retries
+      if (attempt < 3) await sleep(attempt * 3000)
+    }
   }
   return null
-}
-
-/** Run `fn` over items with at most `n` in flight. */
-export async function pool<T>(items: T[], n: number, fn: (t: T, i: number) => Promise<void>): Promise<void> {
-  let i = 0
-  await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const k = i++; await fn(items[k], k) } }))
 }

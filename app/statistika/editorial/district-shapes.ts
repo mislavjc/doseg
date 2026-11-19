@@ -11,7 +11,7 @@ export function parseDistrictShapes(svgText: string): DistrictShape[] {
   const doc = new DOMParser().parseFromString(svgText, "image/svg+xml")
   return Array.from(doc.querySelectorAll("path.district")).map((p) => {
     const title = p.querySelector("title")?.textContent ?? ""
-    const score = title.match(/(\d+)\s*\/\s*100/)
+    const score = title.match(/(\d+)\s*\/\s*100/u)
     return {
       name: title.split("\n")[0]?.trim() ?? "",
       d: p.getAttribute("d") ?? "",

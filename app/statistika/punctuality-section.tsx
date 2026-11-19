@@ -39,6 +39,8 @@ interface RouteOption {
 
 type TimeRange = "24h" | "7d" | "30d"
 
+const TIME_RANGES: TimeRange[] = ["24h", "7d", "30d"]
+
 const TIME_RANGE_LABELS: Record<TimeRange, string> = {
   "24h": "24 sata",
   "7d": "7 dana",
@@ -71,7 +73,7 @@ function aggregateBucket(chunk: HistoryPoint[]): HistoryPoint {
     }
   }
 
-  const weight = sumTrips || chunk.length
+  const weight = sumTrips > 0 ? sumTrips : chunk.length
   return {
     ts,
     avgDelay: sumDelay / weight,
@@ -100,7 +102,7 @@ function downsamplePoints(points: HistoryPoint[], maxPoints: number): HistoryPoi
     buckets[idx].push(p)
   }
 
-  return buckets.filter((b) => b.length > 0).map(aggregateBucket)
+  return buckets.filter((b) => b.length > 0).map((b) => aggregateBucket(b))
 }
 
 /** Detailed delay format with seconds remainder: "3 min 12 s" (for stat headers). */
@@ -130,7 +132,7 @@ function fmtTooltipTime(ts: number, range: TimeRange): string {
 
 function useHistoryFetch(route: string, timeRange: TimeRange) {
   const key = route ? `rt-history:${route}:${timeRange}` : null
-  const { data, error, isLoading } = useSWR<HistoryResponse>(
+  const { data, error, isLoading } = useSWR<HistoryResponse, Error>(
     key,
     () => {
       const now = Math.floor(Date.now() / 1000)
@@ -146,7 +148,7 @@ function useHistoryFetch(route: string, timeRange: TimeRange) {
   )
   return {
     data: data ?? null,
-    error: error ? (error as Error).message : null,
+    error: error ? error.message : null,
     isLoading,
   }
 }
@@ -310,7 +312,7 @@ function TimeRangeSelector({
 }) {
   return (
     <div className="flex gap-1 rounded-full border border-slate-200 bg-white/50 p-1 dark:border-white/10 dark:bg-zinc-900/50">
-      {(Object.keys(TIME_RANGE_LABELS) as TimeRange[]).map((range) => (
+      {TIME_RANGES.map((range) => (
         <button
           type="button"
           key={range}
@@ -390,7 +392,7 @@ function EmptyState() {
       </p>
       <p className="mt-2 text-[15px] text-slate-500 dark:text-slate-500">
         Podaci se prikupljaju u stvarnom vremenu iz{" "}
-        <Term title="General Transit Feed Specification — Real Time: međunarodni standard za podatke o javnom prijevozu">
+        <Term title="General Transit Feed Specification - Real Time: međunarodni standard za podatke o javnom prijevozu">
           GTFS-RT
         </Term>{" "}
         feed-a.
@@ -464,7 +466,6 @@ function DelayChartBody({
         <line x1={0} y1={yScale(0) ?? 0} x2={INNER_WIDTH} y2={yScale(0) ?? 0} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.2} />
       )}
       
-      {/* Bars */}
       {points.map((p) => {
         const xPos = xScale(new Date(p.ts * 1000)) ?? 0
         const delay = Math.max(0, p.avgDelay)
@@ -599,7 +600,6 @@ function useHeadwayScales(points: HistoryPoint[]) {
     const xTicks = xScale.ticks(5)
     const yTicks = yScale.ticks(5)
 
-    // Weighted average headway and CV
     const totalTrips = pts.reduce((s, p) => s + p.tripCount, 0)
     const avgHeadway =
       pts.reduce((s, p) => s + (p.headwaySec ?? 0) * p.tripCount, 0) /
@@ -632,7 +632,6 @@ function HeadwayChartBody({
   yScale,
   xTicks,
   yTicks,
-  maxTrips,
 }: {
   pts: HistoryPoint[]
   timeRange: TimeRange
@@ -651,7 +650,6 @@ function HeadwayChartBody({
       <GridRows scale={yScale} width={INNER_WIDTH} tickValues={yTicks} stroke="#e2e8f0" strokeOpacity={0.5} strokeWidth={1} strokeDasharray="4 4" className="dark:stroke-slate-700" />
       <RegularityZone yScale={yScale} />
       
-      {/* Bars */}
       {pts.map((p) => {
         const xPos = xScale(new Date(p.ts * 1000)) ?? 0
         const cv = p.headwayCv ?? 0
@@ -686,7 +684,7 @@ function HeadwayChartBody({
           y={(yScale(hovered.headwayCv ?? 0) ?? 0) - 10} 
           title={fmtTooltipTime(hovered.ts, timeRange)} 
           value={`CV ${hovered.headwayCv?.toFixed(2)}`} 
-          subtitle={hovered.headwaySec ? `razmak ${Math.round(hovered.headwaySec / 60)} min` : undefined}
+          subtitle={hovered.headwaySec != null && hovered.headwaySec !== 0 ? `razmak ${Math.round(hovered.headwaySec / 60)} min` : undefined}
           color={(hovered.headwayCv ?? 0) < 0.3 ? "#10b981" : (hovered.headwayCv ?? 0) < 0.5 ? "#f59e0b" : "#ef4444"}
         />
       )}
@@ -788,7 +786,7 @@ function HeadwayChartHeader({
         
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
-            <Term title="Koeficijent varijacije — niži broj znači pravilniji razmak između vozila">CV</Term>
+            <Term title="Koeficijent varijacije - niži broj znači pravilniji razmak između vozila">CV</Term>
           </div>
           <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
             {avgCv.toFixed(2)}
@@ -823,7 +821,6 @@ function SvgTooltip({
 }) {
   const width = 156
   const height = subtitle ? 72 : 52
-  // keep inside bounds
   const adjustedX = Math.max(0, Math.min(x - width / 2, INNER_WIDTH - width))
   const adjustedY = Math.max(0, y - height - 12)
 

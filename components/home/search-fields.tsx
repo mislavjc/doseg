@@ -32,9 +32,23 @@ type Recent = { label: string; lat: number; lon: number }
 
 const RECENTS_KEY = "doseg-recent-origins"
 
+function isRecent(v: unknown): v is Recent {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    "label" in v &&
+    typeof v.label === "string" &&
+    "lat" in v &&
+    typeof v.lat === "number" &&
+    "lon" in v &&
+    typeof v.lon === "number"
+  )
+}
+
 function loadRecents(): Recent[] {
   try {
-    return JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]") as Recent[]
+    const parsed: unknown = JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]")
+    return Array.isArray(parsed) ? parsed.filter((v) => isRecent(v)) : []
   } catch {
     return []
   }
@@ -111,8 +125,10 @@ function Dropdown({
   onMyLocation: () => void
 }) {
   // Row indices must mirror dropdownItems() — keep the two in sync.
-  let idx = -1
-  const next = () => ++idx
+  const myLocationIdx = onRemoveOrigin ? 1 : 0
+  const resultsStart = myLocationIdx + (showMyLocation ? 1 : 0)
+  const shownResults = results.slice(0, 5)
+  const recentsStart = resultsStart + shownResults.length
   return (
     <DropdownPanel className="origin-top top-full right-0 left-0 mt-1.5 pb-1">
       {onRemoveOrigin && (
@@ -121,7 +137,7 @@ function Dropdown({
           title="Ukloni polazište"
           tone="red"
           divider
-          active={next() === activeIndex}
+          active={activeIndex === 0}
           onPick={onRemoveOrigin}
         />
       )}
@@ -131,7 +147,7 @@ function Dropdown({
           title="Moja lokacija"
           tone="blue"
           divider
-          active={next() === activeIndex}
+          active={myLocationIdx === activeIndex}
           onPick={onMyLocation}
         />
       )}
@@ -141,11 +157,11 @@ function Dropdown({
       {results.length > 0 && (
         <>
           <DropdownSection label="rezultati" />
-          {results.slice(0, 5).map((s) => (
+          {shownResults.map((s, i) => (
             <ResultRow
               key={`${s.lat}${s.lon}`}
               s={s}
-              active={next() === activeIndex}
+              active={resultsStart + i === activeIndex}
               onPick={onPick}
             />
           ))}
@@ -154,7 +170,7 @@ function Dropdown({
       {recents.length > 0 && (
         <>
           <DropdownSection label="nedavno" divider={results.length > 0} />
-          {recents.map((r) => (
+          {recents.map((r, i) => (
             <DropdownRow
               key={r.label}
               icon={
@@ -162,7 +178,7 @@ function Dropdown({
               }
               title={splitName(r.label).title}
               tone="ink-2"
-              active={next() === activeIndex}
+              active={recentsStart + i === activeIndex}
               onPick={() => onPick({ lat: r.lat, lon: r.lon }, r.label)}
             />
           ))}
@@ -349,7 +365,7 @@ function useRowWiring(args: {
       if (row === "origin") args.onSelectOrigin(p, label)
       else args.onSelectDest(p, label)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- callbacks stable enough
+    // oxlint-disable-next-line react/exhaustive-deps -- callbacks stable enough
     [addRecent, clear, args.onSelectOrigin, args.onSelectDest]
   )
 
@@ -406,7 +422,6 @@ function SwapButton({ onSwap }: { onSwap: () => void }) {
   )
 }
 
-
 export type SearchFieldsProps = {
   hasOrigin: boolean
   hasDest: boolean
@@ -457,8 +472,9 @@ export function SearchFields({
     showMyLocation: activeRow === "origin",
     onRemoveOrigin:
       activeRow === "origin" && hasOrigin ? onClearOrigin : null,
-    onPick: (p: LatLon, label: string) =>
-      activeRow && pick(activeRow, p, label),
+    onPick: (p: LatLon, label: string) => {
+      if (activeRow) pick(activeRow, p, label)
+    },
     onMyLocation,
   }
   const { activeIndex, onKeyNav } = useDropdownKeyboard({
@@ -487,17 +503,10 @@ export function SearchFields({
       />
       {open && (
         <Dropdown
-          results={results}
-          recents={recents}
+          {...itemArgs}
           query={query}
           loading={loading}
-          showMyLocation={activeRow === "origin"}
           activeIndex={activeIndex}
-          onRemoveOrigin={
-            activeRow === "origin" && hasOrigin ? onClearOrigin : null
-          }
-          onPick={(p, label) => activeRow && pick(activeRow, p, label)}
-          onMyLocation={onMyLocation}
         />
       )}
     </div>
@@ -534,9 +543,9 @@ function FieldRows({
   return (
     <div
       className={
-        !resting
-          ? "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
-          : "border border-hairline-strong"
+        resting
+          ? "border border-hairline-strong"
+          : "border-2 border-zg-blue [&>label]:px-[13px] [&>label:first-child]:pt-3 [&>label:last-child]:pb-3"
       }
     >
       <SearchRow

@@ -144,17 +144,17 @@ export function ImenikIntro() {
 export function StatistikaTeaser() {
   const scores = loadScores()
   const ranked = scores
-    ? [...scores.districts].sort((a, b) => a.rank - b.rank)
+    ? scores.districts.toSorted((a, b) => a.rank - b.rank)
     : []
-  const best = ranked[0]
-  const worst = ranked[ranked.length - 1]
+  const best = ranked.at(0)
+  const worst = ranked.at(-1)
   return (
     <Section width="article" className="pb-4 sm:pb-6">
       <Eyebrow>statistika · 17 kvartova</Eyebrow>
       <Hook className="mt-4">Gdje mreža radi, a gdje staje.</Hook>
       <Body className="mt-3 max-w-[520px]">
         {scores && best && worst
-          ? `${best.name} dosegne ${reachKm2(scores, best.avgReachableCells)} km², ${worst.name} ${reachKm2(scores, worst.avgReachableCells)}. `
+          ? `${best.name} dosegne ${reachKm2(best.avgReachableCells)} km², ${worst.name} ${reachKm2(worst.avgReachableCells)}. `
           : ""}
         Analiza povezanosti po kvartu, dobu dana i udaljenosti do stanice.
       </Body>
@@ -285,7 +285,7 @@ export function MobileLedger({ stopCount }: { stopCount: number }) {
  *  drops the row instead of shipping a dead homepage link. */
 export function TrazenoSection({ stopSlugs }: { stopSlugs: Set<string> }) {
   const items = TRAZENO.filter((t) => {
-    const stopSlug = t.href.match(/^\/stanice\/(.+)$/)?.[1]
+    const stopSlug = t.href.match(/^\/stanice\/(.+)$/u)?.[1]
     return !stopSlug || stopSlugs.has(stopSlug)
   })
   return (
@@ -327,7 +327,7 @@ export function KartaBanner() {
     <Section width="article" className="pb-0 sm:pb-0">
       <div className="group relative flex gap-4 border border-hairline-strong transition-colors hover:border-zg-blue sm:gap-6">
         <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {/* oxlint-disable-next-line nextjs/no-img-element */}
           <img
             src="/hero-zagreb.png"
             alt=""

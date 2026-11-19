@@ -30,7 +30,7 @@ function pctColor(pct: number): string {
 }
 
 export default function BajsUtilizationSection() {
-  const { data, error, isLoading } = useSWR<BajsUtilizationData>(
+  const { data, error, isLoading } = useSWR<BajsUtilizationData, Error>(
     "/api/rt/bajs-utilization",
     { refreshInterval: 60_000, keepPreviousData: true }
   )
@@ -41,7 +41,7 @@ export default function BajsUtilizationSection() {
         <div>
           <StatModuleTitle>BAJS iskorištenost</StatModuleTitle>
           <StatModuleLead>
-            Trenutna iskorištenost BAJS sustava dijeljenih bicikala — koliko je
+            Trenutna iskorištenost BAJS sustava dijeljenih bicikala - koliko je
             bicikala u uporabi, te prazne i pune stanice.
           </StatModuleLead>
         </div>

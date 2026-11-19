@@ -30,8 +30,7 @@ export function Hero({
           style={{ objectPosition: mapPosition }}
         />
       </picture>
-      {/* Pixel-cloud fade to white */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pixel-art overlay drawn with image-rendering:pixelated; next/image would resample it */}
       <img
         src="/hero-cloud.png"
         alt=""

@@ -17,7 +17,7 @@ function sections(md: string): Map<string, string[]> {
   const out = new Map<string, string[]>()
   let current: string | null = null
   for (const line of md.split("\n")) {
-    const h2 = /^## (.+)$/.exec(line)
+    const h2 = /^## (.+)$/u.exec(line)
     if (h2) {
       current = h2[1]
       out.set(current, [])
@@ -43,7 +43,7 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
     const firstH2 = lines.findIndex((l) => l.startsWith("## "))
     expect(firstH2).toBeGreaterThan(0)
     const prose = lines.slice(1, firstH2)
-    expect(prose.filter((l) => /^#{1,6} /.test(l))).toEqual([])
+    expect(prose.filter((l) => /^#{1,6} /u.test(l))).toEqual([])
   })
 
   it("fills every H2 section with markdown link list items only", () => {
@@ -53,7 +53,7 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
       const content = body.filter((l) => l.trim() !== "")
       expect(content.length, `${heading} is empty`).toBeGreaterThan(0)
       for (const line of content) {
-        expect(line, `${heading}: "${line}"`).toMatch(/^- \[[^\]]+\]\([^)]+\)/)
+        expect(line, `${heading}: "${line}"`).toMatch(/^- \[[^\]]+\]\([^)]+\)/u)
       }
     }
   })
@@ -65,9 +65,9 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
   })
 
   it("makes every link absolute on the canonical origin", () => {
-    const urls = [...txt.matchAll(/\]\(([^)]+)\)/g)].map((m) => m[1])
+    const urls = [...txt.matchAll(/\]\(([^)]+)\)/gu)].map((m) => m[1])
     expect(urls.length).toBeGreaterThan(5)
-    for (const url of urls) expect(url.startsWith(`${ORIGIN}`)).toBe(true)
+    for (const url of urls) expect(url.startsWith(ORIGIN)).toBe(true)
   })
 })
 
@@ -75,8 +75,8 @@ describe("buildLlmsTxt — content", () => {
   it("carries when-to-use guidance before the link sections", () => {
     const firstH2 = lines.findIndex((l) => l.startsWith("## "))
     const prose = lines.slice(0, firstH2).join("\n")
-    expect(prose).toMatch(/Reach for doseg\.hr when/)
-    expect(prose).toMatch(/not the right source for/)
+    expect(prose).toMatch(/Reach for doseg\.hr when/u)
+    expect(prose).toMatch(/not the right source for/u)
   })
 
   it("names the route patterns an agent needs to construct a URL", () => {
@@ -112,8 +112,8 @@ describe("buildLlmsTxt — content", () => {
   })
 
   it("uses kvart, never cetvrt, for a city district", () => {
-    expect(txt).toMatch(/kvart/)
-    expect(txt.toLowerCase()).not.toMatch(/[cč]etvrt/)
+    expect(txt).toMatch(/kvart/u)
+    expect(txt.toLowerCase()).not.toMatch(/[cč]etvrt/u)
   })
 
   it("contains no em-dashes", () => {

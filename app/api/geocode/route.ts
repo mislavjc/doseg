@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 
 const PHOTON_URL = "https://photon.komoot.io/api/"
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 const DGU_WFS_URL = "https://geoportal.dgu.hr/services/inspire/ad/wfs"
 const ZAGREB_CENTER = { lat: 45.815, lon: 15.982 }
 const ZAGREB_BBOX = "15.82,45.72,16.14,45.90"
-const NEARBY_THRESHOLD = 0.3 // ~30km
+// ~30km
+const NEARBY_THRESHOLD = 0.3
 
 /** Coarse place kind — drives the category dot in the autocomplete (spec §7). */
 export type GeocodeKind =
@@ -57,7 +59,7 @@ function titleKey(name: string): string {
     .trim()
     .toLowerCase()
     .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
+    .replaceAll(/\p{Diacritic}/gu, "")
 }
 
 function dedup(results: Result[]): Result[] {
@@ -65,7 +67,7 @@ function dedup(results: Result[]): Result[] {
   for (const r of results) {
     // Keep genuinely distinct house numbers; collapse same-named results that
     // carry no number (a bare street/place repeated as ulica/mjesto/adresa).
-    const numbered = r.kind === "address" && /\d/.test(r.display_name)
+    const numbered = r.kind === "address" && /\d/u.test(r.display_name)
     const key = numbered ? null : titleKey(r.display_name)
     const dup = out.some(
       (o) =>
@@ -89,10 +91,10 @@ async function searchPhoton(q: string): Promise<Result[]> {
     const params = new URLSearchParams({ q, lat: String(ZAGREB_CENTER.lat), lon: String(ZAGREB_CENTER.lon), limit: "15", lang: "default" })
     const res = await fetch(`${PHOTON_URL}?${params}`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(4000) })
     if (!res.ok) return []
-    const data = await res.json()
+    const data = PhotonResponse.parse(await res.json())
     return (data.features ?? [])
-      .filter((f: PhotonFeature) => { const [lon, lat] = f.geometry.coordinates; return isNearby(lat, lon) })
-      .map((f: PhotonFeature) => {
+      .filter((f) => { const [lon, lat] = f.geometry.coordinates; return isNearby(lat, lon) })
+      .map((f): Result => {
         const p = f.properties
         const [lon, lat] = f.geometry.coordinates
         const parts: string[] = []
@@ -123,14 +125,14 @@ async function searchNominatim(q: string): Promise<Result[]> {
       signal: AbortSignal.timeout(4000),
     })
     if (!res.ok) return []
-    const data = await res.json()
-    if (!Array.isArray(data)) return []
-    return data
-      .filter((item: NominatimResult) => isNearby(parseFloat(item.lat), parseFloat(item.lon)))
-      .map((item: NominatimResult) => ({
+    const parsed = NominatimResponse.safeParse(await res.json())
+    if (!parsed.success) return []
+    return parsed.data
+      .filter((item) => isNearby(Number(item.lat), Number(item.lon)))
+      .map((item) => ({
         display_name: item.display_name,
-        lat: parseFloat(item.lat),
-        lon: parseFloat(item.lon),
+        lat: Number(item.lat),
+        lon: Number(item.lon),
         kind: kindFromOsm(
           item.category,
           item.type,
@@ -142,45 +144,52 @@ async function searchNominatim(q: string): Promise<Result[]> {
   }
 }
 
-type PhotonFeature = {
-  properties: {
-    name?: string
-    street?: string
-    housenumber?: string
-    city?: string
-    osm_key?: string
-    osm_value?: string
-    type?: string
-  }
-  geometry: { coordinates: [number, number] }
-}
+const Point = z.object({
+  coordinates: z.tuple([z.number(), z.number()]).rest(z.number()),
+})
 
-type NominatimResult = {
-  display_name: string
-  lat: string
-  lon: string
-  category?: string
-  type?: string
-  addresstype?: string
-}
+const PhotonResponse = z.object({
+  features: z
+    .array(
+      z.object({
+        properties: z.object({
+          name: z.string().optional(),
+          street: z.string().optional(),
+          housenumber: z.string().optional(),
+          city: z.string().optional(),
+          osm_key: z.string().optional(),
+          osm_value: z.string().optional(),
+          type: z.string().optional(),
+        }),
+        geometry: Point,
+      })
+    )
+    .optional(),
+})
 
-function toWildcardPattern(q: string): string {
-  return q.replace(/'/g, "''").replace(/[cszdCSZD]/g, "_")
-}
+const NominatimResponse = z.array(
+  z.object({
+    display_name: z.string(),
+    lat: z.string(),
+    lon: z.string(),
+    category: z.string().optional(),
+    type: z.string().optional(),
+    addresstype: z.string().optional(),
+  })
+)
 
 function parseQuery(q: string): { street: string; house?: string } {
-  const m = q.match(/^(.+?)\s+(\d+\s*[a-zA-Z]?)$/)
+  const m = q.match(/^(.+?)\s+(\d+\s*[a-zA-Z]?)$/u)
   return m ? { street: m[1], house: m[2].trim() } : { street: q }
 }
 
 async function searchDGU(q: string): Promise<Result[]> {
   const { street: rawStreet, house } = parseQuery(q)
-  const street = rawStreet.replace(/[%_]/g, " ")
-  const escaped = street.replace(/'/g, "''")
-  const wildcard = toWildcardPattern(street)
+  const street = rawStreet.replaceAll(/[%_]/gu, " ")
+  const escaped = street.replaceAll('\'', "''")
+  const wildcard = escaped.replaceAll(/[cszdCSZD]/gu, "_")
   // Try exact match first; fall back to diacritics-wildcard only if different
-  const exactCql = buildDGUCql(escaped, house)
-  const results = await fetchDGU(exactCql, house)
+  const results = await fetchDGU(buildDGUCql(escaped, house), house)
   if (results.length > 0 || wildcard === escaped) return results
   return fetchDGU(buildDGUCql(wildcard, house), house)
 }
@@ -199,10 +208,11 @@ async function fetchDGU(cql: string, house?: string): Promise<Result[]> {
   })
   const res = await fetch(`${DGU_WFS_URL}?${params}`, { next: { revalidate: 3600 }, signal: AbortSignal.timeout(3000) }).catch(() => null)
   if (!res?.ok) return []
-  const data: DGUResponse = await res.json()
+  const parsed = DGUResponse.safeParse(await res.json())
+  if (!parsed.success) return []
   const seen = new Set<number | string>()
   const out: Result[] = []
-  for (const f of data.features ?? []) {
+  for (const f of parsed.data.features ?? []) {
     const uid = house ? f.id : f.properties.ulica_id
     if (seen.has(uid)) continue
     seen.add(uid)
@@ -220,10 +230,19 @@ async function fetchDGU(cql: string, house?: string): Promise<Result[]> {
   return out
 }
 
-type DGUFeature = {
-  id: number
-  geometry: { coordinates: [number, number] }
-  properties: { ulica: string; naselje: string; ulica_id: number; kucni_broj?: string }
-}
-
-type DGUResponse = { features: DGUFeature[] }
+const DGUResponse = z.object({
+  features: z
+    .array(
+      z.object({
+        id: z.union([z.number(), z.string()]),
+        geometry: Point,
+        properties: z.object({
+          ulica: z.string(),
+          naselje: z.string().nullish(),
+          ulica_id: z.union([z.number(), z.string()]),
+          kucni_broj: z.string().nullish(),
+        }),
+      })
+    )
+    .optional(),
+})

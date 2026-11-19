@@ -207,7 +207,7 @@ export default function DelayPropagationSection({
   const key = selectedRoute
     ? `/api/rt/delay-profile?route=${encodeURIComponent(selectedRoute)}`
     : null
-  const { data, error, isLoading } = useSWR<DelayProfileData>(key, {
+  const { data, error, isLoading } = useSWR<DelayProfileData, Error>(key, {
     keepPreviousData: true,
   })
 

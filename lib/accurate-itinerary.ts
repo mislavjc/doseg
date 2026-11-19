@@ -5,9 +5,10 @@ import {
   BAJS_PICKUP_SECONDS,
   BAJS_SPEED,
   computeTransitLegDuration,
+  type PatternData,
   WALK_SPEED,
 } from "./transit-graph"
-import { distMeters, findStreetPath } from "./street-path"
+import { appendCoord, distMeters, findStreetPath, sumCoordDistance } from "./street-path"
 import { getBikeGraph, getWalkGraph } from "./walk-graph"
 
 const WALK_SPEED_MS = WALK_SPEED / 3.6
@@ -114,12 +115,6 @@ function makeBikeLeg(from: Place, to: Place): Leg {
   }
 }
 
-function appendCoord(coords: [number, number][], lon: number, lat: number) {
-  const last = coords.at(-1)
-  if (last && last[0] === lon && last[1] === lat) return
-  coords.push([lon, lat])
-}
-
 function extractTransitStopGeometry(
   state: ReachabilityState,
   stopKeys: string[],
@@ -145,16 +140,6 @@ function extractTransitStopGeometry(
         [fromNode.lon, fromNode.lat],
         [toNode.lon, toNode.lat],
       ]
-}
-
-function sumCoordsDistance(coords: [number, number][]): number {
-  let total = 0
-  for (let i = 1; i < coords.length; i++) {
-    const [prevLon, prevLat] = coords[i - 1]
-    const [lon, lat] = coords[i]
-    total += distMeters(prevLat, prevLon, lat, lon)
-  }
-  return Math.round(total)
 }
 
 function buildChain(state: ReachabilityState, terminalKey: string): string[] {
@@ -215,7 +200,7 @@ function buildTransitLeg(
     return null
   }
 
-  const pattern = state.graph.patterns[pred.patternIdx]
+  const pattern = state.graph.patterns[pred.patternIdx] as PatternData | undefined
   if (!pattern) return null
 
   // Use accumulated elapsed time (actual walk/bike/ride durations) rather than
@@ -248,7 +233,7 @@ function buildTransitLeg(
     from: fromPlace,
     to: toPlace,
     duration: timing.durationSeconds,
-    distance: sumCoordsDistance(transitCoords),
+    distance: Math.round(sumCoordDistance(transitCoords)),
     route: pattern.route || undefined,
     delay: timing.delaySeconds,
     legGeometry: { points: "", coords: transitCoords },
@@ -282,10 +267,7 @@ function processChainStep(
     return { leg, newElapsed: elapsedSeconds + leg.duration }
   }
 
-  const result = buildTransitLeg(state, pred, fromNode, node, elapsedSeconds, firstBoarding)
-  if (!result) return null
-
-  return { leg: result.leg, newElapsed: result.newElapsed }
+  return buildTransitLeg(state, pred, fromNode, node, elapsedSeconds, firstBoarding)
 }
 
 function buildLegsFromChain(
@@ -362,10 +344,7 @@ export function buildAccurateItinerary(
   const terminalKey = pickTerminalKey(state, destLat, destLon, preferredKey)
   if (!terminalKey) return null
 
-  const chain = buildChain(state, terminalKey)
-  if (chain.length === 0) return null
-
-  const result = buildLegsFromChain(state, chain)
+  const result = buildLegsFromChain(state, buildChain(state, terminalKey))
   if (!result) return null
 
   const terminalNode = getNode(state, terminalKey)

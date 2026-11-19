@@ -4,7 +4,7 @@ import { LinePath } from "@visx/shape"
 import { GridRows, GridColumns } from "@visx/grid"
 import type { District as DistrictScore } from "@/lib/generated"
 import type { computeGiniData } from "./stat-data"
-import { fmtHR } from "./stat-data"
+import { fmtHR } from "@/lib/format"
 import { StatModuleTitle } from "./stat-typography"
 
 
@@ -131,8 +131,8 @@ function LorenzGridAndCurve({
       <polygon
         points={[
           ...lorenzPoints.map((p) => `${lxScale(p.x)},${lyScale(p.x)}`),
-          ...[...lorenzPoints]
-            .reverse()
+          ...lorenzPoints
+            .toReversed()
             .map((p) => `${lxScale(p.x)},${lyScale(p.y)}`),
         ].join(" ")}
         fill="#6ee7b7"

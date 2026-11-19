@@ -29,7 +29,7 @@ import {
   type ReachStats,
 } from "./panel-content"
 import type { PanelState } from "./reach-state"
-import { BlueAction, Eyebrow, ReachRamp } from "./ui"
+import { BlueAction, Eyebrow, Hook, ReachRamp } from "./ui"
 
 /**
  * Mobile bottom sheet: at rest it is just a 56px answer bar (km² + chevron) so
@@ -48,7 +48,7 @@ function peekSnap(): string {
   const probe = document.createElement("div")
   probe.style.cssText =
     "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
-  document.body.appendChild(probe)
+  document.body.append(probe)
   const inset = parseFloat(getComputedStyle(probe).paddingBottom) || 0
   probe.remove()
   return `${ANSWER_BAR_PX + inset}px`
@@ -71,9 +71,7 @@ function EmptyPeek({ onUseMyLocation }: { onUseMyLocation: () => void }) {
     <>
       <Eyebrow>doseg · zagreb</Eyebrow>
       <div className="flex flex-col gap-[5px]">
-        <p className="font-heros text-head font-bold text-ink">
-          Klikni bilo gdje na karti
-        </p>
+        <Hook>Klikni bilo gdje na karti</Hook>
         <p className="font-heros text-[16px] leading-[22px] text-ink-muted">
           vidiš dokle stigneš za 30 minuta
         </p>
@@ -220,7 +218,7 @@ function AnswerLine({
     return (
       <span className={cls}>
         <span className="font-bold text-ink">
-          {stats ? `${Math.round(stats.km2)} km²` : "—"}
+          {stats ? `${Math.round(stats.km2)} km²` : "-"}
         </span>
         {stats && <span className="text-ink-muted"> za {minutes} min</span>}
       </span>

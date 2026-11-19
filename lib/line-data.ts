@@ -22,7 +22,7 @@ export function loadLineIndex(): LinePagesIndex {
 
 export function loadLineData(broj: string): LinePageData | null {
   // broj comes from the URL — keep it from escaping the data directory.
-  if (!/^[0-9]{1,3}$/.test(broj)) return null
+  if (!/^[0-9]{1,3}$/u.test(broj)) return null
   return readJsonCached<LinePageData>(join(linijeDir(), `${broj}.json`))
 }
 
@@ -44,10 +44,9 @@ export interface LineHeroMeta {
 }
 
 export function loadHeroMeta(broj: string): LineHeroMeta | null {
-  const all = readJsonCached<Record<string, LineHeroMeta>>(
-    join(linijeDir(), "hero-meta.json")
+  return (
+    readJsonCached<Record<string, LineHeroMeta>>(
+      join(linijeDir(), "hero-meta.json")
+    )?.[broj] ?? null
   )
-  const meta = all?.[broj]
-  // Guard against stale pre-rewrite format (flat crop without .desktop).
-  return meta && "desktop" in meta ? meta : null
 }

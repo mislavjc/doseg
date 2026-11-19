@@ -53,7 +53,7 @@ describe("formatTime()", () => {
     // Use a time where hour < 10: 2025-01-15T05:00:00Z → Zagreb CET 06:00
     vi.setSystemTime(Date.UTC(2025, 0, 15, 5, 0, 0))
     const result = formatTime()
-    expect(result).toMatch(/^\d{2}:\d{2}$/)
+    expect(result).toMatch(/^\d{2}:\d{2}$/u)
     vi.useRealTimers()
   })
 })

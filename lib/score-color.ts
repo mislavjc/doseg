@@ -7,8 +7,10 @@
  */
 
 // Ramp endpoints (must match --rank-100 / --rank-0 in globals.css).
-const HI: [number, number, number] = [0x0e, 0x3f, 0xb0] // score 100 — navy
-const LO: [number, number, number] = [0xf4, 0xf8, 0xfe] // score 0   — pale
+// Score 100: navy.
+const HI: [number, number, number] = [0x0e, 0x3f, 0xb0]
+// Score 0: pale.
+const LO: [number, number, number] = [0xf4, 0xf8, 0xfe]
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n))
 const hex2 = (n: number) => Math.round(n).toString(16).padStart(2, "0")

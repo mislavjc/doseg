@@ -1,6 +1,7 @@
 import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
 import type { computeBajsInsights, computeVarianceInsights, computeFrequencyInsights, computeLineSpeedInsights } from "./stat-data"
-import { fmtHR, TRAM_SPEED_KMH, BUS_SPEED_KMH, TRAIN_SPEED_KMH } from "./stat-data"
+import { fmtHR } from "@/lib/format"
+import { TRAM_SPEED_KMH, BUS_SPEED_KMH, TRAIN_SPEED_KMH } from "./stat-data"
 import { ZagrebBajsBlockMap } from "@/components/zagreb-block-map"
 import { RankingList } from "./stat-shared"
 import { StatModuleTitle } from "./stat-typography"
@@ -93,7 +94,7 @@ function BajsRanking({
       </h3>
       <RankingList
         items={bajs.bajsRankedByBoost}
-        value={(d) => d.bajsBoostPct ?? 0}
+        value={(d) => d.bajsBoostPct}
         label={(d) => `+${d.bajsBoostPct}%`}
         trailing={(d) => `${d.bajsStations} st.`}
         color={{
@@ -140,9 +141,9 @@ function BajsEquityText({ data }: { data: ScoreData }) {
   const topHalf = data.districts.slice(0, Math.floor(data.districts.length / 2))
   const bottomHalf = data.districts.slice(Math.floor(data.districts.length / 2))
   const topBoost =
-    topHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) / topHalf.length
+    topHalf.reduce((s, d) => s + d.bajsBoostPct, 0) / topHalf.length
   const bottomBoost =
-    bottomHalf.reduce((s, d) => s + (d.bajsBoostPct ?? 0), 0) /
+    bottomHalf.reduce((s, d) => s + d.bajsBoostPct, 0) /
     bottomHalf.length
   const narrows = bottomBoost > topBoost
   if (narrows) {
@@ -207,9 +208,9 @@ function BajsTotalImpactCard({
         </div>
         <div className="flex flex-col">
           <div className="font-sans text-[36px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
-            {bajs.topBajsBeneficiary
-              ? `+${bajs.topBajsBeneficiary.bajsBoostPct}%`
-              : "-"}
+            {bajs.topBajsBeneficiary === undefined
+              ? "-"
+              : `+${bajs.topBajsBeneficiary.bajsBoostPct}%`}
           </div>
           <div className="mt-2 text-[15px] text-slate-500 dark:text-slate-400">
             max. dobitak
@@ -313,7 +314,7 @@ function BajsDensityCard({
 }: {
   bajs: BajsInsights
 }) {
-  const lastDistrict = bajs.densityRanked[bajs.densityRanked.length - 1]
+  const lastDistrict = bajs.densityRanked.at(-1)
   return (
     <div className="flex flex-col rounded-lg bg-white/60 p-6 shadow-sm shadow-amber-900/5 ring-1 ring-slate-200/60 dark:bg-white/[0.03] dark:shadow-none dark:ring-white/10">
       <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-amber-700 uppercase">
@@ -324,28 +325,28 @@ function BajsDensityCard({
       </p>
       <RankingList
         items={bajs.densityRanked}
-        value={(d) => d.bajsDensityPerKm2 ?? 0}
-        label={(d) => `${fmtHR(d.bajsDensityPerKm2 ?? 0, 2)} st./km²`}
-        trailing={(d) => `${fmtHR(d.bajsPer10k ?? 0, 1)}/10k st.`}
+        value={(d) => d.bajsDensityPerKm2}
+        label={(d) => `${fmtHR(d.bajsDensityPerKm2, 2)} st./km²`}
+        trailing={(d) => `${fmtHR(d.bajsPer10k, 1)}/10k st.`}
         color={{
           text: "text-amber-600 dark:text-amber-400",
           bg: "bg-amber-100 dark:bg-amber-900/30",
           bar: "bg-amber-500",
         }}
       />
-      {bajs.topDensity && lastDistrict && (
+      {bajs.topDensity !== undefined && lastDistrict && (
         <div className="mt-6 rounded-md bg-amber-50/50 px-4 py-3 dark:bg-amber-950/10">
           <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {bajs.topDensity.name}
             </strong>{" "}
-            ima {fmtHR(bajs.topDensity.bajsDensityPerKm2 ?? 0, 2)} stanica/km²,
+            ima {fmtHR(bajs.topDensity.bajsDensityPerKm2, 2)} stanica/km²,
             dok {lastDistrict.name} ima samo{" "}
-            {fmtHR(lastDistrict.bajsDensityPerKm2 ?? 0, 2)}. Razlika u gustoći
+            {fmtHR(lastDistrict.bajsDensityPerKm2, 2)}. Razlika u gustoći
             od{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {Math.round(
-                (bajs.topDensity.bajsDensityPerKm2 ?? 1) /
+                bajs.topDensity.bajsDensityPerKm2 /
                   (lastDistrict.bajsDensityPerKm2 || 0.01)
               )}
               ×
@@ -366,7 +367,7 @@ export function VarianceSection({
   data: ScoreData
   variance: VarianceInsightsData
 }) {
-  if (!variance.hasVarianceData || variance.varianceRanked.length === 0)
+  if (variance.varianceRanked.length === 0)
     return null
   return (
     <section
@@ -434,8 +435,8 @@ function VarianceRow({
   i: number
   totalGridCells: number
 }) {
-  const minPct = ((d.minReachableCells ?? 0) / totalGridCells) * 100
-  const maxPct = ((d.maxReachableCells ?? 0) / totalGridCells) * 100
+  const minPct = (d.minReachableCells / totalGridCells) * 100
+  const maxPct = (d.maxReachableCells / totalGridCells) * 100
   return (
     <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
       <div className="mb-2 flex items-baseline justify-between gap-2">
@@ -448,7 +449,7 @@ function VarianceRow({
           </span>
         </div>
         <span className="shrink-0 font-sans text-[15px] font-medium tracking-tight text-sky-600 tabular-nums dark:text-sky-400">
-          σ {Math.round(d.stddevReachableCells ?? 0)}
+          σ {Math.round(d.stddevReachableCells)}
         </span>
       </div>
       <div className="ml-7">
@@ -462,8 +463,8 @@ function VarianceRow({
           />
         </div>
         <div className="mt-2 flex justify-between text-[13px] text-slate-500 tabular-nums dark:text-slate-400">
-          <span>Min: {Math.round(d.minReachableCells ?? 0)}</span>
-          <span>Max: {Math.round(d.maxReachableCells ?? 0)}</span>
+          <span>Min: {Math.round(d.minReachableCells)}</span>
+          <span>Max: {Math.round(d.maxReachableCells)}</span>
         </div>
       </div>
     </div>
@@ -476,9 +477,9 @@ function VarianceInterpretation({
   variance: VarianceInsightsData
 }) {
   const mostUnequal = variance.varianceRanked[0]
-  const mostEqual = variance.varianceRanked[variance.varianceRanked.length - 1]
+  const mostEqual = variance.varianceRanked.at(-1)
 
-  if (!mostUnequal || !mostEqual) return null
+  if (mostUnequal === undefined || mostEqual === undefined) return null
 
   return (
     <div className="flex flex-col gap-6">
@@ -510,10 +511,10 @@ function VarianceInterpretation({
         </h3>
         <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
           Nasuprot tome, <strong>{mostEqual.name}</strong> ima najmanju
-          varijaciju (σ {Math.round(mostEqual.stddevReachableCells ?? 0)}).
+          varijaciju (σ {Math.round(mostEqual.stddevReachableCells)}).
           Rezultati se kreću u uskom rasponu od{" "}
-          {Math.round(mostEqual.minReachableCells ?? 0)} do{" "}
-          {Math.round(mostEqual.maxReachableCells ?? 0)}. Ovo ukazuje na
+          {Math.round(mostEqual.minReachableCells)} do{" "}
+          {Math.round(mostEqual.maxReachableCells)}. Ovo ukazuje na
           ravnomjernu raspodjelu infrastrukture kroz cijeli kvart, gdje god se
           nalazili.
         </p>
@@ -528,9 +529,9 @@ function VarianceStatCards({
   variance: VarianceInsightsData
 }) {
   const d = variance.varianceRanked[0]
-  const rangeVal = d
-    ? (d.maxReachableCells ?? 0) - (d.minReachableCells ?? 0)
-    : 0
+  const rangeVal = d === undefined
+    ? 0
+    : d.maxReachableCells - d.minReachableCells
   return (
     <div className="mb-4 grid grid-cols-1 gap-8 sm:grid-cols-2">
       <div className="flex flex-col">
@@ -544,7 +545,7 @@ function VarianceStatCards({
       </div>
       <div className="flex flex-col">
         <div className="font-sans text-[36px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
-          {d ? rangeVal.toLocaleString("hr-HR") : "-"}
+          {d === undefined ? "-" : rangeVal.toLocaleString("hr-HR")}
         </div>
         <div className="mt-2 text-[15px] text-slate-500 dark:text-slate-400">
           max raspon ćelija
@@ -683,7 +684,7 @@ function FrequencyInterpretation({
             ~{Math.round(freq.freqRanked[0]?.medianHeadwayMin ?? 0)} min
           </strong>
           , a najrjeđi ~{Math.round(freq.maxHeadway)} min. Rubni kvartovi ovise o
-          rijetkim autobusnim linijama — to čekanje značajno umanjuje praktičnu
+          rijetkim autobusnim linijama - to čekanje značajno umanjuje praktičnu
           dostupnost.
         </p>
       </div>
@@ -901,7 +902,7 @@ function SpeedModeRow({
   note: string
   pct: number
 }) {
-  const c = speedModeColorMap[color]!
+  const c = speedModeColorMap[color]
   const barColorFull = speedModeBarColor[color] ?? "bg-teal-500"
   return (
     <div className="flex items-center gap-4">

@@ -4,6 +4,7 @@ import { MonoLabel } from "@/components/home/ui"
 import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { Hero } from "@/app/statistika/editorial/hero"
+import { Body } from "@/app/statistika/editorial/primitives"
 import { loadLineIndex } from "@/lib/line-data"
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ function SenderLine() {
 function Signature() {
   return (
     <div className="flex flex-col gap-1 pt-10">
-      <p className="font-heros text-body font-bold text-ink">- Mislav</p>
+      <Body className="font-bold text-ink">- Mislav</Body>
       <a
         href="https://mislavjc.com"
         className="w-fit font-mono text-label text-ink-faint transition-colors duration-150 hover:text-ink"

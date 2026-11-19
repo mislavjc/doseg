@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { FooterMapBand } from "@/app/statistika/editorial/footer"
+import { BodyMuted } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { cn } from "@/lib/utils"
 
@@ -49,9 +50,7 @@ export function ErrorMessage({
         greška {code}
       </p>
       <h1 className="font-heros text-head font-bold text-ink">{title}</h1>
-      <p className="max-w-[520px] font-heros text-body text-ink-muted">
-        {children}
-      </p>
+      <BodyMuted className="max-w-[520px]">{children}</BodyMuted>
     </div>
   )
 }
@@ -257,15 +256,8 @@ export function RouteBreak() {
   )
 }
 
-/** Half-height rail segments above/below a stop dot (mobile vertical route). */
-function Rail({
-  upper,
-  lower,
-}: {
-  upper: "solid" | "dashed" | "none"
-  lower: "solid" | "dashed" | "none"
-}) {
-  const seg = (kind: "solid" | "dashed", pos: "upper" | "lower") => (
+function railSeg(kind: "solid" | "dashed", pos: "upper" | "lower") {
+  return (
     <span
       className={cn(
         "absolute left-[5px]",
@@ -276,10 +268,20 @@ function Rail({
       )}
     />
   )
+}
+
+/** Half-height rail segments above/below a stop dot (mobile vertical route). */
+function Rail({
+  upper,
+  lower,
+}: {
+  upper: "solid" | "dashed" | "none"
+  lower: "solid" | "dashed" | "none"
+}) {
   return (
     <>
-      {upper !== "none" && seg(upper, "upper")}
-      {lower !== "none" && seg(lower, "lower")}
+      {upper !== "none" && railSeg(upper, "upper")}
+      {lower !== "none" && railSeg(lower, "lower")}
     </>
   )
 }

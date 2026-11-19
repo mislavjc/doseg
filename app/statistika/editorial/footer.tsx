@@ -12,7 +12,7 @@ import { MonoLabel, Section } from "./primitives"
 
 const GITHUB = "https://github.com/mislavjc/doseg"
 
-type Item = { t: string; href?: string; external?: boolean }
+type Item = { t: string; href?: string; external?: boolean; prefetch?: false }
 type Column = { label: string; items: Item[] }
 
 const COLUMNS: Column[] = [
@@ -27,7 +27,7 @@ const COLUMNS: Column[] = [
   {
     label: "preuzmi",
     items: [
-      { t: "rezultati.json", href: "/api/open-data" },
+      { t: "rezultati.json", href: "/api/open-data", prefetch: false },
       { t: "izohrone.geojson", href: GITHUB, external: true },
       { t: "metoda.pdf", href: GITHUB, external: true },
     ],
@@ -36,7 +36,7 @@ const COLUMNS: Column[] = [
     label: "doseg",
     items: [
       { t: "karta", href: "/karta" },
-      { t: "podaci", href: "/statistika/podaci" },
+      { t: "podaci", href: "/statistika/podaci", prefetch: false },
       { t: "o projektu", href: "/o-projektu" },
       { t: "github", href: GITHUB, external: true },
     ],
@@ -53,7 +53,7 @@ function ColumnItem({ item }: { item: Item }) {
       {item.t}
     </a>
   ) : (
-    <Link href={item.href} className={linkCls}>
+    <Link href={item.href} prefetch={item.prefetch} className={linkCls}>
       {item.t}
     </Link>
   )

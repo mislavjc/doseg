@@ -1,8 +1,8 @@
-import dynamic from "next/dynamic"
-
 import { plural } from "@/app/linije/copy"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { buildBajsFeatureCollection, getBajsData } from "@/lib/bajs"
+
+import { LazyBajsHeroMap } from "./lazy-hero-map"
 
 /**
  * The /bajs header: the dithered figure-ground of the whole service area, live
@@ -19,8 +19,6 @@ import { buildBajsFeatureCollection, getBajsData } from "@/lib/bajs"
  * solid when bikes are waiting and hollow when the stand is empty. See
  * `station-marks.ts` for why the mark separates the spot from the reading.
  */
-
-const BajsHeroMap = dynamic(() => import("./hero-map"))
 
 /** The map's own mark at legend size, so the key and the map are one thing. */
 function LegendMark({ empty }: { empty?: boolean }) {
@@ -84,7 +82,7 @@ export async function BajsHero() {
         className="h-[420px] w-full bg-cover bg-center sm:h-[560px]"
         style={{ backgroundImage: "url(/bajs-hero.png)" }}
       >
-        <BajsHeroMap initial={seed} />
+        <LazyBajsHeroMap initial={seed} />
       </div>
 
       {/* Nav rides on the map, as on every other page but without a second

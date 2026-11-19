@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useRef, useState } from "react"
+import { Activity, startTransition, Suspense, useEffect, useRef, useState } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import {
@@ -14,7 +14,6 @@ import { NuqsAdapter } from "nuqs/adapters/next/app"
 import type { MapPoiCategory } from "@/lib/poi"
 import { DEFAULT_LAYERS, LayersControl, type LayersState } from "./layers-panel"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
-import { MobileSheet } from "./mobile-sheet"
 import { PolazakControl } from "./polazak-control"
 import { requestMyLocation } from "./reach-state"
 import { SearchFields, type SearchFieldsProps } from "./search-fields"
@@ -25,6 +24,33 @@ const MapCanvas = dynamic(
   () => import("./map-canvas").then((m) => m.MapCanvas),
   { ssr: false }
 )
+
+// vaul + motion only ever run on a phone, so a desktop never downloads them.
+const MobileSheet = dynamic(
+  () => import("./mobile-sheet").then((m) => m.MobileSheet),
+  { ssr: false }
+)
+
+const DESKTOP_QUERY = "(min-width: 768px)"
+
+/**
+ * Which layout the md breakpoint picked, or null on the server and during
+ * hydration. While it is null both layouts render and CSS hides one, exactly
+ * as the server HTML did, so nothing shifts and nothing mismatches. It resolves
+ * in a transition, so dropping the other layout never blocks the main thread.
+ */
+function useViewport(): "desktop" | "mobile" | null {
+  const [viewport, setViewport] = useState<"desktop" | "mobile" | null>(null)
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY)
+    const update = () =>
+      startTransition(() => setViewport(mq.matches ? "desktop" : "mobile"))
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+  return viewport
+}
 
 /** Shareable params — lat/lon (+ dlat/dlon route dest), t (departure),
  * bajs, m (15/30 reach window), poi (enabled category layers). */
@@ -184,37 +210,43 @@ function MapChrome({
   layersProps,
   departTime,
   onTimeChange,
+  viewport,
 }: {
   searchProps: SearchFieldsProps
   layersProps: LayersProps
   departTime: string | null
   onTimeChange: (t: string | null) => void
+  viewport: "desktop" | "mobile" | null
 }) {
   return (
     <>
-      {/* Desktop: site nav floating in the top strip, clear of the sidebar;
-          height-matched to the polazak/slojevi tiles (h-[38px]). Fixed width
-          with breathing room so the links never spill past the bar. */}
-      <div className="absolute top-6 left-[404px] z-20 hidden md:block">
-        <SiteNav className="h-[38px] w-[636px] max-w-none py-0 shadow-map" />
-      </div>
+      <Activity mode={viewport === "mobile" ? "hidden" : "visible"}>
+        {/* Desktop: site nav floating in the top strip, clear of the sidebar;
+            height-matched to the polazak/slojevi tiles (h-[38px]). Fixed width
+            with breathing room so the links never spill past the bar. */}
+        <div className="absolute top-6 left-[404px] z-20 hidden md:block">
+          <SiteNav className="h-[38px] w-[636px] max-w-none py-0 shadow-map" />
+        </div>
 
-      {/* Desktop: top-right control group */}
-      <div className="absolute top-6 right-6 z-20 hidden items-start gap-2.5 md:flex">
-        <PolazakControl departTime={departTime} onChange={onTimeChange} />
-        <LayersControl {...layersProps} />
-      </div>
+        {/* Desktop: top-right control group */}
+        <div className="absolute top-6 right-6 z-20 hidden items-start gap-2.5 md:flex">
+          <PolazakControl departTime={departTime} onChange={onTimeChange} />
+          <LayersControl {...layersProps} />
+        </div>
+      </Activity>
 
-      {/* Mobile: top search bar + polazak/layers controls (spec §9). Offsets add
-          env(safe-area-inset-top) so the chrome clears the iOS status bar under
-          viewport-fit:cover. */}
-      <div className="absolute inset-x-3.5 top-[calc(env(safe-area-inset-top)_+_1rem)] z-30 bg-ground shadow-map md:hidden">
-        <SearchFields {...searchProps} />
-      </div>
-      <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-40 flex items-start gap-2 md:hidden">
-        <PolazakControl departTime={departTime} onChange={onTimeChange} compact />
-        <LayersControl {...layersProps} variant="icon" />
-      </div>
+      <Activity mode={viewport === "desktop" ? "hidden" : "visible"}>
+        {/* Mobile: top search bar + polazak/layers controls (spec §9). Offsets add
+            env(safe-area-inset-top) so the chrome clears the iOS status bar under
+            viewport-fit:cover. */}
+        <div className="absolute inset-x-3.5 top-[calc(env(safe-area-inset-top)_+_1rem)] z-30 bg-ground shadow-map md:hidden">
+          <SearchFields {...searchProps} />
+        </div>
+        <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-40 flex items-start gap-2 md:hidden">
+          <PolazakControl departTime={departTime} onChange={onTimeChange} compact />
+          <LayersControl {...layersProps} variant="icon" />
+        </div>
+      </Activity>
     </>
   )
 }
@@ -253,6 +285,7 @@ function ClientInner() {
     poi: poiLayersFromParam(urlState.poi),
   }))
   const flow = useMapFlow(initial)
+  const viewport = useViewport()
 
   useUrlFlowSync(flow, layers, setUrlState)
 
@@ -325,10 +358,13 @@ function ClientInner() {
         layersProps={layersProps}
         departTime={flow.departTime}
         onTimeChange={flow.setDepartureTime}
+        viewport={viewport}
       />
 
-      <Sidebar {...panelProps} search={searchProps} />
-      <MobileSheet {...panelProps} />
+      <Activity mode={viewport === "mobile" ? "hidden" : "visible"}>
+        <Sidebar {...panelProps} search={searchProps} />
+      </Activity>
+      {viewport === "mobile" && <MobileSheet {...panelProps} />}
     </main>
   )
 }

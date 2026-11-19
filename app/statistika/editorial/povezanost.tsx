@@ -30,9 +30,12 @@ const TerrainView = dynamic(
   { ssr: false, loading: () => <BakedTerrain /> }
 )
 
+// unoptimized: the PNG is a 22K 1-bit palette; the optimizer re-encodes it as a
+// 70K WebP at 2x, so the original is both smaller and pixel-exact.
 function BakedTerrain() {
   return (
     <Image
+      unoptimized
       src="/povezanost-terrain.png"
       alt="3D karta zagrebačkih kvartova, visina označava doseg"
       width={336}

@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   },
 }
 
+export const ensureStatic = "navigation"
+
 export default function KartaTramvajaPage() {
   return (
     <main id="main-content" className={`h-svh ${inter.variable}`}>

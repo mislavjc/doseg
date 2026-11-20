@@ -4,8 +4,14 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   allowedDevOrigins: ["doseg.test"],
+  cacheComponents: true,
+  partialPrefetching: true,
   experimental: {
     serverComponentsHmrCache: false,
+    // Route handlers that read the request or uncached data bail out of
+    // prerendering by throwing, and their own try/catch logs that bail-out as
+    // an error at build time. It is not one.
+    hideLogsAfterAbort: true,
     // Per-icon resolution so the ~2000-export icon barrel doesn't pull its
     // whole module graph into dev compiles / the bundle.
     optimizePackageImports: [

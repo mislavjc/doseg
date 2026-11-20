@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { cacheLife, cacheTag } from "next/cache"
+import { Suspense } from "react"
 
 import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Footer } from "@/app/statistika/editorial/footer"
@@ -45,15 +47,22 @@ export const metadata: Metadata = pseoMetadata({
 const WINDOW_DAYS = 30
 
 /**
- * This route renders per request rather than on a revalidation timer, because
- * the surplus table reads the live GBFS snapshot through `getBajsData()`, whose
- * fetch is `no-store`. The cost is small: that loader keeps its own 60 s
- * in-process cache and the measured endpoints are cached for 5 minutes, so a
- * request is usually just a render. If crawl budget ever argues for a static
- * page, the surplus section is the thing to move client-side.
+ * Everything below the hero is cached for a minute and revalidated in the
+ * background (`cacheLife("minutes")`, tag `bajs`), so the route prerenders and
+ * serves a static shell. That matches what the readers already allowed: the
+ * measured endpoints are 5-minute data, the utilization and the surplus table's
+ * GBFS snapshot are 60-second data. The live hero numbers stay per request;
+ * see `./hero`.
+ *
+ * Without the RT server (a Docker build has none) the rides come back null.
+ * That result only lives for seconds, which keeps it out of the prerender: the
+ * shell then holds the Suspense boundary instead of a frozen "server not
+ * responding" state, and the body renders per request until the server answers.
  */
+async function loadMeasured() {
+  "use cache"
+  cacheTag("bajs")
 
-export default async function BajsPage() {
   const [rides, ranking, live, flow] = await Promise.all([
     loadBajsRides(WINDOW_DAYS),
     loadBajsRanking(WINDOW_DAYS),
@@ -67,80 +76,108 @@ export default async function BajsPage() {
     loadBajsBalance(ranking),
     loadBajsRelocations(WINDOW_DAYS, rides?.fullDays),
   ])
+  if (rides === null) cacheLife("seconds")
+  else cacheLife("minutes")
+  return {
+    rides,
+    ranking,
+    live,
+    flow,
+    balance,
+    relocations,
+    updated: (rides?.measuredTo ?? new Date()).toISOString(),
+  }
+}
 
-  const hasRides = rides !== null && rides.avgPerDay !== null
+type Measured = Awaited<ReturnType<typeof loadMeasured>>
 
+function Intro({ rides }: { rides: Measured["rides"] }) {
+  return (
+    <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+      <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "bajs" }]} />
+      <PageTitle className="mt-4">Bajs u brojkama.</PageTitle>
+      <Body className="mt-1 text-ink-muted">
+        javni bicikli u zagrebu, vožnja po vožnju
+      </Body>
+      {rides !== null && rides.avgPerDay !== null ? (
+        <Body className="mt-5 max-w-[560px]">
+          Zagreb napravi oko{" "}
+          <Strong>
+            {new Intl.NumberFormat("hr-HR").format(
+              Math.round(rides.avgPerDay / 100) * 100
+            )}{" "}
+            vožnji
+          </Strong>{" "}
+          javnim biciklom svaki dan. Nitko tu brojku ne objavljuje, pa je
+          brojimo sami: svake minute snimimo koji bicikl stoji na kojoj
+          stanici i usporedimo dvije uzastopne snimke.
+        </Body>
+      ) : (
+        <Body className="mt-5 max-w-[560px]">
+          Svake minute snimamo koji bicikl stoji na kojoj stanici i
+          usporedbom uzastopnih snimaka brojimo vožnje. Brojke se trenutno ne
+          mogu dohvatiti, ali karta stanica ispod radi uživo.
+        </Body>
+      )}
+    </Section>
+  )
+}
+
+function Measurements({ m }: { m: Measured }) {
+  const { rides, ranking, flow, balance, relocations } = m
+  if (rides === null || rides.avgPerDay === null) {
+    return (
+      <Section id="metodologija">
+        <BodyMuted>
+          Izmjerene brojke dolaze s poslužitelja koji trenutno ne odgovara.
+          Karta iznad čita javni feed izravno, pa je i dalje točna.
+        </BodyMuted>
+      </Section>
+    )
+  }
+  return (
+    <>
+      <Dani rides={rides} />
+      <Odstupanje balance={balance} />
+      <Reljef ranking={ranking} />
+      <Ritam rides={rides} />
+      <Smjer flow={flow} />
+      <Kicker rides={rides} />
+      <Stanice ranking={ranking} rides={rides} />
+      <Kombi relocations={relocations} rides={rides} />
+      <Zakljucak rides={rides} balance={balance} relocations={relocations} />
+      <Metodologija rides={rides} />
+    </>
+  )
+}
+
+async function BajsBody() {
+  const m = await loadMeasured()
+  return (
+    <>
+      <Intro rides={m.rides} />
+      {m.live && (
+        <Ravnoteza
+          docked={m.live.docked}
+          knownFleet={m.live.knownFleet}
+          stations={m.live.stations}
+          empty={m.live.empty}
+        />
+      )}
+      <Measurements m={m} />
+      <Footer updated={m.updated} />
+    </>
+  )
+}
+
+export default function BajsPage() {
   return (
     <EditorialShell>
       <JsonLd data={breadcrumbJsonLd([{ name: "Bajs", path: "/bajs" }])} />
       <BajsHero />
-
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
-        <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "bajs" }]} />
-        <PageTitle className="mt-4">Bajs u brojkama.</PageTitle>
-        <Body className="mt-1 text-ink-muted">
-          javni bicikli u zagrebu, vožnja po vožnju
-        </Body>
-        {hasRides && rides.avgPerDay !== null ? (
-          <Body className="mt-5 max-w-[560px]">
-            Zagreb napravi oko{" "}
-            <Strong>
-              {new Intl.NumberFormat("hr-HR").format(
-                Math.round(rides.avgPerDay / 100) * 100
-              )}{" "}
-              vožnji
-            </Strong>{" "}
-            javnim biciklom svaki dan. Nitko tu brojku ne objavljuje, pa je
-            brojimo sami: svake minute snimimo koji bicikl stoji na kojoj
-            stanici i usporedimo dvije uzastopne snimke.
-          </Body>
-        ) : (
-          <Body className="mt-5 max-w-[560px]">
-            Svake minute snimamo koji bicikl stoji na kojoj stanici i
-            usporedbom uzastopnih snimaka brojimo vožnje. Brojke se trenutno ne
-            mogu dohvatiti, ali karta stanica ispod radi uživo.
-          </Body>
-        )}
-      </Section>
-
-      {live && (
-        <Ravnoteza
-          docked={live.docked}
-          knownFleet={live.knownFleet}
-          stations={live.stations}
-          empty={live.empty}
-        />
-      )}
-
-      {hasRides ? (
-        <>
-          <Dani rides={rides} />
-          <Odstupanje balance={balance} />
-          <Reljef ranking={ranking} />
-          <Ritam rides={rides} />
-          <Smjer flow={flow} />
-          <Kicker rides={rides} />
-          <Stanice ranking={ranking} rides={rides} />
-          <Kombi relocations={relocations} rides={rides} />
-          <Zakljucak
-            rides={rides}
-            balance={balance}
-            relocations={relocations}
-          />
-          <Metodologija rides={rides} />
-        </>
-      ) : (
-        <Section id="metodologija">
-          <BodyMuted>
-            Izmjerene brojke dolaze s poslužitelja koji trenutno ne odgovara.
-            Karta iznad čita javni feed izravno, pa je i dalje točna.
-          </BodyMuted>
-        </Section>
-      )}
-
-      <Footer
-        updated={(rides?.measuredTo ?? new Date()).toISOString()}
-      />
+      <Suspense>
+        <BajsBody />
+      </Suspense>
     </EditorialShell>
   )
 }

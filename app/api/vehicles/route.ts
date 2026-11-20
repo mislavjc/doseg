@@ -1,9 +1,10 @@
+import { connection } from "next/server"
+
 import { apiErrorResponse, jsonResponse } from "@/lib/api-response"
 import { getVehiclePositions } from "@/lib/gtfs-rt"
 
-export const dynamic = "force-dynamic"
-
-export function GET() {
+export async function GET() {
+  await connection()
   try {
     const vehicles = getVehiclePositions()
 

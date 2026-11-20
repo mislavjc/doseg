@@ -113,6 +113,8 @@ const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria
 
 const Strong = ({ children }: { children: React.ReactNode }) => <span style={{ color: INK, fontWeight: 500 }}>{children}</span>
 
+export const ensureStatic = "navigation"
+
 export default function Page() {
   const data = parseJson<Data>(readData("entries.json"))
   const cand = parseJson<Candidates>(readData("candidates.json"))

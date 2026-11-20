@@ -44,8 +44,6 @@ function notableStopsInKvart(kvart: string): KvartStop[] {
     .slice(0, 12)
 }
 
-export const dynamicParams = false
-
 export function generateStaticParams() {
   return loadKvartIndex().map((k) => ({ slug: k.slug }))
 }
@@ -68,6 +66,8 @@ export async function generateMetadata({
     ogImage: "/og.jpg",
   })
 }
+
+export const ensureStatic = "navigation"
 
 export default async function KvartPage({
   params,

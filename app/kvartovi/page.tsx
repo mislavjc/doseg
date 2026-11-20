@@ -52,6 +52,8 @@ function Row({ r }: { r: KvartBoardRow }) {
   )
 }
 
+export const ensureStatic = "navigation"
+
 export default function KvartoviPage() {
   const board = loadKvartBoard()
   if (!board) return null

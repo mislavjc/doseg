@@ -52,6 +52,8 @@ function Signature() {
   )
 }
 
+export const ensureStatic = "navigation"
+
 export default function AboutPage() {
   const updated = loadLineIndex().generatedAt
   return (

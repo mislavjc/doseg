@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/statistika/podaci" },
 }
 
-export const revalidate = 3600
-
 // Enriched for Google Dataset Search: license + keywords + spatialCoverage are
 // what make a Dataset eligible. Output is ODbL because it derives from OSM (ODbL,
 // share-alike); the schedule source is ZET GTFS (Otvorena dozvola RH, credit ZET).
@@ -45,6 +43,8 @@ const datasetJsonLd = {
     contentUrl: "https://doseg.hr/api/open-data",
   },
 }
+
+export const ensureStatic = "navigation"
 
 export default function PodaciPage() {
   return (

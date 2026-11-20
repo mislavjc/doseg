@@ -32,8 +32,6 @@ import {
 import { Stanice } from "../stanice"
 import { VozniRed } from "../vozni-red"
 
-export const dynamicParams = false
-
 export function generateStaticParams() {
   return loadLineIndex().lines.map((l) => ({ broj: l.broj }))
 }
@@ -65,6 +63,8 @@ export async function generateMetadata({
     ogImage: `/api/og?linija=${data.broj}&v=${ogVersion}`,
   })
 }
+
+export const ensureStatic = "navigation"
 
 export default async function LinijaPage({
   params,

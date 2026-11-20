@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { connection } from "next/server"
+import { Suspense } from "react"
 
 import { Client } from "@/components/home/client"
 import { pseoMetadata } from "@/lib/pseo-metadata"
@@ -42,6 +44,21 @@ export async function generateMetadata({
   })
 }
 
+/** The OG card reads searchParams, which only exist per request. This marker
+ * tells Cache Components that the metadata is meant to be dynamic, so the page
+ * body still prerenders as a static shell and the metadata streams in. */
+async function RequestMarker() {
+  await connection()
+  return null
+}
+
 export default function Page() {
-  return <Client />
+  return (
+    <>
+      <Client />
+      <Suspense>
+        <RequestMarker />
+      </Suspense>
+    </>
+  )
 }

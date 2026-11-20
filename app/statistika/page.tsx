@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 3600
+export const ensureStatic = "navigation"
 
 export default function StatistikaPage() {
   const data = loadScores()

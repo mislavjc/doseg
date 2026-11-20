@@ -10,6 +10,8 @@ import {
 
 import {
   applyBasemapBackgroundTint,
+  KARTA_CENTER,
+  KARTA_ZOOM,
   MAP_STYLE_URL,
 } from "@/lib/map-styles"
 import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
@@ -25,7 +27,6 @@ import { MapTile, MapTileButton } from "./ui"
  * legend and journey chips use, so the map and panel always agree.
  */
 
-const ZAGREB: [number, number] = [15.9819, 45.815]
 
 /** Keep in sync with Tailwind's `md:` (sidebar vs bottom-sheet layouts). */
 const MD_BREAKPOINT_PX = 768
@@ -311,8 +312,8 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: MAP_STYLE_URL,
-      center: ZAGREB,
-      zoom: 12.4,
+      center: KARTA_CENTER,
+      zoom: KARTA_ZOOM,
       attributionControl: false,
     })
     mapRef.current = map

@@ -10,8 +10,6 @@ import { renderHomeOgCard } from "./home-card"
 import { renderLineOgCard } from "./line-card"
 import { renderStopOgCard } from "./stop-card"
 
-export const runtime = "nodejs"
-
 type DistrictFeature = {
   type: "Feature"
   properties: { name: string; osmId: number; population: number }

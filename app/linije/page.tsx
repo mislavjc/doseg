@@ -74,6 +74,8 @@ function LineGroup({
   )
 }
 
+export const ensureStatic = "navigation"
+
 export default function LinijeIndexPage() {
   // index.json is already numerically sorted by the generator.
   const index = loadLineIndex()

@@ -23,8 +23,6 @@ import {
 } from "../sections"
 import { StopHero } from "../stop-hero"
 
-export const dynamicParams = false
-
 export function generateStaticParams() {
   return loadStopIndex().stops.map((s) => ({ slug: s.slug }))
 }
@@ -49,6 +47,8 @@ export async function generateMetadata({
     ogImage: `/api/og?stanica=${data.slug}&v=${ogVersion}`,
   })
 }
+
+export const ensureStatic = "navigation"
 
 export default async function StanicaPage({
   params,

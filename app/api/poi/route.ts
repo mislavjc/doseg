@@ -11,11 +11,9 @@ const ALL_CATEGORIES: POICategory[] = [
   "pharmacy",
 ]
 
-export const dynamic = "force-dynamic"
-
 export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl
   try {
-    const { searchParams } = request.nextUrl
     const categoriesParam = searchParams.get("categories")
     // Validate against the allow-list: an unknown category would otherwise build
     // a malformed Overpass query (OSM_TAGS[bogus] === undefined).

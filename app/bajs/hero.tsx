@@ -1,3 +1,6 @@
+import { connection } from "next/server"
+import { Suspense } from "react"
+
 import { plural } from "@/app/linije/copy"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { buildBajsFeatureCollection, getBajsData } from "@/lib/bajs"
@@ -51,20 +54,38 @@ function LegendMark({ empty }: { empty?: boolean }) {
   )
 }
 
-export async function BajsHero() {
-  let data
-  try {
-    data = await getBajsData()
-  } catch {
-    data = null
-  }
+type HeroData = Awaited<ReturnType<typeof getBajsData>> | null
 
+/** The live GBFS snapshot, read per request (the loader keeps its own 60 s
+ * in-process cache). Everything that needs it sits behind Suspense, so the
+ * band, the nav and the baked still are part of the prerendered shell. */
+async function liveData(): Promise<HeroData> {
+  await connection()
+  try {
+    return await getBajsData()
+  } catch {
+    return null
+  }
+}
+
+/** Seeded from the live snapshot so the map has its stations on first paint
+ * instead of popping them in a beat later. */
+async function LiveHeroMap() {
+  const data = await liveData()
+  return (
+    <LazyBajsHeroMap
+      initial={data ? buildBajsFeatureCollection(data.stations) : undefined}
+    />
+  )
+}
+
+/** The legend row. With no reading yet (the Suspense fallback) it keeps the
+ * row's full shape, the count held as invisible text, so nothing shifts when
+ * the live numbers stream in. */
+function HeroLegend({ data, pending }: { data: HeroData; pending?: boolean }) {
   const stations = data?.stations ?? []
   const bikes = stations.reduce((n, s) => n + s.bikesAvailable, 0)
   const empty = stations.filter((s) => s.bikesAvailable === 0).length
-  // Seeded from the server render so the map has its stations on first paint
-  // instead of popping them in a beat later.
-  const seed = data ? buildBajsFeatureCollection(stations) : undefined
 
   // The feed's own timestamp, not the wall clock: it is the moment these
   // numbers were true, and it stays honest if the page is ever cached.
@@ -76,13 +97,50 @@ export async function BajsHero() {
       }).format(new Date(data.updatedAt * 1000))
     : null
 
+  let count = "feed nije dostupan"
+  if (pending) count = "0000 bajseva na 000 stanica · 00 praznih"
+  else if (data)
+    count = `${bikes} ${plural(bikes, "bajs", "bajsa", "bajseva")} na ${stations.length} stanica · ${empty} praznih`
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-hairline bg-ground px-4 py-3 sm:absolute sm:bottom-6 sm:left-6 sm:max-w-[calc(100%-3rem)] sm:gap-y-2 sm:border sm:border-hairline-strong sm:px-4 sm:py-2.5">
+      <span className="font-mono text-label text-ink">
+        uživo{updated ? ` · ${updated}` : ""}
+      </span>
+      <span className="hidden h-3.5 w-px bg-hairline sm:block" />
+      <span className="flex items-center gap-1.5">
+        <LegendMark />
+        <span className="font-mono text-label text-ink-muted">ima bajsa</span>
+      </span>
+      <span className="flex items-center gap-1.5">
+        <LegendMark empty />
+        <span className="font-mono text-label text-ink-muted">prazna</span>
+      </span>
+      <span className="hidden h-3.5 w-px bg-hairline sm:block" />
+      <span
+        className={`font-mono text-label text-ink${pending ? " invisible" : ""}`}
+        aria-hidden={pending}
+      >
+        {count}
+      </span>
+    </div>
+  )
+}
+
+async function LiveHeroLegend() {
+  return <HeroLegend data={await liveData()} />
+}
+
+export function BajsHero() {
   return (
     <header className="relative border-b border-hairline bg-ground">
       <div
         className="h-[420px] w-full bg-cover bg-center sm:h-[560px]"
         style={{ backgroundImage: "url(/bajs-hero.png)" }}
       >
-        <LazyBajsHeroMap initial={seed} />
+        <Suspense fallback={null}>
+          <LiveHeroMap />
+        </Suspense>
       </div>
 
       {/* Nav rides on the map, as on every other page but without a second
@@ -93,26 +151,9 @@ export async function BajsHero() {
 
       {/* Below the map on a phone, where the band is short and a floating card
           would cover the city; a card on the map from sm up. */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-hairline bg-ground px-4 py-3 sm:absolute sm:bottom-6 sm:left-6 sm:max-w-[calc(100%-3rem)] sm:gap-y-2 sm:border sm:border-hairline-strong sm:px-4 sm:py-2.5">
-        <span className="font-mono text-label text-ink">
-          uživo{updated ? ` · ${updated}` : ""}
-        </span>
-        <span className="hidden h-3.5 w-px bg-hairline sm:block" />
-        <span className="flex items-center gap-1.5">
-          <LegendMark />
-          <span className="font-mono text-label text-ink-muted">ima bajsa</span>
-        </span>
-        <span className="flex items-center gap-1.5">
-          <LegendMark empty />
-          <span className="font-mono text-label text-ink-muted">prazna</span>
-        </span>
-        <span className="hidden h-3.5 w-px bg-hairline sm:block" />
-        <span className="font-mono text-label text-ink">
-          {data
-            ? `${bikes} ${plural(bikes, "bajs", "bajsa", "bajseva")} na ${stations.length} stanica · ${empty} praznih`
-            : "feed nije dostupan"}
-        </span>
-      </div>
+      <Suspense fallback={<HeroLegend data={null} pending />}>
+        <LiveHeroLegend />
+      </Suspense>
     </header>
   )
 }

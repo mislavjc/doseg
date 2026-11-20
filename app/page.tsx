@@ -51,6 +51,8 @@ function busiest(lines: LineIndexEntry[], count: number): LineIndexEntry[] {
     .slice(0, count)
 }
 
+export const ensureStatic = "navigation"
+
 export default function HomePage() {
   const index = loadLineIndex()
   const stopIndex = loadStopIndex()

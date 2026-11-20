@@ -73,6 +73,8 @@ function LetterBlock({ letter, stops }: { letter: string; stops: StopIndexEntry[
   )
 }
 
+export const ensureStatic = "navigation"
+
 export default function StaniceIndexPage() {
   const index = loadStopIndex()
   const promoted = index.stops.filter((s) => s.lineCount >= MIN_LINES)

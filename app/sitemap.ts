@@ -1,10 +1,15 @@
 import type { MetadataRoute } from "next"
+import { cacheLife } from "next/cache"
 
 import { loadKvartIndex } from "@/lib/kvart-data"
 import { loadLineIndex } from "@/lib/line-data"
 import { loadStopIndex } from "@/lib/stop-data"
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// oxlint-disable-next-line require-await, typescript/require-await -- "use cache" needs an async function
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  "use cache"
+  // Daily, the cadence the /bajs entry below promises.
+  cacheLife("days")
   const lines = loadLineIndex()
   const kvartovi = loadKvartIndex()
   const stops = loadStopIndex()

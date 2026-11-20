@@ -6,6 +6,7 @@
  * low banner crop with the city sitting below the floating nav. Writes:
  *   - public/hero-zagreb.png     (desktop banner, 1440×320 @2x)
  *   - public/hero-zagreb-m.png   (mobile banner, 420×280 @2x)
+ *   - public/hero-zagreb-thumb.png (centre crop for the home karta banner)
  *   - data/home-hero.json        (crop bounds + simplified boundary ring)
  *
  * Tile/dither machinery is shared via scripts/lib/dither-crop.ts. Run:
@@ -13,6 +14,8 @@
  */
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+
+import sharp from "sharp"
 
 import { mercatorX, mercatorY, type Ring } from "../lib/geo"
 import { argValue } from "./lib/args"
@@ -23,6 +26,14 @@ import { readJson } from "./lib/json"
 // floating nav strip; the rest of the band is fade/breathing room.
 const DESKTOP = { out: "hero-zagreb.png", w: 2880, h: 640, topPx: 200 }
 const MOBILE = { out: "hero-zagreb-m.png", w: 840, h: 560, topPx: 150 }
+/**
+ * The home karta banner shows only the middle of the desktop bake, blown up
+ * 2.25x into a ~150 px window, so it gets its own centre crop instead of the
+ * whole 2880 px band. Even sizes keep the crop centred on the band's centre,
+ * which is the point the banner's marker sits on. 80x160 covers a 180x360 px
+ * window, more than the card ever grows to.
+ */
+const THUMB = { out: "hero-zagreb-thumb.png", w: 80, h: 160 }
 /**
  * Zoom at which the whole city fits the band height (~360 px @2x). Zoom is
  * quantized, so the band bbox is built in pixel space at this zoom — one level
@@ -236,6 +247,15 @@ async function main() {
     prev?.desktop
   )
   console.error(`desktop done (z${desktop.zoom})`)
+  await sharp(join(outDir, DESKTOP.out))
+    .extract({
+      left: (DESKTOP.w - THUMB.w) / 2,
+      top: (DESKTOP.h - THUMB.h) / 2,
+      width: THUMB.w,
+      height: THUMB.h,
+    })
+    .png({ palette: true, colours: 2, dither: 0 })
+    .toFile(join(outDir, THUMB.out))
   const mobile = await mobileCropper.buildCrop(
     join(outDir, MOBILE.out),
     bandBbox(bbox, MOBILE.w, MOBILE.h, MOBILE.topPx),

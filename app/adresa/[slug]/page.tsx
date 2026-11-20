@@ -67,6 +67,10 @@ import {
  * them carry rel="nofollow" for the same reason.
  */
 
+/** Rendered per request, as before Cache Components: 138k slugs have no
+ * useful static shell, and the live Bajs counts stream behind Suspense. */
+export const instant = false
+
 interface Params {
   params: Promise<{ slug: string }>
 }

@@ -191,7 +191,7 @@ function DesktopLegend({
   return (
     <div data-ui className="island absolute bottom-4 left-4 z-10 hidden sm:block max-h-[70vh] overflow-y-auto rounded-2xl p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Tramvajske linije</h2>
+        <h2 className="font-mono text-label text-ink-faint">tramvajske linije</h2>
         {showReset && (
           <button onClick={onReset} className="text-[11px] font-medium text-slate-400 hover:text-slate-600 transition-colors">
             Resetiraj
@@ -224,8 +224,8 @@ function MobileLegend({
         onClick={() => setOpen((p) => !p)}
         className="flex w-full items-center justify-between px-4 py-2.5"
       >
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Tramvajske linije
+        <span className="font-mono text-label text-ink-faint">
+          tramvajske linije
         </span>
         <span className="text-xs text-slate-400">
           {open ? "\u25BE" : "\u25B4"}
@@ -472,7 +472,7 @@ function MapSvg({
       <rect x="0" y="10" width="1280" height="790" fill="url(#dot-grid)" />
       <path d={SAVA_PATH} fill="none" stroke="#4BA3D4" strokeWidth={28} strokeLinecap="round" opacity={0.13} />
       <path d={SAVA_PATH} fill="none" stroke="#4BA3D4" strokeWidth={12} strokeLinecap="round" opacity={0.18} />
-      <text x={1120} y={585} fontSize={14} fontWeight={700} fontFamily="var(--font-sans), system-ui, sans-serif" fill="#4BA3D4" opacity={0.4} letterSpacing="0.25em" className="pointer-events-none select-none">SAVA</text>
+      <text x={1120} y={585} fontSize={14} fontFamily="var(--font-mono), ui-monospace, monospace" fill="#4BA3D4" opacity={0.4} className="pointer-events-none select-none">sava</text>
       <MapSvgSegments activeLine={activeLine} />
       <StationCircles activeLine={activeLine} activeStop={activeStop} hoverStop={hoverStop} onHover={onHover} onSelect={onSelect} />
       <StationLabels activeLine={activeLine} />

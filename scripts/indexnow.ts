@@ -42,7 +42,8 @@ interface DistrictScores {
   districts: Array<{ name: string }>
 }
 
-const dataPath = (...parts: Array<string>) => join(process.cwd(), "data", ...parts)
+const dataPath = (...parts: Array<string>) =>
+  join(process.cwd(), "data", ...parts)
 
 function urlList(): Array<string> {
   const lines = readJson<LineIndex>(dataPath("linije", "index.json"))
@@ -69,7 +70,9 @@ async function main() {
     }),
   })
   // IndexNow returns 200 (accepted) or 202 (accepted, validation pending).
-  console.log(`IndexNow: ${urls.length} URLs → HTTP ${res.status} ${res.statusText}`)
+  console.log(
+    `IndexNow: ${urls.length} URLs → HTTP ${res.status} ${res.statusText}`
+  )
   if (!res.ok) {
     console.error(await res.text())
     process.exit(1)

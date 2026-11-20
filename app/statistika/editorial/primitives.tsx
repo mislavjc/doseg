@@ -59,7 +59,11 @@ export function Section({
   return (
     <section id={id} className={cn("scroll-mt-24 py-14 sm:py-20", className)}>
       <div
-        className={cn("mx-auto w-full px-4 sm:px-8", COLUMN[width], innerClassName)}
+        className={cn(
+          "mx-auto w-full px-4 sm:px-8",
+          COLUMN[width],
+          innerClassName
+        )}
       >
         {children}
       </div>
@@ -94,7 +98,7 @@ export function Eyebrow({
 }: ComponentPropsWithoutRef<"p">) {
   return (
     <p
-      className={cn("font-mono text-label lowercase text-ink-faint", className)}
+      className={cn("font-mono text-label text-ink-faint lowercase", className)}
       {...props}
     />
   )
@@ -147,9 +151,7 @@ export function Strong({
   className,
   ...props
 }: ComponentPropsWithoutRef<"strong">) {
-  return (
-    <strong className={cn("font-bold text-ink", className)} {...props} />
-  )
+  return <strong className={cn("font-bold text-ink", className)} {...props} />
 }
 
 // ── Mono labels / data cells ──────────────────────────────────────────────────
@@ -168,7 +170,10 @@ export function MonoLabel({
 }
 
 /** Methodology / metadata tag — mono 11px in a sharp light box. */
-export function Chip({ className, ...props }: ComponentPropsWithoutRef<"span">) {
+export function Chip({
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"span">) {
   return (
     <span
       className={cn(

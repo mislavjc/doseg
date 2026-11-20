@@ -36,8 +36,14 @@ function useDelayProfileScales(points: Array<DelayProfilePoint>) {
     range: [0, innerW],
     padding: 0.5,
   })
-  const maxDelay = Math.max(...points.map((p) => Math.max(p.avgDelay, p.p90Delay)), 10)
-  const minDelay = Math.min(...points.map((p) => Math.min(p.avgDelay, p.p90Delay)), 0)
+  const maxDelay = Math.max(
+    ...points.map((p) => Math.max(p.avgDelay, p.p90Delay)),
+    10
+  )
+  const minDelay = Math.min(
+    ...points.map((p) => Math.min(p.avgDelay, p.p90Delay)),
+    0
+  )
   const yScale = scaleLinear<number>({
     domain: [minDelay < 0 ? minDelay * 1.15 : 0, maxDelay * 1.15],
     range: [innerH, 0],
@@ -59,15 +65,61 @@ function StopXLabels({
   return (
     <>
       {points.map((p, i) => {
-        if (i % 2 !== 0 && points.length > 20) {return null}
+        if (i % 2 !== 0 && points.length > 20) {
+          return null
+        }
         const x = xScale(p.stopName) ?? 0
-        const label = p.stopName.length > 12 ? p.stopName.slice(0, 11) + "\u2026" : p.stopName
+        const label =
+          p.stopName.length > 12
+            ? p.stopName.slice(0, 11) + "\u2026"
+            : p.stopName
         return (
-          <text key={p.seq} x={x} y={innerH + 16} textAnchor="end" transform={`rotate(-45 ${x} ${innerH + 16})`} className="fill-slate-500 font-mono text-label dark:fill-slate-400">
+          <text
+            key={p.seq}
+            x={x}
+            y={innerH + 16}
+            textAnchor="end"
+            transform={`rotate(-45 ${x} ${innerH + 16})`}
+            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+          >
             {label}
           </text>
         )
       })}
+    </>
+  )
+}
+
+function LastPointMarker({
+  x,
+  y,
+  delay,
+}: {
+  x: number
+  y: number
+  delay: number
+}) {
+  return (
+    <>
+      <circle
+        cx={x}
+        cy={y}
+        r={3}
+        fill="#0072CE"
+        stroke="#fff"
+        strokeWidth={1.5}
+        className="dark:stroke-zinc-900"
+      />
+      <text
+        x={x + 12}
+        y={y - 12}
+        fill="#0072CE"
+        fontSize={12}
+        fontWeight="bold"
+        className="dark:fill-sky-400"
+      >
+        {fmtDelaySec(delay)}
+      </text>
     </>
   )
 }
@@ -84,24 +136,66 @@ function DelayChart({ data }: { data: DelayProfileData }) {
   return (
     <div className="flex flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <div className="overflow-x-auto">
-        <svg width={width} height={height} className="block overflow-visible" role="img" aria-label="Graf propagacije kašnjenja">
+        <svg
+          width={width}
+          height={height}
+          className="block overflow-visible"
+          role="img"
+          aria-label="Graf propagacije kašnjenja"
+        >
           <Group left={DELAY_CHART_MARGIN.left} top={DELAY_CHART_MARGIN.top}>
-            <GridRows scale={yScale} width={innerW} stroke="#cbd5e1" strokeOpacity={0.4} strokeWidth={1} className="dark:stroke-slate-700" />
+            <GridRows
+              scale={yScale}
+              width={innerW}
+              stroke="#cbd5e1"
+              strokeOpacity={0.4}
+              strokeWidth={1}
+              className="dark:stroke-slate-700"
+            />
             {minDelay < 0 && (
-              <line x1={0} y1={yScale(0)} x2={innerW} y2={yScale(0)} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.6} strokeDasharray="4 4" />
+              <line
+                x1={0}
+                y1={yScale(0)}
+                x2={innerW}
+                y2={yScale(0)}
+                stroke="#94a3b8"
+                strokeWidth={1}
+                strokeOpacity={0.6}
+                strokeDasharray="4 4"
+              />
             )}
-            {yScale.ticks(4).map(t => (
-              <text key={t} x={-8} y={yScale(t)} textAnchor="end" fontSize={11} dominantBaseline="central" className="fill-slate-600 dark:fill-slate-400">
+            {yScale.ticks(4).map((t) => (
+              <text
+                key={t}
+                x={-8}
+                y={yScale(t)}
+                textAnchor="end"
+                fontSize={11}
+                dominantBaseline="central"
+                className="fill-slate-600 dark:fill-slate-400"
+              >
                 {fmtDelaySec(t)}
               </text>
             ))}
             <StopXLabels points={points} xScale={xScale} innerH={innerH} />
-            <LinePath data={points} x={d => xScale(d.stopName) ?? 0} y={d => yScale(d.p90Delay)} stroke="#94a3b8" strokeWidth={1} strokeDasharray="4 4" curve={curveStepAfter} />
-            <LinePath data={points} x={d => xScale(d.stopName) ?? 0} y={d => yScale(d.avgDelay)} stroke="#0072CE" strokeWidth={2} curve={curveStepAfter} />
-            <circle cx={lastX} cy={lastY} r={3} fill="#0072CE" stroke="#fff" strokeWidth={1.5} className="dark:stroke-zinc-900" />
-            <text x={lastX + 12} y={lastY - 12} fill="#0072CE" fontSize={12} fontWeight="bold" className="dark:fill-sky-400">
-              {fmtDelaySec(lastPoint.avgDelay)}
-            </text>
+            <LinePath
+              data={points}
+              x={(d) => xScale(d.stopName) ?? 0}
+              y={(d) => yScale(d.p90Delay)}
+              stroke="#94a3b8"
+              strokeWidth={1}
+              strokeDasharray="4 4"
+              curve={curveStepAfter}
+            />
+            <LinePath
+              data={points}
+              x={(d) => xScale(d.stopName) ?? 0}
+              y={(d) => yScale(d.avgDelay)}
+              stroke="#0072CE"
+              strokeWidth={2}
+              curve={curveStepAfter}
+            />
+            <LastPointMarker x={lastX} y={lastY} delay={lastPoint.avgDelay} />
           </Group>
         </svg>
       </div>
@@ -113,8 +207,8 @@ function ChartLegend() {
   return (
     <div className="mb-6 flex flex-wrap gap-6 text-body text-slate-500 dark:text-slate-400">
       <span className="flex items-center gap-2">
-        <span className="inline-block h-0.5 w-4 bg-blue-500" />{" "}
-        Prosječno kašnjenje
+        <span className="inline-block h-0.5 w-4 bg-blue-500" /> Prosječno
+        kašnjenje
       </span>
       <span className="flex items-center gap-2">
         <span className="inline-block h-0.5 w-4 border-t border-dashed border-slate-400 dark:border-slate-500" />{" "}
@@ -135,12 +229,13 @@ function DelayProfileBody({
   isLoading: boolean
   selectedRoute: string
 }) {
-  if (error)
-    {return (
+  if (error) {
+    return (
       <p className="text-body text-slate-500 dark:text-slate-400">
         Podaci nisu dostupni
       </p>
-    )}
+    )
+  }
   if (isLoading || !data) {
     return (
       <div
@@ -179,7 +274,9 @@ function RouteSelector({
   selectedRoute: string
   onChange: (route: string) => void
 }) {
-  if (routes.length === 0) {return null}
+  if (routes.length === 0) {
+    return null
+  }
   return (
     <select
       value={selectedRoute}

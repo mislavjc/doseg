@@ -49,7 +49,9 @@ export async function engineServiceDate(): Promise<string> {
     const res = await fetch(`${ISOCHRONE_URL}/health`, {
       signal: AbortSignal.timeout(2000),
     })
-    const health = await responseJson<{ feed?: { serviceDate?: unknown } } | null>(res)
+    const health = await responseJson<{
+      feed?: { serviceDate?: unknown }
+    } | null>(res)
     const date = health?.feed?.serviceDate
     if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/u.test(date)) {
       cachedHealthDate = { value: date, expiresAt: now + HEALTH_TTL_MS }

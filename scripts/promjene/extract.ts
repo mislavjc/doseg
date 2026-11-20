@@ -173,8 +173,8 @@ export async function loadBody(
       }
       return null
     } catch {
-      // oxlint-disable-next-line no-await-in-loop -- backoff between retries
       if (attempt < 3) {
+        // oxlint-disable-next-line no-await-in-loop -- backoff between retries
         await sleep(attempt * 3000)
       }
     }

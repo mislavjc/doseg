@@ -73,8 +73,12 @@ export function legLineColors(
 ): Array<string> {
   const byLine = new Map<string, string>()
   return legs.map((leg) => {
-    if (isWalkMode(leg.mode)) {return MODE_COLORS.walk}
-    if (isBikeMode(leg.mode)) {return MODE_COLORS.bike}
+    if (isWalkMode(leg.mode)) {
+      return MODE_COLORS.walk
+    }
+    if (isBikeMode(leg.mode)) {
+      return MODE_COLORS.bike
+    }
     const key = `${leg.mode.toUpperCase()}:${leg.route ?? ""}`
     let color = byLine.get(key)
     if (!color) {

@@ -86,7 +86,9 @@ function nearbyBlock(
   const seen = new Set<string>()
   const nearby: Array<NearbyStop> = []
   for (const { s, km } of inRange) {
-    if (seen.has(s.name)) {continue}
+    if (seen.has(s.name)) {
+      continue
+    }
     seen.add(s.name)
     const distM = Math.round(km * 1000)
     nearby.push({
@@ -97,7 +99,9 @@ function nearbyBlock(
       walkMin: walkMin(distM),
       lineCount: s.lineCount,
     })
-    if (nearby.length >= NEARBY_MAX) {break}
+    if (nearby.length >= NEARBY_MAX) {
+      break
+    }
   }
 
   // Union of calling lines over ALL stops within the walk radius (platform
@@ -105,7 +109,9 @@ function nearbyBlock(
   // Each line keeps its best peak headway across those stops.
   const lineMap = new Map<string, NearbyLine>()
   for (const { s, km } of inRange) {
-    if (km > LINES_RADIUS_KM) {break}
+    if (km > LINES_RADIUS_KM) {
+      break
+    }
     const data = loadStopData(s.slug)
     for (const l of data?.lines ?? []) {
       const existing = lineMap.get(l.broj)
@@ -118,7 +124,10 @@ function nearbyBlock(
           peakMin,
           headsign: l.headsign ?? null,
         })
-      } else if (peakMin !== null && (existing.peakMin === null || peakMin < existing.peakMin)) {
+      } else if (
+        peakMin !== null &&
+        (existing.peakMin === null || peakMin < existing.peakMin)
+      ) {
         existing.peakMin = peakMin
         existing.headsign = l.headsign ?? existing.headsign
       }
@@ -156,7 +165,9 @@ export function dosegAt(lon: number, lat: number): DosegAtPayload {
   const scores = loadScores()
   const name = districtAt(lat, lon)
   const d = name ? scores?.districts.find((x) => x.name === name) : null
-  if (!scores || !d) {return { found: false }}
+  if (!scores || !d) {
+    return { found: false }
+  }
 
   return {
     found: true,

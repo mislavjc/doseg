@@ -1,8 +1,8 @@
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import type { HomeHeroData } from "@/lib/home-hero"
 
-import { HomeHeroVariant } from './home-hero-variant';
-import type { HeroFocus } from './home-hero-variant';
+import { HomeHeroVariant } from "./home-hero-variant"
+import type { HeroFocus } from "./home-hero-variant"
 
 /**
  * City banner (Paper "Home v2.0 — banner, cijela stranica"): the kvart hero

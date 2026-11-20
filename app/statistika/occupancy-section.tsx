@@ -31,23 +31,35 @@ const LEVEL_COLORS = {
 } as const
 
 function dominantColor(h: OccupancyRouteHour): string {
-  if (h.total === 0) {return "#e2e8f0"}
+  if (h.total === 0) {
+    return "#e2e8f0"
+  }
   const max = Math.max(h.empty, h.fewSeats, h.standing, h.full)
-  if (max === h.full) {return LEVEL_COLORS.full.bg}
-  if (max === h.standing) {return LEVEL_COLORS.standing.bg}
-  if (max === h.fewSeats) {return LEVEL_COLORS.fewSeats.bg}
+  if (max === h.full) {
+    return LEVEL_COLORS.full.bg
+  }
+  if (max === h.standing) {
+    return LEVEL_COLORS.standing.bg
+  }
+  if (max === h.fewSeats) {
+    return LEVEL_COLORS.fewSeats.bg
+  }
   return LEVEL_COLORS.empty.bg
 }
 
 function cellOpacity(h: OccupancyRouteHour): number {
-  if (h.total === 0) {return 0.15}
+  if (h.total === 0) {
+    return 0.15
+  }
   return Math.min(0.4 + (h.total / 20) * 0.6, 1)
 }
 
 export default function OccupancySection() {
   const { data } = useSWR<OccupancyData>("/api/rt/occupancy")
 
-  if (!data || !data.hasData || data.routes.length === 0) {return null}
+  if (!data || !data.hasData || data.routes.length === 0) {
+    return null
+  }
 
   return (
     <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">

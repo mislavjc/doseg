@@ -46,7 +46,7 @@ export function ErrorMessage({
 }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <p className="font-mono text-label lowercase text-ink-faint">
+      <p className="font-mono text-label text-ink-faint lowercase">
         greška {code}
       </p>
       <h1 className="font-heros text-head font-bold text-ink">{title}</h1>
@@ -117,6 +117,97 @@ const pct = (x: number) => `${((x / ROUTE_W) * 100).toFixed(2)}%`
 const stopLink =
   "font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
 
+function DeadEndDesktop() {
+  return (
+    <div className="hidden w-full max-w-[820px] sm:block">
+      <svg
+        viewBox={`0 0 ${ROUTE_W} 40`}
+        className="block h-auto w-full"
+        aria-hidden
+      >
+        <line
+          x1="30"
+          y1="20"
+          x2="590"
+          y2="20"
+          stroke="var(--zg-blue)"
+          strokeWidth="2"
+        />
+        <line
+          x1="598"
+          y1="20"
+          x2="772"
+          y2="20"
+          stroke="var(--ink-faint)"
+          strokeWidth="2"
+          strokeDasharray="2 6"
+        />
+        {DEAD_END_STOPS.map((s) => (
+          <circle key={s.label} cx={s.x} cy="20" r="6" fill="var(--zg-blue)" />
+        ))}
+        <circle
+          cx="784"
+          cy="20"
+          r="6"
+          fill="var(--ground)"
+          stroke="var(--ink-faint)"
+          strokeWidth="2"
+        />
+      </svg>
+      <nav aria-label="izlazi" className="relative h-7">
+        {DEAD_END_STOPS.map((s) => (
+          <Link
+            key={s.label}
+            href={s.href}
+            className={cn("absolute top-1 -translate-x-1/2", stopLink)}
+            style={{ left: pct(s.x) }}
+          >
+            {s.label}
+          </Link>
+        ))}
+        <span
+          aria-hidden
+          className="absolute top-1 -translate-x-1/2 font-mono text-body leading-6 text-ink-faint"
+          style={{ left: pct(784) }}
+        >
+          404
+        </span>
+      </nav>
+    </div>
+  )
+}
+
+function DeadEndMobile() {
+  return (
+    <nav aria-label="izlazi" className="w-full max-w-[240px] sm:hidden">
+      <ul className="flex flex-col text-left">
+        {DEAD_END_STOPS.map((s, i) => (
+          <li key={s.label} className="relative flex h-12 items-center gap-4">
+            <Rail
+              upper={i === 0 ? "none" : "solid"}
+              lower={i === 2 ? "dashed" : "solid"}
+            />
+            <span className="relative size-3 shrink-0 rounded-full bg-zg-blue" />
+            <Link href={s.href} className={stopLink}>
+              {s.label}
+            </Link>
+          </li>
+        ))}
+        <li className="relative flex h-12 items-center gap-4">
+          <Rail upper="dashed" lower="none" />
+          <span className="relative size-3 shrink-0 rounded-full border-2 border-ink-faint bg-ground" />
+          <span
+            aria-hidden
+            className="font-mono text-body leading-6 text-ink-faint"
+          >
+            404
+          </span>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+
 /**
  * 404 — the route runs through three filled stops (the recovery links), then
  * goes dashed and dies at a hollow stop labelled 404.
@@ -125,69 +216,10 @@ export function RouteDeadEnd() {
   return (
     <>
       {/* Desktop: horizontal route, labels overlaid under the scaled SVG dots. */}
-      <div className="hidden w-full max-w-[820px] sm:block">
-        <svg
-          viewBox={`0 0 ${ROUTE_W} 40`}
-          className="block h-auto w-full"
-          aria-hidden
-        >
-          <line x1="30" y1="20" x2="590" y2="20" stroke="var(--zg-blue)" strokeWidth="2" />
-          <line
-            x1="598"
-            y1="20"
-            x2="772"
-            y2="20"
-            stroke="var(--ink-faint)"
-            strokeWidth="2"
-            strokeDasharray="2 6"
-          />
-          {DEAD_END_STOPS.map((s) => (
-            <circle key={s.label} cx={s.x} cy="20" r="6" fill="var(--zg-blue)" />
-          ))}
-          <circle cx="784" cy="20" r="6" fill="var(--ground)" stroke="var(--ink-faint)" strokeWidth="2" />
-        </svg>
-        <nav aria-label="izlazi" className="relative h-7">
-          {DEAD_END_STOPS.map((s) => (
-            <Link
-              key={s.label}
-              href={s.href}
-              className={cn("absolute top-1 -translate-x-1/2", stopLink)}
-              style={{ left: pct(s.x) }}
-            >
-              {s.label}
-            </Link>
-          ))}
-          <span
-            aria-hidden
-            className="absolute top-1 -translate-x-1/2 font-mono text-body leading-6 text-ink-faint"
-            style={{ left: pct(784) }}
-          >
-            404
-          </span>
-        </nav>
-      </div>
+      <DeadEndDesktop />
 
       {/* Mobile: the vertical stop rail from the linija pages. */}
-      <nav aria-label="izlazi" className="w-full max-w-[240px] sm:hidden">
-        <ul className="flex flex-col text-left">
-          {DEAD_END_STOPS.map((s, i) => (
-            <li key={s.label} className="relative flex h-12 items-center gap-4">
-              <Rail upper={i === 0 ? "none" : "solid"} lower={i === 2 ? "dashed" : "solid"} />
-              <span className="relative size-3 shrink-0 rounded-full bg-zg-blue" />
-              <Link href={s.href} className={stopLink}>
-                {s.label}
-              </Link>
-            </li>
-          ))}
-          <li className="relative flex h-12 items-center gap-4">
-            <Rail upper="dashed" lower="none" />
-            <span className="relative size-3 shrink-0 rounded-full border-2 border-ink-faint bg-ground" />
-            <span aria-hidden className="font-mono text-body leading-6 text-ink-faint">
-              404
-            </span>
-          </li>
-        </ul>
-      </nav>
+      <DeadEndMobile />
     </>
   )
 }
@@ -202,10 +234,38 @@ export function RouteBreak() {
       {/* Desktop */}
       <div className="hidden w-full max-w-[820px] sm:block" aria-hidden>
         <svg viewBox={`0 0 ${ROUTE_W} 40`} className="block h-auto w-full">
-          <line x1="30" y1="20" x2="384" y2="20" stroke="var(--zg-blue)" strokeWidth="2" />
-          <line x1="436" y1="20" x2="790" y2="20" stroke="var(--zg-blue)" strokeWidth="2" />
-          <line x1="399" y1="28" x2="409" y2="12" stroke="var(--ink-faint)" strokeWidth="2" />
-          <line x1="411" y1="28" x2="421" y2="12" stroke="var(--ink-faint)" strokeWidth="2" />
+          <line
+            x1="30"
+            y1="20"
+            x2="384"
+            y2="20"
+            stroke="var(--zg-blue)"
+            strokeWidth="2"
+          />
+          <line
+            x1="436"
+            y1="20"
+            x2="790"
+            y2="20"
+            stroke="var(--zg-blue)"
+            strokeWidth="2"
+          />
+          <line
+            x1="399"
+            y1="28"
+            x2="409"
+            y2="12"
+            stroke="var(--ink-faint)"
+            strokeWidth="2"
+          />
+          <line
+            x1="411"
+            y1="28"
+            x2="421"
+            y2="12"
+            stroke="var(--ink-faint)"
+            strokeWidth="2"
+          />
           <circle cx="30" cy="20" r="6" fill="var(--zg-blue)" />
           <circle cx="790" cy="20" r="6" fill="var(--zg-blue)" />
         </svg>
@@ -216,7 +276,7 @@ export function RouteBreak() {
           >
             ti
           </span>
-          <span className="absolute left-1/2 top-1.5 -translate-x-1/2 font-mono text-label text-ink-faint">
+          <span className="absolute top-1.5 left-1/2 -translate-x-1/2 font-mono text-label text-ink-faint">
             500 · prekid
           </span>
           <span
@@ -237,18 +297,22 @@ export function RouteBreak() {
             <span className="font-mono text-body leading-6 text-ink">ti</span>
           </li>
           <li className="relative flex h-12 items-center gap-4">
-            <span className="absolute bottom-[calc(50%+9px)] left-[5px] top-0 w-0.5 bg-zg-blue" />
-            <span className="absolute bottom-0 left-[5px] top-[calc(50%+9px)] w-0.5 bg-zg-blue" />
+            <span className="absolute top-0 bottom-[calc(50%+9px)] left-[5px] w-0.5 bg-zg-blue" />
+            <span className="absolute top-[calc(50%+9px)] bottom-0 left-[5px] w-0.5 bg-zg-blue" />
             <span className="relative flex size-3 shrink-0 flex-col items-center justify-center gap-[3px]">
               <span className="h-0.5 w-3 -rotate-[58deg] bg-ink-faint" />
               <span className="h-0.5 w-3 -rotate-[58deg] bg-ink-faint" />
             </span>
-            <span className="font-mono text-label text-ink-faint">500 · prekid</span>
+            <span className="font-mono text-label text-ink-faint">
+              500 · prekid
+            </span>
           </li>
           <li className="relative flex h-12 items-center gap-4">
             <Rail upper="solid" lower="none" />
             <span className="relative size-3 shrink-0 rounded-full bg-zg-blue" />
-            <span className="font-mono text-body leading-6 text-ink">doseg.hr</span>
+            <span className="font-mono text-body leading-6 text-ink">
+              doseg.hr
+            </span>
           </li>
         </ul>
       </div>

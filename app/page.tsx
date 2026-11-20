@@ -45,7 +45,10 @@ export const metadata: Metadata = pseoMetadata({
 })
 
 /** Busiest lines first — the rows a first-time visitor most likely wants. */
-function busiest(lines: Array<LineIndexEntry>, count: number): Array<LineIndexEntry> {
+function busiest(
+  lines: Array<LineIndexEntry>,
+  count: number
+): Array<LineIndexEntry> {
   return lines
     .toSorted((a, b) => b.dailyDepartures - a.dailyDepartures)
     .slice(0, count)

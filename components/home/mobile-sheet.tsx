@@ -1,7 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from "motion/react"
+import {
+  AnimatePresence,
+  LazyMotion,
+  domAnimation,
+  m,
+  useReducedMotion,
+} from "motion/react"
 import { Drawer } from "vaul"
 import {
   IconChevronTop,
@@ -11,8 +17,22 @@ import {
 import { NAV_LINKS, NavLink } from "@/app/statistika/editorial/site-nav"
 import { legLineColors } from "@/lib/mode-colors"
 import type { Itinerary } from "@/lib/otp"
-import { ErrorContent, GeoButton, isRouteTooFar, JourneyStrip, LegList, LjestvicaRow, LoadingContent, MinutesRow, PoiList, ReachReadout, RouteSkeleton, RouteSummary, RouteTooFar } from './panel-content';
-import type { PanelContentProps, ReachStats } from './panel-content';
+import {
+  ErrorContent,
+  GeoButton,
+  isRouteTooFar,
+  JourneyStrip,
+  LegList,
+  LjestvicaRow,
+  LoadingContent,
+  MinutesRow,
+  PoiList,
+  ReachReadout,
+  RouteSkeleton,
+  RouteSummary,
+  RouteTooFar,
+} from "./panel-content"
+import type { PanelContentProps, ReachStats } from "./panel-content"
 import type { PanelState } from "./reach-state"
 import { BlueAction, Eyebrow, Hook, ReachRamp } from "./ui"
 
@@ -29,7 +49,9 @@ const ANSWER_BAR_PX = 56
 const SNAP_OPEN = 0.62
 
 function peekSnap(): string {
-  if (typeof document === "undefined") {return `${ANSWER_BAR_PX}px`}
+  if (typeof document === "undefined") {
+    return `${ANSWER_BAR_PX}px`
+  }
   const probe = document.createElement("div")
   probe.style.cssText =
     "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
@@ -111,7 +133,11 @@ function RouteSheetContent({
           transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
           className="flex min-h-0 flex-col gap-[14px]"
         >
-          <RouteSummary itinerary={itinerary} departedAt={departedAt} hideHeadline />
+          <RouteSummary
+            itinerary={itinerary}
+            departedAt={departedAt}
+            hideHeadline
+          />
           <JourneyStrip legs={itinerary.legs} colors={colors} />
           <BlueAction onClick={onBackToReach} back className="self-start">
             Natrag na doseg
@@ -224,7 +250,7 @@ function MiniRoute({
   const reduce = useReducedMotion()
   return (
     <div className="flex min-w-0 grow items-center gap-2.5">
-      <span className="shrink-0 font-heros text-head font-bold leading-5 text-ink">
+      <span className="shrink-0 font-heros text-head leading-5 font-bold text-ink">
         {Math.round(itinerary.duration / 60)} min
       </span>
       <AnimatePresence initial={false}>
@@ -271,10 +297,7 @@ function AnswerBar({
   onUseMyLocation: () => void
 }) {
   return (
-    <div
-      className="relative w-full shrink-0"
-      style={{ height: ANSWER_BAR_PX }}
-    >
+    <div className="relative w-full shrink-0" style={{ height: ANSWER_BAR_PX }}>
       <span className="absolute top-2 left-1/2 h-1 w-[38px] -translate-x-1/2 bg-ink-faint" />
       <div className="flex h-full items-center gap-3 px-5">
         <button

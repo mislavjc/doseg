@@ -1,8 +1,8 @@
 import type { WalkAreaFeature } from "@/lib/generated"
 import type { Itinerary } from "@/lib/otp"
 import type { PoiPhoto, POICategory } from "@/lib/overpass"
-import { multiPolygonAreaKm2, pointInMultiPolygon } from '@/lib/geo';
-import type { Ring } from '@/lib/geo';
+import { multiPolygonAreaKm2, pointInMultiPolygon } from "@/lib/geo"
+import type { Ring } from "@/lib/geo"
 import { plural } from "@/app/linije/copy"
 
 export type LatLon = { lat: number; lon: number }
@@ -46,7 +46,9 @@ export function outerBand(
   let best: WalkAreaFeature | null = null
   for (const f of features) {
     const t = f.properties.time
-    if (t <= maxSeconds && (!best || t > best.properties.time)) {best = f}
+    if (t <= maxSeconds && (!best || t > best.properties.time)) {
+      best = f
+    }
   }
   return best
 }
@@ -65,7 +67,9 @@ export function outerRingsForApi(band: WalkAreaFeature): Array<Ring> {
     const ring = polygon[0]
     const step = Math.max(1, Math.floor(ring.length / 200))
     const sampled: Ring = []
-    for (let i = 0; i < ring.length; i += step) {sampled.push(ring[i])}
+    for (let i = 0; i < ring.length; i += step) {
+      sampled.push(ring[i])
+    }
     return sampled
   })
 }
@@ -80,15 +84,22 @@ export type DistrictContext = {
 /** Title-case an ALL-CAPS name (BAJS stations arrive shouting) — leaves
  * mixed-case names untouched. Shared by leg titles and dot popups. */
 export function deShout(name: string): string {
-  if (name !== name.toUpperCase()) {return name}
+  if (name !== name.toUpperCase()) {
+    return name
+  }
   return name
     .toLowerCase()
-    .replaceAll(/(^|[\s\-./])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase())
+    .replaceAll(
+      /(^|[\s\-./])(\p{L})/gu,
+      (_, sep: string, ch: string) => sep + ch.toUpperCase()
+    )
 }
 
 /** "1 presjedanje" / "2 presjedanja" / "bez presjedanja". */
 export function transfersLabel(n: number): string {
-  if (n <= 0) {return "bez presjedanja"}
+  if (n <= 0) {
+    return "bez presjedanja"
+  }
   return `${n} ${plural(n, "presjedanje", "presjedanja", "presjedanja")}`
 }
 

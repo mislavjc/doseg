@@ -35,17 +35,20 @@ export interface Line {
   dirs: Record<number, DirData>
 }
 
-/** Load a feed, picking per line+direction the trip that visits the MOST stops —
- * i.e. the full canonical route, not a short-turn / depot run (those fooled the
- * old "dominant shape" pick: line 145 came out as a 6-stop stub to "Ratarska").
- * Keeps the rep trip's real shape if the feed has one; otherwise leaves shape
- * empty and the caller draws a stop-connected line (ZET often ships a reroute
- * with no geometry — e.g. line 101 → Šestine has no shape in any feed).
- * `wanted` filters by route_short_name; omit it to load every line. */
-export async function loadFeed(
-  dir: string,
-  wanted?: Set<string>
-): Promise<Map<string, Line>> {
+interface TripInfo {
+  route: string
+  dir: number
+  shape: string
+  headsign: string
+}
+interface RepTrip {
+  trip: string
+  shape: string
+  headsign: string
+  count: number
+}
+
+function readRouteMeta(dir: string, wanted?: Set<string>) {
   const routes = readCsv(join(dir, "routes.txt"))
   const rId = idx(routes.header, "route_id"),
     rShort = idx(routes.header, "route_short_name"),
@@ -59,12 +62,12 @@ export async function loadFeed(
       keepRoutes.add(r[rId])
     }
   }
+  return { routeMeta, keepRoutes }
+}
 
-  // every trip of a wanted route, with its direction + shape_id + headsign
-  const tripInfo = new Map<
-    string,
-    { route: string; dir: number; shape: string; headsign: string }
-  >()
+// every trip of a wanted route, with its direction + shape_id + headsign
+async function readTripInfo(dir: string, keepRoutes: Set<string>) {
+  const tripInfo = new Map<string, TripInfo>()
   await streamCsv(join(dir, "trips.txt"), (c, col) => {
     const route = c[col("route_id")]
     if (!keepRoutes.has(route)) {
@@ -77,8 +80,11 @@ export async function loadFeed(
       headsign: c[col("trip_headsign")],
     })
   })
+  return tripInfo
+}
 
-  // ordered stop sequence for those trips
+// ordered stop sequence for those trips
+async function readTripStops(dir: string, tripInfo: Map<string, TripInfo>) {
   const tripStops = new Map<string, Array<[number, string]>>()
   await streamCsv(join(dir, "stop_times.txt"), (c, col) => {
     const t = c[col("trip_id")]
@@ -90,11 +96,17 @@ export async function loadFeed(
       [Number(c[col("stop_sequence")]), c[col("stop_id")]],
     ])
   })
+  return tripStops
+}
 
-  // rep trip per (route|dir): pick the DOMINANT headsign (most trips) first, then
-  // the most-stops trip within it. Headsign-first avoids both short-turns (few
-  // trips) and depot runs (few trips, but the most stops — tram 8's rare
-  // "Spr.Dubrava" depot leg fooled a plain most-stops pick).
+// rep trip per (route|dir): pick the DOMINANT headsign (most trips) first, then
+// the most-stops trip within it. Headsign-first avoids both short-turns (few
+// trips) and depot runs (few trips, but the most stops — tram 8's rare
+// "Spr.Dubrava" depot leg fooled a plain most-stops pick).
+function pickRepTrips(
+  tripInfo: Map<string, TripInfo>,
+  tripStops: Map<string, Array<[number, string]>>
+) {
   // route|dir|headsign -> trips
   const headCount = new Map<string, number>()
   for (const info of tripInfo.values()) {
@@ -113,10 +125,7 @@ export async function loadFeed(
       domHead.set(rk, { head, n })
     }
   }
-  const rep = new Map<
-    string,
-    { trip: string; shape: string; headsign: string; count: number }
-  >()
+  const rep = new Map<string, RepTrip>()
   for (const [trip, info] of tripInfo) {
     const rk = `${info.route}|${info.dir}`
     if (info.headsign !== domHead.get(rk)?.head) {
@@ -132,7 +141,10 @@ export async function loadFeed(
       })
     }
   }
+  return rep
+}
 
+async function readShapeLines(dir: string, rep: Map<string, RepTrip>) {
   const wantShapes = new Set(
     [...rep.values()].flatMap((v) => (v.shape ? [v.shape] : []))
   )
@@ -161,7 +173,10 @@ export async function loadFeed(
       pts.map((p) => [p[1], p[2]])
     )
   }
+  return shapeLine
+}
 
+function readStopInfo(dir: string) {
   const stops = readCsv(join(dir, "stops.txt"))
   const sId = idx(stops.header, "stop_id"),
     sName = idx(stops.header, "stop_name"),
@@ -175,6 +190,26 @@ export async function loadFeed(
       lon: Number(r[sLon]),
     })
   }
+  return stopInfo
+}
+
+/** Load a feed, picking per line+direction the trip that visits the MOST stops —
+ * i.e. the full canonical route, not a short-turn / depot run (those fooled the
+ * old "dominant shape" pick: line 145 came out as a 6-stop stub to "Ratarska").
+ * Keeps the rep trip's real shape if the feed has one; otherwise leaves shape
+ * empty and the caller draws a stop-connected line (ZET often ships a reroute
+ * with no geometry — e.g. line 101 → Šestine has no shape in any feed).
+ * `wanted` filters by route_short_name; omit it to load every line. */
+export async function loadFeed(
+  dir: string,
+  wanted?: Set<string>
+): Promise<Map<string, Line>> {
+  const { routeMeta, keepRoutes } = readRouteMeta(dir, wanted)
+  const tripInfo = await readTripInfo(dir, keepRoutes)
+  const tripStops = await readTripStops(dir, tripInfo)
+  const rep = pickRepTrips(tripInfo, tripStops)
+  const shapeLine = await readShapeLines(dir, rep)
+  const stopInfo = readStopInfo(dir)
 
   const lines = new Map<string, Line>()
   for (const [rk, r] of rep) {

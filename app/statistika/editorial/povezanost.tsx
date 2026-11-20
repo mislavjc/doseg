@@ -93,7 +93,9 @@ function BoardRow({
       onPointerEnter={onEnter}
       onPointerLeave={onLeave}
       className="flex items-center gap-3 px-3.5 py-1 transition-colors duration-150 ease-out-strong"
-      style={{ backgroundColor: active ? "var(--highlight)" : scoreColor(score) }}
+      style={{
+        backgroundColor: active ? "var(--highlight)" : scoreColor(score),
+      }}
     >
       <span
         className="grow font-mono text-label leading-4 tabular-nums"
@@ -126,18 +128,14 @@ function RankingBoard({
   return (
     <div className="grow">
       <div className="flex items-center gap-3 px-3.5 pt-1 pb-2">
-        <MonoLabel className="grow">
-          ljestvica dosega
-        </MonoLabel>
+        <MonoLabel className="grow">ljestvica dosega</MonoLabel>
         <MonoLabel
           className="shrink-0 text-center font-mono text-label"
           style={{ width: BAR_W }}
         >
           raspon iznutra
         </MonoLabel>
-        <MonoLabel className="w-6.5 shrink-0 text-right">
-          bod
-        </MonoLabel>
+        <MonoLabel className="w-6.5 shrink-0 text-right">bod</MonoLabel>
       </div>
       {rows.map((r) => (
         <BoardRow
@@ -171,7 +169,7 @@ function Stats({ data }: { data: PovezanostData }) {
       {rows.map(([k, v]) => (
         <div key={k} className="flex justify-between">
           <dt className="font-mono text-label text-ink-faint">{k}</dt>
-          <dd className="font-mono text-label tabular-nums text-ink-2">{v}</dd>
+          <dd className="font-mono text-label text-ink-2 tabular-nums">{v}</dd>
         </div>
       ))}
     </dl>
@@ -190,7 +188,11 @@ export function Povezanost({ data }: { data: PovezanostData }) {
           </MountWhenNear>
           <Stats data={data} />
         </div>
-        <RankingBoard rows={data.rows} hovered={hovered} setHovered={setHovered} />
+        <RankingBoard
+          rows={data.rows}
+          hovered={hovered}
+          setHovered={setHovered}
+        />
       </div>
     </Section>
   )

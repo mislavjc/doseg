@@ -22,7 +22,9 @@ export function GET() {
   const stops: SearchIndexPayload["stops"] = []
   for (const s of loadStopIndex().stops) {
     const key = `${s.name}|${s.kvart}`
-    if (seen.has(key)) {continue}
+    if (seen.has(key)) {
+      continue
+    }
     seen.add(key)
     stops.push({ slug: s.slug, name: s.name, kvart: s.kvart })
   }

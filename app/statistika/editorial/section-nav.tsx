@@ -23,14 +23,18 @@ export function SectionNav({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {setActive(entry.target.id)}
+          if (entry.isIntersecting) {
+            setActive(entry.target.id)
+          }
         })
       },
       { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.5, 1] }
     )
     items.forEach(({ id }) => {
       const el = document.getElementById(id)
-      if (el) {observer.observe(el)}
+      if (el) {
+        observer.observe(el)
+      }
     })
     return () => observer.disconnect()
   }, [items])
@@ -49,9 +53,7 @@ export function SectionNav({
             aria-current={isActive ? "location" : undefined}
             className={cn(
               "font-mono text-label lowercase transition-colors duration-150",
-              isActive
-                ? "text-ink"
-                : "text-ink-faint hover:text-ink-2"
+              isActive ? "text-ink" : "text-ink-faint hover:text-ink-2"
             )}
           >
             {label}

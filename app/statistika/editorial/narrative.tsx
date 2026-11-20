@@ -12,7 +12,8 @@ export function Anatomija() {
         <Eyebrow>anatomija jaza</Eyebrow>
         <Hook>Jaz nije samo bod.</Hook>
         <BodyMuted className="max-w-[520px]">
-          Krije se u hodu do stanice, u putu preko grada i u večernjem redu vožnje.
+          Krije se u hodu do stanice, u putu preko grada i u večernjem redu
+          vožnje.
         </BodyMuted>
       </div>
     </Section>

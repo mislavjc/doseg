@@ -59,7 +59,13 @@ async function main() {
     zoomMax: 14,
   })
 
-  const crop = await cropper.buildCrop(outPng, await stationBbox(), OUT_W, OUT_H, PAD)
+  const crop = await cropper.buildCrop(
+    outPng,
+    await stationBbox(),
+    OUT_W,
+    OUT_H,
+    PAD
+  )
   console.error(`bajs-hero.png z${crop.zoom} ${crop.width}x${crop.height}`)
 }
 

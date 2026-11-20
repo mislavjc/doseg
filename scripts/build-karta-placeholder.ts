@@ -50,20 +50,37 @@ async function bake(out: string, cssW: number, cssH: number) {
   const y0 = Math.round(mercatorY(KARTA_CENTER[1]) * worldPx - h / 2)
 
   const tiles = []
-  for (let tx = Math.floor(x0 / TILE_PX); tx <= Math.floor((x0 + w - 1) / TILE_PX); tx++)
-    {for (let ty = Math.floor(y0 / TILE_PX); ty <= Math.floor((y0 + h - 1) / TILE_PX); ty++)
-      {tiles.push({
+  for (
+    let tx = Math.floor(x0 / TILE_PX);
+    tx <= Math.floor((x0 + w - 1) / TILE_PX);
+    tx++
+  ) {
+    for (
+      let ty = Math.floor(y0 / TILE_PX);
+      ty <= Math.floor((y0 + h - 1) / TILE_PX);
+      ty++
+    ) {
+      tiles.push({
         input: join(tilesDir, String(tx), `${ty}.png`),
         left: tx * TILE_PX - x0,
         top: ty * TILE_PX - y0,
-      })}}
+      })
+    }
+  }
 
   // Composite onto an oversized canvas (tiles hang off every edge), then cut.
   const pad = TILE_PX
   const canvas = await sharp({
-    create: { width: w + 2 * pad, height: h + 2 * pad, channels: 3, background: "#ffffff" },
+    create: {
+      width: w + 2 * pad,
+      height: h + 2 * pad,
+      channels: 3,
+      background: "#ffffff",
+    },
   })
-    .composite(tiles.map((t) => ({ ...t, left: t.left + pad, top: t.top + pad })))
+    .composite(
+      tiles.map((t) => ({ ...t, left: t.left + pad, top: t.top + pad }))
+    )
     .png()
     .toBuffer()
   const stitched = await sharp(canvas)
@@ -74,12 +91,16 @@ async function bake(out: string, cssW: number, cssH: number) {
 
   const rgb = Buffer.alloc(w * h * 3, 255)
   for (let i = 0; i < w * h; i++) {
-    if (stitched[i] < 200) {rgb.set(PALE, i * 3)}
+    if (stitched[i] < 200) {
+      rgb.set(PALE, i * 3)
+    }
   }
   await sharp(rgb, { raw: { width: w, height: h, channels: 3 } })
     .png({ palette: true, colours: 2, dither: 0 })
     .toFile(join(process.cwd(), "public", out))
-  console.error(`${out}: ${w}x${h} from bajs-tiles z${tileZoom}, ${tiles.length} tiles`)
+  console.error(
+    `${out}: ${w}x${h} from bajs-tiles z${tileZoom}, ${tiles.length} tiles`
+  )
 }
 
 await Promise.all(CROPS.map((c) => bake(c.out, c.cssW, c.cssH)))

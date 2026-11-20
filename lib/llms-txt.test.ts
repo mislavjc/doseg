@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { buildLlmsTxt, ORIGIN } from './llms-txt';
-import type { LlmsTxtData } from './llms-txt';
+import { buildLlmsTxt, ORIGIN } from "./llms-txt"
+import type { LlmsTxtData } from "./llms-txt"
 
 const DATA: LlmsTxtData = {
   lineCount: 154,
@@ -68,7 +68,9 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
   it("makes every link absolute on the canonical origin", () => {
     const urls = [...txt.matchAll(/\]\(([^)]+)\)/gu)].map((m) => m[1])
     expect(urls.length).toBeGreaterThan(5)
-    for (const url of urls) {expect(url.startsWith(ORIGIN)).toBe(true)}
+    for (const url of urls) {
+      expect(url.startsWith(ORIGIN)).toBe(true)
+    }
   })
 })
 

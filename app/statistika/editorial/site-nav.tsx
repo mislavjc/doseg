@@ -35,7 +35,7 @@ export function NavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "shrink-0 whitespace-nowrap font-mono text-label transition-colors duration-150",
+        "shrink-0 font-mono text-label whitespace-nowrap transition-colors duration-150",
         active ? "text-ink" : "text-ink-muted hover:text-ink",
         className
       )}
@@ -71,10 +71,10 @@ export function SiteNav({
         className
       )}
     >
-      <Bracket char="⌜" className="left-1.5 top-[3px]" />
-      <Bracket char="⌝" className="right-1.5 top-[3px]" />
+      <Bracket char="⌜" className="top-[3px] left-1.5" />
+      <Bracket char="⌝" className="top-[3px] right-1.5" />
       <Bracket char="⌞" className="bottom-[1px] left-1.5" />
-      <Bracket char="⌟" className="bottom-[1px] right-1.5" />
+      <Bracket char="⌟" className="right-1.5 bottom-[1px]" />
 
       <div className="flex w-full items-center justify-between gap-3">
         <Link href="/" className="flex shrink-0 items-center gap-2">
@@ -109,7 +109,7 @@ export function SiteNav({
           <summary className="flex cursor-pointer list-none items-center font-mono text-label text-ink-muted [&::-webkit-details-marker]:hidden">
             izbornik
           </summary>
-          <nav className="absolute right-0 top-full z-20 mt-2 flex min-w-32 flex-col gap-2.5 bg-white px-3.5 py-3 shadow-soft ring-1 ring-hairline-strong">
+          <nav className="absolute top-full right-0 z-20 mt-2 flex min-w-32 flex-col gap-2.5 bg-white px-3.5 py-3 shadow-soft ring-1 ring-hairline-strong">
             {NAV_LINKS.map((l) => (
               <NavLink
                 key={l.href}

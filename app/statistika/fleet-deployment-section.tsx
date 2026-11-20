@@ -20,14 +20,22 @@ interface FleetDeploymentData {
 }
 
 function pctColor(pct: number): string {
-  if (pct >= 90) {return "text-emerald-600 dark:text-emerald-400"}
-  if (pct >= 50) {return "text-amber-600 dark:text-amber-400"}
+  if (pct >= 90) {
+    return "text-emerald-600 dark:text-emerald-400"
+  }
+  if (pct >= 50) {
+    return "text-amber-600 dark:text-amber-400"
+  }
   return "text-red-600 dark:text-red-400"
 }
 
 function pctBg(pct: number): string {
-  if (pct >= 90) {return "bg-emerald-500"}
-  if (pct >= 50) {return "bg-amber-500"}
+  if (pct >= 90) {
+    return "bg-emerald-500"
+  }
+  if (pct >= 50) {
+    return "bg-amber-500"
+  }
   return "bg-red-500"
 }
 
@@ -140,7 +148,11 @@ function SummaryRow({
 
 // --- Active routes table ---
 
-function ActiveRoutesTable({ routes }: { routes: Array<FleetRouteDeployment> }) {
+function ActiveRoutesTable({
+  routes,
+}: {
+  routes: Array<FleetRouteDeployment>
+}) {
   const sorted = routes.toSorted((a, b) => b.deploymentPct - a.deploymentPct)
   return (
     <div className="mt-8 border-t border-slate-100 pt-6 dark:border-white/5">
@@ -183,7 +195,8 @@ function SilentRoutesList({ routes }: { routes: Array<FleetRouteDeployment> }) {
   return (
     <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
       <div className="mb-2 font-mono text-label font-bold text-slate-400 dark:text-slate-500">
-        Bez RT signala ({routes.length} {plural(routes.length, "linija", "linije", "linija")})
+        Bez RT signala ({routes.length}{" "}
+        {plural(routes.length, "linija", "linije", "linija")})
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.map((r) => (

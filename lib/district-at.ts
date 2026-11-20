@@ -1,7 +1,7 @@
 import { join } from "node:path"
 
-import { pointInRing } from './geo';
-import type { Ring } from './geo';
+import { pointInRing } from "./geo"
+import type { Ring } from "./geo"
 import { readJsonCached } from "./page-data"
 
 /**
@@ -21,8 +21,12 @@ export function districtAt(lat: number, lon: number): string | null {
     )?.features ?? []
   for (const f of features) {
     const [outer, ...holes] = f.geometry.coordinates
-    if (pointInRing(lon, lat, outer) && !holes.some((h) => pointInRing(lon, lat, h)))
-      {return f.properties.name}
+    if (
+      pointInRing(lon, lat, outer) &&
+      !holes.some((h) => pointInRing(lon, lat, h))
+    ) {
+      return f.properties.name
+    }
   }
   return null
 }

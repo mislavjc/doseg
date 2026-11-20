@@ -26,18 +26,12 @@ export function MonoLabel({ children }: { children: React.ReactNode }) {
 
 /** Tiny mono caption (ramp ends, strip numbers) — 11px. */
 export function MonoCaption({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="font-mono text-label text-ink-faint">
-      {children}
-    </span>
-  )
+  return <span className="font-mono text-label text-ink-faint">{children}</span>
 }
 
 /** Bold Heros hook — section titles, readout values. */
 export function Hook({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="font-heros text-head font-bold text-ink">{children}</p>
-  )
+  return <p className="font-heros text-head font-bold text-ink">{children}</p>
 }
 
 /** zg-blue Heros link (internal). Pass `arrow` for a trailing forward arrow. */
@@ -109,17 +103,13 @@ export function NumberedStep({
     <div className={`flex items-start ${md ? "gap-[13px]" : "gap-[11px]"}`}>
       <span
         className={`flex shrink-0 items-center justify-center rounded-full bg-chip-blue font-mono text-zg-blue ${
-          md
-            ? "size-6 text-label"
-            : "size-[22px] font-mono text-label"
+          md ? "size-6 text-label" : "size-[22px] font-mono text-label"
         }`}
       >
         {n}
       </span>
       <span className={`flex flex-col pt-px ${md ? "gap-0.5" : "gap-px"}`}>
-        <span className="font-heros text-body leading-5 text-ink">
-          {title}
-        </span>
+        <span className="font-heros text-body leading-5 text-ink">{title}</span>
         <span
           className={`font-heros text-ink-faint ${
             md ? "text-body" : "text-body"

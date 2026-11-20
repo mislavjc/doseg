@@ -43,10 +43,17 @@ const adresaSlugify = (s: string) =>
 const NASELJE_DEFAULT = "Zagreb"
 
 /** Canonical /adresa slug for a street (optionally with a house number). */
-export function adresaSlug(street: Pick<AdresaStreet, "name" | "naselje">, hn?: string): string {
+export function adresaSlug(
+  street: Pick<AdresaStreet, "name" | "naselje">,
+  hn?: string
+): string {
   const parts = [adresaSlugify(street.name)]
-  if (hn) {parts.push(adresaSlugify(hn))}
-  if (street.naselje !== NASELJE_DEFAULT) {parts.push(adresaSlugify(street.naselje))}
+  if (hn) {
+    parts.push(adresaSlugify(hn))
+  }
+  if (street.naselje !== NASELJE_DEFAULT) {
+    parts.push(adresaSlugify(street.naselje))
+  }
   return parts.join("-")
 }
 
@@ -75,7 +82,9 @@ interface SluggedStreet {
 // process (dev re-derives so a re-bake shows up without a restart).
 let slugged: Array<SluggedStreet> | null = null
 function loadSlugged(): Array<SluggedStreet> {
-  if (slugged && process.env.NODE_ENV === "production") {return slugged}
+  if (slugged && process.env.NODE_ENV === "production") {
+    return slugged
+  }
   slugged = loadAdrese().map((street) => ({
     street,
     nameSlug: adresaSlugify(street.name),
@@ -91,22 +100,34 @@ function loadSlugged(): Array<SluggedStreet> {
  * naselje suffix, so a plain slug can only mean the Zagreb street. cache()
  * dedupes the generateMetadata + page call pair per request.
  */
-export const resolveAdresaSlug = cache((slug: string): ResolvedAdresa | null => {
-  for (const { street, nameSlug, streetSlug } of loadSlugged()) {
-    if (!slug.startsWith(nameSlug)) {continue}
-    if (slug === streetSlug) {
-      const [, lat, lon] = centroid(street)
-      return { label: street.name, naselje: street.naselje, kind: "ulica", lat, lon }
+export const resolveAdresaSlug = cache(
+  (slug: string): ResolvedAdresa | null => {
+    for (const { street, nameSlug, streetSlug } of loadSlugged()) {
+      if (!slug.startsWith(nameSlug)) {
+        continue
+      }
+      if (slug === streetSlug) {
+        const [, lat, lon] = centroid(street)
+        return {
+          label: street.name,
+          naselje: street.naselje,
+          kind: "ulica",
+          lat,
+          lon,
+        }
+      }
+      const addr = street.addrs.find(([hn]) => adresaSlug(street, hn) === slug)
+      if (!addr) {
+        continue
+      }
+      return {
+        label: `${street.name} ${addr[0]}`,
+        naselje: street.naselje,
+        kind: "adresa",
+        lat: addr[1],
+        lon: addr[2],
+      }
     }
-    const addr = street.addrs.find(([hn]) => adresaSlug(street, hn) === slug)
-    if (!addr) {continue}
-    return {
-      label: `${street.name} ${addr[0]}`,
-      naselje: street.naselje,
-      kind: "adresa",
-      lat: addr[1],
-      lon: addr[2],
-    }
+    return null
   }
-  return null
-})
+)

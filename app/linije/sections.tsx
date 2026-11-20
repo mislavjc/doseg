@@ -67,9 +67,17 @@ export function Naslov({ data }: { data: LinePageData }) {
 
 // ── Činjenice ───────────────────────────────────────────────────────────────
 
-function FactGroup({ label, first = false }: { label: string; first?: boolean }) {
+function FactGroup({
+  label,
+  first = false,
+}: {
+  label: string
+  first?: boolean
+}) {
   return (
-    <p className={cn("pb-2 font-mono text-label text-zg-blue", !first && "pt-6")}>
+    <p
+      className={cn("pb-2 font-mono text-label text-zg-blue", !first && "pt-6")}
+    >
       {label}
     </p>
   )
@@ -89,7 +97,11 @@ export function Cinjenice({ data }: { data: LinePageData }) {
           {range && (
             <FactRow
               label="razmak u špici"
-              value={range[0] === range[1] ? `${range[0]} min` : `${range[0]}-${range[1]} min`}
+              value={
+                range[0] === range[1]
+                  ? `${range[0]} min`
+                  : `${range[0]}-${range[1]} min`
+              }
             />
           )}
           <FactRow
@@ -104,7 +116,9 @@ export function Cinjenice({ data }: { data: LinePageData }) {
       ) : (
         <FactRow
           label="status"
-          value={status === "weekendOnly" ? "vozi samo vikendom" : "trenutno ne vozi"}
+          value={
+            status === "weekendOnly" ? "vozi samo vikendom" : "trenutno ne vozi"
+          }
         />
       )}
       <FactGroup label="trasa" />
@@ -136,7 +150,10 @@ export function Frekvencija({ data }: { data: LinePageData }) {
         const count = hist[h]
         const height = count > 0 ? Math.max((count / max) * 84, 6) : 2
         return (
-          <div key={h} className="flex w-full max-w-5 flex-col items-center gap-1">
+          <div
+            key={h}
+            className="flex w-full max-w-5 flex-col items-center gap-1"
+          >
             <div
               className={cn(
                 "w-full",
@@ -157,7 +174,9 @@ export function frekvencijaCopy(data: LinePageData): {
   body: string
 } | null {
   const status = serviceStatus(data)
-  if (status === "none") {return null}
+  if (status === "none") {
+    return null
+  }
   const hist = serviceHistogram(data)
   const peak = Math.max(...hist, 0)
   const hook = `${cap(numberWord(peak))} ${plural(peak, "polazak", "polaska", "polazaka")} na sat u špici.`
@@ -234,7 +253,9 @@ function suspendedFaq(
 
 export function buildFaq(data: LinePageData): Array<FaqItem> {
   const status = serviceStatus(data)
-  if (status !== "weekday") {return suspendedFaq(data, status)}
+  if (status !== "weekday") {
+    return suspendedFaq(data, status)
+  }
 
   const items: Array<FaqItem> = []
   const noun = MODE_NOUN[data.mode]
@@ -281,7 +302,10 @@ export function buildFaq(data: LinePageData): Array<FaqItem> {
   // generator already excludes night trams from interchange data).
   const terminalTrams = data.directions[0].stops[0].tramInterchange
   const crossings = data.related.tramCrossings
-  if (data.mode === "bus" && (crossings.length > 0 || terminalTrams.length > 0)) {
+  if (
+    data.mode === "bus" &&
+    (crossings.length > 0 || terminalTrams.length > 0)
+  ) {
     const parts: Array<string> = []
     if (crossings.length > 0) {
       // Stop with the most tram lines wins.
@@ -327,18 +351,22 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
   )
   const describe = (t: string) => {
     const lines = related.filter((r) => r.terminal === t)
-    if (lines.length === 0) {return null}
+    if (lines.length === 0) {
+      return null
+    }
     const trams = lines.filter((l) => l.mode === "tram").map((l) => l.broj)
     const buses = lines.filter((l) => l.mode === "bus").map((l) => l.broj)
     const parts: Array<string> = []
-    if (trams.length > 0)
-      {parts.push(
+    if (trams.length > 0) {
+      parts.push(
         `${plural(trams.length, "tramvaj", "tramvaji", "tramvaji")} ${trams.join(", ")}`
-      )}
-    if (buses.length > 0)
-      {parts.push(
+      )
+    }
+    if (buses.length > 0) {
+      parts.push(
         `${plural(buses.length, "autobus", "autobusi", "autobusi")} ${buses.slice(0, 6).join(", ")}`
-      )}
+      )
+    }
     return parts.join(" i ")
   }
 

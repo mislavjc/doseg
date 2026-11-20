@@ -1,6 +1,7 @@
-# Staged-file checks only, so a commit stays at a second or two. CI runs the full suite.
+# Staged-file checks only, so a commit stays at a few seconds. CI runs the full suite.
+# Piped: prettier rewrites and re-stages first, so oxlint sees the formatted file.
 pre-commit:
-  parallel: true
+  piped: true
   jobs:
     - name: prettier
       glob: "*.{ts,tsx}"

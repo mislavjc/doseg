@@ -46,7 +46,11 @@ function currentNow(): Now {
 /** Union of both directions' hours, ascending (GTFS hours, may exceed 23). */
 function mergedHours(dirs: Array<Array<HourRow>>): Array<number> {
   const hours = new Set<number>()
-  for (const dir of dirs) {for (const row of dir) {hours.add(row.hour)}}
+  for (const dir of dirs) {
+    for (const row of dir) {
+      hours.add(row.hour)
+    }
+  }
   return [...hours].toSorted((a, b) => a - b)
 }
 
@@ -115,11 +119,15 @@ function DayTable({
   const hours = mergedHours(rows)
   // Next departure per direction (first time ≥ now across the whole day).
   const nextDeps = rows.map((dir) => {
-    if (!now) {return null}
+    if (!now) {
+      return null
+    }
     for (const row of dir) {
       for (const m of row.minutes) {
         const t = row.hour * 60 + m
-        if (t >= now.serviceMin) {return t}
+        if (t >= now.serviceMin) {
+          return t
+        }
       }
     }
     return null
@@ -149,9 +157,7 @@ function DayTable({
           now.serviceMin >= hour * 60 &&
           now.serviceMin < (hour + 1) * 60
         const rowPast =
-          now !== null &&
-          !isCurrentRow &&
-          (hour + 1) * 60 <= now.serviceMin
+          now !== null && !isCurrentRow && (hour + 1) * 60 <= now.serviceMin
         return (
           <div
             key={hour}

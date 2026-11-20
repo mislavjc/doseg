@@ -33,7 +33,9 @@ export function SectionHeader({
 }) {
   return (
     <header className={cn("pb-8", className)}>
-      <Eyebrow className={accent ? "text-zg-blue" : undefined}>{eyebrow}</Eyebrow>
+      <Eyebrow className={accent ? "text-zg-blue" : undefined}>
+        {eyebrow}
+      </Eyebrow>
       <Hook className="mt-4">{hook}</Hook>
       {Boolean(children) && (
         <Body className="mt-3 max-w-[520px] text-ink-muted">{children}</Body>
@@ -64,7 +66,9 @@ export function FactRow({
         divided && "border-b border-hairline last:border-b-0"
       )}
     >
-      <span className="shrink-0 font-heros text-body text-ink-muted">{label}</span>
+      <span className="shrink-0 font-heros text-body text-ink-muted">
+        {label}
+      </span>
       <span className="h-[13px] min-w-0 flex-1 border-b border-dotted border-hairline-strong" />
       {href ? (
         <Link
@@ -128,7 +132,9 @@ export function LineBadge({
       ? "border border-zg-blue bg-white text-zg-blue"
       : "bg-zg-blue text-white"
   )
-  const title = mode ? `${mode === "tram" ? "tramvaj" : "autobus"} ${broj}` : undefined
+  const title = mode
+    ? `${mode === "tram" ? "tramvaj" : "autobus"} ${broj}`
+    : undefined
   return href ? (
     <Link href={href} className={cls} title={title}>
       {broj}
@@ -222,8 +228,8 @@ export function PrevNext({
 export function Provenijencija({ date }: { date: string }) {
   return (
     <p className="font-mono text-label text-ink-faint">
-      vozni red iz službenog zet gtfs feeda · osvježava se automatski ·
-      vrijedi za {date}
+      vozni red iz službenog zet gtfs feeda · osvježava se automatski · vrijedi
+      za {date}
     </p>
   )
 }

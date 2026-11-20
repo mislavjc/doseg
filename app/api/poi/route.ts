@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server"
 
 import { jsonResponse } from "@/lib/api-response"
-import { fetchPOIs } from '@/lib/overpass';
-import type { POICategory } from '@/lib/overpass';
+import { fetchPOIs } from "@/lib/overpass"
+import type { POICategory } from "@/lib/overpass"
 
 const ALL_CATEGORIES: Array<POICategory> = [
   "hospital",

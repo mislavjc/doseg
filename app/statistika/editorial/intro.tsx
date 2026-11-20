@@ -29,11 +29,14 @@ export function Intro({
   return (
     <Section>
       <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "statistika" }]} />
-      <PageTitle className="mt-4">Statistika dostupnosti zagrebačkog prijevoza</PageTitle>
+      <PageTitle className="mt-4">
+        Statistika dostupnosti zagrebačkog prijevoza
+      </PageTitle>
       <Body className="mt-4.5">
         Koliko je grada dostupno iz vašeg kvarta u {maxMinutes} minuta javnim
-        prijevozom? Doseg mjeri stvarni doseg svakog od {districtCount} zagrebačkih
-        gradskih kvartova: tramvajem, autobusom, vlakom i BAJS biciklom.
+        prijevozom? Doseg mjeri stvarni doseg svakog od {districtCount}{" "}
+        zagrebačkih gradskih kvartova: tramvajem, autobusom, vlakom i BAJS
+        biciklom.
       </Body>
 
       <SectionNav items={SECTIONS} className="mt-6" />

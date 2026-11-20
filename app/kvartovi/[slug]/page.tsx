@@ -9,8 +9,23 @@ import { loadKvart, loadKvartIndex } from "@/lib/kvart-data"
 import { pseoMetadata } from "@/lib/pseo-metadata"
 import { loadStopIndex } from "@/lib/stop-data"
 
-import { Blizina, Cinjenice, DosegLink, IzvanSpice, KvartHero, KvartJsonLd, Linije, Matrica, Naslov, OvisiOAdresi, Promjene, Scorecard, StaniceUKvartu, buildFaq } from '../sections';
-import type { KvartStop } from '../sections';
+import {
+  Blizina,
+  Cinjenice,
+  DosegLink,
+  IzvanSpice,
+  KvartHero,
+  KvartJsonLd,
+  Linije,
+  Matrica,
+  Naslov,
+  OvisiOAdresi,
+  Promjene,
+  Scorecard,
+  StaniceUKvartu,
+  buildFaq,
+} from "../sections"
+import type { KvartStop } from "../sections"
 
 /** Busiest stops physically in this kvart, deduped by name (a stop name can
  * repeat per direction), for the kvart → stop internal links. Built from the
@@ -18,7 +33,9 @@ import type { KvartStop } from '../sections';
 function notableStopsInKvart(kvart: string): Array<KvartStop> {
   const byName = new Map<string, KvartStop>()
   for (const s of loadStopIndex().stops) {
-    if (s.kvart !== kvart) {continue}
+    if (s.kvart !== kvart) {
+      continue
+    }
     const prev = byName.get(s.name)
     if (!prev || s.lineCount > prev.lineCount) {
       byName.set(s.name, { name: s.name, slug: s.slug, lineCount: s.lineCount })
@@ -40,7 +57,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const data = loadKvart(slug)
-  if (!data) {return {}}
+  if (!data) {
+    return {}
+  }
   const title = `${data.name}: javni prijevoz i povezanost | Doseg`
   const description = `${data.name} je ${data.rank}. od ${data.total} zagrebačkih kvartova po povezanosti javnim prijevozom. ${data.tramCount} tramvajskih i ${data.busCount} autobusnih linija; ${data.within30} kvartova nadohvat za 30 minuta.`
   return pseoMetadata({
@@ -61,7 +80,9 @@ export default async function KvartPage({
 }) {
   const { slug } = await params
   const data = loadKvart(slug)
-  if (!data) {notFound()}
+  if (!data) {
+    notFound()
+  }
   const faq = buildFaq(data)
   const updated = loadScores()?.generatedAt ?? ""
   const stopsInKvart = notableStopsInKvart(data.name)
@@ -71,7 +92,7 @@ export default async function KvartPage({
       <KvartJsonLd data={data} faq={faq} />
       <KvartHero data={data} />
 
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+      <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
         <Naslov data={data} />
       </Section>
       <Section width="article" className="pb-0 sm:pb-0">

@@ -45,7 +45,9 @@ export default function StatSectionTabs() {
 
     allSectionIds.forEach((id) => {
       const el = document.getElementById(id)
-      if (el) {observer.observe(el)}
+      if (el) {
+        observer.observe(el)
+      }
     })
 
     return () => observer.disconnect()
@@ -56,15 +58,15 @@ export default function StatSectionTabs() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.div 
-        className="sticky top-4 sm:top-6 z-40 flex w-full justify-center px-4 pointer-events-none mb-6 sm:mb-8"
+      <m.div
+        className="pointer-events-none sticky top-4 z-40 mb-6 flex w-full justify-center px-4 sm:top-6 sm:mb-8"
         initial={{ y: -20, opacity: 0, filter: "blur(4px)" }}
         animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       >
         <nav
           aria-label="Odjeljci izvještaja"
-          className="island island-compact pointer-events-auto flex items-center gap-0.5 sm:gap-1.5 overflow-x-auto scrollbar-hide max-w-full"
+          className="island island-compact scrollbar-hide pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto sm:gap-1.5"
         >
           {groups.map((group) => {
             const isActive = activeGroupId === group.id
@@ -75,7 +77,7 @@ export default function StatSectionTabs() {
                 key={group.id}
                 href={`#${targetId}`}
                 className={[
-                  "relative flex h-8 sm:h-9 shrink-0 items-center justify-center rounded-full px-3.5 sm:px-4 font-mono text-label transition-colors outline-none",
+                  "relative flex h-8 shrink-0 items-center justify-center rounded-full px-3.5 font-mono text-label transition-colors outline-none sm:h-9 sm:px-4",
                   isActive
                     ? "text-white"
                     : "text-neutral-500 hover:bg-neutral-100/60 hover:text-neutral-900 active:bg-neutral-200/60",
@@ -97,4 +99,3 @@ export default function StatSectionTabs() {
     </LazyMotion>
   )
 }
-

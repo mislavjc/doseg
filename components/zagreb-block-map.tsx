@@ -7,42 +7,158 @@ const LABEL_LIGHT = "#fafaf9"
 
 /** Same grid positions as connectivity map; scores are static snapshot from district-scores. */
 const ZAGREB_DISTRICTS_GRID = [
-  { id: "podsljeme", name: "Podsljeme", short: "POD", col: 2, row: 0, score: 13 },
-  { id: "podsused-vrapce", name: "Podsused - Vrapče", short: "POV", col: 0, row: 1, score: 31 },
-  { id: "crnomerec", name: "Črnomerec", short: "ČRN", col: 1, row: 1, score: 31 },
-  { id: "gornji-grad", name: "Gornji grad - Medveščak", short: "GGM", col: 2, row: 1, score: 52 },
+  {
+    id: "podsljeme",
+    name: "Podsljeme",
+    short: "POD",
+    col: 2,
+    row: 0,
+    score: 13,
+  },
+  {
+    id: "podsused-vrapce",
+    name: "Podsused - Vrapče",
+    short: "POV",
+    col: 0,
+    row: 1,
+    score: 31,
+  },
+  {
+    id: "crnomerec",
+    name: "Črnomerec",
+    short: "ČRN",
+    col: 1,
+    row: 1,
+    score: 31,
+  },
+  {
+    id: "gornji-grad",
+    name: "Gornji grad - Medveščak",
+    short: "GGM",
+    col: 2,
+    row: 1,
+    score: 52,
+  },
   { id: "maksimir", name: "Maksimir", short: "MAK", col: 3, row: 1, score: 40 },
-  { id: "gornja-dubrava", name: "Gornja Dubrava", short: "GDU", col: 4, row: 1, score: 20 },
+  {
+    id: "gornja-dubrava",
+    name: "Gornja Dubrava",
+    short: "GDU",
+    col: 4,
+    row: 1,
+    score: 20,
+  },
   { id: "sesvete", name: "Sesvete", short: "SES", col: 5, row: 1, score: 17 },
-  { id: "stenjevec", name: "Stenjevec", short: "STE", col: 0, row: 2, score: 41 },
-  { id: "tresnjevka-sjever", name: "Trešnjevka - sjever", short: "TSJ", col: 1, row: 2, score: 62 },
-  { id: "donji-grad", name: "Donji grad", short: "DGR", col: 2, row: 2, score: 100 },
-  { id: "pescenica", name: "Peščenica - Žitnjak", short: "PŠČ", col: 3, row: 2, score: 33 },
-  { id: "donja-dubrava", name: "Donja Dubrava", short: "DDU", col: 4, row: 2, score: 42 },
-  { id: "tresnjevka-jug", name: "Trešnjevka - jug", short: "TJU", col: 1, row: 3, score: 52 },
+  {
+    id: "stenjevec",
+    name: "Stenjevec",
+    short: "STE",
+    col: 0,
+    row: 2,
+    score: 41,
+  },
+  {
+    id: "tresnjevka-sjever",
+    name: "Trešnjevka - sjever",
+    short: "TSJ",
+    col: 1,
+    row: 2,
+    score: 62,
+  },
+  {
+    id: "donji-grad",
+    name: "Donji grad",
+    short: "DGR",
+    col: 2,
+    row: 2,
+    score: 100,
+  },
+  {
+    id: "pescenica",
+    name: "Peščenica - Žitnjak",
+    short: "PŠČ",
+    col: 3,
+    row: 2,
+    score: 33,
+  },
+  {
+    id: "donja-dubrava",
+    name: "Donja Dubrava",
+    short: "DDU",
+    col: 4,
+    row: 2,
+    score: 42,
+  },
+  {
+    id: "tresnjevka-jug",
+    name: "Trešnjevka - jug",
+    short: "TJU",
+    col: 1,
+    row: 3,
+    score: 52,
+  },
   { id: "trnje", name: "Trnje", short: "TRN", col: 2, row: 3, score: 83 },
-  { id: "novi-zagreb-zapad", name: "Novi Zagreb - zapad", short: "NZZ", col: 1, row: 4, score: 36 },
-  { id: "novi-zagreb-istok", name: "Novi Zagreb - istok", short: "NZI", col: 2, row: 4, score: 56 },
-  { id: "brezovica", name: "Brezovica", short: "BRZ", col: 1, row: 5, score: 17 },
+  {
+    id: "novi-zagreb-zapad",
+    name: "Novi Zagreb - zapad",
+    short: "NZZ",
+    col: 1,
+    row: 4,
+    score: 36,
+  },
+  {
+    id: "novi-zagreb-istok",
+    name: "Novi Zagreb - istok",
+    short: "NZI",
+    col: 2,
+    row: 4,
+    score: 56,
+  },
+  {
+    id: "brezovica",
+    name: "Brezovica",
+    short: "BRZ",
+    col: 1,
+    row: 5,
+    score: 17,
+  },
 ] as const
 
 const NUM_COLS = 6
 const NUM_ROWS = 6
 
 function connectivityColor(score: number) {
-  if (score >= 80) {return "#398f71"}
-  if (score >= 60) {return "#4ea586"}
-  if (score >= 40) {return "#66bba1"}
-  if (score >= 30) {return "#81d2bb"}
-  if (score >= 20) {return "#a1e7d5"}
+  if (score >= 80) {
+    return "#398f71"
+  }
+  if (score >= 60) {
+    return "#4ea586"
+  }
+  if (score >= 40) {
+    return "#66bba1"
+  }
+  if (score >= 30) {
+    return "#81d2bb"
+  }
+  if (score >= 20) {
+    return "#a1e7d5"
+  }
   return "#c4f8ea"
 }
 
 function bajsBoostColor(boostPct: number) {
-  if (boostPct >= 40) {return "#d97706"}
-  if (boostPct >= 25) {return "#f59e0b"}
-  if (boostPct >= 10) {return "#fbbf24"}
-  if (boostPct > 0) {return "#fcd34d"}
+  if (boostPct >= 40) {
+    return "#d97706"
+  }
+  if (boostPct >= 25) {
+    return "#f59e0b"
+  }
+  if (boostPct >= 10) {
+    return "#fbbf24"
+  }
+  if (boostPct > 0) {
+    return "#fcd34d"
+  }
   return "#94a3b8"
 }
 
@@ -68,7 +184,11 @@ export function ZagrebBlockMap() {
   )
 }
 
-export function ZagrebBajsBlockMap({ districts }: { districts: ReadonlyArray<DistrictScore> }) {
+export function ZagrebBajsBlockMap({
+  districts,
+}: {
+  districts: ReadonlyArray<DistrictScore>
+}) {
   const byName = new Map(districts.map((d) => [d.name, d]))
   const cells = ZAGREB_DISTRICTS_GRID.map((g) => {
     const d = byName.get(g.name)
@@ -109,7 +229,7 @@ function ZagrebDistrictGrid({ cells }: { cells: Array<GridCell> }) {
   const byPos = new Map(cells.map((c) => [`${c.col},${c.row}`, c]))
 
   return (
-    <div className="flex w-full justify-center overflow-hidden sm:overflow-visible rounded-xl bg-[#fbfbf9] py-8">
+    <div className="flex w-full justify-center overflow-hidden rounded-xl bg-[#fbfbf9] py-8 sm:overflow-visible">
       <div
         className="grid gap-[3px]"
         style={{

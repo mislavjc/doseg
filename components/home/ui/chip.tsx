@@ -38,9 +38,7 @@ export function ModeChip({
       {isBikeMode(mode) ? (
         <BikeIcon className="text-white" />
       ) : (
-        <span className="font-mono text-label text-white">
-          {route ?? "·"}
-        </span>
+        <span className="font-mono text-label text-white">{route ?? "·"}</span>
       )}
     </span>
   )
@@ -71,11 +69,7 @@ export function DestSquare({ active = true }: { active?: boolean }) {
 }
 
 /** Flat editorial checkbox — layer toggles. `mixed` = some children on. */
-export function CheckSquare({
-  state,
-}: {
-  state: "on" | "off" | "mixed"
-}) {
+export function CheckSquare({ state }: { state: "on" | "off" | "mixed" }) {
   return (
     <span
       aria-hidden
@@ -93,7 +87,5 @@ export function CheckSquare({
 
 /** POI category dot — sidebar counts ↔ map markers share the palette. */
 export function PoiDot({ colorClass }: { colorClass: string }) {
-  return (
-    <span className={`size-[9px] shrink-0 rounded-full ${colorClass}`} />
-  )
+  return <span className={`size-[9px] shrink-0 rounded-full ${colorClass}`} />
 }

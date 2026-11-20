@@ -34,9 +34,7 @@ export function DropdownSection({
         divider ? "border-t border-hairline" : ""
       }`}
     >
-      <span className="font-mono text-label text-ink-faint">
-        {label}
-      </span>
+      <span className="font-mono text-label text-ink-faint">{label}</span>
     </div>
   )
 }

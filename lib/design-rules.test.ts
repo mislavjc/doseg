@@ -13,14 +13,18 @@ function sources(dir: string): Array<string> {
     .filter((p) => !skip.some((s) => p.startsWith(s)))
 }
 
-const files = ["app", "components", "lib", "hooks"].flatMap((dir) => sources(dir))
+const files = ["app", "components", "lib", "hooks"].flatMap((dir) =>
+  sources(dir)
+)
 
 function offenders(pattern: RegExp): Array<string> {
   return files.flatMap((file) =>
     readFileSync(join(root, file), "utf8")
       .split("\n")
       .flatMap((line, i) =>
-        [...line.matchAll(pattern)].map((m) => `${relative(root, join(root, file))}:${i + 1} ${m[0]}`)
+        [...line.matchAll(pattern)].map(
+          (m) => `${relative(root, join(root, file))}:${i + 1} ${m[0]}`
+        )
       )
   )
 }
@@ -32,12 +36,18 @@ describe("design rules (AGENTS.md)", () => {
 
   it("uses only text-head, text-body and text-label for font size", () => {
     expect(
-      offenders(/(?<![\w-])(?:[a-z0-9-]+:)*text-(?:\[\d+(?:\.\d+)?(?:px|rem|em)\]|xs|sm|base|lg|xl|[2-9]xl)(?![\w-])/gu)
+      offenders(
+        /(?<![\w-])(?:[a-z0-9-]+:)*text-(?:\[\d+(?:\.\d+)?(?:px|rem|em)\]|xs|sm|base|lg|xl|[2-9]xl)(?![\w-])/gu
+      )
     ).toEqual([])
   })
 
   it("has no all-caps or tracked-caps labels", () => {
-    expect(offenders(/(?<![\w-])(?:[a-z0-9-]+:)*(?:uppercase|tracking-(?:wide|wider|widest))(?![\w-])/gu)).toEqual([])
+    expect(
+      offenders(
+        /(?<![\w-])(?:[a-z0-9-]+:)*(?:uppercase|tracking-(?:wide|wider|widest))(?![\w-])/gu
+      )
+    ).toEqual([])
   })
 
   it("never hands map popups raw HTML", () => {

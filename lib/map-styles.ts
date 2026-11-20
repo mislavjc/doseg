@@ -14,10 +14,13 @@ export const KARTA_ZOOM = 12.4
  * as MapLibre's 512 px tiles at KARTA_ZOOM.
  */
 export const KARTA_PLACEHOLDER_ZOOM = 13
-export const KARTA_PLACEHOLDER_SCALE = 2 ** (KARTA_ZOOM + 1 - KARTA_PLACEHOLDER_ZOOM)
+export const KARTA_PLACEHOLDER_SCALE =
+  2 ** (KARTA_ZOOM + 1 - KARTA_PLACEHOLDER_ZOOM)
 
 /** Subtle tint behind vector tiles so the UI matches the light shell. */
 export function applyBasemapBackgroundTint(map: MapLibreMap) {
-  if (!map.getLayer("background")) {return}
+  if (!map.getLayer("background")) {
+    return
+  }
   map.setPaintProperty("background", "background-color", "#f1f5f9")
 }

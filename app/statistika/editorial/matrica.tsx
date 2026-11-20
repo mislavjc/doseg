@@ -37,7 +37,7 @@ function OriginPicker({
         onValueChange={(v) => onChange(String(v))}
         aria-label="Polazni kvart"
       >
-        <Select.Trigger className="inline-flex min-w-[160px] cursor-pointer items-center justify-between gap-3 border border-hairline-strong px-3 py-1.5 font-mono text-label text-ink outline-none transition-colors select-none hover:border-ink-faint focus-visible:ring-2 focus-visible:ring-zg-blue/40 data-[popup-open]:border-zg-blue">
+        <Select.Trigger className="inline-flex min-w-[160px] cursor-pointer items-center justify-between gap-3 border border-hairline-strong px-3 py-1.5 font-mono text-label text-ink transition-colors outline-none select-none hover:border-ink-faint focus-visible:ring-2 focus-visible:ring-zg-blue/40 data-[popup-open]:border-zg-blue">
           <Select.Value />
           <Select.Icon className="font-mono text-label text-ink-faint transition-transform duration-150 data-[popup-open]:rotate-180">
             ▾
@@ -49,7 +49,7 @@ function OriginPicker({
             sideOffset={5}
             alignItemWithTrigger={false}
           >
-            <Select.Popup className="max-h-[min(22rem,var(--available-height))] origin-(--transform-origin) overflow-auto overscroll-none border border-hairline-strong bg-white py-1 shadow-soft outline-none transition-[transform,opacity] data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
+            <Select.Popup className="max-h-[min(22rem,var(--available-height))] origin-(--transform-origin) overflow-auto overscroll-none border border-hairline-strong bg-white py-1 shadow-soft transition-[transform,opacity] outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
               {options.map((o) => (
                 <Select.Item
                   key={o}
@@ -107,7 +107,9 @@ function TravelList({
             onPointerEnter={() => setHover(t.name)}
             onPointerLeave={() => setHover(null)}
             className="flex items-center gap-3 px-3 py-1 transition-colors duration-150 ease-out-strong"
-            style={{ backgroundColor: active ? "var(--highlight)" : paint.fill(t.min) }}
+            style={{
+              backgroundColor: active ? "var(--highlight)" : paint.fill(t.min),
+            }}
           >
             <span
               className="w-5 shrink-0 font-mono text-label tabular-nums opacity-60"
@@ -115,10 +117,16 @@ function TravelList({
             >
               {String(i + 1).padStart(2, "0")}
             </span>
-            <span className="grow font-mono text-label leading-4" style={{ color }}>
+            <span
+              className="grow font-mono text-label leading-4"
+              style={{ color }}
+            >
               {t.name}
             </span>
-            <span className="font-mono text-label tabular-nums" style={{ color }}>
+            <span
+              className="font-mono text-label tabular-nums"
+              style={{ color }}
+            >
               {t.min}
             </span>
           </div>

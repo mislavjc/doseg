@@ -13,13 +13,13 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { mercatorX, mercatorY } from '../lib/geo';
-import type { Ring } from '../lib/geo';
+import { mercatorX, mercatorY } from "../lib/geo"
+import type { Ring } from "../lib/geo"
 import { kvartSlug } from "../lib/kvart-slug"
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import { createDitherCropper } from './lib/dither-crop';
-import type { HeroMeta } from './lib/dither-crop';
+import { createDitherCropper } from "./lib/dither-crop"
+import type { HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 // Slim band, zoomed out so the district sits clear of the nav with margin.
@@ -47,25 +47,53 @@ function bboxOf(coords: Array<Ring>): Array<number> {
     e = -Infinity,
     n = -Infinity
   for (const [lon, lat] of coords[0]) {
-    if (lon < w) {w = lon}
-    if (lon > e) {e = lon}
-    if (lat < s) {s = lat}
-    if (lat > n) {n = lat}
+    if (lon < w) {
+      w = lon
+    }
+    if (lon > e) {
+      e = lon
+    }
+    if (lat < s) {
+      s = lat
+    }
+    if (lat > n) {
+      n = lat
+    }
   }
   return [w, s, e, n]
 }
 
-async function buildHero(slug: string, bbox: Array<number>, prev?: HeroMeta): Promise<HeroMeta> {
+async function buildHero(
+  slug: string,
+  bbox: Array<number>,
+  prev?: HeroMeta
+): Promise<HeroMeta> {
   // Mobile band height follows the district's mercator aspect, clamped (worldPx
   // cancels in the ratio, so the normalized mercator projections suffice).
   const [w, s, e, n] = bbox
   const aspect =
     (mercatorY(s) - mercatorY(n)) / Math.max(mercatorX(e) - mercatorX(w), 1e-9)
-  const mobileH = Math.round(Math.min(Math.max(MOBILE_W * aspect, MOBILE_H_MIN), MOBILE_H_MAX))
+  const mobileH = Math.round(
+    Math.min(Math.max(MOBILE_W * aspect, MOBILE_H_MIN), MOBILE_H_MAX)
+  )
   const d = DESKTOP_CROP
   const [desktop, mobile] = await Promise.all([
-    cropper.buildCrop(join(outDir, `hero-${slug}.png`), bbox, d.outW, d.outH, d.pad, prev?.desktop),
-    cropper.buildCrop(join(outDir, `hero-${slug}-m.png`), bbox, MOBILE_W, mobileH, MOBILE_PAD, prev?.mobile),
+    cropper.buildCrop(
+      join(outDir, `hero-${slug}.png`),
+      bbox,
+      d.outW,
+      d.outH,
+      d.pad,
+      prev?.desktop
+    ),
+    cropper.buildCrop(
+      join(outDir, `hero-${slug}-m.png`),
+      bbox,
+      MOBILE_W,
+      mobileH,
+      MOBILE_PAD,
+      prev?.mobile
+    ),
   ])
   return { desktop, mobile }
 }
@@ -74,10 +102,16 @@ async function main() {
   mkdirSync(outDir, { recursive: true })
   mkdirSync(dataDir, { recursive: true })
   const geo = readJson<{
-    features: Array<{ properties: { name: string }; geometry: { coordinates: Array<Ring> } }>
+    features: Array<{
+      properties: { name: string }
+      geometry: { coordinates: Array<Ring> }
+    }>
   }>(join(root, "data/districts.geojson"))
   const districts = geo.features
-    .map((f) => ({ slug: kvartSlug(f.properties.name), bbox: bboxOf(f.geometry.coordinates) }))
+    .map((f) => ({
+      slug: kvartSlug(f.properties.name),
+      bbox: bboxOf(f.geometry.coordinates),
+    }))
     .filter((d) => !onlyKvart || d.slug === onlyKvart)
 
   const metaPath = join(dataDir, "hero-meta.json")

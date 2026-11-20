@@ -19,7 +19,7 @@ function DumbbellRow({ row, top }: { row: EveningRow; top: boolean }) {
     <div className="flex h-[23px] items-center gap-3">
       <span
         className={cn(
-          "w-[128px] shrink-0 whitespace-nowrap text-right font-mono text-label",
+          "w-[128px] shrink-0 text-right font-mono text-label whitespace-nowrap",
           top ? "text-ink" : "text-ink-muted"
         )}
       >
@@ -56,9 +56,7 @@ function LegendDot({ cls, label }: { cls: string; label: string }) {
   return (
     <span className="flex items-center gap-1.5">
       <span className={cn("size-[9px] rounded-full", cls)} />
-      <span className="font-mono text-label text-ink-muted">
-        {label}
-      </span>
+      <span className="font-mono text-label text-ink-muted">{label}</span>
     </span>
   )
 }

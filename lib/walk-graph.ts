@@ -28,7 +28,11 @@ const GRID_CELL_SIZE = 0.002
 
 const cached = new Map<string, WalkingGraph>()
 
-function readGraphBuffer(path: string, label: string, buildCommand: string): Buffer {
+function readGraphBuffer(
+  path: string,
+  label: string,
+  buildCommand: string
+): Buffer {
   try {
     return readFileSync(path)
   } catch {
@@ -90,7 +94,9 @@ function loadGraph(
   buildCommand: string
 ): WalkingGraph {
   const existing = cached.get(path)
-  if (existing) {return existing}
+  if (existing) {
+    return existing
+  }
 
   const buf = readGraphBuffer(path, label, buildCommand)
   const arrays = parseGraphArrays(buf)

@@ -16,8 +16,14 @@ import { scoreColor, scoreTextColor } from "@/lib/score-color"
 
 // Heavy and client-only; the list carries the section until three.js lands.
 const TerrainView = dynamic(
-  () => import("@/app/statistika/editorial/terrain-view").then((m) => m.TerrainView),
-  { ssr: false, loading: () => <div className="w-full [aspect-ratio:1300/980]" /> }
+  () =>
+    import("@/app/statistika/editorial/terrain-view").then(
+      (m) => m.TerrainView
+    ),
+  {
+    ssr: false,
+    loading: () => <div className="[aspect-ratio:1300/980] w-full" />,
+  }
 )
 
 const RIDES = new Intl.NumberFormat("hr-HR", { maximumFractionDigits: 0 })
@@ -78,9 +84,12 @@ function Summary({ kvartovi }: { kvartovi: Array<KvartRides> }) {
   return (
     <dl className="flex flex-col gap-1.5">
       {rows.map(([k, v]) => (
-        <div key={k} className="flex justify-between border-t border-hairline pt-1.5">
+        <div
+          key={k}
+          className="flex justify-between border-t border-hairline pt-1.5"
+        >
           <dt className="font-mono text-label text-ink-faint">{k}</dt>
-          <dd className="font-mono text-label tabular-nums text-ink">{v}</dd>
+          <dd className="font-mono text-label text-ink tabular-nums">{v}</dd>
         </div>
       ))}
     </dl>
@@ -100,7 +109,9 @@ export function KvartTerrain({
   return (
     <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
       <div className="flex flex-col gap-4 md:w-[400px] md:shrink-0">
-        <MountWhenNear fallback={<div className="w-full [aspect-ratio:1300/980]" />}>
+        <MountWhenNear
+          fallback={<div className="[aspect-ratio:1300/980] w-full" />}
+        >
           <TerrainView
             hovered={hovered}
             onHover={setHovered}

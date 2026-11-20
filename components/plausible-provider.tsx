@@ -7,7 +7,9 @@ let initialized = false
 
 export function PlausibleProvider() {
   useEffect(() => {
-    if (initialized) {return}
+    if (initialized) {
+      return
+    }
     initialized = true
     void import("@plausible-analytics/tracker").then(({ init }) => {
       init({ domain: SITE_DOMAIN })

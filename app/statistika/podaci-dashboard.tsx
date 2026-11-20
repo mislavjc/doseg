@@ -11,10 +11,7 @@ import AccessibilityProfileSection from "./accessibility-profile-section"
 import { loadScores, loadAllData, sortRoutesByName } from "./stat-data"
 import type { ScoreData, AllData } from "./stat-data"
 import { Shell, BackLink, SectionGroup } from "./stat-shared"
-import {
-  StatMuted,
-  StatPageTitle,
-} from "./stat-typography"
+import { StatMuted, StatPageTitle } from "./stat-typography"
 import {
   StatHero,
   HeadlineInsights,
@@ -46,10 +43,7 @@ import {
   TransferDependencySection,
   CentralitySection,
 } from "./route-matrix-centrality-sections"
-import {
-  DistrictBandsSection,
-  MethodologySection,
-} from "./district-sections"
+import { DistrictBandsSection, MethodologySection } from "./district-sections"
 
 /**
  * The legacy deep-dive dashboard (network, route stats, centrality, BAJS, travel
@@ -101,7 +95,7 @@ function StatistikaContent({ data }: { data: ScoreData }) {
   return (
     <Shell>
       <StatSectionTabs />
-      <div className="mx-auto w-full max-w-[min(100%,56rem)] px-3 pb-16 sm:px-6 pt-4 sm:pt-6">
+      <div className="mx-auto w-full max-w-[min(100%,56rem)] px-3 pt-4 pb-16 sm:px-6 sm:pt-6">
         <main
           id="main-content"
           className="min-w-0 overflow-x-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_-4px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] sm:rounded-3xl"

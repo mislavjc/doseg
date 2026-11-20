@@ -1,8 +1,8 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useEffect, useState } from 'react';
-import type { ComponentProps } from 'react';
+import { useEffect, useState } from "react"
+import type { ComponentProps } from "react"
 
 import type BajsHeroMapImpl from "./hero-map"
 

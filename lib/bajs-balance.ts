@@ -35,7 +35,9 @@ export async function loadBajsBalance(
   ranking: BajsRanking | null,
   limit = 5
 ): Promise<BajsBalance | null> {
-  if (!ranking) {return null}
+  if (!ranking) {
+    return null
+  }
 
   let live
   try {
@@ -76,7 +78,9 @@ export async function loadBajsBalance(
       }
     })
 
-  if (over.length === 0 && empty.length === 0) {return null}
+  if (over.length === 0 && empty.length === 0) {
+    return null
+  }
 
   return {
     surplus: over.slice(0, limit),

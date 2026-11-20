@@ -71,7 +71,9 @@ export function pointInMultiPolygon(
   coordinates: Array<Array<Ring>>
 ): boolean {
   for (const polygon of coordinates) {
-    if (!pointInRing(lon, lat, polygon[0])) {continue}
+    if (!pointInRing(lon, lat, polygon[0])) {
+      continue
+    }
     let inHole = false
     for (let r = 1; r < polygon.length; r++) {
       if (pointInRing(lon, lat, polygon[r])) {
@@ -79,7 +81,9 @@ export function pointInMultiPolygon(
         break
       }
     }
-    if (!inHole) {return true}
+    if (!inHole) {
+      return true
+    }
   }
   return false
 }
@@ -88,7 +92,10 @@ export function pointInMultiPolygon(
 function ringAreaKm2(ring: Ring): number {
   let sum = 0
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    sum += (ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1]) * KM_PER_DEG_LON * KM_PER_DEG_LAT
+    sum +=
+      (ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1]) *
+      KM_PER_DEG_LON *
+      KM_PER_DEG_LAT
   }
   return Math.abs(sum) / 2
 }

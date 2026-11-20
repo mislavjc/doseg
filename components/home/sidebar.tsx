@@ -1,9 +1,16 @@
 "use client"
 
-import { ErrorContent, GeoButton, LjestvicaBlock, LoadingContent, ReachContent, RouteContent } from './panel-content';
-import type { PanelContentProps } from './panel-content';
-import { SearchFields } from './search-fields';
-import type { SearchFieldsProps } from './search-fields';
+import {
+  ErrorContent,
+  GeoButton,
+  LjestvicaBlock,
+  LoadingContent,
+  ReachContent,
+  RouteContent,
+} from "./panel-content"
+import type { PanelContentProps } from "./panel-content"
+import { SearchFields } from "./search-fields"
+import type { SearchFieldsProps } from "./search-fields"
 import { ReachIllustration, RouteIllustration } from "./step-illustrations"
 import { BlueAction, Eyebrow, NumberedStep } from "./ui"
 
@@ -95,7 +102,11 @@ export function Sidebar({
         )}
 
         {isRoute ? (
-          <BlueAction onClick={onBackToReach} back className="mt-auto shrink-0 self-start">
+          <BlueAction
+            onClick={onBackToReach}
+            back
+            className="mt-auto shrink-0 self-start"
+          >
             Natrag na doseg
           </BlueAction>
         ) : (

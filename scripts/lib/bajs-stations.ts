@@ -11,6 +11,8 @@ export async function fetchStations(): Promise<Array<Station>> {
     await fetch(STATION_INFORMATION_URL)
   )
   const stations = feed.data.stations.filter((s) => !s.is_virtual_station)
-  if (stations.length === 0) {throw new Error("GBFS returned no stations")}
+  if (stations.length === 0) {
+    throw new Error("GBFS returned no stations")
+  }
   return stations
 }

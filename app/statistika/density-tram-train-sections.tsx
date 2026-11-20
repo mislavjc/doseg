@@ -1,8 +1,15 @@
 import { scaleLinear, scaleSqrt } from "@visx/scale"
 import { Group } from "@visx/group"
 import { GridRows } from "@visx/grid"
-import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
-import type { computeScatterData, computeFrequencyInsights, DensityDatum } from "./stat-data"
+import type {
+  District as DistrictScore,
+  DistrictScoresOutput as ScoreData,
+} from "@/lib/generated"
+import type {
+  computeScatterData,
+  computeFrequencyInsights,
+  DensityDatum,
+} from "./stat-data"
 import { fmtHR } from "@/lib/format"
 import { SectionIcon } from "./stat-shared"
 import { CollapsibleContent } from "./stat-expandable"
@@ -12,11 +19,7 @@ import { plural } from "@/app/linije/copy"
 type ScatterData = ReturnType<typeof computeScatterData>
 type FreqInsights = ReturnType<typeof computeFrequencyInsights>
 
-export function DensityScatterSection({
-  scatter,
-}: {
-  scatter: ScatterData
-}) {
+export function DensityScatterSection({ scatter }: { scatter: ScatterData }) {
   const scatterMargin = { top: 20, right: 16, bottom: 50, left: 40 }
   const scatterW = 400
   const scatterH = 320
@@ -46,7 +49,10 @@ export function DensityScatterSection({
       className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
     >
       <DensitySectionHeader />
-      <CollapsibleContent expandLabel="Prikaži gustoću i povezanost" collapseLabel="Suzi prikaz">
+      <CollapsibleContent
+        expandLabel="Prikaži gustoću i povezanost"
+        collapseLabel="Suzi prikaz"
+      >
         <div className="mt-12 flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
           <div className="w-full shrink-0 lg:w-[400px]">
             <ScatterPlot
@@ -416,11 +422,7 @@ function ScatterAccessibilityTable({
   )
 }
 
-function DensityInterpretation({
-  scatter,
-}: {
-  scatter: ScatterData
-}) {
+function DensityInterpretation({ scatter }: { scatter: ScatterData }) {
   return (
     <div className="flex flex-col rounded-2xl bg-violet-50/50 p-6 dark:bg-violet-950/10">
       <SectionIcon icon="venn" color="violet" title="Što graf otkriva?" />
@@ -436,11 +438,7 @@ function DensityInterpretation({
   )
 }
 
-function DensitySesveteInsight({
-  scatter,
-}: {
-  scatter: ScatterData
-}) {
+function DensitySesveteInsight({ scatter }: { scatter: ScatterData }) {
   return (
     <p>
       <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -459,11 +457,7 @@ function DensitySesveteInsight({
   )
 }
 
-function DensityDonjiGradInsight({
-  scatter,
-}: {
-  scatter: ScatterData
-}) {
+function DensityDonjiGradInsight({ scatter }: { scatter: ScatterData }) {
   return (
     <p>
       <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -486,12 +480,10 @@ function DensityDonjiGradInsight({
   )
 }
 
-export function TramSection({
-  freq,
-}: {
-  freq: FreqInsights
-}) {
-  if (freq.tramlessDistricts.length === 0) {return null}
+export function TramSection({ freq }: { freq: FreqInsights }) {
+  if (freq.tramlessDistricts.length === 0) {
+    return null
+  }
   return (
     <section
       id="tramvaj"
@@ -505,8 +497,8 @@ export function TramSection({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {freq.bestTramless}
             </strong>
-            . Broj tramvajskih linija je najjači prediktor rezultata - kvartovi s
-            više od 10 linija prosječno imaju rezultat{" "}
+            . Broj tramvajskih linija je najjači prediktor rezultata - kvartovi
+            s više od 10 linija prosječno imaju rezultat{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {freq.avgScoreWithManyTramLines}
             </strong>
@@ -516,7 +508,9 @@ export function TramSection({
       </div>
       <div>
         <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
-          {freq.tramlessDistricts.length} {plural(freq.tramlessDistricts.length, "kvart", "kvarta", "kvartova")} bez tramvaja
+          {freq.tramlessDistricts.length}{" "}
+          {plural(freq.tramlessDistricts.length, "kvart", "kvarta", "kvartova")}{" "}
+          bez tramvaja
         </div>
         <TramlessScores districts={freq.tramlessDistricts} />
       </div>
@@ -542,11 +536,11 @@ function TramlessScores({ districts }: { districts: Array<DistrictScore> }) {
 }
 
 export function HzTrainSection({ data }: { data: ScoreData }) {
-  const withTrains = data.districts.filter(
-    (d) => d.trainLines.length > 0
-  )
+  const withTrains = data.districts.filter((d) => d.trainLines.length > 0)
   const anyTrainBoost = withTrains.some((d) => d.trainBoostPct > 0)
-  if (withTrains.length === 0 || anyTrainBoost) {return null}
+  if (withTrains.length === 0 || anyTrainBoost) {
+    return null
+  }
   return (
     <section
       id="vlak"
@@ -656,17 +650,20 @@ function HzTrainBody({
         </div>
         <p className="text-body text-slate-600 dark:text-slate-300">
           Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji - a na
-          koridorima s više linija u istom smjeru i češće.
-          Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi
-          značajno proširio doseg perifernih kvartova poput Sesveta i Velike
-          Gorice.
+          koridorima s više linija u istom smjeru i češće. Kad bi HŽ vozio
+          svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi značajno
+          proširio doseg perifernih kvartova poput Sesveta i Velike Gorice.
         </p>
       </div>
     </div>
   )
 }
 
-function HzTrainDistrictList({ withTrains }: { withTrains: Array<DistrictScore> }) {
+function HzTrainDistrictList({
+  withTrains,
+}: {
+  withTrains: Array<DistrictScore>
+}) {
   const sorted = withTrains.toSorted((a, b) => b.score - a.score)
   const maxScore = sorted.length > 0 ? sorted[0].score : 1
   return (

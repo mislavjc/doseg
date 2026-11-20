@@ -16,8 +16,8 @@ import { join } from "node:path"
 
 import { responseJson } from "../lib/json"
 
-import { OSM_TAGS, ZAGREB_BBOX } from '../lib/overpass';
-import type { PoiPhoto, POICategory } from '../lib/overpass';
+import { OSM_TAGS, ZAGREB_BBOX } from "../lib/overpass"
+import type { PoiPhoto, POICategory } from "../lib/overpass"
 
 const CATEGORIES: Array<POICategory> = [
   "hospital",
@@ -50,13 +50,17 @@ async function fetchOsmWikidata(): Promise<Map<number, string>> {
     },
     body: `data=${encodeURIComponent(query)}`,
   })
-  if (!res.ok) {throw new Error(`Overpass ${res.status}`)}
+  if (!res.ok) {
+    throw new Error(`Overpass ${res.status}`)
+  }
   const json = await responseJson<{ elements: Array<OverpassEl> }>(res)
 
   const byOsm = new Map<number, string>()
   for (const el of json.elements) {
     const qid = el.tags?.wikidata
-    if (qid && /^Q\d+$/u.test(qid)) {byOsm.set(el.id, qid)}
+    if (qid && /^Q\d+$/u.test(qid)) {
+      byOsm.set(el.id, qid)
+    }
   }
   return byOsm
 }
@@ -69,17 +73,25 @@ async function fetchP18(qids: Array<string>): Promise<Map<string, string>> {
     const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${batch}&props=claims&format=json&origin=*`
     // oxlint-disable-next-line no-await-in-loop -- Wikidata batches go one at a time, as its API etiquette asks
     const res = await fetch(url, { headers: { "User-Agent": UA } })
-    if (!res.ok) {throw new Error(`Wikidata ${res.status}`)}
+    if (!res.ok) {
+      throw new Error(`Wikidata ${res.status}`)
+    }
     // oxlint-disable-next-line no-await-in-loop -- same request as above
     const data = await responseJson<{
       entities: Record<
         string,
-        { claims?: { P18?: Array<{ mainsnak?: { datavalue?: { value?: string } } }> } }
+        {
+          claims?: {
+            P18?: Array<{ mainsnak?: { datavalue?: { value?: string } } }>
+          }
+        }
       >
     }>(res)
     for (const [qid, ent] of Object.entries(data.entities)) {
       const file = ent.claims?.P18?.[0]?.mainsnak?.datavalue?.value
-      if (file) {out.set(qid, file)}
+      if (file) {
+        out.set(qid, file)
+      }
     }
   }
   return out
@@ -96,13 +108,17 @@ function plain(html: string): string {
     .trim()
   if (s.length % 2 === 0) {
     const half = s.slice(0, s.length / 2)
-    if (half === s.slice(s.length / 2)) {return half}
+    if (half === s.slice(s.length / 2)) {
+      return half
+    }
   }
   return s
 }
 
 /** Commons file title → "Author · License" credit line. */
-async function fetchCredits(files: Array<string>): Promise<Map<string, string>> {
+async function fetchCredits(
+  files: Array<string>
+): Promise<Map<string, string>> {
   const out = new Map<string, string>()
   for (let i = 0; i < files.length; i += 50) {
     const titles = files
@@ -115,7 +131,9 @@ async function fetchCredits(files: Array<string>): Promise<Map<string, string>> 
       encodeURIComponent(titles)
     // oxlint-disable-next-line no-await-in-loop -- Commons batches go one at a time, as its API etiquette asks
     const res = await fetch(url, { headers: { "User-Agent": UA } })
-    if (!res.ok) {throw new Error(`Commons ${res.status}`)}
+    if (!res.ok) {
+      throw new Error(`Commons ${res.status}`)
+    }
     // oxlint-disable-next-line no-await-in-loop -- same request as above
     const data = await responseJson<{
       query?: {
@@ -123,7 +141,9 @@ async function fetchCredits(files: Array<string>): Promise<Map<string, string>> 
           string,
           {
             title?: string
-            imageinfo?: Array<{ extmetadata?: Record<string, { value?: string }> }>
+            imageinfo?: Array<{
+              extmetadata?: Record<string, { value?: string }>
+            }>
           }
         >
       }
@@ -131,10 +151,14 @@ async function fetchCredits(files: Array<string>): Promise<Map<string, string>> 
     for (const page of Object.values(data.query?.pages ?? {})) {
       const file = page.title?.replace(/^File:/u, "")
       const meta = page.imageinfo?.[0]?.extmetadata
-      if (!file) {continue}
+      if (!file) {
+        continue
+      }
       let author = meta?.Artist?.value ? plain(meta.Artist.value) : null
       // PD placeholder
-      if (author && /^unknown/iu.test(author)) {author = null}
+      if (author && /^unknown/iu.test(author)) {
+        author = null
+      }
       const license = meta?.LicenseShortName?.value
         ? plain(meta.LicenseShortName.value)
         : null
@@ -161,8 +185,10 @@ async function main() {
   const map: Record<string, PoiPhoto> = {}
   for (const [osmId, qid] of osmToQid) {
     const file = qidToFile.get(qid)
-    if (!file) {continue}
-    const encoded = encodeURIComponent(file.replaceAll(' ', "_"))
+    if (!file) {
+      continue
+    }
+    const encoded = encodeURIComponent(file.replaceAll(" ", "_"))
     map[String(osmId)] = {
       thumb: `https://commons.wikimedia.org/wiki/Special:FilePath/${encoded}?width=${THUMB_WIDTH}`,
       page: `https://commons.wikimedia.org/wiki/File:${encoded}`,

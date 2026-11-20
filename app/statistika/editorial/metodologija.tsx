@@ -1,4 +1,12 @@
-import { Body, BodyMuted, Chip, Eyebrow, Hook, MonoLabel, Section } from "./primitives"
+import {
+  Body,
+  BodyMuted,
+  Chip,
+  Eyebrow,
+  Hook,
+  MonoLabel,
+  Section,
+} from "./primitives"
 
 /**
  * Metodologija (Paper node FTP-0) — how the score is computed, the parameter
@@ -42,7 +50,9 @@ export function Metodologija({
           <MonoLabel>uz oprez</MonoLabel>
           {caveats.map((c) => (
             <div key={c} className="flex items-baseline gap-2.5">
-              <span className="shrink-0 font-mono text-label text-zg-blue">·</span>
+              <span className="shrink-0 font-mono text-label text-zg-blue">
+                ·
+              </span>
               <BodyMuted>{c}</BodyMuted>
             </div>
           ))}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
-import { adresaSlug, centroid, loadAdrese } from '@/lib/adresa';
-import type { AdresaStreet, ResolvedAdresa } from '@/lib/adresa';
+import { adresaSlug, centroid, loadAdrese } from "@/lib/adresa"
+import type { AdresaStreet, ResolvedAdresa } from "@/lib/adresa"
 import { districtAt } from "@/lib/district-at"
 import { norm } from "@/lib/normalize"
 
@@ -23,7 +23,9 @@ interface IndexedStreet extends AdresaStreet {
 
 let indexed: Array<IndexedStreet> | null = null
 function loadIndex(): Array<IndexedStreet> {
-  if (indexed && process.env.NODE_ENV === "production") {return indexed}
+  if (indexed && process.env.NODE_ENV === "production") {
+    return indexed
+  }
   // oxlint-disable-next-line oxc/no-map-spread -- loadAdrese() objects are the shared page-data cache; mutating them would leak index fields into adresa pages
   indexed = loadAdrese().map((s) => {
     const nameNorm = norm(s.name)
@@ -37,10 +39,16 @@ function loadIndex(): Array<IndexedStreet> {
  *  "krizanica" (Ulica Jurja Križanića). 7 shared leading chars is long enough
  *  to avoid false friends like "kriza" ⊂ "krizaniceva". */
 function wordMatch(t: string, w: string): boolean {
-  if (w.startsWith(t)) {return true}
-  if (t.length < 7 || w.length < 7) {return false}
+  if (w.startsWith(t)) {
+    return true
+  }
+  if (t.length < 7 || w.length < 7) {
+    return false
+  }
   let i = 0
-  while (i < t.length && i < w.length && t[i] === w[i]) {i++}
+  while (i < t.length && i < w.length && t[i] === w[i]) {
+    i++
+  }
   return i >= 7
 }
 
@@ -52,8 +60,12 @@ function matchesStreet(street: IndexedStreet, tokens: Array<string>): boolean {
 /** Rank: whole-name prefix beats first-word prefix beats the rest; ties by
  *  name length so "Ilica" outranks "Ilički odvojak" and similar. */
 function rank(street: IndexedStreet, joined: string): number {
-  if (street.nameNorm.startsWith(joined)) {return 0}
-  if (street.words[0]?.startsWith(joined.split(" ")[0] ?? "")) {return 1}
+  if (street.nameNorm.startsWith(joined)) {
+    return 0
+  }
+  if (street.words[0]?.startsWith(joined.split(" ")[0] ?? "")) {
+    return 1
+  }
   return 2
 }
 
@@ -85,8 +97,9 @@ export function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const raw = searchParams.get("q")?.trim() ?? ""
   const q = norm(raw)
-  if (q.length < 3)
-    {return NextResponse.json({ hits: [] as Array<AdresaHit> })}
+  if (q.length < 3) {
+    return NextResponse.json({ hits: [] as Array<AdresaHit> })
+  }
 
   // Trailing house number ("savska 25", "ilica 5a") splits off; a digits-only
   // query is a line lookup, not an address — the client never sends one.
@@ -94,24 +107,32 @@ export function GET(request: Request) {
   const last = tokens.at(-1)
   const houseNum = /^\d+[a-z]?$/u.test(last ?? "") ? last : null
   const streetTokens = houseNum ? tokens.slice(0, -1) : tokens
-  if (streetTokens.length === 0)
-    {return NextResponse.json({ hits: [] as Array<AdresaHit> })}
+  if (streetTokens.length === 0) {
+    return NextResponse.json({ hits: [] as Array<AdresaHit> })
+  }
 
   const joined = streetTokens.join(" ")
   const matched = loadIndex()
     .filter((s) => matchesStreet(s, streetTokens))
-    .toSorted((a, b) => rank(a, joined) - rank(b, joined) || a.name.length - b.name.length)
+    .toSorted(
+      (a, b) =>
+        rank(a, joined) - rank(b, joined) || a.name.length - b.name.length
+    )
 
   const hits: Array<AdresaHit> = []
   for (const street of matched) {
-    if (hits.length >= MAX_HITS) {break}
+    if (hits.length >= MAX_HITS) {
+      break
+    }
     if (houseNum) {
       // Exact number first, then prefix matches (2 → 2, 2a, 21…).
       const nums = street.addrs
         .filter(([hn]) => hn.startsWith(houseNum))
         .toSorted(([a], [b]) => (a === houseNum ? -1 : b === houseNum ? 1 : 0))
       for (const [hn, lat, lon] of nums) {
-        if (hits.length >= MAX_HITS) {break}
+        if (hits.length >= MAX_HITS) {
+          break
+        }
         hits.push({
           label: `${street.name} ${hn}`,
           slug: adresaSlug(street, hn),
@@ -130,7 +151,9 @@ export function GET(request: Request) {
   // has no 40): dead air is worse than the street itself, so fall back to
   // ulica rows for the top matches.
   if (hits.length === 0 && houseNum) {
-    for (const street of matched.slice(0, MAX_HITS)) {hits.push(streetHit(street))}
+    for (const street of matched.slice(0, MAX_HITS)) {
+      hits.push(streetHit(street))
+    }
   }
 
   return NextResponse.json(

@@ -114,18 +114,7 @@ function bestDiff(
   return { res, bestSpan }
 }
 
-async function main() {
-  const dataDir = join(process.cwd(), "data", "promjene")
-  // Include shapeless feeds too — genDiff/genOneSided fall back to stop-connected
-  // drawing when a feed ships no shapes.txt (ZET feeds before ~2024-10).
-  const registry = readJson<Array<Reg>>(REGISTRY).toSorted((a, b) =>
-    a.validFrom.localeCompare(b.validFrom)
-  )
-  const last = registry.at(-1)
-  if (!last) {
-    throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")
-  }
-
+function buildSpecs(dataDir: string): Array<Spec> {
   // Build the change list: curated entries (always mapped) + scraped line-changes.
   const { entries } = readJson<{ entries: Array<Entry> }>(
     join(dataDir, "entries.json")
@@ -161,7 +150,40 @@ async function main() {
         ]
       : []
   )
-  const specs = [...curated, ...auto]
+  return [...curated, ...auto]
+}
+
+function isWorthMap(s: Spec, res: Result, bestSpan: number): boolean {
+  // auto weak/no-diff → stays a text row
+  if (!s.curated && !visibleDiff(res.stat)) {
+    return false
+  }
+  // A wide bracket accumulates unrelated drift, so a MIXED add+remove diff over
+  // one is unreliable (the genuine reroute is muddied by months of other edits).
+  // A monotonic change (pure extension / pure truncation) survives — the old
+  // route is still a clean sub/superset of the new one. Curated entries trusted.
+  return !(
+    !s.curated &&
+    bestSpan > 150 * 86_400_000 &&
+    res.stat.mode === "diff" &&
+    res.stat.added > 0 &&
+    res.stat.removed > 0
+  )
+}
+
+async function main() {
+  const dataDir = join(process.cwd(), "data", "promjene")
+  // Include shapeless feeds too — genDiff/genOneSided fall back to stop-connected
+  // drawing when a feed ships no shapes.txt (ZET feeds before ~2024-10).
+  const registry = readJson<Array<Reg>>(REGISTRY).toSorted((a, b) =>
+    a.validFrom.localeCompare(b.validFrom)
+  )
+  const last = registry.at(-1)
+  if (!last) {
+    throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")
+  }
+
+  const specs = buildSpecs(dataDir)
 
   // Load every feed (for the union of changed lines), then bracket each change by
   // LINE PRESENCE, not just the announcement date: a removed line is drawn from the
@@ -220,26 +242,7 @@ async function main() {
           res = genOneSided(line, "new", get(firstWith, line))
         }
       }
-      if (!res) {
-        skipped++
-        continue
-      }
-      // auto weak/no-diff → stays a text row
-      if (!s.curated && !visibleDiff(res.stat)) {
-        skipped++
-        continue
-      }
-      // A wide bracket accumulates unrelated drift, so a MIXED add+remove diff over
-      // one is unreliable (the genuine reroute is muddied by months of other edits).
-      // A monotonic change (pure extension / pure truncation) survives — the old
-      // route is still a clean sub/superset of the new one. Curated entries trusted.
-      if (
-        !s.curated &&
-        bestSpan > 150 * 86_400_000 &&
-        res.stat.mode === "diff" &&
-        res.stat.added > 0 &&
-        res.stat.removed > 0
-      ) {
+      if (!res || !isWorthMap(s, res, bestSpan)) {
         skipped++
         continue
       }

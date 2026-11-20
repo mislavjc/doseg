@@ -8,7 +8,9 @@ import { secondsOfDay } from "@/lib/zagreb-time"
 function parseDepartureTime(timeStr: string | null): number {
   if (timeStr) {
     const [h, m] = timeStr.split(":").map(Number)
-    if (!Number.isNaN(h) && !Number.isNaN(m)) {return h * 3600 + m * 60}
+    if (!Number.isNaN(h) && !Number.isNaN(m)) {
+      return h * 3600 + m * 60
+    }
   }
   return secondsOfDay()
 }

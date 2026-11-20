@@ -67,11 +67,14 @@ function GaugeRow({
       </span>
       <div className="flex min-w-0 flex-1 items-center gap-[7px]">
         <span className={cn("size-[7px] shrink-0 rounded-[2px]", bar)} />
-        <span className={cn("h-0.5 shrink-0", bar)} style={{ width: `${pct}%` }} />
+        <span
+          className={cn("h-0.5 shrink-0", bar)}
+          style={{ width: `${pct}%` }}
+        />
         <span className={cn("h-[11px] w-[3px] shrink-0", bar)} />
         <span
           className={cn(
-            "shrink-0 whitespace-nowrap pl-[3px] font-mono text-label tabular-nums",
+            "shrink-0 pl-[3px] font-mono text-label whitespace-nowrap tabular-nums",
             accent === "blue" ? "text-ink" : "text-ink-muted"
           )}
         >
@@ -95,7 +98,9 @@ export function StopGauges({
   stops: Array<NearbyStop>
   cityAvgM: number | null
 }) {
-  if (stops.length === 0) {return null}
+  if (stops.length === 0) {
+    return null
+  }
   const maxM = Math.max(...stops.map((s) => s.distM), cityAvgM ?? 0)
   return (
     <div className="flex flex-col gap-4">
@@ -123,7 +128,9 @@ export function StopGauges({
 
 /** Nearest Bajs stations in the stop-gauge grammar; bike counts are live. */
 export function BajsGauges({ stations }: { stations: Array<NearestBajs> }) {
-  if (stations.length === 0) {return null}
+  if (stations.length === 0) {
+    return null
+  }
   const maxM = Math.max(...stations.map((s) => s.distM))
   return (
     <div className="flex flex-col gap-4">
@@ -177,7 +184,9 @@ export function LineTable({
 }
 
 export function NearbyLines({ lines }: { lines: Array<NearbyLine> }) {
-  if (lines.length === 0) {return null}
+  if (lines.length === 0) {
+    return null
+  }
   const day = lines.filter((l) => !l.isNight)
   const night = lines.filter((l) => l.isNight)
   const shown = day.slice(0, BADGE_CAP)
@@ -190,10 +199,17 @@ export function NearbyLines({ lines }: { lines: Array<NearbyLine> }) {
       {day.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           {shown.map((l) => (
-            <LineBadge key={l.broj} broj={l.broj} mode={l.mode} href={`/linije/${l.broj}`} />
+            <LineBadge
+              key={l.broj}
+              broj={l.broj}
+              mode={l.mode}
+              href={`/linije/${l.broj}`}
+            />
           ))}
           {extra > 0 && (
-            <span className="font-mono text-label text-ink-muted">+{extra}</span>
+            <span className="font-mono text-label text-ink-muted">
+              +{extra}
+            </span>
           )}
         </div>
       )}
@@ -201,7 +217,12 @@ export function NearbyLines({ lines }: { lines: Array<NearbyLine> }) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-label text-ink-muted">noćne:</span>
           {night.map((l) => (
-            <LineBadge key={l.broj} broj={l.broj} mode={l.mode} href={`/linije/${l.broj}`} />
+            <LineBadge
+              key={l.broj}
+              broj={l.broj}
+              mode={l.mode}
+              href={`/linije/${l.broj}`}
+            />
           ))}
         </div>
       )}

@@ -1,5 +1,14 @@
-import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
-import type { computeDesertInsights, computeEveningInsights, computeBaseInsights, computeWeekendData, WeekendItem } from "./stat-data"
+import type {
+  District as DistrictScore,
+  DistrictScoresOutput as ScoreData,
+} from "@/lib/generated"
+import type {
+  computeDesertInsights,
+  computeEveningInsights,
+  computeBaseInsights,
+  computeWeekendData,
+  WeekendItem,
+} from "./stat-data"
 import { fmtHR } from "@/lib/format"
 import { pct } from "./stat-data"
 import { RankingList } from "./stat-shared"
@@ -24,7 +33,10 @@ export function TransitDesertSection({
       className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
     >
       <TransitDesertHeader />
-      <CollapsibleContent expandLabel="Prikaži prometne pustinje" collapseLabel="Suzi prometne pustinje">
+      <CollapsibleContent
+        expandLabel="Prikaži prometne pustinje"
+        collapseLabel="Suzi prometne pustinje"
+      >
         <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
           {desert.desertDistricts.length > 0 && (
             <div className="w-full shrink-0 lg:w-[400px]">
@@ -140,11 +152,7 @@ function DesertStatCards({
   )
 }
 
-function DesertInterpretationText({
-  desert,
-}: {
-  desert: DesertInsights
-}) {
+function DesertInterpretationText({ desert }: { desert: DesertInsights }) {
   return (
     <div className="space-y-6 text-body text-slate-700 dark:text-slate-300">
       <p>
@@ -181,12 +189,10 @@ function DesertInterpretationText({
   )
 }
 
-export function StopDistanceSection({
-  desert,
-}: {
-  desert: DesertInsights
-}) {
-  if (desert.stopDistSorted.length === 0) {return null}
+export function StopDistanceSection({ desert }: { desert: DesertInsights }) {
+  if (desert.stopDistSorted.length === 0) {
+    return null
+  }
   return (
     <section
       id="udaljenost-stajalista"
@@ -220,11 +226,7 @@ function StopDistanceHeader() {
   )
 }
 
-function StopDistanceChart({
-  desert,
-}: {
-  desert: DesertInsights
-}) {
+function StopDistanceChart({ desert }: { desert: DesertInsights }) {
   return (
     <div>
       <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
@@ -270,7 +272,7 @@ function StopDistanceBar({
       <span className="w-5 shrink-0 text-right font-mono text-label text-slate-400 dark:text-slate-500">
         {i + 1}
       </span>
-      <span className="w-20 sm:w-[7.5rem] shrink-0 truncate text-body text-slate-700 dark:text-slate-300">
+      <span className="w-20 shrink-0 truncate text-body text-slate-700 sm:w-[7.5rem] dark:text-slate-300">
         {d.name}
       </span>
       <div className="relative h-5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
@@ -318,11 +320,7 @@ function StopDistanceLegend() {
   )
 }
 
-function StopDistanceInterpretation({
-  desert,
-}: {
-  desert: DesertInsights
-}) {
+function StopDistanceInterpretation({ desert }: { desert: DesertInsights }) {
   const first = desert.stopDistSorted[0]
   const last = desert.stopDistSorted[desert.stopDistSorted.length - 1]
   return (
@@ -423,15 +421,19 @@ export function PeakOffPeakSection({
   base: BaseInsights
   evening: EveningInsights
 }) {
-  if (evening.eveningRankedByDrop.length === 0)
-    {return null}
+  if (evening.eveningRankedByDrop.length === 0) {
+    return null
+  }
   return (
     <section
       id="vrsni-sat"
       className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
     >
       <PeakOffPeakHeader departureTime={base.displayDepartureTime} />
-      <CollapsibleContent expandLabel="Prikaži jutro vs. večer" collapseLabel="Suzi jutro vs. večer">
+      <CollapsibleContent
+        expandLabel="Prikaži jutro vs. večer"
+        collapseLabel="Suzi jutro vs. večer"
+      >
         <div className="flex flex-col items-start gap-12 overflow-hidden lg:flex-row lg:gap-16">
           <div className="w-full shrink-0 lg:w-[400px]">
             <PeakOffPeakRanking data={data} evening={evening} />
@@ -503,11 +505,7 @@ function PeakOffPeakRanking({
   )
 }
 
-function PeakOffPeakInterpretation({
-  evening,
-}: {
-  evening: EveningInsights
-}) {
+function PeakOffPeakInterpretation({ evening }: { evening: EveningInsights }) {
   return (
     <div className="flex min-w-0 flex-col gap-8">
       <PeakOffPeakStatCards evening={evening} />
@@ -526,11 +524,7 @@ function PeakOffPeakInterpretation({
   )
 }
 
-function PeakOffPeakStatCards({
-  evening,
-}: {
-  evening: EveningInsights
-}) {
+function PeakOffPeakStatCards({ evening }: { evening: EveningInsights }) {
   return (
     <div className="flex min-w-0 flex-col gap-8 sm:flex-row">
       <div className="flex min-w-0 flex-col border-l-2 border-indigo-500 py-1 pl-4">
@@ -548,27 +542,28 @@ function PeakOffPeakStatCards({
         </div>
         <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           najgori pad
-          <br className="hidden sm:block" /> ({evening.eveningRankedByDrop[0]?.name ?? "-"})
+          <br className="hidden sm:block" /> (
+          {evening.eveningRankedByDrop[0]?.name ?? "-"})
         </div>
       </div>
     </div>
   )
 }
 
-export function WeekendSection({
-  weekend,
-}: {
-  weekend: WeekendData
-}) {
-  if (!weekend.weekendComparison || weekend.weekendComparison.length === 0)
-    {return null}
+export function WeekendSection({ weekend }: { weekend: WeekendData }) {
+  if (!weekend.weekendComparison || weekend.weekendComparison.length === 0) {
+    return null
+  }
   return (
     <section
       id="vikend"
       className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
     >
       <WeekendHeader cityWeekendChange={weekend.cityWeekendChange} />
-      <CollapsibleContent expandLabel="Prikaži vikend analizu" collapseLabel="Suzi vikend analizu">
+      <CollapsibleContent
+        expandLabel="Prikaži vikend analizu"
+        collapseLabel="Suzi vikend analizu"
+      >
         <div className="flex flex-col items-start gap-12">
           <div className="w-full">
             <WeekendBarChart weekend={weekend} />
@@ -598,12 +593,10 @@ function WeekendHeader({ cityWeekendChange }: { cityWeekendChange: number }) {
   )
 }
 
-function WeekendBarChart({
-  weekend,
-}: {
-  weekend: WeekendData
-}) {
-  if (!weekend.weekendComparison) {return null}
+function WeekendBarChart({ weekend }: { weekend: WeekendData }) {
+  if (!weekend.weekendComparison) {
+    return null
+  }
   return (
     <div>
       <div className="mb-4 flex items-baseline justify-between">
@@ -691,12 +684,10 @@ function WeekendBarRow({
   )
 }
 
-function WeekendInterpretation({
-  weekend,
-}: {
-  weekend: WeekendData
-}) {
-  if (!weekend.weekendComparison) {return null}
+function WeekendInterpretation({ weekend }: { weekend: WeekendData }) {
+  if (!weekend.weekendComparison) {
+    return null
+  }
   return (
     <div className="flex flex-col gap-8">
       <WeekendStatCards weekend={weekend} />
@@ -717,12 +708,10 @@ function WeekendInterpretation({
   )
 }
 
-function WeekendStatCards({
-  weekend,
-}: {
-  weekend: WeekendData
-}) {
-  if (!weekend.weekendComparison) {return null}
+function WeekendStatCards({ weekend }: { weekend: WeekendData }) {
+  if (!weekend.weekendComparison) {
+    return null
+  }
   return (
     <div className="flex flex-col gap-8 sm:flex-row">
       <div className="flex flex-col border-l-2 border-violet-500 py-1 pl-4">
@@ -742,7 +731,8 @@ function WeekendStatCards({
         </div>
         <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           najveća promjena
-          <br className="hidden sm:block" /> ({weekend.weekendComparison[0]?.name ?? "-"})
+          <br className="hidden sm:block" /> (
+          {weekend.weekendComparison[0]?.name ?? "-"})
         </div>
       </div>
     </div>

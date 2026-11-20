@@ -9,7 +9,7 @@
  *   - public/hero-zagreb-thumb.png (centre crop for the home karta banner)
  *   - data/home-hero.json        (crop bounds + simplified boundary ring)
  *
- * Tile/dither machinery is shared via scripts/lib/dither-crop.ts. Run:
+ * Dither machinery is shared via scripts/lib/dither-crop.ts. Run:
  *   bun scripts/build-home-hero.ts [--zoom 14] [--cutoff 80]
  */
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
@@ -56,7 +56,6 @@ const root = process.cwd()
 // crop that bakes fine.
 function makeCropper(oversampleZoom: number) {
   return createDitherCropper({
-    cacheDir: join(root, ".cache", "tiles", "dark_nolabels"),
     cutoff: Number(argValue("--cutoff") ?? 30),
     zoomOverride: argValue("--zoom") ? Number(argValue("--zoom")) : undefined,
     zoomMin: 9,

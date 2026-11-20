@@ -26,7 +26,6 @@ const PAD = 0.04
 
 const root = process.cwd()
 const outPng = join(root, "public", "bajs-hero.png")
-const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
 const cutoff = Number(argValue("--cutoff") ?? 80)
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
@@ -52,7 +51,6 @@ async function main() {
   // zoomMax 14: the whole service area is ~30 km across, so the fitting zoom is
   // low and the oversampling in the cropper is what keeps the fabric readable.
   const cropper = createDitherCropper({
-    cacheDir,
     cutoff,
     zoomOverride,
     zoomMin: 11,

@@ -1,25 +1,21 @@
 /**
- * Shared dithered-map crop machinery for the baked pSEO heroes (lines + stops).
+ * Shared dithered-map crop machinery for the baked heroes (lines, stops,
+ * kvartovi, home, bajs).
  *
- * Fetches CARTO dark_nolabels tiles around a lon/lat bbox and renders the
- * blue-on-white figure-ground: building footprints (gray < buildingGray in the
- * current CARTO style) become Zagreb blue, everything else white. Tiles are
- * fetched ~oversampleZoom levels above the fitting zoom and box-downscaled, so
- * the urban fabric keeps its texture. Tiles cache under cacheDir so re-runs and
- * overlapping crops are cheap.
- *
- * Used by scripts/build-line-heroes.ts (route bbox) and
- * scripts/build-stop-heroes.ts (junction window around a stop).
+ * Rasterises OSM building footprints (scripts/lib/osm-buildings.ts) around a
+ * lon/lat bbox into the blue-on-white figure-ground: buildings become Zagreb
+ * blue, everything else white. The mask is drawn ~oversampleZoom levels above
+ * the fitting zoom and box-downscaled, so the urban fabric keeps its texture.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync } from "node:fs"
 import { join } from "node:path"
-import { setTimeout as sleep } from "node:timers/promises"
 
 import sharp from "sharp"
 
 import { mercatorX, mercatorY } from "../../lib/geo"
 import { mapConcurrent } from "./concurrency"
+import { type Footprints, loadFootprints, rasterizeFootprints } from "./osm-buildings"
 
 const TILE_SIZE = 256
 
@@ -42,18 +38,13 @@ export interface HeroMeta {
 }
 
 export interface DitherCropperOptions {
-  /** Tile cache directory (e.g. .cache/tiles/dark_nolabels). */
-  cacheDir: string
-  tileUrl?: string
   /** Coverage cutoff 0–255: how much of a display pixel must be building to turn blue. */
   cutoff?: number
-  buildingGray?: number
   blue?: [number, number, number]
   zoomOverride?: number
   zoomMin?: number
   zoomMax?: number
   oversampleZoom?: number
-  fetchConcurrency?: number
 }
 
 type Cfg = Required<Omit<DitherCropperOptions, "zoomOverride">> & {
@@ -62,193 +53,33 @@ type Cfg = Required<Omit<DitherCropperOptions, "zoomOverride">> & {
 
 export const mercX = (lon: number, worldPx: number) => mercatorX(lon) * worldPx
 export const mercY = (lat: number, worldPx: number) => mercatorY(lat) * worldPx
-export const invMercX = (x: number, worldPx: number) =>
-  (x / worldPx) * 360 - 180
-export const invMercY = (y: number, worldPx: number) =>
+const invMercX = (x: number, worldPx: number) => (x / worldPx) * 360 - 180
+const invMercY = (y: number, worldPx: number) =>
   (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldPx))) * 180) / Math.PI
 
-/** Sharp's raw input only takes 1-4 channels; anything else is a corrupt decode. */
-export function rawChannels(n: number): 1 | 2 | 3 | 4 {
-  if (n === 1 || n === 2 || n === 3 || n === 4) {
-    return n
-  }
-  throw new Error(`unexpected raw channel count ${n}`)
+let footprints: Promise<Footprints> | undefined
+
+/** Building mask for a native crop rect at the given zoom (1 = building). */
+async function buildingMask(zoom: number, x0: number, y0: number, natW: number, natH: number) {
+  footprints ??= loadFootprints()
+  return rasterizeFootprints(await footprints, TILE_SIZE * 2 ** zoom, x0, y0, natW, natH)
 }
 
-/** How many of `len` pixels from `start` are darker than `threshold`. */
-export function countBelow(
-  data: Buffer,
-  start: number,
-  len: number,
-  threshold: number
-): number {
-  let n = 0
-  for (let i = start; i < start + len; i++) {
-    if (data[i] < threshold) {
-      n++
-    }
-  }
-  return n
-}
-
-/** One tile download, cached on success; null on HTTP or network failure. */
-async function tryFetchTile(
-  url: string,
-  dir: string,
-  cachePath: string
-): Promise<Buffer | null> {
-  try {
-    const res = await fetch(url)
-    if (!res.ok) {
-      return null
-    }
-    const buf = Buffer.from(await res.arrayBuffer())
-    mkdirSync(dir, { recursive: true })
-    writeFileSync(cachePath, buf)
-    return buf
-  } catch {
-    // network error — fall through to backoff/retry
-    return null
-  }
-}
-
-function whiteTile(): Promise<Buffer> {
-  return sharp({
-    create: {
-      width: TILE_SIZE,
-      height: TILE_SIZE,
-      channels: 3,
-      background: "#fff",
-    },
-  })
-    .png()
-    .toBuffer()
-}
-
-async function fetchTile(
-  cfg: Cfg,
-  z: number,
-  x: number,
-  y: number
-): Promise<Buffer> {
-  const max = 2 ** z
-  if (x < 0 || y < 0 || x >= max || y >= max) {
-    return whiteTile()
-  }
-  const cachePath = join(cfg.cacheDir, String(z), String(x), `${y}.png`)
-  if (existsSync(cachePath)) {
-    return readFileSync(cachePath)
-  }
-  // Retry transient failures (CDN throttling on a big z17/z18 sweep), then fall
-  // back to a white tile so one bad tile can't abort the whole batch.
-  for (let attempt = 0; attempt < 4; attempt++) {
-    // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
-    const buf = await tryFetchTile(
-      `${cfg.tileUrl}/${z}/${x}/${y}.png`,
-      join(cfg.cacheDir, String(z), String(x)),
-      cachePath
-    )
-    if (buf) {
-      return buf
-    }
-    // oxlint-disable-next-line no-await-in-loop -- backoff between retries
-    await sleep(250 * (attempt + 1))
-  }
-  console.error(`tile ${z}/${x}/${y}: gave up after retries, using white`)
-  return whiteTile()
-}
-
-/** Fetch + stitch tiles covering a native crop rect, return grayscale pixels. */
-async function stitchGrayCrop(
-  cfg: Cfg,
-  zoom: number,
-  x0: number,
-  y0: number,
-  natW: number,
-  natH: number
-): Promise<Buffer> {
-  const tx0 = Math.floor(x0 / TILE_SIZE)
-  const ty0 = Math.floor(y0 / TILE_SIZE)
-  const tx1 = Math.floor((x0 + natW - 1) / TILE_SIZE)
-  const ty1 = Math.floor((y0 + natH - 1) / TILE_SIZE)
-
-  const tiles: Array<{ x: number; y: number }> = []
-  for (let ty = ty0; ty <= ty1; ty++) {
-    for (let tx = tx0; tx <= tx1; tx++) {
-      tiles.push({ x: tx, y: ty })
-    }
-  }
-
-  const buffers = await mapConcurrent(tiles, cfg.fetchConcurrency, (t) =>
-    fetchTile(cfg, zoom, t.x, t.y)
-  )
-
-  const canvasW = (tx1 - tx0 + 1) * TILE_SIZE
-  const stitched = await sharp({
-    create: {
-      width: canvasW,
-      height: (ty1 - ty0 + 1) * TILE_SIZE,
-      channels: 3,
-      background: "#fff",
-    },
-    limitInputPixels: false,
-  })
-    .composite(
-      tiles.map((t, i) => ({
-        input: buffers[i],
-        left: (t.x - tx0) * TILE_SIZE,
-        top: (t.y - ty0) * TILE_SIZE,
-      }))
-    )
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-
-  const { data } = await sharp(stitched.data, {
-    raw: {
-      width: canvasW,
-      height: stitched.info.height,
-      channels: rawChannels(stitched.info.channels),
-    },
-    limitInputPixels: false,
-  })
-    .extract({
-      left: x0 - tx0 * TILE_SIZE,
-      top: y0 - ty0 * TILE_SIZE,
-      width: natW,
-      height: natH,
-    })
-    .grayscale()
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-  return data
-}
-
-function cropSig(
-  cfg: Cfg,
-  bbox: Array<number>,
-  outW: number,
-  outH: number,
-  pad: number
-): string {
+async function cropSig(cfg: Cfg, bbox: number[], outW: number, outH: number, pad: number): Promise<string> {
+  footprints ??= loadFootprints()
   return [
+    (await footprints).source,
     bbox.map((v) => v.toFixed(5)).join(","),
     `${outW}x${outH}`,
     pad,
     cfg.cutoff,
-    cfg.buildingGray,
     cfg.zoomOverride ?? "",
     `zmax${cfg.zoomMax}`,
   ].join(":")
 }
 
 /** Threshold the box-averaged building coverage into a 2-colour blue/white raster. */
-function thresholdToBlue(
-  cfg: Cfg,
-  data: Buffer,
-  outW: number,
-  outH: number,
-  scale: number
-): Buffer {
+function thresholdToBlue(cfg: Cfg, mask: Uint8Array, outW: number, outH: number, scale: number): Buffer {
   const out = Buffer.alloc(outW * outH * 3)
   const natW = outW * scale
   const minSub = Math.max(1, Math.round((cfg.cutoff / 255) * scale * scale))
@@ -258,12 +89,8 @@ function thresholdToBlue(
       const baseY = oy * scale
       const baseX = ox * scale
       for (let dy = 0; dy < scale; dy++) {
-        sub += countBelow(
-          data,
-          (baseY + dy) * natW + baseX,
-          scale,
-          cfg.buildingGray
-        )
+        const row = (baseY + dy) * natW + baseX
+        for (let dx = 0; dx < scale; dx++) sub += mask[row + dx]
       }
       const isBlue = sub >= minSub
       const i = (oy * outW + ox) * 3
@@ -278,16 +105,14 @@ function thresholdToBlue(
 async function buildCrop(
   cfg: Cfg,
   outPng: string,
-  bbox: Array<number>,
+  bbox: number[],
   outW: number,
   outH: number,
   pad: number,
   prev?: HeroCrop
 ): Promise<HeroCrop> {
-  const sig = cropSig(cfg, bbox, outW, outH, pad)
-  if (prev?.sig === sig && existsSync(outPng)) {
-    return prev
-  }
+  const sig = await cropSig(cfg, bbox, outW, outH, pad)
+  if (prev?.sig === sig && existsSync(outPng)) return prev
 
   const [w, s, e, n] = bbox
   const padLon = (e - w) * pad
@@ -300,16 +125,11 @@ async function buildCrop(
   let fitZoom = cfg.zoomMax
   while (fitZoom > cfg.zoomMin) {
     const worldPx = TILE_SIZE * 2 ** fitZoom
-    if (
-      mercX(east, worldPx) - mercX(west, worldPx) <= outW &&
-      mercY(south, worldPx) - mercY(north, worldPx) <= outH
-    ) {
+    if (mercX(east, worldPx) - mercX(west, worldPx) <= outW && mercY(south, worldPx) - mercY(north, worldPx) <= outH)
       break
-    }
     fitZoom--
   }
-  const zoom =
-    cfg.zoomOverride ?? Math.min(fitZoom + cfg.oversampleZoom, cfg.zoomMax)
+  const zoom = cfg.zoomOverride ?? Math.min(fitZoom + cfg.oversampleZoom, cfg.zoomMax)
 
   const worldPx = TILE_SIZE * 2 ** zoom
   const scale = 2 ** (zoom - fitZoom)
@@ -320,8 +140,8 @@ async function buildCrop(
   const x0 = Math.round(cx - natW / 2)
   const y0 = Math.round(cy - natH / 2)
 
-  const data = await stitchGrayCrop(cfg, zoom, x0, y0, natW, natH)
-  const out = thresholdToBlue(cfg, data, outW, outH, scale)
+  const mask = await buildingMask(zoom, x0, y0, natW, natH)
+  const out = thresholdToBlue(cfg, mask, outW, outH, scale)
 
   mkdirSync(join(outPng, ".."), { recursive: true })
   await sharp(out, { raw: { width: outW, height: outH, channels: 3 } })
@@ -344,7 +164,7 @@ export interface TilePyramidOptions {
   /** Root of the XYZ tree; tiles land at outDir/{z}/{x}/{y}.png. */
   outDir: string
   /** [west, south, east, north] — only tiles touching this box are baked. */
-  bbox: Array<number>
+  bbox: number[]
   minZoom: number
   maxZoom: number
   /**
@@ -353,7 +173,7 @@ export interface TilePyramidOptions {
    * MapLibre has to interpolate.
    */
   tileSize?: number
-  /** Deepest CARTO zoom to sample. Bounds the fetch, not the output. */
+  /** Deepest mask zoom to sample. Bounds the raster, not the output. */
   sourceZoomMax?: number
   /** Rebake tiles that already exist on disk. */
   force?: boolean
@@ -372,7 +192,7 @@ export interface TilePyramid {
 /**
  * Bake one XYZ tile of the blue-on-white fabric.
  *
- * Sampling mirrors buildCrop: read the tile's extent at a deeper CARTO zoom and
+ * Sampling mirrors buildCrop: read the tile's extent at a deeper mask zoom and
  * box-average down, so a display pixel turns blue on the share of building under
  * it rather than on whichever single source pixel it happened to land on.
  */
@@ -395,15 +215,8 @@ async function buildTile(
     )
   }
 
-  const data = await stitchGrayCrop(
-    cfg,
-    zs,
-    x * native,
-    y * native,
-    native,
-    native
-  )
-  const out = thresholdToBlue(cfg, data, tileSize, tileSize, scale)
+  const mask = await buildingMask(zs, x * native, y * native, native, native)
+  const out = thresholdToBlue(cfg, mask, tileSize, tileSize, scale)
 
   mkdirSync(join(outPath, ".."), { recursive: true })
   await sharp(out, { raw: { width: tileSize, height: tileSize, channels: 3 } })
@@ -414,7 +227,7 @@ async function buildTile(
 /**
  * Bake a whole XYZ pyramid over a bbox, so the fabric can back a pannable map
  * instead of a single frozen crop. Existing tiles are left alone unless forced,
- * which makes a re-run after a network change cheap.
+ * which makes a re-run after an interrupted bake cheap.
  */
 async function buildTilePyramid(
   cfg: Cfg,
@@ -433,13 +246,11 @@ async function buildTilePyramid(
     const y0 = Math.floor(mercatorY(north) * n)
     const y1 = Math.floor(mercatorY(south) * n)
 
-    const jobs: Array<{ x: number; y: number; path: string }> = []
+    const jobs: { x: number; y: number; path: string }[] = []
     for (let x = x0; x <= x1; x++) {
       for (let y = y0; y <= y1; y++) {
         const path = join(opts.outDir, String(z), String(x), `${y}.png`)
-        if (!opts.force && existsSync(path)) {
-          continue
-        }
+        if (!opts.force && existsSync(path)) continue
         jobs.push({ x, y, path })
       }
     }
@@ -455,43 +266,28 @@ async function buildTilePyramid(
     ]
 
     // oxlint-disable-next-line no-await-in-loop -- zoom levels build in order so onZoom reports progress level by level
-    await mapConcurrent(
-      jobs,
-      Math.max(2, Math.floor(cfg.fetchConcurrency / 4)),
-      (j) => buildTile(cfg, z, j.x, j.y, j.path, tileSize, sourceZoomMax)
+    await mapConcurrent(jobs, 4, (j) =>
+      buildTile(cfg, z, j.x, j.y, j.path, tileSize, sourceZoomMax)
     )
     opts.onZoom?.(z, jobs.length)
   }
 
-  if (!bounds) {
-    throw new Error("empty zoom range")
-  }
+  if (!bounds) throw new Error("empty zoom range")
   return { minZoom: opts.minZoom, maxZoom: opts.maxZoom, tileSize, bounds }
 }
 
 export function createDitherCropper(opts: DitherCropperOptions) {
   const cfg: Cfg = {
-    cacheDir: opts.cacheDir,
-    tileUrl: opts.tileUrl ?? "https://basemaps.cartocdn.com/dark_nolabels",
     cutoff: opts.cutoff ?? 80,
-    buildingGray: opts.buildingGray ?? 6,
     blue: opts.blue ?? [14, 81, 201],
     zoomOverride: opts.zoomOverride,
     zoomMin: opts.zoomMin ?? 12,
     zoomMax: opts.zoomMax ?? 16,
     oversampleZoom: opts.oversampleZoom ?? 2,
-    fetchConcurrency: opts.fetchConcurrency ?? 24,
   }
   return {
-    buildCrop: (
-      outPng: string,
-      bbox: Array<number>,
-      outW: number,
-      outH: number,
-      pad: number,
-      prev?: HeroCrop
-    ) => buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
-    buildTilePyramid: (pyramid: TilePyramidOptions) =>
-      buildTilePyramid(cfg, pyramid),
+    buildCrop: (outPng: string, bbox: number[], outW: number, outH: number, pad: number, prev?: HeroCrop) =>
+      buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
+    buildTilePyramid: (pyramid: TilePyramidOptions) => buildTilePyramid(cfg, pyramid),
   }
 }

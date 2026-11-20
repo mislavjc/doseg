@@ -89,10 +89,14 @@ so check.
   exported to `lib/generated/` via ts-rs (`cargo test` regenerates them) —
   never hand-edit that directory.
 - **Visual assets come from `scripts/*.ts`** (bun). Line hero maps:
-  `bun scripts/build-line-heroes.ts` — CARTO tiles → building-footprint
-  threshold (gray < 6 in the current CARTO dark style) → blue/white duotone
-  PNGs in `public/linije/` + crop bounds in `data/linije/hero-meta.json`.
-  Parameter signatures make re-runs incremental; tiles cache in `.cache/`.
+  `bun scripts/build-line-heroes.ts` — OSM building footprints from
+  `data/osm/croatia.osm.pbf` (`scripts/lib/osm-buildings.ts`) rasterised to
+  blue/white duotone PNGs in `public/linije/` + crop bounds in
+  `data/linije/hero-meta.json`. Stop, kvart, home and bajs heroes share the
+  engine (`scripts/lib/dither-crop.ts`). No tile service: CARTO's raster
+  tiles began returning an API-key placeholder in Nov 2026.
+  Parameter signatures make re-runs incremental; parsed footprints cache in
+  `.cache/`. The data gate fails on blank or near-uniform heroes.
 - Regenerate both when the GTFS feed rolls (feed window is visible in
   `data/linije/index.json`), then commit the outputs — prod gets data and
   images via git → Docker, no upload step.

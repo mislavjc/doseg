@@ -6,6 +6,7 @@ const nextConfig = {
   allowedDevOrigins: ["doseg.test"],
   cacheComponents: true,
   partialPrefetching: true,
+  reactCompiler: true,
   experimental: {
     serverComponentsHmrCache: false,
     // Route handlers that read the request or uncached data bail out of

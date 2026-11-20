@@ -1,11 +1,11 @@
 # Staged-file checks only, so a commit stays at a few seconds. CI runs the full suite.
-# Piped: prettier rewrites and re-stages first, so oxlint sees the formatted file.
+# Piped: oxfmt rewrites and re-stages first, so oxlint sees the formatted file.
 pre-commit:
   piped: true
   jobs:
-    - name: prettier
+    - name: oxfmt
       glob: "*.{ts,tsx}"
-      run: bun prettier --write {staged_files}
+      run: bun oxfmt {staged_files}
       stage_fixed: true
     - name: oxlint
       glob: "*.{ts,tsx,js,mjs}"

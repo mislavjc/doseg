@@ -12,7 +12,12 @@ const NEARBY_THRESHOLD = 0.3
 
 /** Coarse place kind — drives the category dot in the autocomplete (spec §7). */
 export type GeocodeKind =
-  "hospital" | "school" | "park" | "street" | "address" | "place"
+  | "hospital"
+  | "school"
+  | "park"
+  | "street"
+  | "address"
+  | "place"
 
 type Result = {
   display_name: string

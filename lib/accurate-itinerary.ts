@@ -224,7 +224,8 @@ function buildTransitLeg(
   }
 
   const pattern = state.graph.patterns[pred.patternIdx] as
-    PatternData | undefined
+    | PatternData
+    | undefined
   if (!pattern) {
     return null
   }

@@ -137,7 +137,7 @@ Visit `https://doseg.localhost` — port 3000 belongs to a different app on the 
 ```bash
 bun run typecheck              # tsc --noEmit
 bun run lint                   # oxlint, type-aware (caps functions at 90 lines)
-bun run format                 # prettier
+bun run format                 # oxfmt
 bun run test                   # vitest
 bun run build                  # also statically generates every line/stop/kvart page
 cargo test --manifest-path transit/Cargo.toml   # rust tests + ts-rs type export

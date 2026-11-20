@@ -16,7 +16,11 @@ export const ZAGREB_BBOX = {
 }
 
 export type POICategory =
-  "hospital" | "school" | "park" | "supermarket" | "pharmacy"
+  | "hospital"
+  | "school"
+  | "park"
+  | "supermarket"
+  | "pharmacy"
 
 /** Wikimedia Commons photo for a POI (scripts/build-poi-photos.ts). */
 export type PoiPhoto = {

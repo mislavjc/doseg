@@ -148,6 +148,18 @@ function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
   return mins.length > 0 ? [Math.min(...mins), Math.max(...mins)] : null
 }
 
+/** Service hours for one-line summaries (the OG card), honest for lines with
+ *  no weekday service: never "0:00 - 0:00". */
+export function serviceSpan(data: LinePageData): string {
+  const status = serviceStatus(data)
+  if (status === "none") return "trenutno ne prometuje"
+  if (status === "weekendOnly") {
+    const fl = firstLastOfRows([...data.timetable.subota, ...data.timetable.nedjelja])
+    return fl ? `vikendom ${clockFromMin(fl[0])} - ${clockFromMin(fl[1])}` : "samo vikendom"
+  }
+  return `${clockTime(data.stats.firstDeparture)} - ${clockTime(data.stats.lastDeparture)}`
+}
+
 /**
  * Departures-per-hour (0–23, GTFS hours past midnight folded) for the busier
  * single direction on the representative service day. The frequency hook/chart

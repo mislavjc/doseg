@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { buildOverlay } from "@/app/linije/line-hero"
-import { clockTime } from "@/app/linije/copy"
+import { serviceSpan } from "@/app/linije/copy"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import { loadHeroMeta } from "@/lib/line-data"
 
@@ -97,7 +97,7 @@ function InfoBand({ data }: { data: LinePageData }) {
   const peak = data.stats.peakHeadwayMin
   const facts = [
     peak !== null && peak !== 0 ? `u špici svakih ${Math.round(peak)} min` : null,
-    `${clockTime(data.stats.firstDeparture)} - ${clockTime(data.stats.lastDeparture)}`,
+    serviceSpan(data),
   ]
     .filter(Boolean)
     .join(" · ")

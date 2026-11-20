@@ -23,6 +23,8 @@ a legitimate feed change but tight enough to catch a collapse.
 import json
 import os
 import statistics
+import struct
+import zlib
 import subprocess
 import sys
 
@@ -34,6 +36,18 @@ MIN_STOPS = int(os.environ.get("GATE_MIN_STOPS", "1200"))
 MIN_REACH_COVERAGE = float(os.environ.get("GATE_MIN_REACH_COVERAGE", "0.80"))
 MIN_LINE_AREA_MEDIAN = float(os.environ.get("GATE_MIN_LINE_AREA", "10"))
 MIN_STOP_STATIONS_MEDIAN = float(os.environ.get("GATE_MIN_STOP_STATIONS", "12"))
+# Hero maps: share of pixels that are building (blue). Medians run 7-15% per
+# set; a few rural stop crops are legitimately empty, but a broken map source
+# blanks (or floods) nearly all of them at once.
+BLANK_HERO_COVERAGE = 0.001
+FULL_HERO_COVERAGE = 0.95
+MAX_BLANK_HERO_SHARE = float(os.environ.get("GATE_MAX_BLANK_HERO_SHARE", "0.05"))
+MIN_HERO_COVERAGE_MEDIAN = float(os.environ.get("GATE_MIN_HERO_COVERAGE", "0.02"))
+HERO_SETS = (
+    ("data/linije/hero-meta.json", "public/linije"),
+    ("data/stanice/hero-meta.json", "public/stanice"),
+    ("data/kvart/hero-meta.json", "public/kvart"),
+)
 
 SKIP = {"index.json", "hero-meta.json"}
 
@@ -108,7 +122,10 @@ def main():
     if stop_med < MIN_STOP_STATIONS_MEDIAN:
         fail(f"median stop reach {stop_med:.0f} stations < {MIN_STOP_STATIONS_MEDIAN} (walk-only?)")
 
-    # --- 4. Churn normalization: revert timestamp-only diffs ---
+    # --- 4. Hero maps: none missing, none blank (a broken map source) ---
+    check_heroes()
+
+    # --- 5. Churn normalization: revert timestamp-only diffs ---
     reverted = normalize_timestamp_only_diffs()
 
     changed = git_changed_count()
@@ -118,6 +135,105 @@ def main():
         f"(reach {stop_cov:.0%}, med {stop_med:.0f}); "
         f"{changed} files materially changed, {reverted} timestamp-only reverts."
     )
+
+
+def unfilter(ftype, row, prev, bpp):
+    """Undo one PNG scanline filter (spec section 9)."""
+    out = bytearray(row)
+    for i in range(len(out)):
+        left = out[i - bpp] if i >= bpp else 0
+        up = prev[i]
+        if ftype == 1:
+            out[i] = (out[i] + left) & 0xFF
+        elif ftype == 2:
+            out[i] = (out[i] + up) & 0xFF
+        elif ftype == 3:
+            out[i] = (out[i] + (left + up) // 2) & 0xFF
+        elif ftype == 4:
+            ul = prev[i - bpp] if i >= bpp else 0
+            p = left + up - ul
+            pa, pb, pc = abs(p - left), abs(p - up), abs(p - ul)
+            pred = left if pa <= pb and pa <= pc else (up if pb <= pc else ul)
+            out[i] = (out[i] + pred) & 0xFF
+    return bytes(out)
+
+
+def hero_coverage(path, data=None):
+    """Share of non-white pixels in a 1-bit palette hero PNG (what dither-crop
+    writes). Any other PNG layout fails the gate rather than being guessed at."""
+    if data is None:
+        with open(path, "rb") as fh:
+            data = fh.read()
+    pos, idat, ihdr, plte = 8, [], None, b""
+    while pos < len(data):
+        (length,) = struct.unpack(">I", data[pos : pos + 4])
+        kind, body = data[pos + 4 : pos + 8], data[pos + 8 : pos + 8 + length]
+        if kind == b"IHDR":
+            ihdr = struct.unpack(">IIBBBBB", body)
+        elif kind == b"PLTE":
+            plte = body
+        elif kind == b"IDAT":
+            idat.append(body)
+        pos += 12 + length
+    width, height, depth, ctype, _, _, interlace = ihdr
+    if ctype != 3 or depth != 1 or interlace != 0 or len(plte) not in (3, 6):
+        fail(f"{path}: expected a 1-bit palette PNG")
+    if len(plte) == 3:
+        return 0.0 if plte == b"\xff\xff\xff" else 1.0
+    white = 0 if plte[:3] == b"\xff\xff\xff" else 1
+    raw = zlib.decompress(b"".join(idat))
+    stride = (width + 7) // 8
+    prev, ones = bytes(stride), 0
+    for r in range(height):
+        start = r * (stride + 1)
+        row = raw[start + 1 : start + 1 + stride]
+        if raw[start]:
+            row = unfilter(raw[start], row, prev, 1)
+        prev = row
+        bits = int.from_bytes(row, "big") >> (stride * 8 - width)
+        ones += bits.bit_count()
+    set_px = ones if white == 0 else width * height - ones
+    return set_px / (width * height)
+
+
+def check_heroes():
+    """Every hero-meta entry needs both PNGs, and each set must look like a map:
+    the CARTO raster source once started serving a placeholder for every tile,
+    which thresholded to all-white heroes that every other check passed."""
+    for meta_path, png_dir in HERO_SETS:
+        if not os.path.exists(meta_path):
+            continue
+        coverage = {}
+        for key in load(meta_path):
+            for suffix in ("", "-m"):
+                png = f"{png_dir}/hero-{key}{suffix}.png"
+                if not os.path.exists(png):
+                    fail(f"{png} is missing but listed in {meta_path}")
+                coverage[png] = hero_coverage(png)
+        if not coverage:
+            continue
+        bad = [p for p, c in coverage.items() if not BLANK_HERO_COVERAGE <= c <= FULL_HERO_COVERAGE]
+        if len(bad) / len(coverage) > MAX_BLANK_HERO_SHARE:
+            fail(f"{len(bad)}/{len(coverage)} {png_dir} heroes are blank or solid, e.g. {', '.join(bad[:3])}")
+        med = statistics.median(coverage.values())
+        if med < MIN_HERO_COVERAGE_MEDIAN:
+            fail(f"median {png_dir} hero coverage {med:.2%} < {MIN_HERO_COVERAGE_MEDIAN:.0%} (map source broken?)")
+        # An incremental bake only redraws changed crops, so a broken source
+        # shows up as a few previously-good heroes going blank.
+        went_blank = [p for p in changed_vs_head(png_dir) if p in coverage and p in bad and head_coverage(p) >= BLANK_HERO_COVERAGE]
+        if went_blank:
+            fail(f"{len(went_blank)} {png_dir} heroes went blank or solid vs HEAD, e.g. {', '.join(went_blank[:3])}")
+
+
+def changed_vs_head(path):
+    out = subprocess.run(["git", "diff", "--name-only", "HEAD", "--", path], capture_output=True, text=True, check=True)
+    return out.stdout.split()
+
+
+def head_coverage(path):
+    """Coverage of the committed version; heroes new in this run count as blank."""
+    old = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=False)
+    return hero_coverage(path, old.stdout) if old.returncode == 0 else 0.0
 
 
 def normalize_timestamp_only_diffs():

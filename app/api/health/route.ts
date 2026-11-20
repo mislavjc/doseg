@@ -1,6 +1,8 @@
 import { z } from "zod"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
+// Set by the Docker build from the deployed checkout (Dockerfile, deploy.yml).
+const COMMIT = process.env.GIT_SHA || "unknown"
 
 const FeedsResponse = z.object({
   data: z.object({ feeds: z.array(z.unknown()).nullish() }).nullish(),
@@ -25,10 +27,10 @@ export async function GET() {
     if (!res.ok) throw new Error(`OTP responded ${res.status}`)
     const feeds = FeedsResponse.parse(await res.json()).data?.feeds
     if (feeds == null || feeds.length === 0) throw new Error("OTP has no feed loaded")
-    return Response.json({ status: "ok" })
+    return Response.json({ status: "ok", commit: COMMIT })
   } catch (err) {
     // Log the detail server-side; keep the public body generic.
     console.error("health check failed:", err)
-    return Response.json({ status: "degraded" }, { status: 503 })
+    return Response.json({ status: "degraded", commit: COMMIT }, { status: 503 })
   }
 }

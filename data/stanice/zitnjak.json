@@ -16,7 +16,7 @@
   "busLines": [
     "281"
   ],
-  "firstDeparture": "4:41",
+  "firstDeparture": "4:38",
   "lastDeparture": "0:59",
   "directionGroups": 3,
   "lines": [
@@ -27,12 +27,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.5,
+      "peakHeadwayMin": 7.9,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "3",
@@ -41,12 +41,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 12.2,
       "peakRangeMin": [
-        16,
-        17
+        12,
+        13
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 12.7
     },
     {
       "broj": "13",
@@ -60,7 +60,7 @@
         13,
         13
       ],
-      "allDayHeadwayMin": 14.2
+      "allDayHeadwayMin": 14.9
     },
     {
       "broj": "33",
@@ -1040,8 +1040,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 142,
-    "stations45": 370
+    "stations30": 155,
+    "stations45": 402
   },
   "prevSlug": "zitnjacka",
   "nextSlug": "zitnjak-okretiste"

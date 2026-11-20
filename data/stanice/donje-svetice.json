@@ -14,7 +14,7 @@
     "33"
   ],
   "busLines": [],
-  "firstDeparture": "4:34",
+  "firstDeparture": "4:31",
   "lastDeparture": "0:52",
   "directionGroups": 2,
   "lines": [
@@ -25,12 +25,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.5,
+      "peakHeadwayMin": 7.8,
       "peakRangeMin": [
-        10,
-        11
+        8,
+        8
       ],
-      "allDayHeadwayMin": 11.6
+      "allDayHeadwayMin": 9.3
     },
     {
       "broj": "3",
@@ -39,12 +39,12 @@
       "headsign": "Savišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 16.7,
+      "peakHeadwayMin": 12.5,
       "peakRangeMin": [
-        16,
-        17
+        12,
+        13
       ],
-      "allDayHeadwayMin": 17.3
+      "allDayHeadwayMin": 12.7
     },
     {
       "broj": "13",
@@ -53,12 +53,12 @@
       "headsign": "Kvat. trg",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 13.2,
+      "peakHeadwayMin": 13.1,
       "peakRangeMin": [
         13,
         13
       ],
-      "allDayHeadwayMin": 14.2
+      "allDayHeadwayMin": 14.9
     },
     {
       "broj": "33",
@@ -965,9 +965,9 @@
     ]
   },
   "reach": {
-    "stations15": 33,
-    "stations30": 139,
-    "stations45": 339
+    "stations15": 34,
+    "stations30": 154,
+    "stations45": 358
   },
   "prevSlug": "donje-prekrizje",
   "nextSlug": "donji-borcec"

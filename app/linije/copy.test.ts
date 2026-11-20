@@ -7,6 +7,7 @@ import {
   peakRange,
   plural,
   serviceHistogram,
+  serviceSpan,
 } from "./copy"
 
 // ---------------------------------------------------------------------------
@@ -223,5 +224,41 @@ describe("serviceHistogram()", () => {
     const hist = serviceHistogram(data)
     expect(hist).toHaveLength(24)
     expect(hist.every((v) => v === 0)).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// serviceSpan() - the OG card's service hours
+// ---------------------------------------------------------------------------
+
+describe("serviceSpan()", () => {
+  const stats = { firstDeparture: "04:12", lastDeparture: "23:47" }
+
+  it("uses the weekday first/last departure for a running line", () => {
+    const data = { ...makeLinePageData([{ hour: 4, minutes: [12] }]), stats }
+    // @ts-expect-error partial type for testing
+    expect(serviceSpan(data)).toBe("4:12 - 23:47")
+  })
+
+  it("says the line is not running instead of 0:00 - 0:00", () => {
+    const data = {
+      timetable: { radniDan: [], subota: [], nedjelja: [] },
+      stats: { firstDeparture: "00:00", lastDeparture: "00:00" },
+    }
+    // @ts-expect-error partial type for testing
+    expect(serviceSpan(data)).toBe("trenutno ne prometuje")
+  })
+
+  it("uses weekend hours for a weekend-only line", () => {
+    const data = {
+      timetable: {
+        radniDan: [],
+        subota: [[{ hour: 8, minutes: [5] }, { hour: 25, minutes: [10] }]],
+        nedjelja: [],
+      },
+      stats: { firstDeparture: "00:00", lastDeparture: "00:00" },
+    }
+    // @ts-expect-error partial type for testing
+    expect(serviceSpan(data)).toBe("vikendom 8:05 - 1:10")
   })
 })

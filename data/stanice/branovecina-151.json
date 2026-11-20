@@ -481,9 +481,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 45,
-    "stations45": 165
+    "stations15": 7,
+    "stations30": 60,
+    "stations45": 189
   },
   "prevSlug": "branovec",
   "nextSlug": "branovecka"

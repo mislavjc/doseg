@@ -12,7 +12,7 @@
     "161"
   ],
   "firstDeparture": "4:35",
-  "lastDeparture": "0:31",
+  "lastDeparture": "0:33",
   "directionGroups": 2,
   "lines": [
     {
@@ -27,7 +27,7 @@
         46,
         59
       ],
-      "allDayHeadwayMin": 39.2
+      "allDayHeadwayMin": 37.9
     }
   ],
   "neighbors": [

@@ -19,6 +19,10 @@ RUN bun run build
 FROM node:22-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# Commit this image was built from, reported by /api/health. Declared in the
+# runner stage only so a new sha never invalidates the builder cache.
+ARG GIT_SHA=unknown
+ENV GIT_SHA=$GIT_SHA
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nodejs
 USER nodejs

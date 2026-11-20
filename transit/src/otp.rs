@@ -92,6 +92,10 @@ fn build_raw_pattern(
     }
 }
 
+/// ureq caps response bodies at 10 MiB by default. The all-patterns query
+/// outgrew that on ZET's 2026-11 feed, so allow a generous ceiling instead.
+const OTP_BODY_LIMIT: u64 = 256 * 1024 * 1024;
+
 fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
     let body = GetPatterns::build_query(get_patterns::Variables {});
     let resp: graphql_client::Response<get_patterns::ResponseData> =
@@ -100,6 +104,8 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
             .send_json(&body)
             .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
             .body_mut()
+            .with_config()
+            .limit(OTP_BODY_LIMIT)
             .read_json()
             .expect("Failed to parse OTP response");
 

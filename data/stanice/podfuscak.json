@@ -265,9 +265,9 @@
     ]
   },
   "reach": {
-    "stations15": 24,
-    "stations30": 70,
-    "stations45": 245
+    "stations15": 26,
+    "stations30": 80,
+    "stations45": 258
   },
   "prevSlug": "podbreznica",
   "nextSlug": "podsused"

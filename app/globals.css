@@ -556,7 +556,6 @@
 
 /* Map redesign — empty-state "klikni kartu" radar pulse */
 .radar {
-  position: relative;
   width: 200px;
   height: 200px;
 }

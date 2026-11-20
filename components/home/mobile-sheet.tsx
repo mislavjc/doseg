@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { AnimatePresence, m, useReducedMotion } from "motion/react"
+import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from "motion/react"
 import { Drawer } from "vaul"
 import {
   IconChevronTop,
@@ -358,33 +358,35 @@ export function MobileSheet(props: PanelContentProps) {
   const open = snap === SNAP_OPEN
 
   return (
-    <Drawer.Root
-      open
-      modal={false}
-      dismissible={false}
-      snapPoints={snaps}
-      activeSnapPoint={snap}
-      setActiveSnapPoint={setSnap}
-    >
-      <Drawer.Portal>
-        <Drawer.Content
-          aria-describedby={undefined}
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex h-full flex-col outline-none md:hidden"
-        >
-          <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
-            <Drawer.Title className="sr-only">Doseg</Drawer.Title>
-            <AnswerBar
-              panel={panel}
-              minutes={minutes}
-              stats={stats}
-              open={open}
-              onToggle={() => setSnap(open ? peekPx : SNAP_OPEN)}
-              onUseMyLocation={onUseMyLocation}
-            />
-            <SheetBody {...props} open={open} />
-          </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+    <LazyMotion features={domAnimation}>
+      <Drawer.Root
+        open
+        modal={false}
+        dismissible={false}
+        snapPoints={snaps}
+        activeSnapPoint={snap}
+        setActiveSnapPoint={setSnap}
+      >
+        <Drawer.Portal>
+          <Drawer.Content
+            aria-describedby={undefined}
+            className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex h-full flex-col outline-none md:hidden"
+          >
+            <div className="pointer-events-auto mt-auto flex h-full flex-col bg-ground pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_30px_rgba(15,23,42,0.16)]">
+              <Drawer.Title className="sr-only">Doseg</Drawer.Title>
+              <AnswerBar
+                panel={panel}
+                minutes={minutes}
+                stats={stats}
+                open={open}
+                onToggle={() => setSnap(open ? peekPx : SNAP_OPEN)}
+                onUseMyLocation={onUseMyLocation}
+              />
+              <SheetBody {...props} open={open} />
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </LazyMotion>
   )
 }

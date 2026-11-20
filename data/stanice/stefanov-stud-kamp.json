@@ -46,12 +46,12 @@
       "headsign": "Borongaj",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 17.0,
+      "peakHeadwayMin": 12.1,
       "peakRangeMin": [
-        17,
-        17
+        12,
+        12
       ],
-      "allDayHeadwayMin": 21.3
+      "allDayHeadwayMin": 17.2
     }
   ],
   "neighbors": [
@@ -718,8 +718,8 @@
   },
   "reach": {
     "stations15": 23,
-    "stations30": 121,
-    "stations45": 397
+    "stations30": 162,
+    "stations45": 437
   },
   "prevSlug": "staro-okretiste-brezovica-2",
   "nextSlug": "stefanovec-114"

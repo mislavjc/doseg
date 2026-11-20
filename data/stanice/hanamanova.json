@@ -13,7 +13,7 @@
     "118"
   ],
   "firstDeparture": "4:32",
-  "lastDeparture": "1:02",
+  "lastDeparture": "0:48",
   "directionGroups": 2,
   "lines": [
     {
@@ -23,12 +23,12 @@
       "headsign": "Jarun",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 52.5,
+      "peakHeadwayMin": 30.0,
       "peakRangeMin": [
-        51,
-        54
+        30,
+        30
       ],
-      "allDayHeadwayMin": 50.0
+      "allDayHeadwayMin": 41.1
     },
     {
       "broj": "118",
@@ -37,12 +37,12 @@
       "headsign": "Voltino",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.0,
+      "peakHeadwayMin": 9.0,
       "peakRangeMin": [
-        10,
-        10
+        9,
+        9
       ],
-      "allDayHeadwayMin": 11.7
+      "allDayHeadwayMin": 10.1
     }
   ],
   "neighbors": [
@@ -546,9 +546,9 @@
     ]
   },
   "reach": {
-    "stations15": 36,
-    "stations30": 150,
-    "stations45": 393
+    "stations15": 37,
+    "stations30": 168,
+    "stations45": 419
   },
   "prevSlug": "hammova",
   "nextSlug": "harabajsi"

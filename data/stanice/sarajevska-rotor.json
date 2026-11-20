@@ -1,0 +1,70 @@
+{
+  "slug": "sarajevska-rotor",
+  "name": "Sarajevska-rotor",
+  "kvart": "Novi Zagreb - istok",
+  "lat": 45.77698,
+  "lon": 16.00302,
+  "mode": "bus",
+  "bothDirections": false,
+  "lineCount": 1,
+  "tramLines": [],
+  "busLines": [
+    "295"
+  ],
+  "firstDeparture": "5:05",
+  "lastDeparture": "23:15",
+  "directionGroups": 0,
+  "lines": [
+    {
+      "broj": "295",
+      "mode": "bus",
+      "isNight": false,
+      "headsign": "Tišinska ul. III odv",
+      "isLoop": false,
+      "bothDirections": false,
+      "peakHeadwayMin": 27.5,
+      "peakRangeMin": [
+        24,
+        31
+      ],
+      "allDayHeadwayMin": 37.6
+    }
+  ],
+  "neighbors": [
+    {
+      "name": "Sarajevska - Hrelić",
+      "slug": "sarajevska-hrelic"
+    }
+  ],
+  "hero": {
+    "bbox": [
+      16.00095,
+      45.77553,
+      16.00508,
+      45.77842
+    ],
+    "lines": [
+      {
+        "broj": "295",
+        "mode": "bus",
+        "shape": [
+          [
+            16.00696,
+            45.76549
+          ],
+          [
+            16.00301,
+            45.77697
+          ]
+        ]
+      }
+    ]
+  },
+  "reach": {
+    "stations15": 27,
+    "stations30": 143,
+    "stations45": 373
+  },
+  "prevSlug": "sarajevska-hrelic",
+  "nextSlug": "sasi-okretiste"
+}

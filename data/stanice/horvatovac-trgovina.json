@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "7:34",
-  "lastDeparture": "13:34",
+  "firstDeparture": "5:24",
+  "lastDeparture": "23:24",
   "directionGroups": 1,
   "lines": [
     {
@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 22,
-    "stations30": 133,
-    "stations45": 284
+    "stations15": 20,
+    "stations30": 137,
+    "stations45": 301
   },
   "prevSlug": "horvatovac-pmf",
   "nextSlug": "horvatovac-zelenjak"

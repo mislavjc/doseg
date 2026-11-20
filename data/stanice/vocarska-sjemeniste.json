@@ -11,8 +11,8 @@
   "busLines": [
     "204"
   ],
-  "firstDeparture": "7:38",
-  "lastDeparture": "13:38",
+  "firstDeparture": "5:28",
+  "lastDeparture": "23:28",
   "directionGroups": 1,
   "lines": [
     {
@@ -594,9 +594,9 @@
     ]
   },
   "reach": {
-    "stations15": 38,
-    "stations30": 147,
-    "stations45": 350
+    "stations15": 43,
+    "stations30": 154,
+    "stations45": 355
   },
   "prevSlug": "vocarska-drustveni-d",
   "nextSlug": "vodnikova"

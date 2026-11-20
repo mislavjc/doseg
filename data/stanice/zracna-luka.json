@@ -32,16 +32,12 @@
   ],
   "neighbors": [
     {
-      "name": "Velika Kosnica",
-      "slug": "velika-kosnica"
+      "name": "Petina",
+      "slug": "petina"
     },
     {
       "name": "Zrak. tehnička škola",
       "slug": "zrak-tehnicka-skola"
-    },
-    {
-      "name": "Petina",
-      "slug": "petina"
     }
   ],
   "hero": {
@@ -251,7 +247,7 @@
   "reach": {
     "stations15": 8,
     "stations30": 23,
-    "stations45": 65
+    "stations45": 66
   },
   "prevSlug": "znikina",
   "nextSlug": "zrak-tehnicka-skola"

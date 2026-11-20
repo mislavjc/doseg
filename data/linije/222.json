@@ -131,7 +131,6 @@
           "tramInterchange": [
             "6",
             "7",
-            "8",
             "14"
           ]
         },
@@ -2067,7 +2066,7 @@
       },
       {
         "broj": "8",
-        "stopName": "Zapruđe"
+        "stopName": "Folnegovićevo"
       },
       {
         "broj": "14",
@@ -2078,7 +2077,7 @@
   "prevBroj": "221",
   "nextBroj": "223",
   "reach": {
-    "areaKm2": 42.7,
+    "areaKm2": 41.2,
     "stopName": "Utrina",
     "lat": 45.77781,
     "lon": 15.99788

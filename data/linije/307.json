@@ -1126,8 +1126,8 @@
         },
         {
           "name": "Sarajevska - Hrelić",
-          "lat": 45.76522,
-          "lon": 16.00675,
+          "lat": 45.76549,
+          "lon": 16.00697,
           "offsetMin": 27,
           "tramInterchange": []
         },
@@ -2161,12 +2161,6 @@
   "related": {
     "sharedTerminal": [
       {
-        "broj": "8",
-        "mode": "tram",
-        "isNight": false,
-        "terminal": "Zapruđe"
-      },
-      {
         "broj": "14",
         "mode": "tram",
         "isNight": false,
@@ -2190,7 +2184,7 @@
   "prevBroj": "295",
   "nextBroj": "308",
   "reach": {
-    "areaKm2": 24.7,
+    "areaKm2": 25.8,
     "stopName": "Selnica-put za Bapče",
     "lat": 45.74948,
     "lon": 16.10122

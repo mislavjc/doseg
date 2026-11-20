@@ -26,12 +26,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.6,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -40,12 +40,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 9.8,
+      "peakHeadwayMin": 6.7,
       "peakRangeMin": [
-        9,
-        10
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 7.7
     },
     {
       "broj": "11",
@@ -54,12 +54,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "12",
@@ -68,12 +68,12 @@
       "headsign": "Dubrava",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.6,
+      "peakHeadwayMin": 6.8,
       "peakRangeMin": [
-        9,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 9.9
+      "allDayHeadwayMin": 7.8
     },
     {
       "broj": "34",
@@ -814,9 +814,9 @@
     ]
   },
   "reach": {
-    "stations15": 19,
-    "stations30": 117,
-    "stations45": 389
+    "stations15": 20,
+    "stations30": 153,
+    "stations45": 416
   },
   "prevSlug": "ratarska",
   "nextSlug": "ravnice-maksimir-2"

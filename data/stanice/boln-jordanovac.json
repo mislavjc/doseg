@@ -39,7 +39,7 @@
       "bothDirections": false,
       "peakHeadwayMin": 40.0,
       "peakRangeMin": null,
-      "allDayHeadwayMin": 81.3
+      "allDayHeadwayMin": 52.2
     }
   ],
   "neighbors": [
@@ -1283,9 +1283,9 @@
     ]
   },
   "reach": {
-    "stations15": 28,
-    "stations30": 118,
-    "stations45": 282
+    "stations15": 27,
+    "stations30": 120,
+    "stations45": 300
   },
   "prevSlug": "bol-jankomir",
   "nextSlug": "bolnica-goljak"

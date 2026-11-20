@@ -28,7 +28,7 @@
         56,
         59
       ],
-      "allDayHeadwayMin": 42.8
+      "allDayHeadwayMin": 41.2
     },
     {
       "broj": "234",
@@ -42,7 +42,7 @@
         20,
         20
       ],
-      "allDayHeadwayMin": 24.4
+      "allDayHeadwayMin": 23.9
     }
   ],
   "neighbors": [
@@ -719,8 +719,8 @@
   },
   "reach": {
     "stations15": 32,
-    "stations30": 157,
-    "stations45": 362
+    "stations30": 160,
+    "stations45": 370
   },
   "prevSlug": "arena-centar-novi-zagreb-zapad-2",
   "nextSlug": "aspergeri"

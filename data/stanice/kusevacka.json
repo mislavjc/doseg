@@ -22,9 +22,12 @@
       "headsign": "Borovje",
       "isLoop": false,
       "bothDirections": false,
-      "peakHeadwayMin": 50.0,
-      "peakRangeMin": null,
-      "allDayHeadwayMin": 50.0
+      "peakHeadwayMin": 25.0,
+      "peakRangeMin": [
+        25,
+        25
+      ],
+      "allDayHeadwayMin": 28.9
     }
   ],
   "neighbors": [
@@ -399,8 +402,8 @@
   },
   "reach": {
     "stations15": 6,
-    "stations30": 33,
-    "stations45": 184
+    "stations30": 39,
+    "stations45": 199
   },
   "prevSlug": "kupljenska",
   "nextSlug": "kustosijanska"

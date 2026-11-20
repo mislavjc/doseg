@@ -12,7 +12,7 @@
     "210"
   ],
   "firstDeparture": "4:38",
-  "lastDeparture": "0:52",
+  "lastDeparture": "0:57",
   "directionGroups": 2,
   "lines": [
     {
@@ -22,12 +22,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 22.1
     }
   ],
   "neighbors": [
@@ -206,8 +206,8 @@
   },
   "reach": {
     "stations15": 37,
-    "stations30": 124,
-    "stations45": 391
+    "stations30": 143,
+    "stations45": 400
   },
   "prevSlug": "ljubijska-gornja-dubrava-2",
   "nextSlug": "ljubljanica"

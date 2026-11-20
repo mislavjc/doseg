@@ -2,18 +2,18 @@
   "slug": "petina",
   "name": "Petina",
   "kvart": null,
-  "lat": 45.75687,
-  "lon": 16.09955,
+  "lat": 45.75629,
+  "lon": 16.09914,
   "mode": "bus",
-  "bothDirections": false,
+  "bothDirections": true,
   "lineCount": 1,
   "tramLines": [],
   "busLines": [
     "290"
   ],
-  "firstDeparture": "4:52",
+  "firstDeparture": "4:46",
   "lastDeparture": "0:37",
-  "directionGroups": 1,
+  "directionGroups": 2,
   "lines": [
     {
       "broj": "290",
@@ -21,7 +21,7 @@
       "isNight": false,
       "headsign": "Kvat. trg",
       "isLoop": false,
-      "bothDirections": false,
+      "bothDirections": true,
       "peakHeadwayMin": 35.0,
       "peakRangeMin": [
         35,
@@ -32,26 +32,30 @@
   ],
   "neighbors": [
     {
-      "name": "Zračna luka",
-      "slug": "zracna-luka"
-    },
-    {
       "name": "Velika Kosnica",
       "slug": "velika-kosnica"
+    },
+    {
+      "name": "Zračna luka",
+      "slug": "zracna-luka"
     }
   ],
   "hero": {
     "bbox": [
-      16.09748,
-      45.75543,
-      16.10161,
-      45.75831
+      16.09707,
+      45.75485,
+      16.1012,
+      45.75773
     ],
     "lines": [
       {
         "broj": "290",
         "mode": "bus",
         "shape": [
+          [
+            16.08875,
+            45.74393
+          ],
           [
             16.09037,
             45.745
@@ -141,9 +145,9 @@
     ]
   },
   "reach": {
-    "stations15": 6,
-    "stations30": 50,
-    "stations45": 146
+    "stations15": 11,
+    "stations30": 61,
+    "stations45": 183
   },
   "prevSlug": "pesteri",
   "nextSlug": "petlja-izlaz-novi-zagreb-zapad"

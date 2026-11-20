@@ -37,12 +37,12 @@
       "headsign": "Savski most",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 11.7,
+      "peakHeadwayMin": 9.3,
       "peakRangeMin": [
-        11,
-        12
+        8,
+        10
       ],
-      "allDayHeadwayMin": 12.3
+      "allDayHeadwayMin": 10.3
     },
     {
       "broj": "7",
@@ -51,12 +51,12 @@
       "headsign": "Savski gaj-rotor",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 10.2,
+      "peakHeadwayMin": 6.7,
       "peakRangeMin": [
-        9,
-        11
+        7,
+        7
       ],
-      "allDayHeadwayMin": 10.7
+      "allDayHeadwayMin": 7.7
     },
     {
       "broj": "11",
@@ -65,12 +65,12 @@
       "headsign": "Dubec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.0,
+      "peakHeadwayMin": 6.2,
       "peakRangeMin": [
-        8,
-        8
+        6,
+        6
       ],
-      "allDayHeadwayMin": 9.1
+      "allDayHeadwayMin": 7.1
     },
     {
       "broj": "12",
@@ -79,12 +79,12 @@
       "headsign": "Ljubljanica",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 8.5,
+      "peakHeadwayMin": 6.8,
       "peakRangeMin": [
-        8,
-        9
+        7,
+        7
       ],
-      "allDayHeadwayMin": 9.9
+      "allDayHeadwayMin": 7.8
     },
     {
       "broj": "34",
@@ -118,12 +118,12 @@
       "headsign": "Miroševec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 17.5,
       "peakRangeMin": [
-        30,
-        30
+        15,
+        15
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 20.0
     },
     {
       "broj": "208",
@@ -132,12 +132,12 @@
       "headsign": "Vidovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 21.3,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        21
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 27.7
     },
     {
       "broj": "209",
@@ -146,12 +146,12 @@
       "headsign": "Čučerje",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 21.0,
+      "peakHeadwayMin": 16.4,
       "peakRangeMin": [
-        20,
-        20
+        15,
+        18
       ],
-      "allDayHeadwayMin": 22.1
+      "allDayHeadwayMin": 18.6
     },
     {
       "broj": "210",
@@ -160,12 +160,12 @@
       "headsign": "Novi Retkovec",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 30.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        30,
-        30
+        20,
+        20
       ],
-      "allDayHeadwayMin": 29.9
+      "allDayHeadwayMin": 22.1
     },
     {
       "broj": "213",
@@ -202,12 +202,12 @@
       "headsign": "Gran. Novaki",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 40.0,
+      "peakHeadwayMin": 20.0,
       "peakRangeMin": [
-        38,
-        43
+        15,
+        20
       ],
-      "allDayHeadwayMin": 37.8
+      "allDayHeadwayMin": 26.9
     },
     {
       "broj": "232",
@@ -216,12 +216,12 @@
       "headsign": "Čret-Melinišće",
       "isLoop": false,
       "bothDirections": true,
-      "peakHeadwayMin": 45.0,
+      "peakHeadwayMin": 22.5,
       "peakRangeMin": [
-        43,
-        48
+        20,
+        23
       ],
-      "allDayHeadwayMin": 34.1
+      "allDayHeadwayMin": 29.6
     },
     {
       "broj": "235",
@@ -2294,9 +2294,9 @@
     ]
   },
   "reach": {
-    "stations15": 30,
-    "stations30": 147,
-    "stations45": 396
+    "stations15": 39,
+    "stations30": 183,
+    "stations45": 417
   },
   "prevSlug": "dubranec-vikend-nas",
   "nextSlug": "dubravica"

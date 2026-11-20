@@ -9,7 +9,7 @@ import {
   PrevNext as KitPrevNext,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
-import { type FaqItem } from "@/app/statistika/editorial/faq"
+import type { FaqItem } from '@/app/statistika/editorial/faq';
 import { Body, Hook, PageTitle } from "@/app/statistika/editorial/primitives"
 import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
@@ -138,8 +138,8 @@ export function LinijeKojeStaju({ data }: { data: StopPageData }) {
 
 export function DosegOdavde({ data }: { data: StopPageData }) {
   const copy = dosegCopy(data)
-  if (!copy || !data.reach) return null
-  const bands: [string, number][] = [
+  if (!copy || !data.reach) {return null}
+  const bands: Array<[string, number]> = [
     ["za 15 min", data.reach.stations15],
     ["za 30 min", data.reach.stations30],
     ["za 45 min", data.reach.stations45],
@@ -174,7 +174,7 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
 // ── Susjedne stanice ────────────────────────────────────────────────────────
 
 export function SusjedneStanice({ data }: { data: StopPageData }) {
-  if (data.neighbors.length === 0) return null
+  if (data.neighbors.length === 0) {return null}
   return (
     <div>
       <SectionHeader eyebrow="susjedne stanice" hook="Stanice u blizini.">
@@ -208,9 +208,9 @@ export function IstoimeneStanice({
   siblings,
 }: {
   name: string
-  siblings: SiblingStop[]
+  siblings: Array<SiblingStop>
 }) {
-  if (siblings.length === 0) return null
+  if (siblings.length === 0) {return null}
   const n = siblings.length
   const count = `${numberWordF(n)} ${plural(n, "stanica", "stanice", "stanica")}`
   const verb = plural(n, "Postoji", "Postoje", "Postoji")
@@ -252,8 +252,8 @@ export function PrevNext({ data }: { data: StopPageData }) {
 
 // ── FAQ + JSON-LD ───────────────────────────────────────────────────────────
 
-export function buildFaq(data: StopPageData): FaqItem[] {
-  const items: FaqItem[] = []
+export function buildFaq(data: StopPageData): Array<FaqItem> {
+  const items: Array<FaqItem> = []
   const n = data.lineCount
 
   items.push({
@@ -262,12 +262,12 @@ export function buildFaq(data: StopPageData): FaqItem[] {
   })
 
   const nearest = data.neighbors.slice(0, 2).map((x) => x.name)
-  const locParts: string[] = []
-  if (data.kvart) locParts.push(`Stanica ${data.name} nalazi se u kvartu ${data.kvart}.`)
+  const locParts: Array<string> = []
+  if (data.kvart) {locParts.push(`Stanica ${data.name} nalazi se u kvartu ${data.kvart}.`)}
   if (nearest.length > 0)
-    locParts.push(
+    {locParts.push(
       `Najbliže susjedne stanice su ${nearest.join(nearest.length > 1 ? " i " : "")}.`
-    )
+    )}
   if (locParts.length > 0) {
     items.push({ q: `Gdje se nalazi stanica ${data.name}?`, a: locParts.join(" ") })
   }
@@ -280,10 +280,10 @@ export function buildFaq(data: StopPageData): FaqItem[] {
     : ""
   const window = serviceWindow(data)
   if (window)
-    items.push({
+    {items.push({
       q: `Kada vozi prvi i zadnji polazak sa stanice ${data.name}?`,
       a: `Prvi polazak sa stanice je u ${window.first}, a zadnji u ${window.last}.${freq}`,
-    })
+    })}
 
   return items
 }

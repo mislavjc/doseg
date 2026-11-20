@@ -23,15 +23,15 @@ import { parseDistrictShapes } from "./district-shapes"
 // Caps coloured by the shared score ramp (same as the board) so neighbouring
 // districts differ in shade — navy = high, pale = low. Hover lifts a block to a
 // clean bright blue (same hue throughout) regardless of its base shade.
-const HILITE = new THREE.Color(0x1e63f2)
+const HILITE = new THREE.Color(0x1e_63_f2)
 const HILITE_WALL = HILITE.clone().multiplyScalar(0.85)
-const HILITE_EDGE = 0x1746b3
+const HILITE_EDGE = 0x17_46_b3
 
 type Block = {
   name: string
-  caps: THREE.MeshBasicMaterial[]
-  walls: THREE.MeshBasicMaterial[]
-  edges: THREE.LineBasicMaterial[]
+  caps: Array<THREE.MeshBasicMaterial>
+  walls: Array<THREE.MeshBasicMaterial>
+  edges: Array<THREE.LineBasicMaterial>
   baseCap: THREE.Color
   baseWall: THREE.Color
   baseEdge: number
@@ -68,13 +68,13 @@ export function TerrainView({
 
   useEffect(() => {
     const mount = mountRef.current
-    if (!mount) return
+    if (!mount) {return}
     let disposed = false
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     // Supersample above device DPR — small static canvas, big crispness win.
     renderer.setPixelRatio(Math.min((window.devicePixelRatio || 1) * 1.5, 3))
-    renderer.setClearColor(0xffffff, 0)
+    renderer.setClearColor(0xff_ff_ff, 0)
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFShadowMap
     mount.append(renderer.domElement)
@@ -89,7 +89,7 @@ export function TerrainView({
     const raycaster = new THREE.Raycaster()
     const pointer = new THREE.Vector2()
     const blocks = new Map<string, Block>()
-    const capMeshes: THREE.Mesh[] = []
+    const capMeshes: Array<THREE.Mesh> = []
     let sizeVec = new THREE.Vector3(1, 1, 1)
     let activeHover: string | null = null
 
@@ -130,7 +130,7 @@ export function TerrainView({
     }
 
     const build = (svgText: string) => {
-      if (disposed) return
+      if (disposed) {return}
       const shapes = parseDistrictShapes(svgText)
       const names = shapes.map((s) => s.name)
       const override = valuesRef.current
@@ -176,7 +176,7 @@ export function TerrainView({
           group.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 30), edgeMat))
           block.edges.push(edgeMat)
         })
-        if (name) blocks.set(name, block)
+        if (name) {blocks.set(name, block)}
       })
 
       group.scale.y = -1
@@ -194,7 +194,7 @@ export function TerrainView({
       ground.position.z = -0.8
       ground.receiveShadow = true
       scene.add(ground)
-      const sun = new THREE.DirectionalLight(0xffffff, 1)
+      const sun = new THREE.DirectionalLight(0xff_ff_ff, 1)
       sun.position.set(-sizeVec.x * 0.55, -sizeVec.y * 0.75, sizeVec.y * 1.5)
       sun.castShadow = true
       sun.shadow.mapSize.set(2048, 2048)
@@ -208,7 +208,7 @@ export function TerrainView({
       camera.up.set(0, 0, 1)
       camera.lookAt(0, 0, 48)
       fit()
-      if (hovered) highlight(hovered)
+      if (hovered) {highlight(hovered)}
     }
 
     fetch("/district-map.svg")
@@ -217,7 +217,7 @@ export function TerrainView({
       .catch(() => {})
 
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return
+      if (e.pointerType !== "mouse") {return}
       const rect = renderer.domElement.getBoundingClientRect()
       pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
       pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -255,12 +255,12 @@ export function TerrainView({
         if (hasGeometry(obj)) {
           obj.geometry.dispose()
           const mat = obj.material
-          if (Array.isArray(mat)) mat.forEach((m) => {
+          if (Array.isArray(mat)) {mat.forEach((m) => {
             m.dispose()
-          })
-          else mat.dispose()
+          })}
+          else {mat.dispose()}
         }
-        if (obj instanceof THREE.DirectionalLight) obj.shadow.map?.dispose()
+        if (obj instanceof THREE.DirectionalLight) {obj.shadow.map?.dispose()}
       })
       renderer.dispose()
       renderer.domElement.remove()

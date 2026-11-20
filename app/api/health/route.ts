@@ -24,13 +24,13 @@ export async function GET() {
       body: JSON.stringify({ query: "{ feeds { feedId } }" }),
       signal: AbortSignal.timeout(4000),
     })
-    if (!res.ok) throw new Error(`OTP responded ${res.status}`)
+    if (!res.ok) {throw new Error(`OTP responded ${res.status}`)}
     const feeds = FeedsResponse.parse(await res.json()).data?.feeds
-    if (feeds == null || feeds.length === 0) throw new Error("OTP has no feed loaded")
+    if (feeds == null || feeds.length === 0) {throw new Error("OTP has no feed loaded")}
     return Response.json({ status: "ok", commit: COMMIT })
-  } catch (err) {
+  } catch (error) {
     // Log the detail server-side; keep the public body generic.
-    console.error("health check failed:", err)
+    console.error("health check failed:", error)
     return Response.json({ status: "degraded", commit: COMMIT }, { status: 503 })
   }
 }

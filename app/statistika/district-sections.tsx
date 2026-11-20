@@ -46,7 +46,7 @@ export function DistrictBandsSection({
 function BandHeader({
   band,
 }: {
-  band: { label: string; color: string; districts: DistrictScore[] }
+  band: { label: string; color: string; districts: Array<DistrictScore> }
 }) {
   return (
     <div className="flex flex-col gap-2">

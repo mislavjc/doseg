@@ -7,7 +7,7 @@ export interface OsmItem {
   lat?: number
   lon?: number
   tags?: Record<string, string>
-  refs?: number[]
+  refs?: Array<number>
 }
 
 /** A weighted graph edge (distance in centimeters). */
@@ -35,8 +35,8 @@ export const BBOX = {
  */
 export function writeBinaryGraph(
   path: string,
-  nodeList: { lat: number; lon: number }[],
-  edges: Edge[]
+  nodeList: Array<{ lat: number; lon: number }>,
+  edges: Array<Edge>
 ) {
   edges.sort((a, b) => a.from - b.from)
 
@@ -44,8 +44,8 @@ export function writeBinaryGraph(
   const edgeCount = edges.length
   const offsets = new Uint32Array(nodeCount + 1)
 
-  for (const e of edges) offsets[e.from + 1]++
-  for (let i = 1; i <= nodeCount; i++) offsets[i] += offsets[i - 1]
+  for (const e of edges) {offsets[e.from + 1]++}
+  for (let i = 1; i <= nodeCount; i++) {offsets[i] += offsets[i - 1]}
 
   const headerSize = 8
   const nodesSize = nodeCount * 16

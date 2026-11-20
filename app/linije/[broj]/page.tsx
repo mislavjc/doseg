@@ -43,7 +43,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { broj } = await params
   const data = loadLineData(broj)
-  if (!data) return {}
+  if (!data) {return {}}
   // Title keywords follow real GSC demand: trams are searched "tramvaj {N}",
   // buses "zet {N}" — so each mode leads with its own pattern. Route endpoints
   // live in the description/page body, not the title (keeps it under ~60 chars
@@ -73,7 +73,7 @@ export default async function LinijaPage({
 }) {
   const { broj } = await params
   const data = loadLineData(broj)
-  if (!data) notFound()
+  if (!data) {notFound()}
   const index = loadLineIndex()
   const stops = data.directions[0].stops.length
   const status = serviceStatus(data)

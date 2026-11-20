@@ -21,16 +21,8 @@ import sharp from "sharp"
 
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import {
-  countBelow,
-  type HeroCrop,
-  type HeroMeta,
-  invMercX,
-  invMercY,
-  mercX,
-  mercY,
-  rawChannels,
-} from "./lib/dither-crop"
+import { countBelow, invMercX, invMercY, mercX, mercY, rawChannels } from './lib/dither-crop';
+import type { HeroCrop, HeroMeta } from './lib/dither-crop';
 import { readJson } from "./lib/json"
 
 const TILE_URL = "https://basemaps.cartocdn.com/dark_nolabels"
@@ -82,9 +74,9 @@ async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
       .toBuffer()
   }
   const cachePath = join(cacheDir, String(z), String(x), `${y}.png`)
-  if (existsSync(cachePath)) return readFileSync(cachePath)
+  if (existsSync(cachePath)) {return readFileSync(cachePath)}
   const res = await fetch(`${TILE_URL}/${z}/${x}/${y}.png`)
-  if (!res.ok) throw new Error(`tile ${z}/${x}/${y}: HTTP ${res.status}`)
+  if (!res.ok) {throw new Error(`tile ${z}/${x}/${y}: HTTP ${res.status}`)}
   const buf = Buffer.from(await res.arrayBuffer())
   mkdirSync(join(cacheDir, String(z), String(x)), { recursive: true })
   writeFileSync(cachePath, buf)
@@ -104,9 +96,9 @@ async function stitchGrayCrop(
   const tx1 = Math.floor((x0 + natW - 1) / TILE_SIZE)
   const ty1 = Math.floor((y0 + natH - 1) / TILE_SIZE)
 
-  const tiles: { x: number; y: number }[] = []
+  const tiles: Array<{ x: number; y: number }> = []
   for (let ty = ty0; ty <= ty1; ty++)
-    for (let tx = tx0; tx <= tx1; tx++) tiles.push({ x: tx, y: ty })
+    {for (let tx = tx0; tx <= tx1; tx++) {tiles.push({ x: tx, y: ty })}}
 
   const buffers = await mapConcurrent(tiles, FETCH_CONCURRENCY, (t) =>
     fetchTile(zoom, t.x, t.y)
@@ -145,7 +137,7 @@ async function stitchGrayCrop(
   return data
 }
 
-function cropSig(bbox: number[], outW: number, outH: number, pad: number): string {
+function cropSig(bbox: Array<number>, outW: number, outH: number, pad: number): string {
   return [
     bbox.map((v) => v.toFixed(5)).join(","),
     `${outW}x${outH}`,
@@ -158,7 +150,7 @@ function cropSig(bbox: number[], outW: number, outH: number, pad: number): strin
 
 async function buildCrop(
   broj: string,
-  bbox: number[],
+  bbox: Array<number>,
   suffix: string,
   outW: number,
   outH: number,
@@ -186,7 +178,7 @@ async function buildCrop(
     const worldPx = TILE_SIZE * 2 ** fitZoom
     const wPx = mercX(east, worldPx) - mercX(west, worldPx)
     const hPx = mercY(south, worldPx) - mercY(north, worldPx)
-    if (wPx <= outW && hPx <= outH) break
+    if (wPx <= outW && hPx <= outH) {break}
     fitZoom--
   }
   const zoom = zoomOverride ?? Math.min(fitZoom + OVERSAMPLE_ZOOM, ZOOM_MAX)
@@ -243,7 +235,7 @@ async function buildCrop(
 
 async function buildHero(
   broj: string,
-  bbox: number[],
+  bbox: Array<number>,
   prev?: HeroMeta
 ): Promise<HeroMeta> {
   // Mobile band height follows the route's mercator aspect, clamped.
@@ -280,7 +272,7 @@ async function main() {
 
   let done = 0
   await mapConcurrent(lines, 4, async (broj) => {
-    const { bbox } = readJson<{ bbox: number[] }>(join(dataDir, `${broj}.json`))
+    const { bbox } = readJson<{ bbox: Array<number> }>(join(dataDir, `${broj}.json`))
     const t0 = Date.now()
     const built = await buildHero(broj, bbox, meta[broj])
     meta[broj] = built

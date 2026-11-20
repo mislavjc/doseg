@@ -253,7 +253,7 @@ function ScatterPoints({
   scatterYScale,
   scatterRScale,
 }: {
-  densityData: DensityDatum[]
+  densityData: Array<DensityDatum>
   scatterXScale: ReturnType<typeof scaleLinear<number>>
   scatterYScale: ReturnType<typeof scaleLinear<number>>
   scatterRScale: ReturnType<typeof scaleSqrt<number>>
@@ -385,7 +385,7 @@ function ScatterLegend() {
 function ScatterAccessibilityTable({
   densityData,
 }: {
-  densityData: DensityDatum[]
+  densityData: Array<DensityDatum>
 }) {
   return (
     <div className="sr-only">
@@ -491,7 +491,7 @@ export function TramSection({
 }: {
   freq: FreqInsights
 }) {
-  if (freq.tramlessDistricts.length === 0) return null
+  if (freq.tramlessDistricts.length === 0) {return null}
   return (
     <section
       id="tramvaj"
@@ -524,7 +524,7 @@ export function TramSection({
   )
 }
 
-function TramlessScores({ districts }: { districts: DistrictScore[] }) {
+function TramlessScores({ districts }: { districts: Array<DistrictScore> }) {
   return (
     <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-body text-slate-600 dark:text-slate-400">
       {districts
@@ -546,7 +546,7 @@ export function HzTrainSection({ data }: { data: ScoreData }) {
     (d) => d.trainLines.length > 0
   )
   const anyTrainBoost = withTrains.some((d) => d.trainBoostPct > 0)
-  if (withTrains.length === 0 || anyTrainBoost) return null
+  if (withTrains.length === 0 || anyTrainBoost) {return null}
   return (
     <section
       id="vlak"
@@ -591,7 +591,7 @@ function HzTrainStatStrip({
   withTrains,
   totalDistricts,
 }: {
-  withTrains: DistrictScore[]
+  withTrains: Array<DistrictScore>
   totalDistricts: number
 }) {
   return (
@@ -631,7 +631,7 @@ function HzTrainBody({
   withTrains,
   totalDistricts,
 }: {
-  withTrains: DistrictScore[]
+  withTrains: Array<DistrictScore>
   totalDistricts: number
 }) {
   return (
@@ -666,7 +666,7 @@ function HzTrainBody({
   )
 }
 
-function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
+function HzTrainDistrictList({ withTrains }: { withTrains: Array<DistrictScore> }) {
   const sorted = withTrains.toSorted((a, b) => b.score - a.score)
   const maxScore = sorted.length > 0 ? sorted[0].score : 1
   return (

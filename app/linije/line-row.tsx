@@ -11,7 +11,7 @@ import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
 /** Right-column fact for a row: peak headway, or daily departures. */
 function rowFact(line: LineIndexEntry): string {
   const peak = line.peakHeadwayMin
-  if (peak !== null && peak !== 0 && peak <= 60) return `svakih ${Math.round(peak)} min`
+  if (peak !== null && peak !== 0 && peak <= 60) {return `svakih ${Math.round(peak)} min`}
   return `${line.dailyDepartures} pol. dnevno`
 }
 

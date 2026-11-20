@@ -57,7 +57,7 @@ export interface BajsStation {
 export interface BajsData {
   ttlSeconds: number
   updatedAt: number
-  stations: BajsStation[]
+  stations: Array<BajsStation>
   stationMap: Map<string, BajsStation>
 }
 
@@ -79,7 +79,7 @@ let cacheExpiresAt = 0
 let pendingLoad: Promise<BajsData> | null = null
 
 function clampTtl(ttl: number | undefined): number {
-  if (ttl === undefined || ttl === 0 || Number.isNaN(ttl)) return FALLBACK_TTL_SECONDS
+  if (ttl === undefined || ttl === 0 || Number.isNaN(ttl)) {return FALLBACK_TTL_SECONDS}
   return Math.max(15, Math.min(ttl, FALLBACK_TTL_SECONDS))
 }
 
@@ -111,12 +111,12 @@ async function loadBajsData(): Promise<BajsData> {
     stationsStatus.map((station) => [station.station_id, station])
   )
 
-  const stations: BajsStation[] = []
+  const stations: Array<BajsStation> = []
   for (const stationInfo of stationsInfo) {
-    if (stationInfo.is_virtual_station) continue
+    if (stationInfo.is_virtual_station) {continue}
 
     const stationStatus = statusById.get(stationInfo.station_id)
-    if (!stationStatus) continue
+    if (!stationStatus) {continue}
 
     stations.push({
       key: `bajs:${stationInfo.station_id}`,
@@ -167,14 +167,14 @@ export function getBajsData(): Promise<BajsData> {
   // only the first request of a process lifetime waits on the GBFS feed. A
   // refresh failure keeps the last-good snapshot in place.
   if (cachedData) {
-    if (Date.now() >= cacheExpiresAt) startRefresh().catch(() => {})
+    if (Date.now() >= cacheExpiresAt) {startRefresh().catch(() => {})}
     return Promise.resolve(cachedData)
   }
   return startRefresh()
 }
 
 export function buildBajsFeatureCollection(
-  stations: readonly BajsStation[]
+  stations: ReadonlyArray<BajsStation>
 ): FeatureCollection<Point, BajsStationProperties> {
   return {
     type: "FeatureCollection",

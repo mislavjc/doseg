@@ -8,7 +8,8 @@ import {
   PillLink,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
-import { faqJsonLd, type FaqItem } from "@/app/statistika/editorial/faq"
+import { faqJsonLd } from '@/app/statistika/editorial/faq';
+import type { FaqItem } from '@/app/statistika/editorial/faq';
 import {
   JsonLd,
   breadcrumbJsonLd,
@@ -257,11 +258,11 @@ export function Matrica({ data }: { data: KvartData }) {
 // ── Izvan špice: peak / evening / weekend reach + headway + night ───────────
 
 export function IzvanSpice({ data }: { data: KvartData }) {
-  const bars: [string, number][] = [
+  const bars: Array<[string, number]> = [
     ["špica", 100],
     ["navečer", data.eveningPctOfPeak],
   ]
-  if (data.weekendRetentionPct != null) bars.push(["vikend", data.weekendRetentionPct])
+  if (data.weekendRetentionPct != null) {bars.push(["vikend", data.weekendRetentionPct])}
   return (
     <>
       <SectionHeader eyebrow="izvan špice" hook="Vrijedi li i navečer i vikendom?">
@@ -333,8 +334,8 @@ export function Linije({ data }: { data: KvartData }) {
 
 export type KvartStop = { name: string; slug: string; lineCount: number }
 
-export function StaniceUKvartu({ stops }: { stops: KvartStop[] }) {
-  if (stops.length === 0) return null
+export function StaniceUKvartu({ stops }: { stops: Array<KvartStop> }) {
+  if (stops.length === 0) {return null}
   return (
     <>
       <SectionHeader eyebrow="stanice u kvartu" hook="Najprometnije stanice.">
@@ -451,7 +452,7 @@ export function Blizina({ data }: { data: KvartData }) {
 // ── Promjene (conditional) ──────────────────────────────────────────────────
 
 export function Promjene({ data }: { data: KvartData }) {
-  if (data.promjene.length === 0) return null
+  if (data.promjene.length === 0) {return null}
   return (
     <>
       <SectionHeader eyebrow="promjene na linijama" hook="Nedavne izmjene mreže.">
@@ -485,15 +486,15 @@ export function Promjene({ data }: { data: KvartData }) {
 
 // ── FAQ + JSON-LD ────────────────────────────────────────────────────────────
 
-export function buildFaq(data: KvartData): FaqItem[] {
+export function buildFaq(data: KvartData): Array<FaqItem> {
   const top = data.commute.at(0)
   const tram = data.lines.filter((l) => l.mode === "tram").map((l) => l.broj)
   const bus = data.lines.filter((l) => l.mode === "bus").map((l) => l.broj)
   // Only name the modes the kvart actually has — gluing an empty list left a
   // dangling "te autobusi —." (broken Croatian + a forbidden em-dash).
-  const lineParts: string[] = []
-  if (tram.length > 0) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
-  if (bus.length > 0) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
+  const lineParts: Array<string> = []
+  if (tram.length > 0) {lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)}
+  if (bus.length > 0) {lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)}
   const joined = lineParts.join(" te ")
   const linesAnswer = joined
     ? `${cap(joined)}.`
@@ -519,7 +520,7 @@ export function buildFaq(data: KvartData): FaqItem[] {
   ]
 }
 
-export function KvartJsonLd({ data, faq }: { data: KvartData; faq: FaqItem[] }) {
+export function KvartJsonLd({ data, faq }: { data: KvartData; faq: Array<FaqItem> }) {
   const breadcrumb = breadcrumbJsonLd([
     { name: "Kvartovi", path: "/kvartovi" },
     { name: data.name, path: `/kvartovi/${data.slug}` },

@@ -18,7 +18,7 @@ export type IsochroneResponse = RustIsochroneResponse
  * unique query string and the CDN cache in front of the server never hits. */
 function snapTime(time: string): string {
   const [h, m] = time.split(":").map(Number)
-  if (Number.isNaN(h) || Number.isNaN(m)) return time
+  if (Number.isNaN(h) || Number.isNaN(m)) {return time}
   const snapped = Math.round((h * 60 + m) / 5) * 5
   const hh = Math.floor(snapped / 60) % 24
   const mm = snapped % 60
@@ -48,7 +48,7 @@ function buildIsochroneSearchParams(params: IsochroneParams): URLSearchParams {
     lon: params.lon.toFixed(3),
   })
   searchParams.set("time", snapTime(params.time ?? zagrebNow()))
-  if (params.bajs) searchParams.set("bajs", "1")
+  if (params.bajs) {searchParams.set("bajs", "1")}
   searchParams.set("v", ISOCHRONE_MODEL_VERSION)
   return searchParams
 }
@@ -88,9 +88,9 @@ export async function fetchExactRoute(
     destLat: String(params.destLat),
     destLon: String(params.destLon),
   })
-  if (params.time) searchParams.set("time", params.time)
-  if (params.bajs) searchParams.set("bajs", "1")
-  if (params.preferredKey) searchParams.set("preferredKey", params.preferredKey)
+  if (params.time) {searchParams.set("time", params.time)}
+  if (params.bajs) {searchParams.set("bajs", "1")}
+  if (params.preferredKey) {searchParams.set("preferredKey", params.preferredKey)}
 
   const response = await fetch(`/api/route?${searchParams.toString()}`, {
     signal,
@@ -106,7 +106,7 @@ export interface Itinerary {
   walkDistance: number
   bikeDistance: number
   transfers: number
-  legs: Leg[]
+  legs: Array<Leg>
 }
 
 export interface Leg {
@@ -120,7 +120,7 @@ export interface Leg {
   delay?: number
   legGeometry: {
     points: string
-    coords?: [number, number][]
+    coords?: Array<[number, number]>
   }
 }
 

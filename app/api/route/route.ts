@@ -8,7 +8,7 @@ import { secondsOfDay } from "@/lib/zagreb-time"
 function parseDepartureTime(timeStr: string | null): number {
   if (timeStr) {
     const [h, m] = timeStr.split(":").map(Number)
-    if (!Number.isNaN(h) && !Number.isNaN(m)) return h * 3600 + m * 60
+    if (!Number.isNaN(h) && !Number.isNaN(m)) {return h * 3600 + m * 60}
   }
   return secondsOfDay()
 }
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
     const { response } = jsonResponse(itinerary, "private, max-age=5")
     return response
-  } catch (err) {
-    return apiErrorResponse("route route error", err, 502)
+  } catch (error) {
+    return apiErrorResponse("route route error", error, 502)
   }
 }

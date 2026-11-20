@@ -153,7 +153,7 @@ const RITAM_HEIGHT = 170
 
 export function Ritam({ rides }: { rides: BajsRides }) {
   const { hourly, peakHour, morningPeak } = rides
-  if (!peakHour) return null
+  if (!peakHour) {return null}
 
   const max = Math.max(...hourly.map((h) => h.avgStarts))
   // The morning commute only reads as its own event when it is not the peak.
@@ -229,7 +229,7 @@ export function Ritam({ rides }: { rides: BajsRides }) {
 
 export function Dani({ rides }: { rides: BajsRides }) {
   const { fullDays, avgPerDay, busiestDay, partialDay } = rides
-  if (fullDays.length === 0 || avgPerDay === null || avgPerDay === 0 || !busiestDay) return null
+  if (fullDays.length === 0 || avgPerDay === null || avgPerDay === 0 || !busiestDay) {return null}
 
   const max = Math.max(...fullDays.map((d) => d.starts))
   const totalBulk = fullDays.reduce(
@@ -338,7 +338,7 @@ function BalanceRowView({
 }
 
 export function Odstupanje({ balance }: { balance: BajsBalance | null }) {
-  if (!balance) return null
+  if (!balance) {return null}
   const { surplus, empty, overCapacity, totalStations } = balance
   const maxSurplus = Math.max(1, ...surplus.map((r) => r.surplus ?? 0))
   const maxEmpty = Math.max(0.01, ...empty.map((r) => r.emptyShare ?? 0))
@@ -379,7 +379,7 @@ export function Odstupanje({ balance }: { balance: BajsBalance | null }) {
 
 export function Reljef({ ranking }: { ranking: BajsRanking | null }) {
   const terrain = buildBajsTerrain(ranking)
-  if (!ranking || !terrain) return null
+  if (!ranking || !terrain) {return null}
 
   const top = terrain.kvartovi.at(0)
   const covered = terrain.kvartovi.length
@@ -656,10 +656,10 @@ function SmjerRow({ row, max }: { row: KvartFlow; max: number }) {
 }
 
 export function Smjer({ flow }: { flow: BajsFlow | null }) {
-  if (!flow) return null
+  if (!flow) {return null}
 
   const shown = flow.kvartovi.filter((k) => Math.abs(k.morningNet) >= 1)
-  if (shown.length < 3) return null
+  if (shown.length < 3) {return null}
 
   const max = Math.max(1, ...shown.map((k) => Math.abs(k.morningNet)))
   const drain = flow.drains.at(0)
@@ -719,7 +719,7 @@ const KOMBI_HEIGHT = 140
 
 /** The van's regular runs, which repeat often enough to be routes. */
 function Rute({ corridors }: { corridors: BajsRelocations["corridors"] }) {
-  if (corridors.length === 0) return null
+  if (corridors.length === 0) {return null}
 
   return (
     <div className="mt-8">
@@ -761,10 +761,10 @@ export function Kombi({
   relocations: BajsRelocations | null
   rides: BajsRides
 }) {
-  if (!relocations) return null
+  if (!relocations) {return null}
   const { perDay, hourly, busiestHour, avgMinutes, corridors } = relocations
   const max = Math.max(...hourly)
-  if (max === 0) return null
+  if (max === 0) {return null}
 
   const ridePeak = rides.peakHour?.hour ?? null
 

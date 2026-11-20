@@ -21,7 +21,8 @@ import { join } from "node:path"
 
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
+import { createDitherCropper } from './lib/dither-crop';
+import type { HeroMeta } from './lib/dither-crop';
 import { readJson } from "./lib/json"
 
 const DESKTOP = { suffix: "", outW: 2880, outH: 1120, pad: 0.18 }
@@ -46,7 +47,7 @@ const cropper = createDitherCropper({ cacheDir, cutoff, zoomOverride, zoomMax: 1
 async function main() {
   mkdirSync(outDir, { recursive: true })
 
-  const index = readJson<{ stops: { slug: string; lineCount: number }[] }>(
+  const index = readJson<{ stops: Array<{ slug: string; lineCount: number }> }>(
     join(dataDir, "index.json")
   )
   const slugs = index.stops
@@ -60,7 +61,7 @@ async function main() {
 
   let done = 0
   await mapConcurrent(slugs, 4, async (slug) => {
-    const { hero } = readJson<{ hero: { bbox: number[] } }>(join(dataDir, `${slug}.json`))
+    const { hero } = readJson<{ hero: { bbox: Array<number> } }>(join(dataDir, `${slug}.json`))
     const t0 = Date.now()
     const prev = meta[slug]
     const [desktop, mobile] = await Promise.all([

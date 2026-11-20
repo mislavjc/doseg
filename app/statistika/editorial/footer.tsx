@@ -13,9 +13,9 @@ import { MonoLabel, Section } from "./primitives"
 const GITHUB = "https://github.com/mislavjc/doseg"
 
 type Item = { t: string; href?: string; external?: boolean; prefetch?: false }
-type Column = { label: string; items: Item[] }
+type Column = { label: string; items: Array<Item> }
 
-const COLUMNS: Column[] = [
+const COLUMNS: Array<Column> = [
   {
     label: "izvori",
     items: [
@@ -46,7 +46,7 @@ const COLUMNS: Column[] = [
 function ColumnItem({ item }: { item: Item }) {
   const cls = "font-mono text-label leading-5"
   if (!item.href)
-    return <span className={`${cls} text-ink-faint`}>{item.t}</span>
+    {return <span className={`${cls} text-ink-faint`}>{item.t}</span>}
   const linkCls = `${cls} text-zg-blue transition-colors hover:text-navy`
   return item.external ? (
     <a href={item.href} target="_blank" rel="noopener noreferrer" className={linkCls}>

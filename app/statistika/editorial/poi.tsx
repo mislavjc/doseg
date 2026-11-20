@@ -75,12 +75,12 @@ export function PoiRow({
     </>
   )
   if (href)
-    return (
+    {return (
       // prefetch=false: several per-row map deep links would each trigger
       // their own speculative /karta fetch the moment they scroll into view.
       <Link href={href} prefetch={false} className={cn("group", row)}>
         {inner}
       </Link>
-    )
+    )}
   return <div className={row}>{inner}</div>
 }

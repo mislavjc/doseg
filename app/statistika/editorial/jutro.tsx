@@ -63,7 +63,7 @@ function LegendDot({ cls, label }: { cls: string; label: string }) {
   )
 }
 
-export function Jutro({ rows }: { rows: EveningRow[] }) {
+export function Jutro({ rows }: { rows: Array<EveningRow> }) {
   // Rows arrive sorted by drop desc (computeEvening), so the narration reads off
   // the head and tail. Derived, not written: the March copy claimed "istok gubi
   // trećinu" and survived a feed roll that inverted the story, contradicting the

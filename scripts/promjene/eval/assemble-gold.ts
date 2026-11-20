@@ -13,17 +13,18 @@
 import { writeFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { readJson } from "../../lib/json"
-import { categoryFromRoles, type Notice } from "../extract"
+import { categoryFromRoles } from '../extract';
+import type { Notice } from '../extract';
 
 const DIR = join(process.cwd(), "scripts/promjene/eval")
 const PARTS = join(DIR, "gold-parts")
 
-type GoldPart = Notice & { permanenceEvidence: string; disagreements?: string[]; needsReview?: boolean }
+type GoldPart = Notice & { permanenceEvidence: string; disagreements?: Array<string>; needsReview?: boolean }
 type GoldRecord = Pick<Notice, "permanence" | "lines" | "effectiveDate" | "cleanTitle"> & { category: string }
 
 const gold: Record<string, GoldRecord> = {}
 const reviewOut: Record<string, unknown> = {}
-const flagged: { id: string; permanence: string; category: string; disagreements: string[]; evidence: string }[] = []
+const flagged: Array<{ id: string; permanence: string; category: string; disagreements: Array<string>; evidence: string }> = []
 
 const ids = readdirSync(PARTS).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/u, "")).toSorted((a, b) => +a - +b)
 for (const id of ids) {
@@ -32,7 +33,7 @@ for (const id of ids) {
   const category = r.category === "stajalište" ? "stajalište" : categoryFromRoles(r.lines, r.category)
   gold[id] = { permanence: r.permanence, category, lines: r.lines, effectiveDate: r.effectiveDate ?? null, cleanTitle: r.cleanTitle }
   reviewOut[id] = { ...gold[id], permanenceEvidence: r.permanenceEvidence, disagreements: r.disagreements ?? [], needsReview: r.needsReview === true }
-  if (r.needsReview === true) flagged.push({ id, permanence: r.permanence, category, disagreements: r.disagreements ?? [], evidence: r.permanenceEvidence })
+  if (r.needsReview === true) {flagged.push({ id, permanence: r.permanence, category, disagreements: r.disagreements ?? [], evidence: r.permanenceEvidence })}
 }
 
 writeFileSync(join(DIR, "gold.json"), JSON.stringify(gold, null, 2))
@@ -44,4 +45,4 @@ const byCat = all.reduce<Record<string, number>>((a, g) => ((a[g.category] = (a[
 console.error(`gold: ${ids.length} notices · ${perm} permanent / ${all.length - perm} temporary`)
 console.error(`by category: ${JSON.stringify(byCat)}`)
 console.error(`\n${flagged.length} flagged needsReview (adjudicate these by hand):`)
-for (const f of flagged) console.error(`  ${f.id}  ${f.permanence.padEnd(9)} ${f.category.padEnd(11)} [${f.disagreements.join(",")}]  "${f.evidence.slice(0, 70)}"`)
+for (const f of flagged) {console.error(`  ${f.id}  ${f.permanence.padEnd(9)} ${f.category.padEnd(11)} [${f.disagreements.join(",")}]  "${f.evidence.slice(0, 70)}"`)}

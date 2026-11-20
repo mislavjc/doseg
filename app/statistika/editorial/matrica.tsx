@@ -26,7 +26,7 @@ function OriginPicker({
   onChange,
 }: {
   value: string
-  options: string[]
+  options: Array<string>
   onChange: (v: string) => void
 }) {
   return (
@@ -78,7 +78,7 @@ function TravelList({
   setHover,
 }: {
   origin: string
-  dest: Dest[]
+  dest: Array<Dest>
   paint: Paint
   hover: string | null
   setHover: (n: string | null) => void
@@ -136,7 +136,7 @@ function Choropleth({
   hover,
   setHover,
 }: {
-  shapes: Shape[]
+  shapes: Array<Shape>
   origin: string
   minByName: Map<string, number>
   paint: Paint
@@ -179,13 +179,13 @@ export function Matrica({
   districts,
   matrix,
 }: {
-  districts: string[]
-  matrix: number[][]
+  districts: Array<string>
+  matrix: Array<Array<number>>
 }) {
   const [origin, setOrigin] = useState(
     districts.includes("Donji grad") ? "Donji grad" : districts[0]
   )
-  const [shapes, setShapes] = useState<Shape[]>([])
+  const [shapes, setShapes] = useState<Array<Shape>>([])
   const [hover, setHover] = useState<string | null>(null)
 
   useEffect(() => {

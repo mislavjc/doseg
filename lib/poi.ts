@@ -7,11 +7,11 @@ export type MapPoiCategory = Extract<POICategory, "hospital" | "school" | "park"
  * Single source for POI category UI — sidebar "u dosegu" rows, the Slojevi
  * panel, and any legend. Color classes map to the --poi-* tokens.
  */
-export const POI_CATEGORIES: {
+export const POI_CATEGORIES: Array<{
   key: MapPoiCategory
   label: string
   colorClass: string
-}[] = [
+}> = [
   { key: "hospital", label: "Bolnice", colorClass: "bg-poi-hospital" },
   { key: "school", label: "Škole", colorClass: "bg-poi-school" },
   { key: "park", label: "Parkovi", colorClass: "bg-poi-park" },

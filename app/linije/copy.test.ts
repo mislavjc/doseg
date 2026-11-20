@@ -130,15 +130,15 @@ describe("clockTime()", () => {
 
 type MinimalLinePageData = {
   timetable: {
-    radniDan: Array<{ hour: number; minutes: number[] }>[]
-    subota: Array<{ hour: number; minutes: number[] }>[]
-    nedjelja: Array<{ hour: number; minutes: number[] }>[]
+    radniDan: Array<Array<{ hour: number; minutes: Array<number> }>>
+    subota: Array<Array<{ hour: number; minutes: Array<number> }>>
+    nedjelja: Array<Array<{ hour: number; minutes: Array<number> }>>
   }
   // peakRange only reads timetable.radniDan[0]
 }
 
 function makeLinePageData(
-  radniDanDir0: Array<{ hour: number; minutes: number[] }>
+  radniDanDir0: Array<{ hour: number; minutes: Array<number> }>
 ): MinimalLinePageData {
   return {
     timetable: {

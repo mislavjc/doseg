@@ -38,7 +38,7 @@ function LineGroup({
   topCount,
   moreLabel,
 }: {
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
   topCount: number
   moreLabel: string
 }) {

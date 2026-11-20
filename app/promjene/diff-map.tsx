@@ -23,24 +23,24 @@ type LonLat = [number, number]
 type Pt = { lat: number; lon: number; name: string }
 
 const near = (a: Pt, b: Pt) => {
-  const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111320
-  const dy = (a.lat - b.lat) * 110540
+  const dx = (a.lon - b.lon) * Math.cos((a.lat * Math.PI) / 180) * 111_320
+  const dy = (a.lat - b.lat) * 110_540
   return Math.hypot(dx, dy) < 220
 }
 
-const fcLine = (coords: LonLat[]) => ({ type: "FeatureCollection" as const, features: [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: coords } }] })
-const fcPts = (pts: Pt[]) => ({ type: "FeatureCollection" as const, features: pts.map((p) => ({ type: "Feature" as const, properties: {}, geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] } })) })
+const fcLine = (coords: Array<LonLat>) => ({ type: "FeatureCollection" as const, features: [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: coords } }] })
+const fcPts = (pts: Array<Pt>) => ({ type: "FeatureCollection" as const, features: pts.map((p) => ({ type: "Feature" as const, properties: {}, geometry: { type: "Point" as const, coordinates: [p.lon, p.lat] } })) })
 /** zoom-interpolated number */
 const Z = (a: number, b: number, c: number): maplibregl.ExpressionSpecification => ["interpolate", ["linear"], ["zoom"], 11, a, 14, b, 16, c]
 
 function muteBasemap(map: maplibregl.Map) {
-  if (map.getLayer("background")) map.setPaintProperty("background", "background-color", "#F6F7F9")
+  if (map.getLayer("background")) {map.setPaintProperty("background", "background-color", "#F6F7F9")}
   for (const l of map.getStyle().layers ?? []) {
     try {
       if (/poi|airport|housenum|aeroway|ferry/iu.test(l.id)) { map.setLayoutProperty(l.id, "visibility", "none"); continue }
       if (l.type === "symbol") { map.setPaintProperty(l.id, "text-opacity", 0.6); map.setPaintProperty(l.id, "icon-opacity", 0) }
-      if (l.id === "water") map.setPaintProperty(l.id, "fill-color", "#E7EDF3")
-      if (/^(park|landcover|wood|grass|wetland)/iu.test(l.id) && l.type === "fill") map.setPaintProperty(l.id, "fill-opacity", 0.5)
+      if (l.id === "water") {map.setPaintProperty(l.id, "fill-color", "#E7EDF3")}
+      if (/^(park|landcover|wood|grass|wetland)/iu.test(l.id) && l.type === "fill") {map.setPaintProperty(l.id, "fill-opacity", 0.5)}
     } catch {
       // layer lacks that property, fine
     }
@@ -70,15 +70,15 @@ function endpointMarker(map: maplibregl.Map, p: Pt, kind: "shared" | "new" | "ol
 }
 
 function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, removed, mode = "diff", change = "terminus", stopConnected = false, label }: {
-  oldShape: LonLat[]; newShape: LonLat[]; shared: Pt; newTip: Pt; oldTip: Pt; allStops: Pt[]; added: Pt[]; removed: Pt[]; mode?: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; label?: string
+  oldShape: Array<LonLat>; newShape: Array<LonLat>; shared: Pt; newTip: Pt; oldTip: Pt; allStops: Array<Pt>; added: Array<Pt>; removed: Array<Pt>; mode?: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; label?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current) {return}
     const bounds = new maplibregl.LngLatBounds()
-    for (const [lon, lat] of [...oldShape, ...newShape]) bounds.extend([lon, lat])
+    for (const [lon, lat] of [...oldShape, ...newShape]) {bounds.extend([lon, lat])}
 
     const map = new maplibregl.Map({
       container: ref.current,
@@ -125,7 +125,7 @@ function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, 
       const newWidth = stopConnected ? Z(2.6, 4, 5) : Z(3.5, 6, 7.5)
       map.addLayer({ id: "new-casing", type: "line", source: "new", paint: { "line-color": "#fff", "line-width": newCasing, "line-blur": 0.4 }, layout: round })
       const newPaint: maplibregl.LineLayerSpecification["paint"] = { "line-color": BLUE, "line-width": newWidth }
-      if (stopConnected) newPaint["line-dasharray"] = [1.8, 1.3]
+      if (stopConnected) {newPaint["line-dasharray"] = [1.8, 1.3]}
       map.addLayer({ id: "new-line", type: "line", source: "new", paint: newPaint, layout: round })
       // every station: white halo under each, then the ringed dot.
       // kept = hollow gray · removed = hollow slate · added = solid blue (on top)
@@ -139,19 +139,19 @@ function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, 
       // origin pill would stack under the icon pill. Drop it when they coincide.
       if (mode === "removed") {
         endpointMarker(map, oldTip, "old", cl)
-        if (!near(shared, oldTip)) endpointMarker(map, shared, "old-origin", cl)
+        if (!near(shared, oldTip)) {endpointMarker(map, shared, "old-origin", cl)}
       } else if (mode === "new") {
         endpointMarker(map, newTip, "new", cl)
-        if (!near(shared, newTip)) endpointMarker(map, shared, "shared", cl)
+        if (!near(shared, newTip)) {endpointMarker(map, shared, "shared", cl)}
       } else if (change === "midroute") {
         // termini unchanged — both ends are plain labels; the reroute shows as the
         // diverging blue/slate paths + the added/removed station dots in between.
         endpointMarker(map, shared, "shared", cl)
-        if (!near(shared, newTip)) endpointMarker(map, newTip, "shared", cl)
+        if (!near(shared, newTip)) {endpointMarker(map, newTip, "shared", cl)}
       } else {
         endpointMarker(map, oldTip, "old", cl)
         endpointMarker(map, newTip, "new", cl)
-        if (!near(shared, oldTip) && !near(shared, newTip)) endpointMarker(map, shared, "shared", cl)
+        if (!near(shared, oldTip) && !near(shared, newTip)) {endpointMarker(map, shared, "shared", cl)}
       }
       fit()
     })
@@ -185,7 +185,7 @@ export function LazyDiffMap(props: DiffMapProps) {
   const [active, setActive] = useState(false)
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el) {return}
     const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), { rootMargin: "500px 0px" })
     io.observe(el)
     return () => io.disconnect()

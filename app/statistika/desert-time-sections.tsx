@@ -186,7 +186,7 @@ export function StopDistanceSection({
 }: {
   desert: DesertInsights
 }) {
-  if (desert.stopDistSorted.length === 0) return null
+  if (desert.stopDistSorted.length === 0) {return null}
   return (
     <section
       id="udaljenost-stajalista"
@@ -424,7 +424,7 @@ export function PeakOffPeakSection({
   evening: EveningInsights
 }) {
   if (evening.eveningRankedByDrop.length === 0)
-    return null
+    {return null}
   return (
     <section
       id="vrsni-sat"
@@ -561,7 +561,7 @@ export function WeekendSection({
   weekend: WeekendData
 }) {
   if (!weekend.weekendComparison || weekend.weekendComparison.length === 0)
-    return null
+    {return null}
   return (
     <section
       id="vikend"
@@ -603,7 +603,7 @@ function WeekendBarChart({
 }: {
   weekend: WeekendData
 }) {
-  if (!weekend.weekendComparison) return null
+  if (!weekend.weekendComparison) {return null}
   return (
     <div>
       <div className="mb-4 flex items-baseline justify-between">
@@ -696,7 +696,7 @@ function WeekendInterpretation({
 }: {
   weekend: WeekendData
 }) {
-  if (!weekend.weekendComparison) return null
+  if (!weekend.weekendComparison) {return null}
   return (
     <div className="flex flex-col gap-8">
       <WeekendStatCards weekend={weekend} />
@@ -722,7 +722,7 @@ function WeekendStatCards({
 }: {
   weekend: WeekendData
 }) {
-  if (!weekend.weekendComparison) return null
+  if (!weekend.weekendComparison) {return null}
   return (
     <div className="flex flex-col gap-8 sm:flex-row">
       <div className="flex flex-col border-l-2 border-violet-500 py-1 pl-4">
@@ -753,7 +753,7 @@ function WeekendPositiveText({
   weekendComparison,
   cityWeekendChange,
 }: {
-  weekendComparison: WeekendItem[]
+  weekendComparison: Array<WeekendItem>
   cityWeekendChange: number
 }) {
   const worst = weekendComparison
@@ -805,7 +805,7 @@ function WeekendNegativeText({
   weekendComparison,
   cityWeekendChange,
 }: {
-  weekendComparison: WeekendItem[]
+  weekendComparison: Array<WeekendItem>
   cityWeekendChange: number
 }) {
   const resilient = weekendComparison.slice(0, 3)

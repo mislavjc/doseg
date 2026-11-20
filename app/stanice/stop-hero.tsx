@@ -30,7 +30,7 @@ function invMercY(my: number): number {
 /** Fit a crop of aspect outW:outH around the geometry bbox (no tiles needed),
  *  used when no baked map exists for this stop. */
 function cropFromBbox(
-  bbox: number[],
+  bbox: Array<number>,
   outW: number,
   outH: number
 ): LineHeroCrop {
@@ -45,8 +45,8 @@ function cropFromBbox(
   let spanX = (x1 - x0) * pad
   let spanY = (y1 - y0) * pad
   const target = outW / outH
-  if (spanX / spanY < target) spanX = spanY * target
-  else spanY = spanX / target
+  if (spanX / spanY < target) {spanX = spanY * target}
+  else {spanY = spanX / target}
   return {
     west: invMercX(cx - spanX / 2),
     east: invMercX(cx + spanX / 2),
@@ -58,7 +58,7 @@ function cropFromBbox(
   }
 }
 
-function path(shape: [number, number][], project: (lon: number, lat: number) => [number, number]): string {
+function path(shape: Array<[number, number]>, project: (lon: number, lat: number) => [number, number]): string {
   const pts = shape.map(([lon, lat]) => project(lon, lat))
   return `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
 }

@@ -1,13 +1,7 @@
 import type { Itinerary, Leg, Place } from "./otp"
 import type { ReachabilityState } from "./reachability-state"
-import {
-  BAJS_DROPOFF_SECONDS,
-  BAJS_PICKUP_SECONDS,
-  BAJS_SPEED,
-  computeTransitLegDuration,
-  type PatternData,
-  WALK_SPEED,
-} from "./transit-graph"
+import { BAJS_DROPOFF_SECONDS, BAJS_PICKUP_SECONDS, BAJS_SPEED, computeTransitLegDuration, WALK_SPEED } from './transit-graph';
+import type { PatternData } from './transit-graph';
 import { appendCoord, distMeters, findStreetPath, sumCoordDistance } from "./street-path"
 import { getBikeGraph, getWalkGraph } from "./walk-graph"
 
@@ -35,7 +29,7 @@ function getNode(state: ReachabilityState, key: string): RouteNode | null {
   }
 
   const station = state.bajsData?.stationMap.get(key)
-  if (!station) return null
+  if (!station) {return null}
 
   return {
     key,
@@ -117,19 +111,19 @@ function makeBikeLeg(from: Place, to: Place): Leg {
 
 function extractTransitStopGeometry(
   state: ReachabilityState,
-  stopKeys: string[],
+  stopKeys: Array<string>,
   boardIdx: number,
   alightIdx: number,
   fromNode: RouteNode,
   toNode: RouteNode
-): [number, number][] {
-  const coords: [number, number][] = []
+): Array<[number, number]> {
+  const coords: Array<[number, number]> = []
 
   appendCoord(coords, fromNode.lon, fromNode.lat)
   for (let si = boardIdx; si <= alightIdx; si++) {
     const stopKey = stopKeys[si]
     const stop = state.graph.stops.get(stopKey)
-    if (!stop) continue
+    if (!stop) {continue}
     appendCoord(coords, stop.lon, stop.lat)
   }
   appendCoord(coords, toNode.lon, toNode.lat)
@@ -142,8 +136,8 @@ function extractTransitStopGeometry(
       ]
 }
 
-function buildChain(state: ReachabilityState, terminalKey: string): string[] {
-  const chain: string[] = []
+function buildChain(state: ReachabilityState, terminalKey: string): Array<string> {
+  const chain: Array<string> = []
   const visited = new Set<string>()
   let current: string | null = terminalKey
 
@@ -151,7 +145,7 @@ function buildChain(state: ReachabilityState, terminalKey: string): string[] {
     visited.add(current)
     chain.push(current)
     const pred = state.preds.get(current)
-    if (!pred) break
+    if (!pred) {break}
     current = pred.fromKey
   }
 
@@ -165,14 +159,14 @@ function pickTerminalKey(
   destLon: number,
   preferredKey?: string | null
 ): string | null {
-  if (preferredKey && state.travelTimes.has(preferredKey)) return preferredKey
+  if (preferredKey && state.travelTimes.has(preferredKey)) {return preferredKey}
 
   let bestKey: string | null = null
   let bestScore = Infinity
 
   for (const [key, time] of state.travelTimes) {
     const node = getNode(state, key)
-    if (!node) continue
+    if (!node) {continue}
     const score =
       time + distMeters(node.lat, node.lon, destLat, destLon) / WALK_SPEED_MS
     if (score < bestScore) {
@@ -201,7 +195,7 @@ function buildTransitLeg(
   }
 
   const pattern = state.graph.patterns[pred.patternIdx] as PatternData | undefined
-  if (!pattern) return null
+  if (!pattern) {return null}
 
   // Use accumulated elapsed time (actual walk/bike/ride durations) rather than
   // Dijkstra travel times, which include artificial transfer penalties that
@@ -215,7 +209,7 @@ function buildTransitLeg(
     state.rtData,
     firstBoarding
   )
-  if (!timing) return null
+  if (!timing) {return null}
 
   const fromPlace: Place = { name: fromNode.name, lat: fromNode.lat, lon: fromNode.lon }
   const toPlace: Place = { name: node.name, lat: node.lat, lon: node.lon }
@@ -251,7 +245,7 @@ function processChainStep(
   const node = getNode(state, chainKey)
   const pred = state.preds.get(chainKey)
   const fromNode = pred ? getNode(state, pred.fromKey) : null
-  if (!node || !pred || !fromNode) return null
+  if (!node || !pred || !fromNode) {return null}
 
   const fromPlace: Place = { name: fromNode.name, lat: fromNode.lat, lon: fromNode.lon }
   const toPlace: Place = { name: node.name, lat: node.lat, lon: node.lon }
@@ -272,12 +266,12 @@ function processChainStep(
 
 function buildLegsFromChain(
   state: ReachabilityState,
-  chain: string[]
-): { legs: Leg[]; elapsedSeconds: number } | null {
+  chain: Array<string>
+): { legs: Array<Leg>; elapsedSeconds: number } | null {
   const firstNode = getNode(state, chain[0])
-  if (!firstNode) return null
+  if (!firstNode) {return null}
 
-  const legs: Leg[] = []
+  const legs: Array<Leg> = []
   let elapsedSeconds = 0
 
   const origin: Place = { name: "", lat: state.originLat, lon: state.originLon }
@@ -291,22 +285,22 @@ function buildLegsFromChain(
   let transitUsed = false
   for (let i = 1; i < chain.length; i++) {
     const step = processChainStep(state, chain[i], elapsedSeconds, !transitUsed)
-    if (!step) return null
+    if (!step) {return null}
     legs.push(step.leg)
     elapsedSeconds = step.newElapsed
-    if (step.leg.mode !== "WALK" && step.leg.mode !== "BIKE") transitUsed = true
+    if (step.leg.mode !== "WALK" && step.leg.mode !== "BIKE") {transitUsed = true}
   }
 
   return { legs, elapsedSeconds }
 }
 
 function appendFinalWalkLeg(
-  legs: Leg[],
+  legs: Array<Leg>,
   terminalNode: RouteNode,
   destLat: number,
   destLon: number
 ): number {
-  if (distMeters(terminalNode.lat, terminalNode.lon, destLat, destLon) <= 10) return 0
+  if (distMeters(terminalNode.lat, terminalNode.lon, destLat, destLon) <= 10) {return 0}
   const leg = makeWalkLeg(
     { name: terminalNode.name, lat: terminalNode.lat, lon: terminalNode.lon },
     { name: "", lat: destLat, lon: destLon }
@@ -315,7 +309,7 @@ function appendFinalWalkLeg(
   return leg.duration
 }
 
-function summarizeLegs(legs: Leg[], elapsedSeconds: number): Itinerary {
+function summarizeLegs(legs: Array<Leg>, elapsedSeconds: number): Itinerary {
   const walkDistance = legs
     .filter((leg) => leg.mode === "WALK")
     .reduce((sum, leg) => sum + leg.distance, 0)
@@ -342,19 +336,19 @@ export function buildAccurateItinerary(
   preferredKey?: string | null
 ): Itinerary | null {
   const terminalKey = pickTerminalKey(state, destLat, destLon, preferredKey)
-  if (!terminalKey) return null
+  if (!terminalKey) {return null}
 
   const result = buildLegsFromChain(state, buildChain(state, terminalKey))
-  if (!result) return null
+  if (!result) {return null}
 
   const terminalNode = getNode(state, terminalKey)
-  if (!terminalNode) return null
+  if (!terminalNode) {return null}
 
   result.elapsedSeconds += appendFinalWalkLeg(
     result.legs, terminalNode, destLat, destLon
   )
 
-  if (result.legs.length === 0) return null
+  if (result.legs.length === 0) {return null}
 
   return summarizeLegs(result.legs, result.elapsedSeconds)
 }

@@ -11,7 +11,7 @@ export interface FaqItem {
   a: string
 }
 
-export function CestaPitanja({ items }: { items: FaqItem[] }) {
+export function CestaPitanja({ items }: { items: Array<FaqItem> }) {
   return (
     <div>
       <Eyebrow className="pb-2">česta pitanja</Eyebrow>
@@ -31,7 +31,7 @@ export function CestaPitanja({ items }: { items: FaqItem[] }) {
   )
 }
 
-export function faqJsonLd(items: FaqItem[]) {
+export function faqJsonLd(items: Array<FaqItem>) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",

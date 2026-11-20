@@ -10,33 +10,33 @@ export const MONO = "'Geist Mono', ui-monospace, monospace"
 
 type LonLat = [number, number]
 type Pt = { lat: number; lon: number; name: string }
-export interface Geom { line: string; mode: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; shared: Pt; newTip: Pt; oldTip: Pt; old: { shape: LonLat[] }; new: { shape: LonLat[] }; newStops: Pt[]; addedStops: Pt[]; removedStops: Pt[] }
+export interface Geom { line: string; mode: "diff" | "new" | "removed"; change?: "terminus" | "midroute"; stopConnected?: boolean; shared: Pt; newTip: Pt; oldTip: Pt; old: { shape: Array<LonLat> }; new: { shape: Array<LonLat> }; newStops: Array<Pt>; addedStops: Array<Pt>; removedStops: Array<Pt> }
 interface DiffStat { mode: "diff"; change: "terminus" | "midroute"; len_old_km: number; len_new_km: number; added: number; removed: number; oldTipName: string; newTipName: string; relacija: string }
 interface SideStat { mode: "new" | "removed"; len_km: number; stops_count: number; terminusName: string; originName: string }
 export type Stat = DiffStat | SideStat
 export interface Source { publisher: string; label: string; title: string; url: string; published?: string }
 export interface Successor { line: string; url?: string }
-interface Entry { id: string; noticeId?: string; lines: string[]; mode: string; kind: string; date: string; permanent: boolean; title: string; summary: string; source: Source; maps: string[]; successor?: Successor }
-export interface Data { generatedFrom: { oldFeed: { version: string; start: string }; newFeed: { version: string; start: string } }; entries: Entry[] }
-export interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; displayTitle?: string; datePrecise?: boolean; review?: boolean }
-export interface Candidates { candidates: Cand[] }
+interface Entry { id: string; noticeId?: string; lines: Array<string>; mode: string; kind: string; date: string; permanent: boolean; title: string; summary: string; source: Source; maps: Array<string>; successor?: Successor }
+export interface Data { generatedFrom: { oldFeed: { version: string; start: string }; newFeed: { version: string; start: string } }; entries: Array<Entry> }
+export interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: Array<string>; category: string; permanence: string; listWorthy: boolean; displayTitle?: string; datePrecise?: boolean; review?: boolean }
+export interface Candidates { candidates: Array<Cand> }
 
 export interface MapEntryData { line: string; geom: Geom; stat: Stat }
 
 /** A line change rich enough to feature: it has at least one before/after map.
  * `approxDate` = the date is a Wayback first-archived timestamp (≈ publish, not the
  * verified effective date), shown with a leading "~". */
-export interface FeaturedItem { kind: "featured"; id: string; date: string; approxDate: boolean; category: string; mode: string; lines: string[]; title: string; summary?: string; source: Source; removed: boolean; successor?: Successor; maps: MapEntryData[] }
+export interface FeaturedItem { kind: "featured"; id: string; date: string; approxDate: boolean; category: string; mode: string; lines: Array<string>; title: string; summary?: string; source: Source; removed: boolean; successor?: Successor; maps: Array<MapEntryData> }
 /** A line change announced but not mappable (no GTFS shape for the date). Renders
  * as a compact row, or an obituary when it was discontinued. */
-export interface LineRowItem { kind: "linerow"; id: string; date: string; approxDate: boolean; category: string; lines: string[]; title: string; url: string; removed: boolean }
+export interface LineRowItem { kind: "linerow"; id: string; date: string; approxDate: boolean; category: string; lines: Array<string>; title: string; url: string; removed: boolean }
 /** A stop relocation — the bulk of the register. Folded into the year ledger. */
-export interface StopRowItem { kind: "stoprow"; id: string; date: string; approxDate: boolean; lines: string[]; title: string; url: string }
+export interface StopRowItem { kind: "stoprow"; id: string; date: string; approxDate: boolean; lines: Array<string>; title: string; url: string }
 export type LineItem = FeaturedItem | LineRowItem
 
-export interface YearGroup { year: string; lineItems: LineItem[]; stopItems: StopRowItem[] }
+export interface YearGroup { year: string; lineItems: Array<LineItem>; stopItems: Array<StopRowItem> }
 interface Counts { total: number; line: number; stop: number; maps: number }
-export interface TimelineModel { years: YearGroup[]; counts: Counts }
+export interface TimelineModel { years: Array<YearGroup>; counts: Counts }
 
 export const num = (n: number) => n.toLocaleString("hr")
 const MJ_NOM = ["siječanj", "veljača", "ožujak", "travanj", "svibanj", "lipanj", "srpanj", "kolovoz", "rujan", "listopad", "studeni", "prosinac"]
@@ -57,7 +57,7 @@ const WORDS = ["nula", "jedna", "dvije", "tri", "četiri", "pet", "šest", "seda
 export const hrWord = (n: number) => (n >= 0 && n < WORDS.length ? WORDS[n] : String(n))
 
 export const isTram = (l: string) => /^\d+$/u.test(l) && (+l <= 17 || (+l >= 31 && +l <= 34))
-const joinLines = (ls: string[]) => (ls.length <= 1 ? ls[0] ?? "" : `${ls.slice(0, -1).join(", ")} i ${ls.at(-1)}`)
+const joinLines = (ls: Array<string>) => (ls.length <= 1 ? ls[0] ?? "" : `${ls.slice(0, -1).join(", ")} i ${ls.at(-1)}`)
 
 /** Expand the jarring GTFS abbreviation in endpoint labels ("Ivanja Reka-okret."
  * → "Ivanja Reka-okretište"). Only the unambiguous one. */
@@ -69,12 +69,12 @@ export const normCategory = (k: string): string => ({ ukinute: "ukinuta", produl
 
 /** Clean Croatian headline for an auto-featured / un-curated change (wayback slug
  * titles lack diacritics + casing, so generate from line numbers + category). */
-export function autoHeadline(lines: string[], category: string): string {
-  if (lines.length === 0) return category === "nova" ? "Nova linija." : category === "ukinuta" ? "Ukinuta linija." : "Izmjena u mreži."
+export function autoHeadline(lines: Array<string>, category: string): string {
+  if (lines.length === 0) {return category === "nova" ? "Nova linija." : category === "ukinuta" ? "Ukinuta linija." : "Izmjena u mreži."}
   const single = lines.length === 1, trams = lines.every((l) => isTram(l))
   const noun = trams ? "Tramvaj" : "Autobus"
-  if (category === "nova") return single ? `Nova ${trams ? "tramvajska" : "autobusna"} linija ${lines[0]}.` : `Nove linije ${joinLines(lines)}.`
-  if (category === "ukinuta") return single ? `${noun} ${lines[0]} ukinut.` : `Ukinute linije ${joinLines(lines)}.`
+  if (category === "nova") {return single ? `Nova ${trams ? "tramvajska" : "autobusna"} linija ${lines[0]}.` : `Nove linije ${joinLines(lines)}.`}
+  if (category === "ukinuta") {return single ? `${noun} ${lines[0]} ukinut.` : `Ukinute linije ${joinLines(lines)}.`}
   const m: Record<string, [string, string]> = { produljena: ["produljen", "produljene"], skraćena: ["skraćen", "skraćene"], trasa: ["preusmjeren", "preusmjerene"] }
   const [sg, pl] = m[category] ?? ["izmijenjen", "izmijenjene"]
   return single ? `${noun} ${lines[0]} ${sg}.` : `Linije ${joinLines(lines)} ${pl}.`

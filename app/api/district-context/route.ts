@@ -4,7 +4,8 @@ import { z } from "zod"
 
 import { jsonResponse } from "@/lib/api-response"
 import { loadScores } from "@/lib/district-scores"
-import { pointInRing, type Ring } from "@/lib/geo"
+import { pointInRing } from '@/lib/geo';
+import type { Ring } from '@/lib/geo';
 import { readJsonCached } from "@/lib/page-data"
 
 /**
@@ -16,23 +17,23 @@ import { readJsonCached } from "@/lib/page-data"
 
 type DistrictFeature = {
   properties: { name: string }
-  geometry: { type: "Polygon"; coordinates: Ring[] }
+  geometry: { type: "Polygon"; coordinates: Array<Ring> }
 }
 
 type DistrictScore = { name: string; rank: number; score: number }
 
 let cache: {
-  features: DistrictFeature[]
+  features: Array<DistrictFeature>
   scores: Map<string, DistrictScore>
   cityAreaKm2: number
 } | null = null
 
 function loadDistricts() {
-  if (cache) return cache
-  const geo = readJsonCached<{ features: DistrictFeature[] }>(
+  if (cache) {return cache}
+  const geo = readJsonCached<{ features: Array<DistrictFeature> }>(
     join(process.cwd(), "data/districts.geojson")
   )
-  if (!geo) throw new Error("data/districts.geojson missing or malformed")
+  if (!geo) {throw new Error("data/districts.geojson missing or malformed")}
   // Day-filtered scores (same as the kvart pages), not the pooled legacy file.
   const districts = loadScores()?.districts ?? []
   cache = {
@@ -47,7 +48,7 @@ function loadDistricts() {
 
 function districtContains(d: DistrictFeature, lon: number, lat: number) {
   const [outer, ...holes] = d.geometry.coordinates
-  if (!pointInRing(lon, lat, outer)) return false
+  if (!pointInRing(lon, lat, outer)) {return false}
   return !holes.some((h) => pointInRing(lon, lat, h))
 }
 
@@ -56,11 +57,11 @@ function districtTouchesReach(d: DistrictFeature, reachRing: Ring) {
   const outer = d.geometry.coordinates[0]
   const step = Math.max(1, Math.floor(outer.length / 80))
   for (let i = 0; i < outer.length; i += step) {
-    if (pointInRing(outer[i][0], outer[i][1], reachRing)) return true
+    if (pointInRing(outer[i][0], outer[i][1], reachRing)) {return true}
   }
   const rStep = Math.max(1, Math.floor(reachRing.length / 120))
   for (let i = 0; i < reachRing.length; i += rStep) {
-    if (districtContains(d, reachRing[i][0], reachRing[i][1])) return true
+    if (districtContains(d, reachRing[i][0], reachRing[i][1])) {return true}
   }
   return false
 }

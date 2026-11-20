@@ -29,7 +29,7 @@ interface RouteHealth {
 
 interface RouteHealthResponse {
   generatedAt: number
-  routes: RouteHealth[]
+  routes: Array<RouteHealth>
 }
 
 // --- Component ---
@@ -37,7 +37,7 @@ interface RouteHealthResponse {
 export default function InsightsSection({
   connectivityGaps,
 }: {
-  connectivityGaps: ConnectivityGap[]
+  connectivityGaps: Array<ConnectivityGap>
 }) {
   const hasGaps = connectivityGaps.length > 0
 
@@ -65,7 +65,7 @@ export default function InsightsSection({
 
 // --- Key findings horizontal carousel ---
 
-function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
+function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -75,7 +75,7 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
 
   const measure = useCallback(() => {
     const el = scrollRef.current
-    if (!el) return
+    if (!el) {return}
     const { scrollLeft, scrollWidth, clientWidth } = el
     const maxScroll = scrollWidth - clientWidth
     setCanScrollLeft(maxScroll > 6 && scrollLeft > 6)
@@ -87,7 +87,7 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
     let bestDist = Infinity
     for (let i = 0; i < children.length; i++) {
       const child = children[i]
-      if (!(child instanceof HTMLElement)) continue
+      if (!(child instanceof HTMLElement)) {continue}
       const dist = Math.abs(child.offsetLeft - pad - scrollLeft)
       if (dist < bestDist) {
         bestDist = dist
@@ -99,7 +99,7 @@ function KeyFindingsCarousel({ gaps }: { gaps: ConnectivityGap[] }) {
 
   useEffect(() => {
     const el = scrollRef.current
-    if (!el) return
+    if (!el) {return}
     const updateCardWidth = () => {
       const cardW =
         gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
@@ -170,7 +170,7 @@ function CarouselNav({
   canScrollRight,
   onScrollToIndex,
 }: {
-  gaps: ConnectivityGap[]
+  gaps: Array<ConnectivityGap>
   active: number
   canScrollLeft: boolean
   canScrollRight: boolean
@@ -293,7 +293,7 @@ function modeLabel(mode: string): string {
 }
 
 function formatDelay(seconds: number): string {
-  if (seconds < 60) return `${Math.round(seconds)} s`
+  if (seconds < 60) {return `${Math.round(seconds)} s`}
   const min = Math.floor(seconds / 60)
   const sec = Math.round(seconds % 60)
   return sec > 0 ? `${min} min ${sec} s` : `${min} min`
@@ -305,12 +305,12 @@ function OperationalHealth() {
     keepPreviousData: true,
   })
 
-  if (!data || data.routes.length === 0) return null
+  if (!data || data.routes.length === 0) {return null}
 
   const unreliable = data.routes.filter(
     (r) => r.samples >= 10 && r.severityScore >= 45
   )
-  if (unreliable.length === 0) return null
+  if (unreliable.length === 0) {return null}
 
   return (
     <div className="mt-12">
@@ -354,7 +354,7 @@ function labelText(label: string): string {
   }
 }
 
-function HealthTable({ routes }: { routes: RouteHealth[] }) {
+function HealthTable({ routes }: { routes: Array<RouteHealth> }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-body">

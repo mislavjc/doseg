@@ -11,23 +11,8 @@ import {
 import { NAV_LINKS, NavLink } from "@/app/statistika/editorial/site-nav"
 import { legLineColors } from "@/lib/mode-colors"
 import type { Itinerary } from "@/lib/otp"
-import {
-  ErrorContent,
-  GeoButton,
-  isRouteTooFar,
-  JourneyStrip,
-  LegList,
-  LjestvicaRow,
-  LoadingContent,
-  MinutesRow,
-  PoiList,
-  ReachReadout,
-  RouteSkeleton,
-  RouteSummary,
-  RouteTooFar,
-  type PanelContentProps,
-  type ReachStats,
-} from "./panel-content"
+import { ErrorContent, GeoButton, isRouteTooFar, JourneyStrip, LegList, LjestvicaRow, LoadingContent, MinutesRow, PoiList, ReachReadout, RouteSkeleton, RouteSummary, RouteTooFar } from './panel-content';
+import type { PanelContentProps, ReachStats } from './panel-content';
 import type { PanelState } from "./reach-state"
 import { BlueAction, Eyebrow, Hook, ReachRamp } from "./ui"
 
@@ -44,12 +29,12 @@ const ANSWER_BAR_PX = 56
 const SNAP_OPEN = 0.62
 
 function peekSnap(): string {
-  if (typeof document === "undefined") return `${ANSWER_BAR_PX}px`
+  if (typeof document === "undefined") {return `${ANSWER_BAR_PX}px`}
   const probe = document.createElement("div")
   probe.style.cssText =
     "position:absolute;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)"
   document.body.append(probe)
-  const inset = parseFloat(getComputedStyle(probe).paddingBottom) || 0
+  const inset = Number.parseFloat(getComputedStyle(probe).paddingBottom) || 0
   probe.remove()
   return `${ANSWER_BAR_PX + inset}px`
 }
@@ -339,7 +324,7 @@ function AnswerBar({
 export function MobileSheet(props: PanelContentProps) {
   const { panel, minutes, stats, onUseMyLocation } = props
   const [peekPx] = useState(peekSnap)
-  const [snaps] = useState<(number | string)[]>(() => [peekPx, SNAP_OPEN])
+  const [snaps] = useState<Array<number | string>>(() => [peekPx, SNAP_OPEN])
   const [snap, setSnap] = useState<number | string | null>(peekPx)
   const mode = panel.mode
   const isRoute = mode === "route" || mode === "route-loading"

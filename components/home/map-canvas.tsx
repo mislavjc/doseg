@@ -18,7 +18,8 @@ import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
 import { GEOCODE_KIND_META, POI_CATEGORIES } from "@/lib/poi"
 import { reachColorStops } from "@/lib/reach-ramp"
 import type { LayersState } from "./layers-panel"
-import { deShout, type LatLon, type MapPoi } from "./reach-state"
+import { deShout } from './reach-state';
+import type { LatLon, MapPoi } from './reach-state';
 import { MapTile, MapTileButton } from "./ui"
 
 /**
@@ -46,7 +47,7 @@ const REACH_FILL = reachColorStops(1800)
 /** First symbol/label layer ID so data layers render below text. */
 function firstSymbolLayerId(map: maplibregl.Map): string | undefined {
   for (const l of map.getStyle().layers ?? []) {
-    if (l.type === "symbol") return l.id
+    if (l.type === "symbol") {return l.id}
   }
   return undefined
 }
@@ -58,7 +59,7 @@ function tweakBasemapForIsochrone(map: maplibregl.Map, active: boolean) {
       map.setLayoutProperty(id, "visibility", active ? "none" : "visible")
     }
   }
-  const overrides: [string, number, number][] = [
+  const overrides: Array<[string, number, number]> = [
     ["roadname_major", 11, 13],
     ["roadname_pri", 12, 14],
     ["roadname_sec", 13, 15],
@@ -265,9 +266,9 @@ function dataBounds(
     const g = f.geometry
     if (g.type === "MultiPolygon") {
       for (const poly of g.coordinates)
-        for (const pt of poly[0]) bounds.extend([pt[0], pt[1]])
+        {for (const pt of poly[0]) {bounds.extend([pt[0], pt[1]])}}
     } else if (g.type === "LineString") {
-      for (const pt of g.coordinates) bounds.extend([pt[0], pt[1]])
+      for (const pt of g.coordinates) {bounds.extend([pt[0], pt[1]])}
     }
   }
   return bounds.isEmpty() ? null : bounds
@@ -308,7 +309,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
   }, [onMapClick])
 
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) {return}
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: MAP_STYLE_URL,
@@ -336,7 +337,7 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
         dotLayers.length > 0 &&
         map.queryRenderedFeatures(e.point, { layers: dotLayers }).length > 0
       )
-        return
+        {return}
       onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
     })
     return () => {
@@ -358,7 +359,7 @@ function useMarker(
   const markerRef = useRef<maplibregl.Marker | null>(null)
   useEffect(() => {
     const map = mapRef.current
-    if (!map) return
+    if (!map) {return}
     if (!point) {
       markerRef.current?.remove()
       markerRef.current = null
@@ -375,14 +376,14 @@ function useLayerSync(
   mapRef: React.RefObject<maplibregl.Map | null>,
   ready: boolean,
   layers: LayersState,
-  pois: MapPoi[] | null,
+  pois: Array<MapPoi> | null,
   bajs: GeoJSON.FeatureCollection | null
 ) {
   // Rebuild + upload the source only when the POI data itself changes —
   // not on a category toggle (which just re-filters the same features).
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     const src = map.getSource<maplibregl.GeoJSONSource>("poi")
     void src?.setData(
       pois
@@ -412,7 +413,7 @@ function useLayerSync(
   // Category toggles are two cheap GL calls — no data rebuild.
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     const enabled = POI_CATEGORIES.map((c) => c.key).filter(
       (k) => layers.poi[k]
     )
@@ -426,7 +427,7 @@ function useLayerSync(
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     const src = map.getSource<maplibregl.GeoJSONSource>("bajs")
     void src?.setData(bajs ?? EMPTY_FC)
     map.setLayoutProperty(
@@ -551,8 +552,8 @@ const POPUP_OPTS = {
 /** Resolve the hovered/clicked dot feature + its geo coords. */
 function dotFeatureAt(e: maplibregl.MapLayerMouseEvent) {
   const f = e.features?.[0]
-  if (!f) return null
-  if (f.geometry.type !== "Point") return null
+  if (!f) {return null}
+  if (f.geometry.type !== "Point") {return null}
   const [lon, lat] = f.geometry.coordinates
   const coords: [number, number] = [lon, lat]
   return { f, coords }
@@ -576,18 +577,18 @@ function bindDotPopups(
   let dwellTimer: ReturnType<typeof setTimeout> | null = null
   let hoverKey: string | null = null
   const clearDwell = () => {
-    if (dwellTimer) clearTimeout(dwellTimer)
+    if (dwellTimer) {clearTimeout(dwellTimer)}
     dwellTimer = null
   }
 
   const onMove = (e: maplibregl.MapLayerMouseEvent) => {
     canvas.style.cursor = "pointer"
-    if (action.isOpen()) return
+    if (action.isOpen()) {return}
     const hit = dotFeatureAt(e)
-    if (!hit) return
+    if (!hit) {return}
     const key = hit.coords.join(",")
     // already shown/pending for this dot
-    if (key === hoverKey) return
+    if (key === hoverKey) {return}
     hoverKey = key
     clearDwell()
     const info = describeDot(hit.f)
@@ -598,8 +599,8 @@ function bindDotPopups(
         .addTo(map)
     }
     // Instant for plain dots; brief dwell only when a photo would load.
-    if (info.photo) dwellTimer = setTimeout(show, 150)
-    else show()
+    if (info.photo) {dwellTimer = setTimeout(show, 150)}
+    else {show()}
   }
   const onLeave = () => {
     canvas.style.cursor = ""
@@ -609,7 +610,7 @@ function bindDotPopups(
   }
   const onClick = (e: maplibregl.MapLayerMouseEvent) => {
     const hit = dotFeatureAt(e)
-    if (!hit) return
+    if (!hit) {return}
     clearDwell()
     hoverKey = null
     hover.remove()
@@ -663,7 +664,7 @@ function usePoiInteractions(
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     return bindDotPopups(map, originRef, pickRef)
   }, [mapRef, ready])
 }
@@ -694,7 +695,7 @@ function useDataSync(
 ) {
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     const src = map.getSource<maplibregl.GeoJSONSource>("walk-area")
     void src?.setData(walkArea ?? EMPTY_FC)
     tweakBasemapForIsochrone(map, Boolean(walkArea?.features.length))
@@ -713,7 +714,7 @@ function useDataSync(
   // Same dimming as `/` — fill hides, borders drop to 0.15 under a route.
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !ready) return
+    if (!map || !ready) {return}
     const hasRoute = Boolean(route?.features.length)
     map.setLayoutProperty(
       "walk-area-fill",
@@ -792,7 +793,7 @@ export function MapCanvas({
   origin: LatLon | null
   dest: LatLon | null
   layers: LayersState
-  pois: MapPoi[] | null
+  pois: Array<MapPoi> | null
   bajs: GeoJSON.FeatureCollection | null
   onMapClick: (p: LatLon) => void
   onPoiPick: (p: LatLon, name?: string) => void

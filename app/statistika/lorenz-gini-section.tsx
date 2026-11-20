@@ -60,7 +60,7 @@ export function LorenzSection({
 function LorenzChart({
   lorenzPoints,
 }: {
-  lorenzPoints: { x: number; y: number }[]
+  lorenzPoints: Array<{ x: number; y: number }>
 }) {
   const lm = { top: 10, right: 10, bottom: 30, left: 30 }
   const lw = 280
@@ -104,7 +104,7 @@ function LorenzGridAndCurve({
   liw,
   lih,
 }: {
-  lorenzPoints: { x: number; y: number }[]
+  lorenzPoints: Array<{ x: number; y: number }>
   lxScale: ReturnType<typeof scaleLinear<number>>
   lyScale: ReturnType<typeof scaleLinear<number>>
   liw: number
@@ -220,7 +220,7 @@ function LorenzAxisLabels({
 function LorenzAccessibilityTable({
   popSorted,
 }: {
-  popSorted: DistrictScore[]
+  popSorted: Array<DistrictScore>
 }) {
   return (
     <div className="sr-only">

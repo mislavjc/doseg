@@ -41,7 +41,7 @@ const MIN_NET_PER_DAY = 3
  * Net bikes gained across `hours`, counting riders only: the van's own moves
  * are taken back out on both sides. Negative means the station emptied.
  */
-function riderNet(station: BajsStationFlow, hours: number[]) {
+function riderNet(station: BajsStationFlow, hours: Array<number>) {
   return hours.reduce(
     (net, h) =>
       net +
@@ -67,9 +67,9 @@ export type KvartFlow = {
 
 export type BajsFlow = {
   /** Emptiest morning first, so the chart opens on the strongest signal. */
-  kvartovi: KvartFlow[]
-  drains: KvartFlow[]
-  fills: KvartFlow[]
+  kvartovi: Array<KvartFlow>
+  drains: Array<KvartFlow>
+  fills: Array<KvartFlow>
   /** Days behind the morning window, for turning totals into daily rates. */
   morningDays: number
 }
@@ -78,15 +78,15 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
   const data = await readRtJson<BajsStationFlowResponse>(
     `/api/rt/bajs-station-flow?days=${days}`
   )
-  if (!data || data.stations.length === 0) return null
+  if (!data || data.stations.length === 0) {return null}
 
-  const mean = (hours: number[]) => {
+  const mean = (hours: Array<number>) => {
     const seen = hours.map((h) => data.observedDays[h] ?? 0).filter((d) => d > 0)
     return seen.length > 0 ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
   }
   const morningDays = mean(MORNING)
   const afternoonDays = mean(AFTERNOON)
-  if (morningDays === 0 || afternoonDays === 0) return null
+  if (morningDays === 0 || afternoonDays === 0) {return null}
 
   const totals = new Map<string, { stations: number; am: number; pm: number }>()
   for (const s of data.stations) {
@@ -94,16 +94,16 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
     // only possible for one off the edge of the city, so it is dropped rather
     // than counted anywhere.
     const name = districtAt(s.lat, s.lon)
-    if (!name) continue
+    if (!name) {continue}
     const cur = totals.get(name) ?? { stations: 0, am: 0, pm: 0 }
     cur.stations++
     cur.am += riderNet(s, MORNING)
     cur.pm += riderNet(s, AFTERNOON)
     totals.set(name, cur)
   }
-  if (totals.size === 0) return null
+  if (totals.size === 0) {return null}
 
-  const kvartovi: KvartFlow[] = [...totals.entries()]
+  const kvartovi: Array<KvartFlow> = [...totals.entries()]
     .map(([name, t]) => {
       const morningNet = t.am / morningDays
       const afternoonNet = t.pm / afternoonDays
@@ -139,11 +139,11 @@ export type BajsRelocations = {
   /** Complete days measured, so the copy can say how much is behind it. */
   observedDays: number
   /** Mean moves per local hour, 0-23. */
-  hourly: number[]
+  hourly: Array<number>
   busiestHour: number
   /** Mean minutes a bike spends off the network while being moved. */
   avgMinutes: number
-  corridors: { from: string; to: string; moves: number }[]
+  corridors: Array<{ from: string; to: string; moves: number }>
 }
 
 /**
@@ -153,22 +153,22 @@ export type BajsRelocations = {
  */
 export async function loadBajsRelocations(
   days = 30,
-  fullDays?: { date: string }[]
+  fullDays?: Array<{ date: string }>
 ): Promise<BajsRelocations | null> {
   const data = await readRtJson<BajsRelocationsResponse>(
     `/api/rt/bajs-relocations?days=${days}`
   )
-  if (!data || data.days.length === 0) return null
+  if (!data || data.days.length === 0) {return null}
 
   const observed = fullDays && new Set(fullDays.map((d) => d.date))
   // Without a ride window to lean on, drop the ends, which are always partial.
   const complete = observed
     ? data.days.filter((d) => observed.has(d.date))
     : data.days.slice(1, -1)
-  if (complete.length === 0) return null
+  if (complete.length === 0) {return null}
   const perDay =
     complete.reduce((sum, d) => sum + d.moves, 0) / complete.length
-  if (perDay === 0) return null
+  if (perDay === 0) {return null}
 
   return {
     perDay,

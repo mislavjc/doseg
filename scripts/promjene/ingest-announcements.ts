@@ -38,8 +38,8 @@ const LIST_CATEGORIES = new Set(["nova", "ukinuta", "produljena", "skraćena", "
 /** Permanence verdict: permanent (strong perm + no temp), temporary, or review. */
 function permanence(t: string): "permanent" | "temporary" | "review" {
   const hasTemp = TEMP.test(t), hasPerm = PERM.test(t)
-  if (hasPerm && !hasTemp) return "permanent"
-  if (hasTemp) return "temporary"
+  if (hasPerm && !hasTemp) {return "permanent"}
+  if (hasTemp) {return "temporary"}
   // ambiguous (e.g. a bare "linija X mijenja trasu") — needs a human
   return "review"
 }
@@ -47,7 +47,7 @@ function permanence(t: string): "permanent" | "temporary" | "review" {
 const slugOf = (url: string) => { const m = url.match(/izmjene-u-prometu\/([a-z0-9-]+)\/\d+/iu); return m ? m[1] : "" }
 const titleFromSlug = (slug: string) => slug.replaceAll('-', " ").replaceAll(/\b\w/gu, (c) => c.toUpperCase())
 
-interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: string[]; category: string; permanence: string; listWorthy: boolean; illustratable: boolean }
+interface Cand { id: string; url: string; title: string; date: string | null; source: string; lines: Array<string>; category: string; permanence: string; listWorthy: boolean; illustratable: boolean }
 
 const tsDate = (ts: string) => `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`
 
@@ -59,9 +59,9 @@ async function fromLiveListing(): Promise<Map<string, { title: string; url: stri
     try { html = await get(`https://www.zet.hr/aktualnosti/izmjene-u-prometu/31?page=${page}`) } catch { break }
     const links = [...html.matchAll(/<a[^>]+href="(\/aktualnosti\/izmjene-u-prometu\/[a-z0-9-]+\/\d+)"[^>]*>([^<]+)<\/a>/giu)]
     const fresh = links.filter(([, href]) => !out.has(idOf(href)))
-    for (const [, href, title] of links) { const id = idOf(href); if (id) out.set(id, { title: strip(title), url: `https://www.zet.hr${href}` }) }
+    for (const [, href, title] of links) { const id = idOf(href); if (id) {out.set(id, { title: strip(title), url: `https://www.zet.hr${href}` })} }
     // no new articles → past the last page
-    if (fresh.length === 0) break
+    if (fresh.length === 0) {break}
   }
   console.error(`  live listing: ${out.size} articles`)
   return out
@@ -75,19 +75,19 @@ async function fromWayback(): Promise<Map<string, { url: string; ts: string }>> 
   for (let attempt = 1; attempt <= 5; attempt++) {
     try {
       // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
-      const txt = await get(URL, 120000)
+      const txt = await get(URL, 120_000)
       for (const line of txt.split("\n")) {
         const [ts, original] = line.split(" ")
-        if (!ts || !original) continue
-        const id = idOf(original); if (!id || !slugOf(original)) continue
+        if (!ts || !original) {continue}
+        const id = idOf(original); if (!id || !slugOf(original)) {continue}
         const prev = out.get(id)
         // earliest snapshot ≈ publish date
-        if (!prev || ts < prev.ts) out.set(id, { url: original.replace(/^http:/u, "https:").replace(":80", ""), ts })
+        if (!prev || ts < prev.ts) {out.set(id, { url: original.replace(/^http:/u, "https:").replace(":80", ""), ts })}
       }
       // got the full set
-      if (out.size > 50) break
+      if (out.size > 50) {break}
       console.error(`  wayback CDX attempt ${attempt}: only ${out.size} — retrying`)
-    } catch (e) { console.error(`  wayback CDX attempt ${attempt} failed: ${e instanceof Error ? e.message : String(e)}`) }
+    } catch (error) { console.error(`  wayback CDX attempt ${attempt} failed: ${error instanceof Error ? error.message : String(error)}`) }
     // oxlint-disable-next-line no-await-in-loop -- backoff between retries
     await sleep(attempt * 4000)
   }
@@ -107,7 +107,7 @@ async function main() {
   // Merge by article id. Title precedence: RSS > live listing > slug-derived.
   // Date precedence: RSS pubDate > wayback first-seen.
   const ids = new Set<string>([...rssP.keys(), ...rssN.keys(), ...live.keys(), ...wb.keys()])
-  const cands: Cand[] = []
+  const cands: Array<Cand> = []
   for (const id of ids) {
     const r = rssP.get(id) ?? rssN.get(id)
     const l = live.get(id)
@@ -152,7 +152,7 @@ async function main() {
   // recent-only RSS/live subset.
   const outPath = join(process.cwd(), "data", "promjene", "candidates.json")
   if (wb.size === 0 && existsSync(outPath)) {
-    const prev = readJson<{ candidates?: Cand[] }>(outPath).candidates?.length ?? 0
+    const prev = readJson<{ candidates?: Array<Cand> }>(outPath).candidates?.length ?? 0
     if (prev > cands.length) { console.error(`\nABORT: wayback empty and existing file has ${prev} > ${cands.length} candidates — keeping it. Retry later.`); return }
   }
   writeFileSync(outPath, JSON.stringify(out, null, 2))
@@ -161,7 +161,7 @@ async function main() {
   console.error(`\nLIST-WORTHY by category: ${JSON.stringify(Object.fromEntries(["nova", "ukinuta", "produljena", "skraćena", "trasa", "stajalište"].map((k) => [k, listWorthy.filter((c) => c.category === k).length])))}`)
   console.error(`\nLIST-WORTHY candidates (newest first, first 36):`)
   for (const c of listWorthy.slice(0, 36))
-    console.error(`  ${(c.date ?? "????-??-??")}  ${c.illustratable ? "▮" : "·"} ${c.category.padEnd(11)} [${c.lines.join(",") || "—"}]  ${c.title.slice(0, 54)}`)
+    {console.error(`  ${(c.date ?? "????-??-??")}  ${c.illustratable ? "▮" : "·"} ${c.category.padEnd(11)} [${c.lines.join(",") || "—"}]  ${c.title.slice(0, 54)}`)}
   console.error(`\nwrote data/promjene/candidates.json  (▮ = illustratable from current feeds)`)
 }
 await main()

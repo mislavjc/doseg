@@ -54,16 +54,16 @@ interface OverpassElement {
 }
 
 interface OverpassResponse {
-  elements: OverpassElement[]
+  elements: Array<OverpassElement>
 }
 
 // Keyed by the sorted category set — a narrow request (e.g. ?categories=park)
 // must not poison the cache for a later broader one. The key space is bounded
 // (at most 2^5 category combinations), so the Map can't grow without bound.
-const poiCache = new Map<string, { pois: POI[]; expiresAt: number }>()
-const pendingFetches = new Map<string, Promise<POI[]>>()
+const poiCache = new Map<string, { pois: Array<POI>; expiresAt: number }>()
+const pendingFetches = new Map<string, Promise<Array<POI>>>()
 
-function buildQuery(categories: POICategory[]): string {
+function buildQuery(categories: Array<POICategory>): string {
   const { south, west, north, east } = ZAGREB_BBOX
   const bbox = `${south},${west},${north},${east}`
 
@@ -82,19 +82,19 @@ function buildQuery(categories: POICategory[]): string {
 }
 
 function parseElements(
-  elements: OverpassElement[],
-  categories: POICategory[]
-): POI[] {
-  const pois: POI[] = []
+  elements: Array<OverpassElement>,
+  categories: Array<POICategory>
+): Array<POI> {
+  const pois: Array<POI> = []
 
   for (const el of elements) {
     const lat = el.lat ?? el.center?.lat
     const lon = el.lon ?? el.center?.lon
-    if (lat == null || lon == null) continue
+    if (lat == null || lon == null) {continue}
 
     const name = el.tags?.name ?? ""
     const category = matchCategory(el.tags ?? {}, categories)
-    if (!category) continue
+    if (!category) {continue}
 
     pois.push({ id: el.id, name, lat, lon, category })
   }
@@ -104,24 +104,24 @@ function parseElements(
 
 function matchCategory(
   tags: Record<string, string>,
-  categories: POICategory[]
+  categories: Array<POICategory>
 ): POICategory | null {
   for (const category of categories) {
     switch (category) {
       case "hospital":
-        if (tags.amenity === "hospital") return category
+        if (tags.amenity === "hospital") {return category}
         break
       case "school":
-        if (tags.amenity === "school") return category
+        if (tags.amenity === "school") {return category}
         break
       case "park":
-        if (tags.leisure === "park") return category
+        if (tags.leisure === "park") {return category}
         break
       case "supermarket":
-        if (tags.shop === "supermarket") return category
+        if (tags.shop === "supermarket") {return category}
         break
       case "pharmacy":
-        if (tags.amenity === "pharmacy") return category
+        if (tags.amenity === "pharmacy") {return category}
         break
     }
   }
@@ -143,10 +143,10 @@ function snapshotPath() {
   return join(getDataDir(), "poi-snapshot.json")
 }
 
-function readSnapshot(categories: POICategory[]): POI[] | null {
+function readSnapshot(categories: Array<POICategory>): Array<POI> | null {
   try {
-    const data = parseJson<{ pois: POI[] }>(
-      readFileSync(snapshotPath(), "utf-8")
+    const data = parseJson<{ pois: Array<POI> }>(
+      readFileSync(snapshotPath(), "utf8")
     )
     const wanted = new Set(categories)
     return data.pois.filter((p) => wanted.has(p.category))
@@ -155,7 +155,7 @@ function readSnapshot(categories: POICategory[]): POI[] | null {
   }
 }
 
-function writeSnapshot(pois: POI[]) {
+function writeSnapshot(pois: Array<POI>) {
   try {
     writeFileSync(
       snapshotPath(),
@@ -166,7 +166,7 @@ function writeSnapshot(pois: POI[]) {
   }
 }
 
-async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
+async function loadPOIs(categories: Array<POICategory>): Promise<Array<POI>> {
   const query = buildQuery(categories)
   let lastError: Error | null = null
   for (const url of OVERPASS_MIRRORS) {
@@ -178,7 +178,7 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
         body: `data=${encodeURIComponent(query)}`,
         // Overpass QL caps itself at [timeout:30]; give the socket a little
         // more before we abort a genuinely-hung connection.
-        signal: AbortSignal.timeout(35000),
+        signal: AbortSignal.timeout(35_000),
       })
       if (!response.ok) {
         lastError = new Error(`Overpass API request failed: ${response.status}`)
@@ -189,12 +189,12 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
       const pois = parseElements(json.elements, categories)
       writeSnapshot(pois)
       return pois
-    } catch (err) {
-      lastError = err instanceof Error ? err : new Error(String(err))
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error))
     }
   }
   const snapshot = readSnapshot(categories)
-  if (snapshot && snapshot.length > 0) return snapshot
+  if (snapshot && snapshot.length > 0) {return snapshot}
   throw lastError ?? new Error("Overpass API request failed")
 }
 
@@ -206,10 +206,10 @@ async function loadPOIs(categories: POICategory[]): Promise<POI[]> {
 let photoMap: Partial<Record<string, PoiPhoto>> | null = null
 
 function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
-  if (photoMap) return photoMap
+  if (photoMap) {return photoMap}
   try {
     photoMap = parseJson<Partial<Record<string, PoiPhoto>>>(
-      readFileSync(join(getDataDir(), "poi-photos.json"), "utf-8")
+      readFileSync(join(getDataDir(), "poi-photos.json"), "utf8")
     )
   } catch {
     photoMap = {}
@@ -217,19 +217,19 @@ function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
   return photoMap
 }
 
-function withPhotos(pois: POI[]): POI[] {
+function withPhotos(pois: Array<POI>): Array<POI> {
   const photos = loadPhotoMap()
-  if (Object.keys(photos).length === 0) return pois
+  if (Object.keys(photos).length === 0) {return pois}
   return pois.map((p) => {
     const photo = photos[String(p.id)]
     return photo ? { ...p, photo } : p
   })
 }
 
-export function fetchPOIs(categories: POICategory[]): Promise<POI[]> {
+export function fetchPOIs(categories: Array<POICategory>): Promise<Array<POI>> {
   const key = categories.toSorted().join(",")
   const cached = poiCache.get(key)
-  if (cached && Date.now() < cached.expiresAt) return Promise.resolve(cached.pois)
+  if (cached && Date.now() < cached.expiresAt) {return Promise.resolve(cached.pois)}
 
   let pending = pendingFetches.get(key)
   if (!pending) {

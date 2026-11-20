@@ -13,11 +13,13 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-import { mercatorX, mercatorY, type Ring } from "../lib/geo"
+import { mercatorX, mercatorY } from '../lib/geo';
+import type { Ring } from '../lib/geo';
 import { kvartSlug } from "../lib/kvart-slug"
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
+import { createDitherCropper } from './lib/dither-crop';
+import type { HeroMeta } from './lib/dither-crop';
 import { readJson } from "./lib/json"
 
 // Slim band, zoomed out so the district sits clear of the nav with margin.
@@ -39,21 +41,21 @@ const cutoff = Number(argValue("--cutoff") ?? 80)
 
 const cropper = createDitherCropper({ cacheDir, cutoff, zoomOverride })
 
-function bboxOf(coords: Ring[]): number[] {
+function bboxOf(coords: Array<Ring>): Array<number> {
   let w = Infinity,
     s = Infinity,
     e = -Infinity,
     n = -Infinity
   for (const [lon, lat] of coords[0]) {
-    if (lon < w) w = lon
-    if (lon > e) e = lon
-    if (lat < s) s = lat
-    if (lat > n) n = lat
+    if (lon < w) {w = lon}
+    if (lon > e) {e = lon}
+    if (lat < s) {s = lat}
+    if (lat > n) {n = lat}
   }
   return [w, s, e, n]
 }
 
-async function buildHero(slug: string, bbox: number[], prev?: HeroMeta): Promise<HeroMeta> {
+async function buildHero(slug: string, bbox: Array<number>, prev?: HeroMeta): Promise<HeroMeta> {
   // Mobile band height follows the district's mercator aspect, clamped (worldPx
   // cancels in the ratio, so the normalized mercator projections suffice).
   const [w, s, e, n] = bbox
@@ -72,7 +74,7 @@ async function main() {
   mkdirSync(outDir, { recursive: true })
   mkdirSync(dataDir, { recursive: true })
   const geo = readJson<{
-    features: { properties: { name: string }; geometry: { coordinates: Ring[] } }[]
+    features: Array<{ properties: { name: string }; geometry: { coordinates: Array<Ring> } }>
   }>(join(root, "data/districts.geojson"))
   const districts = geo.features
     .map((f) => ({ slug: kvartSlug(f.properties.name), bbox: bboxOf(f.geometry.coordinates) }))

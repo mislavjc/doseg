@@ -2,17 +2,15 @@ import { join } from "node:path"
 
 import { cache } from "react"
 
-import {
-  loadSaturdayScores,
-  loadScores,
-  loadTravelMatrix,
-  type DistrictScore,
-} from "@/app/statistika/stat-data"
+import { loadSaturdayScores, loadScores, loadTravelMatrix } from '@/app/statistika/stat-data';
+import type { DistrictScore } from '@/app/statistika/stat-data';
 import { getDataDir } from "@/lib/data-dir"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
-import { fastDistKm, pointInRing, type Ring } from "@/lib/geo"
+import { fastDistKm, pointInRing } from '@/lib/geo';
+import type { Ring } from '@/lib/geo';
 import { kvartSlug } from "@/lib/kvart-slug"
-import { loadLineIndex, type LineHeroMeta } from "@/lib/line-data"
+import { loadLineIndex } from '@/lib/line-data';
+import type { LineHeroMeta } from '@/lib/line-data';
 import { readJsonCached } from "@/lib/page-data"
 
 /**
@@ -29,9 +27,9 @@ export interface KvartIndexEntry {
   name: string
 }
 
-export function loadKvartIndex(): KvartIndexEntry[] {
+export function loadKvartIndex(): Array<KvartIndexEntry> {
   const s = loadScores()
-  if (!s) return []
+  if (!s) {return []}
   return s.districts.map((d) => ({ slug: kvartSlug(d.name), name: d.name }))
 }
 
@@ -46,7 +44,7 @@ interface KvartLine {
   broj: string
   mode: "tram" | "bus"
   isNight: boolean
-  terminals: string[]
+  terminals: Array<string>
   headwayMin: number | null
 }
 
@@ -91,17 +89,17 @@ export interface KvartData {
   bajs: { stations: number; boostPct: number; coveragePct: number }
   tramCount: number
   busCount: number
-  nightLines: string[]
+  nightLines: Array<string>
   stops: number
   bestPoint: { lat: number; lon: number }
-  commute: CommuteRow[]
+  commute: Array<CommuteRow>
   within30: number
-  lines: KvartLine[]
-  poi: PoiCat[]
-  promjene: KvartPromjena[]
-  bars: ScoreBar[]
+  lines: Array<KvartLine>
+  poi: Array<PoiCat>
+  promjene: Array<KvartPromjena>
+  bars: Array<ScoreBar>
   cityAvgScore: number
-  boundary: [number, number][]
+  boundary: Array<[number, number]>
   hero: LineHeroMeta | null
 }
 
@@ -109,10 +107,10 @@ export interface KvartData {
 
 interface GeoFeature {
   properties: { name: string }
-  geometry: { type: string; coordinates: Ring[] }
+  geometry: { type: string; coordinates: Array<Ring> }
 }
-function loadGeo(): GeoFeature[] {
-  return readJsonCached<{ features: GeoFeature[] }>(
+function loadGeo(): Array<GeoFeature> {
+  return readJsonCached<{ features: Array<GeoFeature> }>(
     join(process.cwd(), "data/districts.geojson")
   )?.features ?? []
 }
@@ -124,21 +122,21 @@ export interface Poi {
   category: string
 }
 /** Baked OSM POI snapshot (schools/parks/hospitals) — shared with /adresa. */
-export function loadPois(): Poi[] {
-  return readJsonCached<{ pois: Poi[] }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
+export function loadPois(): Array<Poi> {
+  return readJsonCached<{ pois: Array<Poi> }>(join(getDataDir(), "poi-snapshot.json"))?.pois ?? []
 }
 
 interface PromjenaEntry {
   id: string
-  lines: string[]
+  lines: Array<string>
   kind: string
   date: string
   title: string
   source: { url: string }
 }
-function loadPromjene(): PromjenaEntry[] {
+function loadPromjene(): Array<PromjenaEntry> {
   return (
-    readJsonCached<{ entries: PromjenaEntry[] }>(
+    readJsonCached<{ entries: Array<PromjenaEntry> }>(
       join(getDataDir(), "promjene", "entries.json")
     )?.entries ?? []
   )
@@ -156,9 +154,9 @@ function loadHeroMeta(slug: string): LineHeroMeta | null {
 // Only consider POIs within 4 km of the kvart for "nearest".
 const NEARBY_KM = 4
 
-function poiInDistrict(geo: GeoFeature | undefined, pois: Poi[]): PoiCat[] {
-  const keys: PoiCat["key"][] = ["hospital", "school", "park"]
-  if (!geo) return keys.map((key) => ({ key, count: 0, nearestName: null, nearestKm: null }))
+function poiInDistrict(geo: GeoFeature | undefined, pois: Array<Poi>): Array<PoiCat> {
+  const keys: Array<PoiCat["key"]> = ["hospital", "school", "park"]
+  if (!geo) {return keys.map((key) => ({ key, count: 0, nearestName: null, nearestKm: null }))}
   const [outer, ...holes] = geo.geometry.coordinates
   const inside = pois.filter(
     (p) =>
@@ -170,13 +168,13 @@ function poiInDistrict(geo: GeoFeature | undefined, pois: Poi[]): PoiCat[] {
 
 function nearestPoi(
   best: { lat: number; lon: number },
-  pois: Poi[],
+  pois: Array<Poi>,
   key: string
 ): { name: string; km: number } | null {
   let bestName: string | null = null
   let bestKm = Infinity
   for (const p of pois) {
-    if (p.category !== key) continue
+    if (p.category !== key) {continue}
     const km = fastDistKm(best.lat, best.lon, p.lat, p.lon)
     if (km < bestKm) {
       bestKm = km
@@ -188,17 +186,17 @@ function nearestPoi(
     : null
 }
 
-function buildCommute(name: string): { commute: CommuteRow[]; within30: number } {
-  const commute: CommuteRow[] = []
+function buildCommute(name: string): { commute: Array<CommuteRow>; within30: number } {
+  const commute: Array<CommuteRow> = []
   let within30 = 0
   const tm = loadTravelMatrix()
   if (tm) {
     const oi = tm.districts.indexOf(name)
     if (oi >= 0) {
       tm.districts.forEach((n, j) => {
-        if (j === oi) return
+        if (j === oi) {return}
         const min = Math.round(tm.matrix[oi][j])
-        if (min <= 30) within30++
+        if (min <= 30) {within30++}
         commute.push({
           name: n,
           slug: kvartSlug(n),
@@ -213,10 +211,10 @@ function buildCommute(name: string): { commute: CommuteRow[]; within30: number }
 }
 
 function buildLines(d: DistrictScore): {
-  lines: KvartLine[]
+  lines: Array<KvartLine>
   tramCount: number
   busCount: number
-  nightLines: string[]
+  nightLines: Array<string>
 } {
   const idx = new Map<string, LineIndexEntry>(
     loadLineIndex().lines.map((l) => [l.broj, l])
@@ -243,7 +241,7 @@ function buildLines(d: DistrictScore): {
   }
 }
 
-function buildBars(all: DistrictScore[], d: DistrictScore, cityAvg: number): ScoreBar[] {
+function buildBars(all: Array<DistrictScore>, d: DistrictScore, cityAvg: number): Array<ScoreBar> {
   const best = all.reduce((a, b) => (b.score > a.score ? b : a))
   const worst = all.reduce((a, b) => (b.score < a.score ? b : a))
   return [
@@ -254,7 +252,7 @@ function buildBars(all: DistrictScore[], d: DistrictScore, cityAvg: number): Sco
   ]
 }
 
-function buildPromjene(d: DistrictScore): KvartPromjena[] {
+function buildPromjene(d: DistrictScore): Array<KvartPromjena> {
   const set = new Set([...(d.tramLines ?? []), ...(d.busLines ?? [])])
   return loadPromjene()
     .filter((e) => e.lines.some((l) => set.has(l)))
@@ -263,11 +261,11 @@ function buildPromjene(d: DistrictScore): KvartPromjena[] {
 }
 
 function loadKvartImpl(slug: string): KvartData | null {
-  if (!/^[a-z0-9-]+$/u.test(slug)) return null
+  if (!/^[a-z0-9-]+$/u.test(slug)) {return null}
   const scores = loadScores()
-  if (!scores) return null
+  if (!scores) {return null}
   const d = scores.districts.find((x) => kvartSlug(x.name) === slug)
-  if (!d) return null
+  if (!d) {return null}
 
   const all = scores.districts
   const cityAvgScore = Math.round(
@@ -356,7 +354,7 @@ export interface KvartBoardRow {
 }
 
 export interface KvartBoard {
-  rows: KvartBoardRow[]
+  rows: Array<KvartBoardRow>
   cityAvgScore: number
   cityDesertPct: number
   best: KvartBoardRow
@@ -367,8 +365,8 @@ export interface KvartBoard {
 /** All kvarts ranked best→worst by connectivity, for the /kvartovi hub board. */
 export function loadKvartBoard(): KvartBoard | null {
   const s = loadScores()
-  if (!s) return null
-  const rows: KvartBoardRow[] = s.districts
+  if (!s) {return null}
+  const rows: Array<KvartBoardRow> = s.districts
     .toSorted((a, b) => a.rank - b.rank)
     .map((d) => ({
       slug: kvartSlug(d.name),

@@ -30,7 +30,7 @@ const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
 // --- Helpers ---
 
 function computeBarLayout(
-  points: UsagePoint[],
+  points: Array<UsagePoint>,
   xScale: ReturnType<typeof scaleTime<number>>
 ) {
   const gap =
@@ -49,7 +49,7 @@ function HitAreas({
   gap,
   onHover,
 }: {
-  points: UsagePoint[]
+  points: Array<UsagePoint>
   xScale: ReturnType<typeof scaleTime<number>>
   gap: number
   onHover: (p: UsagePoint | null) => void
@@ -129,11 +129,11 @@ function fmtTime(ts: number): string {
 // --- Data fetching ---
 
 function useBajsUsageHistory() {
-  const { data, error, isLoading } = useSWR<UsagePoint[], Error>(
+  const { data, error, isLoading } = useSWR<Array<UsagePoint>, Error>(
     "bajs-usage-history",
     () =>
       fetch("/api/rt/bajs-usage-history").then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        if (!r.ok) {throw new Error(`HTTP ${r.status}`)}
         return r.json()
       }),
     { refreshInterval: 60_000, keepPreviousData: true }
@@ -147,7 +147,7 @@ function useBajsUsageHistory() {
 
 // --- Scales ---
 
-function useUsageScales(points: UsagePoint[]) {
+function useUsageScales(points: Array<UsagePoint>) {
   return useMemo(() => {
     const tsMin = points.reduce((m, p) => Math.min(m, p.ts), Infinity)
     const tsMax = points.reduce((m, p) => Math.max(m, p.ts), -Infinity)
@@ -179,16 +179,16 @@ function useUsageScales(points: UsagePoint[]) {
 export default function BajsUsageChart() {
   const { points, error, isLoading } = useBajsUsageHistory()
 
-  if (error) return <ErrorState message={error} />
-  if (isLoading || !points) return <LoadingState />
-  if (points.length === 0) return <EmptyState />
+  if (error) {return <ErrorState message={error} />}
+  if (isLoading || !points) {return <LoadingState />}
+  if (points.length === 0) {return <EmptyState />}
 
   return <ChartCard points={points} />
 }
 
 // --- Chart card ---
 
-function ChartCard({ points }: { points: UsagePoint[] }) {
+function ChartCard({ points }: { points: Array<UsagePoint> }) {
   const [hovered, setHovered] = useState<UsagePoint | null>(null)
   const { xScale, yScale, xTicks, yTicks, current, peak, avg } =
     useUsageScales(points)
@@ -335,7 +335,7 @@ function ChartXLabels({
   ticks,
   xScale,
 }: {
-  ticks: Date[]
+  ticks: Array<Date>
   xScale: ReturnType<typeof scaleTime<number>>
 }) {
   // Skip labels when ticks are too dense to avoid overlap.
@@ -375,7 +375,7 @@ function ChartYLabels({
   ticks,
   yScale,
 }: {
-  ticks: number[]
+  ticks: Array<number>
   yScale: ReturnType<typeof scaleLinear<number>>
 }) {
   return (

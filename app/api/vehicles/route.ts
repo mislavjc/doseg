@@ -10,7 +10,7 @@ export async function GET() {
 
     const { response } = jsonResponse(vehicles, "public, max-age=15")
     return response
-  } catch (err) {
-    return apiErrorResponse("vehicles route error", err, 500)
+  } catch (error) {
+    return apiErrorResponse("vehicles route error", error, 500)
   }
 }

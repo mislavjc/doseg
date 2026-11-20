@@ -8,14 +8,10 @@ import Link from "next/link"
 
 import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
 import type { Itinerary, Leg } from "@/lib/otp"
-import { POI_CATEGORIES, type MapPoiCategory } from "@/lib/poi"
-import {
-  deShout,
-  formatClock,
-  transfersLabel,
-  type DistrictContext,
-  type PanelState,
-} from "./reach-state"
+import { POI_CATEGORIES } from '@/lib/poi';
+import type { MapPoiCategory } from '@/lib/poi';
+import { deShout, formatClock, transfersLabel } from './reach-state';
+import type { DistrictContext, PanelState } from './reach-state';
 import {
   BikeIcon,
   BlueLink,
@@ -251,12 +247,12 @@ export function ReachContent({
 
 function legTitle(leg: Leg): string {
   const mode = leg.mode.toUpperCase()
-  if (isWalkMode(mode)) return "Pješice"
-  if (mode === "TRAM") return `Tramvaj ${leg.route ?? ""}`.trim()
-  if (mode === "BUS") return `Bus ${leg.route ?? ""}`.trim()
+  if (isWalkMode(mode)) {return "Pješice"}
+  if (mode === "TRAM") {return `Tramvaj ${leg.route ?? ""}`.trim()}
+  if (mode === "BUS") {return `Bus ${leg.route ?? ""}`.trim()}
   if (mode === "RAIL" || mode === "TRAIN")
-    return `Vlak ${leg.route ?? ""}`.trim()
-  if (mode === "BICYCLE" || mode === "BIKE") return "BAJS"
+    {return `Vlak ${leg.route ?? ""}`.trim()}
+  if (mode === "BICYCLE" || mode === "BIKE") {return "BAJS"}
   return leg.mode
 }
 
@@ -265,8 +261,8 @@ export function JourneyStrip({
   colors,
   compact = false,
 }: {
-  legs: Leg[]
-  colors: string[]
+  legs: Array<Leg>
+  colors: Array<string>
   /** Mini variant for the collapsed answer bar — shorter, tighter corners. */
   compact?: boolean
 }) {
@@ -377,7 +373,7 @@ export function LegList({
   colors,
 }: {
   itinerary: Itinerary
-  colors: string[]
+  colors: Array<string>
 }) {
   return (
     <div className="flex flex-col border-t border-hairline">
@@ -445,8 +441,8 @@ export function RouteContent({
   departedAt: Date | null
   loading: boolean
 }) {
-  if (loading || !itinerary) return <RouteSkeleton />
-  if (isRouteTooFar(itinerary)) return <RouteTooFar />
+  if (loading || !itinerary) {return <RouteSkeleton />}
+  if (isRouteTooFar(itinerary)) {return <RouteTooFar />}
   const colors = legLineColors(itinerary.legs)
   return (
     <>

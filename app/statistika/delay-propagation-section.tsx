@@ -20,12 +20,12 @@ interface DelayProfilePoint {
 
 interface DelayProfileData {
   route: string
-  points: DelayProfilePoint[]
+  points: Array<DelayProfilePoint>
 }
 
 const DELAY_CHART_MARGIN = { top: 30, right: 20, bottom: 80, left: 50 }
 
-function useDelayProfileScales(points: DelayProfilePoint[]) {
+function useDelayProfileScales(points: Array<DelayProfilePoint>) {
   const width = Math.max(720, points.length * 32 + 80)
   const height = 240
   const innerW = width - DELAY_CHART_MARGIN.left - DELAY_CHART_MARGIN.right
@@ -52,14 +52,14 @@ function StopXLabels({
   xScale,
   innerH,
 }: {
-  points: DelayProfilePoint[]
+  points: Array<DelayProfilePoint>
   xScale: ReturnType<typeof scalePoint<string>>
   innerH: number
 }) {
   return (
     <>
       {points.map((p, i) => {
-        if (i % 2 !== 0 && points.length > 20) return null
+        if (i % 2 !== 0 && points.length > 20) {return null}
         const x = xScale(p.stopName) ?? 0
         const label = p.stopName.length > 12 ? p.stopName.slice(0, 11) + "\u2026" : p.stopName
         return (
@@ -136,11 +136,11 @@ function DelayProfileBody({
   selectedRoute: string
 }) {
   if (error)
-    return (
+    {return (
       <p className="text-body text-slate-500 dark:text-slate-400">
         Podaci nisu dostupni
       </p>
-    )
+    )}
   if (isLoading || !data) {
     return (
       <div
@@ -175,11 +175,11 @@ function RouteSelector({
   selectedRoute,
   onChange,
 }: {
-  routes: string[]
+  routes: Array<string>
   selectedRoute: string
   onChange: (route: string) => void
 }) {
-  if (routes.length === 0) return null
+  if (routes.length === 0) {return null}
   return (
     <select
       value={selectedRoute}
@@ -199,7 +199,7 @@ function RouteSelector({
 export default function DelayPropagationSection({
   routes,
 }: {
-  routes: string[]
+  routes: Array<string>
 }) {
   const [selectedRoute, setSelectedRoute] = useState(() =>
     pickPreferredRoute(routes)

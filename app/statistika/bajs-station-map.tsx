@@ -60,7 +60,7 @@ function addStationLayer(map: maplibregl.Map) {
   })
 }
 
-function el(tag: string, style: string, ...children: (Node | string)[]) {
+function el(tag: string, style: string, ...children: Array<Node | string>) {
   const node = document.createElement(tag)
   node.style.cssText = style
   node.append(...children)
@@ -91,10 +91,10 @@ function setupInteractions(
   })
   map.on("click", "bajs-circles", (e) => {
     const feature = e.features?.[0]
-    if (!feature || feature.geometry.type !== "Point") return
+    if (!feature || feature.geometry.type !== "Point") {return}
     const [lng, lat] = feature.geometry.coordinates
     const p: unknown = feature.properties
-    if (!isStationProps(p)) return
+    if (!isStationProps(p)) {return}
     popupRef.current?.remove()
     popupRef.current = new maplibregl.Popup({
       closeButton: true,
@@ -138,13 +138,13 @@ export default function BajsStationMap() {
 
   const updateSource = useCallback(() => {
     const map = mapRef.current
-    if (!map || !data) return
+    if (!map || !data) {return}
     const src = map.getSource<maplibregl.GeoJSONSource>("bajs-stations")
-    if (src) void src.setData(data)
+    if (src) {void src.setData(data)}
   }, [data])
 
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) {return}
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
@@ -165,9 +165,9 @@ export default function BajsStationMap() {
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !data) return
-    if (map.isStyleLoaded()) updateSource()
-    else map.once("load", updateSource)
+    if (!map || !data) {return}
+    if (map.isStyleLoaded()) {updateSource()}
+    else {map.once("load", updateSource)}
   }, [data, updateSource])
 
   return (

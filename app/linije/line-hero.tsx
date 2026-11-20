@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
  * visible at any viewport.
  */
 
-function cut(points: [number, number][], trim: number): [number, number][] {
+function cut(points: Array<[number, number]>, trim: number): Array<[number, number]> {
   let remaining = trim
   const out = [...points]
   while (out.length > 1) {
@@ -40,14 +40,14 @@ function cut(points: [number, number][], trim: number): [number, number][] {
  * through their rings.
  */
 function trimPolyline(
-  pts: [number, number][],
+  pts: Array<[number, number]>,
   trimStart: number,
   trimEnd: number
-): [number, number][] {
+): Array<[number, number]> {
   const total = pts
     .slice(1)
     .reduce((s, p, i) => s + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0)
-  if (total <= (trimStart + trimEnd) * 2) return pts
+  if (total <= (trimStart + trimEnd) * 2) {return pts}
   const fromStart = cut(pts, trimStart)
   return cut(fromStart.toReversed(), trimEnd).toReversed()
 }
@@ -60,8 +60,8 @@ interface Box {
 }
 
 /** Points every ~8 units along the polyline, for label hit-testing. */
-function densify(pts: [number, number][], step = 8): [number, number][] {
-  const out: [number, number][] = []
+function densify(pts: Array<[number, number]>, step = 8): Array<[number, number]> {
+  const out: Array<[number, number]> = []
   for (let i = 1; i < pts.length; i++) {
     const [ax, ay] = pts[i - 1]
     const [bx, by] = pts[i]
@@ -71,7 +71,7 @@ function densify(pts: [number, number][], step = 8): [number, number][] {
       out.push([ax + ((bx - ax) * k) / n, ay + ((by - ay) * k) / n])
     }
   }
-  if (pts.length > 0) out.push(pts[pts.length - 1])
+  if (pts.length > 0) {out.push(pts[pts.length - 1])}
   return out
 }
 
@@ -88,11 +88,11 @@ function placeLabel(
   h: number,
   viewW: number,
   viewH: number,
-  routeSamples: [number, number][],
-  obstacles: Box[]
+  routeSamples: Array<[number, number]>,
+  obstacles: Array<Box>
 ): Box {
   const gap = 16
-  const candidates: [number, number][] = [
+  const candidates: Array<[number, number]> = [
     [x + gap, y - h / 2],
     [x - w - gap, y - h / 2],
     [x - w / 2, y - h - 14],
@@ -111,12 +111,12 @@ function placeLabel(
     const inside = (px: number, py: number) =>
       px > bx - margin && px < bx + w + margin && py > by - margin && py < by + h + margin
     let hits = 0
-    for (const [px, py] of routeSamples) if (inside(px, py)) hits++
+    for (const [px, py] of routeSamples) {if (inside(px, py)) {hits++}}
     for (const o of obstacles) {
       // Treat obstacle boxes as solid: any corner/center overlap counts hard.
       const overlapX = bx < o.bx + o.w + margin && bx + w + margin > o.bx
       const overlapY = by < o.by + o.h + margin && by + h + margin > o.by
-      if (overlapX && overlapY) hits += 50
+      if (overlapX && overlapY) {hits += 50}
     }
     // Clamping displacement means the candidate didn't really fit there.
     const displaced = Math.abs(bx - cx) + Math.abs(by - cy)
@@ -173,7 +173,7 @@ function labelBoxSize(name: string): { w: number; h: number } {
 
 export interface Overlay {
   path: string
-  innerDots: [number, number][]
+  innerDots: Array<[number, number]>
   first: [number, number]
   last: [number, number]
   boxA: Box
@@ -200,14 +200,14 @@ export function buildOverlay(
   const stopPts = dir0.stops.map((s) => project(s.lon, s.lat))
   const first = stopPts.at(0)
   const last = stopPts.at(-1)
-  if (shapePts.length === 0 || !first || !last) return null
+  if (shapePts.length === 0 || !first || !last) {return null}
   const path = `M ${shapePts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
 
   // Thin crowded stop dots: on dense or zoomed-out routes adjacent dots melt
   // into a caterpillar, so keep only dots a minimum gap apart (terminals
   // always stay).
   const MIN_DOT_GAP = 16
-  const innerDots: [number, number][] = []
+  const innerDots: Array<[number, number]> = []
   let prev = first
   for (const p of stopPts.slice(1, -1)) {
     if (
@@ -222,7 +222,7 @@ export function buildOverlay(
   // Route-aware label placement: never cover the line, the dots, each other,
   // or the site nav band overlaying the top of the hero.
   const routeSamples = densify(shapePts)
-  const obstacles: Box[] = [first, last].map(([dx, dy]) => ({
+  const obstacles: Array<Box> = [first, last].map(([dx, dy]) => ({
     bx: dx - 12,
     by: dy - 12,
     w: 24,

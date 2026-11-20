@@ -18,7 +18,8 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { entryId } from "../../app/promjene/lib"
-import { genDiff, genOneSided, loadFeed, type DiffResult, type Line, type Mode, type Result } from "../lib/gtfs-feed"
+import { genDiff, genOneSided, loadFeed } from '../lib/gtfs-feed';
+import type { DiffResult, Line, Mode, Result } from '../lib/gtfs-feed';
 import { readJson } from "../lib/json"
 
 // [{version, validFrom, dir, hasShapes}], sorted by validFrom
@@ -27,16 +28,16 @@ const REGISTRY = "/tmp/feeds/registry.json"
 /** Is an auto (non-curated) reroute visible enough to be worth a map? */
 function visibleDiff(stat: Result["stat"]): boolean {
   // new/removed always meaningful
-  if (stat.mode !== "diff") return true
+  if (stat.mode !== "diff") {return true}
   const { added, removed } = stat
   const dLen = Math.abs(stat.len_new_km - stat.len_old_km)
   return stat.change === "terminus" || added + removed >= 3 || dLen >= 0.6
 }
 
 interface Reg { version: string; validFrom: string; dir: string; hasShapes: boolean }
-interface Entry { source: { url: string }; date: string; kind: string; maps: string[]; noticeId?: string }
-interface Cand { id: string; date: string | null; lines: string[]; category: string; listWorthy: boolean }
-interface Spec { id: string; date: string; lines: string[]; mode: Mode; curated: boolean }
+interface Entry { source: { url: string }; date: string; kind: string; maps: Array<string>; noticeId?: string }
+interface Cand { id: string; date: string | null; lines: Array<string>; category: string; listWorthy: boolean }
+interface Spec { id: string; date: string; lines: Array<string>; mode: Mode; curated: boolean }
 
 const kindMode = (k: string): Mode => /ukinut/iu.test(k) ? "removed" : /nova/iu.test(k) ? "new" : "diff"
 const catMode = (c: string): Mode => c === "ukinuta" ? "removed" : c === "nova" ? "new" : "diff"
@@ -45,15 +46,15 @@ const LINE_CATS = new Set(["nova", "ukinuta", "produljena", "skraćena", "trasa"
 // The actual GTFS reroute can land a feed or two off the announcement date,
 // so scan consecutive feed transitions near the date and keep the one where
 // the route changes MOST (a date-aligned pair often straddles no change).
-function bestDiff(line: string, fw: Reg[], date: string, get: (r: Reg, line: string) => Line): { res: DiffResult | null; bestSpan: number } {
-  const D = Date.parse(date), WIN = 80 * 86400000
+function bestDiff(line: string, fw: Array<Reg>, date: string, get: (r: Reg, line: string) => Line): { res: DiffResult | null; bestSpan: number } {
+  const D = Date.parse(date), WIN = 80 * 86_400_000
   let bestMag = -1, bestSpan = 0
   let res: DiffResult | null = null
   for (let i = 0; i < fw.length - 1; i++) {
     const o = fw[i], n = fw[i + 1]
-    if (D < Date.parse(o.validFrom) - WIN || D > Date.parse(n.validFrom) + WIN) continue
+    if (D < Date.parse(o.validFrom) - WIN || D > Date.parse(n.validFrom) + WIN) {continue}
     const r = genDiff(line, get(o, line), get(n, line))
-    if (!r) continue
+    if (!r) {continue}
     // the genuine biggest stop-change (no terminus bias → avoids depot-variant blips)
     const mag = r.stat.added + r.stat.removed
     if (mag > bestMag) { bestMag = mag; res = r; bestSpan = Date.parse(n.validFrom) - Date.parse(o.validFrom) }
@@ -65,17 +66,17 @@ async function main() {
   const dataDir = join(process.cwd(), "data", "promjene")
   // Include shapeless feeds too — genDiff/genOneSided fall back to stop-connected
   // drawing when a feed ships no shapes.txt (ZET feeds before ~2024-10).
-  const registry = readJson<Reg[]>(REGISTRY).toSorted((a, b) => a.validFrom.localeCompare(b.validFrom))
-  if (registry.length === 0) throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")
+  const registry = readJson<Array<Reg>>(REGISTRY).toSorted((a, b) => a.validFrom.localeCompare(b.validFrom))
+  if (registry.length === 0) {throw new Error("no feeds in registry — run /tmp/fetch-feeds.ts first")}
 
   // Build the change list: curated entries (always mapped) + scraped line-changes.
-  const { entries } = readJson<{ entries: Entry[] }>(join(dataDir, "entries.json"))
-  const { candidates: cands } = readJson<{ candidates: Cand[] }>(join(dataDir, "candidates.json"))
+  const { entries } = readJson<{ entries: Array<Entry> }>(join(dataDir, "entries.json"))
+  const { candidates: cands } = readJson<{ candidates: Array<Cand> }>(join(dataDir, "candidates.json"))
   // key geom by the ZET notice id (matches the page's lookup); some source URLs point at
   // an archived listing that doesn't carry the id, so take noticeId explicitly when given.
-  const curated: Spec[] = entries.map((e) => ({ id: entryId(e), date: e.date, lines: e.maps, mode: kindMode(e.kind), curated: true }))
+  const curated: Array<Spec> = entries.map((e) => ({ id: entryId(e), date: e.date, lines: e.maps, mode: kindMode(e.kind), curated: true }))
   const curatedIds = new Set(curated.map((s) => s.id))
-  const auto: Spec[] = cands
+  const auto: Array<Spec> = cands
     .filter((c) => c.listWorthy && c.date != null && c.date !== "" && c.lines.length > 0 && LINE_CATS.has(c.category) && !curatedIds.has(c.id))
     .map((c) => ({ id: c.id, date: c.date!, lines: c.lines, mode: catMode(c.category), curated: false }))
   const specs = [...curated, ...auto]
@@ -112,11 +113,11 @@ async function main() {
       } else if (s.mode === "removed") {
         // latest feed that still has the line
         const lastWith = fw.at(-1)
-        if (lastWith && (s.curated || (last.validFrom > lastWith.validFrom && !has(last, line)))) res = genOneSided(line, "removed", get(lastWith, line))
+        if (lastWith && (s.curated || (last.validFrom > lastWith.validFrom && !has(last, line)))) {res = genOneSided(line, "removed", get(lastWith, line))}
       } else {
         // new: earliest feed that has the line
         const firstWith = fw.at(0)
-        if (firstWith && (s.curated || (first.validFrom < firstWith.validFrom && !has(first, line)))) res = genOneSided(line, "new", get(firstWith, line))
+        if (firstWith && (s.curated || (first.validFrom < firstWith.validFrom && !has(first, line)))) {res = genOneSided(line, "new", get(firstWith, line))}
       }
       if (!res) { skipped++; continue }
       // auto weak/no-diff → stays a text row
@@ -125,7 +126,7 @@ async function main() {
       // one is unreliable (the genuine reroute is muddied by months of other edits).
       // A monotonic change (pure extension / pure truncation) survives — the old
       // route is still a clean sub/superset of the new one. Curated entries trusted.
-      if (!s.curated && bestSpan > 150 * 86400000 && res.stat.mode === "diff" && res.stat.added > 0 && res.stat.removed > 0) {
+      if (!s.curated && bestSpan > 150 * 86_400_000 && res.stat.mode === "diff" && res.stat.added > 0 && res.stat.removed > 0) {
         skipped++
         continue
       }

@@ -25,7 +25,7 @@ type OgAssets = {
 let cachedAssets: OgAssets | null = null
 
 function getAssets(): OgAssets {
-  if (cachedAssets) return cachedAssets
+  if (cachedAssets) {return cachedAssets}
   const tram = readFileSync(join(ASSETS_DIR, "tram.png"))
   cachedAssets = {
     geistMonoRegular: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),

@@ -15,7 +15,7 @@ export function RouteStatsSection({
 }: {
   routeStats: RouteStats | null
 }) {
-  if (!stats) return null
+  if (!stats) {return null}
 
   const sortedRoutes = sortRoutesByName(
     stats.routes.filter((r) => r.mode !== "RAIL")
@@ -55,7 +55,7 @@ export function TravelMatrixSection({
   travelMatrix: TravelMatrix | null
   matrix: MatrixInsights
 }) {
-  if (!travelMatrix) return null
+  if (!travelMatrix) {return null}
   return (
     <section
       id="matrica"
@@ -334,7 +334,7 @@ function computeTransferData(travelMatrix: TravelMatrix) {
   const n = travelMatrix.districts.length
   const buckets: Record<
     string,
-    { count: number; pairs: { from: string; to: string; time: number }[] }
+    { count: number; pairs: Array<{ from: string; to: string; time: number }> }
   > = {
     "0": { count: 0, pairs: [] },
     "1": { count: 0, pairs: [] },
@@ -345,9 +345,9 @@ function computeTransferData(travelMatrix: TravelMatrix) {
 
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (i === j) continue
+      if (i === j) {continue}
       const time = travelMatrix.matrix[i][j]
-      if (time <= 0) continue
+      if (time <= 0) {continue}
       const transfers = travelMatrix.transferMatrix[i][j]
       totalPairs++
       totalTransfers += transfers
@@ -463,7 +463,7 @@ function TransferWorstCorridors({
 }: {
   worstPairs: ReturnType<typeof computeTransferData>["worstPairs"]
 }) {
-  if (worstPairs.length === 0) return null
+  if (worstPairs.length === 0) {return null}
   return (
     <div className="mt-12 flex flex-col">
       <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
@@ -495,9 +495,9 @@ export function TransferDependencySection({
 }: {
   travelMatrix: TravelMatrix | null
 }) {
-  if (!travelMatrix?.transferMatrix) return null
+  if (!travelMatrix?.transferMatrix) {return null}
   const td = computeTransferData(travelMatrix)
-  if (td.totalPairs === 0) return null
+  if (td.totalPairs === 0) {return null}
 
   return (
     <section
@@ -565,7 +565,7 @@ function CentralityRanking({
   color,
   scoreDecimals,
 }: {
-  stops: import("@/lib/generated").CentralityStop[]
+  stops: Array<import("@/lib/generated").CentralityStop>
   title: string
   subtitle: string
   color: "rose" | "emerald"
@@ -698,7 +698,7 @@ export function CentralitySection() {
   const data = readJsonCached<CentralityStats>(
     join(getDataDir(), "centrality-stats.json")
   )
-  if (!data) return null
+  if (!data) {return null}
 
   const { betweenness, closeness, networkDiameter } = data
 

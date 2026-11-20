@@ -20,7 +20,7 @@ export function BajsImpactSection({
   data: ScoreData
   bajs: BajsInsights
 }) {
-  if (!bajs.hasBajs) return null
+  if (!bajs.hasBajs) {return null}
   return (
     <section
       id="bajs"
@@ -369,7 +369,7 @@ export function VarianceSection({
   variance: VarianceInsightsData
 }) {
   if (variance.varianceRanked.length === 0)
-    return null
+    {return null}
   return (
     <section
       id="varijacija"
@@ -480,7 +480,7 @@ function VarianceInterpretation({
   const mostUnequal = variance.varianceRanked[0]
   const mostEqual = variance.varianceRanked.at(-1)
 
-  if (mostUnequal === undefined || mostEqual === undefined) return null
+  if (mostUnequal === undefined || mostEqual === undefined) {return null}
 
   return (
     <div className="flex flex-col gap-6">
@@ -563,7 +563,7 @@ export function FrequencySection({
 }: {
   freq: FreqInsights
 }) {
-  if (freq.freqRanked.length === 0) return null
+  if (freq.freqRanked.length === 0) {return null}
   return (
     <section
       id="frekvencija"

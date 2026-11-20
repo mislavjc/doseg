@@ -1,5 +1,5 @@
-import { readFileSync } from "fs"
-import { join } from "path"
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 
 /**
  * Compact walking graph in CSR (Compressed Sparse Row) format.
@@ -17,7 +17,7 @@ export interface WalkingGraph {
   /** Edge distances in centimeters */
   edgeDistCm: Uint32Array
   /** Spatial grid for nearest-node lookup */
-  grid: Map<string, number[]>
+  grid: Map<string, Array<number>>
   gridCellSize: number
 }
 
@@ -69,7 +69,7 @@ function parseGraphArrays(buf: Buffer) {
 }
 
 function buildSpatialGrid(coords: Float64Array, nodeCount: number) {
-  const grid = new Map<string, number[]>()
+  const grid = new Map<string, Array<number>>()
   for (let i = 0; i < nodeCount; i++) {
     const cx = Math.floor(coords[i * 2 + 1] / GRID_CELL_SIZE)
     const cy = Math.floor(coords[i * 2] / GRID_CELL_SIZE)
@@ -90,7 +90,7 @@ function loadGraph(
   buildCommand: string
 ): WalkingGraph {
   const existing = cached.get(path)
-  if (existing) return existing
+  if (existing) {return existing}
 
   const buf = readGraphBuffer(path, label, buildCommand)
   const arrays = parseGraphArrays(buf)

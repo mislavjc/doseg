@@ -16,13 +16,13 @@ function linijeDir(): string {
 
 export function loadLineIndex(): LinePagesIndex {
   const index = readJsonCached<LinePagesIndex>(join(linijeDir(), "index.json"))
-  if (!index) throw new Error("data/linije/index.json missing — run the line-pages generator")
+  if (!index) {throw new Error("data/linije/index.json missing — run the line-pages generator")}
   return index
 }
 
 export function loadLineData(broj: string): LinePageData | null {
   // broj comes from the URL — keep it from escaping the data directory.
-  if (!/^[0-9]{1,3}$/u.test(broj)) return null
+  if (!/^[0-9]{1,3}$/u.test(broj)) {return null}
   return readJsonCached<LinePageData>(join(linijeDir(), `${broj}.json`))
 }
 

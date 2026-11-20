@@ -45,7 +45,7 @@ export default function StatSectionTabs() {
 
     allSectionIds.forEach((id) => {
       const el = document.getElementById(id)
-      if (el) observer.observe(el)
+      if (el) {observer.observe(el)}
     })
 
     return () => observer.disconnect()

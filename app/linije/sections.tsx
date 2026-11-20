@@ -157,7 +157,7 @@ export function frekvencijaCopy(data: LinePageData): {
   body: string
 } | null {
   const status = serviceStatus(data)
-  if (status === "none") return null
+  if (status === "none") {return null}
   const hist = serviceHistogram(data)
   const peak = Math.max(...hist, 0)
   const hook = `${cap(numberWord(peak))} ${plural(peak, "polazak", "polaska", "polazaka")} na sat u špici.`
@@ -207,14 +207,14 @@ export function DosegLinije({ data }: { data: LinePageData }) {
 function suspendedFaq(
   data: LinePageData,
   status: ReturnType<typeof serviceStatus>
-): FaqItem[] {
+): Array<FaqItem> {
   const weekendSentence = {
     both: "Vozi subotom i nedjeljom.",
     saturday: "Vozi samo subotom.",
     sunday: "Vozi samo nedjeljom.",
     none: "",
   }[weekendKind(data)]
-  const items: FaqItem[] = [
+  const items: Array<FaqItem> = [
     {
       q: `Koliko često vozi linija ${data.broj}?`,
       a:
@@ -232,15 +232,15 @@ function suspendedFaq(
   return items
 }
 
-export function buildFaq(data: LinePageData): FaqItem[] {
+export function buildFaq(data: LinePageData): Array<FaqItem> {
   const status = serviceStatus(data)
-  if (status !== "weekday") return suspendedFaq(data, status)
+  if (status !== "weekday") {return suspendedFaq(data, status)}
 
-  const items: FaqItem[] = []
+  const items: Array<FaqItem> = []
   const noun = MODE_NOUN[data.mode]
   const range = peakRange(data)
 
-  const freqParts: string[] = []
+  const freqParts: Array<string> = []
   if (range) {
     freqParts.push(
       range[0] === range[1]
@@ -282,10 +282,10 @@ export function buildFaq(data: LinePageData): FaqItem[] {
   const terminalTrams = data.directions[0].stops[0].tramInterchange
   const crossings = data.related.tramCrossings
   if (data.mode === "bus" && (crossings.length > 0 || terminalTrams.length > 0)) {
-    const parts: string[] = []
+    const parts: Array<string> = []
     if (crossings.length > 0) {
       // Stop with the most tram lines wins.
-      const byStop = new Map<string, string[]>()
+      const byStop = new Map<string, Array<string>>()
       for (const c of crossings) {
         byStop.set(c.stopName, [...(byStop.get(c.stopName) ?? []), c.broj])
       }
@@ -327,18 +327,18 @@ export function PovezaneLinije({ data }: { data: LinePageData }) {
   )
   const describe = (t: string) => {
     const lines = related.filter((r) => r.terminal === t)
-    if (lines.length === 0) return null
+    if (lines.length === 0) {return null}
     const trams = lines.filter((l) => l.mode === "tram").map((l) => l.broj)
     const buses = lines.filter((l) => l.mode === "bus").map((l) => l.broj)
-    const parts: string[] = []
+    const parts: Array<string> = []
     if (trams.length > 0)
-      parts.push(
+      {parts.push(
         `${plural(trams.length, "tramvaj", "tramvaji", "tramvaji")} ${trams.join(", ")}`
-      )
+      )}
     if (buses.length > 0)
-      parts.push(
+      {parts.push(
         `${plural(buses.length, "autobus", "autobusi", "autobusi")} ${buses.slice(0, 6).join(", ")}`
-      )
+      )}
     return parts.join(" i ")
   }
 

@@ -136,7 +136,7 @@ export function renderStopOgCard(
   meta: LineHeroMeta | null
 ): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/stanice", `hero-${data.slug}.png`)
-  if (!meta || !existsSync(heroPath)) return null
+  if (!meta || !existsSync(heroPath)) {return null}
 
   return new ImageResponse(
     (

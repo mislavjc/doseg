@@ -46,7 +46,7 @@ export function projector(crop: CropBounds, viewW: number, viewH: number) {
 }
 
 /** A linear ring of [lon, lat] positions (GeoJSON order, closed or not). */
-export type Ring = [number, number][]
+export type Ring = Array<[number, number]>
 
 /** Ray-casting point-in-ring test ([lon, lat] GeoJSON order). */
 export function pointInRing(lon: number, lat: number, ring: Ring): boolean {
@@ -68,10 +68,10 @@ export function pointInRing(lon: number, lat: number, ring: Ring): boolean {
 export function pointInMultiPolygon(
   lon: number,
   lat: number,
-  coordinates: Ring[][]
+  coordinates: Array<Array<Ring>>
 ): boolean {
   for (const polygon of coordinates) {
-    if (!pointInRing(lon, lat, polygon[0])) continue
+    if (!pointInRing(lon, lat, polygon[0])) {continue}
     let inHole = false
     for (let r = 1; r < polygon.length; r++) {
       if (pointInRing(lon, lat, polygon[r])) {
@@ -79,7 +79,7 @@ export function pointInMultiPolygon(
         break
       }
     }
-    if (!inHole) return true
+    if (!inHole) {return true}
   }
   return false
 }
@@ -94,7 +94,7 @@ function ringAreaKm2(ring: Ring): number {
 }
 
 /** Area of GeoJSON MultiPolygon coordinates in km² (outer rings minus holes). */
-export function multiPolygonAreaKm2(coordinates: Ring[][]): number {
+export function multiPolygonAreaKm2(coordinates: Array<Array<Ring>>): number {
   let area = 0
   for (const polygon of coordinates) {
     for (let r = 0; r < polygon.length; r++) {

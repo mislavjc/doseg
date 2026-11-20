@@ -76,8 +76,8 @@ async function loadMeasured() {
     loadBajsBalance(ranking),
     loadBajsRelocations(WINDOW_DAYS, rides?.fullDays),
   ])
-  if (rides === null) cacheLife("seconds")
-  else cacheLife("minutes")
+  if (rides === null) {cacheLife("seconds")}
+  else {cacheLife("minutes")}
   return {
     rides,
     ranking,

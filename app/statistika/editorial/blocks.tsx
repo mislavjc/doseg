@@ -85,7 +85,7 @@ export function FactRow({
 export function Breadcrumb({
   trail,
 }: {
-  trail: { label: string; href?: string }[]
+  trail: Array<{ label: string; href?: string }>
 }) {
   return (
     <p className="font-mono text-label text-ink-faint">

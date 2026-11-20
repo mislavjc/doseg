@@ -67,10 +67,10 @@ function Row({
  * facts this section owns: a city-wide ride total or station count here would
  * be a second, slightly different answer to what the hero already states.
  */
-function Summary({ kvartovi }: { kvartovi: KvartRides[] }) {
+function Summary({ kvartovi }: { kvartovi: Array<KvartRides> }) {
   const topThree = kvartovi.slice(0, 3).reduce((n, k) => n + k.share, 0)
   const quietest = kvartovi.at(-1)
-  const rows: [string, string][] = [
+  const rows: Array<[string, string]> = [
     ["kvartova sa stanicom", `${kvartovi.length} / 17`],
     ["u tri najveća", `${Math.round(topThree * 100)}%`],
     ["najtiši kvart", quietest?.name ?? "-"],
@@ -91,7 +91,7 @@ export function KvartTerrain({
   kvartovi,
   values,
 }: {
-  kvartovi: KvartRides[]
+  kvartovi: Array<KvartRides>
   values: Record<string, number>
 }) {
   const [hovered, setHovered] = useState<string | null>(null)

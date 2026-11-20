@@ -24,7 +24,8 @@ import {
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
-import { PoiRow, type PoiKey } from "@/app/statistika/editorial/poi"
+import { PoiRow } from '@/app/statistika/editorial/poi';
+import type { PoiKey } from '@/app/statistika/editorial/poi';
 import { HomeHero } from "@/app/home-hero"
 import { FOCUS_SCALE } from "@/app/home-hero-variant"
 import {
@@ -34,24 +35,17 @@ import {
   NearbyLines,
   StopGauges,
 } from "@/components/doseg-readout"
-import { resolveAdresaSlug, type ResolvedAdresa } from "@/lib/adresa"
+import { resolveAdresaSlug } from '@/lib/adresa';
+import type { ResolvedAdresa } from '@/lib/adresa';
 import { loadScores } from "@/lib/district-scores"
-import {
-  dosegAt,
-  type DosegAtPayload,
-  type NearbyLine,
-  type NearbyStop,
-} from "@/lib/doseg-at"
+import { dosegAt } from '@/lib/doseg-at';
+import type { DosegAtPayload, NearbyLine, NearbyStop } from '@/lib/doseg-at';
 import { projector } from "@/lib/geo"
 import { loadHomeHero } from "@/lib/home-hero"
 import { kartaUrl } from "@/lib/karta-url"
 import { loadLineIndex } from "@/lib/line-data"
-import {
-  nearestBajs,
-  nearestPois,
-  type NearestBajs,
-  type NearestPoi,
-} from "@/lib/okolina"
+import { nearestBajs, nearestPois } from '@/lib/okolina';
+import type { NearestBajs, NearestPoi } from '@/lib/okolina';
 
 /**
  * /adresa/[slug] — the doseg page for one address (Paper "Adresa — LOCK-IN ·
@@ -78,7 +72,7 @@ interface Params {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
   const adresa = resolveAdresaSlug(slug)
-  if (!adresa) return { robots: { index: false } }
+  if (!adresa) {return { robots: { index: false } }}
   return {
     title: `${adresa.label} - doseg javnim prijevozom | doseg.hr`,
     description: `Koliko grada dosežeš za 30 minuta s adrese ${adresa.label}: najbliže stanice, linije u blizini i povezanost kvarta.`,
@@ -100,14 +94,14 @@ function MonoLink({ href, children }: { href: string; children: React.ReactNode 
 
 // ── Data-driven section hooks ────────────────────────────────────────────────
 
-function stopsHook(nearby: NearbyStop[], cityAvgM: number | null) {
+function stopsHook(nearby: Array<NearbyStop>, cityAvgM: number | null) {
   const n = nearby.length
   if (cityAvgM !== null && n >= 2 && nearby[n - 1].distM <= cityAvgM)
-    return `${cap(numberWordF(n))} stanice prije nego što prosjek grada uopće stigne do prve.`
+    {return `${cap(numberWordF(n))} stanice prije nego što prosjek grada uopće stigne do prve.`}
   if (cityAvgM !== null)
-    return nearby[0].distM <= cityAvgM
+    {return nearby[0].distM <= cityAvgM
       ? "Najbliža stanica bliža je nego u prosjeku grada."
-      : "Do najbliže stanice hoda se dulje nego u prosjeku grada."
+      : "Do najbliže stanice hoda se dulje nego u prosjeku grada."}
   return `Najbliža stanica je ${nearby[0].name}, ${nearby[0].walkMin} min hoda.`
 }
 
@@ -119,15 +113,15 @@ function linesHook(data: DosegAtPayload, minPeak: number | null) {
   }
   const day = (data.lines ?? []).filter((l) => !l.isNight)
   const n = day.length
-  if (n === 0) return "Ovdje staju samo noćne linije."
+  if (n === 0) {return "Ovdje staju samo noćne linije."}
   const trams = day.filter((l) => l.mode === "tram").length
   let mode = "tramvaji i autobusi"
-  if (trams === n) mode = n === 1 ? "tramvajska" : "sve tramvajske"
-  else if (trams === 0) mode = n === 1 ? "autobusna" : "sve autobusne"
+  if (trams === n) {mode = n === 1 ? "tramvajska" : "sve tramvajske"}
+  else if (trams === 0) {mode = n === 1 ? "autobusna" : "sve autobusne"}
   return `${cap(numberWordF(n))} ${plural(n, "dnevna linija", "dnevne linije", "dnevnih linija")}, ${mode}.`
 }
 
-function bajsHook(stations: NearestBajs[], nearestStop?: NearbyStop) {
+function bajsHook(stations: Array<NearestBajs>, nearestStop?: NearbyStop) {
   const first = stations[0]
   if (nearestStop && first.distM < nearestStop.distM) {
     return `Bajs ti je bliže nego stanica: ${first.distM} ${plural(first.distM, "metar", "metra", "metara")}.`
@@ -138,7 +132,7 @@ function bajsHook(stations: NearestBajs[], nearestStop?: NearbyStop) {
 const minutesWord = (n: number) => (n === 1 ? "minutu" : numberWordF(n))
 
 /** "Škola na minutu, park na četiri, bolnica na devet." — sorted by distance. */
-function okolinaHook(pois: NearestPoi[]) {
+function okolinaHook(pois: Array<NearestPoi>) {
   return (
     pois
       .map((p, i) => {
@@ -190,10 +184,10 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
       label: "linije na 5 min hoda",
     },
   ].filter((c) => c !== false)
-  if (cells.length === 0) return null
+  if (cells.length === 0) {return null}
 
   const rows = []
-  for (let i = 0; i < cells.length; i += 2) rows.push(cells.slice(i, i + 2))
+  for (let i = 0; i < cells.length; i += 2) {rows.push(cells.slice(i, i + 2))}
   return (
     <Section
       width="article"
@@ -215,7 +209,7 @@ function StaniceSection({
   nearby,
   cityAvgM,
 }: {
-  nearby: NearbyStop[]
+  nearby: Array<NearbyStop>
   cityAvgM: number | null
 }) {
   return (
@@ -242,7 +236,7 @@ function LinijeSection({
   minPeak,
 }: {
   data: DosegAtPayload
-  withPeak: (NearbyLine & { peakMin: number })[]
+  withPeak: Array<NearbyLine & { peakMin: number }>
   minPeak: number | null
 }) {
   const lines = data.lines ?? []
@@ -291,7 +285,7 @@ async function BajsSection({
   karta: string
 }) {
   const stations = await nearestBajs(lon, lat)
-  if (stations.length === 0) return null
+  if (stations.length === 0) {return null}
   return (
     <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
       <Eyebrow>bajs</Eyebrow>
@@ -315,7 +309,7 @@ function OkolinaSection({
   pois,
   origin,
 }: {
-  pois: NearestPoi[]
+  pois: Array<NearestPoi>
   origin: { lat: number; lon: number }
 }) {
   return (
@@ -402,7 +396,7 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
 export default async function AdresaPage({ params }: Params) {
   const { slug } = await params
   const adresa = resolveAdresaSlug(slug)
-  if (!adresa) notFound()
+  if (!adresa) {notFound()}
 
   const data = dosegAt(adresa.lon, adresa.lat)
   const karta = kartaUrl(adresa)

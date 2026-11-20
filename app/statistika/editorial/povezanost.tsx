@@ -160,7 +160,7 @@ function RankingBoard({
 }
 
 function Stats({ data }: { data: PovezanostData }) {
-  const rows: [string, string][] = [
+  const rows: Array<[string, string]> = [
     ["iznad 50", `${data.good} / ${data.total}`],
     ["prosjek", `${data.avg} / 100`],
     ["slab doseg", `${data.poorPct}%`],

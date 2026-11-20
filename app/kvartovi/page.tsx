@@ -11,7 +11,8 @@ import {
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
-import { type KvartBoardRow, loadKvartBoard } from "@/lib/kvart-data"
+import { loadKvartBoard } from '@/lib/kvart-data';
+import type { KvartBoardRow } from '@/lib/kvart-data';
 import { scoreColor } from "@/lib/score-color"
 import { plural } from "@/app/linije/copy"
 
@@ -57,7 +58,7 @@ export const ensureStatic = "navigation"
 
 export default function KvartoviPage() {
   const board = loadKvartBoard()
-  if (!board) return null
+  if (!board) {return null}
 
   const itemList = {
     "@context": "https://schema.org",

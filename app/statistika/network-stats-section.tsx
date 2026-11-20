@@ -30,7 +30,7 @@ function fmtDots(n: number): string {
 }
 
 function tramSort(a: string, b: string): number {
-  return parseInt(a, 10) - parseInt(b, 10)
+  return Number.parseInt(a, 10) - Number.parseInt(b, 10)
 }
 
 function Insight({ children }: { children: React.ReactNode }) {
@@ -45,9 +45,9 @@ function Insight({ children }: { children: React.ReactNode }) {
 // Compute insights from combined data
 // ---------------------------------------------------------------------------
 function computeHeatmapInsights(
-  trams: NetworkRoute[],
-  dayTrams: NetworkRoute[],
-  nightTrams: NetworkRoute[]
+  trams: Array<NetworkRoute>,
+  dayTrams: Array<NetworkRoute>,
+  nightTrams: Array<NetworkRoute>
 ) {
   const hourlySystem = Array.from({ length: 24 }, () => 0)
   for (const r of trams) {
@@ -85,7 +85,7 @@ function computeHeatmapInsights(
 }
 
 function computeQualityInsights(
-  dayTrams: NetworkRoute[],
+  dayTrams: Array<NetworkRoute>,
   routeStats: RouteStatsOutput | null
 ) {
   const withTort = dayTrams.filter(
@@ -108,7 +108,7 @@ function computeQualityInsights(
       .filter((r) => r.headwayCv !== null && r.headwayCv > 0)
       .toSorted((a, b) => (a.headwayCv ?? 99) - (b.headwayCv ?? 99))[0] ?? null
 
-  const speedData: { name: string; spacing: number; speed: number }[] = []
+  const speedData: Array<{ name: string; spacing: number; speed: number }> = []
   if (routeStats) {
     for (const t of dayTrams) {
       const rm = routeStats.routes.find(
@@ -266,7 +266,7 @@ function HeatmapSvg({
   colorScale,
   maxDep,
 }: {
-  tramRoutes: NetworkRoute[]
+  tramRoutes: Array<NetworkRoute>
   colorScale: (v: number) => string
   maxDep: number
 }) {
@@ -326,7 +326,7 @@ function HeatmapCells({
   colorScale,
   maxDep,
 }: {
-  tramRoutes: NetworkRoute[]
+  tramRoutes: Array<NetworkRoute>
   colorScale: (v: number) => string
   maxDep: number
 }) {
@@ -416,7 +416,7 @@ function HourlyHeatmap({
   routes,
   insights,
 }: {
-  routes: NetworkRoute[]
+  routes: Array<NetworkRoute>
   insights: ReturnType<typeof computeInsights>
 }) {
   const tramRoutes = routes
@@ -427,7 +427,7 @@ function HourlyHeatmap({
       return totalB - totalA
     })
 
-  if (tramRoutes.length === 0) return null
+  if (tramRoutes.length === 0) {return null}
 
   const allDeps = tramRoutes.flatMap((r) => r.hourlyDepartures)
   const maxDep = Math.max(...allDeps, 1)
@@ -457,17 +457,17 @@ function HourlyHeatmap({
 // 3. Route Quality Cards
 // ---------------------------------------------------------------------------
 function cvColor(cv: number | null): string {
-  if (cv === null) return "text-slate-400 dark:text-slate-500"
-  if (cv < 0.2) return "text-slate-700 dark:text-slate-300"
-  if (cv <= 0.4) return "text-slate-500 dark:text-slate-400"
+  if (cv === null) {return "text-slate-400 dark:text-slate-500"}
+  if (cv < 0.2) {return "text-slate-700 dark:text-slate-300"}
+  if (cv <= 0.4) {return "text-slate-500 dark:text-slate-400"}
   return "text-slate-900 dark:text-slate-200"
 }
 
 function cvLabel(cv: number | null): string {
-  if (cv === null) return "-"
-  if (cv < 0.15) return "odlično"
-  if (cv < 0.25) return "dobro"
-  if (cv <= 0.4) return "umjereno"
+  if (cv === null) {return "-"}
+  if (cv < 0.15) {return "odlično"}
+  if (cv < 0.25) {return "dobro"}
+  if (cv <= 0.4) {return "umjereno"}
   return "kaotičan"
 }
 
@@ -604,14 +604,14 @@ function RouteQualityCards({
   routes,
   insights,
 }: {
-  routes: NetworkRoute[]
+  routes: Array<NetworkRoute>
   insights: ReturnType<typeof computeInsights>
 }) {
   const tramRoutes = routes
     .filter((r) => r.mode === "TRAM")
     .toSorted((a, b) => tramSort(a.name, b.name))
 
-  if (tramRoutes.length === 0) return null
+  if (tramRoutes.length === 0) {return null}
 
   return (
     <div className="flex flex-col">
@@ -790,11 +790,11 @@ function WeekdayOnlyCard({
       <div className="flex flex-wrap gap-1.5">
         {weekendService.weekdayOnlyRoutes
           .toSorted((a, b) => {
-            const na = parseInt(a, 10),
-              nb = parseInt(b, 10)
-            if (isNaN(na) && isNaN(nb)) return a.localeCompare(b)
-            if (isNaN(na)) return 1
-            if (isNaN(nb)) return -1
+            const na = Number.parseInt(a, 10),
+              nb = Number.parseInt(b, 10)
+            if (isNaN(na) && isNaN(nb)) {return a.localeCompare(b)}
+            if (isNaN(na)) {return 1}
+            if (isNaN(nb)) {return -1}
             return na - nb
           })
           .map((route) => (
@@ -814,8 +814,8 @@ function AsymmetryCard({
   asymmetry,
   topAsymmetric,
 }: {
-  asymmetry: DirectionalAsymmetryEntry[]
-  topAsymmetric: DirectionalAsymmetryEntry[]
+  asymmetry: Array<DirectionalAsymmetryEntry>
+  topAsymmetric: Array<DirectionalAsymmetryEntry>
 }) {
   return (
     <div className="flex flex-col border-l-2 border-slate-300 py-2 pl-6">
@@ -886,8 +886,8 @@ function WeekendAsymmetryInsight({
   weekdayTrams,
   topAsymmetric,
 }: {
-  weekdayTrams: string[]
-  topAsymmetric: DirectionalAsymmetryEntry[]
+  weekdayTrams: Array<string>
+  topAsymmetric: Array<DirectionalAsymmetryEntry>
 }) {
   return (
     <Insight>
@@ -915,9 +915,9 @@ function WeekendAsymmetrySection({
   asymmetry,
 }: {
   weekendService: WeekendService | null
-  asymmetry: DirectionalAsymmetryEntry[] | null
+  asymmetry: Array<DirectionalAsymmetryEntry> | null
 }) {
-  if (!weekendService && !asymmetry) return null
+  if (!weekendService && !asymmetry) {return null}
 
   const topAsymmetric = asymmetry
     ? asymmetry.toSorted((a, b) => a.ratio - b.ratio).slice(0, 5)
@@ -925,7 +925,7 @@ function WeekendAsymmetrySection({
 
   const weekdayTrams =
     weekendService?.weekdayOnlyRoutes.filter(
-      (r) => parseInt(r, 10) <= 34 && !isNaN(parseInt(r, 10))
+      (r) => Number.parseInt(r, 10) <= 34 && !isNaN(Number.parseInt(r, 10))
     ) ?? []
 
   return (
@@ -1101,7 +1101,7 @@ function ServiceSpanNumbers({ span }: { span: ServiceSpan }) {
   )
 }
 
-function PastMidnightCard({ routes }: { routes: string[] }) {
+function PastMidnightCard({ routes }: { routes: Array<string> }) {
   return (
     <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <div className="mb-1 font-mono text-label font-bold text-emerald-600 dark:text-emerald-400">
@@ -1129,7 +1129,7 @@ function PastMidnightCard({ routes }: { routes: string[] }) {
   )
 }
 
-function EndingBefore23Card({ routes }: { routes: string[] }) {
+function EndingBefore23Card({ routes }: { routes: Array<string> }) {
   return (
     <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <div className="mb-1 font-mono text-label font-bold text-red-600 dark:text-red-400">
@@ -1249,16 +1249,16 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
 // 7. Pulse Scheduling Detection
 // ---------------------------------------------------------------------------
 function pulseWaitColor(waitMin: number): string {
-  if (waitMin < 3) return "text-emerald-600 dark:text-emerald-400"
-  if (waitMin <= 6) return "text-amber-600 dark:text-amber-400"
+  if (waitMin < 3) {return "text-emerald-600 dark:text-emerald-400"}
+  if (waitMin <= 6) {return "text-amber-600 dark:text-amber-400"}
   return "text-red-600 dark:text-red-400"
 }
 
 function pulseWaitBg(waitMin: number): string {
   if (waitMin < 3)
-    return "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
+    {return "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"}
   if (waitMin <= 6)
-    return "bg-slate-200/80 text-slate-800 dark:bg-white/15 dark:text-slate-200"
+    {return "bg-slate-200/80 text-slate-800 dark:bg-white/15 dark:text-slate-200"}
   return "bg-slate-300 text-slate-900 dark:bg-white/20 dark:text-white"
 }
 
@@ -1319,11 +1319,11 @@ const PULSE_GAP = 2
 const PULSE_LABEL_W = 120
 
 function pulseHeatColor(wait: number, maxWait: number): string {
-  if (wait < 0) return "transparent"
+  if (wait < 0) {return "transparent"}
   const t = Math.min(wait / maxWait, 1)
-  if (t < 0.33) return "#e2e8f0"
-  if (t < 0.55) return "#94a3b8"
-  if (t < 0.77) return "#64748b"
+  if (t < 0.33) {return "#e2e8f0"}
+  if (t < 0.55) {return "#94a3b8"}
+  if (t < 0.77) {return "#64748b"}
   return "#1e293b"
 }
 
@@ -1331,7 +1331,7 @@ function PulseHeatmapCells({
   topHubs,
   maxWait,
 }: {
-  topHubs: PulseHub[]
+  topHubs: Array<PulseHub>
   maxWait: number
 }) {
   return (
@@ -1380,9 +1380,9 @@ function PulseHeatmapCells({
   )
 }
 
-function PulseHeatmap({ hubs }: { hubs: PulseHub[] }) {
+function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
   const topHubs = hubs.slice(0, 5)
-  if (topHubs.length === 0) return null
+  if (topHubs.length === 0) {return null}
 
   const hours = Array.from({ length: 19 }, (_, i) => i + 5)
   const allWaits = topHubs.flatMap((h) => h.hourlyWait.filter((v) => v >= 0))
@@ -1437,7 +1437,7 @@ function PulseHeatmap({ hubs }: { hubs: PulseHub[] }) {
   )
 }
 
-function PulseHubsTable({ hubs }: { hubs: PulseHub[] }) {
+function PulseHubsTable({ hubs }: { hubs: Array<PulseHub> }) {
   return (
     <div className="overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200/60 bg-slate-100 [-webkit-overflow-scrolling:touch] sm:rounded-3xl dark:border-white/10 dark:bg-zinc-800/60">
       <table className="w-full min-w-[640px] text-left">
@@ -1476,7 +1476,7 @@ function PulseInsight({
   bestHub,
   pulsedCount,
 }: {
-  hubs: PulseHub[]
+  hubs: Array<PulseHub>
   avgWait: number
   bestHub: PulseHub
   pulsedCount: number
@@ -1509,8 +1509,8 @@ function PulseInsight({
   )
 }
 
-function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
-  if (hubs.length === 0) return null
+function PulseSchedulingSection({ hubs }: { hubs: Array<PulseHub> }) {
+  if (hubs.length === 0) {return null}
 
   const avgWait =
     hubs.reduce((s, h) => s + h.avgTransferWaitMin, 0) / hubs.length
@@ -1551,7 +1551,7 @@ export default function NetworkStatsSection() {
   const data = readJsonCached<NetworkStatsOutput>(
     join(getDataDir(), "network-stats.json")
   )
-  if (!data) return null
+  if (!data) {return null}
 
   const routeStats = loadRouteStats()
   const insights = computeInsights(data, routeStats)

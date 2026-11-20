@@ -55,7 +55,7 @@ function StopRow({ stop }: { stop: StopIndexEntry }) {
   )
 }
 
-function LetterBlock({ letter, stops }: { letter: string; stops: StopIndexEntry[] }) {
+function LetterBlock({ letter, stops }: { letter: string; stops: Array<StopIndexEntry> }) {
   return (
     <div id={letterId(letter)} className="scroll-mt-24 pt-8 first:pt-0">
       <div className="flex items-center gap-3">
@@ -80,19 +80,19 @@ export default function StaniceIndexPage() {
   const promoted = index.stops.filter((s) => s.lineCount >= MIN_LINES)
 
   // Bucket by first letter, sort within each bucket (Croatian collation).
-  const groups = new Map<string, StopIndexEntry[]>()
+  const groups = new Map<string, Array<StopIndexEntry>>()
   for (const s of promoted) {
     const L = firstLetter(s.name)
     const bucket = groups.get(L)
-    if (bucket) bucket.push(s)
-    else groups.set(L, [s])
+    if (bucket) {bucket.push(s)}
+    else {groups.set(L, [s])}
   }
-  for (const arr of groups.values()) arr.sort((a, b) => a.name.localeCompare(b.name, "hr"))
+  for (const arr of groups.values()) {arr.sort((a, b) => a.name.localeCompare(b.name, "hr"))}
 
   // Bucket order: the Croatian alphabet present here, then any leftovers (digits).
   const present = HR_LETTERS.filter((L) => groups.has(L))
   const extra = [...groups.keys()]
-    .filter((k) => !(HR_LETTERS as readonly string[]).includes(k))
+    .filter((k) => !(HR_LETTERS as ReadonlyArray<string>).includes(k))
     .toSorted()
   const letters = [...present, ...extra]
 

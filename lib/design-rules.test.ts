@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest"
 const root = join(import.meta.dirname, "..")
 const skip = ["app/api/og/", "lib/generated/"]
 
-function sources(dir: string): string[] {
+function sources(dir: string): Array<string> {
   return readdirSync(join(root, dir), { recursive: true, encoding: "utf8" })
     .map((p) => join(dir, p))
     .filter((p) => /\.tsx?$/u.test(p) && !p.endsWith(".test.ts"))
@@ -15,7 +15,7 @@ function sources(dir: string): string[] {
 
 const files = ["app", "components", "lib", "hooks"].flatMap((dir) => sources(dir))
 
-function offenders(pattern: RegExp): string[] {
+function offenders(pattern: RegExp): Array<string> {
   return files.flatMap((file) =>
     readFileSync(join(root, file), "utf8")
       .split("\n")

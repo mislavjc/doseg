@@ -19,7 +19,7 @@ export const REACH_RAMP = [
 export function reachColorStops(
   maxSeconds: number
 ): maplibregl.ExpressionSpecification {
-  const stops: (number | string)[] = []
+  const stops: Array<number | string> = []
   REACH_RAMP.forEach((color, i) => {
     stops.push((maxSeconds * i) / (REACH_RAMP.length - 1), color)
   })

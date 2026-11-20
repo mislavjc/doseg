@@ -6,11 +6,12 @@
  * Binary format: see writeBinaryGraph in scripts/lib/osm-graph.ts.
  */
 
-import { createReadStream, readFileSync } from "fs"
+import { createReadStream, readFileSync } from "node:fs"
 import createParser from "osm-pbf-parser"
 import through2 from "through2"
 
-import { BBOX, type Edge, type OsmItem, writeBinaryGraph } from "./lib/osm-graph"
+import { BBOX, writeBinaryGraph } from './lib/osm-graph';
+import type { Edge, OsmItem } from './lib/osm-graph';
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"
@@ -67,16 +68,16 @@ function getElevation(
   const tileLon = Math.floor(lon)
   const key = `N${tileLat}E${String(tileLon).padStart(3, "0")}`
   const tile = tiles.get(key)
-  if (!tile) return 0
+  if (!tile) {return 0}
 
   const row = Math.round((tileLat + 1 - lat) * (SRTM_SIZE - 1))
   const col = Math.round((lon - tileLon) * (SRTM_SIZE - 1))
   const idx = row * SRTM_SIZE + col
-  if (idx < 0 || idx >= tile.length) return 0
+  if (idx < 0 || idx >= tile.length) {return 0}
 
   const elev = tile[idx]
   // -32768 = void
-  return elev === -32768 ? 0 : elev
+  return elev === -32_768 ? 0 : elev
 }
 
 /**
@@ -89,13 +90,13 @@ function toblerFactor(slope: number): number {
 
 function parseOsmData(
   nodeCoords: Map<number, { lat: number; lon: number }>,
-  walkableWays: { refs: number[] }[]
+  walkableWays: Array<{ refs: Array<number> }>
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     createReadStream(INPUT)
       .pipe(createParser())
       .pipe(
-        through2.obj((items: OsmItem[], _enc: string, next: () => void) => {
+        through2.obj((items: Array<OsmItem>, _enc: string, next: () => void) => {
           for (const item of items) {
             if (item.type === "node") {
               const lat = item.lat!
@@ -110,9 +111,9 @@ function parseOsmData(
               }
             } else if (item.type === "way" && item.tags) {
               const hw = item.tags.highway
-              if (!hw || !WALKABLE_HIGHWAYS.has(hw)) continue
+              if (!hw || !WALKABLE_HIGHWAYS.has(hw)) {continue}
               if (item.tags.access === "private" || item.tags.foot === "no")
-                continue
+                {continue}
               walkableWays.push({ refs: item.refs! })
             }
           }
@@ -125,14 +126,14 @@ function parseOsmData(
 }
 
 function filterValidWays(
-  walkableWays: { refs: number[] }[],
+  walkableWays: Array<{ refs: Array<number> }>,
   nodeCoords: Map<number, { lat: number; lon: number }>
-): { usedNodeIds: Set<number>; validWays: number[][] } {
+): { usedNodeIds: Set<number>; validWays: Array<Array<number>> } {
   const usedNodeIds = new Set<number>()
-  const validWays: number[][] = []
+  const validWays: Array<Array<number>> = []
 
   for (const way of walkableWays) {
-    const validRefs: number[] = []
+    const validRefs: Array<number> = []
     for (const ref of way.refs) {
       if (nodeCoords.has(ref)) {
         validRefs.push(ref)
@@ -154,12 +155,12 @@ function filterValidWays(
 
 
 function buildEdges(
-  validWays: number[][],
+  validWays: Array<Array<number>>,
   nodeIdToIdx: Map<number, number>,
-  nodeList: { lat: number; lon: number }[],
+  nodeList: Array<{ lat: number; lon: number }>,
   srtmTiles: Map<string, Int16Array>
-): Edge[] {
-  const edges: Edge[] = []
+): Array<Edge> {
+  const edges: Array<Edge> = []
   const hasElevation = srtmTiles.size > 0
 
   for (const refs of validWays) {
@@ -171,7 +172,7 @@ function buildEdges(
       const d = distKm(fromCoord.lat, fromCoord.lon, toCoord.lat, toCoord.lon)
 
       if (!hasElevation || d < 0.01) {
-        const distCm = Math.round(d * 100000)
+        const distCm = Math.round(d * 100_000)
         edges.push({ from: fromIdx, to: toIdx, distCm }, { from: toIdx, to: fromIdx, distCm })
       } else {
         const elevFrom = getElevation(fromCoord.lat, fromCoord.lon, srtmTiles)
@@ -180,8 +181,8 @@ function buildEdges(
         const run = d * 1000
         const slope = rise / run
 
-        const fwd = Math.round((d / toblerFactor(slope)) * 100000)
-        const rev = Math.round((d / toblerFactor(-slope)) * 100000)
+        const fwd = Math.round((d / toblerFactor(slope)) * 100_000)
+        const rev = Math.round((d / toblerFactor(-slope)) * 100_000)
 
         edges.push({ from: fromIdx, to: toIdx, distCm: fwd }, { from: toIdx, to: fromIdx, distCm: rev })
       }
@@ -194,7 +195,7 @@ function buildEdges(
 async function main() {
   console.log("Collecting walkable ways and all nodes within bbox...")
   const nodeCoords = new Map<number, { lat: number; lon: number }>()
-  const walkableWays: { refs: number[] }[] = []
+  const walkableWays: Array<{ refs: Array<number> }> = []
 
   await parseOsmData(nodeCoords, walkableWays)
 
@@ -210,7 +211,7 @@ async function main() {
   )
 
   const nodeIdToIdx = new Map<number, number>()
-  const nodeList: { lat: number; lon: number }[] = []
+  const nodeList: Array<{ lat: number; lon: number }> = []
 
   for (const id of usedNodeIds) {
     const coord = nodeCoords.get(id)!

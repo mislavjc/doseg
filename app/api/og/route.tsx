@@ -14,14 +14,14 @@ import { plural } from "@/app/linije/copy"
 type DistrictFeature = {
   type: "Feature"
   properties: { name: string; osmId: number; population: number }
-  geometry: { type: "Polygon"; coordinates: number[][][] }
+  geometry: { type: "Polygon"; coordinates: Array<Array<Array<number>>> }
 }
 
-function getDistrictGeoJSON(): DistrictFeature[] {
-  const parsed = readJsonCached<{ features: DistrictFeature[] }>(
+function getDistrictGeoJSON(): Array<DistrictFeature> {
+  const parsed = readJsonCached<{ features: Array<DistrictFeature> }>(
     join(process.cwd(), "data/districts.geojson")
   )
-  if (!parsed) throw new Error("data/districts.geojson missing or malformed")
+  if (!parsed) {throw new Error("data/districts.geojson missing or malformed")}
   return parsed.features
 }
 
@@ -34,7 +34,7 @@ function getDistrictScores() {
 function pointInPolygon(
   lat: number,
   lon: number,
-  polygon: number[][]
+  polygon: Array<Array<number>>
 ): boolean {
   let inside = false
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -45,7 +45,7 @@ function pointInPolygon(
 
     const intersect =
       yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi
-    if (intersect) inside = !inside
+    if (intersect) {inside = !inside}
   }
   return inside
 }
@@ -102,7 +102,7 @@ class LruCache<V> {
     this.map.set(key, value)
     while (this.map.size > this.max) {
       const oldest = this.map.keys().next().value
-      if (oldest === undefined) break
+      if (oldest === undefined) {break}
       this.map.delete(oldest)
     }
   }
@@ -119,13 +119,13 @@ const LINE_CARD_HEADERS = {
 
 async function lineCardResponse(linija: string): Promise<Response | null> {
   const cached = lineCardCache.get(linija)
-  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+  if (cached) {return new Response(cached, { headers: LINE_CARD_HEADERS })}
   const line = loadLineData(linija)
-  if (!line) return new Response("Unknown line", { status: 404 })
+  if (!line) {return new Response("Unknown line", { status: 404 })}
   // Hero-map card; falls back to the generic tram card when the line's
   // hero asset is missing.
   const heroCard = renderLineOgCard(line)
-  if (!heroCard) return null
+  if (!heroCard) {return null}
   const body = await heroCard.arrayBuffer()
   lineCardCache.set(linija, body)
   return new Response(body, { headers: LINE_CARD_HEADERS })
@@ -138,26 +138,26 @@ const coordCardCache = new LruCache<ArrayBuffer>(32)
 let homeCardBuf: ArrayBuffer | null = null
 
 async function homeCardResponse(): Promise<Response | null> {
-  if (homeCardBuf) return new Response(homeCardBuf, { headers: LINE_CARD_HEADERS })
+  if (homeCardBuf) {return new Response(homeCardBuf, { headers: LINE_CARD_HEADERS })}
   const card = renderHomeOgCard({
     dayLineCount: loadLineIndex().lines.filter((l) => !l.isNight).length,
     stopCount: loadStopIndex().stops.length,
     kvartCount: getDistrictScores().length || 17,
   })
-  if (!card) return null
+  if (!card) {return null}
   homeCardBuf = await card.arrayBuffer()
   return new Response(homeCardBuf, { headers: LINE_CARD_HEADERS })
 }
 
 async function stopCardResponse(stanica: string): Promise<Response | null> {
   const cached = stopCardCache.get(stanica)
-  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+  if (cached) {return new Response(cached, { headers: LINE_CARD_HEADERS })}
   const stop = loadStopData(stanica)
-  if (!stop) return new Response("Unknown stop", { status: 404 })
+  if (!stop) {return new Response("Unknown stop", { status: 404 })}
   // Hero-map card; null when the stop has no baked hero (long-tail stops) so
   // the caller can fall back to the generic card.
   const heroCard = renderStopOgCard(stop, loadStopHeroMeta(stanica))
-  if (!heroCard) return null
+  if (!heroCard) {return null}
   const body = await heroCard.arrayBuffer()
   stopCardCache.set(stanica, body)
   return new Response(body, { headers: LINE_CARD_HEADERS })
@@ -172,16 +172,16 @@ export async function GET(request: Request) {
 
   if (searchParams.has("naslovnica")) {
     const cardResponse = await homeCardResponse()
-    if (cardResponse) return cardResponse
+    if (cardResponse) {return cardResponse}
     // No hero bake (fresh checkout) — generic text card.
     return renderOgCard({ headline: "Koliko grada dosežeš javnim prijevozom." })
   }
 
   if (linija) {
     const cardResponse = await lineCardResponse(linija)
-    if (cardResponse) return cardResponse
+    if (cardResponse) {return cardResponse}
     const line = loadLineData(linija)
-    if (!line) return new Response("Unknown line", { status: 404 })
+    if (!line) {return new Response("Unknown line", { status: 404 })}
     const peak = line.stats.peakHeadwayMin
     return renderOgCard({
       headline: `Linija ${line.broj}: ${line.terminals[0]} - ${line.terminals[1]}`,
@@ -193,9 +193,9 @@ export async function GET(request: Request) {
 
   if (stanica) {
     const cardResponse = await stopCardResponse(stanica)
-    if (cardResponse) return cardResponse
+    if (cardResponse) {return cardResponse}
     const stop = loadStopData(stanica)
-    if (!stop) return new Response("Unknown stop", { status: 404 })
+    if (!stop) {return new Response("Unknown stop", { status: 404 })}
     // No baked hero — generic text card.
     return renderOgCard({
       headline: `Stanica ${stop.name}`,
@@ -204,7 +204,7 @@ export async function GET(request: Request) {
   }
 
   const hasCoords = latStr && lonStr
-  const [lat, lon] = hasCoords ? [parseFloat(latStr), parseFloat(lonStr)] : [NaN, NaN]
+  const [lat, lon] = hasCoords ? [Number.parseFloat(latStr), Number.parseFloat(lonStr)] : [Number.NaN, Number.NaN]
 
   if (hasCoords && (Number.isNaN(lat) || Number.isNaN(lon))) {
     return new Response("Invalid coordinates", { status: 400 })
@@ -217,7 +217,7 @@ export async function GET(request: Request) {
   // 3-6s satori render on every request.
   const cacheKey = district ? `d:${district.name}` : "generic"
   const cached = coordCardCache.get(cacheKey)
-  if (cached) return new Response(cached, { headers: LINE_CARD_HEADERS })
+  if (cached) {return new Response(cached, { headers: LINE_CARD_HEADERS })}
 
   const card = renderOgCard({
     headline: district ? district.name : "Koliko grada stigneš?",

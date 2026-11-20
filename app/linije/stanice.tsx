@@ -26,7 +26,7 @@ function StopRow({
   slug,
 }: {
   stop: LineStop
-  newTrams: string[]
+  newTrams: Array<string>
   isFirst: boolean
   isLast: boolean
   fallbackChip?: string
@@ -127,9 +127,9 @@ export function Stanice({
   terminalChips,
   stopSlugs = NO_SLUGS,
 }: {
-  directions: LineDirection[]
+  directions: Array<LineDirection>
   /** Fallback chip per direction's end terminal (e.g. "bus 220 · 221"). */
-  terminalChips: (string | undefined)[]
+  terminalChips: Array<string | undefined>
   /** Stop name → /stanice/[slug] for names unique in the stop index. */
   stopSlugs?: Record<string, string>
 }) {

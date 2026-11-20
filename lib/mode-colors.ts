@@ -69,12 +69,12 @@ const LINE_PALETTE = [
 /** Color per leg: same line → same color, new line → next palette slot.
  *  Walks stay grey; BAJS legs always get the brand amber (matches the map). */
 export function legLineColors(
-  legs: { mode: string; route?: string }[]
-): string[] {
+  legs: Array<{ mode: string; route?: string }>
+): Array<string> {
   const byLine = new Map<string, string>()
   return legs.map((leg) => {
-    if (isWalkMode(leg.mode)) return MODE_COLORS.walk
-    if (isBikeMode(leg.mode)) return MODE_COLORS.bike
+    if (isWalkMode(leg.mode)) {return MODE_COLORS.walk}
+    if (isBikeMode(leg.mode)) {return MODE_COLORS.bike}
     const key = `${leg.mode.toUpperCase()}:${leg.route ?? ""}`
     let color = byLine.get(key)
     if (!color) {

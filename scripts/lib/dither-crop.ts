@@ -68,14 +68,14 @@ export const invMercY = (y: number, worldPx: number) =>
 
 /** Sharp's raw input only takes 1-4 channels; anything else is a corrupt decode. */
 export function rawChannels(n: number): 1 | 2 | 3 | 4 {
-  if (n === 1 || n === 2 || n === 3 || n === 4) return n
+  if (n === 1 || n === 2 || n === 3 || n === 4) {return n}
   throw new Error(`unexpected raw channel count ${n}`)
 }
 
 /** How many of `len` pixels from `start` are darker than `threshold`. */
 export function countBelow(data: Buffer, start: number, len: number, threshold: number): number {
   let n = 0
-  for (let i = start; i < start + len; i++) if (data[i] < threshold) n++
+  for (let i = start; i < start + len; i++) {if (data[i] < threshold) {n++}}
   return n
 }
 
@@ -83,7 +83,7 @@ export function countBelow(data: Buffer, start: number, len: number, threshold: 
 async function tryFetchTile(url: string, dir: string, cachePath: string): Promise<Buffer | null> {
   try {
     const res = await fetch(url)
-    if (!res.ok) return null
+    if (!res.ok) {return null}
     const buf = Buffer.from(await res.arrayBuffer())
     mkdirSync(dir, { recursive: true })
     writeFileSync(cachePath, buf)
@@ -102,15 +102,15 @@ function whiteTile(): Promise<Buffer> {
 
 async function fetchTile(cfg: Cfg, z: number, x: number, y: number): Promise<Buffer> {
   const max = 2 ** z
-  if (x < 0 || y < 0 || x >= max || y >= max) return whiteTile()
+  if (x < 0 || y < 0 || x >= max || y >= max) {return whiteTile()}
   const cachePath = join(cfg.cacheDir, String(z), String(x), `${y}.png`)
-  if (existsSync(cachePath)) return readFileSync(cachePath)
+  if (existsSync(cachePath)) {return readFileSync(cachePath)}
   // Retry transient failures (CDN throttling on a big z17/z18 sweep), then fall
   // back to a white tile so one bad tile can't abort the whole batch.
   for (let attempt = 0; attempt < 4; attempt++) {
     // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
     const buf = await tryFetchTile(`${cfg.tileUrl}/${z}/${x}/${y}.png`, join(cfg.cacheDir, String(z), String(x)), cachePath)
-    if (buf) return buf
+    if (buf) {return buf}
     // oxlint-disable-next-line no-await-in-loop -- backoff between retries
     await sleep(250 * (attempt + 1))
   }
@@ -132,8 +132,8 @@ async function stitchGrayCrop(
   const tx1 = Math.floor((x0 + natW - 1) / TILE_SIZE)
   const ty1 = Math.floor((y0 + natH - 1) / TILE_SIZE)
 
-  const tiles: { x: number; y: number }[] = []
-  for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) tiles.push({ x: tx, y: ty })
+  const tiles: Array<{ x: number; y: number }> = []
+  for (let ty = ty0; ty <= ty1; ty++) {for (let tx = tx0; tx <= tx1; tx++) {tiles.push({ x: tx, y: ty })}}
 
   const buffers = await mapConcurrent(tiles, cfg.fetchConcurrency, (t) => fetchTile(cfg, zoom, t.x, t.y))
 
@@ -157,7 +157,7 @@ async function stitchGrayCrop(
   return data
 }
 
-function cropSig(cfg: Cfg, bbox: number[], outW: number, outH: number, pad: number): string {
+function cropSig(cfg: Cfg, bbox: Array<number>, outW: number, outH: number, pad: number): string {
   return [
     bbox.map((v) => v.toFixed(5)).join(","),
     `${outW}x${outH}`,
@@ -179,7 +179,7 @@ function thresholdToBlue(cfg: Cfg, data: Buffer, outW: number, outH: number, sca
       let sub = 0
       const baseY = oy * scale
       const baseX = ox * scale
-      for (let dy = 0; dy < scale; dy++) sub += countBelow(data, (baseY + dy) * natW + baseX, scale, cfg.buildingGray)
+      for (let dy = 0; dy < scale; dy++) {sub += countBelow(data, (baseY + dy) * natW + baseX, scale, cfg.buildingGray)}
       const isBlue = sub >= minSub
       const i = (oy * outW + ox) * 3
       out[i] = isBlue ? cfg.blue[0] : 255
@@ -193,14 +193,14 @@ function thresholdToBlue(cfg: Cfg, data: Buffer, outW: number, outH: number, sca
 async function buildCrop(
   cfg: Cfg,
   outPng: string,
-  bbox: number[],
+  bbox: Array<number>,
   outW: number,
   outH: number,
   pad: number,
   prev?: HeroCrop
 ): Promise<HeroCrop> {
   const sig = cropSig(cfg, bbox, outW, outH, pad)
-  if (prev?.sig === sig && existsSync(outPng)) return prev
+  if (prev?.sig === sig && existsSync(outPng)) {return prev}
 
   const [w, s, e, n] = bbox
   const padLon = (e - w) * pad
@@ -214,7 +214,7 @@ async function buildCrop(
   while (fitZoom > cfg.zoomMin) {
     const worldPx = TILE_SIZE * 2 ** fitZoom
     if (mercX(east, worldPx) - mercX(west, worldPx) <= outW && mercY(south, worldPx) - mercY(north, worldPx) <= outH)
-      break
+      {break}
     fitZoom--
   }
   const zoom = cfg.zoomOverride ?? Math.min(fitZoom + cfg.oversampleZoom, cfg.zoomMax)
@@ -252,7 +252,7 @@ export interface TilePyramidOptions {
   /** Root of the XYZ tree; tiles land at outDir/{z}/{x}/{y}.png. */
   outDir: string
   /** [west, south, east, north] — only tiles touching this box are baked. */
-  bbox: number[]
+  bbox: Array<number>
   minZoom: number
   maxZoom: number
   /**
@@ -334,11 +334,11 @@ async function buildTilePyramid(
     const y0 = Math.floor(mercatorY(north) * n)
     const y1 = Math.floor(mercatorY(south) * n)
 
-    const jobs: { x: number; y: number; path: string }[] = []
+    const jobs: Array<{ x: number; y: number; path: string }> = []
     for (let x = x0; x <= x1; x++) {
       for (let y = y0; y <= y1; y++) {
         const path = join(opts.outDir, String(z), String(x), `${y}.png`)
-        if (!opts.force && existsSync(path)) continue
+        if (!opts.force && existsSync(path)) {continue}
         jobs.push({ x, y, path })
       }
     }
@@ -360,7 +360,7 @@ async function buildTilePyramid(
     opts.onZoom?.(z, jobs.length)
   }
 
-  if (!bounds) throw new Error("empty zoom range")
+  if (!bounds) {throw new Error("empty zoom range")}
   return { minZoom: opts.minZoom, maxZoom: opts.maxZoom, tileSize, bounds }
 }
 
@@ -378,7 +378,7 @@ export function createDitherCropper(opts: DitherCropperOptions) {
     fetchConcurrency: opts.fetchConcurrency ?? 24,
   }
   return {
-    buildCrop: (outPng: string, bbox: number[], outW: number, outH: number, pad: number, prev?: HeroCrop) =>
+    buildCrop: (outPng: string, bbox: Array<number>, outW: number, outH: number, pad: number, prev?: HeroCrop) =>
       buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
     buildTilePyramid: (pyramid: TilePyramidOptions) => buildTilePyramid(cfg, pyramid),
   }

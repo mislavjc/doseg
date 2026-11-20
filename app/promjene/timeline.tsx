@@ -1,17 +1,13 @@
 "use client"
 
-import { Fragment, useMemo, useState, type CSSProperties, type ReactNode } from "react"
+import { Fragment, useMemo, useState } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { MountWhenNear } from "@/components/mount-when-near"
 import { IconCircleBanSign } from "@central-icons-react/square-outlined-radius-0-stroke-2"
-import {
-  INK, MUTE, FAINT, OLD, BLUE, HAIR, DOT, HEROS, MONO,
-  type Stat, type Geom, type Source, type Successor,
-  type FeaturedItem, type LineRowItem, type StopRowItem,
-  type LineItem, type TimelineModel,
-  num, dateLabel, monthLabel, expandStop, TAG, TALLY,
-} from "./lib"
+import { INK, MUTE, FAINT, OLD, BLUE, HAIR, DOT, HEROS, MONO, num, dateLabel, monthLabel, expandStop, TAG, TALLY } from './lib';
+import type { Stat, Geom, Source, Successor, FeaturedItem, LineRowItem, StopRowItem, LineItem, TimelineModel } from './lib';
 import { norm } from "@/lib/normalize"
 import { plural } from "@/app/linije/copy"
 
@@ -77,8 +73,8 @@ function SuccessorNote({ successor }: { successor: Successor }) {
   )
 }
 
-function LineChips({ lines }: { lines: string[] }) {
-  if (lines.length === 0) return null
+function LineChips({ lines }: { lines: Array<string> }) {
+  if (lines.length === 0) {return null}
   const shown = lines.slice(0, 6)
   return (
     <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 4, verticalAlign: "middle" }}>
@@ -97,7 +93,7 @@ function relacijaLabel(r: string): string {
 }
 
 function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
-  const rows: [string, string, string][] =
+  const rows: Array<[string, string, string]> =
     stat.mode === "diff"
       ? [["duljina trase", `${num(stat.len_old_km)} →`, `${num(stat.len_new_km)} km`], ["stajališta (dodano / ukinuto)", "", `+${stat.added} / ${stat.removed}`],
         stat.change === "midroute" ? ["relacija", "", relacijaLabel(stat.relacija)] : ["promijenjeni kraj", `${expandStop(stat.oldTipName)} →`, expandStop(stat.newTipName)]]
@@ -106,7 +102,7 @@ function StatRows({ stat, approx }: { stat: Stat; approx?: boolean }) {
         : [["duljina trase", "", `${num(stat.len_km)} km`], ["broj stajališta", "", `${stat.stops_count}`], ["kraj linije", "", expandStop(stat.terminusName)]]
   // straight-line lengths from a stop-connected route under-read the real road
   // distance, so mark the length as an estimate rather than stating it as fact.
-  if (approx) rows[0][0] += " (procjena)"
+  if (approx) {rows[0][0] += " (procjena)"}
   return (
     <div style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", paddingTop: 24 }}>
       {rows.map(([label, a, b]) => (
@@ -234,11 +230,11 @@ function StopRow({ it }: { it: StopRowItem }) {
 /** Stop relocations are the bulk of the register (≈109) but the least visual.
  * Collapse a whole year of them into one ledger line that expands into month
  * sub-groups. Forced open when the finder is searching or filtered to stops. */
-function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boolean }) {
+function StopLedger({ items, forceOpen }: { items: Array<StopRowItem>; forceOpen: boolean }) {
   const [open, setOpen] = useState(false)
   const show = forceOpen || open
   const months = useMemo(() => {
-    const by = new Map<string, StopRowItem[]>()
+    const by = new Map<string, Array<StopRowItem>>()
     for (const it of items) {
       const ym = it.date.slice(0, 7)
       ;(by.get(ym) ?? by.set(ym, []).get(ym)!).push(it)
@@ -272,14 +268,14 @@ function StopLedger({ items, forceOpen }: { items: StopRowItem[]; forceOpen: boo
   )
 }
 
-function YearHeader({ year, tally }: { year: string; tally: { category: string; count: number }[] }) {
+function YearHeader({ year, tally }: { year: string; tally: Array<{ category: string; count: number }> }) {
   const tokens = tally.toSorted((a, b) => (TALLY[a.category]?.order ?? 9) - (TALLY[b.category]?.order ?? 9))
   return (
     <div style={{ width: "100%", maxWidth: 556, paddingTop: 56, paddingBottom: 10, display: "flex", flexDirection: "column", gap: 8 }}>
       <h2 style={{ margin: 0, fontFamily: MONO, fontWeight: 400, fontSize: 16, color: INK }}>{year}.</h2>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8 }}>
         {tokens.map((t, i) => {
-          if (!Object.hasOwn(TALLY, t.category)) return null
+          if (!Object.hasOwn(TALLY, t.category)) {return null}
           const m = TALLY[t.category]
           return (
             <Fragment key={t.category}>
@@ -344,17 +340,17 @@ function Finder({ q, setQ, seg, setSeg, counts, resultLabel }: { q: string; setQ
 }
 
 function renderLineItem(it: LineItem, legend?: ReactNode) {
-  if (it.kind === "featured") return <FeaturedCard key={it.id} f={it} legend={legend} />
-  if (it.removed) return <ObituaryRow key={it.id} it={it} />
+  if (it.kind === "featured") {return <FeaturedCard key={it.id} f={it} legend={legend} />}
+  if (it.removed) {return <ObituaryRow key={it.id} it={it} />}
   return <NoticeRow key={it.id} it={it} />
 }
 
 /** Year-tally tokens counted from whatever is actually rendered under the header
  * (so filtering/segments never leave the tally claiming hidden content). */
-function tallyOf(lineItems: LineItem[], stopItems: StopRowItem[]): { category: string; count: number }[] {
+function tallyOf(lineItems: Array<LineItem>, stopItems: Array<StopRowItem>): Array<{ category: string; count: number }> {
   const counts: Record<string, number> = {}
-  for (const it of lineItems) counts[it.category] = (counts[it.category] ?? 0) + 1
-  if (stopItems.length > 0) counts["stajalište"] = stopItems.length
+  for (const it of lineItems) {counts[it.category] = (counts[it.category] ?? 0) + 1}
+  if (stopItems.length > 0) {counts["stajalište"] = stopItems.length}
   return Object.entries(counts).map(([category, count]) => ({ category, count }))
 }
 
@@ -368,7 +364,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
   // One filter pass over the register per query (segment switches reuse it). Segment
   // counts reflect the query alone; the result label reflects query + active segment.
   const matched = useMemo(() => {
-    const hit = (it: { title: string; lines: string[] }) => !nq || norm([it.title, ...it.lines].join(" ")).includes(nq)
+    const hit = (it: { title: string; lines: Array<string> }) => !nq || norm([it.title, ...it.lines].join(" ")).includes(nq)
     return model.years.map((yg) => ({ year: yg.year, line: yg.lineItems.filter(hit), stop: yg.stopItems.filter(hit) }))
   }, [model, nq])
 

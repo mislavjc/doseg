@@ -48,7 +48,7 @@ function StatBar({
  */
 export function Sesvete({ facts }: { facts: EditorialFacts }) {
   const s = facts.sesvete
-  if (!s) return null
+  if (!s) {return null}
   return (
     <Section id="sesvete">
       <div className="flex flex-col gap-6">

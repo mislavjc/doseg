@@ -25,10 +25,10 @@ const PRESETS = [
 
 function parseTime(t: string): number | null {
   const m = t.trim().match(/^(\d{1,2})[:.]?(\d{2})$/u)
-  if (!m) return null
+  if (!m) {return null}
   const h = Number(m[1])
   const min = Number(m[2])
-  if (h > 23 || min > 59) return null
+  if (h > 23 || min > 59) {return null}
   return h * 60 + min
 }
 
@@ -54,8 +54,8 @@ function ExactTimeRow({
 
   const commitDraft = () => {
     const parsed = parseTime(draft)
-    if (parsed != null && fmt(parsed) !== effective) onCommit(fmt(parsed))
-    else setDraft(effective)
+    if (parsed != null && fmt(parsed) !== effective) {onCommit(fmt(parsed))}
+    else {setDraft(effective)}
   }
   const step = (delta: number) => {
     const base = parseTime(effective) ?? 0
@@ -85,7 +85,7 @@ function ExactTimeRow({
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commitDraft}
           onKeyDown={(e) => {
-            if (e.key === "Enter") e.currentTarget.blur()
+            if (e.key === "Enter") {e.currentTarget.blur()}
           }}
           aria-label="Točno vrijeme polaska"
           className={`w-[72px] bg-transparent text-center font-mono text-head font-bold outline-none ${

@@ -319,7 +319,7 @@ export function RankingList({
   trailing,
   color,
 }: {
-  items: DistrictScore[]
+  items: Array<DistrictScore>
   value: (d: DistrictScore) => number
   label: (d: DistrictScore) => string
   trailing: (d: DistrictScore) => string

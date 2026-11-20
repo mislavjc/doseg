@@ -63,7 +63,7 @@ export function loadScores(): ScoreData | null {
     const baseByName = new Map(base.districts.map((d) => [d.name, d]))
     for (const d of day.districts) {
       const b = baseByName.get(d.name)
-      if (!b) continue
+      if (!b) {continue}
       d.areaKm2 ??= b.areaKm2
       d.bajsDensityPerKm2 ??= b.bajsDensityPerKm2
       d.bajsPer10k ??= b.bajsPer10k

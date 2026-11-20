@@ -15,7 +15,7 @@ import { fmtPop } from "../stat-data"
 const CELL_KM2 = 0.04
 
 function rankBy(
-  districts: DistrictScore[],
+  districts: Array<DistrictScore>,
   name: string,
   value: (d: DistrictScore) => number
 ): number {
@@ -129,7 +129,7 @@ const m = (d: DistrictScore) => Math.round(d.avgNearestStopM)
 /** Pristup — walk-to-nearest-stop: best vs city average vs worst (metres). */
 export function computeWalk(data: ScoreData) {
   const ds = data.districts
-  if (ds.length === 0) return null
+  if (ds.length === 0) {return null}
   const sorted = ds.toSorted(
     (a, b) => a.avgNearestStopM - b.avgNearestStopM
   )

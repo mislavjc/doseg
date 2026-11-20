@@ -13,14 +13,14 @@ import { numberWordF, plural } from "../linije/copy"
  */
 
 /** "3, 9, 12 i 17" — comma list with Croatian "i" before the last item. */
-function joinHr(items: string[]): string {
-  if (items.length <= 1) return items.join("")
+function joinHr(items: Array<string>): string {
+  if (items.length <= 1) {return items.join("")}
   return `${items.slice(0, -1).join(", ")} i ${items.at(-1)}`
 }
 
 /** "tramvaji 3, 9, 12 i 17" / "tramvaj 3" — null when none of that mode. */
-function modeGroup(singular: string, plural_: string, brojevi: string[]): string | null {
-  if (brojevi.length === 0) return null
+function modeGroup(singular: string, plural_: string, brojevi: Array<string>): string | null {
+  if (brojevi.length === 0) {return null}
   return `${brojevi.length === 1 ? singular : plural_} ${joinHr(brojevi)}`
 }
 
@@ -51,13 +51,13 @@ export function mostFrequentLine(
   let bestKey = Infinity
   for (const l of data.lines) {
     const key = l.peakHeadwayMin ?? l.allDayHeadwayMin
-    if (key == null) continue
+    if (key == null) {continue}
     if (key < bestKey) {
       bestKey = key
       best = l
     }
   }
-  if (!best) return null
+  if (!best) {return null}
   const inPeak = best.peakRangeMin != null || best.peakHeadwayMin != null
   // Reuse lineHeadway for the range / all-day branches; add the peak-scalar tier
   // it doesn't cover. The selection above guarantees a non-null result.
@@ -85,8 +85,8 @@ function directionKind(data: StopPageData): DirectionKind {
  */
 export function directionLabel(data: StopPageData): string | null {
   const kind = directionKind(data)
-  if (kind === "multi") return data.lineCount >= 5 ? "čvorište" : "više smjerova"
-  if (kind === "two") return "oba smjera"
+  if (kind === "multi") {return data.lineCount >= 5 ? "čvorište" : "više smjerova"}
+  if (kind === "two") {return "oba smjera"}
   return null
 }
 
@@ -94,8 +94,8 @@ export function directionLabel(data: StopPageData): string | null {
  *  kind as the chip (not by string-matching directionLabel's output). */
 export function directionNote(data: StopPageData): string {
   const kind = directionKind(data)
-  if (kind === "multi") return ", iz više smjerova"
-  if (kind === "two") return ", u oba smjera"
+  if (kind === "multi") {return ", iz više smjerova"}
+  if (kind === "two") {return ", u oba smjera"}
   return ""
 }
 
@@ -113,7 +113,7 @@ export function introText(data: StopPageData): string {
     )
   }
   const window = serviceWindow(data)
-  if (window) parts.push(`Prvi polazak je u ${window.first}, zadnji u ${window.last}.`)
+  if (window) {parts.push(`Prvi polazak je u ${window.first}, zadnji u ${window.last}.`)}
   return parts.join(" ")
 }
 
@@ -151,8 +151,8 @@ export function lineModeNoun(line: Pick<StopLine, "mode">): string {
 export function lineHeadway(
   line: Pick<StopLine, "peakRangeMin" | "allDayHeadwayMin">
 ): string | null {
-  if (line.peakRangeMin) return `svakih ${rangeText(line.peakRangeMin)} min`
-  if (line.allDayHeadwayMin != null) return `svakih ${Math.round(line.allDayHeadwayMin)} min`
+  if (line.peakRangeMin) {return `svakih ${rangeText(line.peakRangeMin)} min`}
+  if (line.allDayHeadwayMin != null) {return `svakih ${Math.round(line.allDayHeadwayMin)} min`}
   return null
 }
 
@@ -161,7 +161,7 @@ const stanica = (n: number) => `${n} ${plural(n, "stanicu", "stanice", "stanica"
 /** Doseg hook + lede, templated from the real 15/30/45 station counts. */
 export function dosegCopy(data: Pick<StopPageData, "reach">): { hook: string; lede: string } | null {
   const r = data.reach
-  if (!r) return null
+  if (!r) {return null}
   return {
     hook: `Za pola sata dosegneš ${stanica(r.stations30)}.`,
     lede: `Odavde javnim prijevozom i pješice za 15 minuta dosegneš ${stanica(

@@ -2,17 +2,8 @@
 
 import { useState, useRef, useCallback, useEffect } from "react"
 import Link from "next/link"
-import {
-  TRAM_LINES,
-  STATIONS,
-  linesAtStation,
-  isInterchange,
-  LINE_W,
-  SPACING,
-  EDGES,
-  edgeKey,
-  type TramLine,
-} from "@/lib/zagreb-tram-network"
+import { TRAM_LINES, STATIONS, linesAtStation, isInterchange, LINE_W, SPACING, EDGES, edgeKey } from '@/lib/zagreb-tram-network';
+import type { TramLine } from '@/lib/zagreb-tram-network';
 import { LineBadges } from "./line-badges"
 import { plural } from "@/app/linije/copy"
 
@@ -38,7 +29,7 @@ interface Seg {
   color: string
 }
 
-const allSegments: Seg[] = TRAM_LINES.flatMap((line) =>
+const allSegments: Array<Seg> = TRAM_LINES.flatMap((line) =>
   line.stationIds.slice(0, -1).map((aId, i) => {
     const bId = line.stationIds[i + 1]
     const key = edgeKey(aId, bId)
@@ -64,10 +55,10 @@ interface StopInfo {
   x: number
   y: number
   interchange: boolean
-  lines: TramLine[]
+  lines: Array<TramLine>
 }
 
-const stops: StopInfo[] = Object.values(STATIONS).map((s) => ({
+const stops: Array<StopInfo> = Object.values(STATIONS).map((s) => ({
   id: s.id,
   name: s.name,
   x: s.x,
@@ -385,7 +376,7 @@ function StationLabels({ activeLine }: { activeLine: string | null }) {
 
 function HoverTooltip({ stopId }: { stopId: string }) {
   const s = stops.find((st) => st.id === stopId)
-  if (!s) return null
+  if (!s) {return null}
   return (
     <g className="pointer-events-none">
       <rect x={s.x - 4} y={s.y - 28} width={s.name.length * 7.5 + 12} height={22} rx={6} fill="rgba(15,23,42,0.88)" />
@@ -403,7 +394,7 @@ function usePanZoom() {
   const pinchDist = useRef<number | null>(null), dragStart = useRef<{ x: number; y: number } | null>(null)
 
   const onDown = useCallback((e: React.PointerEvent) => {
-    if (e.target instanceof Element && e.target.closest("[data-ui]")) return
+    if (e.target instanceof Element && e.target.closest("[data-ui]")) {return}
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     dragStart.current = { x: e.clientX, y: e.clientY }
     containerRef.current?.setPointerCapture(e.pointerId)
@@ -411,7 +402,7 @@ function usePanZoom() {
 
   const onMove = useCallback((e: React.PointerEvent) => {
     const prev = ptrs.current.get(e.pointerId)
-    if (!prev) return
+    if (!prev) {return}
     if (ptrs.current.size === 1) {
       setView((v) => ({ ...v, x: v.x + e.clientX - prev.x, y: v.y + e.clientY - prev.y }))
       ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
@@ -429,7 +420,7 @@ function usePanZoom() {
 
   const onUp = useCallback((e: React.PointerEvent) => {
     ptrs.current.delete(e.pointerId)
-    if (ptrs.current.size < 2) pinchDist.current = null
+    if (ptrs.current.size < 2) {pinchDist.current = null}
     const ds = dragStart.current; dragStart.current = null
     return ds && Math.hypot(e.clientX - ds.x, e.clientY - ds.y) < 4
   }, [])
@@ -437,7 +428,7 @@ function usePanZoom() {
   // passive: false required to prevent page scroll
   useEffect(() => {
     const el = containerRef.current
-    if (!el) return
+    if (!el) {return}
     const handler = (e: WheelEvent) => {
       e.preventDefault()
       const rect = el.getBoundingClientRect()
@@ -504,7 +495,7 @@ export function TramMap() {
       className="relative h-svh min-h-0 w-full cursor-grab overflow-hidden bg-background select-none active:cursor-grabbing"
       style={{ touchAction: "none" }}
       onPointerDown={onDown} onPointerMove={onMove}
-      onPointerUp={(e) => { if (onUp(e)) setActiveStop(null) }}
+      onPointerUp={(e) => { if (onUp(e)) {setActiveStop(null)} }}
       onPointerCancel={(e) => { onUp(e) }}
     >
       <MapSvg view={view} activeLine={activeLine} activeStop={activeStop} hoverStop={hoverStop} onHover={setHoverStop} onSelect={(id) => setActiveStop((p) => (p === id ? null : id))} />

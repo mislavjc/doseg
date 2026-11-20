@@ -4,12 +4,13 @@
 import { writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { readJson } from "../../lib/json"
-import { extractNotice, loadEnvLocal, type Notice } from "../extract"
+import { extractNotice, loadEnvLocal } from '../extract';
+import type { Notice } from '../extract';
 
 loadEnvLocal()
 
 const bodies = readJson<Record<string, string>>("/tmp/zet-bodies.json")
-const { candidates: cands } = readJson<{ candidates: { id: string; date: string | null }[] }>("data/promjene/candidates.json")
+const { candidates: cands } = readJson<{ candidates: Array<{ id: string; date: string | null }> }>("data/promjene/candidates.json")
 const pub = (id: string) => cands.find((c) => c.id === id)?.date ?? undefined
 const gold: Record<string, Notice> = {}
 for (const id of Object.keys(bodies)) {

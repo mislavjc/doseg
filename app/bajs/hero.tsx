@@ -98,9 +98,9 @@ function HeroLegend({ data, pending }: { data: HeroData; pending?: boolean }) {
     : null
 
   let count = "feed nije dostupan"
-  if (pending) count = "0000 bajseva na 000 stanica · 00 praznih"
+  if (pending) {count = "0000 bajseva na 000 stanica · 00 praznih"}
   else if (data)
-    count = `${bikes} ${plural(bikes, "bajs", "bajsa", "bajseva")} na ${stations.length} stanica · ${empty} praznih`
+    {count = `${bikes} ${plural(bikes, "bajs", "bajsa", "bajseva")} na ${stations.length} stanica · ${empty} praznih`}
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-hairline bg-ground px-4 py-3 sm:absolute sm:bottom-6 sm:left-6 sm:max-w-[calc(100%-3rem)] sm:gap-y-2 sm:border sm:border-hairline-strong sm:px-4 sm:py-2.5">

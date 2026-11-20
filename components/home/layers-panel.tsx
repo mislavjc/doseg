@@ -4,7 +4,8 @@ import { useState } from "react"
 import { IconLayersThree } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { useCloseOnEscape } from "@/hooks/use-close-on-escape"
-import { POI_CATEGORIES, type MapPoiCategory } from "@/lib/poi"
+import { POI_CATEGORIES } from '@/lib/poi';
+import type { MapPoiCategory } from '@/lib/poi';
 import {
   CheckSquare,
   DropdownPanel,

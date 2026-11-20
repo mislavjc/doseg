@@ -10,8 +10,8 @@ import { loadStopIndex } from "@/lib/stop-data"
  */
 
 export interface SearchIndexPayload {
-  lines: { broj: string; terminals: string[] }[]
-  stops: { slug: string; name: string; kvart: string | null }[]
+  lines: Array<{ broj: string; terminals: Array<string> }>
+  stops: Array<{ slug: string; name: string; kvart: string | null }>
 }
 
 export function GET() {
@@ -22,7 +22,7 @@ export function GET() {
   const stops: SearchIndexPayload["stops"] = []
   for (const s of loadStopIndex().stops) {
     const key = `${s.name}|${s.kvart}`
-    if (seen.has(key)) continue
+    if (seen.has(key)) {continue}
     seen.add(key)
     stops.push({ slug: s.slug, name: s.name, kvart: s.kvart })
   }

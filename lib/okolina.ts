@@ -1,6 +1,7 @@
 import { getBajsData } from "@/lib/bajs"
 import { fastDistKm, walkMin } from "@/lib/geo"
-import { loadPois, type PoiKey } from "@/lib/kvart-data"
+import { loadPois } from '@/lib/kvart-data';
+import type { PoiKey } from '@/lib/kvart-data';
 
 /**
  * Address surroundings for /adresa/[slug]: nearest named POI per category
@@ -13,7 +14,7 @@ import { loadPois, type PoiKey } from "@/lib/kvart-data"
 const BAJS_MAX = 3
 const BAJS_RADIUS_KM = 1.2
 
-const POI_KEYS: readonly string[] = ["hospital", "school", "park"] satisfies PoiKey[]
+const POI_KEYS: ReadonlyArray<string> = ["hospital", "school", "park"] satisfies Array<PoiKey>
 
 function isPoiKey(category: string): category is PoiKey {
   return POI_KEYS.includes(category)
@@ -29,21 +30,21 @@ export interface NearestPoi {
 }
 
 /** Nearest NAMED poi per category, sorted by walk time (closest first). */
-export function nearestPois(lon: number, lat: number): NearestPoi[] {
+export function nearestPois(lon: number, lat: number): Array<NearestPoi> {
   const best = new Map<string, NearestPoi>()
   for (const p of loadPois()) {
-    if (!p.name || !isPoiKey(p.category)) continue
+    if (!p.name || !isPoiKey(p.category)) {continue}
     const distM = Math.round(fastDistKm(lat, lon, p.lat, p.lon) * 1000)
     const seen = best.get(p.category)
     if (!seen || distM < seen.distM)
-      best.set(p.category, {
+      {best.set(p.category, {
         key: p.category,
         name: p.name,
         lat: p.lat,
         lon: p.lon,
         distM,
         walkMin: walkMin(distM),
-      })
+      })}
   }
   return [...best.values()].toSorted((a, b) => a.distM - b.distM)
 }
@@ -57,7 +58,7 @@ export interface NearestBajs {
 
 /** Nearest Bajs stations with live bike counts; [] when the feed is down or
  *  nothing is within riding-relevant walking distance. */
-export async function nearestBajs(lon: number, lat: number): Promise<NearestBajs[]> {
+export async function nearestBajs(lon: number, lat: number): Promise<Array<NearestBajs>> {
   try {
     const { stations } = await getBajsData()
     return stations

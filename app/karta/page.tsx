@@ -12,7 +12,7 @@ import { pseoMetadata } from "@/lib/pseo-metadata"
  */
 
 type Props = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>
+  searchParams: Promise<Record<string, string | Array<string> | undefined>>
 }
 
 export async function generateMetadata({
@@ -27,7 +27,7 @@ export async function generateMetadata({
   if (lat && lon) {
     ogParams.set("lat", lat)
     ogParams.set("lon", lon)
-    if (time) ogParams.set("time", time)
+    if (time) {ogParams.set("time", time)}
   }
   const ogQuery = ogParams.toString()
   // Static Paper export for the plain map page; satori render only for

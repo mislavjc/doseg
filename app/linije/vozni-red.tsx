@@ -44,9 +44,9 @@ function currentNow(): Now {
 }
 
 /** Union of both directions' hours, ascending (GTFS hours, may exceed 23). */
-function mergedHours(dirs: HourRow[][]): number[] {
+function mergedHours(dirs: Array<Array<HourRow>>): Array<number> {
   const hours = new Set<number>()
-  for (const dir of dirs) for (const row of dir) hours.add(row.hour)
+  for (const dir of dirs) {for (const row of dir) {hours.add(row.hour)}}
   return [...hours].toSorted((a, b) => a - b)
 }
 
@@ -57,7 +57,7 @@ function MinuteCell({
   nextDep,
   isCurrentRow,
 }: {
-  minutes: number[]
+  minutes: Array<number>
   hour: number
   now: Now | null
   nextDep: number | null
@@ -107,19 +107,19 @@ function DayTable({
   now,
   activeDir,
 }: {
-  rows: HourRow[][]
-  terminals: string[]
+  rows: Array<Array<HourRow>>
+  terminals: Array<string>
   now: Now | null
   activeDir: number
 }) {
   const hours = mergedHours(rows)
   // Next departure per direction (first time ≥ now across the whole day).
   const nextDeps = rows.map((dir) => {
-    if (!now) return null
+    if (!now) {return null}
     for (const row of dir) {
       for (const m of row.minutes) {
         const t = row.hour * 60 + m
-        if (t >= now.serviceMin) return t
+        if (t >= now.serviceMin) {return t}
       }
     }
     return null
@@ -199,7 +199,7 @@ export function VozniRed({
 }: {
   timetable: LineTimetable
   /** Departure terminal display name per direction. */
-  terminals: string[]
+  terminals: Array<string>
 }) {
   const [now, setNow] = useState<Now | null>(null)
   const [activeDir, setActiveDir] = useState(0)

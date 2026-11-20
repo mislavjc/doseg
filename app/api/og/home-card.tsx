@@ -4,7 +4,8 @@ import { join } from "node:path"
 
 import { plural } from "@/app/linije/copy"
 import { projector } from "@/lib/geo"
-import { loadHomeHero, type HomeHeroData } from "@/lib/home-hero"
+import { loadHomeHero } from '@/lib/home-hero';
+import type { HomeHeroData } from '@/lib/home-hero';
 
 import { heroCloudSrc, ogFonts } from "./card"
 
@@ -190,7 +191,7 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
  */
 export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
   const hero = loadHomeHero()
-  if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) return null
+  if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) {return null}
 
   return new ImageResponse(
     (

@@ -44,6 +44,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cloudflare/oxlint-config": "0.1.0",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.6",
@@ -64,6 +65,7 @@
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5",
     "through2": "^5.0.12",
+    "tsrs": "0.25.0-ts7.1.0-beta",
     "typescript": "^7.0.2",
     "vitest": "^5.1.1"
   },

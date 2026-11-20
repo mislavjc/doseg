@@ -18,6 +18,6 @@ export const KARTA_PLACEHOLDER_SCALE = 2 ** (KARTA_ZOOM + 1 - KARTA_PLACEHOLDER_
 
 /** Subtle tint behind vector tiles so the UI matches the light shell. */
 export function applyBasemapBackgroundTint(map: MapLibreMap) {
-  if (!map.getLayer("background")) return
+  if (!map.getLayer("background")) {return}
   map.setPaintProperty("background", "background-color", "#f1f5f9")
 }

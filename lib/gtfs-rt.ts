@@ -15,7 +15,7 @@ interface StopTimeRT {
 
 export interface TripRT {
   /** Sorted by stopSequence. */
-  stopTimes: StopTimeRT[]
+  stopTimes: Array<StopTimeRT>
 }
 
 // ---------------------------------------------------------------------------
@@ -64,7 +64,7 @@ const OccupancyStatusName: Record<number, string> = {
 // ---------------------------------------------------------------------------
 
 let cachedTrips: Map<string, TripRT> = new Map()
-let cachedVehicles: VehiclePosition[] = []
+let cachedVehicles: Array<VehiclePosition> = []
 let cacheTime = 0
 let refreshPromise: Promise<void> | null = null
 
@@ -80,25 +80,25 @@ const MAX_PLAUSIBLE_DELAY = 1800
 
 function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
   const tu = entity.tripUpdate
-  if (!tu?.trip?.tripId || tu.stopTimeUpdate == null || tu.stopTimeUpdate.length === 0) return
+  if (!tu?.trip?.tripId || tu.stopTimeUpdate == null || tu.stopTimeUpdate.length === 0) {return}
 
-  const stopTimes: StopTimeRT[] = []
+  const stopTimes: Array<StopTimeRT> = []
   for (const stu of tu.stopTimeUpdate) {
     const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
-    if (delay < MIN_PLAUSIBLE_DELAY || delay > MAX_PLAUSIBLE_DELAY) continue
+    if (delay < MIN_PLAUSIBLE_DELAY || delay > MAX_PLAUSIBLE_DELAY) {continue}
     stopTimes.push({
       stopSequence: stu.stopSequence ?? 0,
       arrivalDelay: delay,
     })
   }
-  if (stopTimes.length === 0) return
+  if (stopTimes.length === 0) {return}
   stopTimes.sort((a, b) => a.stopSequence - b.stopSequence)
   rt.set(tu.trip.tripId, { stopTimes })
 }
 
-function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
+function parseVehiclePosition(entity: FeedEntity, vehicles: Array<VehiclePosition>) {
   const vp = entity.vehicle
-  if (!vp?.trip?.tripId || !vp.position) return
+  if (!vp?.trip?.tripId || !vp.position) {return}
 
   const statusNum = vp.currentStatus ?? VehicleStopStatus.IN_TRANSIT_TO
   const occNum = vp.occupancyStatus
@@ -119,7 +119,7 @@ function parseVehiclePosition(entity: FeedEntity, vehicles: VehiclePosition[]) {
 async function refresh(): Promise<void> {
   try {
     const res = await fetch(ZET_RT_URL, { signal: AbortSignal.timeout(5000) })
-    if (!res.ok) throw new Error(`GTFS-RT fetch failed: ${res.status}`)
+    if (!res.ok) {throw new Error(`GTFS-RT fetch failed: ${res.status}`)}
 
     const buf = await res.arrayBuffer()
     const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
@@ -127,7 +127,7 @@ async function refresh(): Promise<void> {
     )
 
     const rt = new Map<string, TripRT>()
-    const vehicles: VehiclePosition[] = []
+    const vehicles: Array<VehiclePosition> = []
 
     for (const entity of feed.entity) {
       parseTripUpdate(entity, rt)
@@ -158,7 +158,7 @@ export function getRealtimeData(): Map<string, TripRT> {
 }
 
 /** Returns cached vehicle positions; triggers background refresh when stale. */
-export function getVehiclePositions(): VehiclePosition[] {
+export function getVehiclePositions(): Array<VehiclePosition> {
   ensureFresh()
   return cachedVehicles
 }
@@ -172,7 +172,7 @@ export function getStopDelay(trip: TripRT, stopIdx: number): number {
   const seq = stopIdx + 1
   let delay = 0
   for (const st of trip.stopTimes) {
-    if (st.stopSequence > seq) break
+    if (st.stopSequence > seq) {break}
     delay = st.arrivalDelay
   }
   return delay

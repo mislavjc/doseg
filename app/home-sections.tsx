@@ -174,7 +174,7 @@ export function DesktopLineSection({
 }: {
   eyebrow: string
   hook: string
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
   moreLabel: string
 }) {
   return (
@@ -197,7 +197,7 @@ export function MobileLineGroup({
   lines,
 }: {
   total: number
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
 }) {
   return (
     <Section width="article" className="pb-0 sm:hidden">

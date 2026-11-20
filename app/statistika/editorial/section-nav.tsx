@@ -14,7 +14,7 @@ export function SectionNav({
   items,
   className,
 }: {
-  items: SectionNavItem[]
+  items: Array<SectionNavItem>
   className?: string
 }) {
   const [active, setActive] = useState("")
@@ -23,14 +23,14 @@ export function SectionNav({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id)
+          if (entry.isIntersecting) {setActive(entry.target.id)}
         })
       },
       { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.5, 1] }
     )
     items.forEach(({ id }) => {
       const el = document.getElementById(id)
-      if (el) observer.observe(el)
+      if (el) {observer.observe(el)}
     })
     return () => observer.disconnect()
   }, [items])

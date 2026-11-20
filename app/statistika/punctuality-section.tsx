@@ -30,7 +30,7 @@ interface HistoryResponse {
   route: string
   from: number
   to: number
-  points: HistoryPoint[]
+  points: Array<HistoryPoint>
 }
 
 interface RouteOption {
@@ -40,7 +40,7 @@ interface RouteOption {
 
 type TimeRange = "24h" | "7d" | "30d"
 
-const TIME_RANGES: TimeRange[] = ["24h", "7d", "30d"]
+const TIME_RANGES: Array<TimeRange> = ["24h", "7d", "30d"]
 
 const TIME_RANGE_LABELS: Record<TimeRange, string> = {
   "24h": "24 sata",
@@ -49,14 +49,14 @@ const TIME_RANGE_LABELS: Record<TimeRange, string> = {
 }
 
 const TIME_RANGE_SECONDS: Record<TimeRange, number> = {
-  "24h": 86400,
-  "7d": 7 * 86400,
-  "30d": 30 * 86400,
+  "24h": 86_400,
+  "7d": 7 * 86_400,
+  "30d": 30 * 86_400,
 }
 
 // --- Helpers ---
 
-function aggregateBucket(chunk: HistoryPoint[]): HistoryPoint {
+function aggregateBucket(chunk: Array<HistoryPoint>): HistoryPoint {
   const ts = chunk[Math.floor(chunk.length / 2)].ts
   const sumTrips = chunk.reduce((sum, p) => sum + p.tripCount, 0)
   let sumDelay = 0, sumOnTime = 0, maxDelay = -Infinity
@@ -88,16 +88,16 @@ function aggregateBucket(chunk: HistoryPoint[]): HistoryPoint {
   }
 }
 
-function downsamplePoints(points: HistoryPoint[], maxPoints: number): HistoryPoint[] {
-  if (points.length <= maxPoints) return points
+function downsamplePoints(points: Array<HistoryPoint>, maxPoints: number): Array<HistoryPoint> {
+  if (points.length <= maxPoints) {return points}
 
   const tMin = points[0].ts
   const tMax = points[points.length - 1].ts
   const span = tMax - tMin
-  if (span <= 0) return points
+  if (span <= 0) {return points}
 
   const bucketDuration = span / maxPoints
-  const buckets: HistoryPoint[][] = Array.from({ length: maxPoints }, () => [])
+  const buckets: Array<Array<HistoryPoint>> = Array.from({ length: maxPoints }, () => [])
   for (const p of points) {
     const idx = Math.min(Math.floor((p.ts - tMin) / bucketDuration), maxPoints - 1)
     buckets[idx].push(p)
@@ -108,7 +108,7 @@ function downsamplePoints(points: HistoryPoint[], maxPoints: number): HistoryPoi
 
 /** Detailed delay format with seconds remainder: "3 min 12 s" (for stat headers). */
 function fmtDelayDetailed(seconds: number): string {
-  if (Math.abs(seconds) < 60) return `${Math.round(seconds)} s`
+  if (Math.abs(seconds) < 60) {return `${Math.round(seconds)} s`}
   const min = Math.floor(Math.abs(seconds) / 60)
   const sec = Math.round(Math.abs(seconds) % 60)
   const sign = seconds < 0 ? "-" : ""
@@ -141,7 +141,7 @@ function useHistoryFetch(route: string, timeRange: TimeRange) {
       return fetch(
         `/api/rt/history?route=${encodeURIComponent(route)}&from=${from}&to=${now}`
       ).then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        if (!r.ok) {throw new Error(`HTTP ${r.status}`)}
         return r.json()
       })
     },
@@ -159,7 +159,7 @@ function useHistoryFetch(route: string, timeRange: TimeRange) {
 export default function PunctualitySection({
   routes,
 }: {
-  routes: RouteOption[]
+  routes: Array<RouteOption>
 }) {
   const [selectedRoute, setSelectedRoute] = useState(() =>
     pickPreferredRoute(routes.map((r) => r.name))
@@ -209,7 +209,7 @@ function PunctualityControls({
   timeRange,
   onTimeRangeChange,
 }: {
-  routes: RouteOption[]
+  routes: Array<RouteOption>
   selectedRoute: string
   onRouteChange: (v: string) => void
   timeRange: TimeRange
@@ -242,9 +242,9 @@ function PunctualityContent({
     [data]
   )
 
-  if (error) return <ErrorState message={error} />
-  if (!data) return <LoadingState />
-  if (data.points.length === 0) return <EmptyState />
+  if (error) {return <ErrorState message={error} />}
+  if (!data) {return <LoadingState />}
+  if (data.points.length === 0) {return <EmptyState />}
   const hasHeadway = points.some((p) => p.headwayCv != null)
   return (
     <div className="flex flex-col gap-6">
@@ -256,7 +256,7 @@ function PunctualityContent({
   )
 }
 
-const ROUTE_GROUPS: { mode: string; label: string }[] = [
+const ROUTE_GROUPS: Array<{ mode: string; label: string }> = [
   { mode: "TRAM", label: "Tramvaj" },
   { mode: "BUS", label: "Bus" },
 ]
@@ -268,7 +268,7 @@ function RouteSelector({
   value,
   onChange,
 }: {
-  routes: RouteOption[]
+  routes: Array<RouteOption>
   value: string
   onChange: (v: string) => void
 }) {
@@ -292,7 +292,7 @@ function RouteSelector({
       >
         {ROUTE_GROUPS.map(({ mode, label }) => {
           const group = routes.filter((r) => r.mode === mode)
-          if (group.length === 0) return null
+          if (group.length === 0) {return null}
           return (
             <optgroup key={mode} label={label}>
               {group.map((r) => <option key={r.name} value={r.name}>{r.name}</option>)}
@@ -410,7 +410,7 @@ const MARGIN = { top: 16, right: 48, bottom: 40, left: 16 }
 const INNER_WIDTH = CHART_WIDTH - MARGIN.left - MARGIN.right
 const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
 
-function useDelayScales(points: HistoryPoint[]) {
+function useDelayScales(points: Array<HistoryPoint>) {
   return useMemo(() => {
     const tsMin = points.reduce((m, p) => Math.min(m, p.ts), Infinity)
     const tsMax = points.reduce((m, p) => Math.max(m, p.ts), -Infinity)
@@ -452,7 +452,7 @@ function DelayChartBody({
   hovered,
   onHover,
 }: {
-  points: HistoryPoint[]
+  points: Array<HistoryPoint>
   timeRange: TimeRange
   hovered: HistoryPoint | null
   onHover: (p: HistoryPoint | null) => void
@@ -513,7 +513,7 @@ function DelayChart({
   points,
   timeRange,
 }: {
-  points: HistoryPoint[]
+  points: Array<HistoryPoint>
   timeRange: TimeRange
 }) {
   const [hovered, setHovered] = useState<HistoryPoint | null>(null)
@@ -531,7 +531,7 @@ function DelayChart({
   )
 }
 
-function DelayChartHeader({ points }: { points: HistoryPoint[] }) {
+function DelayChartHeader({ points }: { points: Array<HistoryPoint> }) {
   const totalTrips = points.reduce((s, p) => s + p.tripCount, 0)
   const onTimeTrips = Math.round(points.reduce((s, p) => s + p.onTimePct * p.tripCount, 0))
   const delayedTrips = Math.max(0, totalTrips - onTimeTrips)
@@ -582,10 +582,10 @@ function DelayChartHeader({ points }: { points: HistoryPoint[] }) {
 
 // --- Headway chart ---
 
-function useHeadwayScales(points: HistoryPoint[]) {
+function useHeadwayScales(points: Array<HistoryPoint>) {
   return useMemo(() => {
     const pts = points.filter((p) => p.headwayCv != null)
-    if (pts.length === 0) return null
+    if (pts.length === 0) {return null}
     const tsMin = pts.reduce((m, p) => Math.min(m, p.ts), Infinity)
     const tsMax = pts.reduce((m, p) => Math.max(m, p.ts), -Infinity)
     const maxCv = pts.reduce((m, p) => Math.max(m, p.headwayCv ?? 0), 0.6)
@@ -634,14 +634,14 @@ function HeadwayChartBody({
   xTicks,
   yTicks,
 }: {
-  pts: HistoryPoint[]
+  pts: Array<HistoryPoint>
   timeRange: TimeRange
   hovered: HistoryPoint | null
   onHover: (p: HistoryPoint | null) => void
   xScale: ReturnType<typeof scaleTime<number>>
   yScale: ReturnType<typeof scaleLinear<number>>
-  xTicks: Date[]
-  yTicks: number[]
+  xTicks: Array<Date>
+  yTicks: Array<number>
   maxTrips: number
 }) {
   const { gap, barWidth } = computeBarLayout(pts, xScale)
@@ -697,12 +697,12 @@ function HeadwayChart({
   points,
   timeRange,
 }: {
-  points: HistoryPoint[]
+  points: Array<HistoryPoint>
   timeRange: TimeRange
 }) {
   const [hovered, setHovered] = useState<HistoryPoint | null>(null)
   const scales = useHeadwayScales(points)
-  if (!scales) return null
+  if (!scales) {return null}
   const { xScale, yScale, xTicks, yTicks, avgHeadway, avgCv, maxTrips, pts } = scales
 
   return (
@@ -881,7 +881,7 @@ function ChartXLabels({
   xScale,
   timeRange,
 }: {
-  ticks: Date[]
+  ticks: Array<Date>
   xScale: ReturnType<typeof scaleTime<number>>
   timeRange: TimeRange
 }) {
@@ -907,7 +907,7 @@ function ChartYLabels({
   yScale,
   format,
 }: {
-  ticks: number[]
+  ticks: Array<number>
   yScale: ReturnType<typeof scaleLinear<number>>
   format?: (v: number) => string
 }) {
@@ -921,9 +921,9 @@ function ChartYLabels({
           label = "0m"
           if (v !== 0) {
             const m = Math.round(v / 60)
-            if (m >= 60 && m % 60 === 0) label = `${m / 60}h`
-            else if (m > 60) label = `${Math.floor(m / 60)}h ${m % 60}m`
-            else label = `${m}m`
+            if (m >= 60 && m % 60 === 0) {label = `${m / 60}h`}
+            else if (m > 60) {label = `${Math.floor(m / 60)}h ${m % 60}m`}
+            else {label = `${m}m`}
           }
         }
         return (
@@ -944,7 +944,7 @@ function ChartYLabels({
 }
 
 function computeBarLayout(
-  points: HistoryPoint[],
+  points: Array<HistoryPoint>,
   xScale: ReturnType<typeof scaleTime<number>>
 ) {
   const gap =
@@ -963,7 +963,7 @@ function HitAreas({
   gap,
   onHover,
 }: {
-  points: HistoryPoint[]
+  points: Array<HistoryPoint>
   xScale: ReturnType<typeof scaleTime<number>>
   gap: number
   onHover: (p: HistoryPoint | null) => void

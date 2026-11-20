@@ -11,8 +11,8 @@ export default function RouteAnalysisTables({
   trams,
   buses,
 }: {
-  trams: RouteInfo[]
-  buses: RouteInfo[]
+  trams: Array<RouteInfo>
+  buses: Array<RouteInfo>
 }) {
   return (
     <div className="flex flex-col gap-16">
@@ -66,7 +66,7 @@ function ExpandableRouteTable({
   mode,
 }: {
   title: string
-  routes: RouteInfo[]
+  routes: Array<RouteInfo>
   mode: "TRAM" | "BUS"
 }) {
   const [expanded, setExpanded] = useState(false)
@@ -117,25 +117,25 @@ function headwayStatus(headway: number | null): {
   text: string
   color: string
 } {
-  if (headway == null) return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }
+  if (headway == null) {return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }}
   if (headway <= 8)
-    return {
+    {return {
       dot: "bg-emerald-500",
       text: `~${Math.round(headway)} min`,
       color: "text-emerald-600 dark:text-emerald-400",
-    }
+    }}
   if (headway <= 15)
-    return {
+    {return {
       dot: "bg-emerald-500",
       text: `~${Math.round(headway)} min`,
       color: "text-slate-700 dark:text-slate-300",
-    }
+    }}
   if (headway <= 30)
-    return {
+    {return {
       dot: "bg-amber-400",
       text: `~${Math.round(headway)} min`,
       color: "text-amber-600 dark:text-amber-400",
-    }
+    }}
   return {
     dot: "bg-red-500",
     text: `~${Math.round(headway)} min`,

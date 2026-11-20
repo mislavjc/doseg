@@ -34,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const data = loadStopData(slug)
-  if (!data) return {}
+  if (!data) {return {}}
   const title = stopTitle(data)
   const description = introText(data)
   // The v param busts X/Telegram per-URL caches when the feed rolls.
@@ -57,7 +57,7 @@ export default async function StanicaPage({
 }) {
   const { slug } = await params
   const data = loadStopData(slug)
-  if (!data) notFound()
+  if (!data) {notFound()}
   const index = loadStopIndex()
   const faq = buildFaq(data)
   const siblings = siblingStops(data)

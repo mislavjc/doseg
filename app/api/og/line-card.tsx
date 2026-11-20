@@ -32,9 +32,9 @@ const BAND_H = 160
  */
 function overlaySvg(data: LinePageData): string | null {
   const meta = loadHeroMeta(data.broj)
-  if (!meta) return null
+  if (!meta) {return null}
   const overlay = buildOverlay(data, meta.desktop, VIEW_W, VIEW_H)
-  if (!overlay) return null
+  if (!overlay) {return null}
   const dots = overlay.innerDots
     .map(
       ([x, y]) =>
@@ -171,7 +171,7 @@ function InfoBand({ data }: { data: LinePageData }) {
  */
 export function renderLineOgCard(data: LinePageData): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
-  if (!existsSync(heroPath)) return null
+  if (!existsSync(heroPath)) {return null}
 
   return new ImageResponse(
     (

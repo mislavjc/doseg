@@ -12,13 +12,16 @@ import {
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 import type { MapPoiCategory } from "@/lib/poi"
-import { DEFAULT_LAYERS, LayersControl, type LayersState } from "./layers-panel"
+import { DEFAULT_LAYERS, LayersControl } from './layers-panel';
+import type { LayersState } from './layers-panel';
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { PolazakControl } from "./polazak-control"
 import { requestMyLocation } from "./reach-state"
-import { SearchFields, type SearchFieldsProps } from "./search-fields"
+import { SearchFields } from './search-fields';
+import type { SearchFieldsProps } from './search-fields';
 import { Sidebar } from "./sidebar"
-import { useMapFlow, type FlowInitial } from "./use-map-flow"
+import { useMapFlow } from './use-map-flow';
+import type { FlowInitial } from './use-map-flow';
 
 const MapCanvas = dynamic(
   () => import("./map-canvas").then((m) => m.MapCanvas),
@@ -117,8 +120,8 @@ function pointFromSearch(
 ): { lat: number; lon: number } | null {
   const lat = Number(sp.get(latKey))
   const lon = Number(sp.get(lonKey))
-  if (!sp.has(latKey) || !sp.has(lonKey)) return null
-  if (Number.isNaN(lat) || Number.isNaN(lon)) return null
+  if (!sp.has(latKey) || !sp.has(lonKey)) {return null}
+  if (Number.isNaN(lat) || Number.isNaN(lon)) {return null}
   return { lat, lon }
 }
 
@@ -150,7 +153,7 @@ function useUrlFlowSync(
       const v = sp.get(k)
       return (v == null ? null : Number(v)) === next[k]
     })
-    if (sameAsUrl) return
+    if (sameAsUrl) {return}
     void setUrlState(next, { history: "push" })
   }, [origin, dest, setUrlState])
   // Settings replace in place (no history spam from a slider or a toggle).

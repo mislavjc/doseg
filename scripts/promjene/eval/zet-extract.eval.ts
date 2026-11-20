@@ -7,14 +7,15 @@ import { evalite, createScorer } from "evalite"
 import { generateObject } from "ai"
 import { z } from "zod"
 import { readJson } from "../../lib/json"
-import { extractNotice, loadEnvLocal, type Notice } from "../extract"
+import { extractNotice, loadEnvLocal } from '../extract';
+import type { Notice } from '../extract';
 
 // vitest/evalite don't auto-load .env.local — needed for AI_GATEWAY_API_KEY
 loadEnvLocal()
 
 const DIR = join(process.cwd(), "scripts/promjene/eval")
 const bodies = readJson<Record<string, string>>(join(DIR, "bodies.json"))
-const { candidates: cands } = readJson<{ candidates: { id: string; date: string | null }[] }>(join(process.cwd(), "data/promjene/candidates.json"))
+const { candidates: cands } = readJson<{ candidates: Array<{ id: string; date: string | null }> }>(join(process.cwd(), "data/promjene/candidates.json"))
 const pub = (id: string): string | undefined => cands.find((c) => c.id === id)?.date ?? undefined
 const gold = readJson<Record<string, Notice>>(join(DIR, "gold.json"))
 
@@ -33,7 +34,7 @@ const roleF1 = createScorer<In, Notice, Notice>({
   name: "line-roles-F1",
   scorer: ({ output, expected }) => {
     const A = new Set(output.lines.map((x) => fold(x.number) + ":" + x.role)), B = new Set(expected.lines.map((x) => fold(x.number) + ":" + x.role))
-    let tp = 0; for (const x of A) if (B.has(x)) tp++
+    let tp = 0; for (const x of A) {if (B.has(x)) {tp++}}
     const p = A.size > 0 ? tp / A.size : 1, r = B.size > 0 ? tp / B.size : 1
     return p + r ? (2 * p * r) / (p + r) : 1
   },

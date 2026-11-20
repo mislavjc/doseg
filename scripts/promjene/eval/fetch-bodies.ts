@@ -20,13 +20,13 @@ const OUT = join(DIR, "bodies.json")
 const STOP_TARGET = 16
 
 type Cand = { id: string; url: string; title: string; date: string | null; category: string; permanence: string; listWorthy: boolean }
-const { candidates: cands } = readJson<{ candidates: Cand[] }>(join(process.cwd(), "data/promjene/candidates.json"))
+const { candidates: cands } = readJson<{ candidates: Array<Cand> }>(join(process.cwd(), "data/promjene/candidates.json"))
 const listWorthy = cands.filter((c) => c.listWorthy)
 
 // Seed with whatever's already cached (committed file, then the old /tmp scratch) so we
 // never re-fetch and the existing 16 gold ids stay in the set.
 const bodies = existsSync(OUT) ? readJson<Record<string, string>>(OUT) : {}
-if (existsSync("/tmp/zet-bodies.json")) for (const [k, v] of Object.entries(readJson<Record<string, string>>("/tmp/zet-bodies.json"))) bodies[k] ??= v
+if (existsSync("/tmp/zet-bodies.json")) {for (const [k, v] of Object.entries(readJson<Record<string, string>>("/tmp/zet-bodies.json"))) {bodies[k] ??= v}}
 const already = new Set(Object.keys(bodies))
 
 const LINE = new Set(["nova", "ukinuta", "produljena", "skraćena", "trasa"])

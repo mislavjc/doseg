@@ -23,7 +23,7 @@ export function letterId(letter: string): string {
 export function firstLetter(name: string): string {
   const cp = name.trim().codePointAt(0)
   const c = cp === undefined ? "#" : String.fromCodePoint(cp).toUpperCase()
-  if ((HR_LETTERS as readonly string[]).includes(c)) return c
-  if (/[0-9]/u.test(c)) return "0-9"
+  if ((HR_LETTERS as ReadonlyArray<string>).includes(c)) {return c}
+  if (/[0-9]/u.test(c)) {return "0-9"}
   return c
 }

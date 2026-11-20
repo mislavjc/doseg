@@ -82,7 +82,7 @@ function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
   })
   map.on("click", STATION_LAYER, (e) => {
     const f = e.features?.[0]
-    if (!f || f.geometry.type !== "Point") return
+    if (!f || f.geometry.type !== "Point") {return}
     const [lng, lat] = f.geometry.coordinates
     popup
       .setLngLat([lng, lat])
@@ -91,7 +91,7 @@ function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
   })
 }
 
-function quantile(vals: number[], p: number) {
+function quantile(vals: Array<number>, p: number) {
   const s = vals.toSorted((a, b) => a - b)
   return s[Math.min(s.length - 1, Math.floor(s.length * p))]
 }
@@ -104,7 +104,7 @@ function quantile(vals: number[], p: number) {
  */
 function openingBounds(data: Feed): maplibregl.LngLatBoundsLike {
   const pts = data.features.map((f) => f.geometry.coordinates)
-  if (pts.length < 20) return BOUNDS
+  if (pts.length < 20) {return BOUNDS}
 
   const lons = pts.map((p) => p[0])
   const lats = pts.map((p) => p[1])
@@ -125,7 +125,7 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
   })
 
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) {return}
 
     const map = new maplibregl.Map({
       container: containerRef.current,
@@ -179,14 +179,14 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !data) return
+    if (!map || !data) {return}
     const apply = () => {
       void map.getSource<maplibregl.GeoJSONSource>("stations")?.setData(data)
     }
     // The source only exists once the load handler above has run, so its absence
     // is exactly the signal that we still have to wait for it.
-    if (map.getSource("stations")) apply()
-    else map.once("load", apply)
+    if (map.getSource("stations")) {apply()}
+    else {map.once("load", apply)}
   }, [data])
 
   return (

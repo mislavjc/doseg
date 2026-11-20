@@ -8,13 +8,8 @@ import { Footer } from "@/app/statistika/editorial/footer"
 import { cap } from "@/app/linije/copy"
 import { parseJson } from "@/lib/json"
 import { Timeline } from "./timeline"
-import {
-  INK, MUTE, FAINT, OLD, BLUE, HAIR, KEPT, HEROS, MONO,
-  type Stat, type Geom, type Data, type Candidates, type Cand,
-  type MapEntryData, type FeaturedItem, type LineRowItem, type StopRowItem, type LineItem,
-  type YearGroup, type TimelineModel,
-  num, hrWord, entryId, isTram, autoHeadline, normCategory,
-} from "./lib"
+import { INK, MUTE, FAINT, OLD, BLUE, HAIR, KEPT, HEROS, MONO, num, hrWord, entryId, isTram, autoHeadline, normCategory } from './lib';
+import type { Stat, Geom, Data, Candidates, Cand, MapEntryData, FeaturedItem, LineRowItem, StopRowItem, LineItem, YearGroup, TimelineModel } from './lib';
 
 /**
  * /promjene — announcement-driven changelog of ZET network changes. ZET's
@@ -43,22 +38,22 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
   // id → { line: stat }
   const index = parseJson<Record<string, Record<string, Stat>>>(readData("geom/index.json"))
   const geoms = new Map<string, Geom>()
-  for (const id in index) for (const line in index[id]) geoms.set(`${id}-${line}`, parseJson<Geom>(readData(`geom/${id}-${line}.json`)))
-  const mapsFor = (id: string): MapEntryData[] =>
+  for (const id in index) {for (const line in index[id]) {geoms.set(`${id}-${line}`, parseJson<Geom>(readData(`geom/${id}-${line}.json`)))}}
+  const mapsFor = (id: string): Array<MapEntryData> =>
     Object.entries(index[id] ?? {}).flatMap(([line, stat]) => {
       const geom = geoms.get(`${id}-${line}`)
       return geom ? [{ line, geom, stat }] : []
     })
 
   const entryById = new Map(data.entries.map((e) => [entryId(e), e]))
-  const curated: FeaturedItem[] = data.entries.map((e) => {
+  const curated: Array<FeaturedItem> = data.entries.map((e) => {
     // geom is keyed by the ZET notice id; take it explicitly when given (some
     // source URLs point at an archived listing that doesn't carry the id).
     const id = entryId(e)
     const category = normCategory(e.kind)
     return { kind: "featured", id, date: e.date, approxDate: false, category, mode: e.mode, lines: e.lines, title: e.title, summary: e.summary, source: e.source, removed: category === "ukinuta", successor: e.successor, maps: mapsFor(id) }
   })
-  const autoFeatured: FeaturedItem[] = cand.candidates
+  const autoFeatured: Array<FeaturedItem> = cand.candidates
     .filter((c) => c.listWorthy && !!c.date && Object.hasOwn(index, c.id) && !entryById.has(c.id))
     .map((c) => {
       // Eyebrow shows the line(s) we actually mapped (not every line in a multi-line
@@ -78,21 +73,21 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
   const featuredIds = new Set(featured.map((f) => f.id))
 
   const rows = cand.candidates.filter((c) => c.listWorthy && !!c.date && !featuredIds.has(c.id))
-  const lineRows: LineRowItem[] = rows.filter((c) => c.category !== "stajalište").map((c) => ({
+  const lineRows: Array<LineRowItem> = rows.filter((c) => c.category !== "stajalište").map((c) => ({
     kind: "linerow", id: c.id, date: c.date!, approxDate: approx(c), category: c.category, lines: c.lines, title: c.displayTitle ?? c.title, url: c.url, removed: c.category === "ukinuta",
   }))
-  const stopRows: StopRowItem[] = rows.filter((c) => c.category === "stajalište").map((c) => ({
+  const stopRows: Array<StopRowItem> = rows.filter((c) => c.category === "stajalište").map((c) => ({
     kind: "stoprow", id: c.id, date: c.date!, approxDate: approx(c), lines: c.lines, title: c.displayTitle ?? c.title, url: c.url,
   }))
 
   // Group line changes + stop relocations by year, newest first.
-  const lineItems: LineItem[] = [...featured, ...lineRows]
-  const byYear = new Map<string, { line: LineItem[]; stop: StopRowItem[] }>()
+  const lineItems: Array<LineItem> = [...featured, ...lineRows]
+  const byYear = new Map<string, { line: Array<LineItem>; stop: Array<StopRowItem> }>()
   const ensure = (y: string) => byYear.get(y) ?? byYear.set(y, { line: [], stop: [] }).get(y)!
-  for (const it of lineItems) ensure(it.date.slice(0, 4)).line.push(it)
-  for (const it of stopRows) ensure(it.date.slice(0, 4)).stop.push(it)
+  for (const it of lineItems) {ensure(it.date.slice(0, 4)).line.push(it)}
+  for (const it of stopRows) {ensure(it.date.slice(0, 4)).stop.push(it)}
 
-  const years: YearGroup[] = [...byYear.entries()]
+  const years: Array<YearGroup> = [...byYear.entries()]
     .toSorted((a, b) => b[0].localeCompare(a[0]))
     .map(([year, g]) => {
       g.line.sort((a, b) => b.date.localeCompare(a.date))
@@ -122,7 +117,7 @@ export default function Page() {
   const { total, line, stop, maps } = model.counts
   const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
 
-  const legendItems: [React.ReactNode, string][] = [
+  const legendItems: Array<[React.ReactNode, string]> = [
     [lineSw(BLUE), "trasa danas"], [lineSw(OLD, "0.1 5.2"), "prijašnja trasa"],
     [dotSw(BLUE, "#fff"), "novo stajalište"], [dotSw("#fff", OLD), "ukinuto stajalište"], [dotSw("#fff", KEPT), "stajalište na trasi"],
     [<IconFlag1 key="f" size={19} color={BLUE} />, "novi kraj linije"], [<IconCircleBanSign key="x" size={19} color={OLD} />, "ukinuti kraj linije"],

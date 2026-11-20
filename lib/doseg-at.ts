@@ -52,9 +52,9 @@ export interface DosegAtPayload {
   reachKm2?: number
   basis?: "kvart"
   /** Nearest stop pages, deduped by name (platform pairs collapse). */
-  nearby?: NearbyStop[]
+  nearby?: Array<NearbyStop>
   /** Distinct lines calling within LINES_RADIUS_KM, trams first. */
-  lines?: NearbyLine[]
+  lines?: Array<NearbyLine>
   /** First/last departure ("4:10" / "0:49") — from the nearest stop with a
    *  usable service window (a few stops carry degenerate data). */
   firstDeparture?: string | null
@@ -84,9 +84,9 @@ function nearbyBlock(
 
   // Platform pairs share a name — keep only the nearest of each.
   const seen = new Set<string>()
-  const nearby: NearbyStop[] = []
+  const nearby: Array<NearbyStop> = []
   for (const { s, km } of inRange) {
-    if (seen.has(s.name)) continue
+    if (seen.has(s.name)) {continue}
     seen.add(s.name)
     const distM = Math.round(km * 1000)
     nearby.push({
@@ -97,7 +97,7 @@ function nearbyBlock(
       walkMin: walkMin(distM),
       lineCount: s.lineCount,
     })
-    if (nearby.length >= NEARBY_MAX) break
+    if (nearby.length >= NEARBY_MAX) {break}
   }
 
   // Union of calling lines over ALL stops within the walk radius (platform
@@ -105,7 +105,7 @@ function nearbyBlock(
   // Each line keeps its best peak headway across those stops.
   const lineMap = new Map<string, NearbyLine>()
   for (const { s, km } of inRange) {
-    if (km > LINES_RADIUS_KM) break
+    if (km > LINES_RADIUS_KM) {break}
     const data = loadStopData(s.slug)
     for (const l of data?.lines ?? []) {
       const existing = lineMap.get(l.broj)
@@ -156,7 +156,7 @@ export function dosegAt(lon: number, lat: number): DosegAtPayload {
   const scores = loadScores()
   const name = districtAt(lat, lon)
   const d = name ? scores?.districts.find((x) => x.name === name) : null
-  if (!scores || !d) return { found: false }
+  if (!scores || !d) {return { found: false }}
 
   return {
     found: true,

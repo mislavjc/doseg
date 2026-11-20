@@ -16,7 +16,7 @@ export interface TramLine {
   number: string
   label: string
   color: string
-  stationIds: string[]
+  stationIds: Array<string>
 }
 
 // ---- Official ZET line-colour groups ----------------------------------------
@@ -41,7 +41,7 @@ const LINE_COLORS = {
 //   Lower-west junction (y=640): Prečko / Knežija / St. dom Radić
 //   South loop (y=720): Savski most / Savski gaj → Zapruđe
 
-const stationList: TramStation[] = [
+const stationList: Array<TramStation> = [
   // ── UPPER CORRIDOR (y=320) ─────────────────────────────────────────────
   { id: "crnomerec", name: "Črnomerec", x: 80, y: 320 },
   { id: "trg-tudjmana", name: "Trg dr. F. Tuđmana", x: 240, y: 320 },
@@ -109,13 +109,13 @@ export const STATIONS: Record<string, TramStation> = Object.fromEntries(
   stationList.map((s) => [s.id, s]),
 )
 
-function ids(...list: (keyof typeof STATIONS)[]): string[] {
+function ids(...list: Array<keyof typeof STATIONS>): Array<string> {
   return list
 }
 
 // ---- Line definitions (simplified to key stations) --------------------------
 
-export const TRAM_LINES: TramLine[] = [
+export const TRAM_LINES: Array<TramLine> = [
   {
     number: "1",
     label: "Zapadni kolodvor – Borongaj",
@@ -281,7 +281,7 @@ export const TRAM_LINES: TramLine[] = [
 
 // ---- Derived helpers --------------------------------------------------------
 
-export function linesAtStation(stationId: string): TramLine[] {
+export function linesAtStation(stationId: string): Array<TramLine> {
   return TRAM_LINES.filter((l) => l.stationIds.includes(stationId))
 }
 
@@ -297,7 +297,7 @@ export const LINE_W = 4
 export const SPACING = LINE_W + 1.5
 
 export interface EdgeInfo {
-  lines: string[]
+  lines: Array<string>
   px: number
   py: number
 }
@@ -305,7 +305,7 @@ export interface EdgeInfo {
 /** Canonical edge key: spatially ordered so perpendicular offset is consistent. */
 export function edgeKey(a: string, b: string): string {
   const sA = STATIONS[a], sB = STATIONS[b]
-  if (sA.x < sB.x || (sA.x === sB.x && sA.y < sB.y)) return `${a}|${b}`
+  if (sA.x < sB.x || (sA.x === sB.x && sA.y < sB.y)) {return `${a}|${b}`}
   return `${b}|${a}`
 }
 
@@ -322,9 +322,9 @@ export const EDGES: ReadonlyMap<string, EdgeInfo> = (() => {
         m.set(key, { lines: [], px: -dy / len, py: dx / len })
       }
       const e = m.get(key)!
-      if (!e.lines.includes(line.number)) e.lines.push(line.number)
+      if (!e.lines.includes(line.number)) {e.lines.push(line.number)}
     }
   }
-  for (const e of m.values()) e.lines.sort((a, b) => +a - +b)
+  for (const e of m.values()) {e.lines.sort((a, b) => +a - +b)}
   return m
 })()

@@ -36,21 +36,21 @@ export function bodyFromHtml(html: string): string {
  * (more reliable) per-line roles instead of trusting the model's separate guess —
  * an extension is also a reroute, which is where model/gold disagree. Stop notices
  * (model said stajalište, no line role implies a category) keep their category. */
-export function categoryFromRoles<C extends string>(lines: { role: string }[], fallback: C): "nova" | "ukinuta" | "produljena" | "skraćena" | "trasa" | "vozni red" | C {
+export function categoryFromRoles<C extends string>(lines: Array<{ role: string }>, fallback: C): "nova" | "ukinuta" | "produljena" | "skraćena" | "trasa" | "vozni red" | C {
   const r = new Set(lines.map((l) => l.role))
-  if (r.has("new")) return "nova"
-  if (r.has("removed")) return "ukinuta"
-  if (r.has("extended")) return "produljena"
-  if (r.has("shortened")) return "skraćena"
-  if (r.has("rerouted")) return "trasa"
-  if (r.has("schedule-only")) return "vozni red"
+  if (r.has("new")) {return "nova"}
+  if (r.has("removed")) {return "ukinuta"}
+  if (r.has("extended")) {return "produljena"}
+  if (r.has("shortened")) {return "skraćena"}
+  if (r.has("rerouted")) {return "trasa"}
+  if (r.has("schedule-only")) {return "vozni red"}
   return fallback
 }
 
 export async function extractNotice(model: string, body: string, publishedHint?: string): Promise<Notice> {
   // oxlint-disable-next-line typescript/no-deprecated -- moving to generateText + Output.object changes the gateway request; re-run the gold eval before switching
   const { object } = await generateObject({ model, schema: noticeSchema, prompt: extractPrompt(body, publishedHint) })
-  if (object.category !== "stajalište") object.category = categoryFromRoles(object.lines, object.category)
+  if (object.category !== "stajalište") {object.category = categoryFromRoles(object.lines, object.category)}
   return object
 }
 
@@ -59,7 +59,7 @@ export async function extractNotice(model: string, body: string, publishedHint?:
 /** Load .env.local into process.env (scripts + vitest don't auto-load it). */
 export function loadEnvLocal(): void {
   try {
-    for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/u); if (m && !process.env[m[1]]) process.env[m[1]] = m[2] }
+    for (const l of readFileSync(".env.local", "utf8").split("\n")) { const m = l.match(/^([A-Z_]+)=(.*)$/u); if (m && !process.env[m[1]]) {process.env[m[1]] = m[2]} }
   } catch {
     // no .env.local
   }
@@ -72,7 +72,7 @@ export const isRealBody = (b: string) => b.replaceAll(/Sažetak:|Tekst:/gu, "").
 /** Fetch + extract + validate one archived notice body, caching it into `bodies[id]`.
  * Returns the body, or null if unrecoverable after 3 attempts with backoff. */
 export async function loadBody(id: string, url: string, bodies: Record<string, string>): Promise<string | null> {
-  if (bodies[id]) return bodies[id]
+  if (bodies[id]) {return bodies[id]}
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       // oxlint-disable-next-line no-await-in-loop -- retries are sequential by definition
@@ -81,7 +81,7 @@ export async function loadBody(id: string, url: string, bodies: Record<string, s
       return null
     } catch {
       // oxlint-disable-next-line no-await-in-loop -- backoff between retries
-      if (attempt < 3) await sleep(attempt * 3000)
+      if (attempt < 3) {await sleep(attempt * 3000)}
     }
   }
   return null

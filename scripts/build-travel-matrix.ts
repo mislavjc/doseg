@@ -10,8 +10,8 @@
  * Usage: bun scripts/build-travel-matrix.ts [--time HH:MM] [--date YYYY-MM-DD] [--concurrency N]
  */
 
-import { writeFileSync } from "fs"
-import { join } from "path"
+import { writeFileSync } from "node:fs"
+import { join } from "node:path"
 import { responseJson } from "../lib/json"
 import { mapConcurrent } from "./lib/concurrency"
 import { readJson } from "./lib/json"
@@ -26,10 +26,10 @@ function parseArgs() {
   let concurrency = DEFAULT_CONCURRENCY
 
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--time" && args[i + 1]) time = args[++i]
-    else if (args[i] === "--date" && args[i + 1]) date = args[++i]
+    if (args[i] === "--time" && args[i + 1]) {time = args[++i]}
+    else if (args[i] === "--date" && args[i + 1]) {date = args[++i]}
     else if (args[i] === "--concurrency" && args[i + 1])
-      concurrency = Math.trunc(Number(args[++i]))
+      {concurrency = Math.trunc(Number(args[++i]))}
   }
 
   if (!date) {
@@ -45,7 +45,7 @@ function parseArgs() {
 
 import type { District, DistrictScoresOutput } from "../lib/generated"
 
-function loadDistricts(): District[] {
+function loadDistricts(): Array<District> {
   const data = readJson<DistrictScoresOutput>(
     join(process.cwd(), "data/district-scores.json")
   )
@@ -55,11 +55,11 @@ function loadDistricts(): District[] {
 interface PlanResponse {
   data?: {
     plan?: {
-      itineraries?: {
+      itineraries?: Array<{
         duration: number
         numberOfTransfers: number
         walkDistance: number
-      }[]
+      }>
     } | null
   } | null
 }
@@ -148,12 +148,12 @@ interface PairResult {
 }
 
 function buildPairTasks(
-  districts: District[],
+  districts: Array<District>,
   date: string,
   time: string
-): (() => Promise<PairResult>)[] {
+): Array<() => Promise<PairResult>> {
   const n = districts.length
-  const tasks: (() => Promise<PairResult>)[] = []
+  const tasks: Array<() => Promise<PairResult>> = []
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       const fromD = districts[i]
@@ -185,12 +185,12 @@ function buildPairTasks(
 }
 
 function fillMatrices(
-  results: PairResult[],
+  results: Array<PairResult>,
   n: number
-): { matrix: number[][]; transferMatrix: number[][]; walkMatrix: number[][]; noRouteCount: number } {
-  const matrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
-  const transferMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
-  const walkMatrix: number[][] = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+): { matrix: Array<Array<number>>; transferMatrix: Array<Array<number>>; walkMatrix: Array<Array<number>>; noRouteCount: number } {
+  const matrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const transferMatrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+  const walkMatrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
   let noRouteCount = 0
 
   for (const { i, j, result } of results) {
@@ -206,8 +206,8 @@ function fillMatrices(
   return { matrix, transferMatrix, walkMatrix, noRouteCount }
 }
 
-function printSummaryTable(names: string[], matrix: number[][]) {
-  console.error(`\n${"From \\ To".padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`)
+function printSummaryTable(names: Array<string>, matrix: Array<Array<number>>) {
+  console.error(`\n${String.raw`From \ To`.padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`)
   console.error("\u2500".repeat(22 + names.length * 6))
   for (let i = 0; i < names.length; i++) {
     const row = matrix[i]

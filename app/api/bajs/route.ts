@@ -14,7 +14,7 @@ export async function GET() {
       `private, max-age=${data.ttlSeconds}`
     )
     return response
-  } catch (err) {
-    return apiErrorResponse("bajs route error", err, 502)
+  } catch (error) {
+    return apiErrorResponse("bajs route error", error, 502)
   }
 }

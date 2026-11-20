@@ -47,7 +47,7 @@ function needle(filled: boolean, hover: boolean): ImageData {
   c.width = W * PR
   c.height = H * PR
   const ctx = c.getContext("2d")
-  if (!ctx) throw new Error("no 2d context")
+  if (!ctx) {throw new Error("no 2d context")}
   ctx.scale(PR, PR)
 
   const ink = hover ? INK : BLUE

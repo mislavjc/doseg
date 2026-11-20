@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { buildLlmsTxt, ORIGIN, type LlmsTxtData } from "./llms-txt"
+import { buildLlmsTxt, ORIGIN } from './llms-txt';
+import type { LlmsTxtData } from './llms-txt';
 
 const DATA: LlmsTxtData = {
   lineCount: 154,
@@ -13,8 +14,8 @@ const txt = buildLlmsTxt(DATA)
 const lines = txt.split("\n")
 
 /** The body of every `## Section`, keyed by heading text. */
-function sections(md: string): Map<string, string[]> {
-  const out = new Map<string, string[]>()
+function sections(md: string): Map<string, Array<string>> {
+  const out = new Map<string, Array<string>>()
   let current: string | null = null
   for (const line of md.split("\n")) {
     const h2 = /^## (.+)$/u.exec(line)
@@ -67,7 +68,7 @@ describe("buildLlmsTxt — llmstxt.org structure", () => {
   it("makes every link absolute on the canonical origin", () => {
     const urls = [...txt.matchAll(/\]\(([^)]+)\)/gu)].map((m) => m[1])
     expect(urls.length).toBeGreaterThan(5)
-    for (const url of urls) expect(url.startsWith(ORIGIN)).toBe(true)
+    for (const url of urls) {expect(url.startsWith(ORIGIN)).toBe(true)}
   })
 })
 

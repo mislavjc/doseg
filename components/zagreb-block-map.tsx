@@ -30,19 +30,19 @@ const NUM_COLS = 6
 const NUM_ROWS = 6
 
 function connectivityColor(score: number) {
-  if (score >= 80) return "#398f71"
-  if (score >= 60) return "#4ea586"
-  if (score >= 40) return "#66bba1"
-  if (score >= 30) return "#81d2bb"
-  if (score >= 20) return "#a1e7d5"
+  if (score >= 80) {return "#398f71"}
+  if (score >= 60) {return "#4ea586"}
+  if (score >= 40) {return "#66bba1"}
+  if (score >= 30) {return "#81d2bb"}
+  if (score >= 20) {return "#a1e7d5"}
   return "#c4f8ea"
 }
 
 function bajsBoostColor(boostPct: number) {
-  if (boostPct >= 40) return "#d97706"
-  if (boostPct >= 25) return "#f59e0b"
-  if (boostPct >= 10) return "#fbbf24"
-  if (boostPct > 0) return "#fcd34d"
+  if (boostPct >= 40) {return "#d97706"}
+  if (boostPct >= 25) {return "#f59e0b"}
+  if (boostPct >= 10) {return "#fbbf24"}
+  if (boostPct > 0) {return "#fcd34d"}
   return "#94a3b8"
 }
 
@@ -68,7 +68,7 @@ export function ZagrebBlockMap() {
   )
 }
 
-export function ZagrebBajsBlockMap({ districts }: { districts: readonly DistrictScore[] }) {
+export function ZagrebBajsBlockMap({ districts }: { districts: ReadonlyArray<DistrictScore> }) {
   const byName = new Map(districts.map((d) => [d.name, d]))
   const cells = ZAGREB_DISTRICTS_GRID.map((g) => {
     const d = byName.get(g.name)
@@ -105,7 +105,7 @@ type GridCell = {
   tooltip: string
 }
 
-function ZagrebDistrictGrid({ cells }: { cells: GridCell[] }) {
+function ZagrebDistrictGrid({ cells }: { cells: Array<GridCell> }) {
   const byPos = new Map(cells.map((c) => [`${c.col},${c.row}`, c]))
 
   return (

@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 /**
  * Renders `fallback` until the box comes within `rootMargin` of the viewport,
@@ -24,7 +25,7 @@ export function MountWhenNear({
 
   useEffect(() => {
     const el = ref.current
-    if (!el || near) return
+    if (!el || near) {return}
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

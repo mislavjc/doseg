@@ -7,7 +7,7 @@ export type DistrictShape = { name: string; d: string; score: number }
 
 // Returns every `path.district` in document order (callers filter as needed) so
 // the order stays aligned with three.js SVGLoader's path order in terrain-view.
-export function parseDistrictShapes(svgText: string): DistrictShape[] {
+export function parseDistrictShapes(svgText: string): Array<DistrictShape> {
   const doc = new DOMParser().parseFromString(svgText, "image/svg+xml")
   return Array.from(doc.querySelectorAll("path.district")).map((p) => {
     const title = p.querySelector("title")?.textContent ?? ""

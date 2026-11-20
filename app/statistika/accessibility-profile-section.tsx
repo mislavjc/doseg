@@ -37,10 +37,10 @@ function getColor(name: string, idx: number): string {
 }
 
 interface ProfileInsights {
-  sorted: DistrictHourlyProfile[]
-  top3: DistrictHourlyProfile[]
-  bottom3: DistrictHourlyProfile[]
-  cityAvgByHour: number[]
+  sorted: Array<DistrictHourlyProfile>
+  top3: Array<DistrictHourlyProfile>
+  bottom3: Array<DistrictHourlyProfile>
+  cityAvgByHour: Array<number>
   cityPeakHour: number
   cityPeakCells: number
   cityTroughHour: number
@@ -48,14 +48,14 @@ interface ProfileInsights {
   cityDropPct: number
   biggestDrop: DistrictHourlyProfile
   smallestDrop: DistrictHourlyProfile
-  hours: number[]
+  hours: Array<number>
 }
 
 type HourDatum = { hour: number; cells: number }
 
 interface ChartLine {
   id: string
-  data: HourDatum[]
+  data: Array<HourDatum>
   color: string
   width: number
   dash?: string
@@ -77,8 +77,8 @@ function computeInsights(data: AccessibilityProfileOutput): ProfileInsights {
   let cityPeakIdx = 0
   let cityTroughIdx = 0
   for (let i = 0; i < cityAvgByHour.length; i++) {
-    if (cityAvgByHour[i] > cityAvgByHour[cityPeakIdx]) cityPeakIdx = i
-    if (cityAvgByHour[i] < cityAvgByHour[cityTroughIdx]) cityTroughIdx = i
+    if (cityAvgByHour[i] > cityAvgByHour[cityPeakIdx]) {cityPeakIdx = i}
+    if (cityAvgByHour[i] < cityAvgByHour[cityTroughIdx]) {cityTroughIdx = i}
   }
   const cityPeakCells = cityAvgByHour[cityPeakIdx]
   const cityTroughCells = cityAvgByHour[cityTroughIdx]
@@ -111,11 +111,11 @@ function computeInsights(data: AccessibilityProfileOutput): ProfileInsights {
 function buildChartLines(
   data: AccessibilityProfileOutput,
   insights: ProfileInsights
-): ChartLine[] {
-  const makeLine = (cells: number[]): HourDatum[] =>
+): Array<ChartLine> {
+  const makeLine = (cells: Array<number>): Array<HourDatum> =>
     insights.hours.map((h, i) => ({ hour: h, cells: cells[i] }))
 
-  const lines: ChartLine[] = []
+  const lines: Array<ChartLine> = []
   for (const d of insights.bottom3) {
     const idx = data.districts.findIndex((dd) => dd.name === d.name)
     lines.push({
@@ -151,7 +151,7 @@ export default function AccessibilityProfileSection() {
   const data = readJsonCached<AccessibilityProfileOutput>(
     join(getDataDir(), "accessibility-profile.json")
   )
-  if (!data || data.districts.length === 0) return null
+  if (!data || data.districts.length === 0) {return null}
 
   const insights = computeInsights(data)
 
@@ -285,8 +285,8 @@ function ChartGrid({
   yScale: LinearScale
   innerW: number
   innerH: number
-  yTicks: number[]
-  hours: number[]
+  yTicks: Array<number>
+  hours: Array<number>
 }) {
   return (
     <>
@@ -338,8 +338,8 @@ function ChartAxes({
   yScale: LinearScale
   innerW: number
   innerH: number
-  yTicks: number[]
-  hours: number[]
+  yTicks: Array<number>
+  hours: Array<number>
 }) {
   return (
     <>
@@ -393,7 +393,7 @@ function ChartLines({
   xScale,
   yScale,
 }: {
-  lines: ChartLine[]
+  lines: Array<ChartLine>
   xScale: LinearScale
   yScale: LinearScale
 }) {
@@ -642,7 +642,7 @@ function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
   )
 }
 
-function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
+function DesktopTable({ sorted }: { sorted: Array<DistrictHourlyProfile> }) {
   return (
     <div className="hidden overflow-x-auto sm:block">
       <table className="w-full text-body">
@@ -666,7 +666,7 @@ function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
   )
 }
 
-function MobileCards({ sorted }: { sorted: DistrictHourlyProfile[] }) {
+function MobileCards({ sorted }: { sorted: Array<DistrictHourlyProfile> }) {
   return (
     <div className="flex flex-col gap-4 sm:hidden">
       {sorted.map((d, i) => (
@@ -677,8 +677,8 @@ function MobileCards({ sorted }: { sorted: DistrictHourlyProfile[] }) {
 }
 
 function dropColorClass(pct: number): string {
-  if (pct >= 50) return "text-rose-600 dark:text-rose-400"
-  if (pct >= 30) return "text-orange-600 dark:text-orange-400"
+  if (pct >= 50) {return "text-rose-600 dark:text-rose-400"}
+  if (pct >= 30) {return "text-orange-600 dark:text-orange-400"}
   return "text-teal-600 dark:text-teal-400"
 }
 
@@ -721,7 +721,7 @@ function ProfileTableRow({
   )
 }
 
-function Sparkline({ cells }: { cells: number[] }) {
+function Sparkline({ cells }: { cells: Array<number> }) {
   const sparkW = 80
   const sparkH = 20
   const maxC = Math.max(...cells, 1)

@@ -60,6 +60,25 @@ function addStationLayer(map: maplibregl.Map) {
   })
 }
 
+function el(tag: string, style: string, ...children: (Node | string)[]) {
+  const node = document.createElement(tag)
+  node.style.cssText = style
+  node.append(...children)
+  return node
+}
+
+function stationPopup(p: StationProps) {
+  const strong = (v: number) => el("strong", "", String(v))
+  return el(
+    "div",
+    "font-family:system-ui,sans-serif;font-size:13px;line-height:1.5",
+    el("strong", "font-size:14px", p.name),
+    el("div", "margin-top:4px", "Bicikli: ", strong(p.bikesAvailable)),
+    el("div", "", "Dokovi: ", strong(p.docksAvailable)),
+    el("div", "color:#64748b;font-size:12px;margin-top:2px", `Kapacitet: ${p.capacity}`),
+  )
+}
+
 function setupInteractions(
   map: maplibregl.Map,
   popupRef: React.RefObject<maplibregl.Popup | null>,
@@ -83,14 +102,7 @@ function setupInteractions(
       offset: 12,
     })
       .setLngLat([lng, lat])
-      .setHTML(
-        `<div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.5">
-          <strong style="font-size:14px">${p.name}</strong>
-          <div style="margin-top:4px">Bicikli: <strong>${p.bikesAvailable}</strong></div>
-          <div>Dokovi: <strong>${p.docksAvailable}</strong></div>
-          <div style="color:#64748b;font-size:12px;margin-top:2px">Kapacitet: ${p.capacity}</div>
-        </div>`,
-      )
+      .setDOMContent(stationPopup(p))
       .addTo(map)
   })
 }

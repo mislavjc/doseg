@@ -96,7 +96,7 @@ function LinijaRow({ line }: { line: StopPageData["lines"][number] }) {
       >
         <LineBadge broj={line.broj} />
         <span className="flex min-w-0 items-baseline gap-2">
-          <span className="truncate font-heros text-[16px] leading-6 text-ink transition-colors group-hover:text-zg-blue">
+          <span className="truncate font-heros text-body leading-6 text-ink transition-colors group-hover:text-zg-blue">
             smjer {line.headsign}
           </span>
           <span className="shrink-0 font-mono text-label text-ink-faint">
@@ -162,7 +162,7 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
       <Link
         href={`/karta?lat=${data.lat}&lon=${data.lon}`}
         rel="nofollow"
-        className="mt-5 inline-flex items-center gap-1.5 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+        className="mt-5 inline-flex items-center gap-1.5 font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
       >
         otvori kartu dosega odavde
         <IconArrowUpRight size={16} className="shrink-0" />

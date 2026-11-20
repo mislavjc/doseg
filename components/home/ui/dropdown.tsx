@@ -34,7 +34,7 @@ export function DropdownSection({
         divider ? "border-t border-hairline" : ""
       }`}
     >
-      <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+      <span className="font-mono text-label text-ink-faint">
         {label}
       </span>
     </div>
@@ -86,12 +86,12 @@ export function DropdownRow({
       </span>
       <span className="flex min-w-0 flex-col">
         <span
-          className={`truncate font-heros text-[16px] leading-5 ${toneClass}`}
+          className={`truncate font-heros text-body leading-5 ${toneClass}`}
         >
           {title}
         </span>
         {sub && (
-          <span className="truncate font-heros text-[13px] leading-4 text-ink-faint">
+          <span className="truncate font-heros text-body text-ink-faint">
             {sub}
           </span>
         )}

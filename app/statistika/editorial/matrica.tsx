@@ -31,15 +31,15 @@ function OriginPicker({
 }) {
   return (
     <div className="flex items-center gap-2.5 pt-1">
-      <MonoLabel className="text-[11px]">iz</MonoLabel>
+      <MonoLabel>iz</MonoLabel>
       <Select.Root
         value={value}
         onValueChange={(v) => onChange(String(v))}
         aria-label="Polazni kvart"
       >
-        <Select.Trigger className="inline-flex min-w-[160px] cursor-pointer items-center justify-between gap-3 border border-hairline-strong px-3 py-1.5 font-mono text-xs text-ink outline-none transition-colors select-none hover:border-ink-faint focus-visible:ring-2 focus-visible:ring-zg-blue/40 data-[popup-open]:border-zg-blue">
+        <Select.Trigger className="inline-flex min-w-[160px] cursor-pointer items-center justify-between gap-3 border border-hairline-strong px-3 py-1.5 font-mono text-label text-ink outline-none transition-colors select-none hover:border-ink-faint focus-visible:ring-2 focus-visible:ring-zg-blue/40 data-[popup-open]:border-zg-blue">
           <Select.Value />
-          <Select.Icon className="font-mono text-xs text-ink-faint transition-transform duration-150 data-[popup-open]:rotate-180">
+          <Select.Icon className="font-mono text-label text-ink-faint transition-transform duration-150 data-[popup-open]:rotate-180">
             ▾
           </Select.Icon>
         </Select.Trigger>
@@ -54,7 +54,7 @@ function OriginPicker({
                 <Select.Item
                   key={o}
                   value={o}
-                  className="flex cursor-default items-center justify-between gap-4 px-3 py-1.5 font-mono text-xs text-ink-2 outline-none select-none data-[highlighted]:bg-surface data-[selected]:text-ink"
+                  className="flex cursor-default items-center justify-between gap-4 px-3 py-1.5 font-mono text-label text-ink-2 outline-none select-none data-[highlighted]:bg-surface data-[selected]:text-ink"
                 >
                   <Select.ItemText>{o}</Select.ItemText>
                   <Select.ItemIndicator className="text-zg-blue">
@@ -86,17 +86,17 @@ function TravelList({
   return (
     <div className="min-w-0 grow">
       <div className="flex items-center justify-between px-3 pb-2">
-        <MonoLabel className="text-[11px]">do kvarta</MonoLabel>
-        <MonoLabel className="text-[11px]">min</MonoLabel>
+        <MonoLabel>do kvarta</MonoLabel>
+        <MonoLabel>min</MonoLabel>
       </div>
       <div
         className="flex items-center gap-3 px-3 py-1"
         style={{ backgroundColor: "var(--ink)" }}
       >
-        <span className="grow font-heros text-xs leading-4 text-ground">
+        <span className="grow font-mono text-label leading-4 text-ground">
           · &nbsp;{origin}
         </span>
-        <span className="font-mono text-xs text-ground/70">ovdje ste</span>
+        <span className="font-mono text-label text-ground/70">ovdje ste</span>
       </div>
       {dest.map((t, i) => {
         const active = hover === t.name
@@ -110,15 +110,15 @@ function TravelList({
             style={{ backgroundColor: active ? "var(--highlight)" : paint.fill(t.min) }}
           >
             <span
-              className="w-5 shrink-0 font-mono text-[11px] tabular-nums opacity-60"
+              className="w-5 shrink-0 font-mono text-label tabular-nums opacity-60"
               style={{ color }}
             >
               {String(i + 1).padStart(2, "0")}
             </span>
-            <span className="grow font-heros text-xs leading-4" style={{ color }}>
+            <span className="grow font-mono text-label leading-4" style={{ color }}>
               {t.name}
             </span>
-            <span className="font-mono text-xs tabular-nums" style={{ color }}>
+            <span className="font-mono text-label tabular-nums" style={{ color }}>
               {t.min}
             </span>
           </div>
@@ -168,7 +168,7 @@ function Choropleth({
           )
         })}
       </svg>
-      <MonoLabel className="mt-2 block text-[11px]">
+      <MonoLabel className="mt-2 block">
         tamnije = bliže · ○ ovdje ste
       </MonoLabel>
     </div>

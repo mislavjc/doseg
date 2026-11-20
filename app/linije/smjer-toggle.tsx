@@ -28,7 +28,7 @@ export function SmjerToggle({
           aria-pressed={active === i}
           className={cn(
             "border px-3.5 py-1.5 font-mono transition-colors",
-            size === "body" ? "text-[16px] leading-5" : "text-label",
+            size === "body" ? "text-body leading-5" : "text-label",
             active === i
               ? "border-zg-blue bg-zg-blue text-white"
               : "border-hairline-strong text-ink-muted"

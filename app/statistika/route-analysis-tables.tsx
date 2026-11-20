@@ -34,25 +34,25 @@ function RouteTableHead() {
   return (
     <thead>
       <tr>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Linija
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Stanica
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Udaljenost
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Polasci
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Brzina
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
           Vožnja
         </th>
-        <th scope="col" className="pb-4 text-left text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <th scope="col" className="pb-4 text-left text-body text-slate-400 dark:text-slate-500">
           Interval
         </th>
       </tr>
@@ -78,10 +78,10 @@ function ExpandableRouteTable({
   return (
     <div className="flex flex-col">
       <div className="mb-8 flex items-baseline gap-3">
-        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           {title}
         </h3>
-        <span className="font-sans text-[13px] tabular-nums text-slate-400 dark:text-slate-500">
+        <span className="font-mono text-label tabular-nums text-slate-400 dark:text-slate-500">
           {routes.length} {plural(routes.length, "linija", "linije", "linija")}
         </span>
       </div>
@@ -98,7 +98,7 @@ function ExpandableRouteTable({
       {needsToggle && (
         <button
           type="button"
-          className="mt-6 self-start rounded-full border border-slate-200 bg-white px-5 py-2.5 text-[13px] font-medium text-slate-600 transition-[transform,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-slate-300 hover:text-slate-900 active:scale-[0.98] dark:border-white/10 dark:bg-zinc-900/40 dark:text-slate-300 dark:hover:border-white/20"
+          className="mt-6 self-start rounded-full border border-slate-200 bg-white px-5 py-2.5 text-body text-slate-600 transition-[transform,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-slate-300 hover:text-slate-900 active:scale-[0.98] dark:border-white/10 dark:bg-zinc-900/40 dark:text-slate-300 dark:hover:border-white/20"
           aria-expanded={expanded}
           aria-controls={regionId}
           onClick={() => setExpanded((e) => !e)}
@@ -151,7 +151,7 @@ function RouteRow({ route }: { route: RouteInfo }) {
     <tr className="even:bg-slate-50/70 dark:even:bg-white/[0.02]">
       <td className="py-3 pr-8">
         <span
-          className={`inline-flex min-w-[2.5rem] items-center justify-center rounded-md px-2.5 py-1 text-[15px] font-semibold tabular-nums ${
+          className={`inline-flex min-w-[2.5rem] items-center justify-center rounded-md px-2.5 py-1 text-head font-bold tabular-nums ${
             isTram
               ? "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
               : "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
@@ -160,34 +160,34 @@ function RouteRow({ route }: { route: RouteInfo }) {
           {route.name}
         </span>
       </td>
-      <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
         {route.stops}
       </td>
-      <td className="py-3 pr-8 text-[15px] text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-slate-700 dark:text-slate-300">
         {fmtHR(route.distanceKm, 1)}
-        <span className="ml-1.5 inline-flex rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium tracking-wide text-slate-500 uppercase dark:bg-white/5 dark:text-slate-400">
+        <span className="ml-1.5 inline-flex rounded bg-slate-100 px-1.5 py-0.5 font-mono text-label text-slate-500 dark:bg-white/5 dark:text-slate-400">
           km
         </span>
       </td>
-      <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
         {route.dailyDepartures.toLocaleString("hr-HR")}
-        <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
+        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           {fmtHR(route.depPerHour, 1)}/h
         </span>
       </td>
-      <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
         {fmtHR(route.commercialSpeedKmh, 1)}
-        <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
+        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           km/h
         </span>
       </td>
-      <td className="py-3 pr-8 text-[15px] tabular-nums text-slate-600 dark:text-slate-400">
+      <td className="py-3 pr-8 text-body tabular-nums text-slate-600 dark:text-slate-400">
         {route.travelTimeMin}
-        <span className="ml-1.5 text-[13px] text-slate-400 dark:text-slate-500">
+        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           min
         </span>
       </td>
-      <td className={`py-3 text-[15px] font-medium ${hw.color}`}>
+      <td className={`py-3 text-body ${hw.color}`}>
         {hw.dot ? (
           <span className="inline-flex items-center gap-2">
             <span

@@ -22,7 +22,7 @@ export function Segmented<T extends string | number>({
             type="button"
             aria-pressed={selected}
             onClick={() => onChange(opt.value)}
-            className={`flex grow basis-0 flex-col items-center justify-center gap-px py-3 text-center font-mono text-[13px] leading-4 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
+            className={`flex grow basis-0 flex-col items-center justify-center gap-px py-3 text-center font-mono text-label transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.97] ${
               i > 0 ? "border-l border-hairline-strong" : ""
             } ${
               selected

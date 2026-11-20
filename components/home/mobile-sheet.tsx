@@ -72,7 +72,7 @@ function EmptyPeek({ onUseMyLocation }: { onUseMyLocation: () => void }) {
       <Eyebrow>doseg · zagreb</Eyebrow>
       <div className="flex flex-col gap-[5px]">
         <Hook>Klikni bilo gdje na karti</Hook>
-        <p className="font-heros text-[16px] leading-[22px] text-ink-muted">
+        <p className="font-heros text-body leading-[22px] text-ink-muted">
           vidiš dokle stigneš za 30 minuta
         </p>
       </div>
@@ -213,7 +213,7 @@ function AnswerLine({
   minutes: number
   stats: ReachStats | null
 }) {
-  const cls = "font-heros text-[16px] leading-5"
+  const cls = "font-heros text-body leading-5"
   if (panel.mode === "reach") {
     return (
       <span className={cls}>
@@ -239,7 +239,7 @@ function MiniRoute({
   const reduce = useReducedMotion()
   return (
     <div className="flex min-w-0 grow items-center gap-2.5">
-      <span className="shrink-0 font-heros text-[16px] leading-5 font-bold text-ink">
+      <span className="shrink-0 font-heros text-head font-bold leading-5 text-ink">
         {Math.round(itinerary.duration / 60)} min
       </span>
       <AnimatePresence initial={false}>

@@ -40,7 +40,7 @@ function StopRow({ stop }: { stop: StopIndexEntry }) {
         className="group flex items-baseline justify-between gap-3 border-b border-hairline py-2"
       >
         <span className="flex min-w-0 items-baseline gap-2">
-          <span className="truncate font-heros text-[16px] leading-5 text-ink transition-colors group-hover:text-zg-blue">
+          <span className="truncate font-heros text-body leading-5 text-ink transition-colors group-hover:text-zg-blue">
             {stop.name}
           </span>
           {stop.kvart && (
@@ -59,7 +59,7 @@ function LetterBlock({ letter, stops }: { letter: string; stops: StopIndexEntry[
   return (
     <div id={letterId(letter)} className="scroll-mt-24 pt-8 first:pt-0">
       <div className="flex items-center gap-3">
-        <span className="flex size-7 shrink-0 items-center justify-center border border-hairline-strong font-heros text-[16px] font-bold leading-none text-zg-blue">
+        <span className="flex size-7 shrink-0 items-center justify-center border border-hairline-strong font-heros text-head font-bold leading-none text-zg-blue">
           {letter}
         </span>
         <span className="h-px flex-1 bg-hairline-strong" />

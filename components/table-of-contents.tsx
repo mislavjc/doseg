@@ -75,7 +75,7 @@ export default function StatSectionTabs() {
                 key={group.id}
                 href={`#${targetId}`}
                 className={[
-                  "relative flex h-8 sm:h-9 shrink-0 items-center justify-center rounded-full px-3.5 sm:px-4 text-[12px] sm:text-[13px] font-medium transition-colors outline-none",
+                  "relative flex h-8 sm:h-9 shrink-0 items-center justify-center rounded-full px-3.5 sm:px-4 font-mono text-label transition-colors outline-none",
                   isActive
                     ? "text-white"
                     : "text-neutral-500 hover:bg-neutral-100/60 hover:text-neutral-900 active:bg-neutral-200/60",

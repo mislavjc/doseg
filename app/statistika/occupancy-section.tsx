@@ -53,7 +53,7 @@ export default function OccupancySection() {
     <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
       <StatModuleTitle className="mb-12">Zauzetost vozila</StatModuleTitle>
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-        <StatProse className="flex-1 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-body text-slate-700 dark:text-slate-300">
           <p>
             Razina popunjenosti vozila po liniji i satu iz GTFS-RT feeda.
             Prikazano ako ZET šalje podatke o popunjenosti.
@@ -72,7 +72,7 @@ export default function OccupancySection() {
 
 function Legend() {
   return (
-    <div className="mb-8 flex flex-wrap gap-6 text-[11px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+    <div className="mb-8 flex flex-wrap gap-6 font-mono text-label text-slate-500 dark:text-slate-400">
       {Object.entries(LEVEL_COLORS).map(([key, val]) => (
         <div key={key} className="flex items-center gap-2">
           <div
@@ -91,16 +91,16 @@ const SERVICE_HOURS = Array.from({ length: 19 }, (_, i) => i + 5)
 function HeatmapGrid({ routes }: { routes: OccupancyRoute[] }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-[11px]">
+      <table className="w-full border-collapse font-mono text-label">
         <thead>
           <tr>
-            <th className="w-14 pb-4 text-right font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="w-14 pb-4 text-right font-mono text-label text-slate-500 dark:text-slate-400">
               Linija
             </th>
             {SERVICE_HOURS.map((h) => (
               <th
                 key={h}
-                className="pb-4 text-center font-medium tracking-wider text-slate-400 dark:text-slate-500"
+                className="pb-4 text-center font-mono text-label text-slate-400 dark:text-slate-500"
                 style={{ minWidth: 24 }}
               >
                 {h % 4 === 0 ? h : ""}
@@ -122,7 +122,7 @@ function HeatmapRow({ route }: { route: OccupancyRoute }) {
   const hourMap = new Map(route.hours.map((h) => [h.hour, h]))
   return (
     <tr className="group">
-      <td className="py-1 pr-4 text-right font-mono text-[13px] font-medium text-slate-600 dark:text-slate-300">
+      <td className="py-1 pr-4 text-right font-mono text-label text-slate-600 dark:text-slate-300">
         {route.routeId}
       </td>
       {SERVICE_HOURS.map((h) => (

@@ -178,37 +178,37 @@ function NetworkOverviewCards({ data }: { data: NetworkStatsOutput }) {
   return (
     <div className="grid grid-cols-1 gap-10 rounded-[12px] bg-[#f9f9f9] p-6 sm:grid-cols-3 sm:gap-10 sm:p-8 dark:bg-[#1a1a1a]">
       <div className="flex flex-col">
-        <div className="font-sans text-5xl leading-none font-semibold tracking-tighter text-slate-900 tabular-nums sm:text-[40px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {fmtDots(vehicleKm.total)}
         </div>
-        <div className="mt-3 text-[15px] leading-snug text-slate-600 sm:mt-2 sm:text-[15px] dark:text-slate-400">
+        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
           vozilo-km/dan
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 sm:mt-1 sm:text-[13px] dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
           Tramvaj {fmtDots(vehicleKm.tram)} · Autobus {fmtDots(vehicleKm.bus)}
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-5xl leading-none font-semibold tracking-tighter text-slate-900 tabular-nums sm:text-[40px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {fleet ? fmtDots(fleet.totalBlocks) : "-"}
         </div>
-        <div className="mt-3 text-[15px] leading-snug text-slate-600 sm:mt-2 sm:text-[15px] dark:text-slate-400">
+        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
           vozila
         </div>
         {fleet && (
-          <div className="mt-2 text-[15px] leading-snug text-slate-500 sm:mt-1 sm:text-[13px] dark:text-slate-400">
+          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
             Tramvaj {fleet.tramBlocks} · Autobus {fleet.busBlocks}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-5xl leading-none font-semibold tracking-tighter text-slate-900 tabular-nums sm:text-[40px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {fmtDots(deadEndStops.total)}
         </div>
-        <div className="mt-3 text-[15px] leading-snug text-slate-600 sm:mt-2 sm:text-[15px] dark:text-slate-400">
+        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
           slijepih stanica
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 sm:mt-1 sm:text-[13px] dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
           Autobus {fmtDots(deadEndStops.byMode["BUS"] ?? 0)} · Tramvaj{" "}
           {deadEndStops.byMode["TRAM"] ?? 0} · Vlak{" "}
           {deadEndStops.byMode["RAIL"] ?? 0}
@@ -291,7 +291,7 @@ function HeatmapSvg({
             y={ri * (HEATMAP_CELL_H + HEATMAP_GAP) + HEATMAP_CELL_H / 2 + 1}
             textAnchor="end"
             dominantBaseline="central"
-            className="fill-slate-600 font-sans text-[11px] dark:fill-slate-400"
+            className="fill-slate-600 font-mono text-label dark:fill-slate-400"
           >
             {r.name}
           </text>
@@ -311,7 +311,7 @@ function HeatmapSvg({
             }
             y={rows * (HEATMAP_CELL_H + HEATMAP_GAP) + 16}
             textAnchor="middle"
-            className="fill-slate-500 font-sans text-[10px] dark:fill-slate-400"
+            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
           >
             {h}h
           </text>
@@ -365,8 +365,8 @@ function HeatmapCells({
               dominantBaseline="central"
               className={
                 dep < maxDep * 0.42
-                  ? "fill-slate-700 font-sans text-[10px] font-medium dark:fill-slate-200"
-                  : "fill-white/90 font-sans text-[10px] font-medium"
+                  ? "fill-slate-700 font-mono text-label dark:fill-slate-200"
+                  : "fill-white/90 font-mono text-label"
               }
             >
               {dep}
@@ -385,10 +385,10 @@ function HeatmapInsight({
 }) {
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-50/80 p-6 sm:p-7 dark:border-white/10 dark:bg-white/4">
-      <h3 className="mb-2 font-sans text-[13px] font-semibold tracking-widest text-slate-500 uppercase sm:text-[13px] dark:text-slate-400">
+      <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Satni polasci tramvaja
       </h3>
-      <p className="text-[18px] leading-relaxed text-slate-600 dark:text-slate-300">
+      <p className="text-body text-slate-600 dark:text-slate-300">
         Broj polazaka po satu za svaku tramvajsku liniju. Svjetlija boja znači
         više polazaka. Vršni sat je <strong>{insights.peakHour}:00</strong> s{" "}
         {insights.peakDeps} tramvajskih polazaka.
@@ -440,7 +440,7 @@ function HourlyHeatmap({
     <div className="flex flex-col gap-8">
       <HeatmapInsight insights={insights} />
       <div className="overflow-x-auto rounded-2xl border border-slate-200/60 bg-slate-100 p-4 sm:rounded-3xl sm:p-6 dark:border-white/10 dark:bg-zinc-800/60">
-        <p className="mb-3 text-center text-[13px] leading-snug text-slate-500 sm:hidden dark:text-slate-400">
+        <p className="mb-3 text-center text-body text-slate-500 sm:hidden dark:text-slate-400">
           Povucite vodoravno za sve sate i linije.
         </p>
         <HeatmapSvg
@@ -482,11 +482,11 @@ function RouteQualityCardStatRow({
 }) {
   return (
     <div className="flex min-w-0 items-baseline justify-between gap-3 border-b border-slate-100 py-2 last:border-0 sm:gap-2 sm:py-1.5 dark:border-white/5">
-      <span className="min-w-0 shrink text-[11px] font-medium tracking-widest text-slate-500 uppercase sm:truncate sm:text-[11px] dark:text-slate-400">
+      <span className="min-w-0 shrink font-mono text-label text-slate-500 sm:truncate dark:text-slate-400">
         {label}
       </span>
       <span
-        className={`shrink-0 font-sans text-[15px] leading-none tracking-tight tabular-nums sm:text-[15px] ${valueClassName}`}
+        className={`shrink-0 font-sans text-body tabular-nums ${valueClassName}`}
       >
         {children}
       </span>
@@ -531,18 +531,18 @@ function RouteQualityCard({ r }: { r: NetworkRoute }) {
   return (
     <div className="isolate flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[12px] bg-[#f9f9f9] p-5 dark:bg-[#1a1a1a]">
       <div className="mb-2 flex min-w-0 items-center justify-between gap-2">
-        <span className="inline-flex h-8 w-11 shrink-0 items-center justify-center rounded-sm bg-white/90 text-[13px] font-bold text-slate-700 dark:bg-white/10 dark:text-slate-200">
+        <span className="inline-flex h-8 w-11 shrink-0 items-center justify-center rounded-sm bg-white/90 text-head font-bold text-slate-700 dark:bg-white/10 dark:text-slate-200">
           {r.name}
         </span>
         {isNight && (
-          <span className="shrink-0 text-[11px] font-medium tracking-widest text-slate-400 uppercase">
+          <span className="shrink-0 font-mono text-label text-slate-400">
             noćna
           </span>
         )}
       </div>
       <RouteQualityCardStats r={r} />
       {r.headwayCv !== null && (
-        <div className="mt-2 min-w-0 truncate text-[11px] font-medium text-slate-500">
+        <div className="mt-2 min-w-0 truncate font-mono text-label text-slate-500">
           <span className={cvColor(r.headwayCv)}>
             Takt: {cvLabel(r.headwayCv)}
           </span>
@@ -559,10 +559,10 @@ function RouteQualityInsight({
 }) {
   return (
     <div className="flex flex-col rounded-[12px] bg-[#f9f9f9] p-6 sm:p-7 dark:bg-[#1a1a1a]">
-      <h3 className="mb-2 font-sans text-[13px] font-semibold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Zanimljivosti
       </h3>
-      <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <p className="text-body text-slate-700 dark:text-slate-300">
         {insights.mostDirect && insights.mostWinding && (
           <>
             Najizravnija linija je{" "}
@@ -620,7 +620,7 @@ function RouteQualityCards({
           <StatModuleTitle>
             Kvaliteta tramvajskih linija
           </StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Tortuoznost mjeri koliko je ruta neizravna (1,0 = savršeno ravna).
             CV takta označava ujednačenost razmaka polazaka (manje = bolje).
           </p>
@@ -648,36 +648,36 @@ function FleetNumbers({ fleet }: { fleet: Fleet }) {
     <div className="rounded-[12px] bg-[#f9f9f9] p-7 sm:p-8 dark:bg-[#1a1a1a]">
       <div className="grid grid-cols-2 gap-6 sm:gap-4">
         <div>
-          <div className="font-sans text-3xl leading-none font-semibold tracking-tighter text-slate-900 tabular-nums sm:text-[28px] dark:text-slate-100">
+          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
             {fleet.totalBlocks}
           </div>
-          <div className="mt-2 text-[13px] text-slate-500 sm:mt-1 sm:text-[13px] dark:text-slate-400">
+          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
             ukupno blokova
           </div>
         </div>
         <div>
-          <div className="font-sans text-3xl leading-none font-semibold tracking-tighter text-slate-700 tabular-nums sm:text-[28px] dark:text-slate-200">
+          <div className="font-sans text-head font-bold text-slate-700 tabular-nums dark:text-slate-200">
             {fleet.interlinedBlocks}
           </div>
-          <div className="mt-2 text-[13px] text-slate-500 sm:mt-1 sm:text-[13px] dark:text-slate-400">
+          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
             interliniranih
           </div>
         </div>
       </div>
       <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-100 pt-5 sm:mt-4 sm:gap-6 sm:pt-4 dark:border-slate-800">
         <div>
-          <span className="font-sans text-[22px] tracking-tight text-slate-800 tabular-nums sm:text-[20px] dark:text-slate-200">
+          <span className="font-sans text-head font-bold text-slate-800 tabular-nums dark:text-slate-200">
             {fleet.tramBlocks}
           </span>
-          <span className="ml-2 text-[13px] text-slate-500 sm:ml-1.5 sm:text-[11px]">
+          <span className="ml-2 text-body text-slate-500 sm:ml-1.5">
             tramvajskih
           </span>
         </div>
         <div>
-          <span className="font-sans text-[22px] tracking-tight text-slate-800 tabular-nums sm:text-[20px] dark:text-slate-200">
+          <span className="font-sans text-head font-bold text-slate-800 tabular-nums dark:text-slate-200">
             {fleet.busBlocks}
           </span>
-          <span className="ml-2 text-[13px] text-slate-500 sm:ml-1.5 sm:text-[11px]">
+          <span className="ml-2 text-body text-slate-500 sm:ml-1.5">
             autobusnih
           </span>
         </div>
@@ -693,7 +693,7 @@ function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
 
   return (
     <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-3 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Najsloženiji blokovi
       </div>
       <div className="space-y-2.5">
@@ -702,14 +702,14 @@ function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
             key={block.blockId}
             className="flex flex-wrap items-center gap-1.5"
           >
-            <span className="shrink-0 text-[13px] font-medium text-slate-600 tabular-nums dark:text-slate-300">
+            <span className="shrink-0 font-mono text-label text-slate-600 tabular-nums dark:text-slate-300">
               {block.blockId}
             </span>
-            <span className="text-[11px] text-slate-400">→</span>
+            <span className="font-mono text-label text-slate-400">→</span>
             {block.routes.map((route) => (
               <span
                 key={route}
-                className="inline-flex h-5 items-center rounded-md bg-slate-100 px-1.5 text-[11px] font-semibold text-slate-700 tabular-nums dark:bg-white/10 dark:text-slate-200"
+                className="inline-flex h-5 items-center rounded-md bg-slate-100 px-1.5 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-white/10 dark:text-slate-200"
               >
                 {route}
               </span>
@@ -735,7 +735,7 @@ function FleetSection({
           <StatModuleTitle>
             Vozni park i interlining
           </StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Koliko se često ista vozila (blokovi) koriste na više različitih
             linija tijekom dana, što štedi resurse, ali komplicira mrežu.
           </p>
@@ -778,12 +778,12 @@ function WeekdayOnlyCard({
 }) {
   return (
     <div className="flex flex-col border-l-2 border-indigo-500 py-2 pl-6">
-      <div className="mb-2 font-sans text-[13px] font-bold tracking-widest text-indigo-700 uppercase">
+      <div className="mb-2 font-mono text-label font-bold text-indigo-700">
         Samo radnim danom
       </div>
-      <div className="mb-4 font-sans text-[36px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="mb-4 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
         {weekendService.weekdayOnlyCount}{" "}
-        <span className="font-sans text-[18px] text-slate-500 dark:text-slate-400">
+        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
           linija
         </span>
       </div>
@@ -800,7 +800,7 @@ function WeekdayOnlyCard({
           .map((route) => (
             <span
               key={route}
-              className="inline-flex h-6 items-center rounded-sm bg-slate-100 px-2 font-mono text-[13px] font-bold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
+              className="inline-flex h-6 items-center rounded-sm bg-slate-100 px-2 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
             >
               {route}
             </span>
@@ -819,12 +819,12 @@ function AsymmetryCard({
 }) {
   return (
     <div className="flex flex-col border-l-2 border-slate-300 py-2 pl-6">
-      <div className="mb-2 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Smjerna asimetrija
       </div>
-      <div className="mb-4 font-sans text-[36px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="mb-4 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
         {asymmetry.length}{" "}
-        <span className="font-sans text-[18px] text-slate-500 dark:text-slate-400">
+        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
           linija
         </span>
       </div>
@@ -849,15 +849,15 @@ function AsymmetryBar({ entry }: { entry: DirectionalAsymmetryEntry }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 items-center justify-center rounded-sm bg-slate-100 px-2 font-mono text-[13px] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+        <span className="inline-flex h-6 items-center justify-center rounded-sm bg-slate-100 px-2 font-mono text-label font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
           {entry.name}
         </span>
-        <span className="text-[15px] text-slate-700 dark:text-slate-300">
+        <span className="text-body text-slate-700 dark:text-slate-300">
           {entry.outboundTrips} odl. / {entry.inboundTrips} dol.
         </span>
       </div>
       <div className="ml-2 flex items-center gap-2">
-        <span className="w-8 text-right text-[11px] tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <span className="w-8 text-right font-mono text-label text-slate-500 dark:text-slate-400">
           odl.
         </span>
         <div className="flex-1">
@@ -868,7 +868,7 @@ function AsymmetryBar({ entry }: { entry: DirectionalAsymmetryEntry }) {
         </div>
       </div>
       <div className="ml-2 flex items-center gap-2">
-        <span className="w-8 text-right text-[11px] tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <span className="w-8 text-right font-mono text-label text-slate-500 dark:text-slate-400">
           dol.
         </span>
         <div className="flex-1">
@@ -934,7 +934,7 @@ function WeekendAsymmetrySection({
         <StatModuleTitle>
           Vikend i smjerna asimetrija
         </StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Neke linije ne voze vikendom, a neke imaju različit broj polazaka u
           svakom smjeru.
         </p>
@@ -967,7 +967,7 @@ function HistogramBars({
     <div className="space-y-1">
       {data.map((bucket) => (
         <div key={bucket.label} className="flex items-center gap-2 sm:gap-2">
-          <span className="w-12 shrink-0 text-right font-mono text-[13px] text-slate-500 tabular-nums sm:w-10 sm:text-[11px] dark:text-slate-400">
+          <span className="w-12 shrink-0 text-right font-mono text-label text-slate-500 tabular-nums sm:w-10 dark:text-slate-400">
             {bucket.label}
           </span>
           <div className="flex-1">
@@ -992,7 +992,7 @@ function HistogramBars({
               )}
             </div>
           </div>
-          <span className="w-8 text-right font-mono text-[11px] text-slate-400 tabular-nums">
+          <span className="w-8 text-right font-mono text-label text-slate-400 tabular-nums">
             {bucket.stopCount}
           </span>
         </div>
@@ -1019,15 +1019,15 @@ function ServiceHistogram({
   return (
     <div className="flex flex-col rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <div
-        className={`mb-1 font-sans text-[11px] font-bold tracking-widest uppercase ${titleColor}`}
+        className={`mb-1 font-mono text-label font-bold ${titleColor}`}
       >
         {title}
       </div>
-      <div className="mb-4 text-[15px] text-slate-600 dark:text-slate-400">
+      <div className="mb-4 text-body text-slate-600 dark:text-slate-400">
         {subtitle}
       </div>
       <HistogramBars data={data} max={max} />
-      <div className="mt-3 flex gap-4 text-[11px] text-slate-500 dark:text-slate-400">
+      <div className="mt-3 flex gap-4 font-mono text-label text-slate-500 dark:text-slate-400">
         <span className="flex items-center gap-1">
           <span className="inline-block h-2 w-2 rounded-sm bg-slate-400" />{" "}
           tramvaj
@@ -1058,41 +1058,41 @@ function ServiceSpanNumbers({ span }: { span: ServiceSpan }) {
   return (
     <div className="mb-8 grid grid-cols-1 gap-6 rounded-[12px] bg-[#f9f9f9] p-5 sm:grid-cols-3 sm:gap-8 sm:p-6 dark:bg-[#1a1a1a]">
       <div className="flex flex-col">
-        <div className="font-sans text-[36px] leading-none font-medium tracking-tight text-amber-600 tabular-nums dark:text-amber-400">
+        <div className="font-sans text-head font-bold text-amber-600 tabular-nums dark:text-amber-400">
           {span.firstMorningDeparture}
         </div>
-        <div className="mt-2 text-[15px] text-slate-600 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
           prvi jutarnji polazak
         </div>
         {tramMode && (
-          <div className="mt-1 text-[13px] text-slate-500 dark:text-slate-400">
+          <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
             Tramvaj {tramMode.earliestDeparture} · Autobus{" "}
             {busMode?.earliestDeparture ?? "-"}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-[36px] leading-none font-medium tracking-tight text-indigo-600 tabular-nums dark:text-indigo-400">
+        <div className="font-sans text-head font-bold text-indigo-600 tabular-nums dark:text-indigo-400">
           {span.lastEveningDeparture}
         </div>
-        <div className="mt-2 text-[15px] text-slate-600 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
           zadnji večernji polazak
         </div>
         {tramMode && (
-          <div className="mt-1 text-[13px] text-slate-500 dark:text-slate-400">
+          <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
             Tramvaj {tramMode.latestDeparture} · Autobus{" "}
             {busMode?.latestDeparture ?? "-"}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-[36px] leading-none font-medium tracking-tight text-red-600 tabular-nums dark:text-red-400">
+        <div className="font-sans text-head font-bold text-red-600 tabular-nums dark:text-red-400">
           {Math.round(nightGap.pctDarkBy23)}%
         </div>
-        <div className="mt-2 text-[15px] text-slate-600 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
           stanica u mraku do 23h
         </div>
-        <div className="mt-1 text-[13px] text-slate-500 dark:text-slate-400">
+        <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
           {fmtDots(nightGap.stopsDarkBy23)} od {fmtDots(nightGap.totalStops)}{" "}
           stanica
         </div>
@@ -1104,23 +1104,23 @@ function ServiceSpanNumbers({ span }: { span: ServiceSpan }) {
 function PastMidnightCard({ routes }: { routes: string[] }) {
   return (
     <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-emerald-600 uppercase dark:text-emerald-400">
+      <div className="mb-1 font-mono text-label font-bold text-emerald-600 dark:text-emerald-400">
         Usluga nakon ponoći
       </div>
-      <div className="mb-3 text-[13px] text-slate-500 dark:text-slate-400">
+      <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
         {routes.length} {plural(routes.length, "linija", "linije", "linija")} čija usluga prelazi ponoć
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 30).map((route) => (
           <span
             key={route}
-            className="inline-flex h-6 items-center rounded-full bg-emerald-100 px-2 text-[11px] font-semibold text-emerald-800 tabular-nums dark:bg-emerald-900/40 dark:text-emerald-300"
+            className="inline-flex h-6 items-center rounded-full bg-emerald-100 px-2 font-mono text-label font-bold text-emerald-800 tabular-nums dark:bg-emerald-900/40 dark:text-emerald-300"
           >
             {route}
           </span>
         ))}
         {routes.length > 30 && (
-          <span className="inline-flex h-6 items-center px-1 text-[11px] text-slate-400">
+          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-slate-400">
             +{routes.length - 30}
           </span>
         )}
@@ -1132,23 +1132,23 @@ function PastMidnightCard({ routes }: { routes: string[] }) {
 function EndingBefore23Card({ routes }: { routes: string[] }) {
   return (
     <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-1 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase dark:text-red-400">
+      <div className="mb-1 font-mono text-label font-bold text-red-600 dark:text-red-400">
         Gašenje prije 23h
       </div>
-      <div className="mb-3 text-[13px] text-slate-500 dark:text-slate-400">
+      <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
         {routes.length} {plural(routes.length, "linija završava", "linije završavaju", "linija završava")} radni dan do 23:00
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 20).map((route) => (
           <span
             key={route}
-            className="inline-flex h-6 items-center rounded-full bg-red-100 px-2 text-[11px] font-semibold text-red-800 tabular-nums dark:bg-red-900/40 dark:text-red-300"
+            className="inline-flex h-6 items-center rounded-full bg-red-100 px-2 font-mono text-label font-bold text-red-800 tabular-nums dark:bg-red-900/40 dark:text-red-300"
           >
             {route}
           </span>
         ))}
         {routes.length > 20 && (
-          <span className="inline-flex h-6 items-center px-1 text-[11px] text-slate-400">
+          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-slate-400">
             +{routes.length - 20}
           </span>
         )}
@@ -1211,7 +1211,7 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
         <StatModuleTitle>
           Kad se Zagreb budi i gasi
         </StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Kada stajalište dobije prvi polazak ujutro, a kada ostaje bez usluge
           navečer. Zagreb ne spava u isto vrijeme - neki kvartovi gube prijevoz
           satima prije ostatka grada.
@@ -1266,12 +1266,12 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
   return (
     <tr className="border-b border-slate-100 last:border-0 dark:border-slate-800">
       <td className="py-3 pr-4 text-left">
-        <div className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
+        <div className="text-body text-slate-800 dark:text-slate-200">
           {hub.stopName}
         </div>
       </td>
       <td className="py-3 pr-4 text-center">
-        <span className="font-sans text-[15px] font-medium tracking-tight text-slate-800 tabular-nums dark:text-slate-200">
+        <span className="font-sans text-body text-slate-800 tabular-nums dark:text-slate-200">
           {hub.routeCount}
         </span>
       </td>
@@ -1280,13 +1280,13 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
           {hub.routes.slice(0, 8).map((route) => (
             <span
               key={route}
-              className="inline-flex h-5 items-center rounded bg-slate-100 px-1.5 text-[11px] font-semibold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
+              className="inline-flex h-5 items-center rounded bg-slate-100 px-1.5 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
             >
               {route}
             </span>
           ))}
           {hub.routes.length > 8 && (
-            <span className="text-[11px] text-slate-400">
+            <span className="font-mono text-label text-slate-400">
               +{hub.routes.length - 8}
             </span>
           )}
@@ -1294,17 +1294,17 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
       </td>
       <td className="py-3 pr-4 text-center">
         <span
-          className={`inline-flex h-6 items-center rounded-full px-2 text-[13px] font-semibold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
+          className={`inline-flex h-6 items-center rounded-full px-2 font-mono text-label font-bold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
         >
           {fmtHR(hub.avgTransferWaitMin, 1)} min
         </span>
       </td>
       <td className="py-3 text-center">
-        <span className="text-[13px] text-slate-700 tabular-nums dark:text-slate-300">
+        <span className="font-mono text-label text-slate-700 tabular-nums dark:text-slate-300">
           {hub.bestHour}:00
         </span>
         <span
-          className={`ml-1.5 text-[11px] font-medium tabular-nums ${pulseWaitColor(hub.bestHourWaitMin)}`}
+          className={`ml-1.5 font-mono text-label tabular-nums ${pulseWaitColor(hub.bestHourWaitMin)}`}
         >
           ({fmtHR(hub.bestHourWaitMin, 1)} min)
         </span>
@@ -1367,8 +1367,8 @@ function PulseHeatmapCells({
               dominantBaseline="central"
               className={
                 wait < maxWait * 0.33
-                  ? "fill-slate-700 font-sans text-[9px] font-medium dark:fill-slate-200"
-                  : "fill-white/90 font-sans text-[9px] font-medium"
+                  ? "fill-slate-700 font-mono text-label dark:fill-slate-200"
+                  : "fill-white/90 font-mono text-label"
               }
             >
               {wait.toFixed(0)}
@@ -1407,7 +1407,7 @@ function PulseHeatmap({ hubs }: { hubs: PulseHub[] }) {
             y={ri * (PULSE_CELL_H + PULSE_GAP) + PULSE_CELL_H / 2 + 1}
             textAnchor="end"
             dominantBaseline="central"
-            className="fill-slate-600 font-sans text-[11px] dark:fill-slate-400"
+            className="fill-slate-600 font-mono text-label dark:fill-slate-400"
           >
             {hub.stopName.length > 18
               ? hub.stopName.slice(0, 16) + "..."
@@ -1427,7 +1427,7 @@ function PulseHeatmap({ hubs }: { hubs: PulseHub[] }) {
               }
               y={topHubs.length * (PULSE_CELL_H + PULSE_GAP) + 16}
               textAnchor="middle"
-              className="fill-slate-500 font-sans text-[10px] dark:fill-slate-400"
+              className="fill-slate-500 font-mono text-label dark:fill-slate-400"
             >
               {h}h
             </text>
@@ -1443,19 +1443,19 @@ function PulseHubsTable({ hubs }: { hubs: PulseHub[] }) {
       <table className="w-full min-w-[640px] text-left">
         <thead>
           <tr className="border-b border-slate-100 dark:border-slate-700">
-            <th className="px-6 py-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="px-6 py-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
               Stajalište
             </th>
-            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
               Linije
             </th>
-            <th className="px-4 py-3 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="px-4 py-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
               Rute
             </th>
-            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
               Prosj. čekanje
             </th>
-            <th className="px-4 py-3 text-center text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
               Najbolji sat
             </th>
           </tr>
@@ -1525,7 +1525,7 @@ function PulseSchedulingSection({ hubs }: { hubs: PulseHub[] }) {
         <StatModuleTitle>
           Pulse scheduling
         </StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Pulse scheduling znači sinkronizaciju dolazaka različitih linija na
           ključna čvorišta, kako bi putnici mogli presjedati s minimalnim
           čekanjem. Analiziramo {hubs.length} najvećih presjedačkih čvorišta.
@@ -1566,7 +1566,7 @@ export default function NetworkStatsSection() {
           <StatModuleTitle>
             Analiza mreže
           </StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 sm:text-[18px] dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Detaljan pregled rasporeda, kapaciteta i karakteristika voznog reda
             zagrebačkog javnog prijevoza.
           </p>

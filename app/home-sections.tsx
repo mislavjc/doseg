@@ -53,7 +53,7 @@ function MoreLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1 pt-4 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+      className="inline-flex items-center gap-1 pt-4 font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
     >
       {children}
       <IconArrowRight size={16} className="shrink-0" />

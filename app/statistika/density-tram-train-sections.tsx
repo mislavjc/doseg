@@ -78,7 +78,7 @@ function DensitySectionHeader() {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Gustoća vs. povezanost</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
           Svaka točka je jedan gradski kvart. Idealno bi gušće naseljeni
           kvartovi trebali imati bolji javni prijevoz - ali to u Zagrebu često
           nije slučaj.
@@ -175,7 +175,7 @@ function ScatterGrid({
           y={scatterYScale(v) + 1}
           textAnchor="end"
           dominantBaseline="middle"
-          className="fill-slate-400 text-[8px] dark:fill-slate-500"
+          className="fill-slate-400 font-mono text-label dark:fill-slate-500"
         >
           {v}
         </text>
@@ -220,7 +220,7 @@ function ScatterAxes({
           x={scatterXScale(v)}
           y={scatterInnerH + 16}
           textAnchor="middle"
-          className="fill-slate-400 text-[8px] dark:fill-slate-500"
+          className="fill-slate-400 font-mono text-label dark:fill-slate-500"
         >
           {v}
         </text>
@@ -229,7 +229,7 @@ function ScatterAxes({
         x={scatterInnerW / 2}
         y={scatterInnerH + 32}
         textAnchor="middle"
-        className="fill-slate-500 text-[9px] dark:fill-slate-400"
+        className="fill-slate-500 font-mono text-label dark:fill-slate-400"
       >
         Gustoća (stan. / uzorak)
       </text>
@@ -239,7 +239,7 @@ function ScatterAxes({
         textAnchor="middle"
         dominantBaseline="middle"
         transform={`rotate(-90, -28, ${scatterInnerH / 2})`}
-        className="fill-slate-500 text-[9px] dark:fill-slate-400"
+        className="fill-slate-500 font-mono text-label dark:fill-slate-400"
       >
         Rezultat
       </text>
@@ -322,7 +322,7 @@ function ScatterLabels({
           y={scatterYScale(scatter.scatterDonjiGrad.score) + 1}
           textAnchor="end"
           dominantBaseline="middle"
-          className="fill-slate-700 text-[8px] font-medium dark:fill-slate-300"
+          className="fill-slate-700 font-mono text-label dark:fill-slate-300"
         >
           Donji grad
         </text>
@@ -337,7 +337,7 @@ function ScatterLabels({
           y={scatterYScale(scatter.scatterSesvete.score) + 1}
           textAnchor="start"
           dominantBaseline="middle"
-          className="fill-slate-700 text-[8px] font-medium dark:fill-slate-300"
+          className="fill-slate-700 font-mono text-label dark:fill-slate-300"
         >
           Sesvete
         </text>
@@ -352,7 +352,7 @@ function ScatterLabels({
           y={scatterYScale(scatter.scatterNovizg.score) + 1}
           textAnchor="start"
           dominantBaseline="middle"
-          className="fill-slate-700 text-[8px] font-medium dark:fill-slate-300"
+          className="fill-slate-700 font-mono text-label dark:fill-slate-300"
         >
           {scatter.scatterNovizg.name}
         </text>
@@ -363,7 +363,7 @@ function ScatterLabels({
 
 function ScatterLegend() {
   return (
-    <div className="mt-3 flex items-center justify-center gap-6 text-[13px] text-slate-500 dark:text-slate-400">
+    <div className="mt-3 flex items-center justify-center gap-6 text-body text-slate-500 dark:text-slate-400">
       <span className="flex items-center gap-1.5">
         <span className="inline-block h-2.5 w-2.5 rounded-full bg-green-600 opacity-70" />
         Ima tramvaj (krug)
@@ -424,7 +424,7 @@ function DensityInterpretation({
   return (
     <div className="flex flex-col rounded-2xl bg-violet-50/50 p-6 dark:bg-violet-950/10">
       <SectionIcon icon="venn" color="violet" title="Što graf otkriva?" />
-      <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
         <p>
           Kvartovi s tramvajem (zeleni) grupiraju se iznad rezultata 30, dok
           kvartovi bez tramvaja (ljubičasti) konzistentno zaostaju.
@@ -500,7 +500,7 @@ export function TramSection({
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Tramvaj je kralj</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Nijedan kvart bez tramvaja ne prelazi rezultat{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {freq.bestTramless}
@@ -515,7 +515,7 @@ export function TramSection({
         </div>
       </div>
       <div>
-        <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           {freq.tramlessDistricts.length} {plural(freq.tramlessDistricts.length, "kvart", "kvarta", "kvartova")} bez tramvaja
         </div>
         <TramlessScores districts={freq.tramlessDistricts} />
@@ -526,7 +526,7 @@ export function TramSection({
 
 function TramlessScores({ districts }: { districts: DistrictScore[] }) {
   return (
-    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-slate-600 dark:text-slate-400">
+    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-body text-slate-600 dark:text-slate-400">
       {districts
         .toSorted((a, b) => b.score - a.score)
         .map((d) => (
@@ -555,7 +555,7 @@ export function HzTrainSection({ data }: { data: ScoreData }) {
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>HŽ vlak - neiskorišten potencijal</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             HŽ ima stanice u{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {withTrains.length}
@@ -577,7 +577,7 @@ export function HzTrainSection({ data }: { data: ScoreData }) {
           />
         </div>
         <div className="mt-8 md:mt-0 md:w-1/2">
-          <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+          <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
             Kvartovi uz željeznicu
           </div>
           <HzTrainDistrictList withTrains={withTrains} />
@@ -597,28 +597,28 @@ function HzTrainStatStrip({
   return (
     <div className="my-8 flex flex-col gap-8 border-y border-slate-100 py-6 sm:flex-row sm:gap-12 dark:border-white/10">
       <div className="flex flex-col border-l-2 border-teal-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           0%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           doprinos vlaka u
           <br className="hidden sm:block" /> 30-minutnom dosegu
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-teal-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {withTrains.length}/{totalDistricts}
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           kvartova s pristupom
           <br className="hidden sm:block" /> željezničkoj mreži
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-slate-300 py-1 pl-4 dark:border-white/15">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           30-60 min
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           interval HŽ
           <br className="hidden sm:block" /> regionalnih vlakova
         </div>
@@ -636,14 +636,14 @@ function HzTrainBody({
 }) {
   return (
     <div className="flex flex-col gap-6">
-      <p className="text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <p className="text-body text-slate-700 dark:text-slate-300">
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           {withTrains.length} od {totalDistricts} kvartova
         </strong>{" "}
         ima pristup željezničkoj mreži - ali vlak ne poboljšava 30-minutnu
         dostupnost ni u jednoj od njih.
       </p>
-      <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="text-body text-slate-600 dark:text-slate-400">
         Razlog je frekvencija. HŽ regionalni vlakovi voze svakih 30-60 minuta.
         Uz prosječno čekanje od 15-30 minuta, putnik potroši većinu svog
         30-minutnog budžeta samo čekajući na peronu. Kad vlak napokon stigne,
@@ -651,10 +651,10 @@ function HzTrainBody({
         usporedbi s tramvajem ili autobusom koji su već krenuli.
       </p>
       <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-5 dark:border-white/10 dark:bg-white/4">
-        <div className="mb-2 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <div className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           Tramvaj vs. vlak
         </div>
-        <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-300">
+        <p className="text-body text-slate-600 dark:text-slate-300">
           Tramvaj u vršnom satu dolazi svakih 7-10 minuta po liniji - a na
           koridorima s više linija u istom smjeru i češće.
           Kad bi HŽ vozio svakih 15 minuta, čekanje bi palo na ~7 min i vlak bi
@@ -673,16 +673,16 @@ function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
     <div className="space-y-3">
       {sorted.map((d, i) => (
         <div key={d.name} className="flex items-center gap-3">
-          <span className="w-5 shrink-0 text-right font-sans text-[13px] tracking-tight text-slate-400 tabular-nums">
+          <span className="w-5 shrink-0 text-right font-mono text-label text-slate-400 tabular-nums">
             {i + 1}.
           </span>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-baseline justify-between gap-2">
-              <span className="flex items-center gap-1.5 truncate text-[15px] font-medium text-slate-900 dark:text-slate-100">
+              <span className="flex items-center gap-1.5 truncate text-body text-slate-900 dark:text-slate-100">
                 <span className="inline-block size-2 shrink-0 rounded-full bg-teal-500" />
                 {d.name}
               </span>
-              <span className="shrink-0 font-sans text-[15px] font-medium tracking-tight text-teal-700 tabular-nums dark:text-teal-400">
+              <span className="shrink-0 font-sans text-body text-teal-700 tabular-nums dark:text-teal-400">
                 {d.score} bod.
               </span>
             </div>
@@ -693,7 +693,7 @@ function HzTrainDistrictList({ withTrains }: { withTrains: DistrictScore[] }) {
               />
             </div>
           </div>
-          <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+          <span className="shrink-0 font-mono text-label text-slate-400 tabular-nums dark:text-slate-500">
             {d.trainLines.length} lin · boost 0%
           </span>
         </div>

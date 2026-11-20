@@ -48,7 +48,7 @@ export default function BajsUtilizationSection() {
       </div>
 
       {error && (
-        <p className="text-[13px] text-slate-500 dark:text-slate-400">
+        <p className="text-body text-slate-500 dark:text-slate-400">
           {error.message}
         </p>
       )}
@@ -76,16 +76,16 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
       <div className="flex flex-col gap-3 sm:pr-10">
         <div>
           <span
-            className={`font-sans text-[48px] leading-none font-semibold tracking-tighter tabular-nums ${pctColor(data.utilizationPct)}`}
+            className={`font-sans text-head font-bold tabular-nums ${pctColor(data.utilizationPct)}`}
           >
             {fmtHR(data.utilizationPct, 1)}%
           </span>
         </div>
-        <div className="text-[15px] text-slate-500 dark:text-slate-400">
+        <div className="text-body text-slate-500 dark:text-slate-400">
           iskorištenost
         </div>
       </div>
-      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-[13px] text-slate-600 sm:border-0 sm:pt-0 sm:pl-10 sm:pr-10 dark:border-white/10 dark:text-slate-400">
+      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-body text-slate-600 sm:border-0 sm:pt-0 sm:pl-10 sm:pr-10 dark:border-white/10 dark:text-slate-400">
         <Metric value={data.bikesInUse} label="u uporabi" />
         <Metric value={data.totalBikesAvailable} label="na stanicama" />
         <Metric
@@ -145,11 +145,11 @@ function StatusBadge({
     >
       <div className="flex items-center gap-3">
         <span className={`inline-block h-3 w-3 rounded ${dotColor}`} />
-        <span className="text-[15px] text-slate-700 dark:text-slate-300">
+        <span className="text-body text-slate-700 dark:text-slate-300">
           {label}
         </span>
       </div>
-      <span className="font-sans text-[15px] font-medium text-slate-900 tabular-nums dark:text-slate-100">
+      <span className="font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
         {count}
       </span>
     </div>
@@ -159,7 +159,7 @@ function StatusBadge({
 function Metric({ value, label }: { value: number; label: string }) {
   return (
     <span className="flex items-center gap-3">
-      <strong className="font-sans text-[18px] font-semibold text-slate-900 dark:text-slate-100">
+      <strong className="font-sans text-head font-bold text-slate-900 dark:text-slate-100">
         {value.toLocaleString("hr-HR")}
       </strong>
       <span>{label}</span>

@@ -194,10 +194,10 @@ function ProfileChartCard({
 }) {
   return (
     <div className="flex flex-col">
-      <StatEyebrow className="mb-6 text-[13px] font-bold">
+      <StatEyebrow className="mb-6 text-head font-bold">
         Dostupnost kroz dan
       </StatEyebrow>
-      <p className="mb-8 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="mb-8 text-body text-slate-600 dark:text-slate-400">
         Broj dosežnih ćelija po satu za odabrane kvartove i gradski prosjek.
       </p>
       <ProfileChart data={data} insights={insights} />
@@ -350,7 +350,7 @@ function ChartAxes({
           y={yScale(v) + 1}
           textAnchor="end"
           dominantBaseline="middle"
-          className="fill-slate-400 font-mono text-[9px] dark:fill-slate-500"
+          className="fill-slate-400 font-mono text-label dark:fill-slate-500"
         >
           {v}
         </text>
@@ -363,7 +363,7 @@ function ChartAxes({
             x={xScale(h)}
             y={innerH + 16}
             textAnchor="middle"
-            className="fill-slate-400 font-mono text-[9px] dark:fill-slate-500"
+            className="fill-slate-400 font-mono text-label dark:fill-slate-500"
           >
             {h}:00
           </text>
@@ -372,7 +372,7 @@ function ChartAxes({
         x={innerW / 2}
         y={innerH + 30}
         textAnchor="middle"
-        className="fill-slate-400 text-[10px] font-bold tracking-widest uppercase dark:fill-slate-500"
+        className="fill-slate-400 font-mono text-label font-bold dark:fill-slate-500"
       >
         Sat
       </text>
@@ -380,7 +380,7 @@ function ChartAxes({
         x={-30}
         y={-6}
         textAnchor="start"
-        className="fill-slate-400 text-[10px] font-bold tracking-widest uppercase dark:fill-slate-500"
+        className="fill-slate-400 font-mono text-label font-bold dark:fill-slate-500"
       >
         Ćelije
       </text>
@@ -445,14 +445,14 @@ function ChartMarkers({
       <text
         x={xScale(insights.cityPeakHour) + 6}
         y={yScale(insights.cityPeakCells) - 6}
-        className="fill-slate-600 text-[8px] font-medium dark:fill-slate-300"
+        className="fill-slate-600 font-mono text-label dark:fill-slate-300"
       >
         vrh
       </text>
       <text
         x={xScale(insights.cityTroughHour) + 6}
         y={yScale(insights.cityTroughCells) + 12}
-        className="fill-slate-600 text-[8px] font-medium dark:fill-slate-300"
+        className="fill-slate-600 font-mono text-label dark:fill-slate-300"
       >
         dno
       </text>
@@ -503,7 +503,7 @@ function ProfileLegend({
                 : {}),
             }}
           />
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+          <span className="font-mono text-label text-slate-500 dark:text-slate-400">
             {item.name}
           </span>
         </div>
@@ -520,7 +520,7 @@ function ProfileInterpretation({ insights }: { insights: ProfileInsights }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="mt-4 flex flex-col border-l-2 border-teal-500 py-2 pl-6">
-        <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-teal-700 uppercase">
+        <h3 className="mb-2 font-mono text-label font-bold text-teal-700">
           Kada grad diše?
         </h3>
         <InterpretationStats insights={insights} />
@@ -534,19 +534,19 @@ function InterpretationStats({ insights }: { insights: ProfileInsights }) {
   return (
     <div className="mb-6 grid grid-cols-2 gap-4">
       <div>
-        <div className="font-sans text-[28px] leading-none tracking-tight text-teal-600 tabular-nums dark:text-teal-400">
+        <div className="font-sans text-head font-bold text-teal-600 tabular-nums dark:text-teal-400">
           {insights.cityPeakHour}:00
         </div>
-        <div className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
           vršni sat
           <br />({Math.round(insights.cityPeakCells)} ćelija prosjek)
         </div>
       </div>
       <div>
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {insights.cityTroughHour}:00
         </div>
-        <div className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
           najslabiji sat
           <br />
           (-{fmtHR(insights.cityDropPct, 1)}% pad)
@@ -558,7 +558,7 @@ function InterpretationStats({ insights }: { insights: ProfileInsights }) {
 
 function InterpretationText({ insights }: { insights: ProfileInsights }) {
   return (
-    <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
       <p>
         Vršna dostupnost je u{" "}
         <span className="font-medium text-slate-900 dark:text-slate-100">
@@ -627,14 +627,14 @@ function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
   return (
     <div className="mb-6 flex flex-col gap-2 border-l-2 border-slate-200 pl-4 dark:border-white/10">
       <div className="flex items-baseline justify-between">
-        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           Dnevna stabilnost po kvartovima
         </h3>
-        <span className="font-sans text-[15px] tracking-tight text-slate-500 dark:text-slate-400">
+        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
           prosječni pad -{fmtHR(cityDropPct, 1)}%
         </span>
       </div>
-      <p className="text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="text-body text-slate-600 dark:text-slate-400">
         Poredano po padu usluge - kvartovi s najvećim raskorakom između najboljeg
         i najgoreg sata.
       </p>
@@ -645,9 +645,9 @@ function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
 function DesktopTable({ sorted }: { sorted: DistrictHourlyProfile[] }) {
   return (
     <div className="hidden overflow-x-auto sm:block">
-      <table className="w-full text-[15px]">
+      <table className="w-full text-body">
         <thead>
-          <tr className="border-b-2 border-slate-200 text-left text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:border-white/10 dark:text-slate-400">
+          <tr className="border-b-2 border-slate-200 text-left font-mono text-label font-bold text-slate-500 dark:border-white/10 dark:text-slate-400">
             <th className="w-8 pr-4 pb-3">#</th>
             <th className="pr-4 pb-3">Kvart</th>
             <th className="pr-4 pb-3 text-right">Vrh</th>
@@ -691,7 +691,7 @@ function ProfileTableRow({
 }) {
   return (
     <tr className="border-b border-slate-100 last:border-0 dark:border-white/5">
-      <td className="py-3 pr-4 font-mono text-[11px] text-slate-400 dark:text-slate-500">
+      <td className="py-3 pr-4 font-mono text-label text-slate-400 dark:text-slate-500">
         {rank.toString().padStart(2, "0")}
       </td>
       <td className="py-3 pr-4 font-medium text-slate-800 dark:text-slate-200">
@@ -699,13 +699,13 @@ function ProfileTableRow({
       </td>
       <td className="py-3 pr-4 text-right text-slate-600 tabular-nums dark:text-slate-400">
         {d.peakHour}:00{" "}
-        <span className="ml-1 text-[13px] text-slate-400 dark:text-slate-500">
+        <span className="ml-1 text-body text-slate-400 dark:text-slate-500">
           ({Math.round(d.peakCells)})
         </span>
       </td>
       <td className="py-3 pr-4 text-right text-slate-600 tabular-nums dark:text-slate-400">
         {d.troughHour}:00{" "}
-        <span className="ml-1 text-[13px] text-slate-400 dark:text-slate-500">
+        <span className="ml-1 text-body text-slate-400 dark:text-slate-500">
           ({Math.round(d.troughCells)})
         </span>
       </td>
@@ -759,7 +759,7 @@ function ProfileMobileCard({
     <div className="flex flex-col border-b border-slate-100 pb-4 last:border-0 dark:border-white/5">
       <div className="mb-1 flex items-baseline justify-between">
         <div className="flex items-baseline gap-2">
-          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">
+          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
             {rank.toString().padStart(2, "0")}
           </span>
           <span className="font-medium text-slate-800 dark:text-slate-200">
@@ -772,7 +772,7 @@ function ProfileMobileCard({
           -{fmtHR(d.serviceDropPct, 1)}%
         </span>
       </div>
-      <div className="ml-5 text-[13px] text-slate-500 dark:text-slate-400">
+      <div className="ml-5 text-body text-slate-500 dark:text-slate-400">
         Vrh {d.peakHour}:00 ({Math.round(d.peakCells)} ćelija) · Dno{" "}
         {d.troughHour}:00 ({Math.round(d.troughCells)} ćelija)
       </div>

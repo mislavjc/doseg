@@ -135,9 +135,9 @@ function ZagrebDistrictGrid({ cells }: { cells: GridCell[] }) {
               style={{ backgroundColor: cell.bg, color: cell.label }}
               title={cell.title}
             >
-              <span className="font-medium text-base tracking-wide sm:text-xl">{cell.short}</span>
+              <span className="text-body">{cell.short}</span>
               <div
-                className={`pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(280px,85vw)] -translate-x-1/2 rounded bg-gray-900 px-3 py-1.5 text-center text-xs leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 ${
+                className={`pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(280px,85vw)] -translate-x-1/2 rounded bg-gray-900 px-3 py-1.5 text-center font-mono text-label leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 ${
                   tooltipBelow ? "top-full mt-1.5" : "bottom-full mb-1.5"
                 }`}
               >

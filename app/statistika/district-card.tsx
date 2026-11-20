@@ -17,22 +17,22 @@ function DenseSpecialBadges({ d }: { d: DistrictScore }) {
   return (
     <div className="flex flex-wrap gap-1.5 mt-2">
       {d.trainLines.length > 0 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-teal-50 px-1.5 py-0.5 text-[11px] font-medium text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
+        <div className="inline-flex items-center gap-1 rounded-sm bg-teal-50 px-1.5 py-0.5 font-mono text-label text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
           HŽ Vlak
         </div>
       )}
       {d.bajsStations > 0 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-amber-50 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+        <div className="inline-flex items-center gap-1 rounded-sm bg-amber-50 px-1.5 py-0.5 font-mono text-label text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
           {d.bajsStations} BAJS
         </div>
       )}
       {d.peakOffpeakDrop >= 30 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-1.5 py-0.5 text-[11px] font-medium text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+        <div className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-1.5 py-0.5 font-mono text-label text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
           -{d.peakOffpeakDrop}% navečer
         </div>
       )}
       {d.desertPct >= 20 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-red-50 px-1.5 py-0.5 text-[11px] font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
+        <div className="inline-flex items-center gap-1 rounded-sm bg-red-50 px-1.5 py-0.5 font-mono text-label text-red-700 dark:bg-red-900/30 dark:text-red-400">
           {d.desertPct}% pustinja
         </div>
       )}
@@ -45,7 +45,7 @@ function DenseBoostBars({ d, totalGridCells }: { d: DistrictScore; totalGridCell
 
   const renderBoost = (label: string, pctVal: number, rawVal: number, colorClass: string, bgClass: string, barClass: string) => (
     <div className="mt-3">
-      <div className="mb-1 flex justify-between text-[10px] uppercase tracking-wider">
+      <div className="mb-1 flex justify-between font-mono text-label">
         <span className={colorClass}>{label}</span>
         <span className={colorClass}>+{pctVal}%</span>
       </div>
@@ -67,16 +67,16 @@ function DenseBoostBars({ d, totalGridCells }: { d: DistrictScore; totalGridCell
 function DenseLinesList({ d }: { d: DistrictScore }) {
   return (
     <div className="mt-4">
-      <span className="mb-2 block text-[10px] uppercase tracking-widest text-slate-400">Linije</span>
+      <span className="mb-2 block font-mono text-label text-slate-400">Linije</span>
       <div className="flex flex-wrap gap-1">
         {d.tramLines.map((line) => (
-          <span key={`t${line}`} className="flex h-5 min-w-5 items-center justify-center rounded-sm bg-slate-100 px-1 font-mono text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{line}</span>
+          <span key={`t${line}`} className="flex h-5 min-w-5 items-center justify-center rounded-sm bg-slate-100 px-1 font-mono text-label text-slate-600 dark:bg-slate-800 dark:text-slate-300">{line}</span>
         ))}
         {d.busLines.length > 0 && (
-          <span className="flex h-5 items-center justify-center rounded-sm bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{d.busLines.length} bus</span>
+          <span className="flex h-5 items-center justify-center rounded-sm bg-slate-100 px-1.5 font-mono text-label text-slate-600 dark:bg-slate-800 dark:text-slate-300">{d.busLines.length} bus</span>
         )}
         {d.trainLines.length > 0 && (
-          <span className="flex h-5 items-center justify-center rounded-sm bg-teal-50 px-1.5 font-mono text-[10px] font-medium text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">HŽ</span>
+          <span className="flex h-5 items-center justify-center rounded-sm bg-teal-50 px-1.5 font-mono text-label text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">HŽ</span>
         )}
       </div>
     </div>
@@ -101,29 +101,29 @@ export function DistrictCard({
         <div className="flex items-center gap-4">
           <DistrictEmblem pathData={emblemPath} rank={d.rank} color={bandColor} />
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Kvart</div>
-            <h4 className="text-[20px] font-semibold tracking-tight text-slate-900 dark:text-slate-100 leading-tight">{d.name}</h4>
+            <div className="font-mono text-label font-bold text-slate-400 mb-1">Kvart</div>
+            <h4 className="text-head font-bold text-slate-900 dark:text-slate-100">{d.name}</h4>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[24px] font-semibold tracking-tight" style={{ color: bandColor }}>{d.score}</div>
-          <div className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Indeks</div>
+          <div className="text-head font-bold" style={{ color: bandColor }}>{d.score}</div>
+          <div className="font-mono text-label text-slate-400">Indeks</div>
         </div>
       </div>
 
       <div className="px-6">
         <div className="flex justify-between gap-3 text-center">
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-            <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stan.</div>
-            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
+            <div className="mb-0.5 font-mono text-label text-slate-400">Stan.</div>
+            <div className="text-body text-slate-900 dark:text-slate-100">{d.population != null && d.population !== 0 ? fmtHR(d.population/1000, 1)+'k' : '-'}</div>
           </div>
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-            <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Stanice</div>
-            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">{d.stops}</div>
+            <div className="mb-0.5 font-mono text-label text-slate-400">Stanice</div>
+            <div className="text-body text-slate-900 dark:text-slate-100">{d.stops}</div>
           </div>
           <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-            <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">Interval</div>
-            <div className="text-[15px] font-medium text-slate-900 dark:text-slate-100">~{Math.round(d.medianHeadwayMin)}m</div>
+            <div className="mb-0.5 font-mono text-label text-slate-400">Interval</div>
+            <div className="text-body text-slate-900 dark:text-slate-100">~{Math.round(d.medianHeadwayMin)}m</div>
           </div>
         </div>
         
@@ -133,7 +133,7 @@ export function DistrictCard({
       </div>
 
       <div className="mt-6 border-t border-slate-50/80 p-6 pb-5 dark:border-slate-800/50">
-        <div className="mb-4 flex justify-between text-[11px] uppercase tracking-widest text-slate-500">
+        <div className="mb-4 flex justify-between font-mono text-label text-slate-500">
           <span>Doseg grada</span>
           <span className="font-semibold text-slate-900 dark:text-white">{pct(d.avgReachableCells, totalGridCells)}%</span>
         </div>
@@ -151,7 +151,7 @@ export function DistrictCard({
         <DenseLinesList d={d} />
         
         <div className="mt-6 flex items-center justify-between">
-          <Link href={mapLink} className="group flex items-center gap-2 text-[14px] font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+          <Link href={mapLink} className="group flex items-center gap-2 text-body text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
             <span>Istraži područje</span>
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:translate-x-1 dark:bg-slate-800">&rarr;</span>
           </Link>

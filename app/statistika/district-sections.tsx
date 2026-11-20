@@ -55,11 +55,11 @@ function BandHeader({
           className="inline-block h-3 w-3 shrink-0 rounded-full"
           style={{ backgroundColor: band.color }}
         />
-        <StatModuleTitle className="text-xl sm:text-2xl">
+        <StatModuleTitle className="text-head font-bold">
           {band.label}
         </StatModuleTitle>
       </div>
-      <span className="pl-7 text-[15px] font-medium text-slate-500 dark:text-slate-400">
+      <span className="pl-7 text-body text-slate-500 dark:text-slate-400">
         {band.districts.length}{" "}
         {band.districts.length === 1
           ? "kvart"
@@ -196,14 +196,14 @@ function MethodologyItem({
   const colorHex = colorHexes[color] ?? "#94a3b8"
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <span className="flex items-center gap-2 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <span className="flex items-center gap-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         <span
           className="inline-block h-2 w-2 rounded-full"
           style={{ backgroundColor: colorHex }}
         />
         {title}
       </span>
-      <p className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <p className="text-body text-slate-700 dark:text-slate-300">
         {children}
       </p>
     </div>
@@ -217,7 +217,7 @@ function MethodologyFooter({
 }) {
   return (
     <div className="mt-12 flex flex-col gap-6 border-t border-slate-100 pt-10 dark:border-white/10">
-      <p className="font-sans text-[13px] tracking-wide text-slate-500 dark:text-slate-400">
+      <p className="font-mono text-label text-slate-500 dark:text-slate-400">
         Zadnji izračun proveden:{" "}
         <span className="font-medium text-slate-900 dark:text-slate-100">
           {base.generatedLabel}
@@ -234,7 +234,7 @@ function MethodologyDownload() {
       <a
         href="/api/open-data"
         download="doseg-district-scores.json"
-        className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-[13px] font-medium text-white transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+        className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-body text-white transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
       >
         <svg
           aria-hidden="true"
@@ -253,7 +253,7 @@ function MethodologyDownload() {
         </svg>
         Preuzmi podatke (JSON)
       </a>
-      <span className="max-w-xs sm:max-w-md text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <span className="max-w-xs sm:max-w-md text-body text-slate-500 dark:text-slate-400">
         Svi izračunati podaci po kvartovima - rezultati, populacija, pustinjski
         indeks, BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu.
         Slobodno za korištenje uz navođenje izvora.

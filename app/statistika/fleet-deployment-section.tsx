@@ -45,7 +45,7 @@ export default function FleetDeploymentSection() {
         Pokrivenost flote u stvarnom vremenu
       </StatModuleTitle>
       <div className="flex flex-col gap-12">
-        <StatProse className="flex-1 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-body text-slate-700 dark:text-slate-300">
           <p>
             Koliko planiranih polazaka trenutačno šalje podatke o poziciji
             vozila? Nizak postotak znači da ZET ne prati sve linije u stvarnom
@@ -55,7 +55,7 @@ export default function FleetDeploymentSection() {
         </StatProse>
         <div className="w-full">
           {error && !data && (
-            <p className="text-[13px] text-slate-500 dark:text-slate-400">
+            <p className="text-body text-slate-500 dark:text-slate-400">
               Podaci nisu dostupni
             </p>
           )}
@@ -110,15 +110,15 @@ function SummaryRow({
     <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
       <div>
         <span
-          className={`font-sans text-[48px] leading-none font-medium tracking-tight tabular-nums ${pctColor(data.totalDeploymentPct)}`}
+          className={`font-sans text-head font-bold tabular-nums ${pctColor(data.totalDeploymentPct)}`}
         >
           {Math.round(data.totalDeploymentPct)}%
         </span>
       </div>
-      <div className="text-[15px] text-slate-500 dark:text-slate-400">
+      <div className="text-body text-slate-500 dark:text-slate-400">
         ukupno pokriveno ({data.totalActive} / {data.totalScheduled} polazaka)
       </div>
-      <div className="mt-2 flex gap-6 text-[13px] text-slate-600 dark:text-slate-400">
+      <div className="mt-2 flex gap-6 text-body text-slate-600 dark:text-slate-400">
         <span className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
           <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -144,7 +144,7 @@ function ActiveRoutesTable({ routes }: { routes: FleetRouteDeployment[] }) {
   const sorted = routes.toSorted((a, b) => b.deploymentPct - a.deploymentPct)
   return (
     <div className="mt-8 border-t border-slate-100 pt-6 dark:border-white/5">
-      <div className="mb-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-4 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Linije s RT signalom
       </div>
       <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -159,7 +159,7 @@ function ActiveRoutesTable({ routes }: { routes: FleetRouteDeployment[] }) {
 function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
   return (
     <div className="flex items-center gap-2 py-1">
-      <span className="w-10 shrink-0 text-right font-mono text-[13px] font-medium text-slate-800 tabular-nums dark:text-slate-200">
+      <span className="w-10 shrink-0 text-right font-mono text-label text-slate-800 tabular-nums dark:text-slate-200">
         {r.routeId}
       </span>
       <div className="h-1.5 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
@@ -169,7 +169,7 @@ function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
         />
       </div>
       <span
-        className={`w-12 text-right font-mono text-[11px] font-medium tabular-nums ${pctColor(r.deploymentPct)}`}
+        className={`w-12 text-right font-mono text-label tabular-nums ${pctColor(r.deploymentPct)}`}
       >
         {r.activeTrips}/{r.scheduledTrips}
       </span>
@@ -182,14 +182,14 @@ function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
 function SilentRoutesList({ routes }: { routes: FleetRouteDeployment[] }) {
   return (
     <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
-      <div className="mb-2 text-[11px] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">
+      <div className="mb-2 font-mono text-label font-bold text-slate-400 dark:text-slate-500">
         Bez RT signala ({routes.length} {plural(routes.length, "linija", "linije", "linija")})
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.map((r) => (
           <span
             key={r.routeId}
-            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-label text-slate-400 dark:bg-slate-800 dark:text-slate-500"
           >
             {r.routeId}
           </span>

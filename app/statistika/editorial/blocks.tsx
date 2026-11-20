@@ -151,7 +151,7 @@ export function PillLink({
   children: ReactNode
   muted?: boolean
 }) {
-  const base = "px-3.5 py-1.5 font-mono text-[16px] leading-5 transition-colors"
+  const base = "px-3.5 py-1.5 font-mono text-body leading-5 transition-colors"
   if (href && !muted) {
     return (
       <Link
@@ -186,7 +186,7 @@ export function PrevNext({
   next?: PagerLink | null
 }) {
   const value =
-    "flex items-center gap-1 font-mono text-[16px] leading-6 text-zg-blue transition-colors group-hover:text-navy"
+    "flex items-center gap-1 font-mono text-body leading-6 text-zg-blue transition-colors group-hover:text-navy"
   return (
     <nav className="flex items-start justify-between">
       {prev ? (

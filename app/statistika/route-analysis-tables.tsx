@@ -3,6 +3,7 @@
 import { useId, useState } from "react"
 import type { RouteStatsRoute as RouteInfo } from "@/lib/generated"
 import { fmtHR } from "@/lib/format"
+import { plural } from "@/app/linije/copy"
 
 const INITIAL_VISIBLE = 5
 
@@ -81,7 +82,7 @@ function ExpandableRouteTable({
           {title}
         </h3>
         <span className="font-sans text-[13px] tabular-nums text-slate-400 dark:text-slate-500">
-          {routes.length} linija
+          {routes.length} {plural(routes.length, "linija", "linije", "linija")}
         </span>
       </div>
       <div className="overflow-x-auto">

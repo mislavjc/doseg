@@ -14,6 +14,7 @@ import {
   type TramLine,
 } from "@/lib/zagreb-tram-network"
 import { LineBadges } from "./line-badges"
+import { plural } from "@/app/linije/copy"
 
 const INTERCHANGE_R = 7
 const STOP_R = 3.5
@@ -285,7 +286,7 @@ function StationInfoPanel({ stop, onClose, onToggleLine }: { stop: StopInfo; onC
           <div>
             <h3 className="text-base font-semibold text-slate-800">{stop.name}</h3>
             <p className="mt-0.5 text-xs text-slate-500">
-              {stop.interchange ? "Presjedanje" : "Stajalište"} &middot; {lineCount} {lineCount === 1 ? "linija" : lineCount < 5 ? "linije" : "linija"}
+              {stop.interchange ? "Presjedanje" : "Stajalište"} &middot; {lineCount} {plural(lineCount, "linija", "linije", "linija")}
             </p>
           </div>
           <button onClick={onClose} className="mt-0.5 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600" aria-label="Zatvori">

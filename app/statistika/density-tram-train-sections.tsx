@@ -7,6 +7,7 @@ import { fmtHR } from "@/lib/format"
 import { SectionIcon } from "./stat-shared"
 import { CollapsibleContent } from "./stat-expandable"
 import { StatModuleTitle } from "./stat-typography"
+import { plural } from "@/app/linije/copy"
 
 type ScatterData = ReturnType<typeof computeScatterData>
 type FreqInsights = ReturnType<typeof computeFrequencyInsights>
@@ -515,7 +516,7 @@ export function TramSection({
       </div>
       <div>
         <div className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-          {freq.tramlessDistricts.length} kvartova bez tramvaja
+          {freq.tramlessDistricts.length} {plural(freq.tramlessDistricts.length, "kvart", "kvarta", "kvartova")} bez tramvaja
         </div>
         <TramlessScores districts={freq.tramlessDistricts} />
       </div>

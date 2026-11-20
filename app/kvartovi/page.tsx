@@ -13,6 +13,7 @@ import {
 } from "@/app/statistika/editorial/primitives"
 import { type KvartBoardRow, loadKvartBoard } from "@/lib/kvart-data"
 import { scoreColor } from "@/lib/score-color"
+import { plural } from "@/app/linije/copy"
 
 export const metadata: Metadata = {
   title: "Zagrebački kvartovi po povezanosti javnog prijevoza | Doseg",
@@ -42,7 +43,7 @@ function Row({ r }: { r: KvartBoardRow }) {
           <span style={{ width: `${r.score}%`, backgroundColor: scoreColor(r.score) }} />
         </span>
         <span className="hidden w-[68px] shrink-0 text-right font-mono text-label text-ink-muted sm:inline">
-          {r.lineCount} linija
+          {r.lineCount} {plural(r.lineCount, "linija", "linije", "linija")}
         </span>
         <span className="w-8 shrink-0 text-right font-mono text-body text-ink">
           {r.score}

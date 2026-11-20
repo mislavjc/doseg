@@ -6,6 +6,7 @@ import {
   pointInMultiPolygon,
   type Ring,
 } from "@/lib/geo"
+import { plural } from "@/app/linije/copy"
 
 export type LatLon = { lat: number; lon: number }
 
@@ -91,7 +92,7 @@ export function deShout(name: string): string {
 /** "1 presjedanje" / "2 presjedanja" / "bez presjedanja". */
 export function transfersLabel(n: number): string {
   if (n <= 0) return "bez presjedanja"
-  return `${n} ${n === 1 ? "presjedanje" : "presjedanja"}`
+  return `${n} ${plural(n, "presjedanje", "presjedanja", "presjedanja")}`
 }
 
 // One formatter instance — Intl.DateTimeFormat is expensive to construct and

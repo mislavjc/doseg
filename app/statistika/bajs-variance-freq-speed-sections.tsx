@@ -6,6 +6,7 @@ import { ZagrebBajsBlockMap } from "@/components/zagreb-block-map"
 import { RankingList } from "./stat-shared"
 import { StatModuleTitle } from "./stat-typography"
 import { CollapsibleContent } from "./stat-expandable"
+import { plural } from "@/app/linije/copy"
 
 type BajsInsights = ReturnType<typeof computeBajsInsights>
 type VarianceInsightsData = ReturnType<typeof computeVarianceInsights>
@@ -779,7 +780,7 @@ function LineSpeedCards({
           label="Tramvaj"
           speed={TRAM_SPEED_KMH}
           color="rose"
-          note={`${lineSpeed.tramLineCount} linija, prosj. ${lineSpeed.avgTramCoverage} ${lineSpeed.avgTramCoverage === 1 ? "kvart" : lineSpeed.avgTramCoverage < 5 ? "kvarta" : "kvartova"} po liniji`}
+          note={`${lineSpeed.tramLineCount} ${plural(lineSpeed.tramLineCount, "linija", "linije", "linija")}, prosj. ${lineSpeed.avgTramCoverage} ${plural(lineSpeed.avgTramCoverage, "kvart", "kvarta", "kvartova")} po liniji`}
           pct={(TRAM_SPEED_KMH / TRAIN_SPEED_KMH) * 100}
         />
         <SpeedModeRow
@@ -787,7 +788,7 @@ function LineSpeedCards({
           label="Autobus"
           speed={BUS_SPEED_KMH}
           color="blue"
-          note={`${lineSpeed.busLineCount} linija, prosj. ${lineSpeed.avgBusCoverage} ${lineSpeed.avgBusCoverage === 1 ? "kvart" : lineSpeed.avgBusCoverage < 5 ? "kvarta" : "kvartova"} po liniji`}
+          note={`${lineSpeed.busLineCount} ${plural(lineSpeed.busLineCount, "linija", "linije", "linija")}, prosj. ${lineSpeed.avgBusCoverage} ${plural(lineSpeed.avgBusCoverage, "kvart", "kvarta", "kvartova")} po liniji`}
           pct={(BUS_SPEED_KMH / TRAIN_SPEED_KMH) * 100}
         />
         {lineSpeed.trainLineCount > 0 && (
@@ -796,7 +797,7 @@ function LineSpeedCards({
             label="HŽ vlak"
             speed={TRAIN_SPEED_KMH}
             color="teal"
-            note={`${lineSpeed.trainLineCount} linija - ali doprinos dosegu 0% zbog rijetkog intervala`}
+            note={`${lineSpeed.trainLineCount} ${plural(lineSpeed.trainLineCount, "linija", "linije", "linija")} - ali doprinos dosegu 0% zbog rijetkog intervala`}
             pct={100}
           />
         )}

@@ -2,6 +2,7 @@ import type { District as DistrictScore, DistrictScoresOutput as ScoreData } fro
 import type { DistrictEmblems, computeBaseInsights, computeBajsInsights, computeBands } from "./stat-data"
 import { StatModuleTitle } from "./stat-typography"
 import { DistrictCard } from "./district-card"
+import { plural } from "@/app/linije/copy"
 
 type BaseInsights = ReturnType<typeof computeBaseInsights>
 type BajsInsights = ReturnType<typeof computeBajsInsights>
@@ -156,7 +157,7 @@ function MethodologyGridItems({
       <MethodologyItem color="purple" title="Vozni red">
         Prosjek od{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {data.departureCount} polazaka
+          {data.departureCount} {plural(data.departureCount, "polazak", "polaska", "polazaka")}
         </strong>{" "}
         u prozoru{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">

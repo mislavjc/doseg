@@ -21,6 +21,7 @@ import {
   StatModuleTitle,
 } from "./stat-typography"
 import { CollapsibleContent } from "./stat-expandable"
+import { plural } from "@/app/linije/copy"
 
 function fmtDots(n: number): string {
   return Math.round(n)
@@ -395,11 +396,11 @@ function HeatmapInsight({
           <>
             {" "}
             Najfrekventnija linija {insights.busiestTram.name} ima{" "}
-            {insights.busiestPeakDep} polazaka u vršnom satu - tramvaj svakih{" "}
+            {insights.busiestPeakDep} {plural(insights.busiestPeakDep, "polazak", "polaska", "polazaka")} u vršnom satu - tramvaj svakih{" "}
             <strong>{fmtHR(insights.busiestInterval, 1)} minuta</strong>.
           </>
         )}{" "}
-        Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} polazaka -
+        Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} {plural(insights.nightTotal, "polazak", "polaska", "polazaka")} -
         tek{" "}
         {fmtHR(
           (insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100,
@@ -1107,7 +1108,7 @@ function PastMidnightCard({ routes }: { routes: string[] }) {
         Usluga nakon ponoći
       </div>
       <div className="mb-3 text-[13px] text-slate-500 dark:text-slate-400">
-        {routes.length} linija čija usluga prelazi ponoć
+        {routes.length} {plural(routes.length, "linija", "linije", "linija")} čija usluga prelazi ponoć
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 30).map((route) => (
@@ -1135,7 +1136,7 @@ function EndingBefore23Card({ routes }: { routes: string[] }) {
         Gašenje prije 23h
       </div>
       <div className="mb-3 text-[13px] text-slate-500 dark:text-slate-400">
-        {routes.length} linija završava radni dan do 23:00
+        {routes.length} {plural(routes.length, "linija završava", "linije završavaju", "linija završava")} radni dan do 23:00
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 20).map((route) => (
@@ -1188,7 +1189,7 @@ function ServiceSpanInsight({ span }: { span: ServiceSpan }) {
       {nightGap.routesEndingBefore23.length > 0 && (
         <>
           {" "}
-          Čak {nightGap.routesEndingBefore23.length} linija završava uslugu
+          Čak {nightGap.routesEndingBefore23.length} {plural(nightGap.routesEndingBefore23.length, "linija završava", "linije završavaju", "linija završava")} uslugu
           prije 23:00.
         </>
       )}{" "}

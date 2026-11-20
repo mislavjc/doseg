@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { StatModuleTitle, StatProse } from "./stat-typography"
+import { plural } from "@/app/linije/copy"
 
 interface FleetRouteDeployment {
   routeId: string
@@ -182,7 +183,7 @@ function SilentRoutesList({ routes }: { routes: FleetRouteDeployment[] }) {
   return (
     <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
       <div className="mb-2 text-[11px] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">
-        Bez RT signala ({routes.length} linija)
+        Bez RT signala ({routes.length} {plural(routes.length, "linija", "linije", "linija")})
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.map((r) => (

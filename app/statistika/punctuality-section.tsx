@@ -12,6 +12,7 @@ import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { BarRounded } from "@visx/shape"
 import { GridRows } from "@visx/grid"
+import { plural } from "@/app/linije/copy"
 
 // --- Types ---
 
@@ -500,7 +501,7 @@ function DelayChartBody({
           y={(yScale(Math.max(0, hovered.avgDelay)) ?? 0) - 10} 
           title={fmtTooltipTime(hovered.ts, timeRange)} 
           value={fmtDelayDetailed(hovered.avgDelay)} 
-          subtitle={`${hovered.tripCount} polazaka`}
+          subtitle={`${hovered.tripCount} ${plural(hovered.tripCount, "polazak", "polaska", "polazaka")}`}
           color={hovered.avgDelay < 180 ? "#10b981" : "#f59e0b"}
         />
       )}

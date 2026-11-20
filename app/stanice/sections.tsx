@@ -213,7 +213,7 @@ export function IstoimeneStanice({
   if (siblings.length === 0) return null
   const n = siblings.length
   const count = `${numberWordF(n)} ${plural(n, "stanica", "stanice", "stanica")}`
-  const verb = n === 1 ? "Postoji" : "Postoje"
+  const verb = plural(n, "Postoji", "Postoje", "Postoji")
   return (
     <div>
       <SectionHeader eyebrow="istoimene stanice" hook={`${verb} još ${count} imena ${name}.`}>

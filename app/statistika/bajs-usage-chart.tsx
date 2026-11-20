@@ -8,6 +8,7 @@ import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { BarRounded } from "@visx/shape"
 import { GridRows } from "@visx/grid"
+import { plural } from "@/app/linije/copy"
 
 // --- Types ---
 
@@ -250,7 +251,7 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
               x={xScale(new Date(hovered.ts * 1000)) ?? 0} 
               y={(yScale(hovered.bikesInUse) ?? 0) - 10} 
               title={fmtTime(hovered.ts)} 
-              value={`${hovered.bikesInUse} bicikala`} 
+              value={`${hovered.bikesInUse} ${plural(hovered.bikesInUse, "bicikl", "bicikla", "bicikala")}`} 
               subtitle={`${hovered.available} dostupno na stanicama`} 
               color={hovered.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"}
             />

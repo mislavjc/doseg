@@ -268,7 +268,7 @@ export function IzvanSpice({ data }: { data: KvartData }) {
         Ocjena gore mjeri jutarnju špicu. Ovako kvart vozi ostatak vremena.
       </SectionHeader>
       <div className="flex flex-col gap-3">
-        <MonoLabel className="text-[12px]">doseg u odnosu na špicu</MonoLabel>
+        <MonoLabel>doseg u odnosu na špicu</MonoLabel>
         {bars.map(([label, pct]) => (
           <div key={label} className="flex items-center gap-3.5">
             <span className="w-[84px] shrink-0 font-heros text-body text-ink">{label}</span>
@@ -278,7 +278,7 @@ export function IzvanSpice({ data }: { data: KvartData }) {
             <span className="w-9 shrink-0 text-right font-mono text-body text-ink">{pct}</span>
           </div>
         ))}
-        <MonoLabel className="mt-1 text-[12px]">
+        <MonoLabel className="mt-1">
           interval: radnim danom ~{data.weekdayHeadwayMin} min
           {data.weekendHeadwayMin == null ? "" : `, vikendom ~${data.weekendHeadwayMin} min`}
           {data.nightLines.length > 0
@@ -322,7 +322,7 @@ export function Linije({ data }: { data: KvartData }) {
           />
         ))}
       </div>
-      <MonoLabel className="mt-2.5 block text-[12px]">
+      <MonoLabel className="mt-2.5 block">
         ispunjeno plavo: tramvaj · obrub: autobus
       </MonoLabel>
     </>
@@ -363,7 +363,7 @@ export function OvisiOAdresi({ data }: { data: KvartData }) {
       <SectionHeader eyebrow="ovisi o adresi" hook="Nije svuda jednako.">
         Kvart nije ujednačen: uz prugu dosegneš puno, na rubu znatno manje.
       </SectionHeader>
-      <MonoLabel className="block text-[12px]">
+      <MonoLabel className="block">
         dostupnih dijelova grada (mrežnih ćelija) za 30 min, ovisno o adresi
       </MonoLabel>
       <div className="relative mt-1.5 h-16 w-full">
@@ -386,7 +386,7 @@ export function OvisiOAdresi({ data }: { data: KvartData }) {
           {max.toLocaleString("hr")}
         </span>
       </div>
-      <MonoLabel className="block text-[12px]">
+      <MonoLabel className="block">
         rub kvarta → uz prugu · do najbliže stanice prosječno {data.avgNearestStopM} m · {data.desertPct}% pustinja
       </MonoLabel>
     </>

@@ -46,7 +46,7 @@ export default function InsightsSection({
       {hasGaps && (
         <>
           <div className="mb-8">
-            <StatModuleTitle className="text-lg sm:text-xl">
+            <StatModuleTitle className="text-body">
               Ključni nalazi
             </StatModuleTitle>
           </div>
@@ -266,7 +266,7 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
     <div className="flex h-full min-h-[180px] flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-4 sm:min-h-[200px] sm:p-6 dark:bg-[#1a1a1a]">
       <div className="flex items-center gap-3">
         <span
-          className={`inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
+          className={`inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 font-mono text-label ${
             isCritical
               ? "border-red-200 text-red-600 dark:border-red-900/50 dark:text-red-400"
               : "border-slate-200 text-slate-500 dark:border-white/10 dark:text-slate-400"
@@ -274,11 +274,11 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
         >
           {isCritical ? "Kritično" : "Upozorenje"}
         </span>
-        <span className="text-[13px] text-slate-500 dark:text-slate-400">
+        <span className="text-body text-slate-500 dark:text-slate-400">
           Nalaz {index < 10 ? `0${index}` : index}
         </span>
       </div>
-      <div className="mt-1 flex flex-col gap-1.5 text-[15px] leading-relaxed text-slate-900 dark:text-slate-100">
+      <div className="mt-1 flex flex-col gap-1.5 text-body text-slate-900 dark:text-slate-100">
         <span className="font-medium">{gap.issue}</span>
         <span className="text-slate-600 dark:text-slate-400">{gap.impact}</span>
       </div>
@@ -314,7 +314,7 @@ function OperationalHealth() {
 
   return (
     <div className="mt-12">
-      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Operativni problemi (zadnjih 24h)
       </div>
       <HealthTable routes={unreliable.slice(0, 8)} />
@@ -357,9 +357,9 @@ function labelText(label: string): string {
 function HealthTable({ routes }: { routes: RouteHealth[] }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[13px]">
+      <table className="w-full text-body">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-[11px] font-bold tracking-wider text-slate-500 uppercase dark:border-white/10 dark:text-slate-400">
+          <tr className="border-b border-slate-200 text-left font-mono text-label font-bold text-slate-500 dark:border-white/10 dark:text-slate-400">
             <th className="py-2 pr-3">Linija</th>
             <th className="py-2 pr-3">Stanje</th>
             <th className="py-2 pr-2 sm:pr-6 text-right">Na vrijeme</th>
@@ -389,13 +389,13 @@ function HealthRow({ route: r }: { route: RouteHealth }) {
         <span className="font-mono font-medium text-slate-900 dark:text-slate-100">
           {r.routeId}
         </span>
-        <span className="ml-2 text-[11px] text-slate-400">
+        <span className="ml-2 font-mono text-label text-slate-400">
           {modeLabel(r.mode)}
         </span>
       </td>
       <td className="py-2.5 pr-3">
         <span
-          className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${labelColor(r.label)}`}
+          className={`inline-block rounded-full px-2 py-0.5 font-mono text-label ${labelColor(r.label)}`}
         >
           {labelText(r.label)}
         </span>
@@ -431,7 +431,7 @@ function SeverityBar({ score }: { score: number }) {
           : "bg-emerald-500"
   return (
     <div className="flex items-center justify-end gap-2">
-      <span className="font-mono text-[13px] text-slate-500 tabular-nums dark:text-slate-400">
+      <span className="font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
         {Math.round(score)}
       </span>
       <div className="h-2 w-12 sm:w-16 rounded-full bg-slate-100 dark:bg-slate-800">

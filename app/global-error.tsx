@@ -54,7 +54,7 @@ export default function GlobalError({
           <RouteBreak />
           <button
             onClick={reset}
-            className="font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+            className="font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
           >
             pokušaj ponovno →
           </button>

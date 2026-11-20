@@ -53,7 +53,7 @@ function LineGroup({
       </ul>
       {rest.length > 0 && (
         <details className="group/det">
-          <summary className="cursor-pointer list-none pt-4 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy [&::-webkit-details-marker]:hidden">
+          <summary className="cursor-pointer list-none pt-4 font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy [&::-webkit-details-marker]:hidden">
             <span className="inline-flex items-center gap-1 group-open/det:hidden">
               {moreLabel}
               <IconArrowRight size={16} className="shrink-0" />

@@ -45,7 +45,7 @@ function TransitDesertHeader() {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Prometne pustinje</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
           Područja gdje je najbliža stanica udaljena više od 500 metara zračne
           linije (realna pješačka udaljenost je 20-40% veća) ili gdje prijevoz
           dolazi rjeđe od 2 puta na sat.
@@ -65,14 +65,14 @@ function DesertRanking({
   return (
     <div>
       <div className="mb-4 flex items-baseline justify-between">
-        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           Daleko od stanice (&gt;500m)
         </h3>
-        <span className="font-sans text-[15px] tracking-tight text-slate-500 dark:text-slate-400">
+        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
           {data.cityDesertPct}% grada
         </span>
       </div>
-      <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-body text-slate-500 dark:text-slate-400">
         Udio uzorkovanih točaka u svakom kvartu udaljenijih više od 500m od
         najbliže stanice javnog prijevoza.
       </p>
@@ -100,7 +100,7 @@ function DesertInterpretation({
 }) {
   return (
     <div>
-      <h3 className="font-sans text-[28px] tracking-tight text-rose-800 dark:text-rose-400">
+      <h3 className="font-sans text-head font-bold text-rose-800 dark:text-rose-400">
         Koliko je to loše?
       </h3>
       <DesertStatCards data={data} desert={desert} />
@@ -119,19 +119,19 @@ function DesertStatCards({
   return (
     <div className="my-8 flex flex-col gap-8 border-y border-slate-100 py-6 sm:flex-row sm:gap-12 dark:border-white/10">
       <div className="flex flex-col border-l-2 border-rose-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {data.cityDesertPct}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           uzorkovanih točaka grada
           <br className="hidden sm:block" /> je &gt;500m od stanice
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-rose-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {desert.desertDistricts.length}
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           od {data.districts.length} kvartova ima barem
           <br className="hidden sm:block" /> jednu pustinjsku zonu
         </div>
@@ -146,7 +146,7 @@ function DesertInterpretationText({
   desert: DesertInsights
 }) {
   return (
-    <div className="space-y-6 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="space-y-6 text-body text-slate-700 dark:text-slate-300">
       <p>
         Najveća prometna pustinja je{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -206,7 +206,7 @@ function StopDistanceHeader() {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Udaljenost do najbližeg stajališta</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
           Prosječna udaljenost pješačenja do najbliže stanice javnog prijevoza.
           Urbanistički standard od{" "}
           <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -227,7 +227,7 @@ function StopDistanceChart({
 }) {
   return (
     <div>
-      <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Prosječna udaljenost po kvartu (m)
       </h3>
       <div className="flex flex-col gap-2">
@@ -267,10 +267,10 @@ function StopDistanceBar({
           : "bg-red-500"
   return (
     <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-mono text-[11px] text-slate-400 dark:text-slate-500">
+      <span className="w-5 shrink-0 text-right font-mono text-label text-slate-400 dark:text-slate-500">
         {i + 1}
       </span>
-      <span className="w-20 sm:w-[7.5rem] shrink-0 truncate text-[13px] text-slate-700 dark:text-slate-300">
+      <span className="w-20 sm:w-[7.5rem] shrink-0 truncate text-body text-slate-700 dark:text-slate-300">
         {d.name}
       </span>
       <div className="relative h-5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800">
@@ -284,7 +284,7 @@ function StopDistanceBar({
           title="400m"
         />
       </div>
-      <span className="w-12 shrink-0 text-right font-mono text-[13px] font-medium text-slate-900 tabular-nums dark:text-slate-100">
+      <span className="w-12 shrink-0 text-right font-mono text-label text-slate-900 tabular-nums dark:text-slate-100">
         {Math.round(meters)}m
       </span>
     </div>
@@ -293,7 +293,7 @@ function StopDistanceBar({
 
 function StopDistanceLegend() {
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-label text-slate-500 dark:text-slate-400">
       <span className="flex items-center gap-1">
         <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
         &lt;200m
@@ -345,24 +345,24 @@ function StopDistStatCards({
   return (
     <div className="flex flex-col gap-8 sm:flex-row">
       <div className="flex flex-col border-l-2 border-emerald-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           ~{Math.round(first?.avgNearestStopM ?? 0)}m
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           {first?.name}
         </div>
-        <div className="mt-1 text-[13px] text-slate-400">
+        <div className="mt-1 text-body text-slate-400">
           najbliže stanice u prosjeku
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-rose-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           ~{Math.round(last?.avgNearestStopM ?? 0)}m
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           {last?.name}
         </div>
-        <div className="mt-1 text-[13px] text-slate-400">
+        <div className="mt-1 text-body text-slate-400">
           najudaljenije stanice u prosjeku
         </div>
       </div>
@@ -380,7 +380,7 @@ function StopDistInterpretationText({
   last: DistrictScore
 }) {
   return (
-    <div className="space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
       <p>
         Stanovnici{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -450,7 +450,7 @@ function PeakOffPeakHeader({ departureTime }: { departureTime: string }) {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Jutro vs. večer</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
           Koliko dostupnosti svaki kvart gubi navečer (21:00) u usporedbi s
           jutarnjim vršnim satom ({departureTime}). Ista mreža, manji broj
           polazaka.
@@ -470,17 +470,17 @@ function PeakOffPeakRanking({
   return (
     <div>
       <div className="mb-4 flex items-baseline justify-between">
-        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           Najveći pad navečer
         </h3>
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-0.5 font-sans text-[13px] text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-0.5 font-sans text-body text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400">
           <span className="font-semibold tracking-tight tabular-nums">
             -{evening.cityEveningDrop}%
           </span>
           <span className="font-normal opacity-70">prosjek</span>
         </div>
       </div>
-      <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-body text-slate-500 dark:text-slate-400">
         Postotak smanjenja dosežnih ćelija u 30 minuta navečer u usporedbi s
         jutarnjim vršnim satom.
       </p>
@@ -511,7 +511,7 @@ function PeakOffPeakInterpretation({
   return (
     <div className="flex min-w-0 flex-col gap-8">
       <PeakOffPeakStatCards evening={evening} />
-      <div className="min-w-0 space-y-4 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <div className="min-w-0 space-y-4 text-body text-slate-700 dark:text-slate-300">
         <p>
           Gradski prosjek pada za{" "}
           <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -534,19 +534,19 @@ function PeakOffPeakStatCards({
   return (
     <div className="flex min-w-0 flex-col gap-8 sm:flex-row">
       <div className="flex min-w-0 flex-col border-l-2 border-indigo-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           -{evening.cityEveningDrop}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           prosječni pad dosega
           <br className="hidden sm:block" /> u cijelom gradu
         </div>
       </div>
       <div className="flex min-w-0 flex-col border-l-2 border-indigo-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           -{evening.eveningRankedByDrop[0]?.peakOffpeakDrop ?? 0}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           najgori pad
           <br className="hidden sm:block" /> ({evening.eveningRankedByDrop[0]?.name ?? "-"})
         </div>
@@ -587,7 +587,7 @@ function WeekendHeader({ cityWeekendChange }: { cityWeekendChange: number }) {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Radni dan vs. subota</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
           Usporedba rezultata dostupnosti radnim danom i subotom.
           {cityWeekendChange > 0
             ? " Iznenađujuće, subotom je povezanost u prosjeku bolja. OTP model koristi subotnja vremena vožnje koja su kraća zbog manjeg prometa, što više nego kompenzira rjeđi vozni red."
@@ -607,10 +607,10 @@ function WeekendBarChart({
   return (
     <div>
       <div className="mb-4 flex items-baseline justify-between">
-        <h3 className="font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           Promjena rezultata subotom
         </h3>
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-0.5 font-sans text-[13px] text-violet-700 dark:bg-violet-500/10 dark:text-violet-400">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-0.5 font-sans text-body text-violet-700 dark:bg-violet-500/10 dark:text-violet-400">
           <span className="font-semibold tracking-tight tabular-nums">
             {weekend.cityWeekendChange > 0 ? "+" : ""}
             {fmtHR(weekend.cityWeekendChange, 1)}%
@@ -618,7 +618,7 @@ function WeekendBarChart({
           <span className="font-normal opacity-70">prosjek</span>
         </div>
       </div>
-      <p className="mb-6 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-body text-slate-500 dark:text-slate-400">
         Postotak promjene rezultata subotom u usporedbi s radnim danom.
       </p>
       <div className="flex flex-col gap-2">
@@ -660,15 +660,15 @@ function WeekendBarRow({
     <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
       <div className="mb-2 flex items-baseline justify-between gap-2">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500">
+          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
             {(i + 1).toString().padStart(2, "0")}
           </span>
-          <span className="text-[15px] font-medium text-slate-700 dark:text-slate-300">
+          <span className="text-body text-slate-700 dark:text-slate-300">
             {p.name}
           </span>
         </div>
         <span
-          className={`shrink-0 font-sans text-[15px] font-medium tracking-tight tabular-nums ${isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}
+          className={`shrink-0 font-sans text-body tabular-nums ${isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}
         >
           {p.change > 0 ? "+" : ""}
           {fmtHR(p.change, 1)}%
@@ -683,7 +683,7 @@ function WeekendBarRow({
             style={{ width: `${barPct}%` }}
           />
         </div>
-        <div className="mt-2 text-[13px] text-slate-500 tabular-nums dark:text-slate-400">
+        <div className="mt-2 font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
           Radni dan: {p.weekdayScore} &rarr; Subota: {p.weekendScore}
         </div>
       </div>
@@ -700,7 +700,7 @@ function WeekendInterpretation({
   return (
     <div className="flex flex-col gap-8">
       <WeekendStatCards weekend={weekend} />
-      <div className="space-y-6 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+      <div className="space-y-6 text-body text-slate-700 dark:text-slate-300">
         {weekend.cityWeekendChange > 0 ? (
           <WeekendPositiveText
             weekendComparison={weekend.weekendComparison}
@@ -726,21 +726,21 @@ function WeekendStatCards({
   return (
     <div className="flex flex-col gap-8 sm:flex-row">
       <div className="flex flex-col border-l-2 border-violet-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {weekend.cityWeekendChange > 0 ? "+" : ""}
           {fmtHR(weekend.cityWeekendChange, 1)}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           pop. ponderirana
           <br className="hidden sm:block" /> prosječna promjena
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-violet-500 py-1 pl-4">
-        <div className="font-sans text-[28px] leading-none tracking-tight text-slate-900 tabular-nums sm:text-[32px] dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {weekend.weekendComparison[0]?.change > 0 ? "+" : ""}
           {fmtHR(weekend.weekendComparison[0]?.change ?? 0, 1)}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           najveća promjena
           <br className="hidden sm:block" /> ({weekend.weekendComparison[0]?.name ?? "-"})
         </div>

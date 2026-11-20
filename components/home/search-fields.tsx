@@ -305,7 +305,7 @@ function SearchRow({
         placeholder={placeholder}
         aria-label={kind === "origin" ? "Polazište" : "Odredište"}
         title={value || undefined}
-        className="w-full bg-transparent font-heros text-[16px] leading-5 text-ink outline-none placeholder:text-ink-muted"
+        className="w-full bg-transparent font-heros text-body leading-5 text-ink outline-none placeholder:text-ink-muted"
       />
       {showClear ? (
         <button

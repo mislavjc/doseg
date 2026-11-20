@@ -9,6 +9,7 @@ import { renderOgCard } from "./card"
 import { renderHomeOgCard } from "./home-card"
 import { renderLineOgCard } from "./line-card"
 import { renderStopOgCard } from "./stop-card"
+import { plural } from "@/app/linije/copy"
 
 type DistrictFeature = {
   type: "Feature"
@@ -198,7 +199,7 @@ export async function GET(request: Request) {
     // No baked hero — generic text card.
     return renderOgCard({
       headline: `Stanica ${stop.name}`,
-      sub: `${stop.lineCount} ${stop.lineCount === 1 ? "linija" : "linije"} · doseg javnim prijevozom`,
+      sub: `${stop.lineCount} ${plural(stop.lineCount, "linija", "linije", "linija")} · doseg javnim prijevozom`,
     })
   }
 

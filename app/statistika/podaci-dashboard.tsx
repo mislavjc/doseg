@@ -84,9 +84,9 @@ function NoDataMessage() {
         <StatMuted>
           Nije moguće generirati podatke. Provjeri je li OTP pokrenut.
         </StatMuted>
-        <p className="mt-1 text-[13px] text-slate-600">
+        <p className="mt-1 text-body text-slate-600">
           Pokreni{" "}
-          <code className="rounded bg-white/6 px-1.5 py-0.5 text-[12px] text-slate-400">
+          <code className="rounded bg-white/6 px-1.5 py-0.5 font-mono text-label text-slate-400">
             docker compose up otp
           </code>{" "}
           pa osvježi stranicu.

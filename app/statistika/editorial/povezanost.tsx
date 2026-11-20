@@ -96,7 +96,7 @@ function BoardRow({
       style={{ backgroundColor: active ? "var(--highlight)" : scoreColor(score) }}
     >
       <span
-        className="grow font-heros text-xs leading-4 tabular-nums"
+        className="grow font-mono text-label leading-4 tabular-nums"
         style={{ color: textColor }}
       >
         {String(rank).padStart(2, "0")}
@@ -105,7 +105,7 @@ function BoardRow({
       </span>
       <Whisker spread={spread} onDark={onDark} />
       <span
-        className="w-6.5 shrink-0 text-right font-mono text-xs leading-4 tabular-nums"
+        className="w-6.5 shrink-0 text-right font-mono text-label leading-4 tabular-nums"
         style={{ color: textColor }}
       >
         {score}
@@ -126,16 +126,16 @@ function RankingBoard({
   return (
     <div className="grow">
       <div className="flex items-center gap-3 px-3.5 pt-1 pb-2">
-        <MonoLabel className="grow text-[11px] leading-[14px]">
+        <MonoLabel className="grow">
           ljestvica dosega
         </MonoLabel>
         <MonoLabel
-          className="shrink-0 text-center text-[11px] leading-[14px]"
+          className="shrink-0 text-center font-mono text-label"
           style={{ width: BAR_W }}
         >
           raspon iznutra
         </MonoLabel>
-        <MonoLabel className="w-6.5 shrink-0 text-right text-[11px] leading-[14px]">
+        <MonoLabel className="w-6.5 shrink-0 text-right">
           bod
         </MonoLabel>
       </div>
@@ -150,7 +150,7 @@ function RankingBoard({
       ))}
       <Link
         href="/kvartovi"
-        className="mt-2.5 flex items-center justify-between border-t border-hairline px-3.5 pt-2.5 font-mono text-[11px] leading-[14px] text-zg-blue transition-colors hover:text-navy"
+        className="mt-2.5 flex items-center justify-between border-t border-hairline px-3.5 pt-2.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
       >
         <span>svaki kvart po povezanosti</span>
         <IconArrowRight size={14} className="shrink-0" />
@@ -170,8 +170,8 @@ function Stats({ data }: { data: PovezanostData }) {
     <dl className="flex flex-col gap-1.5">
       {rows.map(([k, v]) => (
         <div key={k} className="flex justify-between">
-          <dt className="font-mono text-xs text-ink-faint">{k}</dt>
-          <dd className="font-mono text-xs tabular-nums text-ink-2">{v}</dd>
+          <dt className="font-mono text-label text-ink-faint">{k}</dt>
+          <dd className="font-mono text-label tabular-nums text-ink-2">{v}</dd>
         </div>
       ))}
     </dl>

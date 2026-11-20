@@ -63,15 +63,8 @@ export function SectionGroup({
       </div>
 
       <div className="relative">
-        <span
-          className="pointer-events-none absolute -top-2 right-0 select-none font-sans text-[96px] font-bold leading-none tracking-tighter text-slate-900/[0.04] sm:text-[120px] dark:text-white/[0.04]"
-          aria-hidden="true"
-        >
-          {numLabel}
-        </span>
-
         <p
-          className={`mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.15em] ${accent.eyebrowColor}`}
+          className={`mb-3 font-mono text-label font-bold ${accent.eyebrowColor}`}
         >
           {numLabel} - {eyebrow}
         </p>
@@ -263,7 +256,7 @@ export function SectionIcon({
       >
         <SectionIconSvg icon={icon} />
       </span>
-      <StatModuleTitle className="text-[22px] sm:text-[22px]">
+      <StatModuleTitle className="text-head font-bold">
         {title}
       </StatModuleTitle>
     </div>
@@ -289,16 +282,16 @@ function RankingListItem({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-sans text-[13px] tracking-tight text-slate-400 tabular-nums">
+      <span className="w-5 shrink-0 text-right font-mono text-label text-slate-400 tabular-nums">
         {i + 1}.
       </span>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between gap-2">
-          <span className="truncate text-[15px] font-medium text-slate-900 dark:text-slate-100">
+          <span className="truncate text-body text-slate-900 dark:text-slate-100">
             {d.name}
           </span>
           <span
-            className={`shrink-0 font-sans text-[15px] font-medium tracking-tight tabular-nums ${color.text}`}
+            className={`shrink-0 font-sans text-body tabular-nums ${color.text}`}
           >
             {label(d)}
           </span>
@@ -312,7 +305,7 @@ function RankingListItem({
           />
         </div>
       </div>
-      <span className="shrink-0 text-[11px] text-slate-400 tabular-nums dark:text-slate-500">
+      <span className="shrink-0 font-mono text-label text-slate-400 tabular-nums dark:text-slate-500">
         {trailing(d)}
       </span>
     </div>
@@ -363,7 +356,7 @@ export function BackLink() {
   return (
     <Link
       href="/karta"
-      className="mb-16 inline-flex items-center gap-2 text-[13px] font-medium text-[#a3a3a3] lowercase transition-colors duration-150 hover:text-[#171717]"
+      className="mb-16 inline-flex items-center gap-2 text-body text-[#a3a3a3] lowercase transition-colors duration-150 hover:text-[#171717]"
     >
       <svg
         aria-hidden="true"
@@ -402,7 +395,7 @@ export function DistrictEmblem({
           style={{ borderColor: color, backgroundColor: `${color}1a` }}
         />
       )}
-      <span className="relative z-10 inline-flex min-w-7 items-center justify-center px-2 py-1 font-sans text-[15px] tracking-tight text-slate-900 tabular-nums dark:text-white">
+      <span className="relative z-10 inline-flex min-w-7 items-center justify-center px-2 py-1 font-sans text-body text-slate-900 tabular-nums dark:text-white">
         {rank}
       </span>
     </div>

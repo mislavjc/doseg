@@ -13,6 +13,7 @@ import {
   num, dateLabel, monthLabel, expandStop, TAG, TALLY,
 } from "./lib"
 import { norm } from "@/lib/normalize"
+import { plural } from "@/app/linije/copy"
 
 // Code-split maplibre-gl out of the initial /promjene bundle; MountWhenNear
 // holds the chunk fetch until the map is 200px from the viewport (the first
@@ -378,7 +379,7 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
     .map((y) => ({ year: y.year, lineItems: showLines ? y.line : [], stopItems: showStops ? y.stop : [] }))
     .filter((s) => s.lineItems.length > 0 || s.stopItems.length > 0)
   const shown = sections.reduce((a, s) => a + s.lineItems.length + s.stopItems.length, 0)
-  const resultLabel = nq ? `${num(shown)} ${shown === 1 ? "rezultat" : "rezultata"}` : "najnovije gore"
+  const resultLabel = nq ? `${num(shown)} ${plural(shown, "rezultat", "rezultata", "rezultata")}` : "najnovije gore"
   const ledgerOpen = nq !== "" || seg === "stajalište"
   // Legend renders above the first VISIBLE before/after map.
   const legendId = sections.flatMap((s) => s.lineItems).find((it) => it.kind === "featured" && it.maps.length > 0)?.id
@@ -391,12 +392,12 @@ export function Timeline({ model, legend }: { model: TimelineModel; legend?: Rea
           <span style={{ fontFamily: HEROS, fontSize: 16, color: MUTE }}>Nema promjena koje odgovaraju pretrazi.</span>
           {seg === "linije" && qStop > 0 && (
             <button type="button" onClick={() => setSeg("stajalište")} style={{ alignSelf: "flex-start", border: "none", background: "none", padding: 0, cursor: "pointer", fontFamily: MONO, fontSize: 12, color: BLUE }}>
-              {qStop === 1 ? "1 rezultat" : `${num(qStop)} rezultata`} među stajalištima →
+              {num(qStop)} {plural(qStop, "rezultat", "rezultata", "rezultata")} među stajalištima →
             </button>
           )}
           {seg === "stajalište" && qLine > 0 && (
             <button type="button" onClick={() => setSeg("linije")} style={{ alignSelf: "flex-start", border: "none", background: "none", padding: 0, cursor: "pointer", fontFamily: MONO, fontSize: 12, color: BLUE }}>
-              {qLine === 1 ? "1 rezultat" : `${num(qLine)} rezultata`} među linijama →
+              {num(qLine)} {plural(qLine, "rezultat", "rezultata", "rezultata")} među linijama →
             </button>
           )}
         </div>

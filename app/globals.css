@@ -397,29 +397,32 @@
   border: 1px solid rgba(0, 0, 0, 0.04);
   border-radius: 20px;
   padding: 12px 16px;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 24px;
   color: #1e293b;
 }
 .district-popup .maplibregl-popup-content strong {
   color: #0f172a;
-  font-weight: 600;
+  font-weight: 700;
   display: block;
 }
 .district-popup .maplibregl-popup-content .score {
   display: block;
-  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 .district-popup .maplibregl-popup-content .detail {
   display: block;
   color: #64748b;
+  font-family: var(--font-mono), monospace;
   font-size: 12px;
+  line-height: 16px;
 }
 .district-popup .maplibregl-popup-content .pop {
   display: block;
   color: #94a3b8;
-  font-size: 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  line-height: 16px;
 }
 .district-popup .maplibregl-popup-tip {
   border-top-color: rgba(255, 255, 255, 0.95) !important;

@@ -68,7 +68,7 @@ function ErrorFooter() {
             height={25}
             className="h-[25px] w-[34px] object-contain"
           />
-          <span className="font-mono text-sm font-medium leading-tight tracking-[-0.01em]">
+          <span className="font-mono text-label">
             <span className="text-ink">doseg</span>
             <span className="text-zg-blue">.hr</span>
           </span>
@@ -115,7 +115,7 @@ const ROUTE_W = 820
 const pct = (x: number) => `${((x / ROUTE_W) * 100).toFixed(2)}%`
 
 const stopLink =
-  "font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+  "font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
 
 /**
  * 404 — the route runs through three filled stops (the recovery links), then
@@ -159,7 +159,7 @@ export function RouteDeadEnd() {
           ))}
           <span
             aria-hidden
-            className="absolute top-1 -translate-x-1/2 font-mono text-[16px] leading-6 text-ink-faint"
+            className="absolute top-1 -translate-x-1/2 font-mono text-body leading-6 text-ink-faint"
             style={{ left: pct(784) }}
           >
             404
@@ -182,7 +182,7 @@ export function RouteDeadEnd() {
           <li className="relative flex h-12 items-center gap-4">
             <Rail upper="dashed" lower="none" />
             <span className="relative size-3 shrink-0 rounded-full border-2 border-ink-faint bg-ground" />
-            <span aria-hidden className="font-mono text-[16px] leading-6 text-ink-faint">
+            <span aria-hidden className="font-mono text-body leading-6 text-ink-faint">
               404
             </span>
           </li>
@@ -211,7 +211,7 @@ export function RouteBreak() {
         </svg>
         <div className="relative h-7">
           <span
-            className="absolute top-1 -translate-x-1/2 font-mono text-[16px] leading-6 text-ink"
+            className="absolute top-1 -translate-x-1/2 font-mono text-body leading-6 text-ink"
             style={{ left: pct(30) }}
           >
             ti
@@ -220,7 +220,7 @@ export function RouteBreak() {
             500 · prekid
           </span>
           <span
-            className="absolute top-1 -translate-x-1/2 font-mono text-[16px] leading-6 text-ink"
+            className="absolute top-1 -translate-x-1/2 font-mono text-body leading-6 text-ink"
             style={{ left: pct(790) }}
           >
             doseg.hr
@@ -234,7 +234,7 @@ export function RouteBreak() {
           <li className="relative flex h-12 items-center gap-4">
             <Rail upper="none" lower="solid" />
             <span className="relative size-3 shrink-0 rounded-full bg-zg-blue" />
-            <span className="font-mono text-[16px] leading-6 text-ink">ti</span>
+            <span className="font-mono text-body leading-6 text-ink">ti</span>
           </li>
           <li className="relative flex h-12 items-center gap-4">
             <span className="absolute bottom-[calc(50%+9px)] left-[5px] top-0 w-0.5 bg-zg-blue" />
@@ -248,7 +248,7 @@ export function RouteBreak() {
           <li className="relative flex h-12 items-center gap-4">
             <Rail upper="solid" lower="none" />
             <span className="relative size-3 shrink-0 rounded-full bg-zg-blue" />
-            <span className="font-mono text-[16px] leading-6 text-ink">doseg.hr</span>
+            <span className="font-mono text-body leading-6 text-ink">doseg.hr</span>
           </li>
         </ul>
       </div>

@@ -116,7 +116,7 @@ export function Ravnoteza({
   return (
     <Section id="ravnoteza" width="wide" className="pb-0 pt-12 sm:pb-0 sm:pt-14">
       <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 pb-8">
-        <MonoLabel className="text-ink">{stations} stanica</MonoLabel>
+        <MonoLabel className="text-ink">{stations} {plural(stations, "stanica", "stanice", "stanica")}</MonoLabel>
         <MonoLabel className="text-ink">{bajsevi(docked)}</MonoLabel>
         <MonoLabel className="text-ink">{empty} praznih</MonoLabel>
       </div>
@@ -270,7 +270,7 @@ export function Dani({ rides }: { rides: BajsRides }) {
 
       <BodyMuted className="mt-6">
         Najprometniji izmjereni dan je {dayLabel(busiestDay.date)} s{" "}
-        {num(busiestDay.starts)} vožnji.
+        {num(busiestDay.starts)} {plural(busiestDay.starts, "vožnja", "vožnje", "vožnji")}.
         {partialDay
           ? ` Danas je do sada ${num(partialDay.starts)}, ali dan još traje.`
           : ""}{" "}

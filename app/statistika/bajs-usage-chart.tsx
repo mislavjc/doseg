@@ -8,6 +8,7 @@ import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { BarRounded } from "@visx/shape"
 import { GridRows } from "@visx/grid"
+import { plural } from "@/app/linije/copy"
 
 // --- Types ---
 
@@ -198,7 +199,7 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
       <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <ChartHeader current={current} peak={peak} />
         <div className="mt-8 mb-4">
-          <h4 className="text-[15px] font-medium text-slate-500">Dnevni trend korištenja</h4>
+          <h4 className="text-body text-slate-500">Dnevni trend korištenja</h4>
         </div>
         <ChartSvg label="Grafikon korištenja BAJS bicikala">
           <GridRows
@@ -250,7 +251,7 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
               x={xScale(new Date(hovered.ts * 1000)) ?? 0} 
               y={(yScale(hovered.bikesInUse) ?? 0) - 10} 
               title={fmtTime(hovered.ts)} 
-              value={`${hovered.bikesInUse} bicikala`} 
+              value={`${hovered.bikesInUse} ${plural(hovered.bikesInUse, "bicikl", "bicikla", "bicikala")}`} 
               subtitle={`${hovered.available} dostupno na stanicama`} 
               color={hovered.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"}
             />
@@ -272,31 +273,31 @@ function ChartHeader({
 }) {
   return (
     <div className="flex flex-col mb-8">
-      <h3 className="mb-6 font-sans text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">Trend korištenja</h3>
+      <h3 className="mb-6 font-sans text-head font-bold text-slate-900 dark:text-slate-100">Trend korištenja</h3>
       
       <div className="flex flex-wrap gap-8 sm:gap-12">
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             <span className="w-1 h-3 rounded-full bg-[#3b82f6]"></span>
             Trenutno
           </div>
-          <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
             {fmtHR(current)}
           </span>
-          <span className="text-[13px] text-slate-500">
+          <span className="text-body text-slate-500">
             u uporabi
           </span>
         </div>
         
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             <span className="w-1 h-3 rounded-full bg-slate-300 dark:bg-slate-700"></span>
             Maksimum
           </div>
-          <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
             {fmtHR(peak)}
           </span>
-          <span className="text-[13px] text-slate-500">
+          <span className="text-body text-slate-500">
             najviše istovremeno
           </span>
         </div>
@@ -360,7 +361,7 @@ function ChartXLabels({
             x={xScale(t)}
             y={INNER_HEIGHT + 24}
             textAnchor="middle"
-            className="fill-slate-500 text-[11px] font-medium dark:fill-slate-400"
+            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
           >
             {fmtTime(t.getTime() / 1000)}
           </text>
@@ -386,7 +387,7 @@ function ChartYLabels({
           y={(yScale(v) ?? 0) + 1}
           textAnchor="start"
           dominantBaseline="middle"
-          className="fill-slate-500 text-[11px] font-medium dark:fill-slate-400"
+          className="fill-slate-500 font-mono text-label dark:fill-slate-400"
         >
           {fmtHR(v)}
         </text>
@@ -400,12 +401,12 @@ function ChartYLabels({
 function LoadingState() {
   return (
     <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Dnevni trend
       </div>
       <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="flex items-center justify-center py-20">
-          <div className="flex items-center gap-3 text-[15px] text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-3 text-body text-slate-500 dark:text-slate-400">
             <svg
               className="h-5 w-5 animate-spin text-lime-500"
               viewBox="0 0 24 24"
@@ -439,12 +440,12 @@ function LoadingState() {
 function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Dnevni trend
       </div>
       <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="rounded-2xl bg-red-50/50 p-8 text-center dark:bg-red-950/10">
-          <p className="text-[15px] text-red-700 dark:text-red-400">
+          <p className="text-body text-red-700 dark:text-red-400">
             Nije moguće dohvatiti podatke: {message}
           </p>
         </div>
@@ -456,12 +457,12 @@ function ErrorState({ message }: { message: string }) {
 function EmptyState() {
   return (
     <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-sans text-[11px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Dnevni trend
       </div>
       <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
         <div className="rounded-2xl bg-slate-50/50 p-8 text-center dark:bg-zinc-900/20">
-          <p className="text-[15px] text-slate-600 dark:text-slate-400">
+          <p className="text-body text-slate-600 dark:text-slate-400">
             Podaci se prikupljaju...
           </p>
         </div>

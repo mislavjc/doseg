@@ -49,7 +49,7 @@ const Bracket = ({ char, className }: { char: string; className: string }) => (
   <span
     aria-hidden
     className={cn(
-      "pointer-events-none absolute font-mono text-base leading-4 text-ink-faint",
+      "pointer-events-none absolute font-mono text-body leading-4 text-ink-faint",
       className
     )}
   >
@@ -86,7 +86,7 @@ export function SiteNav({
             className="h-[21px] w-7 object-contain"
             priority
           />
-          <span className="font-mono text-[14px] font-medium leading-[18px] tracking-[-0.01em]">
+          <span className="font-mono text-label">
             <span className="text-ink">doseg</span>
             <span className="text-zg-blue">.hr</span>
           </span>

@@ -14,6 +14,7 @@ import {
   type TramLine,
 } from "@/lib/zagreb-tram-network"
 import { LineBadges } from "./line-badges"
+import { plural } from "@/app/linije/copy"
 
 const INTERCHANGE_R = 7
 const STOP_R = 3.5
@@ -144,7 +145,7 @@ function ZoomControls({ onZoomIn, onZoomOut }: { onZoomIn: () => void; onZoomOut
     >
       <button
         onClick={onZoomIn}
-        className="px-3 py-2 text-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors leading-none"
+        className="px-3 py-2 text-head font-bold text-slate-600 hover:bg-slate-100 transition-colors"
         aria-label="Zoom in"
       >
         +
@@ -152,7 +153,7 @@ function ZoomControls({ onZoomIn, onZoomOut }: { onZoomIn: () => void; onZoomOut
       <div className="h-px bg-slate-100" />
       <button
         onClick={onZoomOut}
-        className="px-3 py-2 text-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors leading-none"
+        className="px-3 py-2 text-head font-bold text-slate-600 hover:bg-slate-100 transition-colors"
         aria-label="Zoom out"
       >
         &minus;
@@ -165,14 +166,14 @@ function LegendRow({ line, activeLine, onToggle }: { line: TramLine; activeLine:
   return (
     <button
       onClick={onToggle}
-      className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-[13px] transition-all ${
+      className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-body transition-all ${
         activeLine === line.number
           ? "bg-slate-100 ring-1 ring-slate-200"
           : activeLine ? "opacity-35 hover:opacity-60" : "hover:bg-slate-50"
       }`}
     >
       <span
-        className="inline-flex h-5 w-7 shrink-0 items-center justify-center rounded text-[11px] font-bold text-white"
+        className="inline-flex h-5 w-7 shrink-0 items-center justify-center rounded font-mono text-label font-bold text-white"
         style={{ backgroundColor: line.color }}
       >
         {line.number}
@@ -190,9 +191,9 @@ function DesktopLegend({
   return (
     <div data-ui className="island absolute bottom-4 left-4 z-10 hidden sm:block max-h-[70vh] overflow-y-auto rounded-2xl p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Tramvajske linije</h2>
+        <h2 className="font-mono text-label text-ink-faint">tramvajske linije</h2>
         {showReset && (
-          <button onClick={onReset} className="text-[11px] font-medium text-slate-400 hover:text-slate-600 transition-colors">
+          <button onClick={onReset} className="font-mono text-label text-slate-400 hover:text-slate-600 transition-colors">
             Resetiraj
           </button>
         )}
@@ -223,10 +224,10 @@ function MobileLegend({
         onClick={() => setOpen((p) => !p)}
         className="flex w-full items-center justify-between px-4 py-2.5"
       >
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Tramvajske linije
+        <span className="font-mono text-label text-ink-faint">
+          tramvajske linije
         </span>
-        <span className="text-xs text-slate-400">
+        <span className="font-mono text-label text-slate-400">
           {open ? "\u25BE" : "\u25B4"}
         </span>
       </button>
@@ -236,7 +237,7 @@ function MobileLegend({
             <button
               key={line.number}
               onClick={() => onToggleLine(line.number)}
-              className="rounded-md px-2 py-1 text-xs font-bold text-white transition-opacity"
+              className="rounded-md px-2 py-1 font-mono text-label font-bold text-white transition-opacity"
               style={{
                 backgroundColor: line.color,
                 opacity: activeLine && activeLine !== line.number ? 0.3 : 1,
@@ -257,11 +258,11 @@ function LineProgressRow({ line, stopId, onToggle }: { line: TramLine; stopId: s
   const pct = total > 1 ? (idx / (total - 1)) * 100 : 50
   return (
     <button onClick={onToggle} className="group flex items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-slate-50">
-      <span className="inline-flex h-6 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold text-white shadow-sm" style={{ backgroundColor: line.color }}>
+      <span className="inline-flex h-6 w-8 shrink-0 items-center justify-center rounded-md font-mono text-label font-bold text-white shadow-sm" style={{ backgroundColor: line.color }}>
         {line.number}
       </span>
       <div className="min-w-0 flex-1">
-        <div className="truncate text-[13px] font-medium text-slate-700">
+        <div className="truncate text-body text-slate-700">
           {STATIONS[line.stationIds[0]].name} &rarr; {STATIONS[line.stationIds[total - 1]].name}
         </div>
         <div className="mt-1.5 flex items-center gap-1.5">
@@ -269,7 +270,7 @@ function LineProgressRow({ line, stopId, onToggle }: { line: TramLine; stopId: s
             <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${pct}%`, backgroundColor: line.color }} />
             <div className="absolute top-1/2 h-2.5 w-2.5 rounded-full border-2 border-white shadow-sm" style={{ left: `${pct}%`, backgroundColor: line.color, transform: "translate(-50%,-50%)" }} />
           </div>
-          <span className="shrink-0 text-[10px] tabular-nums text-slate-400">{idx + 1}/{total}</span>
+          <span className="shrink-0 font-mono text-label tabular-nums text-slate-400">{idx + 1}/{total}</span>
         </div>
       </div>
     </button>
@@ -283,9 +284,9 @@ function StationInfoPanel({ stop, onClose, onToggleLine }: { stop: StopInfo; onC
       <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="text-base font-semibold text-slate-800">{stop.name}</h3>
-            <p className="mt-0.5 text-xs text-slate-500">
-              {stop.interchange ? "Presjedanje" : "Stajalište"} &middot; {lineCount} {lineCount === 1 ? "linija" : lineCount < 5 ? "linije" : "linija"}
+            <h3 className="text-head font-bold text-slate-800">{stop.name}</h3>
+            <p className="mt-0.5 font-mono text-label text-slate-500">
+              {stop.interchange ? "Presjedanje" : "Stajalište"} &middot; {lineCount} {plural(lineCount, "linija", "linije", "linija")}
             </p>
           </div>
           <button onClick={onClose} className="mt-0.5 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600" aria-label="Zatvori">
@@ -471,7 +472,7 @@ function MapSvg({
       <rect x="0" y="10" width="1280" height="790" fill="url(#dot-grid)" />
       <path d={SAVA_PATH} fill="none" stroke="#4BA3D4" strokeWidth={28} strokeLinecap="round" opacity={0.13} />
       <path d={SAVA_PATH} fill="none" stroke="#4BA3D4" strokeWidth={12} strokeLinecap="round" opacity={0.18} />
-      <text x={1120} y={585} fontSize={14} fontWeight={700} fontFamily="var(--font-sans), system-ui, sans-serif" fill="#4BA3D4" opacity={0.4} letterSpacing="0.25em" className="pointer-events-none select-none">SAVA</text>
+      <text x={1120} y={585} fontSize={14} fontFamily="var(--font-mono), ui-monospace, monospace" fill="#4BA3D4" opacity={0.4} className="pointer-events-none select-none">sava</text>
       <MapSvgSegments activeLine={activeLine} />
       <StationCircles activeLine={activeLine} activeStop={activeStop} hoverStop={hoverStop} onHover={onHover} onSelect={onSelect} />
       <StationLabels activeLine={activeLine} />
@@ -508,9 +509,9 @@ export function TramMap() {
     >
       <MapSvg view={view} activeLine={activeLine} activeStop={activeStop} hoverStop={hoverStop} onHover={setHoverStop} onSelect={(id) => setActiveStop((p) => (p === id ? null : id))} />
       <header data-ui className="island island-compact absolute top-4 left-4 z-10 flex items-center gap-3">
-        <Link href="/" className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-800">&larr; Doseg</Link>
+        <Link href="/" className="text-body text-slate-500 transition-colors hover:text-slate-800">&larr; Doseg</Link>
         <span className="text-slate-200">|</span>
-        <h1 className="text-sm font-semibold text-slate-800">Karta tramvajskih linija</h1>
+        <h1 className="text-head font-bold text-slate-800">Karta tramvajskih linija</h1>
       </header>
       <ZoomControls onZoomIn={zoomIn} onZoomOut={zoomOut} />
       <DesktopLegend activeLine={activeLine} showReset={!!activeLine || view.s !== 1} onToggleLine={toggleLine} onReset={resetView} />

@@ -165,8 +165,8 @@ function DiffMap({ oldShape, newShape, shared, newTip, oldTip, allStops, added, 
     <div role="img" aria-label={label} style={{ position: "relative", width: "100%", height: "clamp(360px, 44vw, 580px)", overflow: "hidden" }}>
       <div ref={ref} className="diffmap" style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 0 1px #E5E8EC, inset 0 0 60px rgba(15,23,42,.05)" }} />
       <MapTile className="absolute bottom-3 right-3 z-[2] flex flex-col">
-        <MapTileButton label="Približi kartu" onClick={() => { mapRef.current?.zoomIn() }} className="size-[34px] border-b border-hairline font-heros text-[18px] leading-[22px] text-ink-2">+</MapTileButton>
-        <MapTileButton label="Udalji kartu" onClick={() => { mapRef.current?.zoomOut() }} className="size-[34px] font-heros text-[18px] leading-[22px] text-ink-2">−</MapTileButton>
+        <MapTileButton label="Približi kartu" onClick={() => { mapRef.current?.zoomIn() }} className="size-[34px] border-b border-hairline font-heros text-body text-ink-2">+</MapTileButton>
+        <MapTileButton label="Udalji kartu" onClick={() => { mapRef.current?.zoomOut() }} className="size-[34px] font-heros text-body text-ink-2">−</MapTileButton>
       </MapTile>
     </div>
   )

@@ -38,7 +38,7 @@ export function ModeChip({
       {isBikeMode(mode) ? (
         <BikeIcon className="text-white" />
       ) : (
-        <span className="font-mono text-[11px] leading-[14px] text-white">
+        <span className="font-mono text-label text-white">
           {route ?? "·"}
         </span>
       )}
@@ -84,7 +84,7 @@ export function CheckSquare({
       }`}
     >
       {state === "on" && (
-        <span className="font-mono text-[10px] leading-none text-white">✓</span>
+        <span className="font-mono text-label text-white">✓</span>
       )}
       {state === "mixed" && <span className="h-[1.5px] w-[7px] bg-white" />}
     </span>

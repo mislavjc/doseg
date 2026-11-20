@@ -151,7 +151,7 @@ export default function Page() {
         .diffmap .maplibregl-ctrl-group{border-radius:0;box-shadow:0 1px 3px rgba(15,23,42,.16)}
         .diffmap .maplibregl-ctrl-group button{border-radius:0;width:30px;height:30px}
         .diffmap .maplibregl-ctrl-group button+button{border-top:1px solid #E5E8EC}
-        .diffmap .maplibregl-ctrl-attrib{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;background:rgba(255,255,255,.66)}
+        .diffmap .maplibregl-ctrl-attrib{font-family:'Geist Mono',ui-monospace,monospace;font-size:12px;background:rgba(255,255,255,.66)}
         .diffmap .maplibregl-ctrl-attrib.maplibregl-compact,.diffmap .maplibregl-ctrl-attrib-button{border-radius:0}
         .diffmap .maplibregl-cooperative-gesture-screen{font-family:'Geist Mono',ui-monospace,monospace}
         .pr-search:focus-within{border-color:var(--zg-blue);box-shadow:inset 0 0 0 1px var(--zg-blue)}

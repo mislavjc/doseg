@@ -23,7 +23,7 @@ export function LineRow({ line }: { line: LineIndexEntry }) {
         className="group flex items-center gap-3.5 border-b border-hairline py-2.5"
       >
         <LineBadge broj={line.broj} />
-        <span className="min-w-0 truncate font-heros text-[16px] leading-6 text-ink transition-colors group-hover:text-zg-blue">
+        <span className="min-w-0 truncate font-heros text-body leading-6 text-ink transition-colors group-hover:text-zg-blue">
           {line.terminals[0]} - {line.terminals[1]}
         </span>
         <span className="h-3 min-w-3 flex-1 border-b border-dotted border-hairline-strong" />

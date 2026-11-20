@@ -27,7 +27,7 @@ export function MonoLabel({ children }: { children: React.ReactNode }) {
 /** Tiny mono caption (ramp ends, strip numbers) — 11px. */
 export function MonoCaption({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+    <span className="font-mono text-label text-ink-faint">
       {children}
     </span>
   )
@@ -53,7 +53,7 @@ export function BlueLink({
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1 font-heros text-[16px] leading-5 text-zg-blue transition-colors duration-150 hover:text-navy"
+      className="inline-flex items-center gap-1 font-heros text-body leading-5 text-zg-blue transition-colors duration-150 hover:text-navy"
     >
       {children}
       {arrow && <IconArrowRight size={14} className="shrink-0" />}
@@ -77,7 +77,7 @@ export function BlueAction({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1 font-heros text-[14px] leading-[18px] text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97] ${className}`}
+      className={`inline-flex items-center gap-1 font-heros text-body text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97] ${className}`}
     >
       {back && <IconArrowLeft size={14} className="shrink-0" />}
       {children}
@@ -111,18 +111,18 @@ export function NumberedStep({
         className={`flex shrink-0 items-center justify-center rounded-full bg-chip-blue font-mono text-zg-blue ${
           md
             ? "size-6 text-label"
-            : "size-[22px] text-[11px] leading-[14px]"
+            : "size-[22px] font-mono text-label"
         }`}
       >
         {n}
       </span>
       <span className={`flex flex-col pt-px ${md ? "gap-0.5" : "gap-px"}`}>
-        <span className="font-heros text-[16px] leading-5 text-ink">
+        <span className="font-heros text-body leading-5 text-ink">
           {title}
         </span>
         <span
           className={`font-heros text-ink-faint ${
-            md ? "text-[14px] leading-[18px]" : "text-[13px] leading-4"
+            md ? "text-body" : "text-body"
           }`}
         >
           {sub}

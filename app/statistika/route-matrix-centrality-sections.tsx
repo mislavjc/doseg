@@ -35,7 +35,7 @@ export function RouteStatsSection({
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Analiza linija</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Detaljna analiza performansi svih tramvajskih i autobusnih linija u
             zagrebačkom prometu. Podaci iz statičkog GTFS izračuna, generirano{" "}
             {generatedLabel}.
@@ -81,7 +81,7 @@ function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Matrica putovanja</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Vrijeme putovanja javnim prijevozom između središta svakog kvarta,
           polazak u {travelMatrix.departureTime}. Boja označava
           trajanje - od zelene (brzo) do crvene (sporo).
@@ -94,14 +94,14 @@ function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
 function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
   return (
     <div className="flex flex-col">
-      <h3 className="mb-8 font-sans text-[11px] font-bold tracking-widest text-cyan-700 uppercase dark:text-cyan-400">
+      <h3 className="mb-8 font-mono text-label font-bold text-cyan-700 dark:text-cyan-400">
         Vrijeme putovanja u minutama
       </h3>
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-white to-transparent dark:from-zinc-950" />
         <div className="overflow-x-auto">
           <table
-          className="w-max border-collapse text-[11px]"
+          className="w-max border-collapse font-mono text-label"
           aria-label="Matrica putovanja između kvartova"
         >
           <thead>
@@ -212,11 +212,11 @@ function MatrixCell({
         className="flex flex-col items-center justify-center rounded px-1 py-0.5"
         style={{ backgroundColor: bg, color: textColor }}
       >
-        <span className="font-sans text-[13px] leading-tight font-medium tracking-tight tabular-nums">
+        <span className="font-mono text-label tabular-nums">
           {isDiag ? "-" : time < 0 ? "×" : time}
         </span>
         {!isDiag && time > 0 && (
-          <span className="text-[9px] leading-tight opacity-60">
+          <span className="font-mono text-label opacity-60">
             {transfers}p
           </span>
         )}
@@ -227,7 +227,7 @@ function MatrixCell({
 
 function TravelMatrixLegend() {
   return (
-    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+    <div className="mt-8 flex flex-wrap gap-x-4 gap-y-1 font-mono text-label text-slate-500 dark:text-slate-400">
       <span className="flex items-center gap-1">
         <span
           className="inline-block h-2.5 w-4 rounded"
@@ -263,7 +263,7 @@ function TravelMatrixLegend() {
         />
         nema rute
       </span>
-      <span className="text-[11px] italic">p = presjedanja</span>
+      <span className="font-mono text-label italic">p = presjedanja</span>
     </div>
   )
 }
@@ -275,49 +275,49 @@ function TravelMatrixInsights({
 }) {
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="mb-2 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Zanimljivosti
       </h3>
       <div className="flex flex-col gap-6">
         {matrix.matrixWorstCorridor && matrix.matrixWorstCorridor.time > 0 && (
           <div className="border-l-2 border-rose-500 py-1 pl-4">
-            <div className="text-[13px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <div className="font-mono text-label text-slate-500 dark:text-slate-400">
               Najdulje putovanje
             </div>
-            <div className="mt-2 font-sans text-[20px] tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="mt-2 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
               {districtAbbrev[matrix.matrixWorstCorridor.from] ??
                 matrix.matrixWorstCorridor.from}{" "}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block -mt-0.5 align-middle text-slate-400"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>{" "}
               {districtAbbrev[matrix.matrixWorstCorridor.to] ??
                 matrix.matrixWorstCorridor.to}
             </div>
-            <div className="mt-1 text-[15px] text-slate-600 dark:text-slate-400">
+            <div className="mt-1 text-body text-slate-600 dark:text-slate-400">
               {matrix.matrixWorstCorridor.time} minuta
             </div>
           </div>
         )}
         {matrix.matrixBestPair && matrix.matrixBestPair.time < Infinity && (
           <div className="border-l-2 border-emerald-500 py-1 pl-4">
-            <div className="text-[13px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <div className="font-mono text-label text-slate-500 dark:text-slate-400">
               Najbrža veza
             </div>
-            <div className="mt-2 font-sans text-[20px] tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="mt-2 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
               {districtAbbrev[matrix.matrixBestPair.from] ??
                 matrix.matrixBestPair.from}{" "}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block -mt-0.5 align-middle text-slate-400"><path d="M8 4 2 12l6 8" /><path d="M16 4l6 8-6 8" /><path d="M2 12h20" /></svg>{" "}
               {districtAbbrev[matrix.matrixBestPair.to] ??
                 matrix.matrixBestPair.to}
             </div>
-            <div className="mt-1 text-[15px] text-slate-600 dark:text-slate-400">
+            <div className="mt-1 text-body text-slate-600 dark:text-slate-400">
               {matrix.matrixBestPair.time} minuta
             </div>
           </div>
         )}
         <div className="border-l-2 border-violet-500 py-1 pl-4">
-          <div className="text-[13px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+          <div className="font-mono text-label text-slate-500 dark:text-slate-400">
             Prosjek svih putovanja
           </div>
-          <div className="mt-2 font-sans text-[24px] tracking-tight text-slate-900 dark:text-slate-100">
+          <div className="mt-2 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
             {matrix.avgTimeAll} min
           </div>
         </div>
@@ -436,19 +436,19 @@ function TransferStackedBar({
             key={d.label}
             className={`border-l-2 py-1 pl-4 ${d.color.split(" ")[0].replace("bg-", "border-")}`}
           >
-            <div className="text-[13px] font-medium tracking-widest text-slate-500 uppercase dark:text-slate-400">
+            <div className="font-mono text-label text-slate-500 dark:text-slate-400">
               {d.label}
             </div>
-            <div className="mt-2 font-sans text-[24px] font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+            <div className="mt-2 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
               {d.count}
             </div>
-            <div className="text-[15px] text-slate-600 dark:text-slate-400">
+            <div className="text-body text-slate-600 dark:text-slate-400">
               parova kvartova ({d.pct}%)
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-8 border-t border-slate-100 pt-6 text-[15px] leading-relaxed text-slate-600 dark:border-white/10 dark:text-slate-400">
+      <div className="mt-8 border-t border-slate-100 pt-6 text-body text-slate-600 dark:border-white/10 dark:text-slate-400">
         Prosječno presjedanja po putovanju:{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
           {avgTransfers}
@@ -466,7 +466,7 @@ function TransferWorstCorridors({
   if (worstPairs.length === 0) return null
   return (
     <div className="mt-12 flex flex-col">
-      <h3 className="mb-6 font-sans text-[13px] font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
         Koridori s 2+ presjedanja
       </h3>
       <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -475,12 +475,12 @@ function TransferWorstCorridors({
             key={`${pair.from}-${pair.to}`}
             className="flex items-baseline justify-between border-b border-slate-100 pb-2 dark:border-white/5"
           >
-            <span className="text-[15px] text-slate-800">
+            <span className="text-body text-slate-800">
               {pair.from}{" "}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block align-middle text-slate-400"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>{" "}
               {pair.to}
             </span>
-            <span className="ml-4 font-sans text-[15px] font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+            <span className="ml-4 font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
               {pair.time} min
             </span>
           </div>
@@ -507,7 +507,7 @@ export function TransferDependencySection({
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Ovisnost o presjedanjima</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
             Koliko presjedanja zahtijeva tipično putovanje između zagrebačkih
             kvartova? Svako presjedanje dodaje prosječno 8-12 minuta čekanja.
           </p>
@@ -517,7 +517,7 @@ export function TransferDependencySection({
       <TransferStackedBar barData={td.barData} avgTransfers={td.avgTransfers} />
         <TransferWorstCorridors worstPairs={td.worstPairs} />
 
-        <div className="mt-8 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <div className="mt-8 text-body text-slate-700 dark:text-slate-300">
           <p>
             Od {td.totalPairs} mogućih parova kvartova,{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -575,11 +575,11 @@ function CentralityRanking({
     <div className="flex flex-col">
       <div className={`border-l-2 border-${color}-500 py-1 pl-4`}>
         <h3
-          className={`font-sans text-[20px] tracking-tight text-${color}-600 dark:text-${color}-400`}
+          className={`font-sans text-head font-bold text-${color}-600 dark:text-${color}-400`}
         >
           {title}
         </h3>
-        <p className="mt-2 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-body text-slate-600 dark:text-slate-400">
           {subtitle}
         </p>
       </div>
@@ -595,15 +595,15 @@ function CentralityRanking({
               <div className="flex items-baseline justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <span
-                    className={`font-mono text-[11px] font-bold text-slate-400 dark:text-slate-500`}
+                    className={`font-mono text-label font-bold text-slate-400 dark:text-slate-500`}
                   >
                     {(i + 1).toString().padStart(2, "0")}
                   </span>
-                  <span className="text-[15px] font-medium text-slate-700 dark:text-slate-300">
+                  <span className="text-body text-slate-700 dark:text-slate-300">
                     {stop.name}
                   </span>
                 </div>
-                <span className="font-sans text-[15px] tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+                <span className="font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
                   {stop.score.toFixed(scoreDecimals)}
                 </span>
               </div>
@@ -620,13 +620,13 @@ function CentralityRanking({
                   {stop.routes.slice(0, 6).map((r) => (
                     <span
                       key={r}
-                      className="inline-flex h-5 items-center rounded-sm bg-slate-100 px-1.5 font-mono text-[11px] font-medium text-slate-600 dark:bg-white/10 dark:text-slate-300"
+                      className="inline-flex h-5 items-center rounded-sm bg-slate-100 px-1.5 font-mono text-label text-slate-600 dark:bg-white/10 dark:text-slate-300"
                     >
                       {r}
                     </span>
                   ))}
                   {stop.routes.length > 6 && (
-                    <span className="inline-flex h-5 items-center rounded-sm bg-slate-50 px-1.5 font-mono text-[11px] font-medium text-slate-400 dark:bg-white/5 dark:text-slate-500">
+                    <span className="inline-flex h-5 items-center rounded-sm bg-slate-50 px-1.5 font-mono text-label text-slate-400 dark:bg-white/5 dark:text-slate-500">
                       +{stop.routes.length - 6}
                     </span>
                   )}
@@ -649,44 +649,44 @@ function CentralityNumbers({
   return (
     <div className="my-12 grid grid-cols-2 gap-6 sm:gap-12 border-t border-b border-slate-100 py-12 sm:grid-cols-4 dark:border-white/10">
       <div className="flex flex-col border-l-2 border-rose-500 pl-4">
-        <div className="font-sans text-[48px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {networkDiameter.minutes}
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           minuta - mrežni dijametar
         </div>
-        <div className="mt-1 text-[13px] text-slate-400">
+        <div className="mt-1 text-body text-slate-400">
           {networkDiameter.fromStop} &rarr; {networkDiameter.toStop}
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-emerald-500 pl-4">
-        <div className="font-sans text-[48px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {averagePathLength.minutes}
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           min prosječno putovanje
         </div>
-        <div className="mt-1 text-[13px] text-slate-400">
+        <div className="mt-1 text-body text-slate-400">
           srednja vrijednost svih najkraćih puteva
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-violet-500 pl-4">
-        <div className="font-sans text-[48px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {averagePathLength.reachablePct}%
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           parova povezano
         </div>
-        <div className="mt-1 text-[13px] text-slate-400">
+        <div className="mt-1 text-body text-slate-400">
           {averagePathLength.reachablePairs.toLocaleString("hr")} od{" "}
           {averagePathLength.totalPairs.toLocaleString("hr")}
         </div>
       </div>
       <div className="flex flex-col border-l-2 border-slate-300 pl-4 dark:border-slate-700">
-        <div className="font-sans text-[48px] leading-none font-medium tracking-tight text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {data.stopCount.toLocaleString("hr")}
         </div>
-        <div className="mt-2 text-[15px] leading-snug text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
           analiziranih stanica
         </div>
       </div>
@@ -707,7 +707,7 @@ export function CentralitySection() {
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Centralnost mreže</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-[18px] leading-relaxed text-slate-600 dark:text-slate-400">
+          <p className="mt-4 max-w-xl text-body text-slate-600 dark:text-slate-400">
             Analiza grafa otkriva kritične točke mreže - stanice čijim
             zatvaranjem bi se cijelom sustavu dramatično pogoršala povezanost, i
             stanice koje najbolje pokrivaju cijeli grad.
@@ -735,7 +735,7 @@ export function CentralitySection() {
           />
         </div>
 
-        <div className="mt-12 text-[18px] leading-relaxed text-slate-700 dark:text-slate-300">
+        <div className="mt-12 text-body text-slate-700 dark:text-slate-300">
           <p>
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               Betweenness centralnost

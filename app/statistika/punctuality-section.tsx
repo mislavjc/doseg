@@ -12,6 +12,7 @@ import { scaleLinear, scaleTime } from "@visx/scale"
 import { Group } from "@visx/group"
 import { BarRounded } from "@visx/shape"
 import { GridRows } from "@visx/grid"
+import { plural } from "@/app/linije/copy"
 
 // --- Types ---
 
@@ -275,7 +276,7 @@ function RouteSelector({
     <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/50 py-1 pr-1 pl-3.5 dark:border-white/10 dark:bg-zinc-900/50">
       <label
         htmlFor="punctuality-route"
-        className="pointer-events-none flex items-center gap-1.5 text-[12px] font-medium text-slate-500 dark:text-slate-400"
+        className="pointer-events-none flex items-center gap-1.5 font-mono text-label text-slate-500 dark:text-slate-400"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60" aria-hidden="true">
           <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H6C4.9 6 3.9 6.8 3.6 7.8l-1.4 5c-.1.4-.2.8-.2 1.2 0 .4.1.8.2 1.2C2.5 16.3 3 18 3 18h3M7 18v2M17 18v2" />
@@ -286,7 +287,7 @@ function RouteSelector({
         id="punctuality-route"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-w-[80px] sm:min-w-[100px] cursor-pointer appearance-none rounded-full border-0 bg-slate-900 py-1.5 pr-7 pl-3 text-[12px] font-medium text-white shadow-sm transition-all hover:bg-slate-800 focus:ring-2 focus:ring-indigo-400/40 focus:ring-offset-1 focus:outline-none dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white dark:focus:ring-indigo-500/40"
+        className="min-w-[80px] sm:min-w-[100px] cursor-pointer appearance-none rounded-full border-0 bg-slate-900 py-1.5 pr-7 pl-3 font-mono text-label text-white shadow-sm transition-all hover:bg-slate-800 focus:ring-2 focus:ring-indigo-400/40 focus:ring-offset-1 focus:outline-none dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white dark:focus:ring-indigo-500/40"
         style={{ backgroundImage: SELECT_CHEVRON_SVG, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center" }}
       >
         {ROUTE_GROUPS.map(({ mode, label }) => {
@@ -317,7 +318,7 @@ function TimeRangeSelector({
           type="button"
           key={range}
           onClick={() => onChange(range)}
-          className={`rounded-full px-4 py-1.5 text-[12px] font-medium transition-colors ${
+          className={`rounded-full px-4 py-1.5 font-mono text-label transition-colors ${
             value === range
               ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
               : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
@@ -335,7 +336,7 @@ function TimeRangeSelector({
 function LoadingState() {
   return (
     <div className="flex items-center justify-center py-20">
-      <div className="flex items-center gap-3 text-[15px] text-slate-500 dark:text-slate-400">
+      <div className="flex items-center gap-3 text-body text-slate-500 dark:text-slate-400">
         <LoadingSpinner />
         Učitavanje podataka...
       </div>
@@ -374,10 +375,10 @@ function LoadingSpinner() {
 function ErrorState({ message }: { message: string }) {
   return (
     <div className="rounded-2xl border border-dashed border-red-200 bg-red-50/50 p-12 text-center dark:border-red-900/20 dark:bg-red-900/10">
-      <p className="text-[15px] font-medium text-red-600 dark:text-red-400">
+      <p className="text-body text-red-600 dark:text-red-400">
         Nije moguće dohvatiti podatke: {message}
       </p>
-      <p className="mt-2 text-[15px] text-red-500/70 dark:text-red-500/50">
+      <p className="mt-2 text-body text-red-500/70 dark:text-red-500/50">
         Provjeri je li backend pokrenut.
       </p>
     </div>
@@ -387,10 +388,10 @@ function ErrorState({ message }: { message: string }) {
 function EmptyState() {
   return (
     <div className="rounded-2xl border border-slate-200/60 bg-slate-100 p-12 text-center dark:border-white/10 dark:bg-zinc-800/60">
-      <p className="text-[15px] font-medium text-slate-600 dark:text-slate-400">
+      <p className="text-body text-slate-600 dark:text-slate-400">
         Nema podataka za odabrani period.
       </p>
-      <p className="mt-2 text-[15px] text-slate-500 dark:text-slate-500">
+      <p className="mt-2 text-body text-slate-500 dark:text-slate-500">
         Podaci se prikupljaju u stvarnom vremenu iz{" "}
         <Term title="General Transit Feed Specification - Real Time: međunarodni standard za podatke o javnom prijevozu">
           GTFS-RT
@@ -500,7 +501,7 @@ function DelayChartBody({
           y={(yScale(Math.max(0, hovered.avgDelay)) ?? 0) - 10} 
           title={fmtTooltipTime(hovered.ts, timeRange)} 
           value={fmtDelayDetailed(hovered.avgDelay)} 
-          subtitle={`${hovered.tripCount} polazaka`}
+          subtitle={`${hovered.tripCount} ${plural(hovered.tripCount, "polazak", "polaska", "polazaka")}`}
           color={hovered.avgDelay < 180 ? "#10b981" : "#f59e0b"}
         />
       )}
@@ -521,7 +522,7 @@ function DelayChart({
     <div className="rounded-[12px] bg-[#f9f9f9] p-3 sm:p-5 dark:bg-[#1a1a1a]">
       <DelayChartHeader points={points} />
       <div className="mt-8 mb-4">
-        <h4 className="flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400"><span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true" />Uživo kašnjenje u prometu</h4>
+        <h4 className="flex items-center gap-2 text-body text-slate-500 dark:text-slate-400"><span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true" />Uživo kašnjenje u prometu</h4>
       </div>
       <div className="w-full">
         <DelayChartBody points={points} timeRange={timeRange} hovered={hovered} onHover={setHovered} />
@@ -540,31 +541,31 @@ function DelayChartHeader({ points }: { points: HistoryPoint[] }) {
 
   return (
     <div className="flex flex-col">
-      <h3 className="mb-6 font-sans text-[11px] font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">Točnost polazaka</h3>
+      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">Točnost polazaka</h3>
       
       <div className="flex flex-wrap gap-4 sm:gap-8 mb-5">
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             <span className="w-1 h-3 rounded-full bg-[#10b981]"></span>
             Na vrijeme
           </div>
-          <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
             {onTimePct}%
           </span>
-          <span className="text-[13px] text-slate-500">
+          <span className="text-body text-slate-500">
             {onTimeTrips.toLocaleString("hr-HR")}
           </span>
         </div>
         
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             <span className="w-1 h-3 rounded-full bg-[#f59e0b]"></span>
             Kašnjenje
           </div>
-          <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
             {delayedPct}%
           </span>
-          <span className="text-[13px] text-slate-500">
+          <span className="text-body text-slate-500">
             {delayedTrips.toLocaleString("hr-HR")}
           </span>
         </div>
@@ -708,7 +709,7 @@ function HeadwayChart({
     <div className="rounded-[12px] bg-[#f9f9f9] p-3 sm:p-5 dark:bg-[#1a1a1a]">
       <HeadwayChartHeader avgHeadway={avgHeadway} avgCv={avgCv} />
       <div className="mt-8 mb-4">
-        <h4 className="flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400"><span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true" />Varijacija razmaka uživo</h4>
+        <h4 className="flex items-center gap-2 text-body text-slate-500 dark:text-slate-400"><span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" aria-hidden="true" />Varijacija razmaka uživo</h4>
       </div>
       <div className="w-full">
         <HeadwayChartBody pts={pts} timeRange={timeRange} hovered={hovered} onHover={setHovered} xScale={xScale} yScale={yScale} xTicks={xTicks} yTicks={yTicks} maxTrips={maxTrips} />
@@ -747,7 +748,7 @@ function RegularityZone({
         x={INNER_WIDTH - 2}
         y={y03 - 4}
         textAnchor="end"
-        className="fill-slate-400/80 text-[7px] dark:fill-slate-500"
+        className="fill-slate-400/80 font-mono text-label dark:fill-slate-500"
       >
         dobra regularnost
       </text>
@@ -772,26 +773,26 @@ function HeadwayChartHeader({
 
   return (
     <div className="flex flex-col">
-      <h3 className="mb-6 font-sans text-[11px] font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">Regularnost razmaka</h3>
+      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">Regularnost razmaka</h3>
       
       <div className="flex flex-wrap gap-4 sm:gap-8 mb-5">
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             Kvaliteta
           </div>
-          <span className={`font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight capitalize mb-1 ${qualityColor}`}>
+          <span className={`font-sans text-head font-bold capitalize mb-1 ${qualityColor}`}>
             {quality}
           </span>
         </div>
         
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-[13px] text-slate-500 font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
             <Term title="Koeficijent varijacije - niži broj znači pravilniji razmak između vozila">CV</Term>
           </div>
-          <span className="font-sans text-4xl sm:text-[40px] font-medium leading-none tracking-tight text-slate-900 dark:text-slate-100 mb-1">
+          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
             {avgCv.toFixed(2)}
           </span>
-          <span className="text-[13px] text-slate-500">
+          <span className="text-body text-slate-500">
             {avgHeadway >= 60
               ? `${Math.round(avgHeadway / 60)} min prosjek`
               : `${Math.round(avgHeadway)} s prosjek`}
@@ -892,7 +893,7 @@ function ChartXLabels({
           x={xScale(t)}
           y={INNER_HEIGHT + 24}
           textAnchor="middle"
-          className="fill-slate-500 text-[11px] font-medium dark:fill-slate-400"
+          className="fill-slate-500 font-mono text-label dark:fill-slate-400"
         >
           {fmtTime(t.getTime() / 1000, timeRange)}
         </text>
@@ -932,7 +933,7 @@ function ChartYLabels({
             y={(yScale(v) ?? 0) + 1}
             textAnchor="start"
             dominantBaseline="middle"
-            className="fill-slate-500 text-[11px] font-medium dark:fill-slate-400"
+            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
           >
             {label}
           </text>

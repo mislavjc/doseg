@@ -37,13 +37,13 @@ function StopRow({
     newTrams.length > 0 ? `tram ${newTrams.join(" · ")}` : terminal ? fallbackChip : undefined
 
   const nameClass = cn(
-    "min-w-0 flex-1 truncate pl-3 font-heros text-[16px] leading-5",
+    "min-w-0 flex-1 truncate pl-3 font-heros text-body leading-5",
     terminal ? "font-bold text-ink" : "text-ink"
   )
 
   return (
     <li className="flex h-10 items-center">
-      <span className="w-11 shrink-0 text-right font-mono text-[16px] leading-5 text-ink-faint">
+      <span className="w-11 shrink-0 text-right font-mono text-body leading-5 text-ink-faint">
         {stop.offsetMin}&apos;
       </span>
       <span className="relative h-10 w-8 shrink-0" aria-hidden>
@@ -95,10 +95,10 @@ function DirectionColumn({
   return (
     <div className={cn("min-w-0 flex-1", className)}>
       <p className="flex items-center gap-2 pb-4">
-        <span className="font-mono text-[16px] leading-6 text-zg-blue">
+        <span className="font-mono text-body leading-6 text-zg-blue">
           smjer {direction.headsign}
         </span>
-        <span className="font-mono text-[16px] leading-6 text-ink-faint">
+        <span className="font-mono text-body leading-6 text-ink-faint">
           · {total} min ukupno
         </span>
       </p>

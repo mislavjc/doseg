@@ -38,7 +38,7 @@ export function StatHero({
       <StatHeroMeta>
         <StatHeroMetaText>jutarnji presjek</StatHeroMetaText>
         <span className="h-1 w-1 rounded-full bg-slate-200 dark:bg-slate-600" />
-        <span className="text-[13px] font-medium text-slate-400 dark:text-slate-500">
+        <span className="text-body text-slate-400 dark:text-slate-500">
           {departureTime}
         </span>
       </StatHeroMeta>
@@ -137,7 +137,7 @@ export function ChoroplethSection() {
 
 function ChoroplethLegend() {
   return (
-    <p className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
+    <p className="flex flex-wrap items-center gap-x-4 gap-y-2 text-body text-slate-600 dark:text-slate-400">
       <span className="flex items-center gap-2">
         <span className="inline-block h-2 w-2 rounded-full bg-[#16a34a]" />
         Bolja povezanost
@@ -249,7 +249,7 @@ export function AccessibilityGapSection({
           <div className="bg-emerald-500" style={{ width: `${goodPct}%` }} />
           <div className="bg-rose-500" style={{ width: `${poorPct}%` }} />
         </div>
-        <div className="mt-3 flex justify-between text-[13px] text-slate-500">
+        <div className="mt-3 flex justify-between text-body text-slate-500">
           <span>Dobra povezanost (&ge;50): {goodPct}%</span>
           <span>Lo&#353;a povezanost (&lt;25): {poorPct}%</span>
         </div>

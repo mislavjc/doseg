@@ -55,7 +55,7 @@ function LayerRow({
     >
       <CheckSquare state={state} />
       <span
-        className={`grow font-heros text-[16px] leading-5 ${
+        className={`grow font-heros text-body leading-5 ${
           state === "off" ? "text-ink-muted" : "text-ink"
         }`}
       >
@@ -92,7 +92,7 @@ function SubRow({
         <PoiDot colorClass={colorClass} />
       </span>
       <span
-        className={`grow font-heros text-[14px] leading-[18px] ${
+        className={`grow font-heros text-body ${
           on ? "text-ink-2" : "text-ink-faint"
         }`}
       >
@@ -211,7 +211,7 @@ export function LayersControl({
             className="shrink-0 text-ink-muted"
           />
           {variant === "label" && (
-            <span className="font-heros text-[15px] leading-[18px] text-ink-2">
+            <span className="font-heros text-body text-ink-2">
               Slojevi{n > 0 ? ` · ${n}` : ""}
             </span>
           )}

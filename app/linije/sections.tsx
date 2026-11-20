@@ -191,7 +191,7 @@ export function DosegLinije({ data }: { data: LinePageData }) {
       </SectionHeader>
       <Link
         href={mapHref}
-        className="inline-flex items-center gap-1.5 font-mono text-[16px] leading-6 text-zg-blue transition-colors hover:text-navy"
+        className="inline-flex items-center gap-1.5 font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
       >
         otvori liniju {data.broj} na karti
         <IconArrowUpRight size={16} className="shrink-0" />

@@ -172,7 +172,7 @@ export function Chip({ className, ...props }: ComponentPropsWithoutRef<"span">) 
   return (
     <span
       className={cn(
-        "inline-flex items-center bg-surface px-2.5 py-[5px] font-mono text-[11px] leading-[14px] text-ink-2",
+        "inline-flex items-center bg-surface px-2.5 py-[5px] font-mono text-label text-ink-2",
         className
       )}
       {...props}

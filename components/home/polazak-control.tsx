@@ -67,7 +67,7 @@ function ExactTimeRow({
       <button
         type="button"
         onClick={() => step(-15)}
-        className="w-11 border border-hairline-strong font-mono text-[13px] leading-4 text-ink-muted transition-[color,transform] duration-150 ease-out hover:text-ink-2 active:scale-[0.97]"
+        className="w-11 border border-hairline-strong font-mono text-label text-ink-muted transition-[color,transform] duration-150 ease-out hover:text-ink-2 active:scale-[0.97]"
       >
         −15
       </button>
@@ -88,7 +88,7 @@ function ExactTimeRow({
             if (e.key === "Enter") e.currentTarget.blur()
           }}
           aria-label="Točno vrijeme polaska"
-          className={`w-[72px] bg-transparent text-center font-mono text-[22px] leading-[26px] outline-none ${
+          className={`w-[72px] bg-transparent text-center font-mono text-head font-bold outline-none ${
             active ? "text-zg-blue" : "text-ink-2"
           }`}
         />
@@ -96,7 +96,7 @@ function ExactTimeRow({
       <button
         type="button"
         onClick={() => step(15)}
-        className="w-11 border border-hairline-strong font-mono text-[13px] leading-4 text-ink-muted transition-[color,transform] duration-150 ease-out hover:text-ink-2 active:scale-[0.97]"
+        className="w-11 border border-hairline-strong font-mono text-label text-ink-muted transition-[color,transform] duration-150 ease-out hover:text-ink-2 active:scale-[0.97]"
       >
         +15
       </button>
@@ -134,7 +134,7 @@ function PanelBody({
             }`}
           />
           <span
-            className={`font-heros text-[16px] leading-5 ${
+            className={`font-heros text-body leading-5 ${
               departTime === null ? "font-bold text-zg-blue" : "text-ink"
             }`}
           >
@@ -142,7 +142,7 @@ function PanelBody({
           </span>
         </span>
         <span
-          className={`font-mono text-[13px] leading-4 ${
+          className={`font-mono text-label ${
             departTime === null ? "text-zg-blue" : "text-ink-muted"
           }`}
         >
@@ -177,15 +177,15 @@ function PanelBody({
         onCommit={onPick}
       />
       <div className="flex justify-between px-[18px] pt-1.5">
-        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+        <span className="font-mono text-label text-ink-faint">
           upiši ili koristi ±
         </span>
-        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+        <span className="font-mono text-label text-ink-faint">
           korak 15 min
         </span>
       </div>
       <div className="m-3 bg-note-bg px-[14px] py-3">
-        <p className="font-heros text-[14px] leading-[19px] text-note-ink">
+        <p className="font-heros text-body text-note-ink">
           Doseg se mijenja kroz dan, navečer istok grada gubi gotovo trećinu.
         </p>
       </div>
@@ -225,7 +225,7 @@ export function PolazakControl({
                 polazak
               </span>
             )}
-            <span className="font-heros text-[15px] leading-[18px] font-bold text-ink">
+            <span className="font-heros text-head font-bold text-ink">
               {departTime ?? `Sada · ${now}`}
             </span>
           </span>

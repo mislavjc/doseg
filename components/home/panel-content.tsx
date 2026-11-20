@@ -69,7 +69,7 @@ export function GeoButton({ onUse }: { onUse: () => void }) {
       className="flex shrink-0 items-center gap-2.5 self-start border border-hairline-strong px-3.5 py-[11px] transition-colors duration-150 ease-out hover:bg-row-tint active:scale-[0.99]"
     >
       <IconLocation size={16} className="shrink-0 text-zg-blue" />
-      <span className="font-heros text-[16px] leading-5 text-zg-blue">
+      <span className="font-heros text-body leading-5 text-zg-blue">
         Koristi moju lokaciju
       </span>
     </button>
@@ -104,14 +104,14 @@ export function ErrorContent({ onRetry }: { onRetry: () => void }) {
     <div className="flex flex-col gap-[10px]">
       <MonoLabel>greška pri izračunu</MonoLabel>
       <Hook>Ne mogu izračunati doseg.</Hook>
-      <p className="font-heros text-[16px] leading-6 text-ink-muted">
+      <p className="font-heros text-body leading-6 text-ink-muted">
         Podaci o mreži trenutno nisu dostupni. Provjeri vezu pa pokušaj
         ponovno, adresa ostaje upisana.
       </p>
       <button
         type="button"
         onClick={onRetry}
-        className="inline-flex w-fit items-center gap-1 pt-1 font-mono text-[16px] leading-6 text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97]"
+        className="inline-flex w-fit items-center gap-1 pt-1 font-mono text-body leading-6 text-zg-blue transition-[color,transform] duration-150 ease-[var(--ease-out-strong)] hover:text-navy active:scale-[0.97]"
       >
         pokušaj ponovno
         <IconArrowRight size={14} className="shrink-0" />
@@ -138,7 +138,7 @@ export function ReachReadout({
       {!hideHeadline && (
         <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "-"}</Hook>
       )}
-      <p className="font-heros text-[16px] leading-[22px] text-ink-muted">
+      <p className="font-heros text-body leading-[22px] text-ink-muted">
         {stats?.pctCity != null && `${stats.pctCity}% površine grada`}
         {stats?.districtsInReach != null &&
           stats.totalDistricts != null &&
@@ -190,7 +190,7 @@ export function PoiList({
     <div className="flex flex-col gap-[11px]">
       <div className="flex items-center justify-between">
         <MonoLabel>u dosegu</MonoLabel>
-        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+        <span className="font-mono text-label text-ink-faint">
           klik za kartu
         </span>
       </div>
@@ -208,11 +208,11 @@ export function PoiList({
               <span className={on ? "" : "opacity-30"}>
                 <PoiDot colorClass={row.colorClass} />
               </span>
-              <span className="font-heros text-[16px] leading-5 text-ink-2">
+              <span className="font-heros text-body leading-5 text-ink-2">
                 {row.label}
               </span>
             </span>
-            <span className="font-heros text-[16px] leading-5 text-ink">
+            <span className="font-heros text-body leading-5 text-ink">
               {poiCounts ? (poiCounts[row.key] ?? 0) : "…"}
             </span>
           </button>
@@ -293,7 +293,7 @@ export function JourneyStrip({
                 <BikeIcon className="text-white" />
               ) : (
                 leg.route && (
-                  <span className="font-mono text-[11px] leading-[14px] text-white">
+                  <span className="font-mono text-label text-white">
                     {leg.route}
                   </span>
                 )
@@ -327,14 +327,14 @@ function LegRow({
     >
       <ModeChip mode={leg.mode} route={leg.route} color={color} />
       <div className="flex grow flex-col gap-px">
-        <span className="font-heros text-[16px] leading-5 text-ink">
+        <span className="font-heros text-body leading-5 text-ink">
           {legTitle(leg)}
         </span>
-        <span className="font-heros text-[13px] leading-4 text-ink-faint">
+        <span className="font-heros text-body text-ink-faint">
           {sub}
         </span>
       </div>
-      <span className="font-mono text-[13px] leading-4 text-ink-muted">
+      <span className="font-mono text-label text-ink-muted">
         {Math.max(1, Math.round(leg.duration / 60))} min
       </span>
     </div>
@@ -358,11 +358,11 @@ export function RouteSummary({
   return (
     <div className="flex flex-col gap-1">
       {!hideHeadline && (
-        <p className="font-heros text-[16px] leading-5 font-bold text-ink">
+        <p className="font-heros text-head font-bold leading-5 text-ink">
           {minutes} min
         </p>
       )}
-      <p className="font-heros text-[14px] leading-[18px] text-ink-muted">
+      <p className="font-heros text-body text-ink-muted">
         {departedAt && arrival
           ? `Polazak ${formatClock(departedAt)}, dolazak ${formatClock(arrival)} · `
           : ""}
@@ -429,7 +429,7 @@ export function RouteTooFar({
   return (
     <div className="flex flex-col gap-[5px]">
       {!hideHeadline && <Hook>Predaleko za javni prijevoz</Hook>}
-      <p className="font-heros text-[14px] leading-[18px] text-ink-muted">
+      <p className="font-heros text-body text-ink-muted">
         Do ovog odredišta nema razumne ZET veze. Probaj odredište bliže gradu.
       </p>
     </div>
@@ -472,7 +472,7 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
           href="/statistika"
           className="group -mx-1.5 flex items-center justify-between px-1.5 py-0.5 transition-colors duration-150 hover:bg-row-tint"
         >
-          <span className="font-heros text-[16px] leading-5 text-ink">
+          <span className="font-heros text-body leading-5 text-ink">
             {district.name}
           </span>
           <span className="font-mono text-label text-zg-blue">
@@ -480,13 +480,13 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
           </span>
         </Link>
       ) : (
-        <p className="font-heros text-[16px] leading-5 text-ink-faint">
+        <p className="font-heros text-body leading-5 text-ink-faint">
           Klikni kartu za svoj kvart
         </p>
       )}
       <RankRamp score={district?.score} />
       {district && (
-        <span className="font-mono text-[11px] leading-[14px] text-ink-faint">
+        <span className="font-mono text-label text-ink-faint">
           ocjena dosega · 0-100
         </span>
       )}
@@ -506,15 +506,15 @@ export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
     <div className="flex items-center justify-between gap-3 border-t border-hairline pt-3.5">
       {district ? (
         <Link href="/statistika" className="flex flex-col">
-          <span className="font-heros text-[16px] leading-5 text-ink">
+          <span className="font-heros text-body leading-5 text-ink">
             {district.name}
           </span>
-          <span className="font-mono text-[11px] leading-[14px] text-zg-blue">
+          <span className="font-mono text-label text-zg-blue">
             #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
           </span>
         </Link>
       ) : (
-        <span className="font-heros text-[16px] leading-5 text-ink">
+        <span className="font-heros text-body leading-5 text-ink">
           Tvoj kvart na ljestvici
         </span>
       )}

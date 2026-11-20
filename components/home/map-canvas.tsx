@@ -502,7 +502,7 @@ function dotPopupEl(
   const body = document.createElement("div")
   body.className = "flex flex-col px-3.5 py-3"
   const title = document.createElement("span")
-  title.className = "font-heros text-[16px] leading-5 text-ink"
+  title.className = "font-heros text-body leading-5 text-ink"
   title.textContent = info.name ?? fallbackTitle
   body.append(title)
   if (info.sub) {

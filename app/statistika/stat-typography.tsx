@@ -17,7 +17,7 @@ export function StatPageTitle({
   return (
     <h1
       className={cn(
-        "font-sans text-4xl font-medium leading-[1.1] tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100",
+        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ export function StatHeroMeta({
   return (
     <div
       className={cn(
-        "mb-6 flex items-center gap-3 text-[13px] font-medium text-slate-400 dark:text-slate-500",
+        "mb-6 flex items-center gap-3 text-body text-slate-400 dark:text-slate-500",
         className
       )}
       {...props}
@@ -64,7 +64,7 @@ export function StatGroupTitle({
   return (
     <h2
       className={cn(
-        "font-sans text-[26px] font-medium tracking-tight text-slate-900 sm:text-[32px] dark:text-slate-100",
+        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -81,7 +81,7 @@ export function StatGroupLead({
   return (
     <p
       className={cn(
-        "mb-12 max-w-[650px] text-base leading-relaxed text-slate-600 sm:text-[18px] dark:text-slate-400",
+        "mb-12 max-w-[650px] text-body text-slate-600 dark:text-slate-400",
         className
       )}
       {...props}
@@ -103,7 +103,7 @@ export function StatModuleTitle({
   return (
     <Tag
       className={cn(
-        "font-sans text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100",
+        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -118,7 +118,7 @@ export function StatModuleLead({
   return (
     <p
       className={cn(
-        "mt-4 max-w-xl text-[18px] leading-relaxed text-slate-700 dark:text-slate-300",
+        "mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300",
         className
       )}
       {...props}
@@ -136,7 +136,7 @@ export function StatDisplayHeading({
   return (
     <h2
       className={cn(
-        "mb-8 text-center text-xl font-normal tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100",
+        "mb-8 text-center text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -155,7 +155,7 @@ export function StatOverline({
   return (
     <p
       className={cn(
-        "mb-2 text-sm font-medium lowercase text-slate-400 dark:text-slate-500",
+        "mb-2 text-body lowercase text-slate-400 dark:text-slate-500",
         className
       )}
       {...props}
@@ -173,7 +173,7 @@ export function StatEyebrow({
   return (
     <Tag
       className={cn(
-        "mb-2 font-sans text-[11px] font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400",
+        "mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400",
         className
       )}
       {...props}
@@ -190,7 +190,7 @@ export function StatBodyLarge({
   return (
     <p
       className={cn(
-        "text-base leading-[1.8] text-slate-600 dark:text-slate-400",
+        "text-body leading-[1.8] text-slate-600 dark:text-slate-400",
         className
       )}
       {...props}
@@ -205,7 +205,7 @@ export function StatProse({
   return (
     <div
       className={cn(
-        "flex flex-col gap-6 text-base leading-[1.8] text-slate-600 dark:text-slate-400",
+        "flex flex-col gap-6 text-body leading-[1.8] text-slate-600 dark:text-slate-400",
         className
       )}
       {...props}
@@ -219,7 +219,7 @@ export function StatMuted({
 }: ComponentPropsWithoutRef<"p">) {
   return (
     <p
-      className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+      className={cn("text-body text-slate-500 dark:text-slate-400", className)}
       {...props}
     />
   )
@@ -246,7 +246,7 @@ export function StatKpiValue({
   return (
     <span
       className={cn(
-        "font-sans text-5xl font-normal leading-none tracking-tight text-slate-900 sm:text-[56px] dark:text-slate-100",
+        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -261,7 +261,7 @@ export function StatKpiNote({
   return (
     <span
       className={cn(
-        "font-sans text-[32px] font-normal leading-none tracking-tight text-slate-900 sm:text-[40px] dark:text-slate-100",
+        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
@@ -276,7 +276,7 @@ export function StatKpiCaption({
   return (
     <div
       className={cn(
-        "mt-8 text-xs leading-relaxed text-slate-600 sm:text-[13px] dark:text-slate-400",
+        "mt-8 font-mono text-label text-slate-600 dark:text-slate-400",
         className
       )}
       {...props}
@@ -308,7 +308,7 @@ export function StatInsightBody({
   return (
     <p
       className={cn(
-        "text-[15px] leading-relaxed text-slate-600 sm:text-sm dark:text-slate-300",
+        "text-body text-slate-600 dark:text-slate-300",
         className
       )}
       {...props}

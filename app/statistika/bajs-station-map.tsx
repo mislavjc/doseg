@@ -60,6 +60,25 @@ function addStationLayer(map: maplibregl.Map) {
   })
 }
 
+function el(tag: string, style: string, ...children: (Node | string)[]) {
+  const node = document.createElement(tag)
+  node.style.cssText = style
+  node.append(...children)
+  return node
+}
+
+function stationPopup(p: StationProps) {
+  const strong = (v: number) => el("strong", "", String(v))
+  return el(
+    "div",
+    "font-family:var(--font-heros),sans-serif;font-size:16px;line-height:24px",
+    el("strong", "", p.name),
+    el("div", "margin-top:4px", "Bicikli: ", strong(p.bikesAvailable)),
+    el("div", "", "Dokovi: ", strong(p.docksAvailable)),
+    el("div", "color:#64748b;font-family:var(--font-mono),monospace;font-size:12px;line-height:16px;margin-top:2px", `Kapacitet: ${p.capacity}`),
+  )
+}
+
 function setupInteractions(
   map: maplibregl.Map,
   popupRef: React.RefObject<maplibregl.Popup | null>,
@@ -83,21 +102,14 @@ function setupInteractions(
       offset: 12,
     })
       .setLngLat([lng, lat])
-      .setHTML(
-        `<div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.5">
-          <strong style="font-size:14px">${p.name}</strong>
-          <div style="margin-top:4px">Bicikli: <strong>${p.bikesAvailable}</strong></div>
-          <div>Dokovi: <strong>${p.docksAvailable}</strong></div>
-          <div style="color:#64748b;font-size:12px;margin-top:2px">Kapacitet: ${p.capacity}</div>
-        </div>`,
-      )
+      .setDOMContent(stationPopup(p))
       .addTo(map)
   })
 }
 
 function MapLegend() {
   return (
-    <div className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-3 py-2 text-[11px] backdrop-blur-sm dark:bg-zinc-900/90">
+    <div className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-3 py-2 font-mono text-label backdrop-blur-sm dark:bg-zinc-900/90">
       <div className="mb-1 font-semibold text-slate-700 dark:text-slate-300">Dostupnost</div>
       <div className="flex items-center gap-3">
         <span className="flex items-center gap-1">

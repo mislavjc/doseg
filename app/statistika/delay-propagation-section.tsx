@@ -63,7 +63,7 @@ function StopXLabels({
         const x = xScale(p.stopName) ?? 0
         const label = p.stopName.length > 12 ? p.stopName.slice(0, 11) + "\u2026" : p.stopName
         return (
-          <text key={p.seq} x={x} y={innerH + 16} textAnchor="end" transform={`rotate(-45 ${x} ${innerH + 16})`} className="fill-slate-500 text-[10px] dark:fill-slate-400">
+          <text key={p.seq} x={x} y={innerH + 16} textAnchor="end" transform={`rotate(-45 ${x} ${innerH + 16})`} className="fill-slate-500 font-mono text-label dark:fill-slate-400">
             {label}
           </text>
         )
@@ -111,7 +111,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
 
 function ChartLegend() {
   return (
-    <div className="mb-6 flex flex-wrap gap-6 text-[13px] font-medium text-slate-500 dark:text-slate-400">
+    <div className="mb-6 flex flex-wrap gap-6 text-body text-slate-500 dark:text-slate-400">
       <span className="flex items-center gap-2">
         <span className="inline-block h-0.5 w-4 bg-blue-500" />{" "}
         Prosječno kašnjenje
@@ -137,7 +137,7 @@ function DelayProfileBody({
 }) {
   if (error)
     return (
-      <p className="text-[13px] text-slate-500 dark:text-slate-400">
+      <p className="text-body text-slate-500 dark:text-slate-400">
         Podaci nisu dostupni
       </p>
     )
@@ -156,7 +156,7 @@ function DelayProfileBody({
   if (data.points.length === 0) {
     return (
       <div className="rounded-[12px] bg-[#f9f9f9] p-8 text-center sm:p-12 dark:bg-[#1a1a1a]">
-        <p className="text-[15px] text-slate-500 dark:text-slate-400">
+        <p className="text-body text-slate-500 dark:text-slate-400">
           Nema podataka o kašnjenju za liniju {selectedRoute} u zadnjih 24h
         </p>
       </div>
@@ -185,7 +185,7 @@ function RouteSelector({
       value={selectedRoute}
       onChange={(e) => onChange(e.target.value)}
       aria-label="Linija"
-      className="h-10 min-w-[160px] rounded-full border border-slate-100 bg-white/80 px-4 text-[15px] font-medium text-slate-700 transition-colors hover:border-slate-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-white/10 dark:bg-zinc-900/80 dark:text-slate-200 dark:hover:border-white/20"
+      className="h-10 min-w-[160px] rounded-full border border-slate-100 bg-white/80 px-4 text-body text-slate-700 transition-colors hover:border-slate-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-white/10 dark:bg-zinc-900/80 dark:text-slate-200 dark:hover:border-white/20"
     >
       {routes.map((r) => (
         <option key={r} value={r}>

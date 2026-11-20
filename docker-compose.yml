@@ -68,7 +68,10 @@ services:
     restart: "no"
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        - GIT_SHA=${GIT_SHA:-unknown}
     environment:
       - OTP_URL=http://otp:8080
       - HOSTNAME=0.0.0.0

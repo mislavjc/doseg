@@ -8,8 +8,8 @@ import { createReadStream } from "node:fs"
 import createParser from "osm-pbf-parser"
 import through2 from "through2"
 
-import { BBOX, writeBinaryGraph } from './lib/osm-graph';
-import type { Edge, OsmItem } from './lib/osm-graph';
+import { BBOX, writeBinaryGraph } from "./lib/osm-graph"
+import type { Edge, OsmItem } from "./lib/osm-graph"
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/bike-graph.bin"
@@ -52,11 +52,21 @@ interface BikeableWay {
 
 function isBikeAllowed(tags: Record<string, string>): boolean {
   const highway = tags.highway
-  if (!highway || !BIKEABLE_HIGHWAYS.has(highway)) {return false}
-  if (tags.access === "private" || tags.access === "no") {return false}
-  if (tags.bicycle === "no" || tags.bicycle === "dismount") {return false}
-  if (tags.motorroad === "yes") {return false}
-  if (highway === "steps") {return false}
+  if (!highway || !BIKEABLE_HIGHWAYS.has(highway)) {
+    return false
+  }
+  if (tags.access === "private" || tags.access === "no") {
+    return false
+  }
+  if (tags.bicycle === "no" || tags.bicycle === "dismount") {
+    return false
+  }
+  if (tags.motorroad === "yes") {
+    return false
+  }
+  if (highway === "steps") {
+    return false
+  }
 
   if (CONDITIONAL_BIKE_HIGHWAYS.has(highway)) {
     const bicycle = tags.bicycle
@@ -110,31 +120,36 @@ function parseOsmData(
     createReadStream(INPUT)
       .pipe(createParser())
       .pipe(
-        through2.obj((items: Array<OsmItem>, _enc: string, next: () => void) => {
-          for (const item of items) {
-            if (item.type === "node") {
-              const lat = item.lat!
-              const lon = item.lon!
-              if (
-                lat >= BBOX.minLat &&
-                lat <= BBOX.maxLat &&
-                lon >= BBOX.minLon &&
-                lon <= BBOX.maxLon
-              ) {
-                nodeCoords.set(item.id, { lat, lon })
+        through2.obj(
+          (items: Array<OsmItem>, _enc: string, next: () => void) => {
+            for (const item of items) {
+              if (item.type === "node") {
+                const { lat, lon } = item
+                if (
+                  lat !== undefined &&
+                  lon !== undefined &&
+                  lat >= BBOX.minLat &&
+                  lat <= BBOX.maxLat &&
+                  lon >= BBOX.minLon &&
+                  lon <= BBOX.maxLon
+                ) {
+                  nodeCoords.set(item.id, { lat, lon })
+                }
+              } else if (item.type === "way" && item.tags) {
+                if (!isBikeAllowed(item.tags)) {
+                  continue
+                }
+                const { forward, backward } = getDirection(item.tags)
+                bikeableWays.push({
+                  refs: item.refs ?? [],
+                  forward,
+                  backward,
+                })
               }
-            } else if (item.type === "way" && item.tags) {
-              if (!isBikeAllowed(item.tags)) {continue}
-              const { forward, backward } = getDirection(item.tags)
-              bikeableWays.push({
-                refs: item.refs ?? [],
-                forward,
-                backward,
-              })
             }
+            next()
           }
-          next()
-        })
+        )
       )
       .on("finish", resolve)
       .on("error", reject)
@@ -144,7 +159,7 @@ function parseOsmData(
 function filterValidWays(
   bikeableWays: Array<BikeableWay>,
   nodeCoords: Map<number, { lat: number; lon: number }>
-): { usedNodeIds: Set<number>; validWays: Array<BikeableWay> } {
+) {
   const usedNodeIds = new Set<number>()
   const validWays: Array<BikeableWay> = []
 
@@ -188,7 +203,9 @@ function buildEdges(
     for (let i = 0; i < way.refs.length - 1; i++) {
       const fromIdx = nodeIdToIdx.get(way.refs[i])
       const toIdx = nodeIdToIdx.get(way.refs[i + 1])
-      if (fromIdx === undefined || toIdx === undefined) {continue}
+      if (fromIdx === undefined || toIdx === undefined) {
+        continue
+      }
 
       const fromCoord = nodeList[fromIdx]
       const toCoord = nodeList[toIdx]
@@ -196,8 +213,12 @@ function buildEdges(
         distKm(fromCoord.lat, fromCoord.lon, toCoord.lat, toCoord.lon) * 100_000
       )
 
-      if (way.forward) {edges.push({ from: fromIdx, to: toIdx, distCm })}
-      if (way.backward) {edges.push({ from: toIdx, to: fromIdx, distCm })}
+      if (way.forward) {
+        edges.push({ from: fromIdx, to: toIdx, distCm })
+      }
+      if (way.backward) {
+        edges.push({ from: toIdx, to: fromIdx, distCm })
+      }
     }
   }
 
@@ -227,7 +248,9 @@ async function main() {
 
   for (const id of usedNodeIds) {
     const coord = nodeCoords.get(id)
-    if (!coord) {continue}
+    if (!coord) {
+      continue
+    }
     nodeIdToIdx.set(id, nodeList.length)
     nodeList.push(coord)
   }

@@ -36,10 +36,10 @@ export function RankRamp({ score }: { score?: number }) {
   return (
     <div
       aria-hidden
-      className={`relative h-2 ${score == null ? "opacity-40" : ""}`}
+      className={`relative h-2 ${score === undefined ? "opacity-40" : ""}`}
       style={{ background: RANK_GRADIENT }}
     >
-      {score != null && (
+      {score !== undefined && (
         <span
           className="absolute -top-[3px] h-[14px] w-[3px] bg-ink"
           style={{

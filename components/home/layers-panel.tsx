@@ -4,8 +4,8 @@ import { useState } from "react"
 import { IconLayersThree } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { useCloseOnEscape } from "@/hooks/use-close-on-escape"
-import { POI_CATEGORIES } from '@/lib/poi';
-import type { MapPoiCategory } from '@/lib/poi';
+import { POI_CATEGORIES } from "@/lib/poi"
+import type { MapPoiCategory } from "@/lib/poi"
 import {
   CheckSquare,
   DropdownPanel,
@@ -62,7 +62,7 @@ function LayerRow({
       >
         {label}
       </span>
-      {meta != null && (
+      {meta !== null && meta !== undefined && (
         <span className="font-mono text-label text-ink-faint">{meta}</span>
       )}
     </button>
@@ -99,7 +99,7 @@ function SubRow({
       >
         {label}
       </span>
-      {meta != null && (
+      {meta !== null && meta !== undefined && (
         <span
           className={`font-mono text-label ${
             on ? "text-ink-muted" : "text-ink-faint/70"
@@ -132,12 +132,12 @@ function PanelBody({
       ? "mixed"
       : "off"
   return (
-    <DropdownPanel className="origin-top-right top-full right-0 mt-1.5 max-h-[calc(100dvh-env(safe-area-inset-top)-180px)] w-[272px] overflow-y-auto pb-1.5">
+    <DropdownPanel className="top-full right-0 mt-1.5 max-h-[calc(100dvh-env(safe-area-inset-top)-180px)] w-[272px] origin-top-right overflow-y-auto pb-1.5">
       <DropdownSection label="slojevi karte" />
       <LayerRow
         state={layers.doseg ? "on" : "off"}
         label="Doseg"
-        meta={km2 == null ? undefined : `${Math.round(km2)} km²`}
+        meta={km2 === null ? undefined : `${Math.round(km2)} km²`}
         onToggle={() => onChange({ ...layers, doseg: !layers.doseg })}
       />
       <LayerRow

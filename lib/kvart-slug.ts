@@ -1,4 +1,10 @@
-const DIA: Record<string, string> = { č: "c", ć: "c", š: "s", ž: "z", đ: "d" }
+const DIA = new Map([
+  ["č", "c"],
+  ["ć", "c"],
+  ["š", "s"],
+  ["ž", "z"],
+  ["đ", "d"],
+])
 
 /**
  * "Trešnjevka - sjever" → "tresnjevka-sjever" (template-safe, diacritic-free).
@@ -9,7 +15,7 @@ const DIA: Record<string, string> = { č: "c", ć: "c", š: "s", ž: "z", đ: "d
 export function kvartSlug(name: string): string {
   return name
     .toLowerCase()
-    .replaceAll(/[čćšžđ]/gu, (c) => DIA[c] ?? c)
+    .replaceAll(/[čćšžđ]/gu, (c) => DIA.get(c) ?? c)
     .replaceAll(/[^a-z0-9]+/gu, "-")
     .replaceAll(/^-+|-+$/gu, "")
 }

@@ -1,4 +1,4 @@
-import type * as maplibregl from "maplibre-gl"
+import type { ExpressionSpecification } from "maplibre-gl"
 
 /**
  * Reach (isochrone) ramp, near → far — docs/map-redesign-spec.md §1.
@@ -16,9 +16,7 @@ export const REACH_RAMP = [
 ] as const
 
 /** MapLibre color expression over the walk-area `time` property (seconds). */
-export function reachColorStops(
-  maxSeconds: number
-): maplibregl.ExpressionSpecification {
+export function reachColorStops(maxSeconds: number): ExpressionSpecification {
   const stops: Array<number | string> = []
   REACH_RAMP.forEach((color, i) => {
     stops.push((maxSeconds * i) / (REACH_RAMP.length - 1), color)
@@ -28,5 +26,5 @@ export function reachColorStops(
     ["linear"],
     ["get", "time"],
     ...stops,
-  ] as maplibregl.ExpressionSpecification
+  ] as ExpressionSpecification
 }

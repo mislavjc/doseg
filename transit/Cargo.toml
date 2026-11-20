@@ -40,6 +40,10 @@ opt-level = 3
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
+# Restriction lints for leftovers that must never ship; CI promotes every warning to an error with -D warnings.
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
 # Grid, routing and stats code converts between f64 coordinates/seconds and integer indices/counts whose ranges are bounded by the Zagreb bbox and feed size.
 cast_possible_truncation = "allow"
 cast_precision_loss = "allow"

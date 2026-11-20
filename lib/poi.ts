@@ -1,7 +1,10 @@
 import type { POICategory } from "./overpass"
 
 /** The POI categories the map UI surfaces (subset of lib/overpass kinds). */
-export type MapPoiCategory = Extract<POICategory, "hospital" | "school" | "park">
+export type MapPoiCategory = Extract<
+  POICategory,
+  "hospital" | "school" | "park"
+>
 
 /**
  * Single source for POI category UI — sidebar "u dosegu" rows, the Slojevi
@@ -21,14 +24,16 @@ export const POI_CATEGORIES: Array<{
  * Geocode result kind → autocomplete dot + croatian label (spec §7).
  * Streets share the school blue per the Paper design.
  */
-export const GEOCODE_KIND_META: Record<
+export const GEOCODE_KIND_META = new Map<
   string,
   { dotClass: string; label: string }
-> = {
-  hospital: { dotClass: "bg-poi-hospital", label: "bolnica" },
-  school: { dotClass: "bg-poi-school", label: "škola" },
-  park: { dotClass: "bg-poi-park", label: "park" },
-  street: { dotClass: "bg-poi-school", label: "ulica" },
-  address: { dotClass: "bg-ink-faint", label: "adresa" },
-  place: { dotClass: "bg-ink-faint", label: "mjesto" },
-}
+>(
+  Object.entries({
+    hospital: { dotClass: "bg-poi-hospital", label: "bolnica" },
+    school: { dotClass: "bg-poi-school", label: "škola" },
+    park: { dotClass: "bg-poi-park", label: "park" },
+    street: { dotClass: "bg-poi-school", label: "ulica" },
+    address: { dotClass: "bg-ink-faint", label: "adresa" },
+    place: { dotClass: "bg-ink-faint", label: "mjesto" },
+  })
+)

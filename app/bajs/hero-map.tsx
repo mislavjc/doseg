@@ -1,7 +1,13 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import * as maplibregl from "@/lib/maplibre"
+import {
+  AttributionControl,
+  MapLibreMap,
+  NavigationControl,
+  Popup,
+} from "@/lib/maplibre"
+import type { GeoJSONSource, LngLatBoundsLike } from "@/lib/maplibre"
 import type { StyleSpecification } from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import useSWR from "swr"
@@ -9,7 +15,11 @@ import useSWR from "swr"
 import { plural } from "@/app/linije/copy"
 import meta from "@/data/bajs-tiles.json"
 
-import { addStationLayers, setStationHover, STATION_LAYER } from "./station-marks"
+import {
+  addStationLayers,
+  setStationHover,
+  STATION_LAYER,
+} from "./station-marks"
 
 /**
  * The pannable dither. Instead of a vendor basemap this map's only ground is
@@ -48,13 +58,17 @@ const DITHER_STYLE: StyleSpecification = {
     },
   },
   layers: [
-    { id: "ground", type: "background", paint: { "background-color": "#ffffff" } },
+    {
+      id: "ground",
+      type: "background",
+      paint: { "background-color": "#ffffff" },
+    },
     { id: "dither", type: "raster", source: "dither" },
   ],
 }
 
 /** Built as nodes, not markup: station names come from a third-party feed. */
-function popupContent(p: Record<string, unknown>) {
+function popupContent(p: NonNullable<GeoJSON.GeoJsonProperties>) {
   const bikes = Number(p.bikesAvailable ?? 0)
   const docks = Number(p.docksAvailable ?? 0)
 
@@ -70,11 +84,14 @@ function popupContent(p: Record<string, unknown>) {
   return frag
 }
 
-function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
+function addInteractions(map: MapLibreMap, popup: Popup) {
   map.on("mousemove", STATION_LAYER, (e) => {
     map.getCanvas().style.cursor = "pointer"
     const id: unknown = e.features?.[0]?.properties?.stationId
-    setStationHover(map, typeof id === "string" || typeof id === "number" ? id : undefined)
+    setStationHover(
+      map,
+      typeof id === "string" || typeof id === "number" ? id : undefined
+    )
   })
   map.on("mouseleave", STATION_LAYER, () => {
     map.getCanvas().style.cursor = ""
@@ -82,7 +99,9 @@ function addInteractions(map: maplibregl.Map, popup: maplibregl.Popup) {
   })
   map.on("click", STATION_LAYER, (e) => {
     const f = e.features?.[0]
-    if (!f || f.geometry.type !== "Point") {return}
+    if (!f || f.geometry.type !== "Point") {
+      return
+    }
     const [lng, lat] = f.geometry.coordinates
     popup
       .setLngLat([lng, lat])
@@ -102,9 +121,11 @@ function quantile(vals: Array<number>, p: number) {
  * back until the city everyone recognises is a smear across the middle. They
  * are still there, one drag east.
  */
-function openingBounds(data: Feed): maplibregl.LngLatBoundsLike {
+function openingBounds(data: Feed): LngLatBoundsLike {
   const pts = data.features.map((f) => f.geometry.coordinates)
-  if (pts.length < 20) {return BOUNDS}
+  if (pts.length < 20) {
+    return BOUNDS
+  }
 
   const lons = pts.map((p) => p[0])
   const lats = pts.map((p) => p[1])
@@ -116,7 +137,7 @@ function openingBounds(data: Feed): maplibregl.LngLatBoundsLike {
 
 export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<maplibregl.Map | null>(null)
+  const mapRef = useRef<MapLibreMap | null>(null)
 
   const { data } = useSWR<Feed>("/api/bajs", {
     refreshInterval: REFRESH_MS,
@@ -125,9 +146,11 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
   })
 
   useEffect(() => {
-    if (!containerRef.current) {return}
+    if (!containerRef.current) {
+      return
+    }
 
-    const map = new maplibregl.Map({
+    const map = new MapLibreMap({
       container: containerRef.current,
       style: DITHER_STYLE,
       bounds: openingBounds(initial),
@@ -146,13 +169,16 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
       attributionControl: false,
     })
     map.touchZoomRotate.disableRotation()
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right")
     map.addControl(
-      new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
+      new NavigationControl({ showCompass: false }),
+      "bottom-right"
+    )
+    map.addControl(
+      new AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
       "bottom-right"
     )
 
-    const popup = new maplibregl.Popup({
+    const popup = new Popup({
       className: "bajs-hero-popup",
       closeButton: false,
       maxWidth: "240px",
@@ -179,14 +205,19 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
 
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !data) {return}
+    if (!map || !data) {
+      return
+    }
     const apply = () => {
-      void map.getSource<maplibregl.GeoJSONSource>("stations")?.setData(data)
+      void map.getSource<GeoJSONSource>("stations")?.setData(data)
     }
     // The source only exists once the load handler above has run, so its absence
     // is exactly the signal that we still have to wait for it.
-    if (map.getSource("stations")) {apply()}
-    else {map.once("load", apply)}
+    if (map.getSource("stations")) {
+      apply()
+    } else {
+      map.once("load", apply)
+    }
   }, [data])
 
   return (

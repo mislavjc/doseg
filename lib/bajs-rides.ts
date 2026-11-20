@@ -46,7 +46,9 @@ export async function readRtJson<T>(
     const res = await fetch(`${ISOCHRONE_URL}${path}`, {
       next: { revalidate },
     })
-    if (!res.ok) {return null}
+    if (!res.ok) {
+      return null
+    }
     return await responseJson<T>(res)
   } catch {
     return null
@@ -55,7 +57,7 @@ export async function readRtJson<T>(
 
 /** The endpoint reports 0 (or null) before anything has been measured. */
 function epochDate(seconds: number | null): Date | null {
-  return seconds != null && seconds !== 0 ? new Date(seconds * 1000) : null
+  return seconds !== null && seconds !== 0 ? new Date(seconds * 1000) : null
 }
 
 export type BajsRides = {
@@ -81,28 +83,34 @@ export async function loadBajsRides(days = 30): Promise<BajsRides | null> {
   const data = await readRtJson<BajsRidesResponse>(
     `/api/rt/bajs-rides?days=${days}`
   )
-  if (!data) {return null}
+  if (!data) {
+    return null
+  }
 
   const complete = data.days.filter((d) => d.minutes >= FULL_DAY_MINUTES)
   const last = data.days.at(-1)
   const partialDay = last && last.minutes < FULL_DAY_MINUTES ? last : null
 
-  const avgPerDay = complete.length > 0
-    ? complete.reduce((sum, d) => sum + d.starts, 0) / complete.length
-    : null
+  const avgPerDay =
+    complete.length > 0
+      ? complete.reduce((sum, d) => sum + d.starts, 0) / complete.length
+      : null
 
-  const busiestDay = complete.length > 0
-    ? complete.reduce((best, d) => (d.starts > best.starts ? d : best))
-    : null
+  const busiestDay =
+    complete.length > 0
+      ? complete.reduce((best, d) => (d.starts > best.starts ? d : best))
+      : null
 
   const hourly = data.hourly
-  const peakHour = hourly.length > 0
-    ? hourly.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
-    : null
+  const peakHour =
+    hourly.length > 0
+      ? hourly.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
+      : null
   const morning = hourly.filter((h) => h.hour < 12)
-  const morningPeak = morning.length > 0
-    ? morning.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
-    : null
+  const morningPeak =
+    morning.length > 0
+      ? morning.reduce((best, h) => (h.avgStarts > best.avgStarts ? h : best))
+      : null
 
   return {
     fullDays: complete,
@@ -137,13 +145,17 @@ export async function loadBajsLive(): Promise<BajsLive | null> {
     empty_stations?: Array<unknown>
     emptyStations?: Array<unknown>
   }>("/api/rt/bajs-utilization", 60)
-  if (!data) {return null}
+  if (!data) {
+    return null
+  }
 
   const stations = data.total_stations ?? data.totalStations ?? 0
   const docked = data.total_bikes_available ?? data.totalBikesAvailable ?? 0
   const knownFleet = data.known_fleet ?? data.knownFleet ?? 0
   const empty = (data.empty_stations ?? data.emptyStations ?? []).length
-  if (stations === 0 || docked === 0) {return null}
+  if (stations === 0 || docked === 0) {
+    return null
+  }
 
   return { stations, docked, knownFleet, empty }
 }
@@ -166,7 +178,9 @@ export async function loadBajsRanking(
   const data = await readRtJson<BajsRankingResponse>(
     `/api/rt/bajs-station-ranking?days=${days}&limit=200`
   )
-  if (!data || data.stations.length === 0) {return null}
+  if (!data || data.stations.length === 0) {
+    return null
+  }
 
   // The feed publishes names in caps; the site never renders caps.
   const stations = data.stations.map((s) => ({

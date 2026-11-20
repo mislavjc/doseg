@@ -15,6 +15,7 @@ export default function Error({
       </ErrorMessage>
       <RouteBreak />
       <button
+        type="button"
         onClick={reset}
         className="font-mono text-body leading-6 text-zg-blue transition-colors hover:text-navy"
       >

@@ -10,8 +10,8 @@ import { createReadStream, readFileSync } from "node:fs"
 import createParser from "osm-pbf-parser"
 import through2 from "through2"
 
-import { BBOX, writeBinaryGraph } from './lib/osm-graph';
-import type { Edge, OsmItem } from './lib/osm-graph';
+import { BBOX, writeBinaryGraph } from "./lib/osm-graph"
+import type { Edge, OsmItem } from "./lib/osm-graph"
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"
@@ -68,12 +68,16 @@ function getElevation(
   const tileLon = Math.floor(lon)
   const key = `N${tileLat}E${String(tileLon).padStart(3, "0")}`
   const tile = tiles.get(key)
-  if (!tile) {return 0}
+  if (!tile) {
+    return 0
+  }
 
   const row = Math.round((tileLat + 1 - lat) * (SRTM_SIZE - 1))
   const col = Math.round((lon - tileLon) * (SRTM_SIZE - 1))
   const idx = row * SRTM_SIZE + col
-  if (idx < 0 || idx >= tile.length) {return 0}
+  if (idx < 0 || idx >= tile.length) {
+    return 0
+  }
 
   const elev = tile[idx]
   // -32768 = void
@@ -96,29 +100,35 @@ function parseOsmData(
     createReadStream(INPUT)
       .pipe(createParser())
       .pipe(
-        through2.obj((items: Array<OsmItem>, _enc: string, next: () => void) => {
-          for (const item of items) {
-            if (item.type === "node") {
-              const lat = item.lat!
-              const lon = item.lon!
-              if (
-                lat >= BBOX.minLat &&
-                lat <= BBOX.maxLat &&
-                lon >= BBOX.minLon &&
-                lon <= BBOX.maxLon
-              ) {
-                nodeCoords.set(item.id, { lat, lon })
+        through2.obj(
+          (items: Array<OsmItem>, _enc: string, next: () => void) => {
+            for (const item of items) {
+              if (item.type === "node") {
+                const { lat, lon } = item
+                if (
+                  lat !== undefined &&
+                  lon !== undefined &&
+                  lat >= BBOX.minLat &&
+                  lat <= BBOX.maxLat &&
+                  lon >= BBOX.minLon &&
+                  lon <= BBOX.maxLon
+                ) {
+                  nodeCoords.set(item.id, { lat, lon })
+                }
+              } else if (item.type === "way" && item.tags) {
+                const hw = item.tags.highway
+                if (!hw || !WALKABLE_HIGHWAYS.has(hw)) {
+                  continue
+                }
+                if (item.tags.access === "private" || item.tags.foot === "no") {
+                  continue
+                }
+                walkableWays.push({ refs: item.refs ?? [] })
               }
-            } else if (item.type === "way" && item.tags) {
-              const hw = item.tags.highway
-              if (!hw || !WALKABLE_HIGHWAYS.has(hw)) {continue}
-              if (item.tags.access === "private" || item.tags.foot === "no")
-                {continue}
-              walkableWays.push({ refs: item.refs! })
             }
+            next()
           }
-          next()
-        })
+        )
       )
       .on("finish", resolve)
       .on("error", reject)
@@ -128,7 +138,7 @@ function parseOsmData(
 function filterValidWays(
   walkableWays: Array<{ refs: Array<number> }>,
   nodeCoords: Map<number, { lat: number; lon: number }>
-): { usedNodeIds: Set<number>; validWays: Array<Array<number>> } {
+) {
   const usedNodeIds = new Set<number>()
   const validWays: Array<Array<number>> = []
 
@@ -153,7 +163,6 @@ function filterValidWays(
   return { usedNodeIds, validWays }
 }
 
-
 function buildEdges(
   validWays: Array<Array<number>>,
   nodeIdToIdx: Map<number, number>,
@@ -165,15 +174,21 @@ function buildEdges(
 
   for (const refs of validWays) {
     for (let i = 0; i < refs.length - 1; i++) {
-      const fromIdx = nodeIdToIdx.get(refs[i])!
-      const toIdx = nodeIdToIdx.get(refs[i + 1])!
+      const fromIdx = nodeIdToIdx.get(refs[i])
+      const toIdx = nodeIdToIdx.get(refs[i + 1])
+      if (fromIdx === undefined || toIdx === undefined) {
+        continue
+      }
       const fromCoord = nodeList[fromIdx]
       const toCoord = nodeList[toIdx]
       const d = distKm(fromCoord.lat, fromCoord.lon, toCoord.lat, toCoord.lon)
 
       if (!hasElevation || d < 0.01) {
         const distCm = Math.round(d * 100_000)
-        edges.push({ from: fromIdx, to: toIdx, distCm }, { from: toIdx, to: fromIdx, distCm })
+        edges.push(
+          { from: fromIdx, to: toIdx, distCm },
+          { from: toIdx, to: fromIdx, distCm }
+        )
       } else {
         const elevFrom = getElevation(fromCoord.lat, fromCoord.lon, srtmTiles)
         const elevTo = getElevation(toCoord.lat, toCoord.lon, srtmTiles)
@@ -184,7 +199,10 @@ function buildEdges(
         const fwd = Math.round((d / toblerFactor(slope)) * 100_000)
         const rev = Math.round((d / toblerFactor(-slope)) * 100_000)
 
-        edges.push({ from: fromIdx, to: toIdx, distCm: fwd }, { from: toIdx, to: fromIdx, distCm: rev })
+        edges.push(
+          { from: fromIdx, to: toIdx, distCm: fwd },
+          { from: toIdx, to: fromIdx, distCm: rev }
+        )
       }
     }
   }
@@ -214,7 +232,10 @@ async function main() {
   const nodeList: Array<{ lat: number; lon: number }> = []
 
   for (const id of usedNodeIds) {
-    const coord = nodeCoords.get(id)!
+    const coord = nodeCoords.get(id)
+    if (!coord) {
+      continue
+    }
     nodeIdToIdx.set(id, nodeList.length)
     nodeList.push(coord)
   }

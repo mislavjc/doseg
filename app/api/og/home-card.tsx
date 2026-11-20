@@ -4,8 +4,8 @@ import { join } from "node:path"
 
 import { plural } from "@/app/linije/copy"
 import { projector } from "@/lib/geo"
-import { loadHomeHero } from '@/lib/home-hero';
-import type { HomeHeroData } from '@/lib/home-hero';
+import { loadHomeHero } from "@/lib/home-hero"
+import type { HomeHeroData } from "@/lib/home-hero"
 
 import { heroCloudSrc, ogFonts } from "./card"
 
@@ -72,11 +72,8 @@ function MapWindow({ hero }: { hero: HomeHeroData }) {
         overflow: "hidden",
       }}
     >
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={boundarySvg(hero)} alt="" style={MAP_LAYER} />
       <div
         style={{
@@ -102,7 +99,15 @@ export interface HomeOgCounts {
 }
 
 /** One "value label" pair of the counter line. */
-function Counter({ value, label, blue }: { value: string; label: string; blue?: boolean }) {
+function Counter({
+  value,
+  label,
+  blue,
+}: {
+  value: string
+  label: string
+  blue?: boolean
+}) {
   return (
     <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
       <div
@@ -161,17 +166,47 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
       </div>
       <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
         <Counter value="30 min" label="s bilo koje adrese" blue />
-        <div style={{ fontFamily: "Geist Mono", fontSize: "24px", lineHeight: "33px", color: SEPARATOR, display: "flex" }}>·</div>
+        <div
+          style={{
+            fontFamily: "Geist Mono",
+            fontSize: "24px",
+            lineHeight: "33px",
+            color: SEPARATOR,
+            display: "flex",
+          }}
+        >
+          ·
+        </div>
         <Counter
           value={String(counts.dayLineCount)}
           label={plural(counts.dayLineCount, "linija", "linije", "linija")}
         />
-        <div style={{ fontFamily: "Geist Mono", fontSize: "24px", lineHeight: "33px", color: SEPARATOR, display: "flex" }}>·</div>
+        <div
+          style={{
+            fontFamily: "Geist Mono",
+            fontSize: "24px",
+            lineHeight: "33px",
+            color: SEPARATOR,
+            display: "flex",
+          }}
+        >
+          ·
+        </div>
         <Counter
           value={String(counts.stopCount)}
           label={plural(counts.stopCount, "stanica", "stanice", "stanica")}
         />
-        <div style={{ fontFamily: "Geist Mono", fontSize: "24px", lineHeight: "33px", color: SEPARATOR, display: "flex" }}>·</div>
+        <div
+          style={{
+            fontFamily: "Geist Mono",
+            fontSize: "24px",
+            lineHeight: "33px",
+            color: SEPARATOR,
+            display: "flex",
+          }}
+        >
+          ·
+        </div>
         <Counter
           value={String(counts.kvartCount)}
           label={plural(counts.kvartCount, "kvart", "kvarta", "kvartova")}
@@ -191,26 +226,33 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
  */
 export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
   const hero = loadHomeHero()
-  if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) {return null}
+  if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) {
+    return null
+  }
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#ffffff",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <MapWindow hero={hero} />
       <div
         style={{
           width: "1200px",
-          height: "630px",
+          height: `${RULE_H}px`,
+          backgroundColor: ZG_BLUE,
           display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#ffffff",
-          position: "relative",
-          overflow: "hidden",
         }}
-      >
-        <MapWindow hero={hero} />
-        <div style={{ width: "1200px", height: `${RULE_H}px`, backgroundColor: ZG_BLUE, display: "flex" }} />
-        <InfoBand counts={counts} />
-      </div>
-    ),
+      />
+      <InfoBand counts={counts} />
+    </div>,
     {
       width: 1200,
       height: 630,

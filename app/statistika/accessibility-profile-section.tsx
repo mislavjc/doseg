@@ -12,28 +12,30 @@ import type {
   DistrictHourlyProfile,
 } from "@/lib/generated"
 
-const DISTRICT_COLORS: Record<string, string> = {
-  "Donji grad": "#059669",
-  "Gornji grad-Medveščak": "#0891b2",
-  Trnje: "#2563eb",
-  "Trešnjevka - sjever": "#7c3aed",
-  "Trešnjevka - jug": "#c026d3",
-  Maksimir: "#ea580c",
-  Črnomerec: "#65a30d",
-  "Peščenica-Žitnjak": "#0d9488",
-  "Novi Zagreb - istok": "#6366f1",
-  "Novi Zagreb - zapad": "#8b5cf6",
-  Stenjevec: "#d97706",
-  "Podsused-Vrapče": "#dc2626",
-  "Gornja Dubrava": "#0284c7",
-  "Donja Dubrava": "#4f46e5",
-  Podsljeme: "#9333ea",
-  Sesvete: "#b91c1c",
-  Brezovica: "#78716c",
-}
+const DISTRICT_COLORS = new Map<string, string>(
+  Object.entries({
+    "Donji grad": "#059669",
+    "Gornji grad-Medveščak": "#0891b2",
+    Trnje: "#2563eb",
+    "Trešnjevka - sjever": "#7c3aed",
+    "Trešnjevka - jug": "#c026d3",
+    Maksimir: "#ea580c",
+    Črnomerec: "#65a30d",
+    "Peščenica-Žitnjak": "#0d9488",
+    "Novi Zagreb - istok": "#6366f1",
+    "Novi Zagreb - zapad": "#8b5cf6",
+    Stenjevec: "#d97706",
+    "Podsused-Vrapče": "#dc2626",
+    "Gornja Dubrava": "#0284c7",
+    "Donja Dubrava": "#4f46e5",
+    Podsljeme: "#9333ea",
+    Sesvete: "#b91c1c",
+    Brezovica: "#78716c",
+  })
+)
 
 function getColor(name: string, idx: number): string {
-  return DISTRICT_COLORS[name] ?? `hsl(${(idx * 40) % 360}, 60%, 50%)`
+  return DISTRICT_COLORS.get(name) ?? `hsl(${(idx * 40) % 360}, 60%, 50%)`
 }
 
 interface ProfileInsights {
@@ -77,8 +79,12 @@ function computeInsights(data: AccessibilityProfileOutput): ProfileInsights {
   let cityPeakIdx = 0
   let cityTroughIdx = 0
   for (let i = 0; i < cityAvgByHour.length; i++) {
-    if (cityAvgByHour[i] > cityAvgByHour[cityPeakIdx]) {cityPeakIdx = i}
-    if (cityAvgByHour[i] < cityAvgByHour[cityTroughIdx]) {cityTroughIdx = i}
+    if (cityAvgByHour[i] > cityAvgByHour[cityPeakIdx]) {
+      cityPeakIdx = i
+    }
+    if (cityAvgByHour[i] < cityAvgByHour[cityTroughIdx]) {
+      cityTroughIdx = i
+    }
   }
   const cityPeakCells = cityAvgByHour[cityPeakIdx]
   const cityTroughCells = cityAvgByHour[cityTroughIdx]
@@ -151,7 +157,9 @@ export default function AccessibilityProfileSection() {
   const data = readJsonCached<AccessibilityProfileOutput>(
     join(getDataDir(), "accessibility-profile.json")
   )
-  if (!data || data.districts.length === 0) {return null}
+  if (!data || data.districts.length === 0) {
+    return null
+  }
 
   const insights = computeInsights(data)
 
@@ -489,25 +497,23 @@ function ProfileLegend({
 
   return (
     <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1">
-      {items.map((item) => (
-        <div key={item.name} className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-[2px] w-4"
-            style={{
-              backgroundColor: item.color,
-              ...(item.dash
-                ? {
-                    backgroundImage: `repeating-linear-gradient(90deg, ${item.color} 0 4px, transparent 4px 6px)`,
-                    backgroundColor: "transparent",
-                  }
-                : {}),
-            }}
-          />
-          <span className="font-mono text-label text-slate-500 dark:text-slate-400">
-            {item.name}
-          </span>
-        </div>
-      ))}
+      {items.map((item) => {
+        const swatchStyle: React.CSSProperties = {
+          backgroundColor: item.color,
+        }
+        if (item.dash) {
+          swatchStyle.backgroundImage = `repeating-linear-gradient(90deg, ${item.color} 0 4px, transparent 4px 6px)`
+          swatchStyle.backgroundColor = "transparent"
+        }
+        return (
+          <div key={item.name} className="flex items-center gap-1.5">
+            <span className="inline-block h-[2px] w-4" style={swatchStyle} />
+            <span className="font-mono text-label text-slate-500 dark:text-slate-400">
+              {item.name}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -635,8 +641,8 @@ function ProfileTableHeader({ cityDropPct }: { cityDropPct: number }) {
         </span>
       </div>
       <p className="text-body text-slate-600 dark:text-slate-400">
-        Poredano po padu usluge - kvartovi s najvećim raskorakom između najboljeg
-        i najgoreg sata.
+        Poredano po padu usluge - kvartovi s najvećim raskorakom između
+        najboljeg i najgoreg sata.
       </p>
     </div>
   )
@@ -677,8 +683,12 @@ function MobileCards({ sorted }: { sorted: Array<DistrictHourlyProfile> }) {
 }
 
 function dropColorClass(pct: number): string {
-  if (pct >= 50) {return "text-rose-600 dark:text-rose-400"}
-  if (pct >= 30) {return "text-orange-600 dark:text-orange-400"}
+  if (pct >= 50) {
+    return "text-rose-600 dark:text-rose-400"
+  }
+  if (pct >= 30) {
+    return "text-orange-600 dark:text-orange-400"
+  }
   return "text-teal-600 dark:text-teal-400"
 }
 

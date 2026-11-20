@@ -1,9 +1,9 @@
 import type { BajsData } from "./bajs"
 import { getBajsData } from "./bajs"
-import { getRealtimeData } from './gtfs-rt';
-import type { TripRT } from './gtfs-rt';
-import { computeTravelTimes, getGraph } from './transit-graph';
-import type { Predecessor, TransitGraph } from './transit-graph';
+import { getRealtimeData } from "./gtfs-rt"
+import type { TripRT } from "./gtfs-rt"
+import { computeTravelTimes, getGraph } from "./transit-graph"
+import type { Predecessor, TransitGraph } from "./transit-graph"
 import { engineServiceDate } from "./zagreb-time"
 
 export interface ReachabilityState {
@@ -33,11 +33,15 @@ const cache = new Map<
  * the 1.5 GB box. Map iterates in insertion order, so the oldest keys go first. */
 function pruneCache(now: number): void {
   for (const [key, entry] of cache) {
-    if (entry.expiresAt <= now) {cache.delete(key)}
+    if (entry.expiresAt <= now) {
+      cache.delete(key)
+    }
   }
   while (cache.size > MAX_CACHE_ENTRIES) {
     const oldest = cache.keys().next().value
-    if (oldest === undefined) {break}
+    if (oldest === undefined) {
+      break
+    }
     cache.delete(oldest)
   }
 }
@@ -108,7 +112,9 @@ async function computeState(
   }
 }
 
-export function getReachabilityState(params: ReachabilityParams): Promise<ReachabilityState> {
+export function getReachabilityState(
+  params: ReachabilityParams
+): Promise<ReachabilityState> {
   const key = makeKey(params)
   const now = Date.now()
   const cached = cache.get(key)
@@ -116,7 +122,7 @@ export function getReachabilityState(params: ReachabilityParams): Promise<Reacha
     return cached.value
   }
 
-  const value = computeState(key, params).catch((error) => {
+  const value = computeState(key, params).catch((error: unknown) => {
     // A transient OTP/BAJS failure must not stay cached and replay its
     // rejection to every caller for the full TTL.
     cache.delete(key)

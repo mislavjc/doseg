@@ -39,25 +39,25 @@ interface VehiclePosition {
 
 const VehicleStopStatus =
   GtfsRealtimeBindings.transit_realtime.VehiclePosition.VehicleStopStatus
-const VehicleStopStatusName: Record<number, VehiclePosition["status"]> = {
-  [VehicleStopStatus.INCOMING_AT]: "INCOMING_AT",
-  [VehicleStopStatus.STOPPED_AT]: "STOPPED_AT",
-  [VehicleStopStatus.IN_TRANSIT_TO]: "IN_TRANSIT_TO",
-}
+const VehicleStopStatusName = new Map<number, VehiclePosition["status"]>([
+  [VehicleStopStatus.INCOMING_AT, "INCOMING_AT"],
+  [VehicleStopStatus.STOPPED_AT, "STOPPED_AT"],
+  [VehicleStopStatus.IN_TRANSIT_TO, "IN_TRANSIT_TO"],
+])
 
 const OccupancyStatus =
   GtfsRealtimeBindings.transit_realtime.VehiclePosition.OccupancyStatus
-const OccupancyStatusName: Record<number, string> = {
-  [OccupancyStatus.EMPTY]: "EMPTY",
-  [OccupancyStatus.MANY_SEATS_AVAILABLE]: "MANY_SEATS_AVAILABLE",
-  [OccupancyStatus.FEW_SEATS_AVAILABLE]: "FEW_SEATS_AVAILABLE",
-  [OccupancyStatus.STANDING_ROOM_ONLY]: "STANDING_ROOM_ONLY",
-  [OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY]: "CRUSHED_STANDING_ROOM_ONLY",
-  [OccupancyStatus.FULL]: "FULL",
-  [OccupancyStatus.NOT_ACCEPTING_PASSENGERS]: "NOT_ACCEPTING_PASSENGERS",
-  [OccupancyStatus.NO_DATA_AVAILABLE]: "NO_DATA_AVAILABLE",
-  [OccupancyStatus.NOT_BOARDABLE]: "NOT_BOARDABLE",
-}
+const OccupancyStatusName = new Map<number, string>([
+  [OccupancyStatus.EMPTY, "EMPTY"],
+  [OccupancyStatus.MANY_SEATS_AVAILABLE, "MANY_SEATS_AVAILABLE"],
+  [OccupancyStatus.FEW_SEATS_AVAILABLE, "FEW_SEATS_AVAILABLE"],
+  [OccupancyStatus.STANDING_ROOM_ONLY, "STANDING_ROOM_ONLY"],
+  [OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY, "CRUSHED_STANDING_ROOM_ONLY"],
+  [OccupancyStatus.FULL, "FULL"],
+  [OccupancyStatus.NOT_ACCEPTING_PASSENGERS, "NOT_ACCEPTING_PASSENGERS"],
+  [OccupancyStatus.NO_DATA_AVAILABLE, "NO_DATA_AVAILABLE"],
+  [OccupancyStatus.NOT_BOARDABLE, "NOT_BOARDABLE"],
+])
 
 // ---------------------------------------------------------------------------
 // Cache state
@@ -80,25 +80,40 @@ const MAX_PLAUSIBLE_DELAY = 1800
 
 function parseTripUpdate(entity: FeedEntity, rt: Map<string, TripRT>) {
   const tu = entity.tripUpdate
-  if (!tu?.trip?.tripId || tu.stopTimeUpdate == null || tu.stopTimeUpdate.length === 0) {return}
+  if (
+    !tu?.trip?.tripId ||
+    !tu.stopTimeUpdate ||
+    tu.stopTimeUpdate.length === 0
+  ) {
+    return
+  }
 
   const stopTimes: Array<StopTimeRT> = []
   for (const stu of tu.stopTimeUpdate) {
     const delay = stu.arrival?.delay ?? stu.departure?.delay ?? 0
-    if (delay < MIN_PLAUSIBLE_DELAY || delay > MAX_PLAUSIBLE_DELAY) {continue}
+    if (delay < MIN_PLAUSIBLE_DELAY || delay > MAX_PLAUSIBLE_DELAY) {
+      continue
+    }
     stopTimes.push({
       stopSequence: stu.stopSequence ?? 0,
       arrivalDelay: delay,
     })
   }
-  if (stopTimes.length === 0) {return}
+  if (stopTimes.length === 0) {
+    return
+  }
   stopTimes.sort((a, b) => a.stopSequence - b.stopSequence)
   rt.set(tu.trip.tripId, { stopTimes })
 }
 
-function parseVehiclePosition(entity: FeedEntity, vehicles: Array<VehiclePosition>) {
+function parseVehiclePosition(
+  entity: FeedEntity,
+  vehicles: Array<VehiclePosition>
+) {
   const vp = entity.vehicle
-  if (!vp?.trip?.tripId || !vp.position) {return}
+  if (!vp?.trip?.tripId || !vp.position) {
+    return
+  }
 
   const statusNum = vp.currentStatus ?? VehicleStopStatus.IN_TRANSIT_TO
   const occNum = vp.occupancyStatus
@@ -110,16 +125,20 @@ function parseVehiclePosition(entity: FeedEntity, vehicles: Array<VehiclePositio
     lon: vp.position.longitude,
     bearing: vp.position.bearing ?? null,
     speed: vp.position.speed ?? null,
-    status: VehicleStopStatusName[statusNum] ?? "IN_TRANSIT_TO",
+    status: VehicleStopStatusName.get(statusNum) ?? "IN_TRANSIT_TO",
     occupancyStatus:
-      occNum == null ? null : (OccupancyStatusName[occNum] ?? null),
+      occNum === null || occNum === undefined
+        ? null
+        : (OccupancyStatusName.get(occNum) ?? null),
   })
 }
 
 async function refresh(): Promise<void> {
   try {
     const res = await fetch(ZET_RT_URL, { signal: AbortSignal.timeout(5000) })
-    if (!res.ok) {throw new Error(`GTFS-RT fetch failed: ${res.status}`)}
+    if (!res.ok) {
+      throw new Error(`GTFS-RT fetch failed: ${res.status}`)
+    }
 
     const buf = await res.arrayBuffer()
     const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
@@ -172,7 +191,9 @@ export function getStopDelay(trip: TripRT, stopIdx: number): number {
   const seq = stopIdx + 1
   let delay = 0
   for (const st of trip.stopTimes) {
-    if (st.stopSequence > seq) {break}
+    if (st.stopSequence > seq) {
+      break
+    }
     delay = st.arrivalDelay
   }
   return delay

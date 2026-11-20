@@ -24,8 +24,8 @@ import {
   PageTitle,
   Section,
 } from "@/app/statistika/editorial/primitives"
-import { PoiRow } from '@/app/statistika/editorial/poi';
-import type { PoiKey } from '@/app/statistika/editorial/poi';
+import { PoiRow } from "@/app/statistika/editorial/poi"
+import type { PoiKey } from "@/app/statistika/editorial/poi"
 import { HomeHero } from "@/app/home-hero"
 import { FOCUS_SCALE } from "@/app/home-hero-variant"
 import {
@@ -35,17 +35,17 @@ import {
   NearbyLines,
   StopGauges,
 } from "@/components/doseg-readout"
-import { resolveAdresaSlug } from '@/lib/adresa';
-import type { ResolvedAdresa } from '@/lib/adresa';
+import { resolveAdresaSlug } from "@/lib/adresa"
+import type { ResolvedAdresa } from "@/lib/adresa"
 import { loadScores } from "@/lib/district-scores"
-import { dosegAt } from '@/lib/doseg-at';
-import type { DosegAtPayload, NearbyLine, NearbyStop } from '@/lib/doseg-at';
+import { dosegAt } from "@/lib/doseg-at"
+import type { DosegAtPayload, NearbyLine, NearbyStop } from "@/lib/doseg-at"
 import { projector } from "@/lib/geo"
 import { loadHomeHero } from "@/lib/home-hero"
 import { kartaUrl } from "@/lib/karta-url"
 import { loadLineIndex } from "@/lib/line-data"
-import { nearestBajs, nearestPois } from '@/lib/okolina';
-import type { NearestBajs, NearestPoi } from '@/lib/okolina';
+import { nearestBajs, nearestPois } from "@/lib/okolina"
+import type { NearestBajs, NearestPoi } from "@/lib/okolina"
 
 /**
  * /adresa/[slug] — the doseg page for one address (Paper "Adresa — LOCK-IN ·
@@ -72,7 +72,9 @@ interface Params {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
   const adresa = resolveAdresaSlug(slug)
-  if (!adresa) {return { robots: { index: false } }}
+  if (!adresa) {
+    return { robots: { index: false } }
+  }
   return {
     title: `${adresa.label} - doseg javnim prijevozom | doseg.hr`,
     description: `Koliko grada dosežeš za 30 minuta s adrese ${adresa.label}: najbliže stanice, linije u blizini i povezanost kvarta.`,
@@ -80,7 +82,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   }
 }
 
-function MonoLink({ href, children }: { href: string; children: React.ReactNode }) {
+function MonoLink({
+  href,
+  children,
+}: {
+  href: string
+  children: React.ReactNode
+}) {
   return (
     <Link
       href={href}
@@ -96,12 +104,14 @@ function MonoLink({ href, children }: { href: string; children: React.ReactNode 
 
 function stopsHook(nearby: Array<NearbyStop>, cityAvgM: number | null) {
   const n = nearby.length
-  if (cityAvgM !== null && n >= 2 && nearby[n - 1].distM <= cityAvgM)
-    {return `${cap(numberWordF(n))} stanice prije nego što prosjek grada uopće stigne do prve.`}
-  if (cityAvgM !== null)
-    {return nearby[0].distM <= cityAvgM
+  if (cityAvgM !== null && n >= 2 && nearby[n - 1].distM <= cityAvgM) {
+    return `${cap(numberWordF(n))} stanice prije nego što prosjek grada uopće stigne do prve.`
+  }
+  if (cityAvgM !== null) {
+    return nearby[0].distM <= cityAvgM
       ? "Najbliža stanica bliža je nego u prosjeku grada."
-      : "Do najbliže stanice hoda se dulje nego u prosjeku grada."}
+      : "Do najbliže stanice hoda se dulje nego u prosjeku grada."
+  }
   return `Najbliža stanica je ${nearby[0].name}, ${nearby[0].walkMin} min hoda.`
 }
 
@@ -113,11 +123,16 @@ function linesHook(data: DosegAtPayload, minPeak: number | null) {
   }
   const day = (data.lines ?? []).filter((l) => !l.isNight)
   const n = day.length
-  if (n === 0) {return "Ovdje staju samo noćne linije."}
+  if (n === 0) {
+    return "Ovdje staju samo noćne linije."
+  }
   const trams = day.filter((l) => l.mode === "tram").length
   let mode = "tramvaji i autobusi"
-  if (trams === n) {mode = n === 1 ? "tramvajska" : "sve tramvajske"}
-  else if (trams === 0) {mode = n === 1 ? "autobusna" : "sve autobusne"}
+  if (trams === n) {
+    mode = n === 1 ? "tramvajska" : "sve tramvajske"
+  } else if (trams === 0) {
+    mode = n === 1 ? "autobusna" : "sve autobusne"
+  }
   return `${cap(numberWordF(n))} ${plural(n, "dnevna linija", "dnevne linije", "dnevnih linija")}, ${mode}.`
 }
 
@@ -145,13 +160,21 @@ function okolinaHook(pois: Array<NearestPoi>) {
 
 // ── Sections ─────────────────────────────────────────────────────────────────
 
-function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | null }) {
+function Ledger({
+  data,
+  minPeak,
+}: {
+  data: DosegAtPayload
+  minPeak: number | null
+}) {
   const nearest = data.nearby?.[0]
   const dayCount = data.lines?.filter((l) => !l.isNight).length ?? 0
   const nightCount = (data.lines?.length ?? 0) - dayCount
   const lineParts = [
-    dayCount > 0 && `${dayCount} ${plural(dayCount, "dnevna", "dnevne", "dnevnih")}`,
-    nightCount > 0 && `${nightCount} ${plural(nightCount, "noćna", "noćne", "noćnih")}`,
+    dayCount > 0 &&
+      `${dayCount} ${plural(dayCount, "dnevna", "dnevne", "dnevnih")}`,
+    nightCount > 0 &&
+      `${nightCount} ${plural(nightCount, "noćna", "noćne", "noćnih")}`,
   ].filter(Boolean)
 
   // Up to 4 facts, hairline rows of 2 — each entry renders only when its data
@@ -184,20 +207,32 @@ function Ledger({ data, minPeak }: { data: DosegAtPayload; minPeak: number | nul
       label: "linije na 5 min hoda",
     },
   ].filter((c) => c !== false)
-  if (cells.length === 0) {return null}
+  if (cells.length === 0) {
+    return null
+  }
 
   const rows = []
-  for (let i = 0; i < cells.length; i += 2) {rows.push(cells.slice(i, i + 2))}
+  for (let i = 0; i < cells.length; i += 2) {
+    rows.push(cells.slice(i, i + 2))
+  }
   return (
     <Section
       width="article"
-      className="pb-0 pt-10 sm:pb-0"
+      className="pt-10 pb-0 sm:pb-0"
       innerClassName="flex flex-col divide-y divide-hairline border-y border-hairline"
     >
       {rows.map((row) => (
-        <div key={row[0].key} className="flex flex-col gap-5 py-4 sm:flex-row sm:gap-10">
+        <div
+          key={row[0].key}
+          className="flex flex-col gap-5 py-4 sm:flex-row sm:gap-10"
+        >
           {row.map((c) => (
-            <LedgerCell key={c.key} icon={c.icon} value={c.value} label={c.label} />
+            <LedgerCell
+              key={c.key}
+              icon={c.icon}
+              value={c.value}
+              label={c.label}
+            />
           ))}
         </div>
       ))}
@@ -213,7 +248,11 @@ function StaniceSection({
   cityAvgM: number | null
 }) {
   return (
-    <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
+    <Section
+      width="article"
+      className="pb-0 sm:pb-0"
+      innerClassName="flex flex-col gap-6"
+    >
       <Eyebrow>stanice u blizini</Eyebrow>
       <Hook>{stopsHook(nearby, cityAvgM)}</Hook>
       <StopGauges stops={nearby} cityAvgM={cityAvgM} />
@@ -245,25 +284,46 @@ function LinijeSection({
   const restDay = lines.filter((l) => !l.isNight && !shownSet.has(l.broj))
   const night = lines.filter((l) => l.isNight)
   return (
-    <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
+    <Section
+      width="article"
+      className="pb-0 sm:pb-0"
+      innerClassName="flex flex-col gap-6"
+    >
       <Eyebrow>linije</Eyebrow>
       <Hook>{linesHook(data, minPeak)}</Hook>
-      {shown.length > 0 ? <LineTable lines={shown} /> : <NearbyLines lines={lines} />}
+      {shown.length > 0 ? (
+        <LineTable lines={shown} />
+      ) : (
+        <NearbyLines lines={lines} />
+      )}
       {shown.length > 0 && (restDay.length > 0 || night.length > 0) && (
         <div className="flex flex-wrap items-center gap-2">
           {restDay.length > 0 && (
             <span className="font-mono text-label text-ink-muted">
-              + još {restDay.length} {plural(restDay.length, "dnevna", "dnevne", "dnevnih")}:
+              + još {restDay.length}{" "}
+              {plural(restDay.length, "dnevna", "dnevne", "dnevnih")}:
             </span>
           )}
           {restDay.map((l) => (
-            <LineBadge key={l.broj} broj={l.broj} mode={l.mode} href={`/linije/${l.broj}`} />
+            <LineBadge
+              key={l.broj}
+              broj={l.broj}
+              mode={l.mode}
+              href={`/linije/${l.broj}`}
+            />
           ))}
           {night.length > 0 && (
-            <span className="font-mono text-label text-ink-muted">· noćne:</span>
+            <span className="font-mono text-label text-ink-muted">
+              · noćne:
+            </span>
           )}
           {night.map((l) => (
-            <LineBadge key={l.broj} broj={l.broj} mode={l.mode} href={`/linije/${l.broj}`} />
+            <LineBadge
+              key={l.broj}
+              broj={l.broj}
+              mode={l.mode}
+              href={`/linije/${l.broj}`}
+            />
           ))}
         </div>
       )}
@@ -285,9 +345,15 @@ async function BajsSection({
   karta: string
 }) {
   const stations = await nearestBajs(lon, lat)
-  if (stations.length === 0) {return null}
+  if (stations.length === 0) {
+    return null
+  }
   return (
-    <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
+    <Section
+      width="article"
+      className="pb-0 sm:pb-0"
+      innerClassName="flex flex-col gap-6"
+    >
       <Eyebrow>bajs</Eyebrow>
       <Hook>{bajsHook(stations, nearestStop)}</Hook>
       <BajsGauges stations={stations} />
@@ -313,7 +379,11 @@ function OkolinaSection({
   origin: { lat: number; lon: number }
 }) {
   return (
-    <Section width="article" className="pb-0 sm:pb-0" innerClassName="flex flex-col gap-6">
+    <Section
+      width="article"
+      className="pb-0 sm:pb-0"
+      innerClassName="flex flex-col gap-6"
+    >
       <Eyebrow>okolina</Eyebrow>
       <Hook>{okolinaHook(pois)}</Hook>
       <div className="flex flex-col">
@@ -338,7 +408,13 @@ function OkolinaSection({
 
 /** The homepage KartaBanner recut for one address: the zoom window centres on
  *  the address (marker on the point) and the whole card opens the karta there. */
-function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: string }) {
+function AdresaKartaBanner({
+  adresa,
+  karta,
+}: {
+  adresa: ResolvedAdresa
+  karta: string
+}) {
   const hero = loadHomeHero()
   const crop = hero?.desktop
   let img: { width: number; left: string; top: string } | null = null
@@ -358,7 +434,7 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
         <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
           {img && (
             <>
-              {/* oxlint-disable-next-line nextjs/no-img-element */}
+              {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
               <img
                 src="/hero-zagreb.png"
                 alt=""
@@ -367,7 +443,7 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
                 className="absolute max-w-none [image-rendering:pixelated]"
                 style={img}
               />
-              <span className="absolute left-1/2 top-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
+              <span className="absolute top-1/2 left-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
             </>
           )}
         </span>
@@ -381,7 +457,11 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
             tramvajem, autobusom, vlakom i Bajsom.
           </Body>
           <span className="mt-3 inline-flex items-center gap-1 font-mono text-label text-zg-blue transition-colors group-hover:text-navy">
-            <Link href={karta} className="absolute inset-0" aria-label="Otvori kartu s ove adrese" />
+            <Link
+              href={karta}
+              className="absolute inset-0"
+              aria-label="Otvori kartu s ove adrese"
+            />
             otvori kartu s ove adrese
             <IconArrowRight size={14} className="shrink-0" />
           </span>
@@ -396,7 +476,9 @@ function AdresaKartaBanner({ adresa, karta }: { adresa: ResolvedAdresa; karta: s
 export default async function AdresaPage({ params }: Params) {
   const { slug } = await params
   const adresa = resolveAdresaSlug(slug)
-  if (!adresa) {notFound()}
+  if (!adresa) {
+    notFound()
+  }
 
   const data = dosegAt(adresa.lon, adresa.lat)
   const karta = kartaUrl(adresa)
@@ -404,19 +486,27 @@ export default async function AdresaPage({ params }: Params) {
   const scores = loadScores()
   const cityAvgM = (scores && computeWalk(scores)?.avg) ?? null
   const withPeak = (data.lines ?? [])
-    .filter((l): l is NearbyLine & { peakMin: number } => !l.isNight && l.peakMin !== null)
+    .filter(
+      (l): l is NearbyLine & { peakMin: number } =>
+        !l.isNight && l.peakMin !== null
+    )
     .toSorted((a, b) => a.peakMin - b.peakMin)
   const minPeak = withPeak[0]?.peakMin ?? null
   const pois = data.found ? nearestPois(adresa.lon, adresa.lat) : []
 
   return (
     <EditorialShell>
-      <HomeHero hero={loadHomeHero()} focus={{ lon: adresa.lon, lat: adresa.lat }} />
+      <HomeHero
+        hero={loadHomeHero()}
+        focus={{ lon: adresa.lon, lat: adresa.lat }}
+      />
 
-      <Section width="article" className="pb-0 pt-8 sm:pb-0 sm:pt-10">
+      <Section width="article" className="pt-8 pb-0 sm:pt-10 sm:pb-0">
         <Eyebrow>
           doseg.hr · adresa
-          {data.kvart ? ` · ${data.kvart.name.toLowerCase()}` : ` · ${adresa.naselje.toLowerCase()}`}
+          {data.kvart
+            ? ` · ${data.kvart.name.toLowerCase()}`
+            : ` · ${adresa.naselje.toLowerCase()}`}
         </Eyebrow>
         <PageTitle className="mt-4">{adresa.label}</PageTitle>
         <Body className="mt-3 max-w-[520px]">
@@ -454,8 +544,8 @@ export default async function AdresaPage({ params }: Params) {
           {data.kvart && (
             <Section width="article" className="pb-0 sm:pb-0">
               <MonoLink href={`/kvartovi/${data.kvart.slug}`}>
-                kvart ove adrese: {data.kvart.name} · {data.kvart.rank}. od {data.kvart.total}{" "}
-                po dosegu
+                kvart ove adrese: {data.kvart.name} · {data.kvart.rank}. od{" "}
+                {data.kvart.total} po dosegu
               </MonoLink>
             </Section>
           )}

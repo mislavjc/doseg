@@ -53,7 +53,9 @@ export function computeEditorialFacts(data: ScoreData) {
     // "12,8"
     worstKm2: fmtHR(worst.avgReachableCells * CELL_KM2, 1),
     // 4
-    bestPopPct: Math.round((best.population ?? 0) / Math.max(totalPop, 1) * 100),
+    bestPopPct: Math.round(
+      ((best.population ?? 0) / Math.max(totalPop, 1)) * 100
+    ),
     sesvete: sesvete && {
       // "70.800"
       population: fmtPop(sesvete.population ?? 0),
@@ -71,9 +73,7 @@ export function computeEditorialFacts(data: ScoreData) {
 export type EditorialFacts = ReturnType<typeof computeEditorialFacts>
 
 const cv = (d: DistrictScore) =>
-  d.avgReachableCells > 0
-    ? d.stddevReachableCells / d.avgReachableCells
-    : 0
+  d.avgReachableCells > 0 ? d.stddevReachableCells / d.avgReachableCells : 0
 
 /**
  * Povezanost ranking + summary stats. `spread` is the within-district
@@ -113,26 +113,28 @@ export function computePovezanost(data: ScoreData) {
 
 export type PovezanostData = ReturnType<typeof computePovezanost>
 
-const SHORT_NAME: Record<string, string> = {
-  "Novi Zagreb - istok": "Novi Zagreb-istok",
-  "Novi Zagreb - zapad": "Novi Zagreb-zapad",
-  "Peščenica - Žitnjak": "Peščenica",
-  "Trešnjevka - sjever": "Trešnjevka-sj.",
-  "Trešnjevka - jug": "Trešnjevka-jug",
-  "Gornji grad - Medveščak": "Gornji grad",
-  "Podsused - Vrapče": "Podsused",
-}
-const shortName = (n: string) => SHORT_NAME[n] ?? n
+const SHORT_NAME = new Map<string, string>(
+  Object.entries({
+    "Novi Zagreb - istok": "Novi Zagreb-istok",
+    "Novi Zagreb - zapad": "Novi Zagreb-zapad",
+    "Peščenica - Žitnjak": "Peščenica",
+    "Trešnjevka - sjever": "Trešnjevka-sj.",
+    "Trešnjevka - jug": "Trešnjevka-jug",
+    "Gornji grad - Medveščak": "Gornji grad",
+    "Podsused - Vrapče": "Podsused",
+  })
+)
+const shortName = (n: string) => SHORT_NAME.get(n) ?? n
 
 const m = (d: DistrictScore) => Math.round(d.avgNearestStopM)
 
 /** Pristup — walk-to-nearest-stop: best vs city average vs worst (metres). */
 export function computeWalk(data: ScoreData) {
   const ds = data.districts
-  if (ds.length === 0) {return null}
-  const sorted = ds.toSorted(
-    (a, b) => a.avgNearestStopM - b.avgNearestStopM
-  )
+  if (ds.length === 0) {
+    return null
+  }
+  const sorted = ds.toSorted((a, b) => a.avgNearestStopM - b.avgNearestStopM)
   const best = sorted[0]
   const worst = sorted[sorted.length - 1]
   const avg = Math.round(

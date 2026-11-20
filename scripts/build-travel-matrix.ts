@@ -26,10 +26,13 @@ function parseArgs() {
   let concurrency = DEFAULT_CONCURRENCY
 
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--time" && args[i + 1]) {time = args[++i]}
-    else if (args[i] === "--date" && args[i + 1]) {date = args[++i]}
-    else if (args[i] === "--concurrency" && args[i + 1])
-      {concurrency = Math.trunc(Number(args[++i]))}
+    if (args[i] === "--time" && args[i + 1]) {
+      time = args[++i]
+    } else if (args[i] === "--date" && args[i + 1]) {
+      date = args[++i]
+    } else if (args[i] === "--concurrency" && args[i + 1]) {
+      concurrency = Math.trunc(Number(args[++i]))
+    }
   }
 
   if (!date) {
@@ -184,13 +187,16 @@ function buildPairTasks(
   return tasks
 }
 
-function fillMatrices(
-  results: Array<PairResult>,
-  n: number
-): { matrix: Array<Array<number>>; transferMatrix: Array<Array<number>>; walkMatrix: Array<Array<number>>; noRouteCount: number } {
-  const matrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
-  const transferMatrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
-  const walkMatrix: Array<Array<number>> = Array.from({ length: n }, () => Array.from({ length: n }, () => -1))
+function fillMatrices(results: Array<PairResult>, n: number) {
+  const matrix: Array<Array<number>> = Array.from({ length: n }, () =>
+    Array.from({ length: n }, () => -1)
+  )
+  const transferMatrix: Array<Array<number>> = Array.from({ length: n }, () =>
+    Array.from({ length: n }, () => -1)
+  )
+  const walkMatrix: Array<Array<number>> = Array.from({ length: n }, () =>
+    Array.from({ length: n }, () => -1)
+  )
   let noRouteCount = 0
 
   for (const { i, j, result } of results) {
@@ -207,7 +213,9 @@ function fillMatrices(
 }
 
 function printSummaryTable(names: Array<string>, matrix: Array<Array<number>>) {
-  console.error(`\n${String.raw`From \ To`.padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`)
+  console.error(
+    `\n${String.raw`From \ To`.padEnd(22)}${names.map((n) => n.slice(0, 5).padStart(6)).join("")}`
+  )
   console.error("\u2500".repeat(22 + names.length * 6))
   for (let i = 0; i < names.length; i++) {
     const row = matrix[i]
@@ -241,7 +249,10 @@ async function main() {
   })
   console.error()
 
-  const { matrix, transferMatrix, walkMatrix, noRouteCount } = fillMatrices(results, n)
+  const { matrix, transferMatrix, walkMatrix, noRouteCount } = fillMatrices(
+    results,
+    n
+  )
 
   const elapsed = ((performance.now() - t0) / 1000).toFixed(1)
   console.error(`\nDone in ${elapsed}s`)

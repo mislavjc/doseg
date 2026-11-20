@@ -1,11 +1,11 @@
 import type { BajsStation } from "./bajs"
-import { getStopDelay } from './gtfs-rt';
-import type { TripRT } from './gtfs-rt';
+import { getStopDelay } from "./gtfs-rt"
+import type { TripRT } from "./gtfs-rt"
 import { decodePolyline } from "./polyline"
 import { KM_PER_DEG_LAT, fastDistKm } from "./geo"
 import { responseJson } from "./json"
-import { modeSpeed } from './transit';
-import type { TransitMode } from './transit';
+import { modeSpeed } from "./transit"
+import type { TransitMode } from "./transit"
 
 const OTP_URL = process.env.OTP_URL || "http://localhost:8080"
 const MAX_WAIT = 60 * 60
@@ -117,10 +117,12 @@ let graphPromise: Promise<TransitGraph> | null = null
  *   weekday vs weekend schedules. When omitted, all trips are returned (legacy behavior).
  */
 export function getGraph(serviceDate?: string): Promise<TransitGraph> {
-  if (cachedGraph && cachedGraphDate === serviceDate) {return Promise.resolve(cachedGraph)}
+  if (cachedGraph && cachedGraphDate === serviceDate) {
+    return Promise.resolve(cachedGraph)
+  }
   if (!graphPromise || cachedGraphDate !== serviceDate) {
     cachedGraphDate = serviceDate
-    graphPromise = buildGraph(serviceDate).catch((error) => {
+    graphPromise = buildGraph(serviceDate).catch((error: unknown) => {
       graphPromise = null
       throw error
     })
@@ -128,15 +130,20 @@ export function getGraph(serviceDate?: string): Promise<TransitGraph> {
   return graphPromise
 }
 
-function extractPatternStopKeys(p: OtpPattern, patternIdx: number, stops: Map<string, StopNode>): Array<string> {
+function extractPatternStopKeys(
+  p: OtpPattern,
+  patternIdx: number,
+  stops: Map<string, StopNode>
+): Array<string> {
   const stopKeys: Array<string> = []
   for (let stopIdx = 0; stopIdx < p.stops.length; stopIdx++) {
     const s = p.stops[stopIdx]
     const key = `${s.lat.toFixed(5)},${s.lon.toFixed(5)}`
     stopKeys.push(key)
 
-    if (!stops.has(key)) {
-      stops.set(key, {
+    let stop = stops.get(key)
+    if (!stop) {
+      stop = {
         lat: s.lat,
         lon: s.lon,
         key,
@@ -145,19 +152,23 @@ function extractPatternStopKeys(p: OtpPattern, patternIdx: number, stops: Map<st
         patterns: [],
         nearbyStops: [],
         nearbyStopIndices: [],
-      })
+      }
+      stops.set(key, stop)
     }
-    stops.get(key)!.patterns.push({ patternIdx, stopIdx })
+    stop.patterns.push({ patternIdx, stopIdx })
   }
   return stopKeys
 }
 
-function extractTripDepartures(p: OtpPattern): { departures: Array<number>; tripIds: Array<string> } {
+function extractTripDepartures(p: OtpPattern) {
   const trips = p.tripsForDate ?? p.trips ?? []
   const tripDeps: Array<{ dep: number; tripId: string }> = []
   for (const trip of trips) {
     const st = trip.stoptimes?.[0]
-    if (st?.scheduledDeparture != null) {
+    if (
+      st?.scheduledDeparture !== null &&
+      st?.scheduledDeparture !== undefined
+    ) {
       const rawId = (trip.gtfsId ?? "").replace(/^[^:]*:/u, "")
       tripDeps.push({ dep: st.scheduledDeparture, tripId: rawId })
     }
@@ -175,24 +186,34 @@ function computeStopOffsets(p: OtpPattern, mode: TransitMode): Array<number> {
   const stopOffsets = [0]
   const trips = p.tripsForDate ?? p.trips ?? []
 
-  const offsetSamples: Array<Array<number>> = Array.from({ length: nStops }, () => [])
+  const offsetSamples: Array<Array<number>> = Array.from(
+    { length: nStops },
+    () => []
+  )
   const sampleCount = Math.min(5, trips.length)
   const tripSample =
     sampleCount === trips.length
       ? trips
-      : Array.from({ length: sampleCount }, (_, i) =>
-          trips[Math.floor((i * trips.length) / sampleCount)]
+      : Array.from(
+          { length: sampleCount },
+          (_, i) => trips[Math.floor((i * trips.length) / sampleCount)]
         )
   for (const trip of tripSample) {
     const st = trip.stoptimes
-    if (!st || st.length !== nStops) {continue}
+    if (!st || st.length !== nStops) {
+      continue
+    }
     const base = st[0]?.scheduledDeparture
-    if (base == null) {continue}
+    if (base === null || base === undefined) {
+      continue
+    }
     for (let si = 1; si < nStops; si++) {
       const dep = st[si]?.scheduledDeparture
-      if (dep != null) {
+      if (dep !== null && dep !== undefined) {
         const offset = dep - base
-        if (offset >= 0) {offsetSamples[si].push(offset)}
+        if (offset >= 0) {
+          offsetSamples[si].push(offset)
+        }
       }
     }
   }
@@ -219,7 +240,9 @@ function computeStopOffsets(p: OtpPattern, mode: TransitMode): Array<number> {
 }
 
 /** The 3x3 block of grid cells around a stop, dx-major. */
-const NEIGHBOR_CELLS = [-1, 0, 1].flatMap((dx) => [-1, 0, 1].map((dy) => [dx, dy]))
+const NEIGHBOR_CELLS = [-1, 0, 1].flatMap((dx) =>
+  [-1, 0, 1].map((dy) => [dx, dy])
+)
 
 function computeNearbyStops(stops: Map<string, StopNode>) {
   const cellSize = TRANSFER_MAX_KM / KM_PER_DEG_LAT
@@ -229,8 +252,12 @@ function computeNearbyStops(stops: Map<string, StopNode>) {
     const cx = Math.floor(stop.lon / cellSize)
     const cy = Math.floor(stop.lat / cellSize)
     const cellKey = `${cx},${cy}`
-    if (!grid.has(cellKey)) {grid.set(cellKey, [])}
-    grid.get(cellKey)!.push(stop)
+    let cell = grid.get(cellKey)
+    if (!cell) {
+      cell = []
+      grid.set(cellKey, cell)
+    }
+    cell.push(stop)
   }
 
   for (const stop of stops.values()) {
@@ -239,9 +266,13 @@ function computeNearbyStops(stops: Map<string, StopNode>) {
 
     for (const [dx, dy] of NEIGHBOR_CELLS) {
       const neighbors = grid.get(`${cx + dx},${cy + dy}`)
-      if (!neighbors) {continue}
+      if (!neighbors) {
+        continue
+      }
       for (const other of neighbors) {
-        if (other.key === stop.key) {continue}
+        if (other.key === stop.key) {
+          continue
+        }
         const d = fastDistKm(stop.lat, stop.lon, other.lat, other.lon)
         if (d <= TRANSFER_MAX_KM) {
           stop.nearbyStops.push({ key: other.key, distKm: d })
@@ -254,7 +285,7 @@ function computeNearbyStops(stops: Map<string, StopNode>) {
 function buildStopIndex(
   stops: Map<string, StopNode>,
   patterns: Array<PatternData>
-): { stopArray: Array<StopNode>; stopIndex: Map<string, number> } {
+) {
   const stopArray = [...stops.values()]
   const stopIndex = new Map<string, number>()
   for (let i = 0; i < stopArray.length; i++) {
@@ -262,13 +293,21 @@ function buildStopIndex(
     stopIndex.set(stopArray[i].key, i)
   }
 
+  const indexOfKey = (key: string) => {
+    const idx = stopIndex.get(key)
+    if (idx === undefined) {
+      throw new Error(`Unknown stop key ${key}`)
+    }
+    return idx
+  }
+
   for (const pattern of patterns) {
-    pattern.stopIndices = pattern.stopKeys.map((k) => stopIndex.get(k)!)
+    pattern.stopIndices = pattern.stopKeys.map(indexOfKey)
   }
 
   for (const stop of stops.values()) {
     stop.nearbyStopIndices = stop.nearbyStops.map((n) => ({
-      idx: stopIndex.get(n.key)!,
+      idx: indexOfKey(n.key),
       distKm: n.distKm,
     }))
   }
@@ -276,7 +315,9 @@ function buildStopIndex(
   return { stopArray, stopIndex }
 }
 
-async function fetchOtpPatterns(serviceDate?: string): Promise<Array<OtpPattern>> {
+async function fetchOtpPatterns(
+  serviceDate?: string
+): Promise<Array<OtpPattern>> {
   const tripsField = serviceDate
     ? `tripsForDate(serviceDate: "${serviceDate}") { gtfsId stoptimes { scheduledDeparture } }`
     : `trips { gtfsId stoptimes { scheduledDeparture } }`
@@ -293,7 +334,9 @@ async function fetchOtpPatterns(serviceDate?: string): Promise<Array<OtpPattern>
     throw new Error(`OTP pattern fetch failed: ${res.status}`)
   }
 
-  const json = await responseJson<{ data?: { patterns?: Array<OtpPattern> | null } | null }>(res)
+  const json = await responseJson<{
+    data?: { patterns?: Array<OtpPattern> | null } | null
+  }>(res)
   if (!json.data?.patterns) {
     throw new Error("OTP returned no pattern data")
   }
@@ -309,7 +352,9 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
 
   for (const p of rawPatterns) {
     const points = p.patternGeometry?.points
-    if (!points || p.stops.length < 2) {continue}
+    if (!points || p.stops.length < 2) {
+      continue
+    }
 
     const patternIdx = patterns.length
     const stopKeys = extractPatternStopKeys(p, patternIdx, stops)
@@ -322,7 +367,10 @@ async function buildGraph(serviceDate?: string): Promise<TransitGraph> {
       stopKeys,
       stopIndices: [],
       mode,
-      route: [p.route?.shortName, p.route?.longName].find((n) => n != null && n !== "") ?? "",
+      route:
+        [p.route?.shortName, p.route?.longName].find(
+          (n) => n !== null && n !== undefined && n !== ""
+        ) ?? "",
       departures,
       tripIds,
       stopOffsets,
@@ -349,7 +397,9 @@ function nextDepartureIndex(
   stopOffset: number,
   clockTime: number
 ): number {
-  if (departures.length === 0) {return -1}
+  if (departures.length === 0) {
+    return -1
+  }
 
   // A trip departing first stop at time D passes this stop at D + stopOffset.
   // We need D + stopOffset >= clockTime, i.e., D >= clockTime - stopOffset.
@@ -359,8 +409,11 @@ function nextDepartureIndex(
   let hi = departures.length
   while (lo < hi) {
     const mid = (lo + hi) >> 1
-    if (departures[mid] < target) {lo = mid + 1}
-    else {hi = mid}
+    if (departures[mid] < target) {
+      lo = mid + 1
+    } else {
+      hi = mid
+    }
   }
 
   return lo >= departures.length ? -1 : lo
@@ -385,7 +438,9 @@ function getFirstWait(
   clockTime: number
 ): { waitSeconds: number; tripIndex: number } | null {
   const lo = nextDepartureIndex(departures, stopOffset, clockTime)
-  if (lo < 0) {return null}
+  if (lo < 0) {
+    return null
+  }
   const wait = departures[lo] + stopOffset - clockTime
   return wait <= MAX_WAIT
     ? { waitSeconds: Math.min(wait, FIRST_BOARDING_WAIT), tripIndex: lo }
@@ -409,7 +464,9 @@ function getExpectedWait(
   clockTime: number
 ): { waitSeconds: number; tripIndex: number } | null {
   const lo = nextDepartureIndex(departures, stopOffset, clockTime)
-  if (lo < 0) {return null}
+  if (lo < 0) {
+    return null
+  }
 
   const headway =
     lo > 0
@@ -450,21 +507,21 @@ export function computeTransitLegDuration(
   }
 
   const tripRT = findTripRT(rtData, pattern.tripIds, result.tripIndex)
-  const boardDelay = tripRT ? getStopDelay(tripRT, boardIdx) : 0
-  let durationSeconds = result.waitSeconds + rideSeconds
-  let delaySeconds: number | undefined
-
-  if (tripRT) {
-    delaySeconds = getStopDelay(tripRT, alightIdx)
-    durationSeconds = Math.max(
-      result.waitSeconds,
-      durationSeconds + clampRtAdjustment(delaySeconds - boardDelay)
-    )
+  const durationSeconds = result.waitSeconds + rideSeconds
+  if (!tripRT) {
+    return { durationSeconds: Math.round(durationSeconds) }
   }
 
+  const boardDelay = getStopDelay(tripRT, boardIdx)
+  const delaySeconds = getStopDelay(tripRT, alightIdx)
   return {
-    durationSeconds: Math.round(durationSeconds),
-    ...(delaySeconds === undefined ? {} : { delaySeconds }),
+    durationSeconds: Math.round(
+      Math.max(
+        result.waitSeconds,
+        durationSeconds + clampRtAdjustment(delaySeconds - boardDelay)
+      )
+    ),
+    delaySeconds,
   }
 }
 
@@ -473,13 +530,11 @@ function findTripRT(
   tripIds: Array<string>,
   tripIndex: number
 ): TripRT | undefined {
-  for (
-    let ti = tripIndex;
-    ti >= Math.max(0, tripIndex - 3);
-    ti--
-  ) {
+  for (let ti = tripIndex; ti >= Math.max(0, tripIndex - 3); ti--) {
     const rt = rtData.get(tripIds[ti])
-    if (rt) {return rt}
+    if (rt) {
+      return rt
+    }
   }
   return undefined
 }
@@ -497,10 +552,15 @@ function nodeKey(
   stopArray: Array<StopNode>,
   bajsAdj: IndexedBajsAdjacency | null
 ): string | null {
-  if (idx < 0) {return null}
-  if (idx < stopCount) {return stopArray[idx].key}
-  if (bajsAdj && idx - stopCount < bajsAdj.bajsCount)
-    {return bajsAdj.stations[idx - stopCount].key}
+  if (idx < 0) {
+    return null
+  }
+  if (idx < stopCount) {
+    return stopArray[idx].key
+  }
+  if (bajsAdj && idx - stopCount < bajsAdj.bajsCount) {
+    return bajsAdj.stations[idx - stopCount].key
+  }
   return null
 }
 
@@ -516,19 +576,19 @@ function collectRoutingResults(
   stopCount: number,
   stopArray: Array<StopNode>,
   bajsAdj: IndexedBajsAdjacency | null
-): {
-  times: Map<string, number>
-  preds: Map<string, Predecessor>
-  delays: Map<string, number>
-} {
+) {
   const times = new Map<string, number>()
   const preds = new Map<string, Predecessor>()
   const delays = new Map<string, number>()
 
   for (let i = 0; i < totalNodes; i++) {
-    if (best[i] >= Infinity) {continue}
+    if (best[i] >= Infinity) {
+      continue
+    }
     const key = nodeKey(i, stopCount, stopArray, bajsAdj)
-    if (!key) {continue}
+    if (!key) {
+      continue
+    }
 
     times.set(key, best[i])
 
@@ -567,7 +627,12 @@ interface DijkstraState {
   h: FlatHeap
 }
 
-function relaxWalk(s: DijkstraState, destIdx: number, time: number, fromIdx: number) {
+function relaxWalk(
+  s: DijkstraState,
+  destIdx: number,
+  time: number,
+  fromIdx: number
+) {
   if (time < s.best[destIdx]) {
     s.best[destIdx] = time
     s.predFrom[destIdx] = fromIdx
@@ -590,15 +655,28 @@ function expandTransitStop(
   const isSameStopTransfer = s.predKind[nodeIdx] === PRED_TRANSIT
   const firstBoarding = time >= seedTimes[nodeIdx] - 1e-6
   for (const { patternIdx, stopIdx } of stop.patterns) {
-    if (isSameStopTransfer && s.predPattern[nodeIdx] === patternIdx) {continue}
+    if (isSameStopTransfer && s.predPattern[nodeIdx] === patternIdx) {
+      continue
+    }
 
     const pattern = graph.patterns[patternIdx]
     const result = firstBoarding
-      ? getFirstWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
-      : getExpectedWait(pattern.departures, pattern.stopOffsets[stopIdx], departureTime + time)
-    if (result === null) {continue}
+      ? getFirstWait(
+          pattern.departures,
+          pattern.stopOffsets[stopIdx],
+          departureTime + time
+        )
+      : getExpectedWait(
+          pattern.departures,
+          pattern.stopOffsets[stopIdx],
+          departureTime + time
+        )
+    if (result === null) {
+      continue
+    }
 
-    const boardTime = time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)
+    const boardTime =
+      time + result.waitSeconds + (isSameStopTransfer ? TRANSFER_PENALTY : 0)
     const boardOffset = pattern.stopOffsets[stopIdx]
     const tripRT = findTripRT(rtData, pattern.tripIds, result.tripIndex)
     const boardDelay = tripRT ? getStopDelay(tripRT, stopIdx) : 0
@@ -622,21 +700,33 @@ function expandTransitStop(
         s.predPattern[destIdx] = patternIdx
         s.predBoard[destIdx] = stopIdx
         s.predAlight[destIdx] = i
-        if (tripRT) {s.delayArr[destIdx] = alightDelay}
+        if (tripRT) {
+          s.delayArr[destIdx] = alightDelay
+        }
         flatHeapPush(s.h, travelTime, destIdx)
       }
     }
   }
 
   for (const { idx: nearbyIdx, distKm } of stop.nearbyStopIndices) {
-    relaxWalk(s, nearbyIdx, time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY, nodeIdx)
+    relaxWalk(
+      s,
+      nearbyIdx,
+      time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY,
+      nodeIdx
+    )
   }
 
   if (bajsAdj) {
     const links = bajsAdj.stopToStationLinks[nodeIdx]
     if (links) {
       for (const { idx: stationIdx, distKm } of links) {
-        relaxWalk(s, stationIdx, time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY, nodeIdx)
+        relaxWalk(
+          s,
+          stationIdx,
+          time + (distKm / WALK_SPEED) * 3600 + TRANSFER_PENALTY,
+          nodeIdx
+        )
       }
     }
   }
@@ -656,7 +746,11 @@ function expandBajsStation(
   const station = bajsAdj.stations[bi]
   if (station.isRenting && station.bikesAvailable > 0) {
     for (const { idx: targetIdx, distKm } of bajsAdj.stationBikeLinks[bi]) {
-      const bikeTime = time + BAJS_PICKUP_SECONDS + BAJS_DROPOFF_SECONDS + (distKm / BAJS_SPEED) * 3600
+      const bikeTime =
+        time +
+        BAJS_PICKUP_SECONDS +
+        BAJS_DROPOFF_SECONDS +
+        (distKm / BAJS_SPEED) * 3600
       if (bikeTime < s.best[targetIdx]) {
         s.best[targetIdx] = bikeTime
         s.predFrom[targetIdx] = nodeIdx
@@ -685,8 +779,11 @@ export function computeTravelTimes(
 } {
   const timeCap = options.timeCap ?? Infinity
   const { stopArray, stopCount } = graph
-  const hasBajs = options.bajsStations != null && options.bajsStations.length > 0
-  const bajsAdj = hasBajs ? buildBajsAdjacencyIndexed(graph, options.bajsStations!) : null
+  const { bajsStations } = options
+  const bajsAdj =
+    bajsStations !== undefined && bajsStations.length > 0
+      ? buildBajsAdjacencyIndexed(graph, bajsStations)
+      : null
   const totalNodes = stopCount + (bajsAdj?.bajsCount ?? 0)
 
   const s: DijkstraState = {
@@ -700,7 +797,15 @@ export function computeTravelTimes(
     h: { hT: [], hN: [], hSize: 0 },
   }
 
-  seedTravelTimes(originLat, originLon, stopArray, stopCount, bajsAdj, s.best, s.h)
+  seedTravelTimes(
+    originLat,
+    originLon,
+    stopArray,
+    stopCount,
+    bajsAdj,
+    s.best,
+    s.h
+  )
 
   // Walk-only seed snapshot: a stop popped at exactly its seed time is still
   // in the "walked here from the origin" state, so boarding there is the
@@ -710,19 +815,42 @@ export function computeTravelTimes(
 
   while (s.h.hSize > 0) {
     const { time, nodeIdx } = flatHeapPop(s.h)
-    if (time > timeCap) {break}
-    if (time > s.best[nodeIdx]) {continue}
+    if (time > timeCap) {
+      break
+    }
+    if (time > s.best[nodeIdx]) {
+      continue
+    }
 
     if (nodeIdx < stopCount) {
-      expandTransitStop(s, stopArray[nodeIdx], nodeIdx, time, departureTime, graph, rtData, bajsAdj, seedTimes)
+      expandTransitStop(
+        s,
+        stopArray[nodeIdx],
+        nodeIdx,
+        time,
+        departureTime,
+        graph,
+        rtData,
+        bajsAdj,
+        seedTimes
+      )
     } else if (bajsAdj) {
       expandBajsStation(s, nodeIdx - stopCount, nodeIdx, time, bajsAdj)
     }
   }
 
   return collectRoutingResults(
-    s.best, s.delayArr, s.predFrom, s.predKind, s.predPattern, s.predBoard, s.predAlight,
-    totalNodes, stopCount, stopArray, bajsAdj
+    s.best,
+    s.delayArr,
+    s.predFrom,
+    s.predKind,
+    s.predPattern,
+    s.predBoard,
+    s.predAlight,
+    totalNodes,
+    stopCount,
+    stopArray,
+    bajsAdj
   )
 }
 
@@ -748,9 +876,13 @@ function seedTravelTimes(
   if (bajsAdj) {
     for (let bi = 0; bi < bajsAdj.bajsCount; bi++) {
       const station = bajsAdj.stations[bi]
-      if (!station.isRenting || station.bikesAvailable <= 0) {continue}
+      if (!station.isRenting || station.bikesAvailable <= 0) {
+        continue
+      }
       const distKm = fastDistKm(originLat, originLon, station.lat, station.lon)
-      if (distKm > WALK_MAX_KM) {continue}
+      if (distKm > WALK_MAX_KM) {
+        continue
+      }
       const walkTime = (distKm / WALK_SPEED) * 3600
       const idx = stopCount + bi
       if (walkTime < best[idx]) {
@@ -790,10 +922,7 @@ function buildIndexedStopStationLinks(
   stopCount: number,
   activeStations: Array<BajsStation>,
   bajsCount: number
-): {
-  stopToStationLinks: Array<Array<IndexedLink> | undefined>
-  stationToStopLinks: Array<Array<IndexedLink>>
-} {
+) {
   const stopToStationLinks = Array.from<Array<IndexedLink> | undefined>({
     length: stopCount,
   })
@@ -809,14 +938,18 @@ function buildIndexedStopStationLinks(
     for (let bi = 0; bi < bajsCount; bi++) {
       const station = activeStations[bi]
       const distKm = fastDistKm(stop.lat, stop.lon, station.lat, station.lon)
-      if (distKm > BAJS_TRANSFER_MAX_KM) {continue}
+      if (distKm > BAJS_TRANSFER_MAX_KM) {
+        continue
+      }
 
       links ??= []
       links.push({ idx: stopCount + bi, distKm })
       stationToStopLinks[bi].push({ idx: si, distKm })
     }
 
-    if (links) {stopToStationLinks[si] = links}
+    if (links) {
+      stopToStationLinks[si] = links
+    }
   }
 
   return { stopToStationLinks, stationToStopLinks }
@@ -837,7 +970,9 @@ function buildIndexedBikeLinks(
     for (let j = i + 1; j < bajsCount; j++) {
       const to = activeStations[j]
       const distKm = fastDistKm(from.lat, from.lon, to.lat, to.lon)
-      if (distKm > BAJS_BIKE_MAX_KM) {continue}
+      if (distKm > BAJS_BIKE_MAX_KM) {
+        continue
+      }
 
       if (
         from.isRenting &&
@@ -877,8 +1012,17 @@ function buildBajsAdjacencyIndexed(
   const { stopCount, stopArray } = graph
 
   const { stopToStationLinks, stationToStopLinks } =
-    buildIndexedStopStationLinks(stopArray, stopCount, activeStations, bajsCount)
-  const stationBikeLinks = buildIndexedBikeLinks(activeStations, bajsCount, stopCount)
+    buildIndexedStopStationLinks(
+      stopArray,
+      stopCount,
+      activeStations,
+      bajsCount
+    )
+  const stationBikeLinks = buildIndexedBikeLinks(
+    activeStations,
+    bajsCount,
+    stopCount
+  )
 
   const adjacency = {
     bajsCount,
@@ -903,7 +1047,9 @@ function flatHeapPush(h: FlatHeap, time: number, node: number) {
   h.hN[i] = node
   while (i > 0) {
     const p = (i - 1) >> 1
-    if (h.hT[p] <= h.hT[i]) {break}
+    if (h.hT[p] <= h.hT[i]) {
+      break
+    }
     const tt = h.hT[p]
     h.hT[p] = h.hT[i]
     h.hT[i] = tt
@@ -914,7 +1060,7 @@ function flatHeapPush(h: FlatHeap, time: number, node: number) {
   }
 }
 
-function flatHeapPop(h: FlatHeap): { time: number; nodeIdx: number } {
+function flatHeapPop(h: FlatHeap) {
   const time = h.hT[0]
   const nodeIdx = h.hN[0]
   h.hSize--
@@ -926,9 +1072,15 @@ function flatHeapPop(h: FlatHeap): { time: number; nodeIdx: number } {
       let s = i
       const l = 2 * i + 1
       const r = 2 * i + 2
-      if (l < h.hSize && h.hT[l] < h.hT[s]) {s = l}
-      if (r < h.hSize && h.hT[r] < h.hT[s]) {s = r}
-      if (s === i) {break}
+      if (l < h.hSize && h.hT[l] < h.hT[s]) {
+        s = l
+      }
+      if (r < h.hSize && h.hT[r] < h.hT[s]) {
+        s = r
+      }
+      if (s === i) {
+        break
+      }
       const tt = h.hT[s]
       h.hT[s] = h.hT[i]
       h.hT[i] = tt
@@ -940,4 +1092,3 @@ function flatHeapPop(h: FlatHeap): { time: number; nodeIdx: number } {
   }
   return { time, nodeIdx }
 }
-

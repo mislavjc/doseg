@@ -9,10 +9,14 @@ const config: KnipConfig = {
     "scripts/proto/*.ts",
   ],
   project: ["**/*.{ts,tsx,mjs,css}"],
+  includeEntryExports: true,
+  treatConfigHintsAsErrors: true,
+  // ts-rs writes one export per Rust type the server can return; the barrel mirrors the crate, not what TS imports today.
+  ignoreIssues: { "lib/generated/**": ["exports", "types"] },
+  // portless is the dev-proxy CLI installed globally on dev machines (bun run dev), never a dependency.
   ignoreBinaries: ["portless"],
   compilers: {
-    css: (text: string) =>
-      [...text.matchAll(/(?<=@)import[^;]+/gu)].join("\n"),
+    css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/gu)].join("\n"),
   },
 }
 

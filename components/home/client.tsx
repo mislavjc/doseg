@@ -1,6 +1,13 @@
 "use client"
 
-import { Activity, startTransition, Suspense, useEffect, useRef, useState } from "react"
+import {
+  Activity,
+  startTransition,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import {
@@ -12,16 +19,16 @@ import {
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 import type { MapPoiCategory } from "@/lib/poi"
-import { DEFAULT_LAYERS, LayersControl } from './layers-panel';
-import type { LayersState } from './layers-panel';
+import { DEFAULT_LAYERS, LayersControl } from "./layers-panel"
+import type { LayersState } from "./layers-panel"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
 import { PolazakControl } from "./polazak-control"
 import { requestMyLocation } from "./reach-state"
-import { SearchFields } from './search-fields';
-import type { SearchFieldsProps } from './search-fields';
+import { SearchFields } from "./search-fields"
+import type { SearchFieldsProps } from "./search-fields"
 import { Sidebar } from "./sidebar"
-import { useMapFlow } from './use-map-flow';
-import type { FlowInitial } from './use-map-flow';
+import { useMapFlow } from "./use-map-flow"
+import type { FlowInitial } from "./use-map-flow"
 
 const MapCanvas = dynamic(
   () => import("./map-canvas").then((m) => m.MapCanvas),
@@ -81,11 +88,11 @@ type UrlState = {
 
 function toFlowInitial(q: UrlState): FlowInitial {
   const origin =
-    q.lat != null && q.lon != null ? { lat: q.lat, lon: q.lon } : undefined
+    q.lat !== null && q.lon !== null ? { lat: q.lat, lon: q.lon } : undefined
   return {
     origin,
     dest:
-      origin && q.dlat != null && q.dlon != null
+      origin && q.dlat !== null && q.dlon !== null
         ? { lat: q.dlat, lon: q.dlon }
         : undefined,
     time: q.t && /^\d{1,2}:\d{2}$/u.test(q.t) ? q.t : null,
@@ -111,7 +118,6 @@ function poiParamFromLayers(poi: LayersState["poi"]): string | null {
   return on.length > 0 ? on.join(",") : null
 }
 
-
 /** Read a coordinate pair straight out of a query string. */
 function pointFromSearch(
   sp: URLSearchParams,
@@ -120,8 +126,12 @@ function pointFromSearch(
 ): { lat: number; lon: number } | null {
   const lat = Number(sp.get(latKey))
   const lon = Number(sp.get(lonKey))
-  if (!sp.has(latKey) || !sp.has(lonKey)) {return null}
-  if (Number.isNaN(lat) || Number.isNaN(lon)) {return null}
+  if (!sp.has(latKey) || !sp.has(lonKey)) {
+    return null
+  }
+  if (Number.isNaN(lat) || Number.isNaN(lon)) {
+    return null
+  }
   return { lat, lon }
 }
 
@@ -136,7 +146,7 @@ function useUrlFlowSync(
   setUrlState: (
     values: Partial<UrlState>,
     options?: { history?: "push" | "replace" }
-  ) => Promise<unknown>
+  ) => Promise<URLSearchParams>
 ) {
   const { origin, dest, departTime, minutes, applyHistoryState } = flow
   useEffect(() => {
@@ -151,9 +161,11 @@ function useUrlFlowSync(
     const sp = new URLSearchParams(window.location.search)
     const sameAsUrl = (["lat", "lon", "dlat", "dlon"] as const).every((k) => {
       const v = sp.get(k)
-      return (v == null ? null : Number(v)) === next[k]
+      return (v === null ? null : Number(v)) === next[k]
     })
-    if (sameAsUrl) {return}
+    if (sameAsUrl) {
+      return
+    }
     void setUrlState(next, { history: "push" })
   }, [origin, dest, setUrlState])
   // Settings replace in place (no history spam from a slider or a toggle).
@@ -246,7 +258,11 @@ function MapChrome({
           <SearchFields {...searchProps} />
         </div>
         <div className="absolute top-[calc(env(safe-area-inset-top)_+_114px)] right-3.5 z-40 flex items-start gap-2 md:hidden">
-          <PolazakControl departTime={departTime} onChange={onTimeChange} compact />
+          <PolazakControl
+            departTime={departTime}
+            onChange={onTimeChange}
+            compact
+          />
           <LayersControl {...layersProps} variant="icon" />
         </div>
       </Activity>
@@ -331,7 +347,11 @@ function ClientInner() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="relative h-dvh overflow-hidden outline-none">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="relative h-dvh overflow-hidden outline-none"
+    >
       <h1 className="sr-only">Doseg: karta dosega javnog prijevoza</h1>
       <nav aria-label="Navigacija" className="sr-only">
         <Link href="/linije">Sve ZET linije: vozni red i stanice</Link>

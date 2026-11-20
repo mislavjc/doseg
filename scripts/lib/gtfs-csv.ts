@@ -13,22 +13,42 @@ import { createInterface } from "node:readline"
 
 function splitCsv(line: string): Array<string> {
   const out: Array<string> = []
-  let cur = "", q = false
+  let cur = "",
+    q = false
   for (let i = 0; i < line.length; i++) {
     const c = line[i]
     if (q) {
-      if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++ } else {q = false} } else {cur += c}
-    } else if (c === '"') {q = true}
-    else if (c === ",") { out.push(cur); cur = "" }
-    else {cur += c}
+      if (c === '"') {
+        if (line[i + 1] === '"') {
+          cur += '"'
+          i++
+        } else {
+          q = false
+        }
+      } else {
+        cur += c
+      }
+    } else if (c === '"') {
+      q = true
+    } else if (c === ",") {
+      out.push(cur)
+      cur = ""
+    } else {
+      cur += c
+    }
   }
   out.push(cur)
   return out
 }
 
-export function readCsv(path: string): { header: Array<string>; rows: Array<Array<string>> } {
-  const lines = readFileSync(path, "utf8").split(/\r?\n/u).filter((l) => l.length)
-  return { header: splitCsv(lines[0]), rows: lines.slice(1).map((l) => splitCsv(l)) }
+export function readCsv(path: string) {
+  const lines = readFileSync(path, "utf8")
+    .split(/\r?\n/u)
+    .filter((l) => l.length)
+  return {
+    header: splitCsv(lines[0]),
+    rows: lines.slice(1).map((l) => splitCsv(l)),
+  }
 }
 
 export const idx = (header: Array<string>, name: string) => header.indexOf(name)
@@ -36,16 +56,30 @@ export const idx = (header: Array<string>, name: string) => header.indexOf(name)
 /** Like `idx` but throws when the column is missing (for feeds we don't control). */
 export function colIndex(header: Array<string>, name: string): number {
   const i = header.indexOf(name)
-  if (i < 0) {throw new Error(`missing column ${name} in [${header.join(",")}]`)}
+  if (i < 0) {
+    throw new Error(`missing column ${name} in [${header.join(",")}]`)
+  }
   return i
 }
 
-export async function streamCsv(path: string, onRow: (cols: Array<string>, col: (n: string) => number) => void) {
-  const rl = createInterface({ input: createReadStream(path), crlfDelay: Infinity })
+export async function streamCsv(
+  path: string,
+  onRow: (cols: Array<string>, col: (n: string) => number) => void
+) {
+  const rl = createInterface({
+    input: createReadStream(path),
+    crlfDelay: Infinity,
+  })
   let col: ((n: string) => number) | null = null
   for await (const line of rl) {
-    if (!line) {continue}
-    if (!col) { const header = splitCsv(line); col = (n) => header.indexOf(n); continue }
+    if (!line) {
+      continue
+    }
+    if (!col) {
+      const header = splitCsv(line)
+      col = (n) => header.indexOf(n)
+      continue
+    }
     onRow(splitCsv(line), col)
   }
 }

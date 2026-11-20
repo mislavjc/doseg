@@ -9,21 +9,52 @@ export const MIN_LINES = 3
 
 /** Croatian collation order for the A–Ž buckets and strip. */
 export const HR_LETTERS = [
-  "A", "B", "C", "Č", "Ć", "D", "Đ", "E", "F", "G", "H", "I", "J", "K", "L",
-  "M", "N", "O", "P", "R", "S", "Š", "T", "U", "V", "Z", "Ž",
+  "A",
+  "B",
+  "C",
+  "Č",
+  "Ć",
+  "D",
+  "Đ",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "R",
+  "S",
+  "Š",
+  "T",
+  "U",
+  "V",
+  "Z",
+  "Ž",
 ] as const
 
 /** ASCII anchor id for a (possibly diacritic) bucket letter. */
-const LETTER_SLUG: Record<string, string> = { "Č": "cc", "Ć": "cy", "Đ": "dj", "Š": "sh", "Ž": "zh" }
+const LETTER_SLUG = new Map<string, string>(
+  Object.entries({ Č: "cc", Ć: "cy", Đ: "dj", Š: "sh", Ž: "zh" })
+)
 export function letterId(letter: string): string {
-  return `slovo-${LETTER_SLUG[letter] ?? (/^[A-Za-z]$/u.test(letter) ? letter.toLowerCase() : "broj")}`
+  return `slovo-${LETTER_SLUG.get(letter) ?? (/^[A-Za-z]$/u.test(letter) ? letter.toLowerCase() : "broj")}`
 }
 
 /** Bucket key for a stop name's first character (Croatian letters keep their own). */
 export function firstLetter(name: string): string {
   const cp = name.trim().codePointAt(0)
   const c = cp === undefined ? "#" : String.fromCodePoint(cp).toUpperCase()
-  if ((HR_LETTERS as ReadonlyArray<string>).includes(c)) {return c}
-  if (/[0-9]/u.test(c)) {return "0-9"}
+  if ((HR_LETTERS as ReadonlyArray<string>).includes(c)) {
+    return c
+  }
+  if (/[0-9]/u.test(c)) {
+    return "0-9"
+  }
   return c
 }

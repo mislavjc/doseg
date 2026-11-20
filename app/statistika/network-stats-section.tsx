@@ -89,7 +89,8 @@ function computeQualityInsights(
   routeStats: RouteStatsOutput | null
 ) {
   const withTort = dayTrams.filter(
-    (r) => r.tortuosity !== null && r.tortuosity < 4
+    (r): r is NetworkRoute & { tortuosity: number } =>
+      r.tortuosity !== null && r.tortuosity < 4
   )
   const mostDirect =
     withTort.length > 0
@@ -396,16 +397,15 @@ function HeatmapInsight({
           <>
             {" "}
             Najfrekventnija linija {insights.busiestTram.name} ima{" "}
-            {insights.busiestPeakDep} {plural(insights.busiestPeakDep, "polazak", "polaska", "polazaka")} u vršnom satu - tramvaj svakih{" "}
+            {insights.busiestPeakDep}{" "}
+            {plural(insights.busiestPeakDep, "polazak", "polaska", "polazaka")}{" "}
+            u vršnom satu - tramvaj svakih{" "}
             <strong>{fmtHR(insights.busiestInterval, 1)} minuta</strong>.
           </>
         )}{" "}
-        Noćna mreža (linije 31-34) pruža samo {insights.nightTotal} {plural(insights.nightTotal, "polazak", "polaska", "polazaka")} -
-        tek{" "}
-        {fmtHR(
-          (insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100,
-          1
-        )}
+        Noćna mreža (linije 31-34) pruža samo {insights.nightTotal}{" "}
+        {plural(insights.nightTotal, "polazak", "polaska", "polazaka")} - tek{" "}
+        {fmtHR((insights.nightTotal / Math.max(insights.dayTotal, 1)) * 100, 1)}
         % dnevnog kapaciteta.
       </p>
     </div>
@@ -427,7 +427,9 @@ function HourlyHeatmap({
       return totalB - totalA
     })
 
-  if (tramRoutes.length === 0) {return null}
+  if (tramRoutes.length === 0) {
+    return null
+  }
 
   const allDeps = tramRoutes.flatMap((r) => r.hourlyDepartures)
   const maxDep = Math.max(...allDeps, 1)
@@ -457,17 +459,31 @@ function HourlyHeatmap({
 // 3. Route Quality Cards
 // ---------------------------------------------------------------------------
 function cvColor(cv: number | null): string {
-  if (cv === null) {return "text-slate-400 dark:text-slate-500"}
-  if (cv < 0.2) {return "text-slate-700 dark:text-slate-300"}
-  if (cv <= 0.4) {return "text-slate-500 dark:text-slate-400"}
+  if (cv === null) {
+    return "text-slate-400 dark:text-slate-500"
+  }
+  if (cv < 0.2) {
+    return "text-slate-700 dark:text-slate-300"
+  }
+  if (cv <= 0.4) {
+    return "text-slate-500 dark:text-slate-400"
+  }
   return "text-slate-900 dark:text-slate-200"
 }
 
 function cvLabel(cv: number | null): string {
-  if (cv === null) {return "-"}
-  if (cv < 0.15) {return "odlično"}
-  if (cv < 0.25) {return "dobro"}
-  if (cv <= 0.4) {return "umjereno"}
+  if (cv === null) {
+    return "-"
+  }
+  if (cv < 0.15) {
+    return "odlično"
+  }
+  if (cv < 0.25) {
+    return "dobro"
+  }
+  if (cv <= 0.4) {
+    return "umjereno"
+  }
   return "kaotičan"
 }
 
@@ -569,13 +585,13 @@ function RouteQualityInsight({
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostDirect.name}
             </strong>{" "}
-            (tortuoznost {fmtHR(insights.mostDirect.tortuosity!, 2)}), a
+            (tortuoznost {fmtHR(insights.mostDirect.tortuosity, 2)}), a
             najkrivudavija{" "}
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               tramvaj {insights.mostWinding.name}
             </strong>{" "}
-            ({fmtHR(insights.mostWinding.tortuosity!, 2)} -{" "}
-            {Math.round((insights.mostWinding.tortuosity! - 1) * 100)}% duža od
+            ({fmtHR(insights.mostWinding.tortuosity, 2)} -{" "}
+            {Math.round((insights.mostWinding.tortuosity - 1) * 100)}% duža od
             ravne linije).
           </>
         )}
@@ -611,15 +627,15 @@ function RouteQualityCards({
     .filter((r) => r.mode === "TRAM")
     .toSorted((a, b) => tramSort(a.name, b.name))
 
-  if (tramRoutes.length === 0) {return null}
+  if (tramRoutes.length === 0) {
+    return null
+  }
 
   return (
     <div className="flex flex-col">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <StatModuleTitle>
-            Kvaliteta tramvajskih linija
-          </StatModuleTitle>
+          <StatModuleTitle>Kvaliteta tramvajskih linija</StatModuleTitle>
           <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Tortuoznost mjeri koliko je ruta neizravna (1,0 = savršeno ravna).
             CV takta označava ujednačenost razmaka polazaka (manje = bolje).
@@ -732,9 +748,7 @@ function FleetSection({
     <div className="flex flex-col">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <StatModuleTitle>
-            Vozni park i interlining
-          </StatModuleTitle>
+          <StatModuleTitle>Vozni park i interlining</StatModuleTitle>
           <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Koliko se često ista vozila (blokovi) koriste na više različitih
             linija tijekom dana, što štedi resurse, ali komplicira mrežu.
@@ -792,9 +806,15 @@ function WeekdayOnlyCard({
           .toSorted((a, b) => {
             const na = Number.parseInt(a, 10),
               nb = Number.parseInt(b, 10)
-            if (isNaN(na) && isNaN(nb)) {return a.localeCompare(b)}
-            if (isNaN(na)) {return 1}
-            if (isNaN(nb)) {return -1}
+            if (Number.isNaN(na) && Number.isNaN(nb)) {
+              return a.localeCompare(b)
+            }
+            if (Number.isNaN(na)) {
+              return 1
+            }
+            if (Number.isNaN(nb)) {
+              return -1
+            }
             return na - nb
           })
           .map((route) => (
@@ -917,7 +937,9 @@ function WeekendAsymmetrySection({
   weekendService: WeekendService | null
   asymmetry: Array<DirectionalAsymmetryEntry> | null
 }) {
-  if (!weekendService && !asymmetry) {return null}
+  if (!weekendService && !asymmetry) {
+    return null
+  }
 
   const topAsymmetric = asymmetry
     ? asymmetry.toSorted((a, b) => a.ratio - b.ratio).slice(0, 5)
@@ -925,15 +947,14 @@ function WeekendAsymmetrySection({
 
   const weekdayTrams =
     weekendService?.weekdayOnlyRoutes.filter(
-      (r) => Number.parseInt(r, 10) <= 34 && !isNaN(Number.parseInt(r, 10))
+      (r) =>
+        Number.parseInt(r, 10) <= 34 && !Number.isNaN(Number.parseInt(r, 10))
     ) ?? []
 
   return (
     <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
       <div className="mb-12">
-        <StatModuleTitle>
-          Vikend i smjerna asimetrija
-        </StatModuleTitle>
+        <StatModuleTitle>Vikend i smjerna asimetrija</StatModuleTitle>
         <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Neke linije ne voze vikendom, a neke imaju različit broj polazaka u
           svakom smjeru.
@@ -1018,9 +1039,7 @@ function ServiceHistogram({
 }) {
   return (
     <div className="flex flex-col rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div
-        className={`mb-1 font-mono text-label font-bold ${titleColor}`}
-      >
+      <div className={`mb-1 font-mono text-label font-bold ${titleColor}`}>
         {title}
       </div>
       <div className="mb-4 text-body text-slate-600 dark:text-slate-400">
@@ -1108,7 +1127,8 @@ function PastMidnightCard({ routes }: { routes: Array<string> }) {
         Usluga nakon ponoći
       </div>
       <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
-        {routes.length} {plural(routes.length, "linija", "linije", "linija")} čija usluga prelazi ponoć
+        {routes.length} {plural(routes.length, "linija", "linije", "linija")}{" "}
+        čija usluga prelazi ponoć
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 30).map((route) => (
@@ -1136,7 +1156,14 @@ function EndingBefore23Card({ routes }: { routes: Array<string> }) {
         Gašenje prije 23h
       </div>
       <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
-        {routes.length} {plural(routes.length, "linija završava", "linije završavaju", "linija završava")} radni dan do 23:00
+        {routes.length}{" "}
+        {plural(
+          routes.length,
+          "linija završava",
+          "linije završavaju",
+          "linija završava"
+        )}{" "}
+        radni dan do 23:00
       </div>
       <div className="flex flex-wrap gap-1.5">
         {routes.slice(0, 20).map((route) => (
@@ -1189,8 +1216,14 @@ function ServiceSpanInsight({ span }: { span: ServiceSpan }) {
       {nightGap.routesEndingBefore23.length > 0 && (
         <>
           {" "}
-          Čak {nightGap.routesEndingBefore23.length} {plural(nightGap.routesEndingBefore23.length, "linija završava", "linije završavaju", "linija završava")} uslugu
-          prije 23:00.
+          Čak {nightGap.routesEndingBefore23.length}{" "}
+          {plural(
+            nightGap.routesEndingBefore23.length,
+            "linija završava",
+            "linije završavaju",
+            "linija završava"
+          )}{" "}
+          uslugu prije 23:00.
         </>
       )}{" "}
       Ako propustite zadnji polazak, na velikom dijelu mreže nemate alternativu
@@ -1208,9 +1241,7 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
   return (
     <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
       <div className="mb-12">
-        <StatModuleTitle>
-          Kad se Zagreb budi i gasi
-        </StatModuleTitle>
+        <StatModuleTitle>Kad se Zagreb budi i gasi</StatModuleTitle>
         <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Kada stajalište dobije prvi polazak ujutro, a kada ostaje bez usluge
           navečer. Zagreb ne spava u isto vrijeme - neki kvartovi gube prijevoz
@@ -1249,16 +1280,22 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
 // 7. Pulse Scheduling Detection
 // ---------------------------------------------------------------------------
 function pulseWaitColor(waitMin: number): string {
-  if (waitMin < 3) {return "text-emerald-600 dark:text-emerald-400"}
-  if (waitMin <= 6) {return "text-amber-600 dark:text-amber-400"}
+  if (waitMin < 3) {
+    return "text-emerald-600 dark:text-emerald-400"
+  }
+  if (waitMin <= 6) {
+    return "text-amber-600 dark:text-amber-400"
+  }
   return "text-red-600 dark:text-red-400"
 }
 
 function pulseWaitBg(waitMin: number): string {
-  if (waitMin < 3)
-    {return "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"}
-  if (waitMin <= 6)
-    {return "bg-slate-200/80 text-slate-800 dark:bg-white/15 dark:text-slate-200"}
+  if (waitMin < 3) {
+    return "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
+  }
+  if (waitMin <= 6) {
+    return "bg-slate-200/80 text-slate-800 dark:bg-white/15 dark:text-slate-200"
+  }
   return "bg-slate-300 text-slate-900 dark:bg-white/20 dark:text-white"
 }
 
@@ -1319,11 +1356,19 @@ const PULSE_GAP = 2
 const PULSE_LABEL_W = 120
 
 function pulseHeatColor(wait: number, maxWait: number): string {
-  if (wait < 0) {return "transparent"}
+  if (wait < 0) {
+    return "transparent"
+  }
   const t = Math.min(wait / maxWait, 1)
-  if (t < 0.33) {return "#e2e8f0"}
-  if (t < 0.55) {return "#94a3b8"}
-  if (t < 0.77) {return "#64748b"}
+  if (t < 0.33) {
+    return "#e2e8f0"
+  }
+  if (t < 0.55) {
+    return "#94a3b8"
+  }
+  if (t < 0.77) {
+    return "#64748b"
+  }
   return "#1e293b"
 }
 
@@ -1382,7 +1427,9 @@ function PulseHeatmapCells({
 
 function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
   const topHubs = hubs.slice(0, 5)
-  if (topHubs.length === 0) {return null}
+  if (topHubs.length === 0) {
+    return null
+  }
 
   const hours = Array.from({ length: 19 }, (_, i) => i + 5)
   const allWaits = topHubs.flatMap((h) => h.hourlyWait.filter((v) => v >= 0))
@@ -1510,7 +1557,9 @@ function PulseInsight({
 }
 
 function PulseSchedulingSection({ hubs }: { hubs: Array<PulseHub> }) {
-  if (hubs.length === 0) {return null}
+  if (hubs.length === 0) {
+    return null
+  }
 
   const avgWait =
     hubs.reduce((s, h) => s + h.avgTransferWaitMin, 0) / hubs.length
@@ -1522,9 +1571,7 @@ function PulseSchedulingSection({ hubs }: { hubs: Array<PulseHub> }) {
   return (
     <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
       <div className="mb-12">
-        <StatModuleTitle>
-          Pulse scheduling
-        </StatModuleTitle>
+        <StatModuleTitle>Pulse scheduling</StatModuleTitle>
         <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Pulse scheduling znači sinkronizaciju dolazaka različitih linija na
           ključna čvorišta, kako bi putnici mogli presjedati s minimalnim
@@ -1551,7 +1598,9 @@ export default function NetworkStatsSection() {
   const data = readJsonCached<NetworkStatsOutput>(
     join(getDataDir(), "network-stats.json")
   )
-  if (!data) {return null}
+  if (!data) {
+    return null
+  }
 
   const routeStats = loadRouteStats()
   const insights = computeInsights(data, routeStats)
@@ -1563,9 +1612,7 @@ export default function NetworkStatsSection() {
     >
       <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <StatModuleTitle>
-            Analiza mreže
-          </StatModuleTitle>
+          <StatModuleTitle>Analiza mreže</StatModuleTitle>
           <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
             Detaljan pregled rasporeda, kapaciteta i karakteristika voznog reda
             zagrebačkog javnog prijevoza.
@@ -1581,7 +1628,9 @@ export default function NetworkStatsSection() {
           <div className="flex flex-col gap-16">
             <HourlyHeatmap routes={data.routes} insights={insights} />
             <RouteQualityCards routes={data.routes} insights={insights} />
-            {data.fleet && <FleetSection fleet={data.fleet} insights={insights} />}
+            {data.fleet && (
+              <FleetSection fleet={data.fleet} insights={insights} />
+            )}
             <WeekendAsymmetrySection
               weekendService={data.weekendService}
               asymmetry={data.directionalAsymmetry}

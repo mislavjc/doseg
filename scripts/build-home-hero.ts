@@ -17,11 +17,11 @@ import { join } from "node:path"
 
 import sharp from "sharp"
 
-import { mercatorX, mercatorY } from '../lib/geo';
-import type { Ring } from '../lib/geo';
+import { mercatorX, mercatorY } from "../lib/geo"
+import type { Ring } from "../lib/geo"
 import { argValue } from "./lib/args"
-import { createDitherCropper } from './lib/dither-crop';
-import type { HeroMeta } from './lib/dither-crop';
+import { createDitherCropper } from "./lib/dither-crop"
+import type { HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 // topPx = city's north edge from the band top (@2x), leaving room for the
@@ -46,7 +46,6 @@ const Z_FIT = 10
 const SIMPLIFY_TOLERANCE = 0.0004
 
 const root = process.cwd()
-
 
 // The kvart defaults assume district scale; the city band fits at z10, so
 // texture comes from deep oversampling. The default cutoff (80 ≈ 31% building
@@ -81,7 +80,8 @@ function ringSignedArea(ring: Ring): number {
   return sum / 2
 }
 
-const pt = ([lon, lat]: [number, number]) => `${lon.toFixed(6)},${lat.toFixed(6)}`
+const pt = ([lon, lat]: [number, number]) =>
+  `${lon.toFixed(6)},${lat.toFixed(6)}`
 const undirected = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`)
 
 /**
@@ -92,7 +92,9 @@ const undirected = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`)
  * dead-ends inside a single district.
  */
 function dissolveBoundary(inputRings: Array<Ring>): Ring {
-  const rings = inputRings.map((r) => (ringSignedArea(r) > 0 ? r : r.toReversed()))
+  const rings = inputRings.map((r) =>
+    ringSignedArea(r) > 0 ? r : r.toReversed()
+  )
 
   const counts = new Map<string, number>()
   for (const ring of rings) {
@@ -109,7 +111,9 @@ function dissolveBoundary(inputRings: Array<Ring>): Ring {
     for (let i = 0; i < ring.length - 1; i++) {
       const a = pt(ring[i])
       const b = pt(ring[i + 1])
-      if (counts.get(undirected(a, b)) === 1) {next.set(a, ring[i + 1])}
+      if (counts.get(undirected(a, b)) === 1) {
+        next.set(a, ring[i + 1])
+      }
     }
   }
 
@@ -118,7 +122,9 @@ function dissolveBoundary(inputRings: Array<Ring>): Ring {
   const visited = new Set<string>()
   let best: Ring = []
   for (const start of next.keys()) {
-    if (visited.has(start)) {continue}
+    if (visited.has(start)) {
+      continue
+    }
     const loop: Ring = []
     let cur: string | undefined = start
     let closed = false
@@ -127,16 +133,24 @@ function dissolveBoundary(inputRings: Array<Ring>): Ring {
         closed = true
         break
       }
-      if (visited.has(cur)) {break}
+      if (visited.has(cur)) {
+        break
+      }
       visited.add(cur)
       const n = next.get(cur)
-      if (!n) {break}
+      if (!n) {
+        break
+      }
       loop.push(n)
       cur = pt(n)
     }
-    if (closed && loop.length > best.length) {best = loop}
+    if (closed && loop.length > best.length) {
+      best = loop
+    }
   }
-  console.error(`dissolve: ${next.size} boundary edges, city ring ${best.length} points`)
+  console.error(
+    `dissolve: ${next.size} boundary edges, city ring ${best.length} points`
+  )
   if (best.length < next.size * 0.8) {
     throw new Error(
       `boundary walk incomplete: longest closed ring ${best.length} of ${next.size} edges`
@@ -151,8 +165,14 @@ function simplify(ring: Ring, tolerance: number): Ring {
   keep[0] = keep[ring.length - 1] = true
   const stack: Array<[number, number]> = [[0, ring.length - 1]]
   while (stack.length > 0) {
-    const [a, b] = stack.pop()!
-    if (b - a < 2) {continue}
+    const range = stack.pop()
+    if (!range) {
+      break
+    }
+    const [a, b] = range
+    if (b - a < 2) {
+      continue
+    }
     const [ax, ay] = ring[a]
     const [bx, by] = ring[b]
     const dx = bx - ax
@@ -211,9 +231,9 @@ interface HomeHeroData extends HeroMeta {
 }
 
 async function main() {
-  const geo = readJson<{ features: Array<{ geometry: { coordinates: Array<Ring> } }> }>(
-    join(root, "data/districts.geojson")
-  )
+  const geo = readJson<{
+    features: Array<{ geometry: { coordinates: Array<Ring> } }>
+  }>(join(root, "data/districts.geojson"))
   const boundary = simplify(
     dissolveBoundary(geo.features.map((f) => f.geometry.coordinates[0])),
     SIMPLIFY_TOLERANCE
@@ -225,10 +245,18 @@ async function main() {
     e = -Infinity,
     n = -Infinity
   for (const [lon, lat] of boundary) {
-    if (lon < w) {w = lon}
-    if (lon > e) {e = lon}
-    if (lat < s) {s = lat}
-    if (lat > n) {n = lat}
+    if (lon < w) {
+      w = lon
+    }
+    if (lon > e) {
+      e = lon
+    }
+    if (lat < s) {
+      s = lat
+    }
+    if (lat > n) {
+      n = lat
+    }
   }
   const bbox = [w, s, e, n]
 

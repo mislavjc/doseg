@@ -2,7 +2,29 @@
 /* eslint-disable max-lines-per-function -- imperative three.js scene reads best in one place */
 
 import { useEffect, useRef } from "react"
-import * as THREE from "three"
+import {
+  Box3,
+  Color,
+  DirectionalLight,
+  DoubleSide,
+  EdgesGeometry,
+  ExtrudeGeometry,
+  Group,
+  LineBasicMaterial,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  OrthographicCamera,
+  PCFShadowMap,
+  PlaneGeometry,
+  Raycaster,
+  Scene,
+  ShadowMaterial,
+  Vector2,
+  Vector3,
+  WebGLRenderer,
+} from "three"
+import type { Object3D } from "three"
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js"
 import { scoreColor } from "@/lib/score-color"
 import { parseDistrictShapes } from "./district-shapes"
@@ -23,24 +45,25 @@ import { parseDistrictShapes } from "./district-shapes"
 // Caps coloured by the shared score ramp (same as the board) so neighbouring
 // districts differ in shade — navy = high, pale = low. Hover lifts a block to a
 // clean bright blue (same hue throughout) regardless of its base shade.
-const HILITE = new THREE.Color(0x1e_63_f2)
+const HILITE = new Color(0x1e_63_f2)
 const HILITE_WALL = HILITE.clone().multiplyScalar(0.85)
 const HILITE_EDGE = 0x17_46_b3
 
 type Block = {
   name: string
-  caps: Array<THREE.MeshBasicMaterial>
-  walls: Array<THREE.MeshBasicMaterial>
-  edges: Array<THREE.LineBasicMaterial>
-  baseCap: THREE.Color
-  baseWall: THREE.Color
+  caps: Array<MeshBasicMaterial>
+  walls: Array<MeshBasicMaterial>
+  edges: Array<LineBasicMaterial>
+  baseCap: Color
+  baseWall: Color
   baseEdge: number
 }
 
-const hasGeometry = (
-  obj: THREE.Object3D
-): obj is THREE.Mesh | THREE.LineSegments =>
-  obj instanceof THREE.Mesh || obj instanceof THREE.LineSegments
+const hasGeometry = (obj: Object3D): obj is Mesh | LineSegments =>
+  "isMesh" in obj || "isLineSegments" in obj
+
+const isDirectionalLight = (obj: Object3D): obj is DirectionalLight =>
+  "isDirectionalLight" in obj
 
 export function TerrainView({
   hovered,
@@ -57,26 +80,30 @@ export function TerrainView({
   const mountRef = useRef<HTMLDivElement>(null)
   const onHoverRef = useRef(onHover)
   const valuesRef = useRef(values)
-  const apiRef = useRef<{ highlight: (name: string | null) => void } | null>(null)
+  const apiRef = useRef<{ highlight: (name: string | null) => void } | null>(
+    null
+  )
 
   useEffect(() => {
     onHoverRef.current = onHover
     // Read at build time, which happens once the SVG lands, so a caller passing
     // a fresh object literal every render does not rebuild the whole scene.
     valuesRef.current = values
-  })
+  }, [onHover, values])
 
   useEffect(() => {
     const mount = mountRef.current
-    if (!mount) {return}
+    if (!mount) {
+      return
+    }
     let disposed = false
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true })
     // Supersample above device DPR — small static canvas, big crispness win.
     renderer.setPixelRatio(Math.min((window.devicePixelRatio || 1) * 1.5, 3))
     renderer.setClearColor(0xff_ff_ff, 0)
     renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = THREE.PCFShadowMap
+    renderer.shadowMap.type = PCFShadowMap
     mount.append(renderer.domElement)
     Object.assign(renderer.domElement.style, {
       width: "100%",
@@ -84,13 +111,13 @@ export function TerrainView({
       display: "block",
     })
 
-    const scene = new THREE.Scene()
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -5000, 9000)
-    const raycaster = new THREE.Raycaster()
-    const pointer = new THREE.Vector2()
+    const scene = new Scene()
+    const camera = new OrthographicCamera(-1, 1, 1, -1, -5000, 9000)
+    const raycaster = new Raycaster()
+    const pointer = new Vector2()
     const blocks = new Map<string, Block>()
-    const capMeshes: Array<THREE.Mesh> = []
-    let sizeVec = new THREE.Vector3(1, 1, 1)
+    const capMeshes: Array<Mesh> = []
+    let sizeVec = new Vector3(1, 1, 1)
     let activeHover: string | null = null
 
     const render = () => renderer.render(scene, camera)
@@ -130,85 +157,105 @@ export function TerrainView({
     }
 
     const build = (svgText: string) => {
-      if (disposed) {return}
+      if (disposed) {
+        return
+      }
       const shapes = parseDistrictShapes(svgText)
       const names = shapes.map((s) => s.name)
       const override = valuesRef.current
-      const scores = shapes.map((s) => (override ? (override[s.name] ?? 0) : s.score))
+      const scores = shapes.map((s) =>
+        override ? (override[s.name] ?? 0) : s.score
+      )
       const maxS = Math.max(...scores, 1)
 
       const data = new SVGLoader().parse(svgText)
-      const group = new THREE.Group()
+      const group = new Group()
       data.paths.forEach((path, i) => {
         const depth = 10 + ((scores[i] ?? 0) / maxS) * 135
-        const cap = new THREE.Color(scoreColor(scores[i] ?? 0))
+        const cap = new Color(scoreColor(scores[i] ?? 0))
         // gentle shading → reads close to the flat board swatch
         const wall = cap.clone().multiplyScalar(0.92)
         const edgeHex = cap.clone().multiplyScalar(0.62).getHex()
         const name = names[i]
-        const block: Block =
-          blocks.get(name) ??
-          {
-            name,
-            caps: [],
-            walls: [],
-            edges: [],
-            baseCap: cap.clone(),
-            baseWall: wall.clone(),
-            baseEdge: edgeHex,
-          }
+        const block: Block = blocks.get(name) ?? {
+          name,
+          caps: [],
+          walls: [],
+          edges: [],
+          baseCap: cap.clone(),
+          baseWall: wall.clone(),
+          baseEdge: edgeHex,
+        }
         path.toShapes().forEach((shape) => {
-          const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false })
-          const capMat = new THREE.MeshBasicMaterial({ color: cap, side: THREE.DoubleSide })
-          const wallMat = new THREE.MeshBasicMaterial({ color: wall, side: THREE.DoubleSide })
-          const mesh = new THREE.Mesh(geo, [capMat, wallMat])
+          const geo = new ExtrudeGeometry(shape, { depth, bevelEnabled: false })
+          const capMat = new MeshBasicMaterial({ color: cap, side: DoubleSide })
+          const wallMat = new MeshBasicMaterial({
+            color: wall,
+            side: DoubleSide,
+          })
+          const mesh = new Mesh(geo, [capMat, wallMat])
           mesh.castShadow = true
           mesh.userData.name = name
           group.add(mesh)
           block.caps.push(capMat)
           block.walls.push(wallMat)
           capMeshes.push(mesh)
-          const edgeMat = new THREE.LineBasicMaterial({
+          const edgeMat = new LineBasicMaterial({
             color: edgeHex,
             transparent: true,
             opacity: 0.45,
           })
-          group.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 30), edgeMat))
+          group.add(new LineSegments(new EdgesGeometry(geo, 30), edgeMat))
           block.edges.push(edgeMat)
         })
-        if (name) {blocks.set(name, block)}
+        if (name) {
+          blocks.set(name, block)
+        }
       })
 
       group.scale.y = -1
-      const box = new THREE.Box3().setFromObject(group)
-      const ctr = box.getCenter(new THREE.Vector3())
-      sizeVec = box.getSize(new THREE.Vector3())
+      const box = new Box3().setFromObject(group)
+      const ctr = box.getCenter(new Vector3())
+      sizeVec = box.getSize(new Vector3())
       group.position.x = -ctr.x
       group.position.y = -ctr.y
       scene.add(group)
 
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(sizeVec.x * 3, sizeVec.y * 3),
-        new THREE.ShadowMaterial({ opacity: 0.08 })
+      const ground = new Mesh(
+        new PlaneGeometry(sizeVec.x * 3, sizeVec.y * 3),
+        new ShadowMaterial({ opacity: 0.08 })
       )
       ground.position.z = -0.8
       ground.receiveShadow = true
       scene.add(ground)
-      const sun = new THREE.DirectionalLight(0xff_ff_ff, 1)
+      const sun = new DirectionalLight(0xff_ff_ff, 1)
       sun.position.set(-sizeVec.x * 0.55, -sizeVec.y * 0.75, sizeVec.y * 1.5)
       sun.castShadow = true
       sun.shadow.mapSize.set(2048, 2048)
       sun.shadow.radius = 7
       const S = Math.max(sizeVec.x, sizeVec.y) * 0.85
-      Object.assign(sun.shadow.camera, { left: -S, right: S, top: S, bottom: -S, near: 1, far: sizeVec.y * 6 })
+      Object.assign(sun.shadow.camera, {
+        left: -S,
+        right: S,
+        top: S,
+        bottom: -S,
+        near: 1,
+        far: sizeVec.y * 6,
+      })
       sun.shadow.camera.updateProjectionMatrix()
       scene.add(sun)
 
-      camera.position.set(-sizeVec.x * 0.08, -sizeVec.y * 1.12, sizeVec.y * 0.92)
+      camera.position.set(
+        -sizeVec.x * 0.08,
+        -sizeVec.y * 1.12,
+        sizeVec.y * 0.92
+      )
       camera.up.set(0, 0, 1)
       camera.lookAt(0, 0, 48)
       fit()
-      if (hovered) {highlight(hovered)}
+      if (hovered) {
+        highlight(hovered)
+      }
     }
 
     fetch("/district-map.svg")
@@ -217,7 +264,9 @@ export function TerrainView({
       .catch(() => {})
 
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") {return}
+      if (e.pointerType !== "mouse") {
+        return
+      }
       const rect = renderer.domElement.getBoundingClientRect()
       pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
       pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -255,12 +304,17 @@ export function TerrainView({
         if (hasGeometry(obj)) {
           obj.geometry.dispose()
           const mat = obj.material
-          if (Array.isArray(mat)) {mat.forEach((m) => {
-            m.dispose()
-          })}
-          else {mat.dispose()}
+          if (Array.isArray(mat)) {
+            mat.forEach((m) => {
+              m.dispose()
+            })
+          } else {
+            mat.dispose()
+          }
         }
-        if (obj instanceof THREE.DirectionalLight) {obj.shadow.map?.dispose()}
+        if (isDirectionalLight(obj)) {
+          obj.shadow.map?.dispose()
+        }
       })
       renderer.dispose()
       renderer.domElement.remove()
@@ -275,7 +329,7 @@ export function TerrainView({
   return (
     <div
       ref={mountRef}
-      className="w-full cursor-pointer [aspect-ratio:1300/980]"
+      className="[aspect-ratio:1300/980] w-full cursor-pointer"
       role="img"
       aria-label={ariaLabel}
     />

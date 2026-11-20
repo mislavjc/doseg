@@ -1,0 +1,11 @@
+# Staged-file checks only, so a commit stays at a second or two. CI runs the full suite.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: prettier
+      glob: "*.{ts,tsx}"
+      run: bun prettier --write {staged_files}
+      stage_fixed: true
+    - name: oxlint
+      glob: "*.{ts,tsx,js,mjs}"
+      run: bun oxlint {staged_files}

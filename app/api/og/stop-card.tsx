@@ -32,14 +32,24 @@ const MAP_LAYER = {
 /** Map window: dither hero + cloud fade + centred stop marker (Paper "OG
  *  stanica — V1": clean junction map, no route overlay). */
 function MapWindow({ data }: { data: StopPageData }) {
-  const heroPath = join(process.cwd(), "public/stanice", `hero-${data.slug}.png`)
+  const heroPath = join(
+    process.cwd(),
+    "public/stanice",
+    `hero-${data.slug}.png`
+  )
   const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
   const cloudSrc = heroCloudSrc()
   return (
-    <div style={{ position: "relative", width: "1200px", height: `${MAP_H}px`, display: "flex", overflow: "hidden" }}>
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
+    <div
+      style={{
+        position: "relative",
+        width: "1200px",
+        height: `${MAP_H}px`,
+        display: "flex",
+        overflow: "hidden",
+      }}
+    >
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
       {/* Stop marker + name, centred (crop is symmetric around the stop). */}
       <div
@@ -95,7 +105,9 @@ function factsText(data: StopPageData): string {
 
 /** White info band: breadcrumb, headline, facts (Paper "OG stanica — V1"). */
 function InfoBand({ data }: { data: StopPageData }) {
-  const crumb = data.kvart ? `doseg.hr / sve stanice / ${data.kvart}` : "doseg.hr / sve stanice"
+  const crumb = data.kvart
+    ? `doseg.hr / sve stanice / ${data.kvart}`
+    : "doseg.hr / sve stanice"
   return (
     <div
       style={{
@@ -110,14 +122,47 @@ function InfoBand({ data }: { data: StopPageData }) {
         padding: "0 56px",
       }}
     >
-      <div style={{ fontFamily: "Geist Mono", fontSize: "24px", lineHeight: "32px", letterSpacing: "0.96px", color: ZG_BLUE, display: "flex" }}>
+      <div
+        style={{
+          fontFamily: "Geist Mono",
+          fontSize: "24px",
+          lineHeight: "32px",
+          letterSpacing: "0.96px",
+          color: ZG_BLUE,
+          display: "flex",
+        }}
+      >
         {crumb}
       </div>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", width: "1088px" }}>
-        <div style={{ fontFamily: "TeX Gyre Heros", fontSize: "34px", fontWeight: 700, lineHeight: "44px", color: INK, display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          width: "1088px",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "TeX Gyre Heros",
+            fontSize: "34px",
+            fontWeight: 700,
+            lineHeight: "44px",
+            color: INK,
+            display: "flex",
+          }}
+        >
           Stanica {data.name}
         </div>
-        <div style={{ fontFamily: "Geist Mono", fontSize: "24px", lineHeight: "38px", color: INK_MUTED, display: "flex" }}>
+        <div
+          style={{
+            fontFamily: "Geist Mono",
+            fontSize: "24px",
+            lineHeight: "38px",
+            color: INK_MUTED,
+            display: "flex",
+          }}
+        >
           {factsText(data)}
         </div>
       </div>
@@ -135,26 +180,30 @@ export function renderStopOgCard(
   data: StopPageData,
   meta: LineHeroMeta | null
 ): ImageResponse | null {
-  const heroPath = join(process.cwd(), "public/stanice", `hero-${data.slug}.png`)
-  if (!meta || !existsSync(heroPath)) {return null}
+  const heroPath = join(
+    process.cwd(),
+    "public/stanice",
+    `hero-${data.slug}.png`
+  )
+  if (!meta || !existsSync(heroPath)) {
+    return null
+  }
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#ffffff",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <MapWindow data={data} />
-        <InfoBand data={data} />
-      </div>
-    ),
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#ffffff",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <MapWindow data={data} />
+      <InfoBand data={data} />
+    </div>,
     {
       width: 1200,
       height: 630,

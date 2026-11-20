@@ -65,6 +65,28 @@ export default function InsightsSection({
 
 // --- Key findings horizontal carousel ---
 
+const isHtmlElement = (node: Element): node is HTMLElement =>
+  "offsetLeft" in node
+
+function nearestChildIndex(el: HTMLElement, scrollLeft: number): number {
+  const pad = Number.parseFloat(getComputedStyle(el).paddingLeft) || 0
+  const children = [...el.children]
+  let best = 0
+  let bestDist = Infinity
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    if (!isHtmlElement(child)) {
+      continue
+    }
+    const dist = Math.abs(child.offsetLeft - pad - scrollLeft)
+    if (dist < bestDist) {
+      bestDist = dist
+      best = i
+    }
+  }
+  return best
+}
+
 function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
@@ -75,31 +97,22 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
 
   const measure = useCallback(() => {
     const el = scrollRef.current
-    if (!el) {return}
+    if (!el) {
+      return
+    }
     const { scrollLeft, scrollWidth, clientWidth } = el
     const maxScroll = scrollWidth - clientWidth
     setCanScrollLeft(maxScroll > 6 && scrollLeft > 6)
     setCanScrollRight(maxScroll > 6 && scrollLeft < maxScroll - 6)
 
-    const pad = Number.parseFloat(getComputedStyle(el).paddingLeft) || 0
-    const children = [...el.children]
-    let best = 0
-    let bestDist = Infinity
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i]
-      if (!(child instanceof HTMLElement)) {continue}
-      const dist = Math.abs(child.offsetLeft - pad - scrollLeft)
-      if (dist < bestDist) {
-        bestDist = dist
-        best = i
-      }
-    }
-    setActive(best)
+    setActive(nearestChildIndex(el, scrollLeft))
   }, [])
 
   useEffect(() => {
     const el = scrollRef.current
-    if (!el) {return}
+    if (!el) {
+      return
+    }
     const updateCardWidth = () => {
       const cardW =
         gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
@@ -183,11 +196,7 @@ function CarouselNav({
         enabled={canScrollLeft}
         onClick={() => onScrollToIndex(Math.max(0, active - 1))}
       />
-      <div
-        className="flex gap-2"
-        role="tablist"
-        aria-label="Nalazi"
-      >
+      <div className="flex gap-2" role="tablist" aria-label="Nalazi">
         {gaps.map((gap, i) => (
           <button
             key={gap.issue}
@@ -249,9 +258,7 @@ function CarouselArrowButton({
         <title>
           {direction === "left" ? "Strelica lijevo" : "Strelica desno"}
         </title>
-        <path
-          d={direction === "left" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"}
-        />
+        <path d={direction === "left" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} />
       </svg>
     </button>
   )
@@ -293,7 +300,9 @@ function modeLabel(mode: string): string {
 }
 
 function formatDelay(seconds: number): string {
-  if (seconds < 60) {return `${Math.round(seconds)} s`}
+  if (seconds < 60) {
+    return `${Math.round(seconds)} s`
+  }
   const min = Math.floor(seconds / 60)
   const sec = Math.round(seconds % 60)
   return sec > 0 ? `${min} min ${sec} s` : `${min} min`
@@ -305,12 +314,16 @@ function OperationalHealth() {
     keepPreviousData: true,
   })
 
-  if (!data || data.routes.length === 0) {return null}
+  if (!data || data.routes.length === 0) {
+    return null
+  }
 
   const unreliable = data.routes.filter(
     (r) => r.samples >= 10 && r.severityScore >= 45
   )
-  if (unreliable.length === 0) {return null}
+  if (unreliable.length === 0) {
+    return null
+  }
 
   return (
     <div className="mt-12">
@@ -362,9 +375,9 @@ function HealthTable({ routes }: { routes: Array<RouteHealth> }) {
           <tr className="border-b border-slate-200 text-left font-mono text-label font-bold text-slate-500 dark:border-white/10 dark:text-slate-400">
             <th className="py-2 pr-3">Linija</th>
             <th className="py-2 pr-3">Stanje</th>
-            <th className="py-2 pr-2 sm:pr-6 text-right">Na vrijeme</th>
-            <th className="py-2 pr-2 sm:pr-6 text-right">Kašnjenje</th>
-            <th className="py-2 pr-1 sm:pr-3 text-right">
+            <th className="py-2 pr-2 text-right sm:pr-6">Na vrijeme</th>
+            <th className="py-2 pr-2 text-right sm:pr-6">Kašnjenje</th>
+            <th className="py-2 pr-1 text-right sm:pr-3">
               <Term title="Koeficijent varijacije razmaka - mjeri koliko pravilno dolaze vozila (niži = bolje)">
                 Regularnost
               </Term>
@@ -434,7 +447,7 @@ function SeverityBar({ score }: { score: number }) {
       <span className="font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
         {Math.round(score)}
       </span>
-      <div className="h-2 w-12 sm:w-16 rounded-full bg-slate-100 dark:bg-slate-800">
+      <div className="h-2 w-12 rounded-full bg-slate-100 sm:w-16 dark:bg-slate-800">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${Math.min(score, 100)}%` }}

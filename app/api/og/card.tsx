@@ -25,7 +25,9 @@ type OgAssets = {
 let cachedAssets: OgAssets | null = null
 
 function getAssets(): OgAssets {
-  if (cachedAssets) {return cachedAssets}
+  if (cachedAssets) {
+    return cachedAssets
+  }
   const tram = readFileSync(join(ASSETS_DIR, "tram.png"))
   cachedAssets = {
     geistMonoRegular: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
@@ -40,9 +42,16 @@ function getAssets(): OgAssets {
 export function ogFonts() {
   const { geistMonoRegular, herosBold } = getAssets()
   return [
-    { name: "Geist Mono", data: geistMonoRegular, weight: 400, style: "normal" },
+    {
+      name: "Geist Mono",
+      data: geistMonoRegular,
+      weight: 400,
+      style: "normal",
+    },
     { name: "TeX Gyre Heros", data: herosBold, weight: 700, style: "normal" },
-  ] satisfies NonNullable<ConstructorParameters<typeof ImageResponse>[1]>["fonts"]
+  ] satisfies NonNullable<
+    ConstructorParameters<typeof ImageResponse>[1]
+  >["fonts"]
 }
 
 /** Cloud-fade layer the hero OG cards lay over their maps; null if unbaked. */
@@ -104,7 +113,6 @@ function OgCard({
         overflow: "hidden",
       }}
     >
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img
         src={tramSrc}
         alt=""

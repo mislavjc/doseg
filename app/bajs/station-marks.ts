@@ -1,4 +1,8 @@
-import type * as maplibregl from "maplibre-gl"
+import type {
+  ExpressionSpecification,
+  Map as MapLibreMap,
+  SymbolLayerSpecification,
+} from "maplibre-gl"
 
 /**
  * How a station is drawn on the /bajs map: a needle.
@@ -47,7 +51,9 @@ function needle(filled: boolean, hover: boolean): ImageData {
   c.width = W * PR
   c.height = H * PR
   const ctx = c.getContext("2d")
-  if (!ctx) {throw new Error("no 2d context")}
+  if (!ctx) {
+    throw new Error("no 2d context")
+  }
   ctx.scale(PR, PR)
 
   const ink = hover ? INK : BLUE
@@ -77,10 +83,7 @@ const iconId = (filled: boolean, hover: boolean) =>
   `station-${filled ? "full" : "empty"}${hover ? "-hover" : ""}`
 
 /** Ramp from an empty stand to a full one, for use inside a zoom ramp. */
-const byBikes = (
-  low: number,
-  high: number
-): maplibregl.ExpressionSpecification => [
+const byBikes = (low: number, high: number): ExpressionSpecification => [
   "interpolate",
   ["linear"],
   ["get", "bikesAvailable"],
@@ -91,7 +94,7 @@ const byBikes = (
 ]
 
 /** Layout of the icon layer, shared by the base layer and its hover twin. */
-function iconLayout(hover: boolean): maplibregl.SymbolLayerSpecification["layout"] {
+function iconLayout(hover: boolean): SymbolLayerSpecification["layout"] {
   return {
     "icon-image": [
       "case",
@@ -122,13 +125,15 @@ function iconLayout(hover: boolean): maplibregl.SymbolLayerSpecification["layout
 
 /** Draw every station. `STATION_LAYER` is what takes hover and clicks. */
 export function addStationLayers(
-  map: maplibregl.Map,
+  map: MapLibreMap,
   data: GeoJSON.FeatureCollection
 ) {
   map.addSource("stations", { type: "geojson", data })
   for (const filled of [true, false]) {
     for (const hover of [true, false]) {
-      map.addImage(iconId(filled, hover), needle(filled, hover), { pixelRatio: PR })
+      map.addImage(iconId(filled, hover), needle(filled, hover), {
+        pixelRatio: PR,
+      })
     }
   }
   map.addLayer({
@@ -149,6 +154,6 @@ export function addStationLayers(
   })
 }
 
-export function setStationHover(map: maplibregl.Map, stationId?: string | number) {
+export function setStationHover(map: MapLibreMap, stationId?: string | number) {
   map.setFilter(HOVER_LAYER, ["==", ["get", "stationId"], stationId ?? ""])
 }

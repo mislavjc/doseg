@@ -16,7 +16,10 @@ import { cn } from "@/lib/utils"
  * visible at any viewport.
  */
 
-function cut(points: Array<[number, number]>, trim: number): Array<[number, number]> {
+function cut(
+  points: Array<[number, number]>,
+  trim: number
+): Array<[number, number]> {
   let remaining = trim
   const out = [...points]
   while (out.length > 1) {
@@ -47,7 +50,9 @@ function trimPolyline(
   const total = pts
     .slice(1)
     .reduce((s, p, i) => s + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0)
-  if (total <= (trimStart + trimEnd) * 2) {return pts}
+  if (total <= (trimStart + trimEnd) * 2) {
+    return pts
+  }
   const fromStart = cut(pts, trimStart)
   return cut(fromStart.toReversed(), trimEnd).toReversed()
 }
@@ -60,7 +65,10 @@ interface Box {
 }
 
 /** Points every ~8 units along the polyline, for label hit-testing. */
-function densify(pts: Array<[number, number]>, step = 8): Array<[number, number]> {
+function densify(
+  pts: Array<[number, number]>,
+  step = 8
+): Array<[number, number]> {
   const out: Array<[number, number]> = []
   for (let i = 1; i < pts.length; i++) {
     const [ax, ay] = pts[i - 1]
@@ -71,7 +79,9 @@ function densify(pts: Array<[number, number]>, step = 8): Array<[number, number]
       out.push([ax + ((bx - ax) * k) / n, ay + ((by - ay) * k) / n])
     }
   }
-  if (pts.length > 0) {out.push(pts[pts.length - 1])}
+  if (pts.length > 0) {
+    out.push(pts[pts.length - 1])
+  }
   return out
 }
 
@@ -109,14 +119,23 @@ function placeLabel(
     const bx = Math.min(Math.max(cx, 8), viewW - w - 8)
     const by = Math.min(Math.max(cy, 8), viewH - h - 8)
     const inside = (px: number, py: number) =>
-      px > bx - margin && px < bx + w + margin && py > by - margin && py < by + h + margin
+      px > bx - margin &&
+      px < bx + w + margin &&
+      py > by - margin &&
+      py < by + h + margin
     let hits = 0
-    for (const [px, py] of routeSamples) {if (inside(px, py)) {hits++}}
+    for (const [px, py] of routeSamples) {
+      if (inside(px, py)) {
+        hits++
+      }
+    }
     for (const o of obstacles) {
       // Treat obstacle boxes as solid: any corner/center overlap counts hard.
       const overlapX = bx < o.bx + o.w + margin && bx + w + margin > o.bx
       const overlapY = by < o.by + o.h + margin && by + h + margin > o.by
-      if (overlapX && overlapY) {hits += 50}
+      if (overlapX && overlapY) {
+        hits += 50
+      }
     }
     // Clamping displacement means the candidate didn't really fit there.
     const displaced = Math.abs(bx - cx) + Math.abs(by - cy)
@@ -167,7 +186,7 @@ function TerminalLabel({
 }
 
 /** Heros Bold 16 in a 10px-padded box; width approximated from glyph count. */
-function labelBoxSize(name: string): { w: number; h: number } {
+function labelBoxSize(name: string) {
   return { w: name.length * 8.9 + 20, h: 28 }
 }
 
@@ -200,7 +219,9 @@ export function buildOverlay(
   const stopPts = dir0.stops.map((s) => project(s.lon, s.lat))
   const first = stopPts.at(0)
   const last = stopPts.at(-1)
-  if (shapePts.length === 0 || !first || !last) {return null}
+  if (shapePts.length === 0 || !first || !last) {
+    return null
+  }
   const path = `M ${shapePts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
 
   // Thin crowded stop dots: on dense or zoomed-out routes adjacent dots melt
@@ -236,13 +257,109 @@ export function buildOverlay(
   })
   const sizeA = labelBoxSize(data.terminals[0])
   const sizeB = labelBoxSize(data.terminals[1])
-  const boxA = placeLabel(first[0], first[1], sizeA.w, sizeA.h, viewW, viewH, routeSamples, obstacles)
-  const boxB = placeLabel(last[0], last[1], sizeB.w, sizeB.h, viewW, viewH, routeSamples, [
-    ...obstacles,
-    boxA,
-  ])
+  const boxA = placeLabel(
+    first[0],
+    first[1],
+    sizeA.w,
+    sizeA.h,
+    viewW,
+    viewH,
+    routeSamples,
+    obstacles
+  )
+  const boxB = placeLabel(
+    last[0],
+    last[1],
+    sizeB.w,
+    sizeB.h,
+    viewW,
+    viewH,
+    routeSamples,
+    [...obstacles, boxA]
+  )
 
   return { path, innerDots, first, last, boxA, boxB }
+}
+
+function RouteOverlay({
+  overlay,
+  viewW,
+  viewH,
+  terminals,
+}: {
+  overlay: Overlay
+  viewW: number
+  viewH: number
+  terminals: LinePageData["terminals"]
+}) {
+  return (
+    <svg
+      aria-hidden
+      viewBox={`0 0 ${viewW} ${viewH}`}
+      preserveAspectRatio="xMidYMid slice"
+      className="absolute inset-0 h-full w-full"
+    >
+      <path
+        d={overlay.path}
+        fill="none"
+        stroke="var(--ground)"
+        strokeWidth={11}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d={overlay.path}
+        fill="none"
+        stroke="var(--zg-blue)"
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {overlay.innerDots.map(([x, y]) => (
+        <circle
+          key={`${x}-${y}`}
+          cx={x}
+          cy={y}
+          r={4.5}
+          fill="var(--ground)"
+          stroke="var(--zg-blue)"
+          strokeWidth={2.5}
+        />
+      ))}
+      <circle
+        cx={overlay.first[0]}
+        cy={overlay.first[1]}
+        r={7}
+        fill="var(--ground)"
+        stroke="var(--zg-blue)"
+        strokeWidth={3}
+      />
+      {/* Destination: blue bullseye — the white gap ring needs a blue
+          outer ring to stay legible on the white map ground. */}
+      <circle
+        cx={overlay.last[0]}
+        cy={overlay.last[1]}
+        r={10.5}
+        fill="none"
+        stroke="var(--zg-blue)"
+        strokeWidth={2}
+      />
+      <circle
+        cx={overlay.last[0]}
+        cy={overlay.last[1]}
+        r={7}
+        fill="var(--zg-blue)"
+        stroke="var(--ground)"
+        strokeWidth={3}
+      />
+      <TerminalLabel box={overlay.boxA} name={terminals[0]} variant="origin" />
+      <TerminalLabel
+        box={overlay.boxB}
+        name={terminals[1]}
+        variant="destination"
+      />
+    </svg>
+  )
 }
 
 function HeroVariant({
@@ -273,7 +390,7 @@ function HeroVariant({
         alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
         variant={variant}
       />
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -281,47 +398,12 @@ function HeroVariant({
         className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
       />
       {overlay && (
-        <svg
-          aria-hidden
-          viewBox={`0 0 ${viewW} ${viewH}`}
-          preserveAspectRatio="xMidYMid slice"
-          className="absolute inset-0 h-full w-full"
-        >
-          <path
-            d={overlay.path}
-            fill="none"
-            stroke="var(--ground)"
-            strokeWidth={11}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d={overlay.path}
-            fill="none"
-            stroke="var(--zg-blue)"
-            strokeWidth={5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {overlay.innerDots.map(([x, y]) => (
-            <circle
-              key={`${x}-${y}`}
-              cx={x}
-              cy={y}
-              r={4.5}
-              fill="var(--ground)"
-              stroke="var(--zg-blue)"
-              strokeWidth={2.5}
-            />
-          ))}
-          <circle cx={overlay.first[0]} cy={overlay.first[1]} r={7} fill="var(--ground)" stroke="var(--zg-blue)" strokeWidth={3} />
-          {/* Destination: blue bullseye — the white gap ring needs a blue
-              outer ring to stay legible on the white map ground. */}
-          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={10.5} fill="none" stroke="var(--zg-blue)" strokeWidth={2} />
-          <circle cx={overlay.last[0]} cy={overlay.last[1]} r={7} fill="var(--zg-blue)" stroke="var(--ground)" strokeWidth={3} />
-          <TerminalLabel box={overlay.boxA} name={data.terminals[0]} variant="origin" />
-          <TerminalLabel box={overlay.boxB} name={data.terminals[1]} variant="destination" />
-        </svg>
+        <RouteOverlay
+          overlay={overlay}
+          viewW={viewW}
+          viewH={viewH}
+          terminals={data.terminals}
+        />
       )}
     </div>
   )

@@ -3,7 +3,11 @@
  * internal messages (upstream URLs, timeouts, library details) must never
  * reach clients.
  */
-export function apiErrorResponse(context: string, err: unknown, status: number): Response {
+export function apiErrorResponse(
+  context: string,
+  err: unknown,
+  status: number
+): Response {
   console.error(`${context}:`, err)
   return Response.json({ error: "Upstream service unavailable" }, { status })
 }
@@ -13,10 +17,7 @@ export function apiErrorResponse(context: string, err: unknown, status: number):
  * Compression is handled by the reverse proxy (Caddy); doing it here
  * wastes CPU on the single-core app container.
  */
-export function jsonResponse(
-  data: unknown,
-  cacheControl: string
-): { response: Response; serializeMs: number } {
+export function jsonResponse(data: unknown, cacheControl: string) {
   const t0 = performance.now()
   const json = JSON.stringify(data)
 

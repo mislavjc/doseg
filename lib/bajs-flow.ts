@@ -78,15 +78,22 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
   const data = await readRtJson<BajsStationFlowResponse>(
     `/api/rt/bajs-station-flow?days=${days}`
   )
-  if (!data || data.stations.length === 0) {return null}
+  if (!data || data.stations.length === 0) {
+    return null
+  }
 
   const mean = (hours: Array<number>) => {
-    const seen = hours.map((h) => data.observedDays[h] ?? 0).filter((d) => d > 0)
+    const seen = hours.flatMap((h) => {
+      const observed = data.observedDays[h] ?? 0
+      return observed > 0 ? [observed] : []
+    })
     return seen.length > 0 ? seen.reduce((a, b) => a + b, 0) / seen.length : 0
   }
   const morningDays = mean(MORNING)
   const afternoonDays = mean(AFTERNOON)
-  if (morningDays === 0 || afternoonDays === 0) {return null}
+  if (morningDays === 0 || afternoonDays === 0) {
+    return null
+  }
 
   const totals = new Map<string, { stations: number; am: number; pm: number }>()
   for (const s of data.stations) {
@@ -94,14 +101,18 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
     // only possible for one off the edge of the city, so it is dropped rather
     // than counted anywhere.
     const name = districtAt(s.lat, s.lon)
-    if (!name) {continue}
+    if (!name) {
+      continue
+    }
     const cur = totals.get(name) ?? { stations: 0, am: 0, pm: 0 }
     cur.stations++
     cur.am += riderNet(s, MORNING)
     cur.pm += riderNet(s, AFTERNOON)
     totals.set(name, cur)
   }
-  if (totals.size === 0) {return null}
+  if (totals.size === 0) {
+    return null
+  }
 
   const kvartovi: Array<KvartFlow> = [...totals.entries()]
     .map(([name, t]) => {
@@ -120,7 +131,9 @@ export async function loadBajsStationFlow(days = 30): Promise<BajsFlow | null> {
     })
     .toSorted((a, b) => a.morningNet - b.morningNet)
 
-  const strong = kvartovi.filter((k) => Math.abs(k.morningNet) >= MIN_NET_PER_DAY)
+  const strong = kvartovi.filter(
+    (k) => Math.abs(k.morningNet) >= MIN_NET_PER_DAY
+  )
 
   return {
     kvartovi,
@@ -158,17 +171,22 @@ export async function loadBajsRelocations(
   const data = await readRtJson<BajsRelocationsResponse>(
     `/api/rt/bajs-relocations?days=${days}`
   )
-  if (!data || data.days.length === 0) {return null}
+  if (!data || data.days.length === 0) {
+    return null
+  }
 
   const observed = fullDays && new Set(fullDays.map((d) => d.date))
   // Without a ride window to lean on, drop the ends, which are always partial.
   const complete = observed
     ? data.days.filter((d) => observed.has(d.date))
     : data.days.slice(1, -1)
-  if (complete.length === 0) {return null}
-  const perDay =
-    complete.reduce((sum, d) => sum + d.moves, 0) / complete.length
-  if (perDay === 0) {return null}
+  if (complete.length === 0) {
+    return null
+  }
+  const perDay = complete.reduce((sum, d) => sum + d.moves, 0) / complete.length
+  if (perDay === 0) {
+    return null
+  }
 
   return {
     perDay,

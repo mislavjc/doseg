@@ -57,8 +57,12 @@ interface DistrictShape {
 
 function pct(cells: number, total: number): string {
   const p = (cells / total) * 100
-  if (p < 0.1) {return "<0,1"}
-  if (p < 1) {return p.toFixed(1).replace(".", ",")}
+  if (p < 0.1) {
+    return "<0,1"
+  }
+  if (p < 1) {
+    return p.toFixed(1).replace(".", ",")
+  }
   return Math.round(p).toString()
 }
 
@@ -72,7 +76,9 @@ function enrichGeoJSON(
 
   for (const feature of geojson.features) {
     const score = scoreMap.get(Number(feature.properties?.osmId))
-    if (!score || !feature.properties) {continue}
+    if (!score || !feature.properties) {
+      continue
+    }
 
     feature.properties.score = score.score
     feature.properties.rank = score.rank
@@ -92,7 +98,9 @@ function toPolygon(rings: Array<Array<Position>>): PolygonRings {
 }
 
 function getPolygons(geometry: Geometry | null): Array<PolygonRings> {
-  if (!geometry) {return []}
+  if (!geometry) {
+    return []
+  }
   if (geometry.type === "Polygon") {
     return [toPolygon(geometry.coordinates)]
   }
@@ -103,9 +111,15 @@ function getPolygons(geometry: Geometry | null): Array<PolygonRings> {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 70) {return "#16a34a"}
-  if (score >= 50) {return "#0891b2"}
-  if (score >= 25) {return "#2563eb"}
+  if (score >= 70) {
+    return "#16a34a"
+  }
+  if (score >= 50) {
+    return "#0891b2"
+  }
+  if (score >= 25) {
+    return "#2563eb"
+  }
   return "#9333ea"
 }
 
@@ -158,7 +172,9 @@ function createProjector(geojson: DistrictCollection): Projector {
 }
 
 function ringToPath(ring: Ring, projector: Projector): string {
-  if (ring.length === 0) {return ""}
+  if (ring.length === 0) {
+    return ""
+  }
   const [first, ...rest] = ring.map((point) => projector.project(point))
   return `M${first[0]} ${first[1]}${rest.map(([x, y]) => `L${x} ${y}`).join("")}Z`
 }
@@ -173,9 +189,7 @@ function geometryToPath(
     .join("")
 }
 
-function collectEmblemRings(
-  geometry: Geometry | null
-): { rawRings: Array<Ring>; minLat: number; maxLat: number } {
+function collectEmblemRings(geometry: Geometry | null) {
   const rawRings: Array<Ring> = []
   let minLat = Infinity
   let maxLat = -Infinity
@@ -195,7 +209,11 @@ function collectEmblemRings(
   return { rawRings, minLat, maxLat }
 }
 
-function projectEmblemRings(rawRings: Array<Ring>, minLat: number, maxLat: number) {
+function projectEmblemRings(
+  rawRings: Array<Ring>,
+  minLat: number,
+  maxLat: number
+) {
   const midLat = (minLat + maxLat) / 2
   const lonFactor = Math.cos((midLat * Math.PI) / 180)
   let minX = Infinity
@@ -222,7 +240,9 @@ function geometryToEmblemPath(
   size: number = EMBLEM_SIZE
 ): string {
   const { rawRings, minLat, maxLat } = collectEmblemRings(geometry)
-  if (rawRings.length === 0) {return ""}
+  if (rawRings.length === 0) {
+    return ""
+  }
 
   const { projectedRings, minX, maxX, minY, maxY } = projectEmblemRings(
     rawRings,
@@ -279,7 +299,9 @@ function polygonCentroid(points: Array<Point>): Point | null {
     cy += (y1 + y2) * cross
   }
 
-  if (Math.abs(crossSum) < 1e-6) {return null}
+  if (Math.abs(crossSum) < 1e-6) {
+    return null
+  }
   return [roundCoord(cx / (3 * crossSum)), roundCoord(cy / (3 * crossSum))]
 }
 
@@ -299,20 +321,21 @@ function bboxCenter(points: Array<Point>): Point {
   return [roundCoord((minX + maxX) / 2), roundCoord((minY + maxY) / 2)]
 }
 
-function featureLabelPoint(
-  geometry: Geometry | null,
-  projector: Projector
-): { centroid: Point; area: number } {
+function featureLabelPoint(geometry: Geometry | null, projector: Projector) {
   let bestArea = 0
   let bestCentroid: Point = [VIEWBOX_WIDTH / 2, VIEWBOX_HEIGHT / 2]
 
   for (const polygon of getPolygons(geometry)) {
     const outerRing = polygon[0]
-    if (!outerRing?.length) {continue}
+    if (!outerRing?.length) {
+      continue
+    }
 
     const projected = outerRing.map((point) => projector.project(point))
     const area = Math.abs(polygonArea(projected))
-    if (area <= bestArea) {continue}
+    if (area <= bestArea) {
+      continue
+    }
 
     bestArea = area
     bestCentroid = polygonCentroid(projected) ?? bboxCenter(projected)
@@ -323,8 +346,12 @@ function featureLabelPoint(
 
 function formatLabelLines(name: string): Array<string> {
   const words = name.trim().split(/\s+/u)
-  if (words.length <= 1) {return [name]}
-  if (words.length === 2) {return words}
+  if (words.length <= 1) {
+    return [name]
+  }
+  if (words.length === 2) {
+    return words
+  }
 
   const midpoint = Math.ceil(words.length / 2)
   return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")]
@@ -346,7 +373,11 @@ function featureTitle(shape: DistrictShape): string {
     `${shape.reachPct}% grada dostupno za ${shape.maxMinutes ?? 30} min`,
   ]
 
-  if (shape.population != null && shape.population !== 0) {
+  if (
+    shape.population !== null &&
+    shape.population !== undefined &&
+    shape.population !== 0
+  ) {
     lines.push(`${shape.population.toLocaleString("hr-HR")} stanovnika`)
   }
 
@@ -362,7 +393,9 @@ function buildDistrictShapes(
   for (const [index, feature] of geojson.features.entries()) {
     const properties: DistrictProperties = feature.properties ?? {}
     const path = geometryToPath(feature.geometry, projector)
-    if (!path) {continue}
+    if (!path) {
+      continue
+    }
 
     const { centroid, area } = featureLabelPoint(feature.geometry, projector)
     shapes.push({
@@ -381,15 +414,15 @@ function buildDistrictShapes(
   return shapes
 }
 
-function buildDistrictEmblems(
-  geojson: DistrictCollection
-): Record<string, string> {
+function buildDistrictEmblems(geojson: DistrictCollection) {
   const emblems: Record<string, string> = {}
 
   for (const [index, feature] of geojson.features.entries()) {
     const osmId = feature.properties?.osmId ?? index
     const path = geometryToEmblemPath(feature.geometry)
-    if (!path || Number.isNaN(osmId)) {continue}
+    if (!path || Number.isNaN(osmId)) {
+      continue
+    }
     emblems[String(osmId)] = path
   }
 
@@ -459,7 +492,6 @@ function main() {
   const svg = buildDistrictMapSvg(enrichedGeojson)
   writeFileSync(MAP_OUTPUT_PATH, svg)
   console.log(`Wrote ${MAP_OUTPUT_PATH}`)
-
 }
 
 main()

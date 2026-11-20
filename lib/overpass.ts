@@ -8,14 +8,15 @@ const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter"
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
 
 /** Zagreb bounding box — shared with scripts/build-poi-photos.ts. */
-export const ZAGREB_BBOX = { south: 45.72, west: 15.82, north: 45.9, east: 16.14 }
+export const ZAGREB_BBOX = {
+  south: 45.72,
+  west: 15.82,
+  north: 45.9,
+  east: 16.14,
+}
 
 export type POICategory =
-  | "hospital"
-  | "school"
-  | "park"
-  | "supermarket"
-  | "pharmacy"
+  "hospital" | "school" | "park" | "supermarket" | "pharmacy"
 
 /** Wikimedia Commons photo for a POI (scripts/build-poi-photos.ts). */
 export type PoiPhoto = {
@@ -90,11 +91,15 @@ function parseElements(
   for (const el of elements) {
     const lat = el.lat ?? el.center?.lat
     const lon = el.lon ?? el.center?.lon
-    if (lat == null || lon == null) {continue}
+    if (lat === undefined || lon === undefined) {
+      continue
+    }
 
     const name = el.tags?.name ?? ""
     const category = matchCategory(el.tags ?? {}, categories)
-    if (!category) {continue}
+    if (!category) {
+      continue
+    }
 
     pois.push({ id: el.id, name, lat, lon, category })
   }
@@ -109,19 +114,29 @@ function matchCategory(
   for (const category of categories) {
     switch (category) {
       case "hospital":
-        if (tags.amenity === "hospital") {return category}
+        if (tags.amenity === "hospital") {
+          return category
+        }
         break
       case "school":
-        if (tags.amenity === "school") {return category}
+        if (tags.amenity === "school") {
+          return category
+        }
         break
       case "park":
-        if (tags.leisure === "park") {return category}
+        if (tags.leisure === "park") {
+          return category
+        }
         break
       case "supermarket":
-        if (tags.shop === "supermarket") {return category}
+        if (tags.shop === "supermarket") {
+          return category
+        }
         break
       case "pharmacy":
-        if (tags.amenity === "pharmacy") {return category}
+        if (tags.amenity === "pharmacy") {
+          return category
+        }
         break
     }
   }
@@ -194,7 +209,9 @@ async function loadPOIs(categories: Array<POICategory>): Promise<Array<POI>> {
     }
   }
   const snapshot = readSnapshot(categories)
-  if (snapshot && snapshot.length > 0) {return snapshot}
+  if (snapshot && snapshot.length > 0) {
+    return snapshot
+  }
   throw lastError ?? new Error("Overpass API request failed")
 }
 
@@ -206,7 +223,9 @@ async function loadPOIs(categories: Array<POICategory>): Promise<Array<POI>> {
 let photoMap: Partial<Record<string, PoiPhoto>> | null = null
 
 function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
-  if (photoMap) {return photoMap}
+  if (photoMap) {
+    return photoMap
+  }
   try {
     photoMap = parseJson<Partial<Record<string, PoiPhoto>>>(
       readFileSync(join(getDataDir(), "poi-photos.json"), "utf8")
@@ -219,7 +238,9 @@ function loadPhotoMap(): Partial<Record<string, PoiPhoto>> {
 
 function withPhotos(pois: Array<POI>): Array<POI> {
   const photos = loadPhotoMap()
-  if (Object.keys(photos).length === 0) {return pois}
+  if (Object.keys(photos).length === 0) {
+    return pois
+  }
   return pois.map((p) => {
     const photo = photos[String(p.id)]
     return photo ? { ...p, photo } : p
@@ -229,7 +250,9 @@ function withPhotos(pois: Array<POI>): Array<POI> {
 export function fetchPOIs(categories: Array<POICategory>): Promise<Array<POI>> {
   const key = categories.toSorted().join(",")
   const cached = poiCache.get(key)
-  if (cached && Date.now() < cached.expiresAt) {return Promise.resolve(cached.pois)}
+  if (cached && Date.now() < cached.expiresAt) {
+    return Promise.resolve(cached.pois)
+  }
 
   let pending = pendingFetches.get(key)
   if (!pending) {

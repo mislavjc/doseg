@@ -316,7 +316,9 @@ export function TrazenoSection({ stopSlugs }: { stopSlugs: Set<string> }) {
  *  redak", It3): a zoomed dither window with the address marker promises what
  *  clicking the karta returns, the probaj chip opens the karta centred on a
  *  seed address (this callout sells the karta, not the /adresa pages). The
- *  bitmap is the hero bake blown up to the hero's focus scale, so the thumb
+ *  bitmap is the centre of the hero bake (hero-zagreb-thumb.png, cropped by
+ *  build-home-hero.ts) shown at the hero's focus scale, 2.25 px per baked
+ *  pixel (FOCUS_SCALE 4.5 over the 1440 px band baked @2x), so the thumb
  *  matches what the zoomed hero actually renders. */
 export function KartaBanner() {
   const proba = resolveAdresaSlug("savska-cesta-25")
@@ -329,12 +331,12 @@ export function KartaBanner() {
         <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
           {/* oxlint-disable-next-line nextjs/no-img-element */}
           <img
-            src="/hero-zagreb.png"
+            src="/hero-zagreb-thumb.png"
             alt=""
             aria-hidden
             loading="lazy"
             className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated]"
-            style={{ width: 6480 }}
+            style={{ width: 180 }}
           />
           <span className="absolute left-1/2 top-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
         </span>

@@ -20,7 +20,6 @@ import { createDitherCropper } from "./lib/dither-crop"
 
 const root = process.cwd()
 const outDir = join(root, "public", "bajs-tiles")
-const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 const metaPath = join(root, "data", "bajs-tiles.json")
 
 const cutoff = Number(argValue("--cutoff") ?? 80)
@@ -62,7 +61,7 @@ async function main() {
     `${stations} stations, box ${bbox.map((v) => v.toFixed(4)).join(", ")}`
   )
 
-  const cropper = createDitherCropper({ cacheDir, cutoff })
+  const cropper = createDitherCropper({ cutoff })
   const pyramid = await cropper.buildTilePyramid({
     outDir,
     bbox,

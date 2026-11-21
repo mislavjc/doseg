@@ -1,45 +1,30 @@
 /**
  * Per-line dithered hero maps for /linije/[broj].
  *
- * For each line in data/linije/, fetches CARTO dark_nolabels tiles around the
- * route bbox and renders the blue-on-white figure-ground: building footprints
- * (gray < 6 in the current CARTO style) become Zagreb blue, everything else
- * white. Tiles are fetched ~2 zoom levels above the fitting zoom and the
- * binary mask is box-downscaled to a 2880×1320 band (2× of the 1440×660 hero),
- * so the urban fabric keeps its texture at route scale. Writes:
+ * For each line in data/linije/, rasterises OSM building footprints around the
+ * route bbox (scripts/lib/dither-crop.ts) into the blue-on-white
+ * figure-ground, oversampled ~2 zoom levels and box-downscaled to a 2880×1320
+ * band (2× of the 1440×660 hero), so the urban fabric keeps its texture at
+ * route scale. Writes:
  *   - public/linije/hero-<broj>.png
  *   - data/linije/hero-meta.json  (lon/lat bounds per crop, for the SVG route overlay)
  *
- * Tiles are cached in .cache/tiles/ so re-runs are cheap. Run:
+ * Crops whose parameter signature is unchanged are skipped, so re-runs are
+ * cheap. Run:
  *   bun scripts/build-line-heroes.ts [--line 109] [--zoom 15] [--cutoff 80]
  */
 
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  writeFileSync,
-} from "node:fs"
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
-
-import sharp from "sharp"
 
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import {
-  countBelow,
-  invMercX,
-  invMercY,
-  mercX,
-  mercY,
-  rawChannels,
-} from "./lib/dither-crop"
-import type { HeroCrop, HeroMeta } from "./lib/dither-crop"
+import { createDitherCropper, mercX, mercY } from "./lib/dither-crop"
+import type { HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
-const TILE_URL = "https://basemaps.cartocdn.com/dark_nolabels"
 const TILE_SIZE = 256
+
 /**
  * Two crops per line: a fixed landscape desktop band, and a mobile band whose
  * height adapts to the route's shape (N-S routes get a tall crop, E-W routes
@@ -57,227 +42,17 @@ const MOBILE_W = 840
 const MOBILE_H_MIN = 460
 const MOBILE_H_MAX = 1120
 const MOBILE_PAD = 0.24
-const ZOOM_MIN = 12
-const ZOOM_MAX = 16
-/** Fetch this many zoom levels above the fitting zoom for supersampled coverage. */
-const OVERSAMPLE_ZOOM = 2
-/** Building-footprint gray threshold in the current CARTO dark style. */
-const BUILDING_GRAY = 6
-/** Zagreb blue (--zg-blue family, same as the baked statistika assets). */
-const BLUE: [number, number, number] = [14, 81, 201]
-const FETCH_CONCURRENCY = 24
 
 const root = process.cwd()
 const dataDir = join(root, "data", "linije")
 const outDir = join(root, "public", "linije")
-const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
 const onlyLine = argValue("--line")
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 /** Coverage cutoff 0–255: how much of a display pixel must be building to turn blue. */
 const cutoff = Number(argValue("--cutoff") ?? 80)
 
-async function fetchTile(z: number, x: number, y: number): Promise<Buffer> {
-  const max = 2 ** z
-  if (x < 0 || y < 0 || x >= max || y >= max) {
-    return sharp({
-      create: {
-        width: TILE_SIZE,
-        height: TILE_SIZE,
-        channels: 3,
-        background: "#fff",
-      },
-    })
-      .png()
-      .toBuffer()
-  }
-  const cachePath = join(cacheDir, String(z), String(x), `${y}.png`)
-  if (existsSync(cachePath)) {
-    return readFileSync(cachePath)
-  }
-  const res = await fetch(`${TILE_URL}/${z}/${x}/${y}.png`)
-  if (!res.ok) {
-    throw new Error(`tile ${z}/${x}/${y}: HTTP ${res.status}`)
-  }
-  const buf = Buffer.from(await res.arrayBuffer())
-  mkdirSync(join(cacheDir, String(z), String(x)), { recursive: true })
-  writeFileSync(cachePath, buf)
-  return buf
-}
-
-/** Fetch + stitch tiles covering a native crop rect, return grayscale pixels. */
-async function stitchGrayCrop(
-  zoom: number,
-  x0: number,
-  y0: number,
-  natW: number,
-  natH: number
-): Promise<Buffer> {
-  const tx0 = Math.floor(x0 / TILE_SIZE)
-  const ty0 = Math.floor(y0 / TILE_SIZE)
-  const tx1 = Math.floor((x0 + natW - 1) / TILE_SIZE)
-  const ty1 = Math.floor((y0 + natH - 1) / TILE_SIZE)
-
-  const tiles: Array<{ x: number; y: number }> = []
-  for (let ty = ty0; ty <= ty1; ty++) {
-    for (let tx = tx0; tx <= tx1; tx++) {
-      tiles.push({ x: tx, y: ty })
-    }
-  }
-
-  const buffers = await mapConcurrent(tiles, FETCH_CONCURRENCY, (t) =>
-    fetchTile(zoom, t.x, t.y)
-  )
-
-  // Composite to raw pixels — a PNG encode/decode round-trip on canvases up
-  // to ~200 megapixels would just burn CPU.
-  const canvasW = (tx1 - tx0 + 1) * TILE_SIZE
-  const stitched = await sharp({
-    create: {
-      width: canvasW,
-      height: (ty1 - ty0 + 1) * TILE_SIZE,
-      channels: 3,
-      background: "#fff",
-    },
-    limitInputPixels: false,
-  })
-    .composite(
-      tiles.map((t, i) => ({
-        input: buffers[i],
-        left: (t.x - tx0) * TILE_SIZE,
-        top: (t.y - ty0) * TILE_SIZE,
-      }))
-    )
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-
-  const { data } = await sharp(stitched.data, {
-    raw: {
-      width: canvasW,
-      height: stitched.info.height,
-      channels: rawChannels(stitched.info.channels),
-    },
-    limitInputPixels: false,
-  })
-    .extract({
-      left: x0 - tx0 * TILE_SIZE,
-      top: y0 - ty0 * TILE_SIZE,
-      width: natW,
-      height: natH,
-    })
-    .grayscale()
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-  return data
-}
-
-function cropSig(
-  bbox: Array<number>,
-  outW: number,
-  outH: number,
-  pad: number
-): string {
-  return [
-    bbox.map((v) => v.toFixed(5)).join(","),
-    `${outW}x${outH}`,
-    pad,
-    cutoff,
-    BUILDING_GRAY,
-    zoomOverride ?? "",
-  ].join(":")
-}
-
-async function buildCrop(
-  broj: string,
-  bbox: Array<number>,
-  suffix: string,
-  outW: number,
-  outH: number,
-  pad: number,
-  prev?: HeroCrop
-): Promise<HeroCrop> {
-  const sig = cropSig(bbox, outW, outH, pad)
-  if (
-    prev?.sig === sig &&
-    existsSync(join(outDir, `hero-${broj}${suffix}.png`))
-  ) {
-    return prev
-  }
-  const [w, s, e, n] = bbox
-  const padLon = (e - w) * pad
-  const padLat = (n - s) * pad
-  const west = w - padLon
-  const east = e + padLon
-  const south = s - padLat
-  const north = n + padLat
-
-  // Largest zoom where the padded bbox fits inside the output band.
-  let fitZoom = ZOOM_MAX
-  while (fitZoom > ZOOM_MIN) {
-    const worldPx = TILE_SIZE * 2 ** fitZoom
-    const wPx = mercX(east, worldPx) - mercX(west, worldPx)
-    const hPx = mercY(south, worldPx) - mercY(north, worldPx)
-    if (wPx <= outW && hPx <= outH) {
-      break
-    }
-    fitZoom--
-  }
-  const zoom = zoomOverride ?? Math.min(fitZoom + OVERSAMPLE_ZOOM, ZOOM_MAX)
-
-  // Native crop: the output band scaled up to the fetch zoom, centred on the bbox.
-  const worldPx = TILE_SIZE * 2 ** zoom
-  const scale = 2 ** (zoom - fitZoom)
-  const natW = outW * scale
-  const natH = outH * scale
-  const cx = (mercX(west, worldPx) + mercX(east, worldPx)) / 2
-  const cy = (mercY(north, worldPx) + mercY(south, worldPx)) / 2
-  const x0 = Math.round(cx - natW / 2)
-  const y0 = Math.round(cy - natH / 2)
-
-  const data = await stitchGrayCrop(zoom, x0, y0, natW, natH)
-
-  // Building mask at fetch zoom → exact box-averaged coverage at output size
-  // (scale is a power of two; sharp's resize kernels stripe on binary input).
-  const out = Buffer.alloc(outW * outH * 3)
-  const area = scale * scale
-  // cutoff is calibrated against 0–255 coverage: convert to subpixel count.
-  const minSub = Math.max(1, Math.round((cutoff / 255) * area))
-  for (let oy = 0; oy < outH; oy++) {
-    for (let ox = 0; ox < outW; ox++) {
-      let sub = 0
-      const baseY = oy * scale
-      const baseX = ox * scale
-      for (let dy = 0; dy < scale; dy++) {
-        sub += countBelow(
-          data,
-          (baseY + dy) * natW + baseX,
-          scale,
-          BUILDING_GRAY
-        )
-      }
-      const blue = sub >= minSub
-      const i = (oy * outW + ox) * 3
-      out[i] = blue ? BLUE[0] : 255
-      out[i + 1] = blue ? BLUE[1] : 255
-      out[i + 2] = blue ? BLUE[2] : 255
-    }
-  }
-
-  await sharp(out, { raw: { width: outW, height: outH, channels: 3 } })
-    .png({ palette: true, colors: 2, dither: 0 })
-    .toFile(join(outDir, `hero-${broj}${suffix}.png`))
-
-  return {
-    west: invMercX(x0, worldPx),
-    east: invMercX(x0 + natW, worldPx),
-    north: invMercY(y0, worldPx),
-    south: invMercY(y0 + natH, worldPx),
-    width: outW,
-    height: outH,
-    zoom,
-    sig,
-  }
-}
+const cropper = createDitherCropper({ cutoff, zoomOverride })
 
 async function buildHero(
   broj: string,
@@ -297,8 +72,22 @@ async function buildHero(
 
   const d = DESKTOP_CROP
   const [desktop, mobile] = await Promise.all([
-    buildCrop(broj, bbox, d.suffix, d.outW, d.outH, d.pad, prev?.desktop),
-    buildCrop(broj, bbox, "-m", MOBILE_W, mobileH, MOBILE_PAD, prev?.mobile),
+    cropper.buildCrop(
+      join(outDir, `hero-${broj}${d.suffix}.png`),
+      bbox,
+      d.outW,
+      d.outH,
+      d.pad,
+      prev?.desktop
+    ),
+    cropper.buildCrop(
+      join(outDir, `hero-${broj}-m.png`),
+      bbox,
+      MOBILE_W,
+      mobileH,
+      MOBILE_PAD,
+      prev?.mobile
+    ),
   ])
   return { desktop, mobile }
 }

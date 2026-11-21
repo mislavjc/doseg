@@ -15,7 +15,8 @@ import sharp from "sharp"
 
 import { mercatorX, mercatorY } from "../../lib/geo"
 import { mapConcurrent } from "./concurrency"
-import { type Footprints, loadFootprints, rasterizeFootprints } from "./osm-buildings"
+import { loadFootprints, rasterizeFootprints } from "./osm-buildings"
+import type { Footprints } from "./osm-buildings"
 
 const TILE_SIZE = 256
 
@@ -60,12 +61,31 @@ const invMercY = (y: number, worldPx: number) =>
 let footprints: Promise<Footprints> | undefined
 
 /** Building mask for a native crop rect at the given zoom (1 = building). */
-async function buildingMask(zoom: number, x0: number, y0: number, natW: number, natH: number) {
+async function buildingMask(
+  zoom: number,
+  x0: number,
+  y0: number,
+  natW: number,
+  natH: number
+) {
   footprints ??= loadFootprints()
-  return rasterizeFootprints(await footprints, TILE_SIZE * 2 ** zoom, x0, y0, natW, natH)
+  return rasterizeFootprints(
+    await footprints,
+    TILE_SIZE * 2 ** zoom,
+    x0,
+    y0,
+    natW,
+    natH
+  )
 }
 
-async function cropSig(cfg: Cfg, bbox: number[], outW: number, outH: number, pad: number): Promise<string> {
+async function cropSig(
+  cfg: Cfg,
+  bbox: Array<number>,
+  outW: number,
+  outH: number,
+  pad: number
+): Promise<string> {
   footprints ??= loadFootprints()
   return [
     (await footprints).source,
@@ -79,7 +99,13 @@ async function cropSig(cfg: Cfg, bbox: number[], outW: number, outH: number, pad
 }
 
 /** Threshold the box-averaged building coverage into a 2-colour blue/white raster. */
-function thresholdToBlue(cfg: Cfg, mask: Uint8Array, outW: number, outH: number, scale: number): Buffer {
+function thresholdToBlue(
+  cfg: Cfg,
+  mask: Uint8Array,
+  outW: number,
+  outH: number,
+  scale: number
+): Buffer {
   const out = Buffer.alloc(outW * outH * 3)
   const natW = outW * scale
   const minSub = Math.max(1, Math.round((cfg.cutoff / 255) * scale * scale))
@@ -90,7 +116,9 @@ function thresholdToBlue(cfg: Cfg, mask: Uint8Array, outW: number, outH: number,
       const baseX = ox * scale
       for (let dy = 0; dy < scale; dy++) {
         const row = (baseY + dy) * natW + baseX
-        for (let dx = 0; dx < scale; dx++) sub += mask[row + dx]
+        for (let dx = 0; dx < scale; dx++) {
+          sub += mask[row + dx]
+        }
       }
       const isBlue = sub >= minSub
       const i = (oy * outW + ox) * 3
@@ -105,14 +133,16 @@ function thresholdToBlue(cfg: Cfg, mask: Uint8Array, outW: number, outH: number,
 async function buildCrop(
   cfg: Cfg,
   outPng: string,
-  bbox: number[],
+  bbox: Array<number>,
   outW: number,
   outH: number,
   pad: number,
   prev?: HeroCrop
 ): Promise<HeroCrop> {
   const sig = await cropSig(cfg, bbox, outW, outH, pad)
-  if (prev?.sig === sig && existsSync(outPng)) return prev
+  if (prev?.sig === sig && existsSync(outPng)) {
+    return prev
+  }
 
   const [w, s, e, n] = bbox
   const padLon = (e - w) * pad
@@ -125,11 +155,16 @@ async function buildCrop(
   let fitZoom = cfg.zoomMax
   while (fitZoom > cfg.zoomMin) {
     const worldPx = TILE_SIZE * 2 ** fitZoom
-    if (mercX(east, worldPx) - mercX(west, worldPx) <= outW && mercY(south, worldPx) - mercY(north, worldPx) <= outH)
+    if (
+      mercX(east, worldPx) - mercX(west, worldPx) <= outW &&
+      mercY(south, worldPx) - mercY(north, worldPx) <= outH
+    ) {
       break
+    }
     fitZoom--
   }
-  const zoom = cfg.zoomOverride ?? Math.min(fitZoom + cfg.oversampleZoom, cfg.zoomMax)
+  const zoom =
+    cfg.zoomOverride ?? Math.min(fitZoom + cfg.oversampleZoom, cfg.zoomMax)
 
   const worldPx = TILE_SIZE * 2 ** zoom
   const scale = 2 ** (zoom - fitZoom)
@@ -164,7 +199,7 @@ export interface TilePyramidOptions {
   /** Root of the XYZ tree; tiles land at outDir/{z}/{x}/{y}.png. */
   outDir: string
   /** [west, south, east, north] — only tiles touching this box are baked. */
-  bbox: number[]
+  bbox: Array<number>
   minZoom: number
   maxZoom: number
   /**
@@ -246,11 +281,13 @@ async function buildTilePyramid(
     const y0 = Math.floor(mercatorY(north) * n)
     const y1 = Math.floor(mercatorY(south) * n)
 
-    const jobs: { x: number; y: number; path: string }[] = []
+    const jobs: Array<{ x: number; y: number; path: string }> = []
     for (let x = x0; x <= x1; x++) {
       for (let y = y0; y <= y1; y++) {
         const path = join(opts.outDir, String(z), String(x), `${y}.png`)
-        if (!opts.force && existsSync(path)) continue
+        if (!opts.force && existsSync(path)) {
+          continue
+        }
         jobs.push({ x, y, path })
       }
     }
@@ -272,7 +309,9 @@ async function buildTilePyramid(
     opts.onZoom?.(z, jobs.length)
   }
 
-  if (!bounds) throw new Error("empty zoom range")
+  if (!bounds) {
+    throw new Error("empty zoom range")
+  }
   return { minZoom: opts.minZoom, maxZoom: opts.maxZoom, tileSize, bounds }
 }
 
@@ -286,8 +325,15 @@ export function createDitherCropper(opts: DitherCropperOptions) {
     oversampleZoom: opts.oversampleZoom ?? 2,
   }
   return {
-    buildCrop: (outPng: string, bbox: number[], outW: number, outH: number, pad: number, prev?: HeroCrop) =>
-      buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
-    buildTilePyramid: (pyramid: TilePyramidOptions) => buildTilePyramid(cfg, pyramid),
+    buildCrop: (
+      outPng: string,
+      bbox: Array<number>,
+      outW: number,
+      outH: number,
+      pad: number,
+      prev?: HeroCrop
+    ) => buildCrop(cfg, outPng, bbox, outW, outH, pad, prev),
+    buildTilePyramid: (pyramid: TilePyramidOptions) =>
+      buildTilePyramid(cfg, pyramid),
   }
 }

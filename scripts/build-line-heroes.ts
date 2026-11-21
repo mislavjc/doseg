@@ -19,7 +19,8 @@ import { join } from "node:path"
 
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import { createDitherCropper, type HeroMeta, mercX, mercY } from "./lib/dither-crop"
+import { createDitherCropper, mercX, mercY } from "./lib/dither-crop"
+import type { HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 const TILE_SIZE = 256
@@ -55,7 +56,7 @@ const cropper = createDitherCropper({ cutoff, zoomOverride })
 
 async function buildHero(
   broj: string,
-  bbox: number[],
+  bbox: Array<number>,
   prev?: HeroMeta
 ): Promise<HeroMeta> {
   // Mobile band height follows the route's mercator aspect, clamped.
@@ -71,8 +72,22 @@ async function buildHero(
 
   const d = DESKTOP_CROP
   const [desktop, mobile] = await Promise.all([
-    cropper.buildCrop(join(outDir, `hero-${broj}${d.suffix}.png`), bbox, d.outW, d.outH, d.pad, prev?.desktop),
-    cropper.buildCrop(join(outDir, `hero-${broj}-m.png`), bbox, MOBILE_W, mobileH, MOBILE_PAD, prev?.mobile),
+    cropper.buildCrop(
+      join(outDir, `hero-${broj}${d.suffix}.png`),
+      bbox,
+      d.outW,
+      d.outH,
+      d.pad,
+      prev?.desktop
+    ),
+    cropper.buildCrop(
+      join(outDir, `hero-${broj}-m.png`),
+      bbox,
+      MOBILE_W,
+      mobileH,
+      MOBILE_PAD,
+      prev?.mobile
+    ),
   ])
   return { desktop, mobile }
 }
@@ -92,7 +107,9 @@ async function main() {
 
   let done = 0
   await mapConcurrent(lines, 4, async (broj) => {
-    const { bbox } = readJson<{ bbox: number[] }>(join(dataDir, `${broj}.json`))
+    const { bbox } = readJson<{ bbox: Array<number> }>(
+      join(dataDir, `${broj}.json`)
+    )
     const t0 = Date.now()
     const built = await buildHero(broj, bbox, meta[broj])
     meta[broj] = built

@@ -9,7 +9,14 @@
  * the extract's size and mtime, so later runs skip the parse.
  */
 
-import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
+import {
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs"
 import { join } from "node:path"
 
 import createParser from "osm-pbf-parser"
@@ -28,8 +35,8 @@ interface PbfItem {
   lat?: number
   lon?: number
   tags?: Record<string, string>
-  refs?: number[]
-  members?: { type: string; ref: number; role: string }[]
+  refs?: Array<number>
+  members?: Array<{ type: string; ref: number; role: string }>
 }
 
 export interface Footprints {
@@ -45,17 +52,20 @@ export interface Footprints {
   bounds: Float64Array
 }
 
-const isBuilding = (tags?: Record<string, string>) => !!tags?.building && tags.building !== "no"
+const isBuilding = (tags?: Record<string, string>) =>
+  !!tags?.building && tags.building !== "no"
 
 function inBox(lat: number, lon: number): boolean {
-  return lat >= BOX.south && lat <= BOX.north && lon >= BOX.west && lon <= BOX.east
+  return (
+    lat >= BOX.south && lat <= BOX.north && lon >= BOX.west && lon <= BOX.east
+  )
 }
 
 /** Node coordinates kept as parallel arrays; PBF nodes arrive sorted by id. */
 class NodeStore {
-  ids: number[] = []
-  x: number[] = []
-  y: number[] = []
+  ids: Array<number> = []
+  x: Array<number> = []
+  y: Array<number> = []
   add(id: number, lat: number, lon: number) {
     this.ids.push(id)
     this.x.push(mercatorX(lon))
@@ -67,9 +77,14 @@ class NodeStore {
     while (lo <= hi) {
       const mid = (lo + hi) >> 1
       const v = this.ids[mid]
-      if (v === id) return mid
-      if (v < id) lo = mid + 1
-      else hi = mid - 1
+      if (v === id) {
+        return mid
+      }
+      if (v < id) {
+        lo = mid + 1
+      } else {
+        hi = mid - 1
+      }
     }
     return -1
   }
@@ -77,34 +92,57 @@ class NodeStore {
 
 interface Parsed {
   nodes: NodeStore
-  buildingWays: number[][]
-  memberWays: Map<number, number[]>
-  relations: { outer: number[]; inner: number[] }[]
+  buildingWays: Array<Array<number>>
+  memberWays: Map<number, Array<number>>
+  relations: Array<{ outer: Array<number>; inner: Array<number> }>
 }
 
 function parsePbf(): Promise<Parsed> {
-  const parsed: Parsed = { nodes: new NodeStore(), buildingWays: [], memberWays: new Map(), relations: [] }
+  const parsed: Parsed = {
+    nodes: new NodeStore(),
+    buildingWays: [],
+    memberWays: new Map(),
+    relations: [],
+  }
   return new Promise((resolve, reject) => {
     createReadStream(OSM_PBF)
       .pipe(createParser())
       .pipe(
-        through2.obj((items: PbfItem[], _enc: string, next: () => void) => {
-          for (const item of items) {
-            if (item.type === "node") {
-              if (inBox(item.lat!, item.lon!)) parsed.nodes.add(item.id, item.lat!, item.lon!)
-            } else if (item.type === "way") {
-              const refs = item.refs ?? []
-              if (refs.length < 4 || parsed.nodes.find(refs[0]) < 0) continue
-              if (isBuilding(item.tags)) parsed.buildingWays.push(refs)
-              else if (refs[0] === refs.at(-1)) parsed.memberWays.set(item.id, refs)
-            } else if (item.tags?.type === "multipolygon" && isBuilding(item.tags)) {
-              const ways = (role: string) =>
-                (item.members ?? []).filter((m) => m.type === "way" && m.role === role).map((m) => m.ref)
-              parsed.relations.push({ outer: ways("outer"), inner: ways("inner") })
+        through2.obj(
+          (items: Array<PbfItem>, _enc: string, next: () => void) => {
+            for (const item of items) {
+              if (item.type === "node") {
+                const { lat = Number.NaN, lon = Number.NaN } = item
+                if (inBox(lat, lon)) {
+                  parsed.nodes.add(item.id, lat, lon)
+                }
+              } else if (item.type === "way") {
+                const refs = item.refs ?? []
+                if (refs.length < 4 || parsed.nodes.find(refs[0]) < 0) {
+                  continue
+                }
+                if (isBuilding(item.tags)) {
+                  parsed.buildingWays.push(refs)
+                } else if (refs[0] === refs.at(-1)) {
+                  parsed.memberWays.set(item.id, refs)
+                }
+              } else if (
+                item.tags?.type === "multipolygon" &&
+                isBuilding(item.tags)
+              ) {
+                const ways = (role: string) =>
+                  (item.members ?? [])
+                    .filter((m) => m.type === "way" && m.role === role)
+                    .map((m) => m.ref)
+                parsed.relations.push({
+                  outer: ways("outer"),
+                  inner: ways("inner"),
+                })
+              }
             }
+            next()
           }
-          next()
-        })
+        )
       )
       .on("finish", () => resolve(parsed))
       .on("error", reject)
@@ -119,13 +157,25 @@ function polygonBounds(fp: Omit<Footprints, "bounds">): Float64Array {
     let minY = Infinity
     let maxX = -Infinity
     let maxY = -Infinity
-    for (let v = fp.ringStart[fp.polyStart[p]]; v < fp.ringStart[fp.polyStart[p + 1]]; v++) {
+    for (
+      let v = fp.ringStart[fp.polyStart[p]];
+      v < fp.ringStart[fp.polyStart[p + 1]];
+      v++
+    ) {
       const x = fp.xy[v * 2]
       const y = fp.xy[v * 2 + 1]
-      if (x < minX) minX = x
-      if (x > maxX) maxX = x
-      if (y < minY) minY = y
-      if (y > maxY) maxY = y
+      if (x < minX) {
+        minX = x
+      }
+      if (x > maxX) {
+        maxX = x
+      }
+      if (y < minY) {
+        minY = y
+      }
+      if (y > maxY) {
+        maxY = y
+      }
     }
     b.set([minX, minY, maxX, maxY], p * 4)
   }
@@ -134,15 +184,17 @@ function polygonBounds(fp: Omit<Footprints, "bounds">): Float64Array {
 
 /** Flatten parsed ways/relations into typed polygon arrays. */
 function assemble(parsed: Parsed, source: string): Footprints {
-  const xy: number[] = []
-  const ringStart: number[] = [0]
-  const polyStart: number[] = [0]
+  const xy: Array<number> = []
+  const ringStart: Array<number> = [0]
+  const polyStart: Array<number> = [0]
 
-  const pushRing = (refs: number[]): boolean => {
+  const pushRing = (refs: Array<number>): boolean => {
     let n = 0
     for (const ref of refs) {
       const i = parsed.nodes.find(ref)
-      if (i < 0) continue
+      if (i < 0) {
+        continue
+      }
       xy.push(parsed.nodes.x[i], parsed.nodes.y[i])
       n++
     }
@@ -154,15 +206,23 @@ function assemble(parsed: Parsed, source: string): Footprints {
     return true
   }
 
-  for (const refs of parsed.buildingWays) if (pushRing(refs)) polyStart.push(ringStart.length - 1)
+  for (const refs of parsed.buildingWays) {
+    if (pushRing(refs)) {
+      polyStart.push(ringStart.length - 1)
+    }
+  }
 
   for (const rel of parsed.relations) {
     const before = ringStart.length
     for (const id of [...rel.outer, ...rel.inner]) {
       const refs = parsed.memberWays.get(id)
-      if (refs) pushRing(refs)
+      if (refs) {
+        pushRing(refs)
+      }
     }
-    if (ringStart.length > before) polyStart.push(ringStart.length - 1)
+    if (ringStart.length > before) {
+      polyStart.push(ringStart.length - 1)
+    }
   }
 
   const fp = {
@@ -175,7 +235,12 @@ function assemble(parsed: Parsed, source: string): Footprints {
 }
 
 function writeCache(path: string, fp: Footprints) {
-  const header = new Uint32Array([fp.xy.length, fp.ringStart.length, fp.polyStart.length, 0])
+  const header = new Uint32Array([
+    fp.xy.length,
+    fp.ringStart.length,
+    fp.polyStart.length,
+    0,
+  ])
   writeFileSync(
     path,
     Buffer.concat([
@@ -204,14 +269,20 @@ function readCache(path: string, source: string): Footprints {
 /** Load (or parse and cache) every building footprint inside BOX. */
 export async function loadFootprints(): Promise<Footprints> {
   if (!existsSync(OSM_PBF)) {
-    throw new Error(`${OSM_PBF} is missing - run scripts/setup-data.sh to download the OSM extract`)
+    throw new Error(
+      `${OSM_PBF} is missing - run scripts/setup-data.sh to download the OSM extract`
+    )
   }
   const st = statSync(OSM_PBF)
   const source = `osm${st.size}`
   const cachePath = join(CACHE_DIR, `${st.size}-${Math.round(st.mtimeMs)}.bin`)
-  if (existsSync(cachePath)) return readCache(cachePath, source)
+  if (existsSync(cachePath)) {
+    return readCache(cachePath, source)
+  }
 
-  console.error(`Parsing building footprints from ${OSM_PBF} (cached after the first run)...`)
+  console.error(
+    `Parsing building footprints from ${OSM_PBF} (cached after the first run)...`
+  )
   const fp = assemble(await parsePbf(), source)
   console.error(`  ${fp.polyStart.length - 1} buildings`)
   mkdirSync(CACHE_DIR, { recursive: true })
@@ -220,14 +291,23 @@ export async function loadFootprints(): Promise<Footprints> {
 }
 
 /** Push the crop-relative x of every edge of ring r that crosses world row yc. */
-function ringCrossings(fp: Footprints, r: number, worldPx: number, yc: number, x0: number, xs: number[]) {
+function ringCrossings(
+  fp: Footprints,
+  r: number,
+  worldPx: number,
+  yc: number,
+  x0: number,
+  xs: Array<number>
+) {
   const v0 = fp.ringStart[r]
   const v1 = fp.ringStart[r + 1]
   for (let v = v0; v < v1; v++) {
     const w = v + 1 < v1 ? v + 1 : v0
     const ay = fp.xy[v * 2 + 1] * worldPx
     const by = fp.xy[w * 2 + 1] * worldPx
-    if (ay <= yc === by <= yc) continue
+    if (ay <= yc === by <= yc) {
+      continue
+    }
     const ax = fp.xy[v * 2] * worldPx
     const bx = fp.xy[w * 2] * worldPx
     xs.push(ax + ((yc - ay) / (by - ay)) * (bx - ax) - x0)
@@ -252,22 +332,39 @@ export function rasterizeFootprints(
   const minY = y0 / worldPx
   const maxX = (x0 + natW) / worldPx
   const maxY = (y0 + natH) / worldPx
-  const xs: number[] = []
+  const xs: Array<number> = []
 
   for (let p = 0; p < fp.polyStart.length - 1; p++) {
     const b = p * 4
-    if (fp.bounds[b] > maxX || fp.bounds[b + 2] < minX || fp.bounds[b + 1] > maxY || fp.bounds[b + 3] < minY) continue
+    if (
+      fp.bounds[b] > maxX ||
+      fp.bounds[b + 2] < minX ||
+      fp.bounds[b + 1] > maxY ||
+      fp.bounds[b + 3] < minY
+    ) {
+      continue
+    }
 
-    const rowStart = Math.max(0, Math.ceil(fp.bounds[b + 1] * worldPx - y0 - 0.5))
-    const rowEnd = Math.min(natH - 1, Math.floor(fp.bounds[b + 3] * worldPx - y0 - 0.5))
+    const rowStart = Math.max(
+      0,
+      Math.ceil(fp.bounds[b + 1] * worldPx - y0 - 0.5)
+    )
+    const rowEnd = Math.min(
+      natH - 1,
+      Math.floor(fp.bounds[b + 3] * worldPx - y0 - 0.5)
+    )
     for (let row = rowStart; row <= rowEnd; row++) {
       xs.length = 0
-      for (let r = fp.polyStart[p]; r < fp.polyStart[p + 1]; r++) ringCrossings(fp, r, worldPx, row + 0.5 + y0, x0, xs)
+      for (let r = fp.polyStart[p]; r < fp.polyStart[p + 1]; r++) {
+        ringCrossings(fp, r, worldPx, row + 0.5 + y0, x0, xs)
+      }
       xs.sort((a, c) => a - c)
       for (let k = 0; k + 1 < xs.length; k += 2) {
         const from = Math.max(0, Math.ceil(xs[k] - 0.5))
         const to = Math.min(natW, Math.ceil(xs[k + 1] - 0.5))
-        if (to > from) mask.fill(1, row * natW + from, row * natW + to)
+        if (to > from) {
+          mask.fill(1, row * natW + from, row * natW + to)
+        }
       }
     }
   }

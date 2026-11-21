@@ -1,5 +1,10 @@
-import { SiteNav } from "@/app/statistika/editorial/site-nav"
-import { HeroPicture } from "@/components/hero-picture"
+import {
+  HeroBand,
+  HeroFrame,
+  HeroPicture,
+  HeroSvg,
+} from "@/components/dither-hero"
+import type { HeroSlice } from "@/components/dither-hero"
 import { mercatorX, mercatorY, projector } from "@/lib/geo"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
@@ -85,12 +90,7 @@ function StopOverlay({
   viewH: number
 }) {
   return (
-    <svg
-      aria-hidden
-      viewBox={`0 0 ${viewW} ${viewH}`}
-      preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 h-full w-full"
-    >
+    <HeroSvg viewW={viewW} viewH={viewH}>
       {/* White casing under every corridor first, then the blue lines on top,
         so casings never cut across a neighbouring line. */}
       {lines.map((l) => (
@@ -132,54 +132,38 @@ function StopOverlay({
         stroke="var(--ground)"
         strokeWidth={3.5}
       />
-    </svg>
+    </HeroSvg>
   )
 }
 
 function StopHeroVariant({
   data,
-  crop,
-  src,
-  variant,
-  className,
+  baked,
+  slice: { crop, variant, className, viewW, viewH },
 }: {
   data: StopPageData
-  crop: LineHeroCrop
-  src: string | null
-  variant: "desktop" | "mobile"
-  className?: string
+  baked: boolean
+  slice: HeroSlice
 }) {
-  const viewW = crop.width / 2
-  const viewH = crop.height / 2
   const project = projector(crop, viewW, viewH)
   const [sx, sy] = project(data.lon, data.lat)
   const lines = data.hero.lines.filter((l) => l.shape.length >= 2)
+  const suffix = variant === "mobile" ? "-m" : ""
 
   return (
-    <div
+    <HeroFrame
+      crop={crop}
       className={className}
-      style={{
-        position: "relative",
-        width: "100%",
-        aspectRatio: `${crop.width} / ${crop.height}`,
-        overflow: "hidden",
-        background: "var(--ground)",
-      }}
+      picture={
+        baked && (
+          <HeroPicture
+            src={`/stanice/hero-${data.slug}${suffix}.png`}
+            alt={`Karta stanice ${data.name} u Zagrebu`}
+            variant={variant}
+          />
+        )
+      }
     >
-      {src && (
-        <HeroPicture
-          src={src}
-          alt={`Karta stanice ${data.name} u Zagrebu`}
-          variant={variant}
-        />
-      )}
-      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
-      <img
-        src="/hero-cloud.png"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
-      />
       <StopOverlay
         lines={lines}
         project={project}
@@ -201,7 +185,7 @@ function StopHeroVariant({
       >
         {data.name}
       </span>
-    </div>
+    </HeroFrame>
   )
 }
 
@@ -214,32 +198,15 @@ export function StopHero({
 }) {
   // Baked dither crop when available, else project the overlay onto a plain
   // white crop fitted to the geometry bbox.
-  const desktopCrop =
-    meta?.desktop ?? cropFromBbox(data.hero.bbox, DESKTOP.w, DESKTOP.h)
-  const mobileCrop =
-    meta?.mobile ?? cropFromBbox(data.hero.bbox, MOBILE.w, MOBILE.h)
-  const desktopSrc = meta ? `/stanice/hero-${data.slug}.png` : null
-  const mobileSrc = meta ? `/stanice/hero-${data.slug}-m.png` : null
-
+  const crops = meta ?? {
+    desktop: cropFromBbox(data.hero.bbox, DESKTOP.w, DESKTOP.h),
+    mobile: cropFromBbox(data.hero.bbox, MOBILE.w, MOBILE.h),
+  }
   return (
-    <header className="relative bg-white">
-      <StopHeroVariant
-        data={data}
-        crop={desktopCrop}
-        src={desktopSrc}
-        variant="desktop"
-        className="hidden sm:block"
-      />
-      <StopHeroVariant
-        data={data}
-        crop={mobileCrop}
-        src={mobileSrc}
-        variant="mobile"
-        className="sm:hidden"
-      />
-      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
-        <SiteNav active="stanice" />
-      </div>
-    </header>
+    <HeroBand meta={crops} nav="stanice">
+      {(slice) => (
+        <StopHeroVariant data={data} baked={meta !== null} slice={slice} />
+      )}
+    </HeroBand>
   )
 }

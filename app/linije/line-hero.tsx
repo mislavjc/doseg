@@ -1,9 +1,13 @@
-import { SiteNav } from "@/app/statistika/editorial/site-nav"
-import { HeroPicture } from "@/components/hero-picture"
+import {
+  HeroBand,
+  HeroFrame,
+  HeroPicture,
+  HeroSvg,
+} from "@/components/dither-hero"
+import type { HeroSlice } from "@/components/dither-hero"
 import { projector } from "@/lib/geo"
 import type { LinePageData } from "@/lib/generated/LinePageData"
 import type { LineHeroCrop, LineHeroMeta } from "@/lib/line-data"
-import { cn } from "@/lib/utils"
 
 /**
  * Line page hero — full-bleed dithered map of the route corridor with the
@@ -293,12 +297,7 @@ function RouteOverlay({
   terminals: LinePageData["terminals"]
 }) {
   return (
-    <svg
-      aria-hidden
-      viewBox={`0 0 ${viewW} ${viewH}`}
-      preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 h-full w-full"
-    >
+    <HeroSvg viewW={viewW} viewH={viewH}>
       <path
         d={overlay.path}
         fill="none"
@@ -358,45 +357,31 @@ function RouteOverlay({
         name={terminals[1]}
         variant="destination"
       />
-    </svg>
+    </HeroSvg>
   )
 }
 
 function HeroVariant({
   data,
-  crop,
-  src,
-  variant,
-  className,
+  slice: { crop, variant, className, viewW, viewH },
 }: {
   data: LinePageData
-  crop: LineHeroCrop
-  src: string
-  variant: "desktop" | "mobile"
-  className?: string
+  slice: HeroSlice
 }) {
-  // SVG units = css pixels of the 1x band (asset is @2x).
-  const viewW = crop.width / 2
-  const viewH = crop.height / 2
   const overlay = buildOverlay(data, crop, viewW, viewH)
-
+  const suffix = variant === "mobile" ? "-m" : ""
   return (
-    <div
-      className={cn("relative w-full overflow-clip", className)}
-      style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
+    <HeroFrame
+      crop={crop}
+      className={className}
+      picture={
+        <HeroPicture
+          src={`/linije/hero-${data.broj}${suffix}.png`}
+          alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
+          variant={variant}
+        />
+      }
     >
-      <HeroPicture
-        src={src}
-        alt={`Karta ${data.mode === "tram" ? "tramvajske" : "autobusne"} linije ${data.broj} u Zagrebu`}
-        variant={variant}
-      />
-      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
-      <img
-        src="/hero-cloud.png"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
-      />
       {overlay && (
         <RouteOverlay
           overlay={overlay}
@@ -405,7 +390,7 @@ function HeroVariant({
           terminals={data.terminals}
         />
       )}
-    </div>
+    </HeroFrame>
   )
 }
 
@@ -417,33 +402,8 @@ export function LineHero({
   meta: LineHeroMeta | null
 }) {
   return (
-    <header className="relative bg-white">
-      {/* Crop swap at Tailwind `sm` (640px) — the contract with the script:
-          desktop crop is sized for ≥640px viewports, mobile below (see CROPS
-          in scripts/build-line-heroes.ts). */}
-      {meta ? (
-        <>
-          <HeroVariant
-            data={data}
-            crop={meta.desktop}
-            src={`/linije/hero-${data.broj}.png`}
-            variant="desktop"
-            className="hidden sm:block"
-          />
-          <HeroVariant
-            data={data}
-            crop={meta.mobile}
-            src={`/linije/hero-${data.broj}-m.png`}
-            variant="mobile"
-            className="sm:hidden"
-          />
-        </>
-      ) : (
-        <div className="h-[180px]" />
-      )}
-      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
-        <SiteNav active="linije" />
-      </div>
-    </header>
+    <HeroBand meta={meta} nav="linije" emptyClassName="h-[180px]">
+      {(slice) => <HeroVariant data={data} slice={slice} />}
+    </HeroBand>
   )
 }

@@ -13,12 +13,13 @@ import type { FaqItem } from "@/app/statistika/editorial/faq"
 import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { PoiRow } from "@/app/statistika/editorial/poi"
 import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
-import { SiteNav } from "@/app/statistika/editorial/site-nav"
-import { HeroPicture } from "@/components/hero-picture"
-import { projector } from "@/lib/geo"
-import type { LineHeroCrop } from "@/lib/line-data"
+import {
+  BoundaryOverlay,
+  HeroBand,
+  HeroFrame,
+  HeroPicture,
+} from "@/components/dither-hero"
 import { scoreColor, scoreTextColor } from "@/lib/score-color"
-import { cn } from "@/lib/utils"
 import type { KvartData } from "@/lib/kvart-data"
 
 import { cap, plural } from "../linije/copy"
@@ -33,117 +34,32 @@ import { cap, plural } from "../linije/copy"
 
 // ── Hero: dithered map cropped to the kvart, with its border ────────────────
 
-function KvartHeroVariant({
-  data,
-  crop,
-  src,
-  variant,
-  className,
-}: {
-  data: KvartData
-  crop: LineHeroCrop
-  src: string
-  variant: "desktop" | "mobile"
-  className?: string
-}) {
-  const viewW = crop.width / 2
-  const viewH = crop.height / 2
-  const project = projector(crop, viewW, viewH)
-  const pts = data.boundary.map(([lon, lat]) => project(lon, lat))
-  const path =
-    pts.length > 0
-      ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
-      : ""
-  const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
-  const cy = pts.reduce((s, p) => s + p[1], 0) / (pts.length || 1)
-  const lw = data.name.length * 8.9 + 20
-  const lh = 28
-  const lx = Math.min(Math.max(cx - lw / 2, 8), viewW - lw - 8)
-  const ly = Math.min(Math.max(cy - lh / 2, 84), viewH - lh - 8)
-  return (
-    <div
-      className={cn("relative w-full overflow-clip", className)}
-      style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
-    >
-      <HeroPicture
-        src={src}
-        alt={`Karta kvarta ${data.name} u Zagrebu`}
-        variant={variant}
-      />
-      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
-      <img
-        src="/hero-cloud.png"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
-      />
-      {path && (
-        <svg
-          aria-hidden
-          viewBox={`0 0 ${viewW} ${viewH}`}
-          preserveAspectRatio="xMidYMid slice"
-          className="absolute inset-0 h-full w-full"
-        >
-          <path
-            d={path}
-            fill="var(--zg-blue)"
-            fillOpacity={0.08}
-            stroke="var(--ground)"
-            strokeWidth={6}
-            strokeLinejoin="round"
-          />
-          <path
-            d={path}
-            fill="none"
-            stroke="var(--zg-blue)"
-            strokeWidth={3}
-            strokeLinejoin="round"
-          />
-          <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
-          <text
-            x={lx + lw / 2}
-            y={ly + lh / 2 + 5.5}
-            textAnchor="middle"
-            fontSize={16}
-            fontWeight={700}
-            fontFamily="var(--font-heros), system-ui, sans-serif"
-            fill="var(--ground)"
-          >
-            {data.name}
-          </text>
-        </svg>
-      )}
-    </div>
-  )
-}
-
 export function KvartHero({ data }: { data: KvartData }) {
   return (
-    <header className="relative bg-white">
-      {data.hero ? (
-        <>
-          <KvartHeroVariant
-            data={data}
-            crop={data.hero.desktop}
-            src={`/kvart/hero-${data.slug}.png`}
-            variant="desktop"
-            className="hidden sm:block"
+    <HeroBand meta={data.hero} nav="kvartovi" emptyClassName="h-[180px]">
+      {({ crop, variant, className, viewW, viewH }) => (
+        <HeroFrame
+          crop={crop}
+          className={className}
+          picture={
+            <HeroPicture
+              src={`/kvart/hero-${data.slug}${variant === "mobile" ? "-m" : ""}.png`}
+              alt={`Karta kvarta ${data.name} u Zagrebu`}
+              variant={variant}
+            />
+          }
+        >
+          <BoundaryOverlay
+            ring={data.boundary}
+            crop={crop}
+            viewW={viewW}
+            viewH={viewH}
+            label={data.name}
+            anchor="centroid"
           />
-          <KvartHeroVariant
-            data={data}
-            crop={data.hero.mobile}
-            src={`/kvart/hero-${data.slug}-m.png`}
-            variant="mobile"
-            className="sm:hidden"
-          />
-        </>
-      ) : (
-        <div className="h-[180px]" />
+        </HeroFrame>
       )}
-      <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
-        <SiteNav active="kvartovi" />
-      </div>
-    </header>
+    </HeroBand>
   )
 }
 

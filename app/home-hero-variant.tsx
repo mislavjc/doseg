@@ -1,8 +1,11 @@
-import { HeroPicture } from "@/components/hero-picture"
+import {
+  BoundaryOverlay,
+  HeroFrame,
+  HeroPicture,
+} from "@/components/dither-hero"
+import type { HeroSlice } from "@/components/dither-hero"
 import { projector } from "@/lib/geo"
 import type { HomeHeroData } from "@/lib/home-hero"
-import type { LineHeroCrop } from "@/lib/line-data"
-import { cn } from "@/lib/utils"
 
 /**
  * One breakpoint's slice of the city banner. At rest (homepage) it renders the
@@ -25,137 +28,59 @@ export interface HeroFocus {
 
 const clampPct = (v: number) => Math.min(Math.max(v, 3), 97)
 
-function BoundaryOverlay({
-  path,
-  viewW,
-  viewH,
-  lx,
-  ly,
-  lw,
-  lh,
-}: {
-  path: string
-  viewW: number
-  viewH: number
-  lx: number
-  ly: number
-  lw: number
-  lh: number
-}) {
-  return (
-    <svg
-      aria-hidden
-      viewBox={`0 0 ${viewW} ${viewH}`}
-      preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 h-full w-full"
-    >
-      <path
-        d={path}
-        fill="var(--zg-blue)"
-        fillOpacity={0.08}
-        stroke="var(--ground)"
-        strokeWidth={6}
-        strokeLinejoin="round"
-      />
-      <path
-        d={path}
-        fill="none"
-        stroke="var(--zg-blue)"
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-      <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
-      <text
-        x={lx + lw / 2}
-        y={ly + lh / 2 + 5.5}
-        textAnchor="middle"
-        fontSize={16}
-        fontWeight={700}
-        fontFamily="var(--font-heros), system-ui, sans-serif"
-        fill="var(--ground)"
-      >
-        Zagreb
-      </text>
-    </svg>
-  )
-}
-
 export function HomeHeroVariant({
   hero,
-  crop,
-  src,
-  variant,
+  slice: { crop, variant, className, viewW, viewH },
   focus,
-  className,
 }: {
   hero: HomeHeroData
-  crop: LineHeroCrop
-  src: string
-  variant: "desktop" | "mobile"
+  slice: HeroSlice
   focus?: HeroFocus | null
-  className?: string
 }) {
-  const viewW = crop.width / 2
-  const viewH = crop.height / 2
-  const project = projector(crop, viewW, viewH)
-  const pts = hero.boundary.map(([lon, lat]) => project(lon, lat))
-  const path =
-    pts.length > 0
-      ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
-      : ""
-  const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
-  const maxY = pts.reduce((s, p) => Math.max(s, p[1]), 0)
-  const lw = "Zagreb".length * 8.9 + 20
-  const lh = 28
-  const lx = Math.min(Math.max(cx - lw / 2, 8), viewW - lw - 8)
-  const ly = Math.min(Math.max(maxY - lh / 2, 84), viewH - lh - 8)
-
   // Zoom origin: the focused address projected into the crop, as percentages
   // so the CSS needs no pixel math. Scaling about that origin keeps the point
   // fixed on screen, which is also where the marker sits.
-  const [fx, fy] = focus ? project(focus.lon, focus.lat) : [0, 0]
+  const [fx, fy] = focus
+    ? projector(crop, viewW, viewH)(focus.lon, focus.lat)
+    : [0, 0]
   const focusLeft = clampPct((fx / viewW) * 100)
   const focusTop = clampPct((fy / viewH) * 100)
 
   return (
-    <div
-      className={cn("relative w-full overflow-clip", className)}
-      style={{ aspectRatio: `${crop.width} / ${crop.height}` }}
+    <HeroFrame
+      crop={crop}
+      className={className}
+      picture={
+        <div
+          className="absolute inset-0"
+          style={
+            focus
+              ? {
+                  transform: `scale(${FOCUS_SCALE})`,
+                  transformOrigin: `${focusLeft}% ${focusTop}%`,
+                  imageRendering: "pixelated",
+                }
+              : undefined
+          }
+        >
+          <HeroPicture
+            src={
+              variant === "mobile" ? "/hero-zagreb-m.png" : "/hero-zagreb.png"
+            }
+            alt="Karta Zagreba s granicom grada"
+            variant={variant}
+          />
+        </div>
+      }
     >
-      <div
-        className="absolute inset-0"
-        style={
-          focus
-            ? {
-                transform: `scale(${FOCUS_SCALE})`,
-                transformOrigin: `${focusLeft}% ${focusTop}%`,
-                imageRendering: "pixelated",
-              }
-            : undefined
-        }
-      >
-        <HeroPicture
-          src={src}
-          alt="Karta Zagreba s granicom grada"
-          variant={variant}
-        />
-      </div>
-      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
-      <img
-        src="/hero-cloud.png"
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
-      />
-      {!focus && path && (
+      {!focus && (
         <BoundaryOverlay
-          path={path}
+          ring={hero.boundary}
+          crop={crop}
           viewW={viewW}
           viewH={viewH}
-          lx={lx}
-          ly={ly}
-          lw={lw}
-          lh={lh}
+          label="Zagreb"
+          anchor="bottom"
         />
       )}
       {focus && (
@@ -164,6 +89,6 @@ export function HomeHeroVariant({
           style={{ left: `${focusLeft}%`, top: `${focusTop}%` }}
         />
       )}
-    </div>
+    </HeroFrame>
   )
 }

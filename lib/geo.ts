@@ -48,6 +48,35 @@ export function projector(crop: CropBounds, viewW: number, viewH: number) {
 /** A linear ring of [lon, lat] positions (GeoJSON order, closed or not). */
 export type Ring = Array<[number, number]>
 
+/** Ring → closed SVG path in hero-crop units, plus a name badge box centred
+ *  on the ring's x mean and its y mean (`centroid`) or lowest point
+ *  (`bottom`), clamped clear of the nav strip and the band edges. */
+export function boundaryLabel(
+  ring: Ring,
+  crop: CropBounds,
+  viewW: number,
+  viewH: number,
+  label: string,
+  anchor: "centroid" | "bottom"
+) {
+  const project = projector(crop, viewW, viewH)
+  const pts = ring.map(([lon, lat]) => project(lon, lat))
+  const path =
+    pts.length > 0
+      ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
+      : ""
+  const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
+  const cy =
+    anchor === "centroid"
+      ? pts.reduce((s, p) => s + p[1], 0) / (pts.length || 1)
+      : pts.reduce((s, p) => Math.max(s, p[1]), 0)
+  const w = label.length * 8.9 + 20
+  const h = 28
+  const x = Math.min(Math.max(cx - w / 2, 8), viewW - w - 8)
+  const y = Math.min(Math.max(cy - h / 2, 84), viewH - h - 8)
+  return { path, box: { x, y, w, h } }
+}
+
 /** Ray-casting point-in-ring test ([lon, lat] GeoJSON order). */
 export function pointInRing(lon: number, lat: number, ring: Ring): boolean {
   let inside = false

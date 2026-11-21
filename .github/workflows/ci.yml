@@ -31,6 +31,7 @@ jobs:
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run lint
       - run: bun run format:check
+      - run: bun run dup
 
   knip:
     runs-on: ubuntu-latest

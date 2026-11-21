@@ -113,7 +113,7 @@ so check.
 
 ## Verification before pushing
 
-`bun run typecheck`, `bun run lint` (oxlint) and `bun run knip` must be clean (lint caps functions at
+`bun run typecheck`, `bun run lint` (oxlint), `bun run knip` and `bun run dup` (jscpd, ceiling in `.jscpd.json`) must be clean (lint caps functions at
 90 lines — split JSX into subcomponents). Rust: `cargo fmt -- --check` and
 `clippy` run in CI. `bun run build` statically generates all line pages, so
 it catches data/loader regressions. The dev server runs behind portless at

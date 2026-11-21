@@ -1,0 +1,9 @@
+{
+  "path": ["app", "components", "lib", "hooks", "scripts"],
+  "ignore": ["**/generated/**", "**/*.test.ts", "**/eval/**"],
+  "minLines": 6,
+  "minTokens": 60,
+  "threshold": 0.15,
+  "reporters": ["console"],
+  "gitignore": true
+}

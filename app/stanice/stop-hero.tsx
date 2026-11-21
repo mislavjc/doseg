@@ -30,7 +30,7 @@ function invMercY(my: number): number {
 /** Fit a crop of aspect outW:outH around the geometry bbox (no tiles needed),
  *  used when no baked map exists for this stop. */
 function cropFromBbox(
-  bbox: number[],
+  bbox: Array<number>,
   outW: number,
   outH: number
 ): LineHeroCrop {
@@ -45,8 +45,11 @@ function cropFromBbox(
   let spanX = (x1 - x0) * pad
   let spanY = (y1 - y0) * pad
   const target = outW / outH
-  if (spanX / spanY < target) spanX = spanY * target
-  else spanY = spanX / target
+  if (spanX / spanY < target) {
+    spanX = spanY * target
+  } else {
+    spanY = spanX / target
+  }
   return {
     west: invMercX(cx - spanX / 2),
     east: invMercX(cx + spanX / 2),
@@ -58,9 +61,79 @@ function cropFromBbox(
   }
 }
 
-function path(shape: [number, number][], project: (lon: number, lat: number) => [number, number]): string {
+function path(
+  shape: Array<[number, number]>,
+  project: (lon: number, lat: number) => [number, number]
+): string {
   const pts = shape.map(([lon, lat]) => project(lon, lat))
   return `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}`
+}
+
+function StopOverlay({
+  lines,
+  project,
+  sx,
+  sy,
+  viewW,
+  viewH,
+}: {
+  lines: StopPageData["hero"]["lines"]
+  project: (lon: number, lat: number) => [number, number]
+  sx: number
+  sy: number
+  viewW: number
+  viewH: number
+}) {
+  return (
+    <svg
+      aria-hidden
+      viewBox={`0 0 ${viewW} ${viewH}`}
+      preserveAspectRatio="xMidYMid slice"
+      className="absolute inset-0 h-full w-full"
+    >
+      {/* White casing under every corridor first, then the blue lines on top,
+        so casings never cut across a neighbouring line. */}
+      {lines.map((l) => (
+        <path
+          key={`c-${l.broj}`}
+          d={path(l.shape, project)}
+          fill="none"
+          stroke="var(--ground)"
+          strokeWidth={9}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+      {lines.map((l) => (
+        <path
+          key={`l-${l.broj}`}
+          d={path(l.shape, project)}
+          fill="none"
+          stroke="var(--zg-blue)"
+          strokeWidth={4.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+      {/* The stop itself — blue bullseye */}
+      <circle
+        cx={sx}
+        cy={sy}
+        r={13}
+        fill="none"
+        stroke="var(--zg-blue)"
+        strokeWidth={2.5}
+      />
+      <circle
+        cx={sx}
+        cy={sy}
+        r={8.5}
+        fill="var(--zg-blue)"
+        stroke="var(--ground)"
+        strokeWidth={3.5}
+      />
+    </svg>
+  )
 }
 
 function StopHeroVariant({
@@ -85,7 +158,13 @@ function StopHeroVariant({
   return (
     <div
       className={className}
-      style={{ position: "relative", width: "100%", aspectRatio: `${crop.width} / ${crop.height}`, overflow: "hidden", background: "var(--ground)" }}
+      style={{
+        position: "relative",
+        width: "100%",
+        aspectRatio: `${crop.width} / ${crop.height}`,
+        overflow: "hidden",
+        background: "var(--ground)",
+      }}
     >
       {src && (
         <HeroPicture
@@ -94,47 +173,21 @@ function StopHeroVariant({
           variant={variant}
         />
       )}
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
       <img
         src="/hero-cloud.png"
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
       />
-      <svg
-        aria-hidden
-        viewBox={`0 0 ${viewW} ${viewH}`}
-        preserveAspectRatio="xMidYMid slice"
-        className="absolute inset-0 h-full w-full"
-      >
-        {/* White casing under every corridor first, then the blue lines on top,
-            so casings never cut across a neighbouring line. */}
-        {lines.map((l) => (
-          <path
-            key={`c-${l.broj}`}
-            d={path(l.shape, project)}
-            fill="none"
-            stroke="var(--ground)"
-            strokeWidth={9}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ))}
-        {lines.map((l) => (
-          <path
-            key={`l-${l.broj}`}
-            d={path(l.shape, project)}
-            fill="none"
-            stroke="var(--zg-blue)"
-            strokeWidth={4.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ))}
-        {/* The stop itself — blue bullseye */}
-        <circle cx={sx} cy={sy} r={13} fill="none" stroke="var(--zg-blue)" strokeWidth={2.5} />
-        <circle cx={sx} cy={sy} r={8.5} fill="var(--zg-blue)" stroke="var(--ground)" strokeWidth={3.5} />
-      </svg>
+      <StopOverlay
+        lines={lines}
+        project={project}
+        sx={sx}
+        sy={sy}
+        viewW={viewW}
+        viewH={viewH}
+      />
 
       {/* Stop name label, anchored above the marker */}
       <span
@@ -161,15 +214,29 @@ export function StopHero({
 }) {
   // Baked dither crop when available, else project the overlay onto a plain
   // white crop fitted to the geometry bbox.
-  const desktopCrop = meta?.desktop ?? cropFromBbox(data.hero.bbox, DESKTOP.w, DESKTOP.h)
-  const mobileCrop = meta?.mobile ?? cropFromBbox(data.hero.bbox, MOBILE.w, MOBILE.h)
+  const desktopCrop =
+    meta?.desktop ?? cropFromBbox(data.hero.bbox, DESKTOP.w, DESKTOP.h)
+  const mobileCrop =
+    meta?.mobile ?? cropFromBbox(data.hero.bbox, MOBILE.w, MOBILE.h)
   const desktopSrc = meta ? `/stanice/hero-${data.slug}.png` : null
   const mobileSrc = meta ? `/stanice/hero-${data.slug}-m.png` : null
 
   return (
     <header className="relative bg-white">
-      <StopHeroVariant data={data} crop={desktopCrop} src={desktopSrc} variant="desktop" className="hidden sm:block" />
-      <StopHeroVariant data={data} crop={mobileCrop} src={mobileSrc} variant="mobile" className="sm:hidden" />
+      <StopHeroVariant
+        data={data}
+        crop={desktopCrop}
+        src={desktopSrc}
+        variant="desktop"
+        className="hidden sm:block"
+      />
+      <StopHeroVariant
+        data={data}
+        crop={mobileCrop}
+        src={mobileSrc}
+        variant="mobile"
+        className="sm:hidden"
+      />
       <div className="absolute inset-x-0 top-[calc(env(safe-area-inset-top)_+_18px)] z-10 flex w-full justify-center px-4 sm:px-16">
         <SiteNav active="stanice" />
       </div>

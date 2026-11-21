@@ -32,9 +32,13 @@ const BAND_H = 160
  */
 function overlaySvg(data: LinePageData): string | null {
   const meta = loadHeroMeta(data.broj)
-  if (!meta) return null
+  if (!meta) {
+    return null
+  }
   const overlay = buildOverlay(data, meta.desktop, VIEW_W, VIEW_H)
-  if (!overlay) return null
+  if (!overlay) {
+    return null
+  }
   const dots = overlay.innerDots
     .map(
       ([x, y]) =>
@@ -82,11 +86,8 @@ function MapWindow({ data }: { data: LinePageData }) {
         overflow: "hidden",
       }}
     >
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
       {routeSrc && <img src={routeSrc} alt="" style={MAP_LAYER} />}
     </div>
   )
@@ -96,7 +97,9 @@ function MapWindow({ data }: { data: LinePageData }) {
 function InfoBand({ data }: { data: LinePageData }) {
   const peak = data.stats.peakHeadwayMin
   const facts = [
-    peak !== null && peak !== 0 ? `u špici svakih ${Math.round(peak)} min` : null,
+    peak !== null && peak !== 0
+      ? `u špici svakih ${Math.round(peak)} min`
+      : null,
     serviceSpan(data),
   ]
     .filter(Boolean)
@@ -171,25 +174,25 @@ function InfoBand({ data }: { data: LinePageData }) {
  */
 export function renderLineOgCard(data: LinePageData): ImageResponse | null {
   const heroPath = join(process.cwd(), "public/linije", `hero-${data.broj}.png`)
-  if (!existsSync(heroPath)) return null
+  if (!existsSync(heroPath)) {
+    return null
+  }
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#ffffff",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <MapWindow data={data} />
-        <InfoBand data={data} />
-      </div>
-    ),
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#ffffff",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <MapWindow data={data} />
+      <InfoBand data={data} />
+    </div>,
     {
       width: 1200,
       height: 630,

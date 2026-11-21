@@ -1,5 +1,9 @@
 import { cn } from "@/lib/utils"
-import type { ComponentPropsWithoutRef, ElementType, HTMLAttributes } from "react"
+import type {
+  ComponentPropsWithoutRef,
+  ElementType,
+  HTMLAttributes,
+} from "react"
 
 /**
  * Stats page typography — components only (no design tokens file).
@@ -48,7 +52,10 @@ export function StatHeroMetaText({
 }: ComponentPropsWithoutRef<"span">) {
   return (
     <span
-      className={cn("font-medium lowercase text-slate-400 dark:text-slate-500", className)}
+      className={cn(
+        "font-medium text-slate-400 lowercase dark:text-slate-500",
+        className
+      )}
       {...props}
     />
   )
@@ -155,7 +162,7 @@ export function StatOverline({
   return (
     <p
       className={cn(
-        "mb-2 text-body lowercase text-slate-400 dark:text-slate-500",
+        "mb-2 text-body text-slate-400 lowercase dark:text-slate-500",
         className
       )}
       {...props}
@@ -231,7 +238,10 @@ export function StatEmphasis({
 }: ComponentPropsWithoutRef<"span">) {
   return (
     <span
-      className={cn("font-medium text-slate-900 dark:text-slate-100", className)}
+      className={cn(
+        "font-medium text-slate-900 dark:text-slate-100",
+        className
+      )}
       {...props}
     />
   )
@@ -307,10 +317,7 @@ export function StatInsightBody({
 }: ComponentPropsWithoutRef<"p">) {
   return (
     <p
-      className={cn(
-        "text-body text-slate-600 dark:text-slate-300",
-        className
-      )}
+      className={cn("text-body text-slate-600 dark:text-slate-300", className)}
       {...props}
     />
   )

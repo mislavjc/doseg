@@ -25,6 +25,61 @@ export interface HeroFocus {
 
 const clampPct = (v: number) => Math.min(Math.max(v, 3), 97)
 
+function BoundaryOverlay({
+  path,
+  viewW,
+  viewH,
+  lx,
+  ly,
+  lw,
+  lh,
+}: {
+  path: string
+  viewW: number
+  viewH: number
+  lx: number
+  ly: number
+  lw: number
+  lh: number
+}) {
+  return (
+    <svg
+      aria-hidden
+      viewBox={`0 0 ${viewW} ${viewH}`}
+      preserveAspectRatio="xMidYMid slice"
+      className="absolute inset-0 h-full w-full"
+    >
+      <path
+        d={path}
+        fill="var(--zg-blue)"
+        fillOpacity={0.08}
+        stroke="var(--ground)"
+        strokeWidth={6}
+        strokeLinejoin="round"
+      />
+      <path
+        d={path}
+        fill="none"
+        stroke="var(--zg-blue)"
+        strokeWidth={3}
+        strokeLinejoin="round"
+      />
+      <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
+      <text
+        x={lx + lw / 2}
+        y={ly + lh / 2 + 5.5}
+        textAnchor="middle"
+        fontSize={16}
+        fontWeight={700}
+        fontFamily="var(--font-heros), system-ui, sans-serif"
+        fill="var(--ground)"
+      >
+        Zagreb
+      </text>
+    </svg>
+  )
+}
+
 export function HomeHeroVariant({
   hero,
   crop,
@@ -44,9 +99,10 @@ export function HomeHeroVariant({
   const viewH = crop.height / 2
   const project = projector(crop, viewW, viewH)
   const pts = hero.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length > 0
-    ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
-    : ""
+  const path =
+    pts.length > 0
+      ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
+      : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
   const maxY = pts.reduce((s, p) => Math.max(s, p[1]), 0)
   const lw = "Zagreb".length * 8.9 + 20
@@ -78,9 +134,13 @@ export function HomeHeroVariant({
             : undefined
         }
       >
-        <HeroPicture src={src} alt="Karta Zagreba s granicom grada" variant={variant} />
+        <HeroPicture
+          src={src}
+          alt="Karta Zagreba s granicom grada"
+          variant={variant}
+        />
       </div>
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -88,27 +148,15 @@ export function HomeHeroVariant({
         className="absolute inset-0 h-full w-full object-cover [image-rendering:pixelated]"
       />
       {!focus && path && (
-        <svg
-          aria-hidden
-          viewBox={`0 0 ${viewW} ${viewH}`}
-          preserveAspectRatio="xMidYMid slice"
-          className="absolute inset-0 h-full w-full"
-        >
-          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="var(--ground)" strokeWidth={6} strokeLinejoin="round" />
-          <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
-          <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
-          <text
-            x={lx + lw / 2}
-            y={ly + lh / 2 + 5.5}
-            textAnchor="middle"
-            fontSize={16}
-            fontWeight={700}
-            fontFamily="var(--font-heros), system-ui, sans-serif"
-            fill="var(--ground)"
-          >
-            Zagreb
-          </text>
-        </svg>
+        <BoundaryOverlay
+          path={path}
+          viewW={viewW}
+          viewH={viewH}
+          lx={lx}
+          ly={ly}
+          lw={lw}
+          lh={lh}
+        />
       )}
       {focus && (
         <span

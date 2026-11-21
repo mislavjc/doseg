@@ -9,4 +9,4 @@ export type StopHeroLine = { broj: string, mode: LineMode,
 /**
  * [lon, lat] pairs, the line's shape clipped to ~`HERO_CLIP_KM` of the stop.
  */
-shape: [number, number][], };
+shape: Array<[number, number]>, };

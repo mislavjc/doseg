@@ -33,18 +33,19 @@ const STATIC_PATHS = [
 ]
 
 interface LineIndex {
-  lines: { broj: string }[]
+  lines: Array<{ broj: string }>
 }
 interface StopIndex {
-  stops: { slug: string }[]
+  stops: Array<{ slug: string }>
 }
 interface DistrictScores {
-  districts: { name: string }[]
+  districts: Array<{ name: string }>
 }
 
-const dataPath = (...parts: string[]) => join(process.cwd(), "data", ...parts)
+const dataPath = (...parts: Array<string>) =>
+  join(process.cwd(), "data", ...parts)
 
-function urlList(): string[] {
+function urlList(): Array<string> {
   const lines = readJson<LineIndex>(dataPath("linije", "index.json"))
   const stops = readJson<StopIndex>(dataPath("stanice", "index.json"))
   const scores = readJson<DistrictScores>(dataPath("district-scores.json"))
@@ -69,7 +70,9 @@ async function main() {
     }),
   })
   // IndexNow returns 200 (accepted) or 202 (accepted, validation pending).
-  console.log(`IndexNow: ${urls.length} URLs → HTTP ${res.status} ${res.statusText}`)
+  console.log(
+    `IndexNow: ${urls.length} URLs → HTTP ${res.status} ${res.statusText}`
+  )
   if (!res.ok) {
     console.error(await res.text())
     process.exit(1)

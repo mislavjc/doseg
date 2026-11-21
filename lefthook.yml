@@ -1,0 +1,12 @@
+# Staged-file checks only, so a commit stays at a few seconds. CI runs the full suite.
+# Piped: oxfmt rewrites and re-stages first, so oxlint sees the formatted file.
+pre-commit:
+  piped: true
+  jobs:
+    - name: oxfmt
+      glob: "*.{ts,tsx}"
+      run: bun oxfmt {staged_files}
+      stage_fixed: true
+    - name: oxlint
+      glob: "*.{ts,tsx,js,mjs}"
+      run: bun oxlint {staged_files}

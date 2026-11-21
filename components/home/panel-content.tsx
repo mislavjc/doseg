@@ -6,16 +6,17 @@ import {
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import Link from "next/link"
 
-import { isBikeMode, isWalkMode, legLineColors, WALK_BAND } from "@/lib/mode-colors"
-import type { Itinerary, Leg } from "@/lib/otp"
-import { POI_CATEGORIES, type MapPoiCategory } from "@/lib/poi"
 import {
-  deShout,
-  formatClock,
-  transfersLabel,
-  type DistrictContext,
-  type PanelState,
-} from "./reach-state"
+  isBikeMode,
+  isWalkMode,
+  legLineColors,
+  WALK_BAND,
+} from "@/lib/mode-colors"
+import type { Itinerary, Leg } from "@/lib/otp"
+import { POI_CATEGORIES } from "@/lib/poi"
+import type { MapPoiCategory } from "@/lib/poi"
+import { deShout, formatClock, transfersLabel } from "./reach-state"
+import type { DistrictContext, PanelState } from "./reach-state"
 import {
   BikeIcon,
   BlueLink,
@@ -105,8 +106,8 @@ export function ErrorContent({ onRetry }: { onRetry: () => void }) {
       <MonoLabel>greška pri izračunu</MonoLabel>
       <Hook>Ne mogu izračunati doseg.</Hook>
       <p className="font-heros text-body leading-6 text-ink-muted">
-        Podaci o mreži trenutno nisu dostupni. Provjeri vezu pa pokušaj
-        ponovno, adresa ostaje upisana.
+        Podaci o mreži trenutno nisu dostupni. Provjeri vezu pa pokušaj ponovno,
+        adresa ostaje upisana.
       </p>
       <button
         type="button"
@@ -139,9 +140,12 @@ export function ReachReadout({
         <Hook>{stats ? `${Math.round(stats.km2)} km² dohvatljivo` : "-"}</Hook>
       )}
       <p className="font-heros text-body leading-[22px] text-ink-muted">
-        {stats?.pctCity != null && `${stats.pctCity}% površine grada`}
-        {stats?.districtsInReach != null &&
-          stats.totalDistricts != null &&
+        {stats !== null &&
+          stats.pctCity !== null &&
+          `${stats.pctCity}% površine grada`}
+        {stats !== null &&
+          stats.districtsInReach !== null &&
+          stats.totalDistricts !== null &&
           ` · ${stats.districtsInReach} od ${stats.totalDistricts} kvartova`}
       </p>
     </div>
@@ -242,7 +246,11 @@ export function ReachContent({
       <ReachReadout minutes={minutes} stats={stats} />
       <ReachRamp rightLabel={`${minutes} min daleko`} />
       <MinutesRow minutes={minutes} onChange={onMinutesChange} />
-      <PoiList poiCounts={poiCounts} active={poiLayers} onToggle={onTogglePoi} />
+      <PoiList
+        poiCounts={poiCounts}
+        active={poiLayers}
+        onToggle={onTogglePoi}
+      />
     </>
   )
 }
@@ -251,12 +259,21 @@ export function ReachContent({
 
 function legTitle(leg: Leg): string {
   const mode = leg.mode.toUpperCase()
-  if (isWalkMode(mode)) return "Pješice"
-  if (mode === "TRAM") return `Tramvaj ${leg.route ?? ""}`.trim()
-  if (mode === "BUS") return `Bus ${leg.route ?? ""}`.trim()
-  if (mode === "RAIL" || mode === "TRAIN")
+  if (isWalkMode(mode)) {
+    return "Pješice"
+  }
+  if (mode === "TRAM") {
+    return `Tramvaj ${leg.route ?? ""}`.trim()
+  }
+  if (mode === "BUS") {
+    return `Bus ${leg.route ?? ""}`.trim()
+  }
+  if (mode === "RAIL" || mode === "TRAIN") {
     return `Vlak ${leg.route ?? ""}`.trim()
-  if (mode === "BICYCLE" || mode === "BIKE") return "BAJS"
+  }
+  if (mode === "BICYCLE" || mode === "BIKE") {
+    return "BAJS"
+  }
   return leg.mode
 }
 
@@ -265,8 +282,8 @@ export function JourneyStrip({
   colors,
   compact = false,
 }: {
-  legs: Leg[]
-  colors: string[]
+  legs: Array<Leg>
+  colors: Array<string>
   /** Mini variant for the collapsed answer bar — shorter, tighter corners. */
   compact?: boolean
 }) {
@@ -330,9 +347,7 @@ function LegRow({
         <span className="font-heros text-body leading-5 text-ink">
           {legTitle(leg)}
         </span>
-        <span className="font-heros text-body text-ink-faint">
-          {sub}
-        </span>
+        <span className="font-heros text-body text-ink-faint">{sub}</span>
       </div>
       <span className="font-mono text-label text-ink-muted">
         {Math.max(1, Math.round(leg.duration / 60))} min
@@ -358,7 +373,7 @@ export function RouteSummary({
   return (
     <div className="flex flex-col gap-1">
       {!hideHeadline && (
-        <p className="font-heros text-head font-bold leading-5 text-ink">
+        <p className="font-heros text-head leading-5 font-bold text-ink">
           {minutes} min
         </p>
       )}
@@ -377,7 +392,7 @@ export function LegList({
   colors,
 }: {
   itinerary: Itinerary
-  colors: string[]
+  colors: Array<string>
 }) {
   return (
     <div className="flex flex-col border-t border-hairline">
@@ -445,8 +460,12 @@ export function RouteContent({
   departedAt: Date | null
   loading: boolean
 }) {
-  if (loading || !itinerary) return <RouteSkeleton />
-  if (isRouteTooFar(itinerary)) return <RouteTooFar />
+  if (loading || !itinerary) {
+    return <RouteSkeleton />
+  }
+  if (isRouteTooFar(itinerary)) {
+    return <RouteTooFar />
+  }
   const colors = legLineColors(itinerary.legs)
   return (
     <>
@@ -476,7 +495,8 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
             {district.name}
           </span>
           <span className="font-mono text-label text-zg-blue">
-            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
+            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}
+            /100
           </span>
         </Link>
       ) : (
@@ -492,7 +512,9 @@ export function LjestvicaBlock({ ctx }: { ctx: DistrictContext | null }) {
       )}
       <div className="flex items-center justify-between">
         <BlueLink href="/o-projektu">O projektu</BlueLink>
-        <BlueLink href="/statistika" arrow>Cijela statistika</BlueLink>
+        <BlueLink href="/statistika" arrow>
+          Cijela statistika
+        </BlueLink>
       </div>
     </div>
   )
@@ -510,7 +532,8 @@ export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
             {district.name}
           </span>
           <span className="font-mono text-label text-zg-blue">
-            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}/100
+            #{district.rank} od {ctx?.totalDistricts ?? 17} · {district.score}
+            /100
           </span>
         </Link>
       ) : (
@@ -518,7 +541,9 @@ export function LjestvicaRow({ ctx }: { ctx: DistrictContext | null }) {
           Tvoj kvart na ljestvici
         </span>
       )}
-      <BlueLink href="/statistika" arrow>Cijela statistika</BlueLink>
+      <BlueLink href="/statistika" arrow>
+        Cijela statistika
+      </BlueLink>
     </div>
   )
 }

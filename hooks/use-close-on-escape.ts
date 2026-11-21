@@ -9,11 +9,15 @@ export function useCloseOnEscape(open: boolean, onClose: () => void) {
   const onCloseRef = useRef(onClose)
   useEffect(() => {
     onCloseRef.current = onClose
-  })
+  }, [onClose])
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      return
+    }
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCloseRef.current()
+      if (e.key === "Escape") {
+        onCloseRef.current()
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)

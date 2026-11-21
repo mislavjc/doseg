@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
-import { IconFlag1, IconCircleBanSign } from "@central-icons-react/square-outlined-radius-0-stroke-2"
+import {
+  IconFlag1,
+  IconCircleBanSign,
+} from "@central-icons-react/square-outlined-radius-0-stroke-2"
 import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Hero } from "@/app/statistika/editorial/hero"
 import { Footer } from "@/app/statistika/editorial/footer"
@@ -9,11 +12,35 @@ import { cap } from "@/app/linije/copy"
 import { parseJson } from "@/lib/json"
 import { Timeline } from "./timeline"
 import {
-  INK, MUTE, FAINT, OLD, BLUE, HAIR, KEPT, HEROS, MONO,
-  type Stat, type Geom, type Data, type Candidates, type Cand,
-  type MapEntryData, type FeaturedItem, type LineRowItem, type StopRowItem, type LineItem,
-  type YearGroup, type TimelineModel,
-  num, hrWord, entryId, isTram, autoHeadline, normCategory,
+  INK,
+  MUTE,
+  FAINT,
+  OLD,
+  BLUE,
+  HAIR,
+  KEPT,
+  HEROS,
+  MONO,
+  num,
+  hrWord,
+  entryId,
+  isTram,
+  autoHeadline,
+  normCategory,
+} from "./lib"
+import type {
+  Stat,
+  Geom,
+  Data,
+  Candidates,
+  Cand,
+  MapEntryData,
+  FeaturedItem,
+  LineRowItem,
+  StopRowItem,
+  LineItem,
+  YearGroup,
+  TimelineModel,
 } from "./lib"
 
 /**
@@ -26,40 +53,80 @@ import {
  * a client Timeline adds search + line/stop filtering.
  */
 
-const readData = (p: string) => readFileSync(join(process.cwd(), "data", "promjene", p), "utf8")
+const readData = (p: string) =>
+  readFileSync(join(process.cwd(), "data", "promjene", p), "utf8")
 // ~ marker: the date is an approximate Wayback timestamp, not a body-read effective date.
+type DatedCand = Cand & { date: string }
 const approx = (c: Cand) => !c.datePrecise && c.source === "wayback"
 
 export const metadata: Metadata = {
   title: "Promjene i izmjene ZET-ovih linija: nove i preusmjerene | Doseg",
-  description: "Kronologija promjena u mreži zagrebačkog ZET-a od 2017.: produljene i preusmjerene linije, nove i ukinute linije, izmještena stajališta, uz službene obavijesti i karte prije/poslije.",
+  description:
+    "Kronologija promjena u mreži zagrebačkog ZET-a od 2017.: produljene i preusmjerene linije, nove i ukinute linije, izmještena stajališta, uz službene obavijesti i karte prije/poslije.",
   alternates: { canonical: "/promjene" },
 }
 
-/** Reads geometry + candidates + curated entries into one serializable model the
- * client Timeline can search and filter. Counts are derived from the rendered
- * set so the funnel sentence and year tallies always match the list. */
-function buildModel(data: Data, cand: Candidates): TimelineModel {
+type GeomIndex = Record<string, Record<string, Stat>>
+type MapsFor = (id: string) => Array<MapEntryData>
+
+function loadMapsFor() {
   // id → { line: stat }
-  const index = parseJson<Record<string, Record<string, Stat>>>(readData("geom/index.json"))
+  const index = parseJson<GeomIndex>(readData("geom/index.json"))
   const geoms = new Map<string, Geom>()
-  for (const id in index) for (const line in index[id]) geoms.set(`${id}-${line}`, parseJson<Geom>(readData(`geom/${id}-${line}.json`)))
-  const mapsFor = (id: string): MapEntryData[] =>
+  for (const id in index) {
+    for (const line in index[id]) {
+      geoms.set(
+        `${id}-${line}`,
+        parseJson<Geom>(readData(`geom/${id}-${line}.json`))
+      )
+    }
+  }
+  const mapsFor: MapsFor = (id) =>
     Object.entries(index[id] ?? {}).flatMap(([line, stat]) => {
       const geom = geoms.get(`${id}-${line}`)
       return geom ? [{ line, geom, stat }] : []
     })
+  return { index, mapsFor }
+}
 
-  const entryById = new Map(data.entries.map((e) => [entryId(e), e]))
-  const curated: FeaturedItem[] = data.entries.map((e) => {
+function curatedItems(data: Data, mapsFor: MapsFor): Array<FeaturedItem> {
+  return data.entries.map((e) => {
     // geom is keyed by the ZET notice id; take it explicitly when given (some
     // source URLs point at an archived listing that doesn't carry the id).
     const id = entryId(e)
     const category = normCategory(e.kind)
-    return { kind: "featured", id, date: e.date, approxDate: false, category, mode: e.mode, lines: e.lines, title: e.title, summary: e.summary, source: e.source, removed: category === "ukinuta", successor: e.successor, maps: mapsFor(id) }
+    return {
+      kind: "featured",
+      id,
+      date: e.date,
+      approxDate: false,
+      category,
+      mode: e.mode,
+      lines: e.lines,
+      title: e.title,
+      summary: e.summary,
+      source: e.source,
+      removed: category === "ukinuta",
+      successor: e.successor,
+      maps: mapsFor(id),
+    }
   })
-  const autoFeatured: FeaturedItem[] = cand.candidates
-    .filter((c) => c.listWorthy && !!c.date && Object.hasOwn(index, c.id) && !entryById.has(c.id))
+}
+
+function autoFeaturedItems(
+  cand: Candidates,
+  index: GeomIndex,
+  entryById: Map<string, Data["entries"][number]>,
+  mapsFor: MapsFor
+): Array<FeaturedItem> {
+  return cand.candidates
+    .filter(
+      (c): c is DatedCand =>
+        c.listWorthy &&
+        !!c.date &&
+        Object.hasOwn(index, c.id) &&
+        !entryById.has(c.id)
+    )
     .map((c) => {
       // Eyebrow shows the line(s) we actually mapped (not every line in a multi-line
       // announcement). Title uses the body-grounded displayTitle (honest about partial /
@@ -67,38 +134,103 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
       const maps = mapsFor(c.id)
       const lines = maps.length > 0 ? maps.map((m) => m.line) : c.lines
       return {
-        kind: "featured", id: c.id, date: c.date!, approxDate: approx(c), category: c.category,
-        mode: lines.length === 1 ? (isTram(lines[0]) ? "Tramvaj" : "Autobus") : "Linije",
-        lines, title: c.displayTitle ?? autoHeadline(lines, c.category),
-        source: { publisher: "ZET", label: "Službena obavijest ZET-a", title: c.title, url: c.url },
-        removed: c.category === "ukinuta", maps,
+        kind: "featured",
+        id: c.id,
+        date: c.date,
+        approxDate: approx(c),
+        category: c.category,
+        mode:
+          lines.length === 1
+            ? isTram(lines[0])
+              ? "Tramvaj"
+              : "Autobus"
+            : "Linije",
+        lines,
+        title: c.displayTitle ?? autoHeadline(lines, c.category),
+        source: {
+          publisher: "ZET",
+          label: "Službena obavijest ZET-a",
+          title: c.title,
+          url: c.url,
+        },
+        removed: c.category === "ukinuta",
+        maps,
       }
     })
-  const featured = [...curated, ...autoFeatured]
-  const featuredIds = new Set(featured.map((f) => f.id))
+}
 
-  const rows = cand.candidates.filter((c) => c.listWorthy && !!c.date && !featuredIds.has(c.id))
-  const lineRows: LineRowItem[] = rows.filter((c) => c.category !== "stajalište").map((c) => ({
-    kind: "linerow", id: c.id, date: c.date!, approxDate: approx(c), category: c.category, lines: c.lines, title: c.displayTitle ?? c.title, url: c.url, removed: c.category === "ukinuta",
-  }))
-  const stopRows: StopRowItem[] = rows.filter((c) => c.category === "stajalište").map((c) => ({
-    kind: "stoprow", id: c.id, date: c.date!, approxDate: approx(c), lines: c.lines, title: c.displayTitle ?? c.title, url: c.url,
-  }))
+function groupByYear(
+  lineItems: Array<LineItem>,
+  stopRows: Array<StopRowItem>
+): Array<YearGroup> {
+  const byYear = new Map<
+    string,
+    { line: Array<LineItem>; stop: Array<StopRowItem> }
+  >()
+  const ensure = (y: string) => {
+    let group = byYear.get(y)
+    if (!group) {
+      group = { line: [], stop: [] }
+      byYear.set(y, group)
+    }
+    return group
+  }
+  for (const it of lineItems) {
+    ensure(it.date.slice(0, 4)).line.push(it)
+  }
+  for (const it of stopRows) {
+    ensure(it.date.slice(0, 4)).stop.push(it)
+  }
 
-  // Group line changes + stop relocations by year, newest first.
-  const lineItems: LineItem[] = [...featured, ...lineRows]
-  const byYear = new Map<string, { line: LineItem[]; stop: StopRowItem[] }>()
-  const ensure = (y: string) => byYear.get(y) ?? byYear.set(y, { line: [], stop: [] }).get(y)!
-  for (const it of lineItems) ensure(it.date.slice(0, 4)).line.push(it)
-  for (const it of stopRows) ensure(it.date.slice(0, 4)).stop.push(it)
-
-  const years: YearGroup[] = [...byYear.entries()]
+  return [...byYear.entries()]
     .toSorted((a, b) => b[0].localeCompare(a[0]))
     .map(([year, g]) => {
       g.line.sort((a, b) => b.date.localeCompare(a.date))
       g.stop.sort((a, b) => b.date.localeCompare(a.date))
       return { year, lineItems: g.line, stopItems: g.stop }
     })
+}
+
+/** Reads geometry + candidates + curated entries into one serializable model the
+ * client Timeline can search and filter. Counts are derived from the rendered
+ * set so the funnel sentence and year tallies always match the list. */
+function buildModel(data: Data, cand: Candidates): TimelineModel {
+  const { index, mapsFor } = loadMapsFor()
+  const entryById = new Map(data.entries.map((e) => [entryId(e), e]))
+  const curated = curatedItems(data, mapsFor)
+  const autoFeatured = autoFeaturedItems(cand, index, entryById, mapsFor)
+  const featured = [...curated, ...autoFeatured]
+  const featuredIds = new Set(featured.map((f) => f.id))
+
+  const rows = cand.candidates.filter(
+    (c): c is DatedCand => c.listWorthy && !!c.date && !featuredIds.has(c.id)
+  )
+  const lineRows: Array<LineRowItem> = rows
+    .filter((c) => c.category !== "stajalište")
+    .map((c) => ({
+      kind: "linerow",
+      id: c.id,
+      date: c.date,
+      approxDate: approx(c),
+      category: c.category,
+      lines: c.lines,
+      title: c.displayTitle ?? c.title,
+      url: c.url,
+      removed: c.category === "ukinuta",
+    }))
+  const stopRows: Array<StopRowItem> = rows
+    .filter((c) => c.category === "stajalište")
+    .map((c) => ({
+      kind: "stoprow",
+      id: c.id,
+      date: c.date,
+      approxDate: approx(c),
+      lines: c.lines,
+      title: c.displayTitle ?? c.title,
+      url: c.url,
+    }))
+
+  const years = groupByYear([...featured, ...lineRows], stopRows)
 
   const total = featured.length + lineRows.length + stopRows.length
   const stop = stopRows.length
@@ -107,46 +239,41 @@ function buildModel(data: Data, cand: Candidates): TimelineModel {
   return { years, counts: { total, line: total - stop, stop, maps } }
 }
 
-const lineSw = (color: string, dash?: string) => <svg width={30} height={10} aria-hidden><line x1={3} y1={5} x2={27} y2={5} stroke={color} strokeWidth={4} strokeLinecap="round" strokeDasharray={dash} /></svg>
+const lineSw = (color: string, dash?: string) => (
+  <svg width={30} height={10} aria-hidden>
+    <line
+      x1={3}
+      y1={5}
+      x2={27}
+      y2={5}
+      stroke={color}
+      strokeWidth={4}
+      strokeLinecap="round"
+      strokeDasharray={dash}
+    />
+  </svg>
+)
 
-const dotSw = (fill: string, stroke: string) => <svg width={14} height={14} aria-hidden><circle cx={7} cy={7} r={fill === "#fff" ? 4 : 4.5} fill={fill} stroke={stroke} strokeWidth={fill === "#fff" ? 2 : 1.5} /></svg>
+const dotSw = (fill: string, stroke: string) => (
+  <svg width={14} height={14} aria-hidden>
+    <circle
+      cx={7}
+      cy={7}
+      r={fill === "#fff" ? 4 : 4.5}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={fill === "#fff" ? 2 : 1.5}
+    />
+  </svg>
+)
 
-const Strong = ({ children }: { children: React.ReactNode }) => <span style={{ color: INK, fontWeight: 500 }}>{children}</span>
+const Strong = ({ children }: { children: React.ReactNode }) => (
+  <span style={{ color: INK, fontWeight: 500 }}>{children}</span>
+)
 
 export const ensureStatic = "navigation"
 
-export default function Page() {
-  const data = parseJson<Data>(readData("entries.json"))
-  const cand = parseJson<Candidates>(readData("candidates.json"))
-  const model = buildModel(data, cand)
-  const { total, line, stop, maps } = model.counts
-  const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
-
-  const legendItems: [React.ReactNode, string][] = [
-    [lineSw(BLUE), "trasa danas"], [lineSw(OLD, "0.1 5.2"), "prijašnja trasa"],
-    [dotSw(BLUE, "#fff"), "novo stajalište"], [dotSw("#fff", OLD), "ukinuto stajalište"], [dotSw("#fff", KEPT), "stajalište na trasi"],
-    [<IconFlag1 key="f" size={19} color={BLUE} />, "novi kraj linije"], [<IconCircleBanSign key="x" size={19} color={OLD} />, "ukinuti kraj linije"],
-  ]
-
-  // Rendered by <Timeline> right above the first before/after map (not parked at
-  // the top, screens away from any map).
-  const legend = (
-    <div style={{ width: "100%", maxWidth: 556, marginTop: 4, border: `1px solid ${HAIR}`, boxSizing: "border-box", padding: "15px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
-      <span style={{ fontFamily: MONO, fontSize: 12, color: FAINT }}>kako čitati kartu</span>
-      <div className="pr-legend-grid" style={{ display: "grid", gridTemplateColumns: "max-content max-content", justifyContent: "start", columnGap: 40, rowGap: 11 }}>
-        {legendItems.map(([icon, label]) => (
-          <span key={label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ display: "flex", width: 26, justifyContent: "center", alignItems: "center" }}>{icon}</span>
-            <span style={{ fontFamily: MONO, fontSize: 12, color: INK }}>{label}</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: `
+const PAGE_CSS = `
         html,body{overflow-x:clip;max-width:100%}
         .diffmap .maplibregl-ctrl-group{border-radius:0;box-shadow:0 1px 3px rgba(15,23,42,.16)}
         .diffmap .maplibregl-ctrl-group button{border-radius:0;width:30px;height:30px}
@@ -163,28 +290,193 @@ export default function Page() {
           .pr-seg{padding-top:11px !important;padding-bottom:9px !important}
           .pr-legend-grid{grid-template-columns:1fr !important;row-gap:10px !important}
         }
-      ` }} />
+      `
+
+function MapLegend() {
+  const legendItems: Array<[React.ReactNode, string]> = [
+    [lineSw(BLUE), "trasa danas"],
+    [lineSw(OLD, "0.1 5.2"), "prijašnja trasa"],
+    [dotSw(BLUE, "#fff"), "novo stajalište"],
+    [dotSw("#fff", OLD), "ukinuto stajalište"],
+    [dotSw("#fff", KEPT), "stajalište na trasi"],
+    [<IconFlag1 key="f" size={19} color={BLUE} />, "novi kraj linije"],
+    [
+      <IconCircleBanSign key="x" size={19} color={OLD} />,
+      "ukinuti kraj linije",
+    ],
+  ]
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 556,
+        marginTop: 4,
+        border: `1px solid ${HAIR}`,
+        boxSizing: "border-box",
+        padding: "15px 18px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
+      <span style={{ fontFamily: MONO, fontSize: 12, color: FAINT }}>
+        kako čitati kartu
+      </span>
+      <div
+        className="pr-legend-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "max-content max-content",
+          justifyContent: "start",
+          columnGap: 40,
+          rowGap: 11,
+        }}
+      >
+        {legendItems.map(([icon, label]) => (
+          <span
+            key={label}
+            style={{ display: "flex", alignItems: "center", gap: 10 }}
+          >
+            <span
+              style={{
+                display: "flex",
+                width: 26,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {icon}
+            </span>
+            <span style={{ fontFamily: MONO, fontSize: 12, color: INK }}>
+              {label}
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Intro({
+  total,
+  line,
+  stop,
+  maps,
+}: {
+  total: number
+  line: number
+  stop: number
+  maps: number
+}) {
+  return (
+    <div
+      className="pr-intro"
+      style={{
+        width: "100%",
+        maxWidth: 556,
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        paddingTop: 64,
+      }}
+    >
+      <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "promjene" }]} />
+      <span style={{ fontFamily: MONO, fontSize: 12, color: BLUE }}>
+        promjene u mreži
+      </span>
+      <h1
+        style={{
+          margin: 0,
+          fontFamily: HEROS,
+          fontWeight: 700,
+          fontSize: 16,
+          lineHeight: "22px",
+          color: INK,
+        }}
+      >
+        Što se promijenilo u ZET-u.
+      </h1>
+      <p
+        style={{
+          margin: 0,
+          fontFamily: HEROS,
+          fontSize: 16,
+          lineHeight: "24px",
+          color: MUTE,
+          maxWidth: 560,
+        }}
+      >
+        Od 2017. bilježimo trajne promjene u ZET-ovoj mreži, njih{" "}
+        <Strong>{num(total)}</Strong>: <Strong>{num(line)}</Strong> na linijama,{" "}
+        <Strong>{num(stop)}</Strong> na stajalištima.{" "}
+        <Strong>{cap(hrWord(maps))}</Strong> ih ima kartu prije i poslije, a
+        svaki opis vodi na službenu obavijest ZET-a.
+      </p>
+    </div>
+  )
+}
+
+function Footnote() {
+  return (
+    <div style={{ width: "100%", maxWidth: 556, paddingTop: 72 }}>
+      <div style={{ height: 1, background: HAIR }} />
+      <span
+        style={{
+          display: "block",
+          paddingTop: 16,
+          fontFamily: MONO,
+          fontSize: 12,
+          lineHeight: "18px",
+          color: FAINT,
+        }}
+      >
+        Popis čine trajne izmjene mreže iz ZET-ovih službenih obavijesti
+        (privremene obilaznice zbog radova i događanja izostavljene). Datumi
+        označeni s ~ približni su, prema prvom arhiviranom zapisu obavijesti, i
+        ne moraju biti točan dan stupanja na snagu. Istaknute promjene imaju
+        kartu prije i poslije iscrtanu iz arhiviranih ZET-ovih GTFS voznih
+        redova oko datuma svake promjene.
+      </span>
+    </div>
+  )
+}
+
+export default function Page() {
+  const data = parseJson<Data>(readData("entries.json"))
+  const cand = parseJson<Candidates>(readData("candidates.json"))
+  const model = buildModel(data, cand)
+  const { total, line, stop, maps } = model.counts
+  const updated = data.entries.reduce((m, e) => (e.date > m ? e.date : m), "")
+
+  const legend = <MapLegend />
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: PAGE_CSS }} />
 
       <Hero active="promjene" mapPosition="center 40%" />
 
-      <main id="main-content" tabIndex={-1} style={{ background: "var(--ground)", display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: 88, paddingInline: 16, boxSizing: "border-box", overflowX: "hidden", maxWidth: "100vw" }}>
-        <div className="pr-intro" style={{ width: "100%", maxWidth: 556, display: "flex", flexDirection: "column", gap: 16, paddingTop: 64 }}>
-          <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "promjene" }]} />
-          <span style={{ fontFamily: MONO, fontSize: 12, color: BLUE }}>promjene u mreži</span>
-          <h1 style={{ margin: 0, fontFamily: HEROS, fontWeight: 700, fontSize: 16, lineHeight: "22px", color: INK }}>Što se promijenilo u ZET-u.</h1>
-          <p style={{ margin: 0, fontFamily: HEROS, fontSize: 16, lineHeight: "24px", color: MUTE, maxWidth: 560 }}>
-            Od 2017. bilježimo trajne promjene u ZET-ovoj mreži, njih <Strong>{num(total)}</Strong>: <Strong>{num(line)}</Strong> na linijama, <Strong>{num(stop)}</Strong> na stajalištima. <Strong>{cap(hrWord(maps))}</Strong> ih ima kartu prije i poslije, a svaki opis vodi na službenu obavijest ZET-a.
-          </p>
-        </div>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        style={{
+          background: "var(--ground)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingBottom: 88,
+          paddingInline: 16,
+          boxSizing: "border-box",
+          overflowX: "hidden",
+          maxWidth: "100vw",
+        }}
+      >
+        <Intro total={total} line={line} stop={stop} maps={maps} />
 
         <Timeline model={model} legend={legend} />
 
-        <div style={{ width: "100%", maxWidth: 556, paddingTop: 72 }}>
-          <div style={{ height: 1, background: HAIR }} />
-          <span style={{ display: "block", paddingTop: 16, fontFamily: MONO, fontSize: 12, lineHeight: "18px", color: FAINT }}>
-            Popis čine trajne izmjene mreže iz ZET-ovih službenih obavijesti (privremene obilaznice zbog radova i događanja izostavljene). Datumi označeni s ~ približni su, prema prvom arhiviranom zapisu obavijesti, i ne moraju biti točan dan stupanja na snagu. Istaknute promjene imaju kartu prije i poslije iscrtanu iz arhiviranih ZET-ovih GTFS voznih redova oko datuma svake promjene.
-          </span>
-        </div>
+        <Footnote />
       </main>
 
       <Footer updated={updated} />

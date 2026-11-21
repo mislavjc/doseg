@@ -4,8 +4,8 @@ import {
   SPACING,
   EDGES,
   edgeKey,
-  type TramLine,
 } from "@/lib/zagreb-tram-network"
+import type { TramLine } from "@/lib/zagreb-tram-network"
 
 interface BadgeInfo {
   x: number
@@ -15,14 +15,14 @@ interface BadgeInfo {
   color: string
 }
 
-function segmentMidpoint(
-  line: TramLine,
-  segIdx: number,
-): { x: number; y: number; angle: number } {
+function segmentMidpoint(line: TramLine, segIdx: number) {
   const aId = line.stationIds[segIdx]
   const bId = line.stationIds[segIdx + 1]
   const key = edgeKey(aId, bId)
-  const e = EDGES.get(key)!
+  const e = EDGES.get(key)
+  if (e === undefined) {
+    throw new Error(`Missing tram edge ${key}`)
+  }
   const idx = e.lines.indexOf(line.number)
   const off = (idx - (e.lines.length - 1) / 2) * SPACING
 
@@ -38,19 +38,25 @@ function segmentMidpoint(
   let angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
 
   // Keep text right-side-up
-  if (angle > 90) angle -= 180
-  if (angle < -90) angle += 180
+  if (angle > 90) {
+    angle -= 180
+  }
+  if (angle < -90) {
+    angle += 180
+  }
 
   return { x: mx, y: my, angle }
 }
 
 /** Place badges at first, last, and (for long lines) middle segments. */
-function computeAllBadges(): BadgeInfo[] {
-  const badges: BadgeInfo[] = []
+function computeAllBadges(): Array<BadgeInfo> {
+  const badges: Array<BadgeInfo> = []
 
   for (const line of TRAM_LINES) {
     const segCount = line.stationIds.length - 1
-    if (segCount < 1) continue
+    if (segCount < 1) {
+      continue
+    }
 
     const first = segmentMidpoint(line, 0)
     badges.push({ ...first, lineNumber: line.number, color: line.color })
@@ -76,11 +82,7 @@ const BADGE_W = 20
 const BADGE_H = 14
 const BADGE_R = 4
 
-export function LineBadges({
-  activeLine,
-}: {
-  activeLine: string | null
-}) {
+export function LineBadges({ activeLine }: { activeLine: string | null }) {
   return (
     <g className="pointer-events-none">
       {allBadges.map((badge) => {

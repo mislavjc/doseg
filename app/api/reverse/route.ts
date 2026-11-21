@@ -1,4 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 import { z } from "zod"
 
 const PHOTON_REVERSE = "https://photon.komoot.io/reverse"
@@ -51,18 +52,23 @@ function isNearby(lat: number, lon: number) {
  * over a nearby POI name ("Blagajna HNB"), falling back to the name only
  * when there's no street. */
 function photonLabel(p: PhotonFeature["properties"]): string {
-  const parts: string[] = []
-  if (p.street) parts.push(p.housenumber ? `${p.street} ${p.housenumber}` : p.street)
-  else if (p.name) parts.push(p.name)
-  if (p.city && parts[0] !== p.city) parts.push(p.city)
+  const parts: Array<string> = []
+  if (p.street) {
+    parts.push(p.housenumber ? `${p.street} ${p.housenumber}` : p.street)
+  } else if (p.name) {
+    parts.push(p.name)
+  }
+  if (p.city && parts[0] !== p.city) {
+    parts.push(p.city)
+  }
   return parts.join(", ")
 }
 
 export async function GET(req: NextRequest) {
   const latStr = req.nextUrl.searchParams.get("lat")
   const lonStr = req.nextUrl.searchParams.get("lon")
-  const lat = latStr == null ? NaN : Number(latStr)
-  const lon = lonStr == null ? NaN : Number(lonStr)
+  const lat = latStr === null ? Number.NaN : Number(latStr)
+  const lon = lonStr === null ? Number.NaN : Number(lonStr)
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     return NextResponse.json({ error: "invalid lat/lon" }, { status: 400 })
   }
@@ -96,18 +102,27 @@ async function reversePhoton(lat: number, lon: number): Promise<string | null> {
       next: { revalidate: 300 },
       signal: AbortSignal.timeout(4000),
     })
-    if (!res.ok) return null
+    if (!res.ok) {
+      return null
+    }
     const f = PhotonResponse.parse(await res.json()).features?.[0]
-    if (!f) return null
+    if (!f) {
+      return null
+    }
     const [flon, flat] = f.geometry.coordinates
-    if (!isNearby(flat, flon)) return null
+    if (!isNearby(flat, flon)) {
+      return null
+    }
     return photonLabel(f.properties) || null
   } catch {
     return null
   }
 }
 
-async function reverseNominatim(lat: number, lon: number): Promise<string | null> {
+async function reverseNominatim(
+  lat: number,
+  lon: number
+): Promise<string | null> {
   try {
     const params = new URLSearchParams({
       lat: String(lat),
@@ -122,20 +137,25 @@ async function reverseNominatim(lat: number, lon: number): Promise<string | null
       next: { revalidate: 300 },
       signal: AbortSignal.timeout(4000),
     })
-    if (!res.ok) return null
+    if (!res.ok) {
+      return null
+    }
     const item = NominatimReverse.parse(await res.json())
     if (item.lat && item.lon) {
       const la = Number(item.lat)
       const lo = Number(item.lon)
-      if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo))
+      if (Number.isFinite(la) && Number.isFinite(lo) && !isNearby(la, lo)) {
         return null
+      }
     }
     // Prefer the structured street (+number) over the full POI-led display_name.
     const a = item.address
     if (a?.road) {
       const parts = [a.house_number ? `${a.road} ${a.house_number}` : a.road]
       const area = a.city ?? a.town ?? a.village ?? a.suburb
-      if (area) parts.push(area)
+      if (area) {
+        parts.push(area)
+      }
       return parts.join(", ")
     }
     return item.display_name ?? null

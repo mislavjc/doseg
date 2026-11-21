@@ -8,11 +8,9 @@ import {
   PillLink,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
-import { faqJsonLd, type FaqItem } from "@/app/statistika/editorial/faq"
-import {
-  JsonLd,
-  breadcrumbJsonLd,
-} from "@/app/statistika/editorial/json-ld"
+import { faqJsonLd } from "@/app/statistika/editorial/faq"
+import type { FaqItem } from "@/app/statistika/editorial/faq"
+import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { PoiRow } from "@/app/statistika/editorial/poi"
 import { Body, Hook, MonoLabel } from "@/app/statistika/editorial/primitives"
 import { SiteNav } from "@/app/statistika/editorial/site-nav"
@@ -52,9 +50,10 @@ function KvartHeroVariant({
   const viewH = crop.height / 2
   const project = projector(crop, viewW, viewH)
   const pts = data.boundary.map(([lon, lat]) => project(lon, lat))
-  const path = pts.length > 0
-    ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
-    : ""
+  const path =
+    pts.length > 0
+      ? `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")} Z`
+      : ""
   const cx = pts.reduce((s, p) => s + p[0], 0) / (pts.length || 1)
   const cy = pts.reduce((s, p) => s + p[1], 0) / (pts.length || 1)
   const lw = data.name.length * 8.9 + 20
@@ -71,7 +70,7 @@ function KvartHeroVariant({
         alt={`Karta kvarta ${data.name} u Zagrebu`}
         variant={variant}
       />
-      {/* oxlint-disable-next-line nextjs/no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
       <img
         src="/hero-cloud.png"
         alt=""
@@ -85,8 +84,21 @@ function KvartHeroVariant({
           preserveAspectRatio="xMidYMid slice"
           className="absolute inset-0 h-full w-full"
         >
-          <path d={path} fill="var(--zg-blue)" fillOpacity={0.08} stroke="var(--ground)" strokeWidth={6} strokeLinejoin="round" />
-          <path d={path} fill="none" stroke="var(--zg-blue)" strokeWidth={3} strokeLinejoin="round" />
+          <path
+            d={path}
+            fill="var(--zg-blue)"
+            fillOpacity={0.08}
+            stroke="var(--ground)"
+            strokeWidth={6}
+            strokeLinejoin="round"
+          />
+          <path
+            d={path}
+            fill="none"
+            stroke="var(--zg-blue)"
+            strokeWidth={3}
+            strokeLinejoin="round"
+          />
           <rect x={lx} y={ly} width={lw} height={lh} fill="var(--zg-blue)" />
           <text
             x={lx + lw / 2}
@@ -151,7 +163,9 @@ export function Naslov({ data }: { data: KvartData }) {
       </Hook>
       <Body className="mt-1 text-ink-muted">
         {data.rank}. od {data.total} po povezanosti javnim prijevozom
-        {data.population !== null && data.population !== 0 ? ` · ${data.population.toLocaleString("hr")} stanovnika` : ""}
+        {data.population !== null && data.population !== 0
+          ? ` · ${data.population.toLocaleString("hr")} stanovnika`
+          : ""}
       </Body>
     </>
   )
@@ -173,7 +187,11 @@ export function Scorecard({ data }: { data: KvartData }) {
       <div className="flex flex-col gap-[18px]">
         {data.bars.map((b) => {
           const self = b.kind === "self"
-          const fill = self ? "var(--zg-blue)" : b.kind === "city" ? "var(--ink-ghost)" : "#a9c2ec"
+          const fill = self
+            ? "var(--zg-blue)"
+            : b.kind === "city"
+              ? "var(--ink-ghost)"
+              : "#a9c2ec"
           return (
             <div key={b.kind} className="flex items-center gap-3.5">
               <span
@@ -224,7 +242,9 @@ export function Matrica({ data }: { data: KvartData }) {
           <MonoLabel>min</MonoLabel>
         </div>
         <div className="flex items-center gap-3 bg-ink px-3 py-1.5">
-          <span className="grow font-heros text-label text-ground">{data.name}</span>
+          <span className="grow font-heros text-label text-ground">
+            {data.name}
+          </span>
           <span className="font-mono text-label text-ground/70">ovdje si</span>
         </div>
         {rows.map((r, i) => (
@@ -257,30 +277,41 @@ export function Matrica({ data }: { data: KvartData }) {
 // ── Izvan špice: peak / evening / weekend reach + headway + night ───────────
 
 export function IzvanSpice({ data }: { data: KvartData }) {
-  const bars: [string, number][] = [
+  const bars: Array<[string, number]> = [
     ["špica", 100],
     ["navečer", data.eveningPctOfPeak],
   ]
-  if (data.weekendRetentionPct != null) bars.push(["vikend", data.weekendRetentionPct])
+  if (data.weekendRetentionPct !== null) {
+    bars.push(["vikend", data.weekendRetentionPct])
+  }
   return (
     <>
-      <SectionHeader eyebrow="izvan špice" hook="Vrijedi li i navečer i vikendom?">
+      <SectionHeader
+        eyebrow="izvan špice"
+        hook="Vrijedi li i navečer i vikendom?"
+      >
         Ocjena gore mjeri jutarnju špicu. Ovako kvart vozi ostatak vremena.
       </SectionHeader>
       <div className="flex flex-col gap-3">
         <MonoLabel>doseg u odnosu na špicu</MonoLabel>
         {bars.map(([label, pct]) => (
           <div key={label} className="flex items-center gap-3.5">
-            <span className="w-[84px] shrink-0 font-heros text-body text-ink">{label}</span>
+            <span className="w-[84px] shrink-0 font-heros text-body text-ink">
+              {label}
+            </span>
             <span className="flex h-[18px] flex-1 bg-surface">
               <span className="bg-zg-blue" style={{ width: `${pct}%` }} />
             </span>
-            <span className="w-9 shrink-0 text-right font-mono text-body text-ink">{pct}</span>
+            <span className="w-9 shrink-0 text-right font-mono text-body text-ink">
+              {pct}
+            </span>
           </div>
         ))}
         <MonoLabel className="mt-1">
           interval: radnim danom ~{data.weekdayHeadwayMin} min
-          {data.weekendHeadwayMin == null ? "" : `, vikendom ~${data.weekendHeadwayMin} min`}
+          {data.weekendHeadwayMin === null
+            ? ""
+            : `, vikendom ~${data.weekendHeadwayMin} min`}
           {data.nightLines.length > 0
             ? ` · noćne linije ${data.nightLines.join(" · ")}`
             : " · nema noćnih linija"}
@@ -295,10 +326,22 @@ export function IzvanSpice({ data }: { data: KvartData }) {
 export function Cinjenice({ data }: { data: KvartData }) {
   return (
     <div className="flex flex-col">
-      <FactRow divided label="tramvajske / autobusne linije" value={`${data.tramCount} / ${data.busCount}`} />
+      <FactRow
+        divided
+        label="tramvajske / autobusne linije"
+        value={`${data.tramCount} / ${data.busCount}`}
+      />
       <FactRow divided label="stanica u kvartu" value={String(data.stops)} />
-      <FactRow divided label="prometna pustinja (>500 m od stanice)" value={`${data.desertPct}%`} />
-      <FactRow divided label="javni bicikli (BAJS)" value={`${data.bajs.stations} ${plural(data.bajs.stations, "stanica", "stanice", "stanica")}`} />
+      <FactRow
+        divided
+        label="prometna pustinja (>500 m od stanice)"
+        value={`${data.desertPct}%`}
+      />
+      <FactRow
+        divided
+        label="javni bicikli (BAJS)"
+        value={`${data.bajs.stations} ${plural(data.bajs.stations, "stanica", "stanice", "stanica")}`}
+      />
     </div>
   )
 }
@@ -308,7 +351,10 @@ export function Cinjenice({ data }: { data: KvartData }) {
 export function Linije({ data }: { data: KvartData }) {
   return (
     <>
-      <SectionHeader eyebrow="linije kroz kvart" hook={`${data.lines.length} ${plural(data.lines.length, "linija", "linije", "linija")}.`}>
+      <SectionHeader
+        eyebrow="linije kroz kvart"
+        hook={`${data.lines.length} ${plural(data.lines.length, "linija", "linije", "linija")}.`}
+      >
         {data.tramCount} tramvajskih i {data.busCount} autobusnih. Svaka vodi na
         svoju stranicu s voznim redom.
       </SectionHeader>
@@ -333,8 +379,10 @@ export function Linije({ data }: { data: KvartData }) {
 
 export type KvartStop = { name: string; slug: string; lineCount: number }
 
-export function StaniceUKvartu({ stops }: { stops: KvartStop[] }) {
-  if (stops.length === 0) return null
+export function StaniceUKvartu({ stops }: { stops: Array<KvartStop> }) {
+  if (stops.length === 0) {
+    return null
+  }
   return (
     <>
       <SectionHeader eyebrow="stanice u kvartu" hook="Najprometnije stanice.">
@@ -372,14 +420,20 @@ export function OvisiOAdresi({ data }: { data: KvartData }) {
           className="absolute top-[30px] h-2 bg-[#8ba3da]"
           style={{ left: pct(min), width: pct(max - min) }}
         />
-        <div className="absolute top-[24px] h-5 w-[5px] bg-ink" style={{ left: pct(median) }} />
+        <div
+          className="absolute top-[24px] h-5 w-[5px] bg-ink"
+          style={{ left: pct(median) }}
+        />
         <span
           className="absolute top-0 font-mono text-label text-ink"
           style={{ left: pct(median) }}
         >
           medijan {median.toLocaleString("hr")}
         </span>
-        <span className="absolute top-[44px] font-mono text-label text-ink-muted" style={{ left: pct(min) }}>
+        <span
+          className="absolute top-[44px] font-mono text-label text-ink-muted"
+          style={{ left: pct(min) }}
+        >
           {min.toLocaleString("hr")}
         </span>
         <span className="absolute top-[44px] right-0 font-mono text-label text-ink-muted">
@@ -387,7 +441,8 @@ export function OvisiOAdresi({ data }: { data: KvartData }) {
         </span>
       </div>
       <MonoLabel className="block">
-        rub kvarta → uz prugu · do najbliže stanice prosječno {data.avgNearestStopM} m · {data.desertPct}% pustinja
+        rub kvarta → uz prugu · do najbliže stanice prosječno{" "}
+        {data.avgNearestStopM} m · {data.desertPct}% pustinja
       </MonoLabel>
     </>
   )
@@ -399,7 +454,10 @@ export function DosegLink({ data }: { data: KvartData }) {
   const { lat, lon } = data.bestPoint
   return (
     <>
-      <SectionHeader eyebrow="doseg odavde" hook="Vidi što stigneš za 30 minuta.">
+      <SectionHeader
+        eyebrow="doseg odavde"
+        hook="Vidi što stigneš za 30 minuta."
+      >
         Interaktivna karta dosega iz najpovezanije točke kvarta: dokle stigneš
         tramvajem, busom i pješice u 15 ili 30 minuta.
       </SectionHeader>
@@ -437,7 +495,7 @@ export function Blizina({ data }: { data: KvartData }) {
             title={POI_LABEL[c.key]}
             detail={
               c.nearestName
-                ? `najbliža/i ${c.nearestName}${c.nearestKm == null ? "" : ` · ${c.nearestKm.toLocaleString("hr")} km`}`
+                ? `najbliža/i ${c.nearestName}${c.nearestKm === null ? "" : ` · ${c.nearestKm.toLocaleString("hr")} km`}`
                 : null
             }
             value={c.count}
@@ -451,22 +509,32 @@ export function Blizina({ data }: { data: KvartData }) {
 // ── Promjene (conditional) ──────────────────────────────────────────────────
 
 export function Promjene({ data }: { data: KvartData }) {
-  if (data.promjene.length === 0) return null
+  if (data.promjene.length === 0) {
+    return null
+  }
   return (
     <>
-      <SectionHeader eyebrow="promjene na linijama" hook="Nedavne izmjene mreže.">
+      <SectionHeader
+        eyebrow="promjene na linijama"
+        hook="Nedavne izmjene mreže."
+      >
         Trajne promjene na linijama koje voze kroz kvart.
       </SectionHeader>
       <div className="flex flex-col">
         {data.promjene.map((p) => (
-          <div key={p.id} className="flex flex-col gap-1.5 border-t border-hairline py-3.5">
+          <div
+            key={p.id}
+            className="flex flex-col gap-1.5 border-t border-hairline py-3.5"
+          >
             <div className="flex items-center gap-3">
               <MonoLabel>{p.date}</MonoLabel>
               <span className="inline-flex items-center border border-zg-blue px-[7px] py-0.5 font-mono text-label text-zg-blue">
                 {p.kind}
               </span>
             </div>
-            <span className="font-heros text-head font-bold text-ink">{p.title}</span>
+            <span className="font-heros text-head font-bold text-ink">
+              {p.title}
+            </span>
             <a
               href={p.url}
               target="_blank"
@@ -485,15 +553,23 @@ export function Promjene({ data }: { data: KvartData }) {
 
 // ── FAQ + JSON-LD ────────────────────────────────────────────────────────────
 
-export function buildFaq(data: KvartData): FaqItem[] {
+export function buildFaq(data: KvartData): Array<FaqItem> {
   const top = data.commute.at(0)
   const tram = data.lines.filter((l) => l.mode === "tram").map((l) => l.broj)
   const bus = data.lines.filter((l) => l.mode === "bus").map((l) => l.broj)
   // Only name the modes the kvart actually has — gluing an empty list left a
   // dangling "te autobusi —." (broken Croatian + a forbidden em-dash).
-  const lineParts: string[] = []
-  if (tram.length > 0) lineParts.push(`${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`)
-  if (bus.length > 0) lineParts.push(`${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`)
+  const lineParts: Array<string> = []
+  if (tram.length > 0) {
+    lineParts.push(
+      `${tram.length === 1 ? "tramvaj" : "tramvaji"} ${tram.join(", ")}`
+    )
+  }
+  if (bus.length > 0) {
+    lineParts.push(
+      `${bus.length === 1 ? "autobus" : "autobusi"} ${bus.join(", ")}`
+    )
+  }
   const joined = lineParts.join(" te ")
   const linesAnswer = joined
     ? `${cap(joined)}.`
@@ -519,7 +595,13 @@ export function buildFaq(data: KvartData): FaqItem[] {
   ]
 }
 
-export function KvartJsonLd({ data, faq }: { data: KvartData; faq: FaqItem[] }) {
+export function KvartJsonLd({
+  data,
+  faq,
+}: {
+  data: KvartData
+  faq: Array<FaqItem>
+}) {
   const breadcrumb = breadcrumbJsonLd([
     { name: "Kvartovi", path: "/kvartovi" },
     { name: data.name, path: `/kvartovi/${data.slug}` },
@@ -528,8 +610,16 @@ export function KvartJsonLd({ data, faq }: { data: KvartData; faq: FaqItem[] }) 
     "@context": "https://schema.org",
     "@type": "Place",
     name: data.name,
-    address: { "@type": "PostalAddress", addressLocality: "Zagreb", addressCountry: "HR" },
-    geo: { "@type": "GeoCoordinates", latitude: data.bestPoint.lat, longitude: data.bestPoint.lon },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Zagreb",
+      addressCountry: "HR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: data.bestPoint.lat,
+      longitude: data.bestPoint.lon,
+    },
   }
   return (
     <>

@@ -5,7 +5,14 @@ import { Breadcrumb } from "@/app/statistika/editorial/blocks"
 import { Footer } from "@/app/statistika/editorial/footer"
 import { Hero } from "@/app/statistika/editorial/hero"
 import { JsonLd } from "@/app/statistika/editorial/json-ld"
-import { Body, EditorialShell, Eyebrow, Hook, PageTitle, Section } from "@/app/statistika/editorial/primitives"
+import {
+  Body,
+  EditorialShell,
+  Eyebrow,
+  Hook,
+  PageTitle,
+  Section,
+} from "@/app/statistika/editorial/primitives"
 import type { StopIndexEntry } from "@/lib/generated/StopIndexEntry"
 import { loadStopIndex } from "@/lib/stop-data"
 
@@ -44,22 +51,31 @@ function StopRow({ stop }: { stop: StopIndexEntry }) {
             {stop.name}
           </span>
           {stop.kvart && (
-            <span className="shrink-0 font-mono text-label text-ink-faint">{stop.kvart}</span>
+            <span className="shrink-0 font-mono text-label text-ink-faint">
+              {stop.kvart}
+            </span>
           )}
         </span>
         <span className="shrink-0 font-mono text-label text-ink-muted">
-          {stop.lineCount} {plural(stop.lineCount, "linija", "linije", "linija")}
+          {stop.lineCount}{" "}
+          {plural(stop.lineCount, "linija", "linije", "linija")}
         </span>
       </Link>
     </li>
   )
 }
 
-function LetterBlock({ letter, stops }: { letter: string; stops: StopIndexEntry[] }) {
+function LetterBlock({
+  letter,
+  stops,
+}: {
+  letter: string
+  stops: Array<StopIndexEntry>
+}) {
   return (
     <div id={letterId(letter)} className="scroll-mt-24 pt-8 first:pt-0">
       <div className="flex items-center gap-3">
-        <span className="flex size-7 shrink-0 items-center justify-center border border-hairline-strong font-heros text-head font-bold leading-none text-zg-blue">
+        <span className="flex size-7 shrink-0 items-center justify-center border border-hairline-strong font-heros text-head leading-none font-bold text-zg-blue">
           {letter}
         </span>
         <span className="h-px flex-1 bg-hairline-strong" />
@@ -80,19 +96,24 @@ export default function StaniceIndexPage() {
   const promoted = index.stops.filter((s) => s.lineCount >= MIN_LINES)
 
   // Bucket by first letter, sort within each bucket (Croatian collation).
-  const groups = new Map<string, StopIndexEntry[]>()
+  const groups = new Map<string, Array<StopIndexEntry>>()
   for (const s of promoted) {
     const L = firstLetter(s.name)
     const bucket = groups.get(L)
-    if (bucket) bucket.push(s)
-    else groups.set(L, [s])
+    if (bucket) {
+      bucket.push(s)
+    } else {
+      groups.set(L, [s])
+    }
   }
-  for (const arr of groups.values()) arr.sort((a, b) => a.name.localeCompare(b.name, "hr"))
+  for (const arr of groups.values()) {
+    arr.sort((a, b) => a.name.localeCompare(b.name, "hr"))
+  }
 
   // Bucket order: the Croatian alphabet present here, then any leftovers (digits).
   const present = HR_LETTERS.filter((L) => groups.has(L))
   const extra = [...groups.keys()]
-    .filter((k) => !(HR_LETTERS as readonly string[]).includes(k))
+    .filter((k) => !(HR_LETTERS as ReadonlyArray<string>).includes(k))
     .toSorted()
   const letters = [...present, ...extra]
 
@@ -115,10 +136,12 @@ export default function StaniceIndexPage() {
       <JsonLd data={itemListJsonLd} />
       <Hero active="stanice" />
 
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+      <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
         <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "sve stanice" }]} />
         <PageTitle className="mt-4">Sve stanice ZET-a, od A do Ž.</PageTitle>
-        <Body className="mt-1 text-ink-muted">koje linije staju, razmak u špici i doseg</Body>
+        <Body className="mt-1 text-ink-muted">
+          koje linije staju, razmak u špici i doseg
+        </Body>
         <Body className="mt-5 max-w-[520px]">
           Svaka veća stanica ima svoju stranicu: linije koje ovdje staju, koliko
           često voze i dokle stigneš odavde. Pronađi je po imenu, kvart je

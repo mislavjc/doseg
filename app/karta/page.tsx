@@ -12,7 +12,7 @@ import { pseoMetadata } from "@/lib/pseo-metadata"
  */
 
 type Props = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>
+  searchParams: Promise<Record<string, string | Array<string> | undefined>>
 }
 
 export async function generateMetadata({
@@ -27,7 +27,9 @@ export async function generateMetadata({
   if (lat && lon) {
     ogParams.set("lat", lat)
     ogParams.set("lon", lon)
-    if (time) ogParams.set("time", time)
+    if (time) {
+      ogParams.set("time", time)
+    }
   }
   const ogQuery = ogParams.toString()
   // Static Paper export for the plain map page; satori render only for
@@ -68,7 +70,7 @@ function MapPlaceholder() {
           src="/karta-placeholder-m.png"
           alt=""
           fetchPriority="high"
-          className="absolute left-1/2 top-[50dvh] w-[480px] max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated] md:left-[calc(50vw-380px)] md:w-[1921px]"
+          className="absolute top-[50dvh] left-1/2 w-[480px] max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated] md:left-[calc(50vw-380px)] md:w-[1921px]"
         />
       </picture>
     </div>

@@ -7,7 +7,12 @@ import { Footer } from "@/app/statistika/editorial/footer"
 import { JsonLd, breadcrumbJsonLd } from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
 import { pseoMetadata } from "@/lib/pseo-metadata"
-import { loadStopData, loadStopHeroMeta, loadStopIndex, siblingStops } from "@/lib/stop-data"
+import {
+  loadStopData,
+  loadStopHeroMeta,
+  loadStopIndex,
+  siblingStops,
+} from "@/lib/stop-data"
 
 import { introText, stopTitle } from "../copy"
 import {
@@ -34,7 +39,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const data = loadStopData(slug)
-  if (!data) return {}
+  if (!data) {
+    return {}
+  }
   const title = stopTitle(data)
   const description = introText(data)
   // The v param busts X/Telegram per-URL caches when the feed rolls.
@@ -57,7 +64,9 @@ export default async function StanicaPage({
 }) {
   const { slug } = await params
   const data = loadStopData(slug)
-  if (!data) notFound()
+  if (!data) {
+    notFound()
+  }
   const index = loadStopIndex()
   const faq = buildFaq(data)
   const siblings = siblingStops(data)
@@ -75,7 +84,7 @@ export default async function StanicaPage({
 
       <StopHero data={data} meta={loadStopHeroMeta(slug)} />
 
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+      <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
         <Naslov data={data} />
       </Section>
 

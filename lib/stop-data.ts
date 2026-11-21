@@ -21,8 +21,11 @@ function staniceDir(): string {
 
 export function loadStopIndex(): StopPagesIndex {
   const index = readJsonCached<StopPagesIndex>(join(staniceDir(), "index.json"))
-  if (!index)
-    throw new Error("data/stanice/index.json missing — run the stop-pages generator")
+  if (!index) {
+    throw new Error(
+      "data/stanice/index.json missing — run the stop-pages generator"
+    )
+  }
   return index
 }
 
@@ -33,13 +36,17 @@ export function loadStopIndex(): StopPagesIndex {
 export function serviceWindow(
   data: StopPageData
 ): { first: string; last: string } | null {
-  if (data.firstDeparture === "0:00" && data.lastDeparture === "0:00") return null
+  if (data.firstDeparture === "0:00" && data.lastDeparture === "0:00") {
+    return null
+  }
   return { first: data.firstDeparture, last: data.lastDeparture }
 }
 
 export function loadStopData(slug: string): StopPageData | null {
   // slug comes from the URL — keep it from escaping the data directory.
-  if (!/^[a-z0-9-]+$/u.test(slug)) return null
+  if (!/^[a-z0-9-]+$/u.test(slug)) {
+    return null
+  }
   return readJsonCached<StopPageData>(join(staniceDir(), `${slug}.json`))
 }
 
@@ -60,15 +67,20 @@ export function loadStopHeroMeta(slug: string): LineHeroMeta | null {
  * (build-time-static); empty Map if the index is absent (callers degrade to
  * plain text, never throw).
  */
-let byName: Map<string, StopIndexEntry[]> | null = null
-function stopsByName(): Map<string, StopIndexEntry[]> {
-  if (byName && process.env.NODE_ENV === "production") return byName
-  const m = new Map<string, StopIndexEntry[]>()
+let byName: Map<string, Array<StopIndexEntry>> | null = null
+function stopsByName(): Map<string, Array<StopIndexEntry>> {
+  if (byName && process.env.NODE_ENV === "production") {
+    return byName
+  }
+  const m = new Map<string, Array<StopIndexEntry>>()
   try {
     for (const s of loadStopIndex().stops) {
       const arr = m.get(s.name)
-      if (arr) arr.push(s)
-      else m.set(s.name, [s])
+      if (arr) {
+        arr.push(s)
+      } else {
+        m.set(s.name, [s])
+      }
     }
   } catch {
     // index not present (e.g. stanice data not deployed) — no links, no throw.
@@ -98,7 +110,7 @@ export function siblingStops(self: {
   name: string
   lat: number
   lon: number
-}): SiblingStop[] {
+}): Array<SiblingStop> {
   const cands = stopsByName().get(self.name) ?? []
   return cands
     .filter((c) => c.slug !== self.slug)
@@ -119,18 +131,25 @@ export function siblingStops(self: {
  */
 export function resolveStopSlugs(
   stops: Iterable<{ name: string; lat: number; lon: number }>
-): Record<string, string> {
+) {
   const idx = stopsByName()
   const out: Record<string, string> = {}
   for (const stop of stops) {
     const cands = idx.get(stop.name)
-    if (!cands || cands.length === 0) continue
+    if (!cands || cands.length === 0) {
+      continue
+    }
     if (cands.length === 1) {
       out[stop.name] = cands[0].slug
       continue
     }
     // Duplicate name → nearest by coords (needs coords on both sides).
-    if (!Number.isFinite(stop.lat) || cands.some((c) => !Number.isFinite(c.lat))) continue
+    if (
+      !Number.isFinite(stop.lat) ||
+      cands.some((c) => !Number.isFinite(c.lat))
+    ) {
+      continue
+    }
     let best = cands[0]
     let bestKm = fastDistKm(stop.lat, stop.lon, best.lat, best.lon)
     for (const c of cands.slice(1)) {

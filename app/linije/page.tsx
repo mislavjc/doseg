@@ -38,7 +38,7 @@ function LineGroup({
   topCount,
   moreLabel,
 }: {
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
   topCount: number
   moreLabel: string
 }) {
@@ -103,7 +103,7 @@ export default function LinijeIndexPage() {
       <JsonLd data={lineListJsonLd} />
       <Hero active="linije" />
 
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+      <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
         <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "sve linije" }]} />
         <PageTitle className="mt-4">Sve ZET linije na jednom mjestu.</PageTitle>
         <Body className="mt-1 text-ink-muted">
@@ -111,15 +111,20 @@ export default function LinijeIndexPage() {
         </Body>
         <Body className="mt-5 max-w-[520px]">
           Svaka linija ima svoju stranicu: polasci po satu, popis stanica s
-          presjedanjima i doseg s karte. Podaci dolaze iz službenog GTFS feeda
-          i osvježavaju se automatski.
+          presjedanjima i doseg s karte. Podaci dolaze iz službenog GTFS feeda i
+          osvježavaju se automatski.
         </Body>
       </Section>
 
       <Section width="article" className="pb-0 sm:pb-0">
         <Eyebrow>
           tramvaji · {dayTrams.length}{" "}
-          {plural(dayTrams.length, "dnevna linija", "dnevne linije", "dnevnih linija")}
+          {plural(
+            dayTrams.length,
+            "dnevna linija",
+            "dnevne linije",
+            "dnevnih linija"
+          )}
         </Eyebrow>
         <Hook className="mt-4">Tramvajska mreža.</Hook>
         <LineGroup
@@ -150,7 +155,9 @@ export default function LinijeIndexPage() {
         <Hook className="mt-4">Grad ne spava skroz.</Hook>
         <Body className="mt-3 max-w-[520px] text-ink-muted">
           Noćni tramvaji 31 do 34 preuzimaju mrežu dok dnevne linije spavaju
-          {nightHeadway != null && nightHeadway !== 0
+          {nightHeadway !== null &&
+          nightHeadway !== undefined &&
+          nightHeadway !== 0
             ? `, s polascima otprilike svakih ${Math.round(nightHeadway)} minuta`
             : ""}
           .

@@ -8,11 +8,10 @@ import {
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import { GEOCODE_KIND_META } from "@/lib/poi"
-import {
-  useAddressSearch,
-  type GeocodeSuggestion,
-} from "@/lib/use-address-search"
-import { requestMyLocation, type LatLon } from "./reach-state"
+import { useAddressSearch } from "@/lib/use-address-search"
+import type { GeocodeSuggestion } from "@/lib/use-address-search"
+import { requestMyLocation } from "./reach-state"
+import type { LatLon } from "./reach-state"
 import {
   DestSquare,
   DropdownPanel,
@@ -45,9 +44,11 @@ function isRecent(v: unknown): v is Recent {
   )
 }
 
-function loadRecents(): Recent[] {
+function loadRecents(): Array<Recent> {
   try {
-    const parsed: unknown = JSON.parse(localStorage.getItem(RECENTS_KEY) ?? "[]")
+    const parsed: unknown = JSON.parse(
+      localStorage.getItem(RECENTS_KEY) ?? "[]"
+    )
     return Array.isArray(parsed) ? parsed.filter((v) => isRecent(v)) : []
   } catch {
     return []
@@ -55,7 +56,7 @@ function loadRecents(): Recent[] {
 }
 
 function useRecents() {
-  const [recents, setRecents] = useState<Recent[]>(() =>
+  const [recents, setRecents] = useState<Array<Recent>>(() =>
     typeof window === "undefined" ? [] : loadRecents()
   )
   const add = useCallback((r: Recent) => {
@@ -70,7 +71,7 @@ function useRecents() {
 }
 
 /** Split "Ilica 242, Črnomerec, Zagreb" into title + context line. */
-function splitName(name: string): { title: string; sub: string | null } {
+function splitName(name: string) {
   const [title, ...rest] = name.split(",")
   const sub = rest.join(",").trim()
   return { title: title.trim(), sub: sub || null }
@@ -90,12 +91,18 @@ function ResultRow({
   onPick: (p: LatLon, label: string) => void
 }) {
   const { title, sub } = splitName(s.display_name)
-  const meta = GEOCODE_KIND_META[s.kind ?? "place"]
+  const meta = GEOCODE_KIND_META.get(s.kind ?? "place")
   return (
     <DropdownRow
-      icon={<span className={`size-[9px] rounded-full ${meta.dotClass}`} />}
+      icon={
+        <span className={`size-[9px] rounded-full ${meta?.dotClass ?? ""}`} />
+      }
       title={title}
-      sub={sub ? `${sub.split(",")[0]} · ${meta.label}` : meta.label}
+      sub={
+        sub
+          ? `${sub.split(",")[0]} · ${meta?.label ?? ""}`
+          : (meta?.label ?? "")
+      }
       active={active}
       onPick={() => onPick({ lat: s.lat, lon: s.lon }, s.display_name)}
     />
@@ -113,8 +120,8 @@ function Dropdown({
   onPick,
   onMyLocation,
 }: {
-  results: GeocodeSuggestion[]
-  recents: Recent[]
+  results: Array<GeocodeSuggestion>
+  recents: Array<Recent>
   query: string
   loading: boolean
   showMyLocation: boolean
@@ -130,7 +137,7 @@ function Dropdown({
   const shownResults = results.slice(0, 5)
   const recentsStart = resultsStart + shownResults.length
   return (
-    <DropdownPanel className="origin-top top-full right-0 left-0 mt-1.5 pb-1">
+    <DropdownPanel className="top-full right-0 left-0 mt-1.5 origin-top pb-1">
       {onRemoveOrigin && (
         <DropdownRow
           icon={<IconCrossLarge size={15} className="text-poi-hospital" />}
@@ -190,20 +197,21 @@ function Dropdown({
 
 /** Flat action list in dropdown render order — drives arrow keys + Enter. */
 function dropdownItems(args: {
-  results: GeocodeSuggestion[]
-  recents: Recent[]
+  results: Array<GeocodeSuggestion>
+  recents: Array<Recent>
   showMyLocation: boolean
   onRemoveOrigin: (() => void) | null
   onPick: (p: LatLon, label: string) => void
   onMyLocation: () => void
-}): { run: () => void; isResult: boolean }[] {
-  const items: { run: () => void; isResult: boolean }[] = []
+}): Array<{ run: () => void; isResult: boolean }> {
+  const items: Array<{ run: () => void; isResult: boolean }> = []
   if (args.onRemoveOrigin) {
     const run = args.onRemoveOrigin
     items.push({ run, isResult: false })
   }
-  if (args.showMyLocation)
+  if (args.showMyLocation) {
     items.push({ run: args.onMyLocation, isResult: false })
+  }
   for (const s of args.results.slice(0, 5)) {
     items.push({
       run: () => args.onPick({ lat: s.lat, lon: s.lon }, s.display_name),
@@ -235,7 +243,9 @@ function useDropdownKeyboard(args: {
   const activeIndex = highlight < items.length ? highlight : -1
 
   const onKeyNav = (e: React.KeyboardEvent) => {
-    if (!open || items.length === 0) return
+    if (!open || items.length === 0) {
+      return
+    }
     if (e.key === "ArrowDown") {
       e.preventDefault()
       setHighlight((activeIndex + 1) % items.length)
@@ -299,8 +309,11 @@ function SearchRow({
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={(e) => {
-          if (e.key === "Escape") inputRef.current?.blur()
-          else onKeyNav(e)
+          if (e.key === "Escape") {
+            inputRef.current?.blur()
+          } else {
+            onKeyNav(e)
+          }
         }}
         placeholder={placeholder}
         aria-label={kind === "origin" ? "Polazište" : "Odredište"}
@@ -359,11 +372,16 @@ function useRowWiring(args: {
 
   const pick = useCallback(
     (row: RowKind, p: LatLon, label?: string) => {
-      if (label) addRecent({ label, lat: p.lat, lon: p.lon })
+      if (label) {
+        addRecent({ label, lat: p.lat, lon: p.lon })
+      }
       clear()
       ;(row === "origin" ? originRef : destRef).current?.blur()
-      if (row === "origin") args.onSelectOrigin(p, label)
-      else args.onSelectDest(p, label)
+      if (row === "origin") {
+        args.onSelectOrigin(p, label)
+      } else {
+        args.onSelectDest(p, label)
+      }
     },
     // oxlint-disable-next-line react/exhaustive-deps -- callbacks stable enough
     [addRecent, clear, args.onSelectOrigin, args.onSelectDest]
@@ -470,10 +488,11 @@ export function SearchFields({
     results,
     recents,
     showMyLocation: activeRow === "origin",
-    onRemoveOrigin:
-      activeRow === "origin" && hasOrigin ? onClearOrigin : null,
+    onRemoveOrigin: activeRow === "origin" && hasOrigin ? onClearOrigin : null,
     onPick: (p: LatLon, label: string) => {
-      if (activeRow) pick(activeRow, p, label)
+      if (activeRow) {
+        pick(activeRow, p, label)
+      }
     },
     onMyLocation,
   }
@@ -532,7 +551,9 @@ function FieldRows({
     | "onClearDest"
   >
   activeRow: RowKind | null
-  rowProps: (kind: RowKind) => Omit<
+  rowProps: (
+    kind: RowKind
+  ) => Omit<
     React.ComponentProps<typeof SearchRow>,
     "icon" | "placeholder" | "trailing" | "onKeyNav"
   >
@@ -572,7 +593,7 @@ function FieldRows({
           <SearchRow
             {...rowProps("dest")}
             onKeyNav={onKeyNav}
-            icon={<DestSquare active={destName != null} />}
+            icon={<DestSquare active={destName !== null} />}
             placeholder="Odredište · traži ili klikni kartu"
             trailing={
               hasDest && resting ? (

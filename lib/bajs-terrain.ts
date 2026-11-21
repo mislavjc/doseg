@@ -24,15 +24,19 @@ export type KvartRides = {
 }
 
 export type BajsTerrain = {
-  kvartovi: KvartRides[]
+  kvartovi: Array<KvartRides>
   /** Keyed by kvart name, the shape `TerrainView` wants. */
   values: Record<string, number>
   /** Stations whose coordinates fall outside every kvart polygon. */
   unplaced: number
 }
 
-export function buildBajsTerrain(ranking: BajsRanking | null): BajsTerrain | null {
-  if (!ranking || ranking.all.length === 0) return null
+export function buildBajsTerrain(
+  ranking: BajsRanking | null
+): BajsTerrain | null {
+  if (!ranking || ranking.all.length === 0) {
+    return null
+  }
 
   const totals = new Map<string, { rides: number; stations: number }>()
   let unplaced = 0
@@ -50,7 +54,9 @@ export function buildBajsTerrain(ranking: BajsRanking | null): BajsTerrain | nul
     cur.stations++
     totals.set(name, cur)
   }
-  if (totals.size === 0) return null
+  if (totals.size === 0) {
+    return null
+  }
 
   const cityRides = [...totals.values()].reduce((n, t) => n + t.rides, 0)
   const busiest = Math.max(...[...totals.values()].map((t) => t.rides))

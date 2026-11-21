@@ -60,10 +60,14 @@ export function PoiRow({
           {title}
         </span>
         {detail && (
-          <span className="truncate font-mono text-label text-ink-muted">{detail}</span>
+          <span className="truncate font-mono text-label text-ink-muted">
+            {detail}
+          </span>
         )}
       </div>
-      <span className={cn("shrink-0 font-mono text-ink", valueClassName)}>{value}</span>
+      <span className={cn("shrink-0 font-mono text-ink", valueClassName)}>
+        {value}
+      </span>
       {/* The arrow is what turns a fact row into a navigable one — without it
           this reads identically to the static /kvartovi variant. */}
       {href && (
@@ -74,7 +78,7 @@ export function PoiRow({
       )}
     </>
   )
-  if (href)
+  if (href) {
     return (
       // prefetch=false: several per-row map deep links would each trigger
       // their own speculative /karta fetch the moment they scroll into view.
@@ -82,5 +86,6 @@ export function PoiRow({
         {inner}
       </Link>
     )
+  }
   return <div className={row}>{inner}</div>
 }

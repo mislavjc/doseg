@@ -13,7 +13,7 @@ export function JsonLd({ data }: { data: object }) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data).replaceAll('<', "\\u003c"),
+        __html: JSON.stringify(data).replaceAll("<", String.raw`\u003c`),
       }}
     />
   )
@@ -24,7 +24,7 @@ export function JsonLd({ data }: { data: object }) {
  * the site-relative path, e.g. "/linije" or `/kvartovi/${slug}`. Mirrors the
  * visual <Breadcrumb> so Google can render the trail instead of the bare URL.
  */
-export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
+export function breadcrumbJsonLd(trail: Array<{ name: string; path: string }>) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -46,7 +46,7 @@ export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
  */
 export function lineStopsJsonLd(
   broj: string,
-  stops: { name: string }[],
+  stops: Array<{ name: string }>,
   slugs: Record<string, string>
 ) {
   return {
@@ -57,12 +57,12 @@ export function lineStopsJsonLd(
     numberOfItems: stops.length,
     itemListElement: stops.map((s, i) => {
       const slug = slugs[s.name]
-      return {
+      const listItem = {
         "@type": "ListItem",
         position: i + 1,
         name: s.name,
-        ...(slug ? { item: `${SITE}/stanice/${slug}` } : {}),
       }
+      return slug ? { ...listItem, item: `${SITE}/stanice/${slug}` } : listItem
     }),
   }
 }

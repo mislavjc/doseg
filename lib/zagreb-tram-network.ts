@@ -16,7 +16,7 @@ export interface TramLine {
   number: string
   label: string
   color: string
-  stationIds: string[]
+  stationIds: Array<string>
 }
 
 // ---- Official ZET line-colour groups ----------------------------------------
@@ -41,7 +41,7 @@ const LINE_COLORS = {
 //   Lower-west junction (y=640): Prečko / Knežija / St. dom Radić
 //   South loop (y=720): Savski most / Savski gaj → Zapruđe
 
-const stationList: TramStation[] = [
+const stationList: Array<TramStation> = [
   // ── UPPER CORRIDOR (y=320) ─────────────────────────────────────────────
   { id: "crnomerec", name: "Črnomerec", x: 80, y: 320 },
   { id: "trg-tudjmana", name: "Trg dr. F. Tuđmana", x: 240, y: 320 },
@@ -106,24 +106,30 @@ const stationList: TramStation[] = [
 ]
 
 export const STATIONS: Record<string, TramStation> = Object.fromEntries(
-  stationList.map((s) => [s.id, s]),
+  stationList.map((s) => [s.id, s])
 )
 
-function ids(...list: (keyof typeof STATIONS)[]): string[] {
+function ids(...list: Array<keyof typeof STATIONS>): Array<string> {
   return list
 }
 
 // ---- Line definitions (simplified to key stations) --------------------------
 
-export const TRAM_LINES: TramLine[] = [
+export const TRAM_LINES: Array<TramLine> = [
   {
     number: "1",
     label: "Zapadni kolodvor – Borongaj",
     color: LINE_COLORS.blue,
     stationIds: ids(
-      "zapadni-kolodvor", "trg-tudjmana", "frankopanska",
-      "trg-jelacica", "trg-zrtava-fasizma",
-      "subiceva", "heinzelova-sjever", "svetice", "borongaj",
+      "zapadni-kolodvor",
+      "trg-tudjmana",
+      "frankopanska",
+      "trg-jelacica",
+      "trg-zrtava-fasizma",
+      "subiceva",
+      "heinzelova-sjever",
+      "svetice",
+      "borongaj"
     ),
   },
   {
@@ -131,10 +137,18 @@ export const TRAM_LINES: TramLine[] = [
     label: "Črnomerec – Savišće",
     color: LINE_COLORS.darkGreen,
     stationIds: ids(
-      "crnomerec", "trg-tudjmana", "vodnikova",
-      "botanicki-vrt", "glavni-kolodvor", "branimir-centar",
-      "autobusni-kolodvor", "drziceva",
-      "heinzelova", "getaldic", "zitnjak", "savisce",
+      "crnomerec",
+      "trg-tudjmana",
+      "vodnikova",
+      "botanicki-vrt",
+      "glavni-kolodvor",
+      "branimir-centar",
+      "autobusni-kolodvor",
+      "drziceva",
+      "heinzelova",
+      "getaldic",
+      "zitnjak",
+      "savisce"
     ),
   },
   {
@@ -142,9 +156,15 @@ export const TRAM_LINES: TramLine[] = [
     label: "Ljubljanica – Savišće",
     color: LINE_COLORS.darkGreen,
     stationIds: ids(
-      "ljubljanica", "tehnicki-muzej", "studentski-centar",
-      "zagrepčanka", "drziceva",
-      "heinzelova", "getaldic", "zitnjak", "savisce",
+      "ljubljanica",
+      "tehnicki-muzej",
+      "studentski-centar",
+      "zagrepčanka",
+      "drziceva",
+      "heinzelova",
+      "getaldic",
+      "zitnjak",
+      "savisce"
     ),
   },
   {
@@ -152,11 +172,21 @@ export const TRAM_LINES: TramLine[] = [
     label: "Savski most – Dubec",
     color: LINE_COLORS.darkGreen,
     stationIds: ids(
-      "savski-most", "st-dom-radic", "zagrepčanka",
-      "studentski-centar", "vodnikova", "botanicki-vrt",
-      "glavni-kolodvor", "branimir-centar", "sheraton",
-      "draskovic", "kvaternikov-trg", "park-maksimir",
-      "ravnice", "dubrava", "dubec",
+      "savski-most",
+      "st-dom-radic",
+      "zagrepčanka",
+      "studentski-centar",
+      "vodnikova",
+      "botanicki-vrt",
+      "glavni-kolodvor",
+      "branimir-centar",
+      "sheraton",
+      "draskovic",
+      "kvaternikov-trg",
+      "park-maksimir",
+      "ravnice",
+      "dubrava",
+      "dubec"
     ),
   },
   {
@@ -164,9 +194,15 @@ export const TRAM_LINES: TramLine[] = [
     label: "Prečko – Park Maksimir",
     color: LINE_COLORS.darkGreen,
     stationIds: ids(
-      "precko", "knezija", "st-dom-radic", "zagrepčanka",
-      "drziceva", "autobusni-kolodvor",
-      "subiceva", "kvaternikov-trg", "park-maksimir",
+      "precko",
+      "knezija",
+      "st-dom-radic",
+      "zagrepčanka",
+      "drziceva",
+      "autobusni-kolodvor",
+      "subiceva",
+      "kvaternikov-trg",
+      "park-maksimir"
     ),
   },
   {
@@ -174,11 +210,20 @@ export const TRAM_LINES: TramLine[] = [
     label: "Črnomerec – Sopot",
     color: LINE_COLORS.yellow,
     stationIds: ids(
-      "crnomerec", "trg-tudjmana", "frankopanska",
-      "trg-jelacica", "zrinjevac", "glavni-kolodvor",
-      "branimir-centar", "autobusni-kolodvor", "drziceva",
-      "drziceva-petlja", "most-mladosti", "zaprudje",
-      "sredisce", "sopot",
+      "crnomerec",
+      "trg-tudjmana",
+      "frankopanska",
+      "trg-jelacica",
+      "zrinjevac",
+      "glavni-kolodvor",
+      "branimir-centar",
+      "autobusni-kolodvor",
+      "drziceva",
+      "drziceva-petlja",
+      "most-mladosti",
+      "zaprudje",
+      "sredisce",
+      "sopot"
     ),
   },
   {
@@ -186,12 +231,22 @@ export const TRAM_LINES: TramLine[] = [
     label: "Savski most – Dubrava",
     color: LINE_COLORS.yellow,
     stationIds: ids(
-      "savski-most", "st-dom-radic", "savski-gaj",
-      "trnsko", "sopot", "sredisce",
-      "zaprudje", "most-mladosti", "drziceva-petlja",
-      "drziceva", "autobusni-kolodvor",
-      "subiceva", "kvaternikov-trg", "park-maksimir",
-      "ravnice", "dubrava",
+      "savski-most",
+      "st-dom-radic",
+      "savski-gaj",
+      "trnsko",
+      "sopot",
+      "sredisce",
+      "zaprudje",
+      "most-mladosti",
+      "drziceva-petlja",
+      "drziceva",
+      "autobusni-kolodvor",
+      "subiceva",
+      "kvaternikov-trg",
+      "park-maksimir",
+      "ravnice",
+      "dubrava"
     ),
   },
   {
@@ -199,9 +254,16 @@ export const TRAM_LINES: TramLine[] = [
     label: "Mihaljevac – Zapruđe",
     color: LINE_COLORS.pink,
     stationIds: ids(
-      "mihaljevac", "gupceva-zvijezda", "draskovic",
-      "sheraton", "branimir-centar", "autobusni-kolodvor",
-      "drziceva", "drziceva-petlja", "most-mladosti", "zaprudje",
+      "mihaljevac",
+      "gupceva-zvijezda",
+      "draskovic",
+      "sheraton",
+      "branimir-centar",
+      "autobusni-kolodvor",
+      "drziceva",
+      "drziceva-petlja",
+      "most-mladosti",
+      "zaprudje"
     ),
   },
   {
@@ -209,10 +271,18 @@ export const TRAM_LINES: TramLine[] = [
     label: "Ljubljanica – Borongaj",
     color: LINE_COLORS.pink,
     stationIds: ids(
-      "ljubljanica", "tehnicki-muzej",
-      "vodnikova", "botanicki-vrt", "glavni-kolodvor",
-      "branimir-centar", "sheraton", "trg-zrtava-fasizma",
-      "subiceva", "heinzelova-sjever", "svetice", "borongaj",
+      "ljubljanica",
+      "tehnicki-muzej",
+      "vodnikova",
+      "botanicki-vrt",
+      "glavni-kolodvor",
+      "branimir-centar",
+      "sheraton",
+      "trg-zrtava-fasizma",
+      "subiceva",
+      "heinzelova-sjever",
+      "svetice",
+      "borongaj"
     ),
   },
   {
@@ -220,9 +290,16 @@ export const TRAM_LINES: TramLine[] = [
     label: "Črnomerec – Dubec",
     color: LINE_COLORS.purple,
     stationIds: ids(
-      "crnomerec", "trg-tudjmana", "frankopanska",
-      "trg-jelacica", "draskovic", "kvaternikov-trg",
-      "park-maksimir", "ravnice", "dubrava", "dubec",
+      "crnomerec",
+      "trg-tudjmana",
+      "frankopanska",
+      "trg-jelacica",
+      "draskovic",
+      "kvaternikov-trg",
+      "park-maksimir",
+      "ravnice",
+      "dubrava",
+      "dubec"
     ),
   },
   {
@@ -230,10 +307,16 @@ export const TRAM_LINES: TramLine[] = [
     label: "Ljubljanica – Dubrava",
     color: LINE_COLORS.purple,
     stationIds: ids(
-      "ljubljanica", "tehnicki-muzej",
-      "vodnikova", "frankopanska",
-      "trg-jelacica", "draskovic", "kvaternikov-trg",
-      "park-maksimir", "ravnice", "dubrava",
+      "ljubljanica",
+      "tehnicki-muzej",
+      "vodnikova",
+      "frankopanska",
+      "trg-jelacica",
+      "draskovic",
+      "kvaternikov-trg",
+      "park-maksimir",
+      "ravnice",
+      "dubrava"
     ),
   },
   {
@@ -241,11 +324,21 @@ export const TRAM_LINES: TramLine[] = [
     label: "Žitnjak – Kvaternikov trg",
     color: LINE_COLORS.green,
     stationIds: ids(
-      "zitnjak", "getaldic", "heinzelova", "drziceva",
-      "studentski-centar", "vodnikova", "frankopanska",
-      "trg-jelacica", "zrinjevac", "glavni-kolodvor",
-      "branimir-centar", "sheraton", "trg-zrtava-fasizma",
-      "subiceva", "kvaternikov-trg",
+      "zitnjak",
+      "getaldic",
+      "heinzelova",
+      "drziceva",
+      "studentski-centar",
+      "vodnikova",
+      "frankopanska",
+      "trg-jelacica",
+      "zrinjevac",
+      "glavni-kolodvor",
+      "branimir-centar",
+      "sheraton",
+      "trg-zrtava-fasizma",
+      "subiceva",
+      "kvaternikov-trg"
     ),
   },
   {
@@ -253,11 +346,20 @@ export const TRAM_LINES: TramLine[] = [
     label: "Mihaljevac – Zapruđe",
     color: LINE_COLORS.yellow,
     stationIds: ids(
-      "mihaljevac", "gupceva-zvijezda", "draskovic",
-      "trg-jelacica", "frankopanska", "vodnikova",
-      "studentski-centar", "zagrepčanka",
-      "st-dom-radic", "savski-gaj", "trnsko",
-      "sopot", "sredisce", "zaprudje",
+      "mihaljevac",
+      "gupceva-zvijezda",
+      "draskovic",
+      "trg-jelacica",
+      "frankopanska",
+      "vodnikova",
+      "studentski-centar",
+      "zagrepčanka",
+      "st-dom-radic",
+      "savski-gaj",
+      "trnsko",
+      "sopot",
+      "sredisce",
+      "zaprudje"
     ),
   },
   {
@@ -271,17 +373,26 @@ export const TRAM_LINES: TramLine[] = [
     label: "Prečko – Borongaj",
     color: LINE_COLORS.darkGreen,
     stationIds: ids(
-      "precko", "knezija", "st-dom-radic", "zagrepčanka",
-      "studentski-centar", "vodnikova", "frankopanska",
-      "trg-jelacica", "trg-zrtava-fasizma",
-      "subiceva", "heinzelova-sjever", "svetice", "borongaj",
+      "precko",
+      "knezija",
+      "st-dom-radic",
+      "zagrepčanka",
+      "studentski-centar",
+      "vodnikova",
+      "frankopanska",
+      "trg-jelacica",
+      "trg-zrtava-fasizma",
+      "subiceva",
+      "heinzelova-sjever",
+      "svetice",
+      "borongaj"
     ),
   },
 ]
 
 // ---- Derived helpers --------------------------------------------------------
 
-export function linesAtStation(stationId: string): TramLine[] {
+export function linesAtStation(stationId: string): Array<TramLine> {
   return TRAM_LINES.filter((l) => l.stationIds.includes(stationId))
 }
 
@@ -297,15 +408,18 @@ export const LINE_W = 4
 export const SPACING = LINE_W + 1.5
 
 export interface EdgeInfo {
-  lines: string[]
+  lines: Array<string>
   px: number
   py: number
 }
 
 /** Canonical edge key: spatially ordered so perpendicular offset is consistent. */
 export function edgeKey(a: string, b: string): string {
-  const sA = STATIONS[a], sB = STATIONS[b]
-  if (sA.x < sB.x || (sA.x === sB.x && sA.y < sB.y)) return `${a}|${b}`
+  const sA = STATIONS[a],
+    sB = STATIONS[b]
+  if (sA.x < sB.x || (sA.x === sB.x && sA.y < sB.y)) {
+    return `${a}|${b}`
+  }
   return `${b}|${a}`
 }
 
@@ -313,18 +427,27 @@ export const EDGES: ReadonlyMap<string, EdgeInfo> = (() => {
   const m = new Map<string, EdgeInfo>()
   for (const line of TRAM_LINES) {
     for (let i = 0; i < line.stationIds.length - 1; i++) {
-      const a = line.stationIds[i], b = line.stationIds[i + 1]
+      const a = line.stationIds[i],
+        b = line.stationIds[i + 1]
       const key = edgeKey(a, b)
-      if (!m.has(key)) {
+      let e = m.get(key)
+      if (!e) {
         const [fstId, sndId] = key.split("|")
-        const sA = STATIONS[fstId], sB = STATIONS[sndId]
-        const dx = sB.x - sA.x, dy = sB.y - sA.y, len = Math.hypot(dx, dy)
-        m.set(key, { lines: [], px: -dy / len, py: dx / len })
+        const sA = STATIONS[fstId],
+          sB = STATIONS[sndId]
+        const dx = sB.x - sA.x,
+          dy = sB.y - sA.y,
+          len = Math.hypot(dx, dy)
+        e = { lines: [], px: -dy / len, py: dx / len }
+        m.set(key, e)
       }
-      const e = m.get(key)!
-      if (!e.lines.includes(line.number)) e.lines.push(line.number)
+      if (!e.lines.includes(line.number)) {
+        e.lines.push(line.number)
+      }
     }
   }
-  for (const e of m.values()) e.lines.sort((a, b) => +a - +b)
+  for (const e of m.values()) {
+    e.lines.sort((a, b) => +a - +b)
+  }
   return m
 })()

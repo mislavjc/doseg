@@ -96,13 +96,16 @@ describe("numberWord()", () => {
   it("10 → 'deset'", () => expect(numberWord(10)).toBe("deset"))
   it("20 → 'dvadeset'", () => expect(numberWord(20)).toBe("dvadeset"))
   it("21 → '21' (beyond word list)", () => expect(numberWord(21)).toBe("21"))
-  it("100 → '100' (beyond word list)", () => expect(numberWord(100)).toBe("100"))
+  it("100 → '100' (beyond word list)", () =>
+    expect(numberWord(100)).toBe("100"))
 })
 
 describe("numberWordF()", () => {
   it("0 → 'nula'", () => expect(numberWordF(0)).toBe("nula"))
-  it("1 → 'jedna' (feminine differs)", () => expect(numberWordF(1)).toBe("jedna"))
-  it("2 → 'dvije' (feminine differs)", () => expect(numberWordF(2)).toBe("dvije"))
+  it("1 → 'jedna' (feminine differs)", () =>
+    expect(numberWordF(1)).toBe("jedna"))
+  it("2 → 'dvije' (feminine differs)", () =>
+    expect(numberWordF(2)).toBe("dvije"))
   it("3 → 'tri' (same as masculine)", () => expect(numberWordF(3)).toBe("tri"))
   it("10 → 'deset'", () => expect(numberWordF(10)).toBe("deset"))
   it("21 → '21' (beyond word list)", () => expect(numberWordF(21)).toBe("21"))
@@ -130,15 +133,15 @@ describe("clockTime()", () => {
 
 type MinimalLinePageData = {
   timetable: {
-    radniDan: Array<{ hour: number; minutes: number[] }>[]
-    subota: Array<{ hour: number; minutes: number[] }>[]
-    nedjelja: Array<{ hour: number; minutes: number[] }>[]
+    radniDan: Array<Array<{ hour: number; minutes: Array<number> }>>
+    subota: Array<Array<{ hour: number; minutes: Array<number> }>>
+    nedjelja: Array<Array<{ hour: number; minutes: Array<number> }>>
   }
   // peakRange only reads timetable.radniDan[0]
 }
 
 function makeLinePageData(
-  radniDanDir0: Array<{ hour: number; minutes: number[] }>
+  radniDanDir0: Array<{ hour: number; minutes: Array<number> }>
 ): MinimalLinePageData {
   return {
     timetable: {
@@ -152,9 +155,7 @@ function makeLinePageData(
 describe("peakRange()", () => {
   it("returns null when fewer than 4 departures in peak window", () => {
     // 3 departures in 06:30–09:30 window
-    const data = makeLinePageData([
-      { hour: 7, minutes: [0, 20, 40] },
-    ])
+    const data = makeLinePageData([{ hour: 7, minutes: [0, 20, 40] }])
     // @ts-expect-error partial type for testing
     expect(peakRange(data)).toBeNull()
   })
@@ -253,7 +254,12 @@ describe("serviceSpan()", () => {
     const data = {
       timetable: {
         radniDan: [],
-        subota: [[{ hour: 8, minutes: [5] }, { hour: 25, minutes: [10] }]],
+        subota: [
+          [
+            { hour: 8, minutes: [5] },
+            { hour: 25, minutes: [10] },
+          ],
+        ],
         nedjelja: [],
       },
       stats: { firstDeparture: "00:00", lastDeparture: "00:00" },

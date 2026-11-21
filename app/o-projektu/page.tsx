@@ -69,16 +69,15 @@ export default function AboutPage() {
 
         <div className="flex flex-col gap-[22px] pt-11 text-body">
           <p>
-            Doseg mjeri koliko je grada stvarno dostupno javnim prijevozom.
-            Klik na kartu vraća doseg za 15 ili 30 minuta, prema stvarnom
-            voznom redu i s kašnjenjima koja se osvježavaju svakih trideset
-            sekundi.
+            Doseg mjeri koliko je grada stvarno dostupno javnim prijevozom. Klik
+            na kartu vraća doseg za 15 ili 30 minuta, prema stvarnom voznom redu
+            i s kašnjenjima koja se osvježavaju svakih trideset sekundi.
           </p>
           <p>
-            Izračun je Dijkstrin algoritam: prvo mrežom tramvaja i buseva,
-            zatim pješice, kroz 422 tisuće čvorova OpenStreetMapa. Težak dio
-            računa Rust servis, rute se sklapaju u pregledniku, a odgovori se
-            cachiraju na mreži od stotinjak metara, pa karta reagira odmah.
+            Izračun je Dijkstrin algoritam: prvo mrežom tramvaja i buseva, zatim
+            pješice, kroz 422 tisuće čvorova OpenStreetMapa. Težak dio računa
+            Rust servis, rute se sklapaju u pregledniku, a odgovori se cachiraju
+            na mreži od stotinjak metara, pa karta reagira odmah.
           </p>
           <p>
             Stranica ne koristi kolačiće ni praćenje; upiti ostaju između

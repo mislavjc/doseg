@@ -1,11 +1,19 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { Provenijencija, SectionHeader } from "@/app/statistika/editorial/blocks"
+import {
+  Provenijencija,
+  SectionHeader,
+} from "@/app/statistika/editorial/blocks"
 import { CestaPitanja, faqJsonLd } from "@/app/statistika/editorial/faq"
 import { Footer } from "@/app/statistika/editorial/footer"
-import { JsonLd, breadcrumbJsonLd, lineStopsJsonLd } from "@/app/statistika/editorial/json-ld"
+import {
+  JsonLd,
+  breadcrumbJsonLd,
+  lineStopsJsonLd,
+} from "@/app/statistika/editorial/json-ld"
 import { EditorialShell, Section } from "@/app/statistika/editorial/primitives"
+import type { LinePageData } from "@/lib/generated/LinePageData"
 import { loadHeroMeta, loadLineData, loadLineIndex } from "@/lib/line-data"
 import { pseoMetadata } from "@/lib/pseo-metadata"
 import { resolveStopSlugs } from "@/lib/stop-data"
@@ -43,7 +51,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { broj } = await params
   const data = loadLineData(broj)
-  if (!data) return {}
+  if (!data) {
+    return {}
+  }
   // Title keywords follow real GSC demand: trams are searched "tramvaj {N}",
   // buses "zet {N}" — so each mode leads with its own pattern. Route endpoints
   // live in the description/page body, not the title (keeps it under ~60 chars
@@ -66,44 +76,16 @@ export async function generateMetadata({
 
 export const ensureStatic = "navigation"
 
-export default async function LinijaPage({
-  params,
+function StopsSection({
+  data,
+  stopSlugs,
 }: {
-  params: Promise<{ broj: string }>
+  data: LinePageData
+  stopSlugs: Record<string, string>
 }) {
-  const { broj } = await params
-  const data = loadLineData(broj)
-  if (!data) notFound()
-  const index = loadLineIndex()
   const stops = data.directions[0].stops.length
-  const status = serviceStatus(data)
-  const faq = buildFaq(data)
-  const frek = frekvencijaCopy(data)
-  const voznickiNote = vozniRedNote(data)
-  // Link each stop to its own page; duplicate names resolve by nearest coords.
-  const stopSlugs = resolveStopSlugs(data.directions.flatMap((d) => d.stops))
-
   return (
-    <EditorialShell>
-      <JsonLd data={faqJsonLd(faq)} />
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Linije", path: "/linije" },
-          { name: `Linija ${data.broj}`, path: `/linije/${data.broj}` },
-        ])}
-      />
-      <JsonLd data={lineStopsJsonLd(data.broj, data.directions[0].stops, stopSlugs)} />
-
-      <LineHero data={data} meta={loadHeroMeta(broj)} />
-
-      <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
-        <Naslov data={data} />
-      </Section>
-
-      <Section width="article" className="pb-0 sm:pb-0">
-        <Cinjenice data={data} />
-      </Section>
-
+    <>
       <Section id="stanice" width="article" className="pb-0 sm:pb-0">
         <SectionHeader
           eyebrow="stanice"
@@ -120,6 +102,52 @@ export default async function LinijaPage({
           stopSlugs={stopSlugs}
         />
       </Section>
+    </>
+  )
+}
+
+export default async function LinijaPage({
+  params,
+}: {
+  params: Promise<{ broj: string }>
+}) {
+  const { broj } = await params
+  const data = loadLineData(broj)
+  if (!data) {
+    notFound()
+  }
+  const index = loadLineIndex()
+  const status = serviceStatus(data)
+  const faq = buildFaq(data)
+  const frek = frekvencijaCopy(data)
+  const voznickiNote = vozniRedNote(data)
+  // Link each stop to its own page; duplicate names resolve by nearest coords.
+  const stopSlugs = resolveStopSlugs(data.directions.flatMap((d) => d.stops))
+
+  return (
+    <EditorialShell>
+      <JsonLd data={faqJsonLd(faq)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Linije", path: "/linije" },
+          { name: `Linija ${data.broj}`, path: `/linije/${data.broj}` },
+        ])}
+      />
+      <JsonLd
+        data={lineStopsJsonLd(data.broj, data.directions[0].stops, stopSlugs)}
+      />
+
+      <LineHero data={data} meta={loadHeroMeta(broj)} />
+
+      <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
+        <Naslov data={data} />
+      </Section>
+
+      <Section width="article" className="pb-0 sm:pb-0">
+        <Cinjenice data={data} />
+      </Section>
+
+      <StopsSection data={data} stopSlugs={stopSlugs} />
 
       <Section width="article" className="pb-0 sm:pb-0">
         <DosegLinije data={data} />

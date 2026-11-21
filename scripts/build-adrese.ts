@@ -2,7 +2,8 @@ import { readdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 import type { Addr } from "../lib/adresa"
-import { pointInRing, type Ring } from "../lib/geo"
+import { pointInRing } from "../lib/geo"
+import type { Ring } from "../lib/geo"
 import { readJson } from "./lib/json"
 
 /**
@@ -36,19 +37,26 @@ interface DguFeature {
 const pagesDir = process.argv[2] ?? "/tmp/dgu-addr"
 const root = join(import.meta.dirname, "..")
 
-const { boundary } = readJson<{ boundary: Ring }>(join(root, "data/home-hero.json"))
+const { boundary } = readJson<{ boundary: Ring }>(
+  join(root, "data/home-hero.json")
+)
 
 const round = (v: number) => Math.round(v * 1e5) / 1e5
 
 // street|naselje → housenumber → Addr. Street names repeat across naselja
 // inside Grad Zagreb (Zagreb, Sesvete, Lučko…) as DISTINCT streets — never
 // merge their numbers.
-const streets = new Map<string, { name: string; naselje: string; byNumber: Map<string, Addr> }>()
+const streets = new Map<
+  string,
+  { name: string; naselje: string; byNumber: Map<string, Addr> }
+>()
 let total = 0
 let inCity = 0
 
-for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).toSorted()) {
-  const page = readJson<{ features: DguFeature[] }>(join(pagesDir, file))
+for (const file of readdirSync(pagesDir)
+  .filter((f) => f.endsWith(".json"))
+  .toSorted()) {
+  const page = readJson<{ features: Array<DguFeature> }>(join(pagesDir, file))
   for (const f of page.features) {
     total++
     const p = f.properties
@@ -56,9 +64,13 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).toSo
     // Rural naselja address by settlement name alone — use it as the street.
     const name = p.ulica ?? p.naselje
     const coords = f.geometry?.coordinates
-    if (!name || !hn || !coords) continue
+    if (!name || !hn || !coords) {
+      continue
+    }
     const [lon, lat] = coords
-    if (!pointInRing(lon, lat, boundary)) continue
+    if (!pointInRing(lon, lat, boundary)) {
+      continue
+    }
     inCity++
     const key = `${name}|${p.naselje ?? ""}`
     let entry = streets.get(key)
@@ -67,7 +79,9 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".json")).toSo
       streets.set(key, entry)
     }
     // Duplicate street+number (multiple entrances etc.) — first one wins.
-    if (!entry.byNumber.has(hn)) entry.byNumber.set(hn, [hn, round(lat), round(lon)])
+    if (!entry.byNumber.has(hn)) {
+      entry.byNumber.set(hn, [hn, round(lat), round(lon)])
+    }
   }
 }
 

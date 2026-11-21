@@ -5,4 +5,4 @@ export type LineDirection = { headsign: string, stops: Array<LineStop>,
 /**
  * [lon, lat] pairs, Douglas–Peucker simplified
  */
-shape: [number, number][], };
+shape: Array<[number, number]>, };

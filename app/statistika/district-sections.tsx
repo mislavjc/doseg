@@ -1,5 +1,13 @@
-import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
-import type { DistrictEmblems, computeBaseInsights, computeBajsInsights, computeBands } from "./stat-data"
+import type {
+  District as DistrictScore,
+  DistrictScoresOutput as ScoreData,
+} from "@/lib/generated"
+import type {
+  DistrictEmblems,
+  computeBaseInsights,
+  computeBajsInsights,
+  computeBands,
+} from "./stat-data"
 import { StatModuleTitle } from "./stat-typography"
 import { DistrictCard } from "./district-card"
 import { plural } from "@/app/linije/copy"
@@ -46,7 +54,7 @@ export function DistrictBandsSection({
 function BandHeader({
   band,
 }: {
-  band: { label: string; color: string; districts: DistrictScore[] }
+  band: { label: string; color: string; districts: Array<DistrictScore> }
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -157,7 +165,8 @@ function MethodologyGridItems({
       <MethodologyItem color="purple" title="Vozni red">
         Prosjek od{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {data.departureCount} {plural(data.departureCount, "polazak", "polaska", "polazaka")}
+          {data.departureCount}{" "}
+          {plural(data.departureCount, "polazak", "polaska", "polazaka")}
         </strong>{" "}
         u prozoru{" "}
         <strong className="font-medium text-slate-900 dark:text-slate-100">
@@ -176,24 +185,25 @@ function MethodologyGridItems({
   )
 }
 
+const METHODOLOGY_DOT_COLORS = {
+  emerald: "#10b981",
+  cyan: "#06b6d4",
+  blue: "#3b82f6",
+  purple: "#a855f7",
+  slate: "#94a3b8",
+  amber: "#f59e0b",
+}
+
 function MethodologyItem({
   color,
   title,
   children,
 }: {
-  color: string
+  color: keyof typeof METHODOLOGY_DOT_COLORS
   title: string
   children: React.ReactNode
 }) {
-  const colorHexes: Record<string, string> = {
-    emerald: "#10b981",
-    cyan: "#06b6d4",
-    blue: "#3b82f6",
-    purple: "#a855f7",
-    slate: "#94a3b8",
-    amber: "#f59e0b",
-  }
-  const colorHex = colorHexes[color] ?? "#94a3b8"
+  const colorHex = METHODOLOGY_DOT_COLORS[color]
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
       <span className="flex items-center gap-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
@@ -203,18 +213,12 @@ function MethodologyItem({
         />
         {title}
       </span>
-      <p className="text-body text-slate-700 dark:text-slate-300">
-        {children}
-      </p>
+      <p className="text-body text-slate-700 dark:text-slate-300">{children}</p>
     </div>
   )
 }
 
-function MethodologyFooter({
-  base,
-}: {
-  base: BaseInsights
-}) {
+function MethodologyFooter({ base }: { base: BaseInsights }) {
   return (
     <div className="mt-12 flex flex-col gap-6 border-t border-slate-100 pt-10 dark:border-white/10">
       <p className="font-mono text-label text-slate-500 dark:text-slate-400">
@@ -253,7 +257,7 @@ function MethodologyDownload() {
         </svg>
         Preuzmi podatke (JSON)
       </a>
-      <span className="max-w-xs sm:max-w-md text-body text-slate-500 dark:text-slate-400">
+      <span className="max-w-xs text-body text-slate-500 sm:max-w-md dark:text-slate-400">
         Svi izračunati podaci po kvartovima - rezultati, populacija, pustinjski
         indeks, BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu.
         Slobodno za korištenje uz navođenje izvora.
@@ -261,4 +265,3 @@ function MethodologyDownload() {
     </div>
   )
 }
-

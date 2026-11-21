@@ -30,7 +30,7 @@ const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
 // --- Helpers ---
 
 function computeBarLayout(
-  points: UsagePoint[],
+  points: Array<UsagePoint>,
   xScale: ReturnType<typeof scaleTime<number>>
 ) {
   const gap =
@@ -49,7 +49,7 @@ function HitAreas({
   gap,
   onHover,
 }: {
-  points: UsagePoint[]
+  points: Array<UsagePoint>
   xScale: ReturnType<typeof scaleTime<number>>
   gap: number
   onHover: (p: UsagePoint | null) => void
@@ -100,19 +100,40 @@ function SvgTooltip({
           width={width}
           height={height}
           rx={8}
-          className="fill-white dark:fill-[#262626] stroke-slate-200 dark:stroke-white/10"
+          className="fill-white stroke-slate-200 dark:fill-[#262626] dark:stroke-white/10"
           strokeWidth={1}
-          style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.05))" }}
+          style={{
+            filter:
+              "drop-shadow(0 4px 12px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.05))",
+          }}
         />
-        <text x={14} y={22} fontSize={11} fontWeight={500} className="fill-slate-400 dark:fill-slate-500">
+        <text
+          x={14}
+          y={22}
+          fontSize={11}
+          fontWeight={500}
+          className="fill-slate-400 dark:fill-slate-500"
+        >
           {title}
         </text>
         <circle cx={18} cy={37} r={3.5} fill={color} />
-        <text x={28} y={41} fontSize={14} fontWeight={600} className="fill-slate-900 dark:fill-slate-100">
+        <text
+          x={28}
+          y={41}
+          fontSize={14}
+          fontWeight={600}
+          className="fill-slate-900 dark:fill-slate-100"
+        >
           {value}
         </text>
         {subtitle && (
-          <text x={14} y={58} fontSize={11} fontWeight={400} className="fill-slate-500 dark:fill-slate-400">
+          <text
+            x={14}
+            y={58}
+            fontSize={11}
+            fontWeight={400}
+            className="fill-slate-500 dark:fill-slate-400"
+          >
             {subtitle}
           </text>
         )}
@@ -129,11 +150,13 @@ function fmtTime(ts: number): string {
 // --- Data fetching ---
 
 function useBajsUsageHistory() {
-  const { data, error, isLoading } = useSWR<UsagePoint[], Error>(
+  const { data, error, isLoading } = useSWR<Array<UsagePoint>, Error>(
     "bajs-usage-history",
     () =>
       fetch("/api/rt/bajs-usage-history").then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        if (!r.ok) {
+          throw new Error(`HTTP ${r.status}`)
+        }
         return r.json()
       }),
     { refreshInterval: 60_000, keepPreviousData: true }
@@ -147,7 +170,7 @@ function useBajsUsageHistory() {
 
 // --- Scales ---
 
-function useUsageScales(points: UsagePoint[]) {
+function useUsageScales(points: Array<UsagePoint>) {
   return useMemo(() => {
     const tsMin = points.reduce((m, p) => Math.min(m, p.ts), Infinity)
     const tsMax = points.reduce((m, p) => Math.max(m, p.ts), -Infinity)
@@ -179,16 +202,22 @@ function useUsageScales(points: UsagePoint[]) {
 export default function BajsUsageChart() {
   const { points, error, isLoading } = useBajsUsageHistory()
 
-  if (error) return <ErrorState message={error} />
-  if (isLoading || !points) return <LoadingState />
-  if (points.length === 0) return <EmptyState />
+  if (error) {
+    return <ErrorState message={error} />
+  }
+  if (isLoading || !points) {
+    return <LoadingState />
+  }
+  if (points.length === 0) {
+    return <EmptyState />
+  }
 
   return <ChartCard points={points} />
 }
 
 // --- Chart card ---
 
-function ChartCard({ points }: { points: UsagePoint[] }) {
+function ChartCard({ points }: { points: Array<UsagePoint> }) {
   const [hovered, setHovered] = useState<UsagePoint | null>(null)
   const { xScale, yScale, xTicks, yTicks, current, peak, avg } =
     useUsageScales(points)
@@ -213,18 +242,26 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
             className="dark:stroke-slate-700"
           />
           {yTicks[0] <= 0 && (
-            <line x1={0} y1={yScale(0) ?? 0} x2={INNER_WIDTH} y2={yScale(0) ?? 0} stroke="#94a3b8" strokeWidth={1} strokeOpacity={0.2} />
+            <line
+              x1={0}
+              y1={yScale(0) ?? 0}
+              x2={INNER_WIDTH}
+              y2={yScale(0) ?? 0}
+              stroke="#94a3b8"
+              strokeWidth={1}
+              strokeOpacity={0.2}
+            />
           )}
-          
+
           {points.map((p) => {
             const xPos = xScale(new Date(p.ts * 1000)) ?? 0
             const yPos = yScale(p.bikesInUse) ?? 0
             const barHeight = Math.max(INNER_HEIGHT - yPos, 4)
             const isHovered = hovered === p
             const opacity = isHovered ? 1 : 0.85
-            
+
             const color = p.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"
-            
+
             return (
               <BarRounded
                 key={p.ts}
@@ -240,19 +277,24 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
               />
             )
           })}
-          
-          <HitAreas points={points} xScale={xScale} gap={gap} onHover={setHovered} />
-          
+
+          <HitAreas
+            points={points}
+            xScale={xScale}
+            gap={gap}
+            onHover={setHovered}
+          />
+
           <ChartXLabels ticks={xTicks} xScale={xScale} />
           <ChartYLabels ticks={yTicks} yScale={yScale} />
-          
+
           {hovered && (
-            <SvgTooltip 
-              x={xScale(new Date(hovered.ts * 1000)) ?? 0} 
-              y={(yScale(hovered.bikesInUse) ?? 0) - 10} 
-              title={fmtTime(hovered.ts)} 
-              value={`${hovered.bikesInUse} ${plural(hovered.bikesInUse, "bicikl", "bicikla", "bicikala")}`} 
-              subtitle={`${hovered.available} dostupno na stanicama`} 
+            <SvgTooltip
+              x={xScale(new Date(hovered.ts * 1000)) ?? 0}
+              y={(yScale(hovered.bikesInUse) ?? 0) - 10}
+              title={fmtTime(hovered.ts)}
+              value={`${hovered.bikesInUse} ${plural(hovered.bikesInUse, "bicikl", "bicikla", "bicikala")}`}
+              subtitle={`${hovered.available} dostupno na stanicama`}
               color={hovered.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"}
             />
           )}
@@ -264,42 +306,34 @@ function ChartCard({ points }: { points: UsagePoint[] }) {
 
 // --- Header ---
 
-function ChartHeader({
-  current,
-  peak,
-}: {
-  current: number
-  peak: number
-}) {
+function ChartHeader({ current, peak }: { current: number; peak: number }) {
   return (
-    <div className="flex flex-col mb-8">
-      <h3 className="mb-6 font-sans text-head font-bold text-slate-900 dark:text-slate-100">Trend korištenja</h3>
-      
+    <div className="mb-8 flex flex-col">
+      <h3 className="mb-6 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+        Trend korištenja
+      </h3>
+
       <div className="flex flex-wrap gap-8 sm:gap-12">
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
-            <span className="w-1 h-3 rounded-full bg-[#3b82f6]"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
+            <span className="h-3 w-1 rounded-full bg-[#3b82f6]"></span>
             Trenutno
           </div>
-          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
+          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
             {fmtHR(current)}
           </span>
-          <span className="text-body text-slate-500">
-            u uporabi
-          </span>
+          <span className="text-body text-slate-500">u uporabi</span>
         </div>
-        
+
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 text-body text-slate-500 mb-1">
-            <span className="w-1 h-3 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
+            <span className="h-3 w-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
             Maksimum
           </div>
-          <span className="font-sans text-head font-bold text-slate-900 dark:text-slate-100 mb-1">
+          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
             {fmtHR(peak)}
           </span>
-          <span className="text-body text-slate-500">
-            najviše istovremeno
-          </span>
+          <span className="text-body text-slate-500">najviše istovremeno</span>
         </div>
       </div>
     </div>
@@ -335,7 +369,7 @@ function ChartXLabels({
   ticks,
   xScale,
 }: {
-  ticks: Date[]
+  ticks: Array<Date>
   xScale: ReturnType<typeof scaleTime<number>>
 }) {
   // Skip labels when ticks are too dense to avoid overlap.
@@ -375,7 +409,7 @@ function ChartYLabels({
   ticks,
   yScale,
 }: {
-  ticks: number[]
+  ticks: Array<number>
   yScale: ReturnType<typeof scaleLinear<number>>
 }) {
   return (

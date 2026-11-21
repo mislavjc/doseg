@@ -10,35 +10,62 @@ export type GeocodeSuggestion = {
 }
 
 function useDebouncedFetch(query: string, onResults: () => void) {
-  const [data, setData] = useState<GeocodeSuggestion[]>([])
+  const [data, setData] = useState<Array<GeocodeSuggestion>>([])
   const [pending, setPending] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    if (abortRef.current) abortRef.current.abort()
-    if (query.length < 2) return
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
+    if (abortRef.current) {
+      abortRef.current.abort()
+    }
+    if (query.length < 2) {
+      return
+    }
 
     timerRef.current = setTimeout(() => {
       const controller = new AbortController()
       abortRef.current = controller
       setPending(true)
-      fetch(`/api/geocode?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+      fetch(`/api/geocode?q=${encodeURIComponent(query)}`, {
+        signal: controller.signal,
+      })
         .then((res) => res.json())
-        .then((d) => { if (!controller.signal.aborted) { const r = Array.isArray(d) ? d : []; setData(r); setPending(false); if (r.length > 0) onResults() } })
-        .catch((err) => { if (!(err instanceof DOMException && err.name === "AbortError")) setPending(false) })
+        .then((d) => {
+          if (!controller.signal.aborted) {
+            const r = Array.isArray(d) ? d : []
+            setData(r)
+            setPending(false)
+            if (r.length > 0) {
+              onResults()
+            }
+          }
+        })
+        .catch((error: unknown) => {
+          if (!(error instanceof DOMException && error.name === "AbortError")) {
+            setPending(false)
+          }
+        })
     }, 350)
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-      if (abortRef.current) abortRef.current.abort()
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+      if (abortRef.current) {
+        abortRef.current.abort()
+      }
     }
   }, [query, onResults])
 
   const cancel = useCallback(() => {
     abortRef.current?.abort()
-    if (timerRef.current) clearTimeout(timerRef.current)
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
   }, [])
 
   const results = query.length < 2 ? [] : data

@@ -2,7 +2,7 @@ import { KM_PER_DEG_LAT, KM_PER_DEG_LON } from "./geo"
 import type { WalkingGraph } from "./walk-graph"
 
 interface PathCacheEntry {
-  coords: [number, number][]
+  coords: Array<[number, number]>
   weightedDistanceCm: number
 }
 
@@ -12,8 +12,8 @@ const pathCache = new WeakMap<
 >()
 
 class PathHeap {
-  private times: number[] = []
-  private nodes: number[] = []
+  private times: Array<number> = []
+  private nodes: Array<number> = []
 
   get size() {
     return this.times.length
@@ -41,7 +41,9 @@ class PathHeap {
     }
     this.times.length = n
     this.nodes.length = n
-    if (n > 0) this.sinkDown(0)
+    if (n > 0) {
+      this.sinkDown(0)
+    }
   }
 
   private bubbleUp(i: number) {
@@ -49,7 +51,9 @@ class PathHeap {
     const nd = this.nodes
     while (i > 0) {
       const parent = (i - 1) >> 1
-      if (t[parent] <= t[i]) break
+      if (t[parent] <= t[i]) {
+        break
+      }
       const tt = t[parent]
       t[parent] = t[i]
       t[i] = tt
@@ -68,9 +72,15 @@ class PathHeap {
       let s = i
       const l = 2 * i + 1
       const r = 2 * i + 2
-      if (l < n && t[l] < t[s]) s = l
-      if (r < n && t[r] < t[s]) s = r
-      if (s === i) break
+      if (l < n && t[l] < t[s]) {
+        s = l
+      }
+      if (r < n && t[r] < t[s]) {
+        s = r
+      }
+      if (s === i) {
+        break
+      }
       const tt = t[s]
       t[s] = t[i]
       t[i] = tt
@@ -93,9 +103,15 @@ export function distMeters(
   return Math.sqrt(dlat * dlat + dlon * dlon)
 }
 
-export function appendCoord(coords: [number, number][], lon: number, lat: number) {
+export function appendCoord(
+  coords: Array<[number, number]>,
+  lon: number,
+  lat: number
+) {
   const last = coords.at(-1)
-  if (last && last[0] === lon && last[1] === lat) return
+  if (last && last[0] === lon && last[1] === lat) {
+    return
+  }
   coords.push([lon, lat])
 }
 
@@ -115,7 +131,9 @@ function findNearestNode(
   for (let dx = -2; dx <= 2; dx++) {
     for (let dy = -2; dy <= 2; dy++) {
       const cell = graph.grid.get(`${cx + dx},${cy + dy}`)
-      if (!cell) continue
+      if (!cell) {
+        continue
+      }
       for (const nodeIdx of cell) {
         const dlat = (graph.coords[nodeIdx * 2] - lat) * KM_PER_DEG_LAT
         const dlon = (graph.coords[nodeIdx * 2 + 1] - lon) * KM_PER_DEG_LON
@@ -157,11 +175,7 @@ function setCachedPath(
   cache.set(`${startNode}:${endNode}`, value)
 }
 
-function runDijkstra(
-  graph: WalkingGraph,
-  startNode: number,
-  endNode: number
-): { best: Float64Array; prev: Int32Array } {
+function runDijkstra(graph: WalkingGraph, startNode: number, endNode: number) {
   const best = new Float64Array(graph.nodeCount).fill(Infinity)
   const prev = new Int32Array(graph.nodeCount).fill(-1)
   const heap = new PathHeap()
@@ -174,14 +188,20 @@ function runDijkstra(
     const nodeIdx = heap.popNode()
     heap.pop()
 
-    if (time > best[nodeIdx]) continue
-    if (nodeIdx === endNode) break
+    if (time > best[nodeIdx]) {
+      continue
+    }
+    if (nodeIdx === endNode) {
+      break
+    }
 
     const edgeEnd = graph.offsets[nodeIdx + 1]
     for (let e = graph.offsets[nodeIdx]; e < edgeEnd; e++) {
       const toIdx = graph.edgeTargets[e]
       const next = time + graph.edgeDistCm[e]
-      if (next >= best[toIdx]) continue
+      if (next >= best[toIdx]) {
+        continue
+      }
       best[toIdx] = next
       prev[toIdx] = nodeIdx
       heap.push(next, toIdx)
@@ -196,16 +216,20 @@ function tracePathChain(
   startNode: number,
   endNode: number,
   graph: WalkingGraph
-): [number, number][] | null {
-  const chain: number[] = []
+): Array<[number, number]> | null {
+  const chain: Array<number> = []
   let current = endNode
   while (current !== -1) {
     chain.push(current)
-    if (current === startNode) break
+    if (current === startNode) {
+      break
+    }
     current = prev[current]
   }
 
-  if (chain.at(-1) !== startNode) return null
+  if (chain.at(-1) !== startNode) {
+    return null
+  }
 
   chain.reverse()
   return chain.map((nodeIdx) => {
@@ -220,7 +244,9 @@ function findPathBetweenNodes(
   endNode: number
 ): PathCacheEntry | null {
   const cachedPath = getCachedPath(graph, startNode, endNode)
-  if (cachedPath !== undefined) return cachedPath
+  if (cachedPath !== undefined) {
+    return cachedPath
+  }
 
   const { best, prev } = runDijkstra(graph, startNode, endNode)
 
@@ -242,7 +268,7 @@ function findPathBetweenNodes(
 }
 
 interface StreetPathResult {
-  coords: [number, number][]
+  coords: Array<[number, number]>
   distanceMeters: number
   durationSeconds: number
 }
@@ -262,7 +288,7 @@ function resolvePathNodes(
   return findPathBetweenNodes(graph, startNodeIdx, endNodeIdx)
 }
 
-export function sumCoordDistance(coords: [number, number][]): number {
+export function sumCoordDistance(coords: Array<[number, number]>): number {
   let total = 0
   for (let i = 1; i < coords.length; i++) {
     const [prevLon, prevLat] = coords[i - 1]
@@ -279,14 +305,23 @@ export function findStreetPath(
   speedKmh: number,
   maxNodeDistKmSq: number = 0.25
 ): StreetPathResult | null {
-  const startNodeIdx = findNearestNode(graph, from.lat, from.lon, maxNodeDistKmSq)
+  const startNodeIdx = findNearestNode(
+    graph,
+    from.lat,
+    from.lon,
+    maxNodeDistKmSq
+  )
   const endNodeIdx = findNearestNode(graph, to.lat, to.lon, maxNodeDistKmSq)
-  if (startNodeIdx < 0 || endNodeIdx < 0) return null
+  if (startNodeIdx < 0 || endNodeIdx < 0) {
+    return null
+  }
 
   const path = resolvePathNodes(graph, startNodeIdx, endNodeIdx)
-  if (!path) return null
+  if (!path) {
+    return null
+  }
 
-  const coords: [number, number][] = []
+  const coords: Array<[number, number]> = []
   appendCoord(coords, from.lon, from.lat)
   for (const [lon, lat] of path.coords) {
     appendCoord(coords, lon, lat)

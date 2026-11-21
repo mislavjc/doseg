@@ -31,7 +31,10 @@ const maxZoom = Number(argValue("--max-zoom") ?? 15)
 const force = args.includes("--force")
 
 /** Padded box around the real stations — the frame the map is allowed to roam. */
-async function serviceBbox(): Promise<{ bbox: number[]; stations: number }> {
+async function serviceBbox(): Promise<{
+  bbox: Array<number>
+  stations: number
+}> {
   const stations = await fetchStations()
 
   const lats = stations.map((s) => s.lat)

@@ -11,8 +11,8 @@ export default function RouteAnalysisTables({
   trams,
   buses,
 }: {
-  trams: RouteInfo[]
-  buses: RouteInfo[]
+  trams: Array<RouteInfo>
+  buses: Array<RouteInfo>
 }) {
   return (
     <div className="flex flex-col gap-16">
@@ -34,25 +34,46 @@ function RouteTableHead() {
   return (
     <thead>
       <tr>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Linija
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Stanica
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Udaljenost
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Polasci
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Brzina
         </th>
-        <th scope="col" className="pb-4 pr-8 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Vožnja
         </th>
-        <th scope="col" className="pb-4 text-left text-body text-slate-400 dark:text-slate-500">
+        <th
+          scope="col"
+          className="pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+        >
           Interval
         </th>
       </tr>
@@ -66,11 +87,11 @@ function ExpandableRouteTable({
   mode,
 }: {
   title: string
-  routes: RouteInfo[]
+  routes: Array<RouteInfo>
   mode: "TRAM" | "BUS"
 }) {
   const [expanded, setExpanded] = useState(false)
-  const tableId = useId().replaceAll(':', "")
+  const tableId = useId().replaceAll(":", "")
   const regionId = `route-table-${mode}-${tableId}`
   const needsToggle = routes.length > INITIAL_VISIBLE
   const visible = expanded ? routes : routes.slice(0, INITIAL_VISIBLE)
@@ -81,12 +102,16 @@ function ExpandableRouteTable({
         <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
           {title}
         </h3>
-        <span className="font-mono text-label tabular-nums text-slate-400 dark:text-slate-500">
+        <span className="font-mono text-label text-slate-400 tabular-nums dark:text-slate-500">
           {routes.length} {plural(routes.length, "linija", "linije", "linija")}
         </span>
       </div>
       <div className="overflow-x-auto">
-        <table id={regionId} className="w-full min-w-[600px]" aria-label={title}>
+        <table
+          id={regionId}
+          className="w-full min-w-[600px]"
+          aria-label={title}
+        >
           <RouteTableHead />
           <tbody>
             {visible.map((r) => (
@@ -112,30 +137,31 @@ function ExpandableRouteTable({
   )
 }
 
-function headwayStatus(headway: number | null): {
-  dot: string
-  text: string
-  color: string
-} {
-  if (headway == null) return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }
-  if (headway <= 8)
+function headwayStatus(headway: number | null) {
+  if (headway === null) {
+    return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }
+  }
+  if (headway <= 8) {
     return {
       dot: "bg-emerald-500",
       text: `~${Math.round(headway)} min`,
       color: "text-emerald-600 dark:text-emerald-400",
     }
-  if (headway <= 15)
+  }
+  if (headway <= 15) {
     return {
       dot: "bg-emerald-500",
       text: `~${Math.round(headway)} min`,
       color: "text-slate-700 dark:text-slate-300",
     }
-  if (headway <= 30)
+  }
+  if (headway <= 30) {
     return {
       dot: "bg-amber-400",
       text: `~${Math.round(headway)} min`,
       color: "text-amber-600 dark:text-amber-400",
     }
+  }
   return {
     dot: "bg-red-500",
     text: `~${Math.round(headway)} min`,
@@ -160,7 +186,7 @@ function RouteRow({ route }: { route: RouteInfo }) {
           {route.name}
         </span>
       </td>
-      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
         {route.stops}
       </td>
       <td className="py-3 pr-8 text-body text-slate-700 dark:text-slate-300">
@@ -169,19 +195,19 @@ function RouteRow({ route }: { route: RouteInfo }) {
           km
         </span>
       </td>
-      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
         {route.dailyDepartures.toLocaleString("hr-HR")}
         <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           {fmtHR(route.depPerHour, 1)}/h
         </span>
       </td>
-      <td className="py-3 pr-8 text-body tabular-nums text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
         {fmtHR(route.commercialSpeedKmh, 1)}
         <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           km/h
         </span>
       </td>
-      <td className="py-3 pr-8 text-body tabular-nums text-slate-600 dark:text-slate-400">
+      <td className="py-3 pr-8 text-body text-slate-600 tabular-nums dark:text-slate-400">
         {route.travelTimeMin}
         <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
           min

@@ -24,7 +24,8 @@ import { readJsonCached } from "@/lib/page-data"
  */
 // walk_graph.rs GRID_CELL_SIZE
 const REACH_CELL_DEG = 0.002
-const REACH_CELL_KM2 = REACH_CELL_DEG * KM_PER_DEG_LAT * (REACH_CELL_DEG * KM_PER_DEG_LON)
+const REACH_CELL_KM2 =
+  REACH_CELL_DEG * KM_PER_DEG_LAT * (REACH_CELL_DEG * KM_PER_DEG_LON)
 
 export function reachKm2(cells: number): number {
   return Math.round(cells * REACH_CELL_KM2)
@@ -47,7 +48,9 @@ export function reachKm2(cells: number): number {
  */
 export function loadScores(): ScoreData | null {
   const dir = getDataDir()
-  const day = readJsonCached<ScoreData>(join(dir, "district-scores-wednesday.json"))
+  const day = readJsonCached<ScoreData>(
+    join(dir, "district-scores-wednesday.json")
+  )
   const base = readJsonCached<ScoreData>(join(dir, "district-scores.json"))
   if (!day) {
     console.error(
@@ -63,7 +66,9 @@ export function loadScores(): ScoreData | null {
     const baseByName = new Map(base.districts.map((d) => [d.name, d]))
     for (const d of day.districts) {
       const b = baseByName.get(d.name)
-      if (!b) continue
+      if (!b) {
+        continue
+      }
       d.areaKm2 ??= b.areaKm2
       d.bajsDensityPerKm2 ??= b.bajsDensityPerKm2
       d.bajsPer10k ??= b.bajsPer10k

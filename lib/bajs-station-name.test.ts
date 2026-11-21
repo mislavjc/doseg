@@ -4,7 +4,9 @@ import { formatStationName } from "./bajs-station-name"
 
 describe("formatStationName", () => {
   it("lowercases the appellative but keeps the proper noun", () => {
-    expect(formatStationName("TRG KRALJA TOMISLAVA")).toBe("Trg kralja Tomislava")
+    expect(formatStationName("TRG KRALJA TOMISLAVA")).toBe(
+      "Trg kralja Tomislava"
+    )
     expect(formatStationName("UL. GRADA VUKOVARA")).toBe("Ul. grada Vukovara")
     expect(formatStationName("TRG DR. FRANJE TUĐMANA")).toBe(
       "Trg dr. Franje Tuđmana"
@@ -26,7 +28,9 @@ describe("formatStationName", () => {
 
   it("preserves initials and known acronyms", () => {
     expect(formatStationName("UL. V. HEINZELA")).toBe("Ul. V. Heinzela")
-    expect(formatStationName("RSC JARUN - AQUARIUS")).toBe("RSC Jarun - Aquarius")
+    expect(formatStationName("RSC JARUN - AQUARIUS")).toBe(
+      "RSC Jarun - Aquarius"
+    )
     expect(formatStationName("KBC ZAGREB")).toBe("KBC Zagreb")
   })
 

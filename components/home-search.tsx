@@ -47,9 +47,9 @@ type IndexedStop = {
 }
 
 type SearchIndex = {
-  lines: { broj: string; label: string; terminalsNorm: string[] }[]
-  stops: IndexedStop[]
-  aliases: { alias: string; stop: IndexedStop }[]
+  lines: Array<{ broj: string; label: string; terminalsNorm: Array<string> }>
+  stops: Array<IndexedStop>
+  aliases: Array<{ alias: string; stop: IndexedStop }>
 }
 
 /** Colloquial names → the stop people mean — only where the official stop
@@ -96,15 +96,20 @@ const stopResult = (s: IndexedStop): Result => ({
   meta: s.kvart,
 })
 
-function search(index: SearchIndex, rawQuery: string): Result[] {
+function search(index: SearchIndex, rawQuery: string): Array<Result> {
   const q = norm(rawQuery.trim())
-  if (!q) return []
+  if (!q) {
+    return []
+  }
 
   if (/^\d+$/u.test(q)) {
     // Digits — a line number lookup, exact broj first.
     return index.lines
       .filter((l) => l.broj.startsWith(q))
-      .toSorted((a, b) => a.broj.length - b.broj.length || Number(a.broj) - Number(b.broj))
+      .toSorted(
+        (a, b) =>
+          a.broj.length - b.broj.length || Number(a.broj) - Number(b.broj)
+      )
       .slice(0, MAX_RESULTS)
       .map((l) => lineResult(l))
   }
@@ -118,21 +123,27 @@ function search(index: SearchIndex, rawQuery: string): Result[] {
           .map((a) => stopResult(a.stop))
       : []
 
-  const starts: Result[] = []
-  const contains: Result[] = []
+  const starts: Array<Result> = []
+  const contains: Array<Result> = []
   for (const s of index.stops) {
     if (s.nameNorm.startsWith(q)) {
       starts.push(stopResult(s))
-      if (starts.length >= MAX_RESULTS) break
+      if (starts.length >= MAX_RESULTS) {
+        break
+      }
     } else if (contains.length < MAX_RESULTS && s.nameNorm.includes(q)) {
       contains.push(stopResult(s))
     }
   }
 
-  const lineHits: Result[] = []
+  const lineHits: Array<Result> = []
   for (const l of index.lines) {
-    if (lineHits.length >= LINE_SLOTS) break
-    if (l.terminalsNorm.some((t) => t.includes(q))) lineHits.push(lineResult(l))
+    if (lineHits.length >= LINE_SLOTS) {
+      break
+    }
+    if (l.terminalsNorm.some((t) => t.includes(q))) {
+      lineHits.push(lineResult(l))
+    }
   }
 
   const stopHits = [...aliasHits, ...starts, ...contains].filter(
@@ -143,11 +154,13 @@ function search(index: SearchIndex, rawQuery: string): Result[] {
 
 // ── Address lookup (baked DGU index, /api/adrese) ─────────────────────────────
 
-async function geocode(query: string): Promise<Result[]> {
+async function geocode(query: string): Promise<Array<Result>> {
   try {
     const res = await fetch(`/api/adrese?${new URLSearchParams({ q: query })}`)
-    if (!res.ok) return []
-    const data = await responseJson<{ hits?: AdresaHit[] }>(res)
+    if (!res.ok) {
+      return []
+    }
+    const data = await responseJson<{ hits?: Array<AdresaHit> }>(res)
     return (data.hits ?? []).slice(0, ADDR_SLOTS).map((h) => ({
       href: `/adresa/${h.slug}`,
       broj: null,
@@ -167,12 +180,12 @@ function useHomeSearch() {
   // brzi-linkovi chips below (no error UI).
   const indexPromiseRef = useRef<Promise<SearchIndex | null> | null>(null)
   const indexRef = useRef<SearchIndex | null>(null)
-  const [results, setResults] = useState<Result[]>([])
+  const [results, setResults] = useState<Array<Result>>([])
   // Split sources so async address hits merge under whatever the local index
   // produced for the SAME query (queryRef guards staleness on both paths).
   const queryRef = useRef("")
-  const localRef = useRef<Result[]>([])
-  const addrRef = useRef<Result[]>([])
+  const localRef = useRef<Array<Result>>([])
+  const addrRef = useRef<Array<Result>>([])
   // In-flight throttle instead of a timer debounce: the first eligible
   // keystroke fetches immediately (suggestion arrives one RTT later, not
   // debounce + RTT); keystrokes during the request coalesce into addrQueued
@@ -194,7 +207,8 @@ function useHomeSearch() {
   const applyResults = () => {
     const next = [...localRef.current, ...addrRef.current]
     setResults((prev) =>
-      prev.length === next.length && prev.every((r, i) => r.href === next[i].href)
+      prev.length === next.length &&
+      prev.every((r, i) => r.href === next[i].href)
         ? prev
         : next
     )
@@ -210,22 +224,30 @@ function useHomeSearch() {
       }
       const queued = addrQueued.current
       addrQueued.current = null
-      if (queued && queued !== q) fetchAddrs(queued)
+      if (queued && queued !== q) {
+        fetchAddrs(queued)
+      }
     })
   }
 
   const runSearch = (value: string) => {
     queryRef.current = value
     const applyLocal = (idx: SearchIndex) => {
-      if (queryRef.current !== value) return
+      if (queryRef.current !== value) {
+        return
+      }
       localRef.current = search(idx, value)
       applyResults()
     }
     const index = indexRef.current
-    if (index) applyLocal(index)
+    if (index) {
+      applyLocal(index)
+    }
     // Index still loading: callbacks on the shared promise run in registration
     // order, so the latest keystroke's results land last.
-    else void loadIndex().then((idx) => idx && applyLocal(idx))
+    else {
+      void loadIndex().then((idx) => idx && applyLocal(idx))
+    }
 
     // Addresses: text-ish queries only (digits are line lookups).
     const q = value.trim()
@@ -235,8 +257,11 @@ function useHomeSearch() {
       applyResults()
       return
     }
-    if (addrInFlight.current) addrQueued.current = q
-    else fetchAddrs(q)
+    if (addrInFlight.current) {
+      addrQueued.current = q
+    } else {
+      fetchAddrs(q)
+    }
   }
 
   return { results, runSearch, loadIndex }
@@ -260,7 +285,9 @@ function renderResult(r: Result) {
           {r.chip ?? "stanica"}
         </span>
       )}
-      <span className="min-w-0 truncate font-heros text-body text-ink">{r.label}</span>
+      <span className="min-w-0 truncate font-heros text-body text-ink">
+        {r.label}
+      </span>
       {r.meta && (
         <span className="ml-auto shrink-0 font-mono text-label text-ink-faint">
           {r.meta}
@@ -280,7 +307,9 @@ export function HomeSearch() {
 
   /** Top-result action shared by the traži button and the Enter fallback. */
   const goTop = () => {
-    if (results.length === 0) return false
+    if (results.length === 0) {
+      return false
+    }
     router.push(results[0].href)
     return true
   }
@@ -302,13 +331,21 @@ export function HomeSearch() {
         onTouchStart={() => void loadIndex()}
         className="flex h-14 w-full items-center gap-3.5 border-2 border-ink bg-white pl-4"
       >
-        <IconMagnifyingGlass size={16} className="shrink-0 text-ink" aria-hidden />
+        <IconMagnifyingGlass
+          size={16}
+          className="shrink-0 text-ink"
+          aria-hidden
+        />
         <Autocomplete.Input
           type="search"
           onFocus={() => void loadIndex()}
           onKeyDown={(e) => {
-            if (e.key !== "Enter" || highlightedRef.current) return
-            if (goTop()) e.preventDefault()
+            if (e.key !== "Enter" || highlightedRef.current) {
+              return
+            }
+            if (goTop()) {
+              e.preventDefault()
+            }
           }}
           placeholder="Upiši adresu, liniju ili stanicu, npr. Savska cesta 25 ili 107"
           aria-label="Pretraži adrese, linije i stanice"
@@ -321,7 +358,9 @@ export function HomeSearch() {
           type="button"
           aria-label="Traži"
           onClick={(e) => {
-            if (goTop()) return
+            if (goTop()) {
+              return
+            }
             e.currentTarget.closest("div")?.querySelector("input")?.focus()
           }}
           className="flex w-14 shrink-0 items-center justify-center self-stretch bg-zg-blue text-white transition duration-150 hover:bg-navy active:scale-[0.97]"

@@ -47,7 +47,11 @@ export default function StatistikaPage() {
   return (
     <EditorialShell>
       <Hero active="statistika" />
-      <Intro maxMinutes={data?.maxMinutes} districtCount={data?.districts.length} departureWindow={data?.departureWindow} />
+      <Intro
+        maxMinutes={data?.maxMinutes}
+        districtCount={data?.districts.length}
+        departureWindow={data?.departureWindow}
+      />
 
       {pov && <Povezanost data={pov} />}
       {facts && <Nejednakost facts={facts} />}

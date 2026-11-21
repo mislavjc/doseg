@@ -12,7 +12,7 @@ export function SmjerToggle({
   onSelect,
   size = "body",
 }: {
-  labels: string[]
+  labels: Array<string>
   active: number
   onSelect: (i: number) => void
   /** "body" = mono 16 (stanice), "label" = mono 12 (vozni red) */

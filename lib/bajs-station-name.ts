@@ -106,24 +106,36 @@ function isInitial(word: string) {
 }
 
 function caseWord(word: string, first: boolean) {
-  if (!word) return word
+  if (!word) {
+    return word
+  }
 
-  if (isInitial(word)) return word.toLocaleUpperCase("hr")
+  if (isInitial(word)) {
+    return word.toLocaleUpperCase("hr")
+  }
 
   const lower = word.toLocaleLowerCase("hr")
-  if (ACRONYMS.has(lower)) return lower.toLocaleUpperCase("hr")
+  if (ACRONYMS.has(lower)) {
+    return lower.toLocaleUpperCase("hr")
+  }
 
   const capitalised = lower.charAt(0).toLocaleUpperCase("hr") + lower.slice(1)
-  if (!first && LOWERCASE.has(lower)) return lower
+  if (!first && LOWERCASE.has(lower)) {
+    return lower
+  }
   return capitalised
 }
 
 export function formatStationName(raw: string): string {
   const trimmed = raw.trim().replaceAll(/\s+/gu, " ")
-  if (!trimmed) return trimmed
+  if (!trimmed) {
+    return trimmed
+  }
   // Anything that is not already caps is left alone: the feed occasionally
   // carries a properly-cased name and re-casing it would only lose detail.
-  if (trimmed !== trimmed.toLocaleUpperCase("hr")) return trimmed
+  if (trimmed !== trimmed.toLocaleUpperCase("hr")) {
+    return trimmed
+  }
 
   let atStart = true
   return trimmed

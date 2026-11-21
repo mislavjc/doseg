@@ -19,13 +19,17 @@ interface BajsUtilizationData {
   bikesInUse: number
   utilizationPct: number
   knownFleet: number
-  emptyStations: { name: string; stationId: string; capacity: number }[]
-  fullStations: { name: string; stationId: string; capacity: number }[]
+  emptyStations: Array<{ name: string; stationId: string; capacity: number }>
+  fullStations: Array<{ name: string; stationId: string; capacity: number }>
 }
 
 function pctColor(pct: number): string {
-  if (pct >= 60) return "text-emerald-600 dark:text-emerald-400"
-  if (pct >= 30) return "text-amber-600 dark:text-amber-400"
+  if (pct >= 60) {
+    return "text-emerald-600 dark:text-emerald-400"
+  }
+  if (pct >= 30) {
+    return "text-amber-600 dark:text-amber-400"
+  }
   return "text-slate-500 dark:text-slate-400"
 }
 
@@ -72,7 +76,7 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
     data.activeStations - data.emptyStations.length - data.fullStations.length
 
   return (
-    <div className="grid grid-cols-1 gap-8 rounded-[12px] bg-[#f9f9f9] p-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-slate-200 sm:p-10 sm:dark:divide-white/10 dark:bg-[#1a1a1a]">
+    <div className="grid grid-cols-1 gap-8 rounded-[12px] bg-[#f9f9f9] p-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-slate-200 sm:p-10 dark:bg-[#1a1a1a] sm:dark:divide-white/10">
       <div className="flex flex-col gap-3 sm:pr-10">
         <div>
           <span
@@ -85,7 +89,7 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
           iskorištenost
         </div>
       </div>
-      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-body text-slate-600 sm:border-0 sm:pt-0 sm:pl-10 sm:pr-10 dark:border-white/10 dark:text-slate-400">
+      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-body text-slate-600 sm:border-0 sm:pt-0 sm:pr-10 sm:pl-10 dark:border-white/10 dark:text-slate-400">
         <Metric value={data.bikesInUse} label="u uporabi" />
         <Metric value={data.totalBikesAvailable} label="na stanicama" />
         <Metric

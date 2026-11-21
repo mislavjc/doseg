@@ -7,14 +7,9 @@ import type { computeGiniData } from "./stat-data"
 import { fmtHR } from "@/lib/format"
 import { StatModuleTitle } from "./stat-typography"
 
-
 type GiniData = ReturnType<typeof computeGiniData>
 
-export function LorenzSection({
-  giniData,
-}: {
-  giniData: GiniData
-}) {
+export function LorenzSection({ giniData }: { giniData: GiniData }) {
   return (
     <section
       id="lorenz"
@@ -31,28 +26,28 @@ export function LorenzSection({
         </div>
       </div>
       <div className="flex flex-col md:flex-row md:items-start md:gap-16">
-          <div className="w-full md:w-[320px] md:shrink-0">
-            <LorenzChart lorenzPoints={giniData.lorenzPoints} />
-            <p className="mt-6 text-center text-body text-slate-500 dark:text-slate-400">
-              Što je krivulja dalje od dijagonale, to je nejednakost veća.
-            </p>
-          </div>
-          <div className="mt-12 flex-1 text-body text-slate-700 md:mt-0 dark:text-slate-300">
-            <p>
-              Ova krivulja prikazuje kumulativni udio dostupnosti u odnosu na
-              kumulativni udio stanovništva.
-            </p>
-            <p className="mt-6">
-              Kada bi svi građani imali jednaku dostupnost, krivulja bi pratila
-              ravnu dijagonalu (linija savršene jednakosti). Odstupanje od te
-              linije pokazuje koliko su resursi neravnomjerno raspoređeni po
-              gradu.
-            </p>
-            <div className="mt-12">
-              <LorenzAccessibilityTable popSorted={giniData.popSorted} />
-            </div>
+        <div className="w-full md:w-[320px] md:shrink-0">
+          <LorenzChart lorenzPoints={giniData.lorenzPoints} />
+          <p className="mt-6 text-center text-body text-slate-500 dark:text-slate-400">
+            Što je krivulja dalje od dijagonale, to je nejednakost veća.
+          </p>
+        </div>
+        <div className="mt-12 flex-1 text-body text-slate-700 md:mt-0 dark:text-slate-300">
+          <p>
+            Ova krivulja prikazuje kumulativni udio dostupnosti u odnosu na
+            kumulativni udio stanovništva.
+          </p>
+          <p className="mt-6">
+            Kada bi svi građani imali jednaku dostupnost, krivulja bi pratila
+            ravnu dijagonalu (linija savršene jednakosti). Odstupanje od te
+            linije pokazuje koliko su resursi neravnomjerno raspoređeni po
+            gradu.
+          </p>
+          <div className="mt-12">
+            <LorenzAccessibilityTable popSorted={giniData.popSorted} />
           </div>
         </div>
+      </div>
     </section>
   )
 }
@@ -60,7 +55,7 @@ export function LorenzSection({
 function LorenzChart({
   lorenzPoints,
 }: {
-  lorenzPoints: { x: number; y: number }[]
+  lorenzPoints: Array<{ x: number; y: number }>
 }) {
   const lm = { top: 10, right: 10, bottom: 30, left: 30 }
   const lw = 280
@@ -104,7 +99,7 @@ function LorenzGridAndCurve({
   liw,
   lih,
 }: {
-  lorenzPoints: { x: number; y: number }[]
+  lorenzPoints: Array<{ x: number; y: number }>
   lxScale: ReturnType<typeof scaleLinear<number>>
   lyScale: ReturnType<typeof scaleLinear<number>>
   liw: number
@@ -220,7 +215,7 @@ function LorenzAxisLabels({
 function LorenzAccessibilityTable({
   popSorted,
 }: {
-  popSorted: DistrictScore[]
+  popSorted: Array<DistrictScore>
 }) {
   return (
     <div className="sr-only">
@@ -249,11 +244,7 @@ function LorenzAccessibilityTable({
   )
 }
 
-export function GiniSection({
-  giniData,
-}: {
-  giniData: GiniData
-}) {
+export function GiniSection({ giniData }: { giniData: GiniData }) {
   return (
     <section
       id="gini"
@@ -270,36 +261,32 @@ export function GiniSection({
       </div>
 
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-          <div className="flex shrink-0 items-baseline gap-2">
-            <span className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
-              {fmtHR(giniData.gini, 2)}
-            </span>
-          </div>
-          <div className="flex-1">
-            <GiniCards giniData={giniData} />
-            <div className="mt-12 text-body text-slate-700 dark:text-slate-300">
-              <GiniInterpretation giniData={giniData} />
-              {/* The previous copy here benchmarked against "most European
+        <div className="flex shrink-0 items-baseline gap-2">
+          <span className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+            {fmtHR(giniData.gini, 2)}
+          </span>
+        </div>
+        <div className="flex-1">
+          <GiniCards giniData={giniData} />
+          <div className="mt-12 text-body text-slate-700 dark:text-slate-300">
+            <GiniInterpretation giniData={giniData} />
+            {/* The previous copy here benchmarked against "most European
                   cities: 0,25 to 0,35" with no source behind it. Removed rather
                   than cited: the number could not be traced, and this page is
                   pitched to fact-checking desks. What is left is definitional. */}
-              <p className="mt-6">
-                Gini ide od 0 (svi kvartovi imaju jednak doseg) do 1 (sav doseg
-                je u jednom kvartu). Ovdje mjeri raspodjelu dosega javnim
-                prijevozom, ne prihoda.
-              </p>
-            </div>
+            <p className="mt-6">
+              Gini ide od 0 (svi kvartovi imaju jednak doseg) do 1 (sav doseg je
+              u jednom kvartu). Ovdje mjeri raspodjelu dosega javnim prijevozom,
+              ne prihoda.
+            </p>
           </div>
         </div>
+      </div>
     </section>
   )
 }
 
-function GiniCards({
-  giniData,
-}: {
-  giniData: GiniData
-}) {
+function GiniCards({ giniData }: { giniData: GiniData }) {
   return (
     <div className="grid grid-cols-1 gap-8 border-l-2 border-slate-100 pl-6 sm:grid-cols-3 dark:border-white/10">
       <div className="flex flex-col">
@@ -332,11 +319,7 @@ function GiniCards({
   )
 }
 
-function GiniInterpretation({
-  giniData,
-}: {
-  giniData: GiniData
-}) {
+function GiniInterpretation({ giniData }: { giniData: GiniData }) {
   return (
     <p>
       BAJS bike-sharing blago{" "}

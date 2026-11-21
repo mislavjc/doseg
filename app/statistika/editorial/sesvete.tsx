@@ -48,7 +48,9 @@ function StatBar({
  */
 export function Sesvete({ facts }: { facts: EditorialFacts }) {
   const s = facts.sesvete
-  if (!s) return null
+  if (!s) {
+    return null
+  }
   return (
     <Section id="sesvete">
       <div className="flex flex-col gap-6">
@@ -73,9 +75,9 @@ export function Sesvete({ facts }: { facts: EditorialFacts }) {
           />
         </div>
         <BodyMuted>
-          Najviše stanovnika i stanica u gradu, a doseg pri samom dnu. Sesvete su
-          i najveći kvart po površini, pa i najgušća mreža pokriva tek dijelove:
-          više prostora, ne više grada na dohvat.
+          Najviše stanovnika i stanica u gradu, a doseg pri samom dnu. Sesvete
+          su i najveći kvart po površini, pa i najgušća mreža pokriva tek
+          dijelove: više prostora, ne više grada na dohvat.
         </BodyMuted>
       </div>
     </Section>

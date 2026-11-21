@@ -26,7 +26,7 @@ function StopRow({
   slug,
 }: {
   stop: LineStop
-  newTrams: string[]
+  newTrams: Array<string>
   isFirst: boolean
   isLast: boolean
   fallbackChip?: string
@@ -34,7 +34,11 @@ function StopRow({
 }) {
   const terminal = isFirst || isLast
   const chip =
-    newTrams.length > 0 ? `tram ${newTrams.join(" · ")}` : terminal ? fallbackChip : undefined
+    newTrams.length > 0
+      ? `tram ${newTrams.join(" · ")}`
+      : terminal
+        ? fallbackChip
+        : undefined
 
   const nameClass = cn(
     "min-w-0 flex-1 truncate pl-3 font-heros text-body leading-5",
@@ -54,13 +58,16 @@ function StopRow({
           )}
         />
         {terminal ? (
-          <span className="absolute left-[9px] top-[13px] size-3.5 rounded-full bg-zg-blue" />
+          <span className="absolute top-[13px] left-[9px] size-3.5 rounded-full bg-zg-blue" />
         ) : (
-          <span className="absolute left-[11px] top-[15px] size-2.5 rounded-full border-[3px] border-zg-blue bg-white" />
+          <span className="absolute top-[15px] left-[11px] size-2.5 rounded-full border-[3px] border-zg-blue bg-white" />
         )}
       </span>
       {slug ? (
-        <Link href={`/stanice/${slug}`} className={cn(nameClass, "transition-colors hover:text-zg-blue")}>
+        <Link
+          href={`/stanice/${slug}`}
+          className={cn(nameClass, "transition-colors hover:text-zg-blue")}
+        >
           {stop.name}
         </Link>
       ) : (
@@ -111,7 +118,9 @@ function DirectionColumn({
             newTrams={newTramsPerStop[i]}
             isFirst={i === 0}
             isLast={i === direction.stops.length - 1}
-            fallbackChip={i === direction.stops.length - 1 ? terminalChip : undefined}
+            fallbackChip={
+              i === direction.stops.length - 1 ? terminalChip : undefined
+            }
             slug={stopSlugs[stop.name]}
           />
         ))}
@@ -127,9 +136,9 @@ export function Stanice({
   terminalChips,
   stopSlugs = NO_SLUGS,
 }: {
-  directions: LineDirection[]
+  directions: Array<LineDirection>
   /** Fallback chip per direction's end terminal (e.g. "bus 220 · 221"). */
-  terminalChips: (string | undefined)[]
+  terminalChips: Array<string | undefined>
   /** Stop name → /stanice/[slug] for names unique in the stop index. */
   stopSlugs?: Record<string, string>
 }) {

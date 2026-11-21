@@ -33,10 +33,10 @@ const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 
 // Percentiles, not extremes: a handful of far-flung stations would otherwise
 // pull the frame wide and shrink the city everyone recognises to a smear.
-const pct = (v: number[], p: number) =>
+const pct = (v: Array<number>, p: number) =>
   v[Math.min(v.length - 1, Math.floor(v.length * p))]
 
-async function stationBbox(): Promise<number[]> {
+async function stationBbox(): Promise<Array<number>> {
   const stations = await fetchStations()
 
   const lats = stations.map((s) => s.lat).toSorted((a, b) => a - b)
@@ -59,7 +59,13 @@ async function main() {
     zoomMax: 14,
   })
 
-  const crop = await cropper.buildCrop(outPng, await stationBbox(), OUT_W, OUT_H, PAD)
+  const crop = await cropper.buildCrop(
+    outPng,
+    await stationBbox(),
+    OUT_W,
+    OUT_H,
+    PAD
+  )
   console.error(`bajs-hero.png z${crop.zoom} ${crop.width}x${crop.height}`)
 }
 

@@ -9,7 +9,7 @@ import {
   PrevNext as KitPrevNext,
   SectionHeader,
 } from "@/app/statistika/editorial/blocks"
-import { type FaqItem } from "@/app/statistika/editorial/faq"
+import type { FaqItem } from "@/app/statistika/editorial/faq"
 import { Body, Hook, PageTitle } from "@/app/statistika/editorial/primitives"
 import { fmtHR } from "@/lib/format"
 import type { StopPageData } from "@/lib/generated/StopPageData"
@@ -46,7 +46,12 @@ export function Naslov({ data }: { data: StopPageData }) {
         trail={[
           { label: "sve stanice", href: "/stanice" },
           ...(data.kvart
-            ? [{ label: data.kvart, href: `/kvartovi/${kvartSlug(data.kvart)}` }]
+            ? [
+                {
+                  label: data.kvart,
+                  href: `/kvartovi/${kvartSlug(data.kvart)}`,
+                },
+              ]
             : []),
           { label: data.name.toLowerCase() },
         ]}
@@ -79,7 +84,12 @@ export function Cinjenice({ data }: { data: StopPageData }) {
           value={`${window.first} · ${window.last}`}
         />
       )}
-      {mf && <FactRow label="najčešća linija" value={`${mf.line.broj} · ${mf.headway}`} />}
+      {mf && (
+        <FactRow
+          label="najčešća linija"
+          value={`${mf.line.broj} · ${mf.headway}`}
+        />
+      )}
     </div>
   )
 }
@@ -105,7 +115,9 @@ function LinijaRow({ line }: { line: StopPageData["lines"][number] }) {
           </span>
         </span>
         <span className="h-3 min-w-3 flex-1 border-b border-dotted border-hairline-strong" />
-        <span className={`shrink-0 font-mono text-label ${hw ? "text-ink-muted" : "text-ink-faint"}`}>
+        <span
+          className={`shrink-0 font-mono text-label ${hw ? "text-ink-muted" : "text-ink-faint"}`}
+        >
           {hw ?? "bez podataka o intervalu"}
         </span>
       </Link>
@@ -138,8 +150,10 @@ export function LinijeKojeStaju({ data }: { data: StopPageData }) {
 
 export function DosegOdavde({ data }: { data: StopPageData }) {
   const copy = dosegCopy(data)
-  if (!copy || !data.reach) return null
-  const bands: [string, number][] = [
+  if (!copy || !data.reach) {
+    return null
+  }
+  const bands: Array<[string, number]> = [
     ["za 15 min", data.reach.stations15],
     ["za 30 min", data.reach.stations30],
     ["za 45 min", data.reach.stations45],
@@ -154,7 +168,8 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
           <div key={label} className="flex-1 border-t-2 border-zg-blue pt-3">
             <p className="font-mono text-label text-ink-faint">{label}</p>
             <Hook as="p" className="mt-1">
-              {count} <span className="font-normal text-ink-muted">stanica</span>
+              {count}{" "}
+              <span className="font-normal text-ink-muted">stanica</span>
             </Hook>
           </div>
         ))}
@@ -174,7 +189,9 @@ export function DosegOdavde({ data }: { data: StopPageData }) {
 // ── Susjedne stanice ────────────────────────────────────────────────────────
 
 export function SusjedneStanice({ data }: { data: StopPageData }) {
-  if (data.neighbors.length === 0) return null
+  if (data.neighbors.length === 0) {
+    return null
+  }
   return (
     <div>
       <SectionHeader eyebrow="susjedne stanice" hook="Stanice u blizini.">
@@ -208,15 +225,20 @@ export function IstoimeneStanice({
   siblings,
 }: {
   name: string
-  siblings: SiblingStop[]
+  siblings: Array<SiblingStop>
 }) {
-  if (siblings.length === 0) return null
+  if (siblings.length === 0) {
+    return null
+  }
   const n = siblings.length
   const count = `${numberWordF(n)} ${plural(n, "stanica", "stanice", "stanica")}`
   const verb = plural(n, "Postoji", "Postoje", "Postoji")
   return (
     <div>
-      <SectionHeader eyebrow="istoimene stanice" hook={`${verb} još ${count} imena ${name}.`}>
+      <SectionHeader
+        eyebrow="istoimene stanice"
+        hook={`${verb} još ${count} imena ${name}.`}
+      >
         Različite lokacije s istim imenom. Provjeri kvart i udaljenost da ne
         zamijeniš stanicu.
       </SectionHeader>
@@ -252,8 +274,8 @@ export function PrevNext({ data }: { data: StopPageData }) {
 
 // ── FAQ + JSON-LD ───────────────────────────────────────────────────────────
 
-export function buildFaq(data: StopPageData): FaqItem[] {
-  const items: FaqItem[] = []
+export function buildFaq(data: StopPageData): Array<FaqItem> {
+  const items: Array<FaqItem> = []
   const n = data.lineCount
 
   items.push({
@@ -262,14 +284,20 @@ export function buildFaq(data: StopPageData): FaqItem[] {
   })
 
   const nearest = data.neighbors.slice(0, 2).map((x) => x.name)
-  const locParts: string[] = []
-  if (data.kvart) locParts.push(`Stanica ${data.name} nalazi se u kvartu ${data.kvart}.`)
-  if (nearest.length > 0)
+  const locParts: Array<string> = []
+  if (data.kvart) {
+    locParts.push(`Stanica ${data.name} nalazi se u kvartu ${data.kvart}.`)
+  }
+  if (nearest.length > 0) {
     locParts.push(
       `Najbliže susjedne stanice su ${nearest.join(nearest.length > 1 ? " i " : "")}.`
     )
+  }
   if (locParts.length > 0) {
-    items.push({ q: `Gdje se nalazi stanica ${data.name}?`, a: locParts.join(" ") })
+    items.push({
+      q: `Gdje se nalazi stanica ${data.name}?`,
+      a: locParts.join(" "),
+    })
   }
 
   const mf = mostFrequentLine(data)
@@ -279,11 +307,12 @@ export function buildFaq(data: StopPageData): FaqItem[] {
       }vozi ${mf.headway}.`
     : ""
   const window = serviceWindow(data)
-  if (window)
+  if (window) {
     items.push({
       q: `Kada vozi prvi i zadnji polazak sa stanice ${data.name}?`,
       a: `Prvi polazak sa stanice je u ${window.first}, a zadnji u ${window.last}.${freq}`,
     })
+  }
 
   return items
 }

@@ -76,8 +76,11 @@ async function loadMeasured() {
     loadBajsBalance(ranking),
     loadBajsRelocations(WINDOW_DAYS, rides?.fullDays),
   ])
-  if (rides === null) cacheLife("seconds")
-  else cacheLife("minutes")
+  if (rides === null) {
+    cacheLife("seconds")
+  } else {
+    cacheLife("minutes")
+  }
   return {
     rides,
     ranking,
@@ -93,7 +96,7 @@ type Measured = Awaited<ReturnType<typeof loadMeasured>>
 
 function Intro({ rides }: { rides: Measured["rides"] }) {
   return (
-    <Section width="article" className="pb-0 pt-10 sm:pb-0 sm:pt-14">
+    <Section width="article" className="pt-10 pb-0 sm:pt-14 sm:pb-0">
       <Breadcrumb trail={[{ label: "doseg.hr" }, { label: "bajs" }]} />
       <PageTitle className="mt-4">Bajs u brojkama.</PageTitle>
       <Body className="mt-1 text-ink-muted">
@@ -109,14 +112,14 @@ function Intro({ rides }: { rides: Measured["rides"] }) {
             vožnji
           </Strong>{" "}
           javnim biciklom svaki dan. Nitko tu brojku ne objavljuje, pa je
-          brojimo sami: svake minute snimimo koji bicikl stoji na kojoj
-          stanici i usporedimo dvije uzastopne snimke.
+          brojimo sami: svake minute snimimo koji bicikl stoji na kojoj stanici
+          i usporedimo dvije uzastopne snimke.
         </Body>
       ) : (
         <Body className="mt-5 max-w-[560px]">
-          Svake minute snimamo koji bicikl stoji na kojoj stanici i
-          usporedbom uzastopnih snimaka brojimo vožnje. Brojke se trenutno ne
-          mogu dohvatiti, ali karta stanica ispod radi uživo.
+          Svake minute snimamo koji bicikl stoji na kojoj stanici i usporedbom
+          uzastopnih snimaka brojimo vožnje. Brojke se trenutno ne mogu
+          dohvatiti, ali karta stanica ispod radi uživo.
         </Body>
       )}
     </Section>

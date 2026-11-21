@@ -1,5 +1,8 @@
 import { ZagrebBlockMap } from "@/components/zagreb-block-map"
-import type { District as DistrictScore, DistrictScoresOutput as ScoreData } from "@/lib/generated"
+import type {
+  District as DistrictScore,
+  DistrictScoresOutput as ScoreData,
+} from "@/lib/generated"
 import type { computeBaseInsights, computeBajsInsights } from "./stat-data"
 import { EditorialStat } from "./stat-shared"
 import {
@@ -98,7 +101,9 @@ function HzEditorialStat({ data }: { data: ScoreData }) {
   const districtsWithTrains = data.districts.filter(
     (d) => d.trainLines.length > 0
   ).length
-  if (districtsWithTrains === 0) return null
+  if (districtsWithTrains === 0) {
+    return null
+  }
   return (
     <EditorialStat
       value={String(districtsWithTrains)}
@@ -107,11 +112,7 @@ function HzEditorialStat({ data }: { data: ScoreData }) {
   )
 }
 
-function BajsEditorialStat({
-  bajs,
-}: {
-  bajs: BajsInsights
-}) {
+function BajsEditorialStat({ bajs }: { bajs: BajsInsights }) {
   return (
     <EditorialStat
       value={String(bajs.bajsTotalStations)}
@@ -205,11 +206,7 @@ function ScoreMeaningDetails({
   )
 }
 
-export function AccessibilityGapSection({
-  base,
-}: {
-  base: BaseInsights
-}) {
+export function AccessibilityGapSection({ base }: { base: BaseInsights }) {
   const goodPct =
     base.totalPop > 0 ? Math.round((base.goodPop / base.totalPop) * 100) : 0
   const poorPct =

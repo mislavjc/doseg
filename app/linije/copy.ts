@@ -21,7 +21,9 @@ export const MODE_ADJ: Record<LineMode, string> = {
 /** "4:55" — GTFS time string "04:55"/"24:11" → display clock time. */
 export function clockTime(hhmm: string): string {
   const [h, m] = hhmm.split(":").map(Number)
-  if (Number.isNaN(h) || Number.isNaN(m)) return hhmm
+  if (Number.isNaN(h) || Number.isNaN(m)) {
+    return hhmm
+  }
   return `${h % 24}:${String(m).padStart(2, "0")}`
 }
 
@@ -34,8 +36,12 @@ export function plural(
 ): string {
   const m10 = n % 10
   const m100 = n % 100
-  if (m10 === 1 && m100 !== 11) return one
-  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few
+  if (m10 === 1 && m100 !== 11) {
+    return one
+  }
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) {
+    return few
+  }
   return many
 }
 
@@ -86,7 +92,7 @@ export function numberWordF(n: number): string {
 }
 
 /** All weekday departure minutes-of-day for one direction, sorted. */
-function flatDepartures(rows: HourRow[]): number[] {
+function flatDepartures(rows: Array<HourRow>): Array<number> {
   return rows.flatMap((r) => r.minutes.map((m) => r.hour * 60 + m))
 }
 
@@ -99,7 +105,9 @@ export function peakRange(data: LinePageData): [number, number] | null {
   const deps = flatDepartures(data.timetable.radniDan[0] ?? []).filter(
     (t) => t >= 6.5 * 60 && t <= 9.5 * 60
   )
-  if (deps.length < 4) return null
+  if (deps.length < 4) {
+    return null
+  }
   const gaps = deps
     .slice(1)
     .map((t, i) => t - deps[i])
@@ -115,23 +123,31 @@ function clockFromMin(min: number): string {
   return `${h}:${String(min % 60).padStart(2, "0")}`
 }
 
-function hasService(rows: HourRow[][]): boolean {
+function hasService(rows: Array<Array<HourRow>>): boolean {
   return rows.some((dir) => dir.length > 0)
 }
 
 export type ServiceStatus = "weekday" | "weekendOnly" | "none"
 
+interface RepresentativeDay {
+  status: ServiceStatus
+  rows: Array<Array<HourRow>>
+}
+
 /** The representative service day to describe — weekday if the line runs then,
  *  else the weekend — and its status. The day-priority rule lives here once;
  *  serviceStatus and serviceHistogram both read it. */
-function representativeDay(data: LinePageData): {
-  status: ServiceStatus
-  rows: HourRow[][]
-} {
+function representativeDay(data: LinePageData): RepresentativeDay {
   const tt = data.timetable
-  if (hasService(tt.radniDan)) return { status: "weekday", rows: tt.radniDan }
-  if (hasService(tt.subota)) return { status: "weekendOnly", rows: tt.subota }
-  if (hasService(tt.nedjelja)) return { status: "weekendOnly", rows: tt.nedjelja }
+  if (hasService(tt.radniDan)) {
+    return { status: "weekday", rows: tt.radniDan }
+  }
+  if (hasService(tt.subota)) {
+    return { status: "weekendOnly", rows: tt.subota }
+  }
+  if (hasService(tt.nedjelja)) {
+    return { status: "weekendOnly", rows: tt.nedjelja }
+  }
   return { status: "none", rows: [] }
 }
 
@@ -143,7 +159,7 @@ export function serviceStatus(data: LinePageData): ServiceStatus {
 }
 
 /** First/last departure (minutes-of-day) across the given day rows, or null. */
-function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
+function firstLastOfRows(rows: Array<Array<HourRow>>): [number, number] | null {
   const mins = rows.flatMap((dir) => flatDepartures(dir))
   return mins.length > 0 ? [Math.min(...mins), Math.max(...mins)] : null
 }
@@ -152,10 +168,17 @@ function firstLastOfRows(rows: HourRow[][]): [number, number] | null {
  *  no weekday service: never "0:00 - 0:00". */
 export function serviceSpan(data: LinePageData): string {
   const status = serviceStatus(data)
-  if (status === "none") return "trenutno ne prometuje"
+  if (status === "none") {
+    return "trenutno ne prometuje"
+  }
   if (status === "weekendOnly") {
-    const fl = firstLastOfRows([...data.timetable.subota, ...data.timetable.nedjelja])
-    return fl ? `vikendom ${clockFromMin(fl[0])} - ${clockFromMin(fl[1])}` : "samo vikendom"
+    const fl = firstLastOfRows([
+      ...data.timetable.subota,
+      ...data.timetable.nedjelja,
+    ])
+    return fl
+      ? `vikendom ${clockFromMin(fl[0])} - ${clockFromMin(fl[1])}`
+      : "samo vikendom"
   }
   return `${clockTime(data.stats.firstDeparture)} - ${clockTime(data.stats.lastDeparture)}`
 }
@@ -166,8 +189,8 @@ export function serviceSpan(data: LinePageData): string {
  * describe THIS series — not `data.histogram`, which sums both directions and so
  * reads as ~2x the frequency a one-way rider actually gets.
  */
-export function serviceHistogram(data: LinePageData): number[] {
-  let best: HourRow[] = []
+export function serviceHistogram(data: LinePageData): Array<number> {
+  let best: Array<HourRow> = []
   let bestN = -1
   for (const dir of representativeDay(data).rows) {
     const n = dir.reduce((s, r) => s + r.minutes.length, 0)
@@ -177,7 +200,9 @@ export function serviceHistogram(data: LinePageData): number[] {
     }
   }
   const hist = Array.from({ length: 24 }, () => 0)
-  for (const r of best) hist[r.hour % 24] += r.minutes.length
+  for (const r of best) {
+    hist[r.hour % 24] += r.minutes.length
+  }
   return hist
 }
 
@@ -186,9 +211,15 @@ export type WeekendKind = "both" | "saturday" | "sunday" | "none"
 export function weekendKind(data: LinePageData): WeekendKind {
   const subota = hasService(data.timetable.subota)
   const nedjelja = hasService(data.timetable.nedjelja)
-  if (subota && nedjelja) return "both"
-  if (subota) return "saturday"
-  if (nedjelja) return "sunday"
+  if (subota && nedjelja) {
+    return "both"
+  }
+  if (subota) {
+    return "saturday"
+  }
+  if (nedjelja) {
+    return "sunday"
+  }
   return "none"
 }
 
@@ -208,14 +239,14 @@ export function vozniRedNote(data: LinePageData): string {
 }
 
 /** Departure-terminal display name per direction (column headers, toggles). */
-export function departureTerminals(data: LinePageData): string[] {
+export function departureTerminals(data: LinePageData): Array<string> {
   return data.directions.map((_, i) =>
     i === 0 ? data.terminals[0] : data.terminals[1]
   )
 }
 
 /** Fallback chip per direction's end terminal: bus lines departing there. */
-export function terminalChips(data: LinePageData): (string | undefined)[] {
+export function terminalChips(data: LinePageData): Array<string | undefined> {
   return data.directions.map((_, i) => {
     const endTerminal = i === 0 ? data.terminals[1] : data.terminals[0]
     const buses = data.related.sharedTerminal
@@ -232,7 +263,9 @@ export function introText(data: LinePageData): string {
   const noun = MODE_NOUN[data.mode]
   const stops = data.directions[0].stops.length
   const travel = Math.round(data.stats.travelTimeMin)
-  const km = data.stats.distanceKm.toLocaleString("hr-HR", { maximumFractionDigits: 1 })
+  const km = data.stats.distanceKm.toLocaleString("hr-HR", {
+    maximumFractionDigits: 1,
+  })
   const krozStanica = `kroz ${stops} ${plural(stops, "stanicu", "stanice", "stanica")}`
   const trajanje = `${travel} ${plural(travel, "minutu", "minute", "minuta")}`
   const status = serviceStatus(data)
@@ -241,8 +274,13 @@ export function introText(data: LinePageData): string {
     return `Linija ${data.broj} trenutno ne prometuje. U aktualnom voznom redu nema nijednog polaska. Trasa je duga ${km} km ${krozStanica}.`
   }
   if (status === "weekendOnly") {
-    const fl = firstLastOfRows([...data.timetable.subota, ...data.timetable.nedjelja])
-    const span = fl ? ` Prvi polazak je u ${clockFromMin(fl[0])}, zadnji u ${clockFromMin(fl[1])}.` : ""
+    const fl = firstLastOfRows([
+      ...data.timetable.subota,
+      ...data.timetable.nedjelja,
+    ])
+    const span = fl
+      ? ` Prvi polazak je u ${clockFromMin(fl[0])}, zadnji u ${clockFromMin(fl[1])}.`
+      : ""
     return `Linija ${data.broj} vozi samo vikendom, radnim danom ne.${span} Od kraja do kraja ${noun} vozi ${trajanje} ${krozStanica}.`
   }
 

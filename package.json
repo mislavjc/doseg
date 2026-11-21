@@ -9,14 +9,16 @@
     "start": "next start",
     "lint": "oxlint --deny-warnings",
     "knip": "knip",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format": "oxfmt \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "build:district-map": "bun scripts/build-district-map-svg.ts",
     "build:walk-graph": "bun scripts/build-walk-graph.ts",
     "build:bike-graph": "bun scripts/build-bike-graph.ts",
     "build:poi-photos": "bun scripts/build-poi-photos.ts",
     "indexnow": "bun scripts/indexnow.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepare": "lefthook install",
+    "format:check": "oxfmt --check \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -44,6 +46,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cloudflare/oxlint-config": "0.1.0",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.6",
@@ -54,16 +57,16 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "evalite": "^0.19.0",
     "knip": "6.47.0",
+    "lefthook": "2.2.2",
     "osm-pbf-parser": "^2.3.0",
+    "oxfmt": "0.79.0",
     "oxlint": "1.94.0",
-    "oxlint-tsgolint": "7.0.2007",
     "postcss": "^8.5.33",
-    "prettier": "^3.10.1",
-    "prettier-plugin-tailwindcss": "0.8.1",
     "shadcn": "^4.23.0",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5",
     "through2": "^5.0.12",
+    "tsrs": "0.25.0-ts7.1.0-beta",
     "typescript": "^7.0.2",
     "vitest": "^5.1.1"
   },

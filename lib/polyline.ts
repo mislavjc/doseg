@@ -2,8 +2,8 @@
  * Decode a Google Encoded Polyline string into [lng, lat] coordinate pairs
  * (GeoJSON order).
  */
-export function decodePolyline(encoded: string): [number, number][] {
-  const points: [number, number][] = []
+export function decodePolyline(encoded: string): Array<[number, number]> {
+  const points: Array<[number, number]> = []
   let index = 0
   let lat = 0
   let lng = 0
@@ -13,7 +13,7 @@ export function decodePolyline(encoded: string): [number, number][] {
     let result = 0
     let b: number
     do {
-      b = encoded.codePointAt(index++)! - 63
+      b = (encoded.codePointAt(index++) ?? Number.NaN) - 63
       result |= (b & 0x1f) << shift
       shift += 5
     } while (b >= 0x20)
@@ -22,7 +22,7 @@ export function decodePolyline(encoded: string): [number, number][] {
     shift = 0
     result = 0
     do {
-      b = encoded.codePointAt(index++)! - 63
+      b = (encoded.codePointAt(index++) ?? Number.NaN) - 63
       result |= (b & 0x1f) << shift
       shift += 5
     } while (b >= 0x20)

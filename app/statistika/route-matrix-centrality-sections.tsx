@@ -1,7 +1,11 @@
 import { join } from "node:path"
 import { getDataDir } from "@/lib/data-dir"
 import { readJsonCached } from "@/lib/page-data"
-import type { CentralityStats, RouteStatsOutput as RouteStats } from "@/lib/generated"
+import type {
+  CentralityStats,
+  CentralityStop,
+  RouteStatsOutput as RouteStats,
+} from "@/lib/generated"
 import type { TravelMatrix, computeMatrixInsights } from "./stat-data"
 import { districtAbbrev, sortRoutesByName } from "./stat-data"
 import RouteAnalysisTables from "./route-analysis-tables"
@@ -15,7 +19,9 @@ export function RouteStatsSection({
 }: {
   routeStats: RouteStats | null
 }) {
-  if (!stats) return null
+  if (!stats) {
+    return null
+  }
 
   const sortedRoutes = sortRoutesByName(
     stats.routes.filter((r) => r.mode !== "RAIL")
@@ -55,14 +61,19 @@ export function TravelMatrixSection({
   travelMatrix: TravelMatrix | null
   matrix: MatrixInsights
 }) {
-  if (!travelMatrix) return null
+  if (!travelMatrix) {
+    return null
+  }
   return (
     <section
       id="matrica"
       className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
     >
       <TravelMatrixHeader travelMatrix={travelMatrix} />
-      <CollapsibleContent expandLabel="Prikaži matricu putovanja" collapseLabel="Suzi matricu putovanja">
+      <CollapsibleContent
+        expandLabel="Prikaži matricu putovanja"
+        collapseLabel="Suzi matricu putovanja"
+      >
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_280px] lg:gap-16 xl:grid-cols-[1fr_320px]">
           <div className="overflow-x-auto">
             <TravelMatrixTable travelMatrix={travelMatrix} />
@@ -83,8 +94,8 @@ function TravelMatrixHeader({ travelMatrix }: { travelMatrix: TravelMatrix }) {
         <StatModuleTitle>Matrica putovanja</StatModuleTitle>
         <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
           Vrijeme putovanja javnim prijevozom između središta svakog kvarta,
-          polazak u {travelMatrix.departureTime}. Boja označava
-          trajanje - od zelene (brzo) do crvene (sporo).
+          polazak u {travelMatrix.departureTime}. Boja označava trajanje - od
+          zelene (brzo) do crvene (sporo).
         </p>
       </div>
     </div>
@@ -101,36 +112,36 @@ function TravelMatrixTable({ travelMatrix }: { travelMatrix: TravelMatrix }) {
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-white to-transparent dark:from-zinc-950" />
         <div className="overflow-x-auto">
           <table
-          className="w-max border-collapse font-mono text-label"
-          aria-label="Matrica putovanja između kvartova"
-        >
-          <thead>
-            <tr>
-              <td className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
-                <span className="sr-only">Iz / U</span>
-              </td>
-              {travelMatrix.districts.map((name) => (
-                <th
-                  key={name}
-                  className="min-w-[44px] p-1 text-center font-medium text-slate-500 dark:text-slate-400"
-                  title={name}
-                >
-                  {districtAbbrev[name] ?? name.slice(0, 4)}
-                </th>
+            className="w-max border-collapse font-mono text-label"
+            aria-label="Matrica putovanja između kvartova"
+          >
+            <thead>
+              <tr>
+                <td className="sticky left-0 z-10 bg-white p-1 text-left font-medium text-slate-500 dark:bg-zinc-950 dark:text-slate-400">
+                  <span className="sr-only">Iz / U</span>
+                </td>
+                {travelMatrix.districts.map((name) => (
+                  <th
+                    key={name}
+                    className="min-w-[44px] p-1 text-center font-medium text-slate-500 dark:text-slate-400"
+                    title={name}
+                  >
+                    {districtAbbrev.get(name) ?? name.slice(0, 4)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {travelMatrix.districts.map((rowName, ri) => (
+                <MatrixRow
+                  key={rowName}
+                  travelMatrix={travelMatrix}
+                  rowName={rowName}
+                  ri={ri}
+                />
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {travelMatrix.districts.map((rowName, ri) => (
-              <MatrixRow
-                key={rowName}
-                travelMatrix={travelMatrix}
-                rowName={rowName}
-                ri={ri}
-              />
-            ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </div>
       </div>
       <TravelMatrixLegend />
@@ -153,7 +164,7 @@ function MatrixRow({
         className="sticky left-0 z-10 bg-white p-1 pr-2 text-left font-medium whitespace-nowrap text-slate-700 group-hover/row:bg-cyan-50 dark:bg-zinc-950 dark:text-slate-300 dark:group-hover/row:bg-cyan-950/20"
         scope="row"
       >
-        {districtAbbrev[rowName] ?? rowName.slice(0, 4)}
+        {districtAbbrev.get(rowName) ?? rowName.slice(0, 4)}
       </th>
       {travelMatrix.matrix[ri].map((time, ci) => (
         <MatrixCell
@@ -216,9 +227,7 @@ function MatrixCell({
           {isDiag ? "-" : time < 0 ? "×" : time}
         </span>
         {!isDiag && time > 0 && (
-          <span className="font-mono text-label opacity-60">
-            {transfers}p
-          </span>
+          <span className="font-mono text-label opacity-60">{transfers}p</span>
         )}
       </div>
     </td>
@@ -268,11 +277,7 @@ function TravelMatrixLegend() {
   )
 }
 
-function TravelMatrixInsights({
-  matrix,
-}: {
-  matrix: MatrixInsights
-}) {
+function TravelMatrixInsights({ matrix }: { matrix: MatrixInsights }) {
   return (
     <div className="flex flex-col gap-6">
       <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
@@ -285,10 +290,23 @@ function TravelMatrixInsights({
               Najdulje putovanje
             </div>
             <div className="mt-2 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
-              {districtAbbrev[matrix.matrixWorstCorridor.from] ??
+              {districtAbbrev.get(matrix.matrixWorstCorridor.from) ??
                 matrix.matrixWorstCorridor.from}{" "}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block -mt-0.5 align-middle text-slate-400"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>{" "}
-              {districtAbbrev[matrix.matrixWorstCorridor.to] ??
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="-mt-0.5 inline-block align-middle text-slate-400"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>{" "}
+              {districtAbbrev.get(matrix.matrixWorstCorridor.to) ??
                 matrix.matrixWorstCorridor.to}
             </div>
             <div className="mt-1 text-body text-slate-600 dark:text-slate-400">
@@ -302,10 +320,24 @@ function TravelMatrixInsights({
               Najbrža veza
             </div>
             <div className="mt-2 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
-              {districtAbbrev[matrix.matrixBestPair.from] ??
+              {districtAbbrev.get(matrix.matrixBestPair.from) ??
                 matrix.matrixBestPair.from}{" "}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block -mt-0.5 align-middle text-slate-400"><path d="M8 4 2 12l6 8" /><path d="M16 4l6 8-6 8" /><path d="M2 12h20" /></svg>{" "}
-              {districtAbbrev[matrix.matrixBestPair.to] ??
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="-mt-0.5 inline-block align-middle text-slate-400"
+              >
+                <path d="M8 4 2 12l6 8" />
+                <path d="M16 4l6 8-6 8" />
+                <path d="M2 12h20" />
+              </svg>{" "}
+              {districtAbbrev.get(matrix.matrixBestPair.to) ??
                 matrix.matrixBestPair.to}
             </div>
             <div className="mt-1 text-body text-slate-600 dark:text-slate-400">
@@ -333,8 +365,8 @@ function TravelMatrixInsights({
 function computeTransferData(travelMatrix: TravelMatrix) {
   const n = travelMatrix.districts.length
   const buckets: Record<
-    string,
-    { count: number; pairs: { from: string; to: string; time: number }[] }
+    "0" | "1" | "2+",
+    { count: number; pairs: Array<{ from: string; to: string; time: number }> }
   > = {
     "0": { count: 0, pairs: [] },
     "1": { count: 0, pairs: [] },
@@ -345,9 +377,13 @@ function computeTransferData(travelMatrix: TravelMatrix) {
 
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (i === j) continue
+      if (i === j) {
+        continue
+      }
       const time = travelMatrix.matrix[i][j]
-      if (time <= 0) continue
+      if (time <= 0) {
+        continue
+      }
       const transfers = travelMatrix.transferMatrix[i][j]
       totalPairs++
       totalTransfers += transfers
@@ -430,7 +466,7 @@ function TransferStackedBar({
             )
         )}
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:gap-8 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-8">
         {barData.map((d) => (
           <div
             key={d.label}
@@ -463,7 +499,9 @@ function TransferWorstCorridors({
 }: {
   worstPairs: ReturnType<typeof computeTransferData>["worstPairs"]
 }) {
-  if (worstPairs.length === 0) return null
+  if (worstPairs.length === 0) {
+    return null
+  }
   return (
     <div className="mt-12 flex flex-col">
       <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
@@ -477,7 +515,20 @@ function TransferWorstCorridors({
           >
             <span className="text-body text-slate-800">
               {pair.from}{" "}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block align-middle text-slate-400"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>{" "}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="inline-block align-middle text-slate-400"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>{" "}
               {pair.to}
             </span>
             <span className="ml-4 font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
@@ -495,9 +546,13 @@ export function TransferDependencySection({
 }: {
   travelMatrix: TravelMatrix | null
 }) {
-  if (!travelMatrix?.transferMatrix) return null
+  if (!travelMatrix?.transferMatrix) {
+    return null
+  }
   const td = computeTransferData(travelMatrix)
-  if (td.totalPairs === 0) return null
+  if (td.totalPairs === 0) {
+    return null
+  }
 
   return (
     <section
@@ -515,41 +570,54 @@ export function TransferDependencySection({
       </div>
 
       <TransferStackedBar barData={td.barData} avgTransfers={td.avgTransfers} />
-        <TransferWorstCorridors worstPairs={td.worstPairs} />
+      <TransferWorstCorridors worstPairs={td.worstPairs} />
 
-        <div className="mt-8 text-body text-slate-700 dark:text-slate-300">
-          <p>
-            Od {td.totalPairs} mogućih parova kvartova,{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
-              {td.directPct}%
-            </strong>{" "}
-            je dostupno izravno bez presjedanja,{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
-              {td.onePct}%
-            </strong>{" "}
-            zahtijeva jedno presjedanje, a{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
-              {td.twoPlusPct}%
-            </strong>{" "}
-            zahtijeva dva ili više.
-            {td.worstPairs.length > 0 && (
-              <>
-                {" "}
-                Najgori koridor (
-                <strong className="font-medium text-slate-900 dark:text-slate-100">
-                  {td.worstPairs[0].from}{" "}
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block align-middle text-slate-400"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>{" "}
-                  {td.worstPairs[0].to}
-                </strong>
-                ) traje{" "}
-                <strong className="font-medium text-slate-900 dark:text-slate-100">
-                  {td.worstPairs[0].time} minuta
-                </strong>{" "}
-                - svako presjedanje dodaje nepredvidivo čekanje.
-              </>
-            )}
-          </p>
-        </div>
+      <div className="mt-8 text-body text-slate-700 dark:text-slate-300">
+        <p>
+          Od {td.totalPairs} mogućih parova kvartova,{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {td.directPct}%
+          </strong>{" "}
+          je dostupno izravno bez presjedanja,{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {td.onePct}%
+          </strong>{" "}
+          zahtijeva jedno presjedanje, a{" "}
+          <strong className="font-medium text-slate-900 dark:text-slate-100">
+            {td.twoPlusPct}%
+          </strong>{" "}
+          zahtijeva dva ili više.
+          {td.worstPairs.length > 0 && (
+            <>
+              {" "}
+              Najgori koridor (
+              <strong className="font-medium text-slate-900 dark:text-slate-100">
+                {td.worstPairs[0].from}{" "}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="inline-block align-middle text-slate-400"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>{" "}
+                {td.worstPairs[0].to}
+              </strong>
+              ) traje{" "}
+              <strong className="font-medium text-slate-900 dark:text-slate-100">
+                {td.worstPairs[0].time} minuta
+              </strong>{" "}
+              - svako presjedanje dodaje nepredvidivo čekanje.
+            </>
+          )}
+        </p>
+      </div>
     </section>
   )
 }
@@ -565,7 +633,7 @@ function CentralityRanking({
   color,
   scoreDecimals,
 }: {
-  stops: import("@/lib/generated").CentralityStop[]
+  stops: Array<CentralityStop>
   title: string
   subtitle: string
   color: "rose" | "emerald"
@@ -640,14 +708,10 @@ function CentralityRanking({
   )
 }
 
-function CentralityNumbers({
-  data,
-}: {
-  data: CentralityStats
-}) {
+function CentralityNumbers({ data }: { data: CentralityStats }) {
   const { networkDiameter, averagePathLength } = data
   return (
-    <div className="my-12 grid grid-cols-2 gap-6 sm:gap-12 border-t border-b border-slate-100 py-12 sm:grid-cols-4 dark:border-white/10">
+    <div className="my-12 grid grid-cols-2 gap-6 border-t border-b border-slate-100 py-12 sm:grid-cols-4 sm:gap-12 dark:border-white/10">
       <div className="flex flex-col border-l-2 border-rose-500 pl-4">
         <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
           {networkDiameter.minutes}
@@ -698,7 +762,9 @@ export function CentralitySection() {
   const data = readJsonCached<CentralityStats>(
     join(getDataDir(), "centrality-stats.json")
   )
-  if (!data) return null
+  if (!data) {
+    return null
+  }
 
   const { betweenness, closeness, networkDiameter } = data
 
@@ -715,7 +781,10 @@ export function CentralitySection() {
         </div>
       </div>
 
-      <CollapsibleContent expandLabel="Prikaži centralnost" collapseLabel="Suzi centralnost">
+      <CollapsibleContent
+        expandLabel="Prikaži centralnost"
+        collapseLabel="Suzi centralnost"
+      >
         <CentralityNumbers data={data} />
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
@@ -772,8 +841,8 @@ export function CentralitySection() {
             <strong className="font-medium text-slate-900 dark:text-slate-100">
               {networkDiameter.minutes} minuta
             </strong>{" "}
-            ({networkDiameter.fromStop} &rarr; {networkDiameter.toStop}) označava
-            najdulje moguće putovanje unutar sustava.
+            ({networkDiameter.fromStop} &rarr; {networkDiameter.toStop})
+            označava najdulje moguće putovanje unutar sustava.
           </p>
         </div>
       </CollapsibleContent>

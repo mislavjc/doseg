@@ -25,10 +25,14 @@ const PRESETS = [
 
 function parseTime(t: string): number | null {
   const m = t.trim().match(/^(\d{1,2})[:.]?(\d{2})$/u)
-  if (!m) return null
+  if (!m) {
+    return null
+  }
   const h = Number(m[1])
   const min = Number(m[2])
-  if (h > 23 || min > 59) return null
+  if (h > 23 || min > 59) {
+    return null
+  }
   return h * 60 + min
 }
 
@@ -54,8 +58,11 @@ function ExactTimeRow({
 
   const commitDraft = () => {
     const parsed = parseTime(draft)
-    if (parsed != null && fmt(parsed) !== effective) onCommit(fmt(parsed))
-    else setDraft(effective)
+    if (parsed !== null && fmt(parsed) !== effective) {
+      onCommit(fmt(parsed))
+    } else {
+      setDraft(effective)
+    }
   }
   const step = (delta: number) => {
     const base = parseTime(effective) ?? 0
@@ -85,7 +92,9 @@ function ExactTimeRow({
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commitDraft}
           onKeyDown={(e) => {
-            if (e.key === "Enter") e.currentTarget.blur()
+            if (e.key === "Enter") {
+              e.currentTarget.blur()
+            }
           }}
           aria-label="Točno vrijeme polaska"
           className={`w-[72px] bg-transparent text-center font-mono text-head font-bold outline-none ${
@@ -116,7 +125,7 @@ function PanelBody({
   const effective = departTime ?? now
   const isPreset = PRESETS.some((p) => p.time === departTime)
   return (
-    <DropdownPanel className="origin-top-right top-full right-0 mt-1.5 w-[312px]">
+    <DropdownPanel className="top-full right-0 mt-1.5 w-[312px] origin-top-right">
       <p className="px-[18px] pt-[18px] pb-2 font-heros text-head font-bold text-ink">
         Kad krećeš?
       </p>

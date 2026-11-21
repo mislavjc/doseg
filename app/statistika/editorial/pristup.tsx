@@ -33,11 +33,14 @@ function WalkBar({
       </span>
       <div className="flex min-w-0 flex-1 items-center gap-[7px]">
         <span className={cn("size-[7px] shrink-0 rounded-[2px]", bar)} />
-        <span className={cn("h-0.5 shrink-0", bar)} style={{ width: `${pct}%` }} />
+        <span
+          className={cn("h-0.5 shrink-0", bar)}
+          style={{ width: `${pct}%` }}
+        />
         <span className={cn("h-[11px] w-[3px] shrink-0", bar)} />
         <span
           className={cn(
-            "shrink-0 whitespace-nowrap pl-[3px] font-mono text-label tabular-nums",
+            "shrink-0 pl-[3px] font-mono text-label whitespace-nowrap tabular-nums",
             accent === "blue" ? "text-ink" : "text-ink-muted"
           )}
         >

@@ -30,6 +30,14 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run lint
+      - run: bun run format:check
+
+  knip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run knip
 
   rust-check:
@@ -43,7 +51,7 @@ jobs:
         with:
           workspaces: transit
       - run: cargo fmt --manifest-path transit/Cargo.toml -- --check
-      - run: cargo clippy --manifest-path transit/Cargo.toml -- -D warnings
+      - run: cargo clippy --manifest-path transit/Cargo.toml --all-targets -- -D warnings
       - run: cargo test --manifest-path transit/Cargo.toml
 
   rust-audit:

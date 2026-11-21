@@ -9,9 +9,10 @@ import {
   StatModuleTitle,
 } from "./stat-typography"
 
-const sectionAccents: Record<string, { gradient: string; eyebrowColor: string }> = {
+const sectionAccents = {
   "promet-danas": {
-    gradient: "from-emerald-400 to-teal-500 dark:from-emerald-500 dark:to-teal-600",
+    gradient:
+      "from-emerald-400 to-teal-500 dark:from-emerald-500 dark:to-teal-600",
     eyebrowColor: "text-emerald-600 dark:text-emerald-400",
   },
   pouzdanost: {
@@ -19,11 +20,13 @@ const sectionAccents: Record<string, { gradient: string; eyebrowColor: string }>
     eyebrowColor: "text-sky-600 dark:text-sky-400",
   },
   povezanost: {
-    gradient: "from-violet-400 to-purple-500 dark:from-violet-500 dark:to-purple-600",
+    gradient:
+      "from-violet-400 to-purple-500 dark:from-violet-500 dark:to-purple-600",
     eyebrowColor: "text-violet-600 dark:text-violet-400",
   },
   bajs: {
-    gradient: "from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600",
+    gradient:
+      "from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600",
     eyebrowColor: "text-amber-600 dark:text-amber-400",
   },
   analiza: {
@@ -40,14 +43,14 @@ export function SectionGroup({
   description,
   children,
 }: {
-  id: string
+  id: keyof typeof sectionAccents
   number: number
   eyebrow: string
   title: string
   description: string
   children: React.ReactNode
 }) {
-  const accent = sectionAccents[id] ?? sectionAccents["analiza"]
+  const accent = sectionAccents[id]
   const numLabel = String(number).padStart(2, "0")
 
   return (
@@ -107,7 +110,7 @@ export function EditorialStat({
   )
 }
 
-const sectionColorMap: Record<string, string> = {
+const sectionColorMap = {
   slate: "text-slate-800 dark:text-slate-200",
   rose: "text-rose-800 dark:text-rose-200",
   emerald: "text-emerald-800 dark:text-emerald-200",
@@ -121,7 +124,7 @@ const sectionColorMap: Record<string, string> = {
   indigo: "text-indigo-800 dark:text-indigo-200",
 }
 
-const sectionBgMap: Record<string, string> = {
+const sectionBgMap = {
   slate: "dark:bg-white/10",
   rose: "dark:bg-rose-500/20",
   emerald: "dark:bg-emerald-500/20",
@@ -135,7 +138,7 @@ const sectionBgMap: Record<string, string> = {
   indigo: "dark:bg-indigo-500/20",
 }
 
-const sectionIconPaths: Record<string, React.ReactNode> = {
+const sectionIconPaths = {
   info: (
     <>
       <circle cx="12" cy="12" r="10" />
@@ -183,9 +186,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
       <circle cx="16.5" cy="16.5" r="5.5" />
     </>
   ),
-  moon: (
-    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-  ),
+  moon: <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />,
   calendar: (
     <>
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -209,9 +210,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
       <path d="M22 4v16" />
     </>
   ),
-  bolt: (
-    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-  ),
+  bolt: <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />,
   "circle-down": (
     <>
       <circle cx="12" cy="12" r="10" />
@@ -220,7 +219,7 @@ const sectionIconPaths: Record<string, React.ReactNode> = {
   ),
 }
 
-function SectionIconSvg({ icon }: { icon: string }) {
+function SectionIconSvg({ icon }: { icon: keyof typeof sectionIconPaths }) {
   return (
     <svg
       aria-hidden="true"
@@ -243,22 +242,18 @@ export function SectionIcon({
   color,
   title,
 }: {
-  icon: string
-  color: string
+  icon: keyof typeof sectionIconPaths
+  color: keyof typeof sectionColorMap
   title: string
 }) {
   return (
-    <div
-      className={`mb-6 flex items-center gap-3 ${sectionColorMap[color] ?? ""}`}
-    >
+    <div className={`mb-6 flex items-center gap-3 ${sectionColorMap[color]}`}>
       <span
-        className={`flex h-10 w-10 items-center justify-center rounded-full bg-white ${sectionBgMap[color] ?? ""}`}
+        className={`flex h-10 w-10 items-center justify-center rounded-full bg-white ${sectionBgMap[color]}`}
       >
         <SectionIconSvg icon={icon} />
       </span>
-      <StatModuleTitle className="text-head font-bold">
-        {title}
-      </StatModuleTitle>
+      <StatModuleTitle className="text-head font-bold">{title}</StatModuleTitle>
     </div>
   )
 }
@@ -319,7 +314,7 @@ export function RankingList({
   trailing,
   color,
 }: {
-  items: DistrictScore[]
+  items: Array<DistrictScore>
   value: (d: DistrictScore) => number
   label: (d: DistrictScore) => string
   trailing: (d: DistrictScore) => string

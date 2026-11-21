@@ -1,9 +1,9 @@
 export async function mapConcurrent<T, R>(
-  items: T[],
+  items: Array<T>,
   limit: number,
   fn: (item: T) => Promise<R>
-): Promise<R[]> {
-  const results: R[] = []
+): Promise<Array<R>> {
+  const results: Array<R> = []
   let next = 0
   await Promise.all(
     Array.from({ length: Math.min(limit, items.length) }, async () => {

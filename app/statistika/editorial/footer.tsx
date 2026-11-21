@@ -13,14 +13,22 @@ import { MonoLabel, Section } from "./primitives"
 const GITHUB = "https://github.com/mislavjc/doseg"
 
 type Item = { t: string; href?: string; external?: boolean; prefetch?: false }
-type Column = { label: string; items: Item[] }
+type Column = { label: string; items: Array<Item> }
 
-const COLUMNS: Column[] = [
+const COLUMNS: Array<Column> = [
   {
     label: "izvori",
     items: [
-      { t: "zet gtfs · rt", href: "https://www.zet.hr/odredbe/datoteke-u-gtfs-formatu/669", external: true },
-      { t: "© openstreetmap", href: "https://www.openstreetmap.org/copyright", external: true },
+      {
+        t: "zet gtfs · rt",
+        href: "https://www.zet.hr/odredbe/datoteke-u-gtfs-formatu/669",
+        external: true,
+      },
+      {
+        t: "© openstreetmap",
+        href: "https://www.openstreetmap.org/copyright",
+        external: true,
+      },
       { t: "dzs 2021", href: "https://dzs.gov.hr", external: true },
     ],
   },
@@ -45,11 +53,17 @@ const COLUMNS: Column[] = [
 
 function ColumnItem({ item }: { item: Item }) {
   const cls = "font-mono text-label leading-5"
-  if (!item.href)
+  if (!item.href) {
     return <span className={`${cls} text-ink-faint`}>{item.t}</span>
+  }
   const linkCls = `${cls} text-zg-blue transition-colors hover:text-navy`
   return item.external ? (
-    <a href={item.href} target="_blank" rel="noopener noreferrer" className={linkCls}>
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={linkCls}
+    >
       {item.t}
     </a>
   ) : (
@@ -108,7 +122,7 @@ export function Footer({ updated }: { updated: string }) {
               <span className="text-ink">doseg</span>
               <span className="text-zg-blue">.hr</span>
             </span>
-            <span className="text-label font-mono text-ink-faint">
+            <span className="font-mono text-label text-ink-faint">
               · statistika dostupnosti zagrebačkog javnog prijevoza
             </span>
           </div>

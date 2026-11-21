@@ -6,7 +6,7 @@ export function GET() {
   try {
     const data = readFileSync(
       join(getDataDir(), "district-scores.json"),
-      "utf-8"
+      "utf8"
     )
     return new Response(data, {
       headers: {

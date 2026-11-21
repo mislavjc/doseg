@@ -114,9 +114,15 @@ export function Ravnoteza({
   const dockedPct = (docked / total) * 100
 
   return (
-    <Section id="ravnoteza" width="wide" className="pb-0 pt-12 sm:pb-0 sm:pt-14">
+    <Section
+      id="ravnoteza"
+      width="wide"
+      className="pt-12 pb-0 sm:pt-14 sm:pb-0"
+    >
       <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 pb-8">
-        <MonoLabel className="text-ink">{stations} {plural(stations, "stanica", "stanice", "stanica")}</MonoLabel>
+        <MonoLabel className="text-ink">
+          {stations} {plural(stations, "stanica", "stanice", "stanica")}
+        </MonoLabel>
         <MonoLabel className="text-ink">{bajsevi(docked)}</MonoLabel>
         <MonoLabel className="text-ink">{empty} praznih</MonoLabel>
       </div>
@@ -153,7 +159,9 @@ const RITAM_HEIGHT = 170
 
 export function Ritam({ rides }: { rides: BajsRides }) {
   const { hourly, peakHour, morningPeak } = rides
-  if (!peakHour) return null
+  if (!peakHour) {
+    return null
+  }
 
   const max = Math.max(...hourly.map((h) => h.avgStarts))
   // The morning commute only reads as its own event when it is not the peak.
@@ -163,7 +171,10 @@ export function Ritam({ rides }: { rides: BajsRides }) {
   // Hours with no observation at all are skipped rather than drawn as zero,
   // so a gap in coverage never reads as a gap in riding.
   const byHour = new Map(hourly.map((h) => [h.hour, h]))
-  const columns = Array.from({ length: 24 }, (_, hour) => byHour.get(hour) ?? null)
+  const columns = Array.from(
+    { length: 24 },
+    (_, hour) => byHour.get(hour) ?? null
+  )
 
   return (
     <Section id="ritam">
@@ -197,13 +208,15 @@ export function Ritam({ rides }: { rides: BajsRides }) {
                   : "bg-ink-ghost"
               )}
               style={{
-                height: h ? `${Math.max(2, (h.avgStarts / max) * RITAM_HEIGHT)}px` : 0,
+                height: h
+                  ? `${Math.max(2, (h.avgStarts / max) * RITAM_HEIGHT)}px`
+                  : 0,
               }}
             />
           ))}
         </div>
         <span
-          className="absolute top-0 -translate-x-1/2 whitespace-nowrap font-mono text-label text-zg-blue"
+          className="absolute top-0 -translate-x-1/2 font-mono text-label whitespace-nowrap text-zg-blue"
           style={{ left: `${((peakHour.hour + 0.5) / 24) * 100}%` }}
         >
           {hourLabel(peakHour.hour)} · {num(peakHour.avgStarts)}
@@ -218,8 +231,8 @@ export function Ritam({ rides }: { rides: BajsRides }) {
       </div>
 
       <BodyMuted className="mt-6 font-mono text-label">
-        prosjek po satu · {dayCount(peakHour.days)} mjerenja · noću
-        se vozi i dalje
+        prosjek po satu · {dayCount(peakHour.days)} mjerenja · noću se vozi i
+        dalje
       </BodyMuted>
     </Section>
   )
@@ -229,7 +242,14 @@ export function Ritam({ rides }: { rides: BajsRides }) {
 
 export function Dani({ rides }: { rides: BajsRides }) {
   const { fullDays, avgPerDay, busiestDay, partialDay } = rides
-  if (fullDays.length === 0 || avgPerDay === null || avgPerDay === 0 || !busiestDay) return null
+  if (
+    fullDays.length === 0 ||
+    avgPerDay === null ||
+    avgPerDay === 0 ||
+    !busiestDay
+  ) {
+    return null
+  }
 
   const max = Math.max(...fullDays.map((d) => d.starts))
   const totalBulk = fullDays.reduce(
@@ -261,7 +281,7 @@ export function Dani({ rides }: { rides: BajsRides }) {
                 style={{ width: `${(d.starts / max) * 100}%` }}
               />
             </span>
-            <span className="w-12 shrink-0 text-right font-mono text-label tabular-nums text-ink">
+            <span className="w-12 shrink-0 text-right font-mono text-label text-ink tabular-nums">
               {num(d.starts)}
             </span>
           </div>
@@ -270,12 +290,13 @@ export function Dani({ rides }: { rides: BajsRides }) {
 
       <BodyMuted className="mt-6">
         Najprometniji izmjereni dan je {dayLabel(busiestDay.date)} s{" "}
-        {num(busiestDay.starts)} {plural(busiestDay.starts, "vožnja", "vožnje", "vožnji")}.
+        {num(busiestDay.starts)}{" "}
+        {plural(busiestDay.starts, "vožnja", "vožnje", "vožnji")}.
         {partialDay
           ? ` Danas je do sada ${num(partialDay.starts)}, ali dan još traje.`
           : ""}{" "}
-        Uz to je {bikes(totalBulk)} premješteno kombijem; ti pomaci nisu
-        vožnje, ne ulaze u brojke gore i brojimo ih{" "}
+        Uz to je {bikes(totalBulk)} premješteno kombijem; ti pomaci nisu vožnje,
+        ne ulaze u brojke gore i brojimo ih{" "}
         <a
           href="#kombi"
           className="inline-flex items-center gap-1 text-zg-blue transition-colors hover:text-navy"
@@ -329,16 +350,16 @@ function BalanceRowView({
           surplus > 0 ? "font-bold text-zg-blue" : "text-ink-muted"
         )}
       >
-        {surplus > 0
-          ? `+${surplus}`
-          : `${Math.round(share * 100)} % prazno`}
+        {surplus > 0 ? `+${surplus}` : `${Math.round(share * 100)} % prazno`}
       </span>
     </div>
   )
 }
 
 export function Odstupanje({ balance }: { balance: BajsBalance | null }) {
-  if (!balance) return null
+  if (!balance) {
+    return null
+  }
   const { surplus, empty, overCapacity, totalStations } = balance
   const maxSurplus = Math.max(1, ...surplus.map((r) => r.surplus ?? 0))
   const maxEmpty = Math.max(0.01, ...empty.map((r) => r.emptyShare ?? 0))
@@ -368,8 +389,7 @@ export function Odstupanje({ balance }: { balance: BajsBalance | null }) {
 
       <BodyMuted className="mt-4 font-mono text-label">
         stanje sada · udio praznog vremena zadnjih{" "}
-        {dayCount(balance.observedDays)} ·
-        mjereno svake minute
+        {dayCount(balance.observedDays)} · mjereno svake minute
       </BodyMuted>
     </Section>
   )
@@ -379,7 +399,9 @@ export function Odstupanje({ balance }: { balance: BajsBalance | null }) {
 
 export function Reljef({ ranking }: { ranking: BajsRanking | null }) {
   const terrain = buildBajsTerrain(ranking)
-  if (!ranking || !terrain) return null
+  if (!ranking || !terrain) {
+    return null
+  }
 
   const top = terrain.kvartovi.at(0)
   const covered = terrain.kvartovi.length
@@ -393,14 +415,16 @@ export function Reljef({ ranking }: { ranking: BajsRanking | null }) {
   return (
     <Section id="reljef" width="wide">
       <Hook className="pb-8">
-        {top ? `Grad ima planinu, a vrh joj je ${top.name}.` : "Grad ima planinu."}
+        {top
+          ? `Grad ima planinu, a vrh joj je ${top.name}.`
+          : "Grad ima planinu."}
       </Hook>
 
       <KvartTerrain kvartovi={terrain.kvartovi} values={terrain.values} />
 
       <BodyMuted className="mt-6 font-mono text-label">
-        mjereno zadnjih {dayCount(ranking.observedDays)} · vožnja se broji kvartu u
-        kojem je počela
+        mjereno zadnjih {dayCount(ranking.observedDays)} · vožnja se broji
+        kvartu u kojem je počela
       </BodyMuted>
       <Body className="mt-3 max-w-[560px]">
         Bajs stoji u <Strong>{covered}</Strong> od sedamnaest zagrebačkih
@@ -438,10 +462,9 @@ export function Kicker({ rides }: { rides: BajsRides }) {
           {balance !== null && (
             <>
               Provjera koja to potvrđuje: kroz cijeli dan broj dolazaka prati
-              broj polazaka na{" "}
-              <Strong>{(balance * 100).toFixed(1)} %</Strong>. Bicikli koji
-              krenu se i vrate, pa se dvije neovisno brojane strane moraju
-              poklopiti.
+              broj polazaka na <Strong>{(balance * 100).toFixed(1)} %</Strong>.
+              Bicikli koji krenu se i vrate, pa se dvije neovisno brojane strane
+              moraju poklopiti.
             </>
           )}
         </Body>
@@ -468,16 +491,19 @@ function RankRow({
 }) {
   return (
     <li className="flex items-center gap-3 border-b border-hairline py-2.5 last:border-b-0">
-      <span className="w-6 shrink-0 font-mono text-label tabular-nums text-ink-faint">
+      <span className="w-6 shrink-0 font-mono text-label text-ink-faint tabular-nums">
         {String(index + 1).padStart(2, "0")}
       </span>
       <span className="w-[150px] shrink-0 truncate font-heros text-body text-ink sm:w-[190px]">
         {station.name}
       </span>
       <span className="hidden h-3 min-w-0 flex-1 bg-surface sm:flex">
-        <span className="bg-zg-blue" style={{ width: `${(value / max) * 100}%` }} />
+        <span
+          className="bg-zg-blue"
+          style={{ width: `${(value / max) * 100}%` }}
+        />
       </span>
-      <span className="ml-auto w-16 shrink-0 text-right font-mono text-label tabular-nums text-ink sm:ml-0">
+      <span className="ml-auto w-16 shrink-0 text-right font-mono text-label text-ink tabular-nums sm:ml-0">
         {label}
       </span>
     </li>
@@ -505,9 +531,9 @@ export function Stanice({
           objaviti tek kad mjerenje pokrije nekoliko tjedana.
         </SectionHeader>
         <BodyMuted>
-          Zasad je izmjereno {dayCount(ranking?.observedDays ?? 0)}, a poredak postaje
-          stabilan oko {RANKING_MIN_DAYS}. Jedan koncert ili jedan kišni vikend
-          na kraćem uzorku preokrene vrh ljestvice, pa bi brojka zvučala
+          Zasad je izmjereno {dayCount(ranking?.observedDays ?? 0)}, a poredak
+          postaje stabilan oko {RANKING_MIN_DAYS}. Jedan koncert ili jedan kišni
+          vikend na kraćem uzorku preokrene vrh ljestvice, pa bi brojka zvučala
           točnije nego što jest. {measuring}
         </BodyMuted>
       </Section>
@@ -656,10 +682,14 @@ function SmjerRow({ row, max }: { row: KvartFlow; max: number }) {
 }
 
 export function Smjer({ flow }: { flow: BajsFlow | null }) {
-  if (!flow) return null
+  if (!flow) {
+    return null
+  }
 
   const shown = flow.kvartovi.filter((k) => Math.abs(k.morningNet) >= 1)
-  if (shown.length < 3) return null
+  if (shown.length < 3) {
+    return null
+  }
 
   const max = Math.max(1, ...shown.map((k) => Math.abs(k.morningNet)))
   const drain = flow.drains.at(0)
@@ -680,8 +710,7 @@ export function Smjer({ flow }: { flow: BajsFlow | null }) {
       >
         Koliko bicikala svako jutro neto stigne u kvart, a koliko ga napusti.
         Vožnje unutar istog kvarta se poništavaju, pa ostaje samo ono što
-        prelazi granicu.{" "}
-        {drain ? `Najviše ih gubi ${drain.name}. ` : ""}
+        prelazi granicu. {drain ? `Najviše ih gubi ${drain.name}. ` : ""}
         Premještanja kombijem su odbijena, inače bi se vidjelo kako ih operater
         vraća, a ne kamo ih ljudi voze.
       </SectionHeader>
@@ -719,7 +748,9 @@ const KOMBI_HEIGHT = 140
 
 /** The van's regular runs, which repeat often enough to be routes. */
 function Rute({ corridors }: { corridors: BajsRelocations["corridors"] }) {
-  if (corridors.length === 0) return null
+  if (corridors.length === 0) {
+    return null
+  }
 
   return (
     <div className="mt-8">
@@ -737,7 +768,7 @@ function Rute({ corridors }: { corridors: BajsRelocations["corridors"] }) {
             <span className="min-w-0 flex-1 truncate font-mono text-label text-ink">
               {c.to}
             </span>
-            <span className="w-16 shrink-0 text-right font-mono text-label tabular-nums text-ink-muted">
+            <span className="w-16 shrink-0 text-right font-mono text-label text-ink-muted tabular-nums">
               {c.moves}×
             </span>
           </div>
@@ -761,10 +792,14 @@ export function Kombi({
   relocations: BajsRelocations | null
   rides: BajsRides
 }) {
-  if (!relocations) return null
+  if (!relocations) {
+    return null
+  }
   const { perDay, hourly, busiestHour, avgMinutes, corridors } = relocations
   const max = Math.max(...hourly)
-  if (max === 0) return null
+  if (max === 0) {
+    return null
+  }
 
   const ridePeak = rides.peakHour?.hour ?? null
 
@@ -776,9 +811,9 @@ export function Kombi({
       >
         Htjeli smo znati odakle kamo ljudi voze. Feed to skriva namjerno: svaki
         bicikl pri iznajmljivanju dobije novi id, pa se vožnja ne može pratiti.
-        Bicikl koji stigne na drugu stanicu sa starim id-om nitko nije
-        iznajmio. Netko ga je prevezao. Ostalo nam je tako mjerenje kombija
-        umjesto mjerenja grada.
+        Bicikl koji stigne na drugu stanicu sa starim id-om nitko nije iznajmio.
+        Netko ga je prevezao. Ostalo nam je tako mjerenje kombija umjesto
+        mjerenja grada.
       </SectionHeader>
 
       <div className="pt-2">
@@ -795,7 +830,9 @@ export function Kombi({
                 "min-w-0 flex-1",
                 hour === busiestHour ? "bg-zg-blue" : "bg-ink-ghost"
               )}
-              style={{ height: `${Math.max(1, (moves / max) * KOMBI_HEIGHT)}px` }}
+              style={{
+                height: `${Math.max(1, (moves / max) * KOMBI_HEIGHT)}px`,
+              }}
             />
           ))}
         </div>
@@ -872,7 +909,9 @@ export function Metodologija({ rides }: { rides: BajsRides }) {
           <MonoLabel>uz oprez</MonoLabel>
           {caveats.map((c) => (
             <div key={c} className="flex items-baseline gap-2.5">
-              <span className="shrink-0 font-mono text-label text-zg-blue">·</span>
+              <span className="shrink-0 font-mono text-label text-zg-blue">
+                ·
+              </span>
               <BodyMuted>{c}</BodyMuted>
             </div>
           ))}

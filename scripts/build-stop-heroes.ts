@@ -21,7 +21,8 @@ import { join } from "node:path"
 
 import { argValue } from "./lib/args"
 import { mapConcurrent } from "./lib/concurrency"
-import { createDitherCropper, type HeroMeta } from "./lib/dither-crop"
+import { createDitherCropper } from "./lib/dither-crop"
+import type { HeroMeta } from "./lib/dither-crop"
 import { readJson } from "./lib/json"
 
 const DESKTOP = { suffix: "", outW: 2880, outH: 1120, pad: 0.18 }
@@ -41,12 +42,17 @@ const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 // zoomMax 17 → a ~2.4 km-wide crop centred on the stop: enough surrounding city
 // to recognise the part of town, while the junction stays legible. (z16 ≈ 4.8 km
 // reads generic; z18 ≈ 1.2 km is too tight to place.) Tiles fetched on first run.
-const cropper = createDitherCropper({ cacheDir, cutoff, zoomOverride, zoomMax: 17 })
+const cropper = createDitherCropper({
+  cacheDir,
+  cutoff,
+  zoomOverride,
+  zoomMax: 17,
+})
 
 async function main() {
   mkdirSync(outDir, { recursive: true })
 
-  const index = readJson<{ stops: { slug: string; lineCount: number }[] }>(
+  const index = readJson<{ stops: Array<{ slug: string; lineCount: number }> }>(
     join(dataDir, "index.json")
   )
   const slugs = index.stops
@@ -60,12 +66,28 @@ async function main() {
 
   let done = 0
   await mapConcurrent(slugs, 4, async (slug) => {
-    const { hero } = readJson<{ hero: { bbox: number[] } }>(join(dataDir, `${slug}.json`))
+    const { hero } = readJson<{ hero: { bbox: Array<number> } }>(
+      join(dataDir, `${slug}.json`)
+    )
     const t0 = Date.now()
     const prev = meta[slug]
     const [desktop, mobile] = await Promise.all([
-      cropper.buildCrop(join(outDir, `hero-${slug}${DESKTOP.suffix}.png`), hero.bbox, DESKTOP.outW, DESKTOP.outH, DESKTOP.pad, prev?.desktop),
-      cropper.buildCrop(join(outDir, `hero-${slug}${MOBILE.suffix}.png`), hero.bbox, MOBILE.outW, MOBILE.outH, MOBILE.pad, prev?.mobile),
+      cropper.buildCrop(
+        join(outDir, `hero-${slug}${DESKTOP.suffix}.png`),
+        hero.bbox,
+        DESKTOP.outW,
+        DESKTOP.outH,
+        DESKTOP.pad,
+        prev?.desktop
+      ),
+      cropper.buildCrop(
+        join(outDir, `hero-${slug}${MOBILE.suffix}.png`),
+        hero.bbox,
+        MOBILE.outW,
+        MOBILE.outH,
+        MOBILE.pad,
+        prev?.mobile
+      ),
     ])
     meta[slug] = { desktop, mobile }
     // Persist after every stop so pages work while a long run is in flight.

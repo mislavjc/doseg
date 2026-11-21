@@ -1,6 +1,7 @@
 import { join } from "node:path"
 
-import { pointInRing, type Ring } from "./geo"
+import { pointInRing } from "./geo"
+import type { Ring } from "./geo"
 import { readJsonCached } from "./page-data"
 
 /**
@@ -10,18 +11,22 @@ import { readJsonCached } from "./page-data"
 
 interface DistrictFeature {
   properties: { name: string }
-  geometry: { type: "Polygon"; coordinates: Ring[] }
+  geometry: { type: "Polygon"; coordinates: Array<Ring> }
 }
 
 export function districtAt(lat: number, lon: number): string | null {
   const features =
-    readJsonCached<{ features: DistrictFeature[] }>(
+    readJsonCached<{ features: Array<DistrictFeature> }>(
       join(process.cwd(), "data/districts.geojson")
     )?.features ?? []
   for (const f of features) {
     const [outer, ...holes] = f.geometry.coordinates
-    if (pointInRing(lon, lat, outer) && !holes.some((h) => pointInRing(lon, lat, h)))
+    if (
+      pointInRing(lon, lat, outer) &&
+      !holes.some((h) => pointInRing(lon, lat, h))
+    ) {
       return f.properties.name
+    }
   }
   return null
 }

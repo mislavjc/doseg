@@ -34,7 +34,9 @@ const QUICK_ADDRESSES = [
   { label: "Ilica 5", slug: "ilica-5" },
 ] as const
 const QUICK_LINES = ["107", "15"] as const
-const QUICK_STOPS = [{ label: "kvaternikov trg", slug: "kvaternikov-trg" }] as const
+const QUICK_STOPS = [
+  { label: "kvaternikov trg", slug: "kvaternikov-trg" },
+] as const
 
 /** Real search phrases people land with (GSC, 28d) → the page that answers. */
 const TRAZENO = [
@@ -45,7 +47,11 @@ const TRAZENO = [
     href: "/stanice/heinzelova",
   },
   { query: "269 vozni red stanice", label: "linija 269", href: "/linije/269" },
-  { query: "tramvaj za Kruge", label: "stanica Kruge", href: "/stanice/kruge-trnje" },
+  {
+    query: "tramvaj za Kruge",
+    label: "stanica Kruge",
+    href: "/stanice/kruge-trnje",
+  },
 ] as const
 
 /** Blue "svih N linija →"-style trailing link under a row group. */
@@ -76,7 +82,7 @@ export function HeroIntro() {
   // Doseg-first positioning (Paper "Home v3.0 — doseg-first"): the name is the
   // thesis, the address is the entry point, the imenik is demoted below.
   return (
-    <Section width="article" className="pb-0 pt-6 sm:pb-0 sm:pt-8">
+    <Section width="article" className="pt-6 pb-0 sm:pt-8 sm:pb-0">
       <Eyebrow>doseg.hr · dostupnost javnog prijevoza u zagrebu</Eyebrow>
       <PageTitle className="mt-4">
         Doseg: koliko grada dosežeš javnim prijevozom.
@@ -92,7 +98,7 @@ export function HeroIntro() {
 
 export function SearchBlock({ stopSlugs }: { stopSlugs: Set<string> }) {
   return (
-    <Section width="article" className="pb-0 pt-8 sm:pb-0 sm:pt-10">
+    <Section width="article" className="pt-8 pb-0 sm:pt-10 sm:pb-0">
       <HomeSearch />
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-mono text-label text-ink-muted">probaj:</span>
@@ -106,15 +112,19 @@ export function SearchBlock({ stopSlugs }: { stopSlugs: Set<string> }) {
             {a.label}
           </Link>
         ))}
-        {QUICK_STOPS.filter((s) => stopSlugs.has(s.slug)).map((s) => (
-          <Link
-            key={s.slug}
-            href={`/stanice/${s.slug}`}
-            className="flex h-6 items-center border border-hairline-strong px-2 font-mono text-label text-ink transition-colors hover:border-zg-blue hover:text-zg-blue"
-          >
-            {s.label}
-          </Link>
-        ))}
+        {QUICK_STOPS.flatMap((s) =>
+          stopSlugs.has(s.slug)
+            ? [
+                <Link
+                  key={s.slug}
+                  href={`/stanice/${s.slug}`}
+                  className="flex h-6 items-center border border-hairline-strong px-2 font-mono text-label text-ink transition-colors hover:border-zg-blue hover:text-zg-blue"
+                >
+                  {s.label}
+                </Link>,
+              ]
+            : []
+        )}
         {QUICK_LINES.map((broj) => (
           <LineBadge key={broj} broj={broj} href={`/linije/${broj}`} />
         ))}
@@ -133,8 +143,8 @@ export function ImenikIntro() {
         Svaka linija, stanica i kvart ima svoju stranicu.
       </Hook>
       <Body className="mt-3 max-w-[520px]">
-        Polasci po satu, prvi i zadnji polazak, interval u špici. Isti podaci
-        iz kojih se računa doseg.
+        Polasci po satu, prvi i zadnji polazak, interval u špici. Isti podaci iz
+        kojih se računa doseg.
       </Body>
     </Section>
   )
@@ -174,7 +184,7 @@ export function DesktopLineSection({
 }: {
   eyebrow: string
   hook: string
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
   moreLabel: string
 }) {
   return (
@@ -197,7 +207,7 @@ export function MobileLineGroup({
   lines,
 }: {
   total: number
-  lines: LineIndexEntry[]
+  lines: Array<LineIndexEntry>
 }) {
   return (
     <Section width="article" className="pb-0 sm:hidden">
@@ -272,7 +282,11 @@ export function MobileLedger({ stopCount }: { stopCount: number }) {
   return (
     <Section width="article" className="pb-0 sm:hidden">
       <ul className="border-t border-hairline">
-        <LedgerRow title="Stanice" meta={`imenik ${stopCount}`} href="/stanice" />
+        <LedgerRow
+          title="Stanice"
+          meta={`imenik ${stopCount}`}
+          href="/stanice"
+        />
         <LedgerRow title="Kvartovi" meta="svih 17" href="/kvartovi" />
         <LedgerRow title="Promjene" meta="zadnje izmjene" href="/promjene" />
       </ul>
@@ -329,16 +343,16 @@ export function KartaBanner() {
     <Section width="article" className="pb-0 sm:pb-0">
       <div className="group relative flex gap-4 border border-hairline-strong transition-colors hover:border-zg-blue sm:gap-6">
         <span className="relative block w-24 shrink-0 self-stretch overflow-hidden sm:w-[150px]">
-          {/* oxlint-disable-next-line nextjs/no-img-element */}
+          {/* oxlint-disable-next-line nextjs/no-img-element -- decorative pre-dithered PNG; next/image would resample the dither */}
           <img
             src="/hero-zagreb-thumb.png"
             alt=""
             aria-hidden
             loading="lazy"
-            className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated]"
+            className="absolute top-1/2 left-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 [image-rendering:pixelated]"
             style={{ width: 180 }}
           />
-          <span className="absolute left-1/2 top-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
+          <span className="absolute top-1/2 left-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 border-2 border-white bg-zg-blue outline outline-1 outline-zg-blue" />
         </span>
         <div className="flex min-w-0 flex-1 flex-col py-4 pr-4 sm:py-5 sm:pr-6">
           <Eyebrow>karta dosega</Eyebrow>
@@ -350,7 +364,9 @@ export function KartaBanner() {
           </Body>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <span className="flex items-center gap-2">
-              <span className="font-mono text-label text-ink-muted">probaj:</span>
+              <span className="font-mono text-label text-ink-muted">
+                probaj:
+              </span>
               <Link
                 href={probaHref}
                 rel="nofollow"

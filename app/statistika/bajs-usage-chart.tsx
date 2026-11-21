@@ -5,10 +5,18 @@ import useSWR from "swr"
 import { fmtHR } from "@/lib/format"
 import { computeXTicks } from "@/lib/chart-utils"
 import { scaleLinear, scaleTime } from "@visx/scale"
-import { Group } from "@visx/group"
-import { BarRounded } from "@visx/shape"
-import { GridRows } from "@visx/grid"
 import { plural } from "@/app/linije/copy"
+import {
+  ChartGrid,
+  ChartSvg,
+  ChartYLabels,
+  computeBarLayout,
+  HitAreas,
+  INNER_HEIGHT,
+  MARGIN,
+  SvgTooltip,
+  TimeBars,
+} from "./time-chart"
 
 // --- Types ---
 
@@ -22,125 +30,9 @@ interface UsagePoint {
 // --- Constants ---
 
 const CHART_WIDTH = 600
-const CHART_HEIGHT = 240
-const MARGIN = { top: 16, right: 48, bottom: 40, left: 16 }
 const INNER_WIDTH = CHART_WIDTH - MARGIN.left - MARGIN.right
-const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
 
 // --- Helpers ---
-
-function computeBarLayout(
-  points: Array<UsagePoint>,
-  xScale: ReturnType<typeof scaleTime<number>>
-) {
-  const gap =
-    points.length > 1
-      ? Math.abs(
-          (xScale(new Date(points[1].ts * 1000)) ?? 0) -
-            (xScale(new Date(points[0].ts * 1000)) ?? 0)
-        )
-      : 8
-  return { gap, barWidth: Math.max(2, gap * 0.65) }
-}
-
-function HitAreas({
-  points,
-  xScale,
-  gap,
-  onHover,
-}: {
-  points: Array<UsagePoint>
-  xScale: ReturnType<typeof scaleTime<number>>
-  gap: number
-  onHover: (p: UsagePoint | null) => void
-}) {
-  return (
-    <>
-      {points.map((p) => (
-        <rect
-          key={p.ts}
-          x={(xScale(new Date(p.ts * 1000)) ?? 0) - gap / 2}
-          y={0}
-          width={gap}
-          height={INNER_HEIGHT}
-          fill="transparent"
-          onPointerEnter={() => onHover(p)}
-          onPointerLeave={() => onHover(null)}
-          className="cursor-crosshair outline-none"
-        />
-      ))}
-    </>
-  )
-}
-
-function SvgTooltip({
-  x,
-  y,
-  title,
-  value,
-  subtitle,
-  color = "#3b82f6",
-}: {
-  x: number
-  y: number
-  title: string
-  value: string
-  subtitle?: string
-  color?: string
-}) {
-  const width = 156
-  const height = subtitle ? 72 : 52
-  const adjustedX = Math.max(0, Math.min(x - width / 2, INNER_WIDTH - width))
-  const adjustedY = Math.max(0, y - height - 12)
-
-  return (
-    <g className="pointer-events-none transition-all duration-200 ease-out">
-      <g transform={`translate(${adjustedX}, ${adjustedY})`}>
-        <rect
-          width={width}
-          height={height}
-          rx={8}
-          className="fill-white stroke-slate-200 dark:fill-[#262626] dark:stroke-white/10"
-          strokeWidth={1}
-          style={{
-            filter:
-              "drop-shadow(0 4px 12px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.05))",
-          }}
-        />
-        <text
-          x={14}
-          y={22}
-          fontSize={11}
-          fontWeight={500}
-          className="fill-slate-400 dark:fill-slate-500"
-        >
-          {title}
-        </text>
-        <circle cx={18} cy={37} r={3.5} fill={color} />
-        <text
-          x={28}
-          y={41}
-          fontSize={14}
-          fontWeight={600}
-          className="fill-slate-900 dark:fill-slate-100"
-        >
-          {value}
-        </text>
-        {subtitle && (
-          <text
-            x={14}
-            y={58}
-            fontSize={11}
-            fontWeight={400}
-            className="fill-slate-500 dark:fill-slate-400"
-          >
-            {subtitle}
-          </text>
-        )}
-      </g>
-    </g>
-  )
-}
 
 function fmtTime(ts: number): string {
   const d = new Date(ts * 1000)
@@ -221,7 +113,8 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
   const [hovered, setHovered] = useState<UsagePoint | null>(null)
   const { xScale, yScale, xTicks, yTicks, current, peak, avg } =
     useUsageScales(points)
-  const { gap, barWidth } = computeBarLayout(points, xScale)
+  const { gap, barWidth } = computeBarLayout(points, xScale, 2, 0.65)
+  const barColor = (v: number) => (v > avg * 1.2 ? "#3b82f6" : "#60a5fa")
 
   return (
     <div className="flex flex-col overflow-hidden border-t border-slate-100 pt-8 dark:border-white/5">
@@ -230,17 +123,12 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
         <div className="mt-8 mb-4">
           <h4 className="text-body text-slate-500">Dnevni trend korištenja</h4>
         </div>
-        <ChartSvg label="Grafikon korištenja BAJS bicikala">
-          <GridRows
-            scale={yScale}
-            width={INNER_WIDTH}
-            tickValues={yTicks}
-            stroke="#e2e8f0"
-            strokeOpacity={0.5}
-            strokeWidth={1}
-            strokeDasharray="4 4"
-            className="dark:stroke-slate-700"
-          />
+        <ChartSvg
+          width={CHART_WIDTH}
+          clip
+          label="Grafikon korištenja BAJS bicikala"
+        >
+          <ChartGrid yScale={yScale} yTicks={yTicks} innerWidth={INNER_WIDTH} />
           {yTicks[0] <= 0 && (
             <line
               x1={0}
@@ -253,30 +141,15 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
             />
           )}
 
-          {points.map((p) => {
-            const xPos = xScale(new Date(p.ts * 1000)) ?? 0
-            const yPos = yScale(p.bikesInUse) ?? 0
-            const barHeight = Math.max(INNER_HEIGHT - yPos, 4)
-            const isHovered = hovered === p
-            const opacity = isHovered ? 1 : 0.85
-
-            const color = p.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"
-
-            return (
-              <BarRounded
-                key={p.ts}
-                x={xPos - barWidth / 2}
-                y={INNER_HEIGHT - barHeight}
-                width={barWidth}
-                height={barHeight}
-                fill={color}
-                fillOpacity={opacity}
-                radius={Math.min(barWidth / 2, 4)}
-                top
-                bottom={false}
-              />
-            )
-          })}
+          <TimeBars
+            points={points}
+            xScale={xScale}
+            yScale={yScale}
+            barWidth={barWidth}
+            hovered={hovered}
+            value={(p) => p.bikesInUse}
+            color={barColor}
+          />
 
           <HitAreas
             points={points}
@@ -286,16 +159,22 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
           />
 
           <ChartXLabels ticks={xTicks} xScale={xScale} />
-          <ChartYLabels ticks={yTicks} yScale={yScale} />
+          <ChartYLabels
+            ticks={yTicks}
+            yScale={yScale}
+            innerWidth={INNER_WIDTH}
+            format={fmtHR}
+          />
 
           {hovered && (
             <SvgTooltip
               x={xScale(new Date(hovered.ts * 1000)) ?? 0}
               y={(yScale(hovered.bikesInUse) ?? 0) - 10}
+              innerWidth={INNER_WIDTH}
               title={fmtTime(hovered.ts)}
               value={`${hovered.bikesInUse} ${plural(hovered.bikesInUse, "bicikl", "bicikla", "bicikala")}`}
               subtitle={`${hovered.available} dostupno na stanicama`}
-              color={hovered.bikesInUse > avg * 1.2 ? "#3b82f6" : "#60a5fa"}
+              color={barColor(hovered.bikesInUse)}
             />
           )}
         </ChartSvg>
@@ -342,29 +221,6 @@ function ChartHeader({ current, peak }: { current: number; peak: number }) {
 
 // --- Shared chart primitives ---
 
-function ChartSvg({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="relative mx-auto w-full overflow-hidden">
-      <svg
-        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
-        className="w-full"
-        role="img"
-        aria-label={label}
-      >
-        <Group top={MARGIN.top} left={MARGIN.left}>
-          {children}
-        </Group>
-      </svg>
-    </div>
-  )
-}
-
 function ChartXLabels({
   ticks,
   xScale,
@@ -401,31 +257,6 @@ function ChartXLabels({
           </text>
         ) : null
       )}
-    </>
-  )
-}
-
-function ChartYLabels({
-  ticks,
-  yScale,
-}: {
-  ticks: Array<number>
-  yScale: ReturnType<typeof scaleLinear<number>>
-}) {
-  return (
-    <>
-      {ticks.map((v) => (
-        <text
-          key={v}
-          x={INNER_WIDTH + 8}
-          y={(yScale(v) ?? 0) + 1}
-          textAnchor="start"
-          dominantBaseline="middle"
-          className="fill-slate-500 font-mono text-label dark:fill-slate-400"
-        >
-          {fmtHR(v)}
-        </text>
-      ))}
     </>
   )
 }

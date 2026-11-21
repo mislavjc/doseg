@@ -6,10 +6,18 @@ import { pickPreferredRoute } from "@/lib/format"
 import { Term } from "@/components/ui/term"
 import { StatModuleLead, StatModuleTitle } from "./stat-typography"
 import { scaleLinear, scaleTime } from "@visx/scale"
-import { Group } from "@visx/group"
-import { BarRounded } from "@visx/shape"
-import { GridRows } from "@visx/grid"
 import { plural } from "@/app/linije/copy"
+import {
+  ChartGrid,
+  ChartSvg,
+  ChartYLabels,
+  computeBarLayout,
+  HitAreas,
+  INNER_HEIGHT,
+  MARGIN,
+  SvgTooltip,
+  TimeBars,
+} from "./time-chart"
 
 // --- Types ---
 
@@ -453,10 +461,25 @@ function EmptyState() {
 // --- Charts ---
 
 const CHART_WIDTH = 700
-const CHART_HEIGHT = 240
-const MARGIN = { top: 16, right: 48, bottom: 40, left: 16 }
 const INNER_WIDTH = CHART_WIDTH - MARGIN.left - MARGIN.right
-const INNER_HEIGHT = CHART_HEIGHT - MARGIN.top - MARGIN.bottom
+
+const delayColor = (delay: number) => (delay < 180 ? "#10b981" : "#f59e0b")
+const cvColor = (cv: number) =>
+  cv < 0.3 ? "#10b981" : cv < 0.5 ? "#f59e0b" : "#ef4444"
+
+function fmtDelayAxis(v: number): string {
+  if (v === 0) {
+    return "0m"
+  }
+  const m = Math.round(v / 60)
+  if (m >= 60 && m % 60 === 0) {
+    return `${m / 60}h`
+  }
+  if (m > 60) {
+    return `${Math.floor(m / 60)}h ${m % 60}m`
+  }
+  return `${m}m`
+}
 
 function useDelayScales(points: Array<HistoryPoint>) {
   return useMemo(() => {
@@ -506,20 +529,11 @@ function DelayChartBody({
   onHover: (p: HistoryPoint | null) => void
 }) {
   const { xScale, yScale, xTicks, yTicks } = useDelayScales(points)
-  const { gap, barWidth } = computeBarLayout(points, xScale)
+  const { gap, barWidth } = computeBarLayout(points, xScale, 8, 0.4)
 
   return (
-    <ChartSvg label="Grafikon prosječnog kašnjenja">
-      <GridRows
-        scale={yScale}
-        width={INNER_WIDTH}
-        tickValues={yTicks}
-        stroke="#e2e8f0"
-        strokeOpacity={0.5}
-        strokeWidth={1}
-        strokeDasharray="4 4"
-        className="dark:stroke-slate-700"
-      />
+    <ChartSvg width={CHART_WIDTH} label="Grafikon prosječnog kašnjenja">
+      <ChartGrid yScale={yScale} yTicks={yTicks} innerWidth={INNER_WIDTH} />
       {yTicks[0] < 0 && (
         <line
           x1={0}
@@ -532,45 +546,34 @@ function DelayChartBody({
         />
       )}
 
-      {points.map((p) => {
-        const xPos = xScale(new Date(p.ts * 1000)) ?? 0
-        const delay = Math.max(0, p.avgDelay)
-        const barHeight = Math.max(
-          INNER_HEIGHT - (yScale(delay) ?? INNER_HEIGHT),
-          4
-        )
-        const yPos = INNER_HEIGHT - barHeight
-        const isHovered = hovered === p
-        const color = delay < 180 ? "#10b981" : "#f59e0b"
-        const opacity = isHovered ? 1 : 0.85
-        return (
-          <BarRounded
-            key={p.ts}
-            x={xPos - barWidth / 2}
-            y={yPos}
-            width={barWidth}
-            height={barHeight}
-            fill={color}
-            fillOpacity={opacity}
-            radius={Math.min(barWidth / 2, 4)}
-            top
-            bottom={false}
-          />
-        )
-      })}
+      <TimeBars
+        points={points}
+        xScale={xScale}
+        yScale={yScale}
+        barWidth={barWidth}
+        hovered={hovered}
+        value={(p) => Math.max(0, p.avgDelay)}
+        color={delayColor}
+      />
       <HitAreas points={points} xScale={xScale} gap={gap} onHover={onHover} />
 
       <ChartXLabels ticks={xTicks} xScale={xScale} timeRange={timeRange} />
-      <ChartYLabels ticks={yTicks} yScale={yScale} />
+      <ChartYLabels
+        ticks={yTicks}
+        yScale={yScale}
+        innerWidth={INNER_WIDTH}
+        format={fmtDelayAxis}
+      />
 
       {hovered && (
         <SvgTooltip
           x={xScale(new Date(hovered.ts * 1000)) ?? 0}
           y={(yScale(Math.max(0, hovered.avgDelay)) ?? 0) - 10}
+          innerWidth={INNER_WIDTH}
           title={fmtTooltipTime(hovered.ts, timeRange)}
           value={fmtDelayDetailed(hovered.avgDelay)}
           subtitle={`${hovered.tripCount} ${plural(hovered.tripCount, "polazak", "polaska", "polazaka")}`}
-          color={hovered.avgDelay < 180 ? "#10b981" : "#f59e0b"}
+          color={delayColor(hovered.avgDelay)}
         />
       )}
     </ChartSvg>
@@ -735,54 +738,29 @@ function HeadwayChartBody({
   yTicks: Array<number>
   maxTrips: number
 }) {
-  const { gap, barWidth } = computeBarLayout(pts, xScale)
+  const { gap, barWidth } = computeBarLayout(pts, xScale, 8, 0.4)
 
   return (
-    <ChartSvg label="Grafikon regularnosti razmaka">
-      <GridRows
-        scale={yScale}
-        width={INNER_WIDTH}
-        tickValues={yTicks}
-        stroke="#e2e8f0"
-        strokeOpacity={0.5}
-        strokeWidth={1}
-        strokeDasharray="4 4"
-        className="dark:stroke-slate-700"
-      />
+    <ChartSvg width={CHART_WIDTH} label="Grafikon regularnosti razmaka">
+      <ChartGrid yScale={yScale} yTicks={yTicks} innerWidth={INNER_WIDTH} />
       <RegularityZone yScale={yScale} />
 
-      {pts.map((p) => {
-        const xPos = xScale(new Date(p.ts * 1000)) ?? 0
-        const cv = p.headwayCv ?? 0
-        const barHeight = Math.max(
-          INNER_HEIGHT - (yScale(cv) ?? INNER_HEIGHT),
-          4
-        )
-        const yPos = INNER_HEIGHT - barHeight
-        const isHovered = hovered === p
-        const color = cv < 0.3 ? "#10b981" : cv < 0.5 ? "#f59e0b" : "#ef4444"
-        const opacity = isHovered ? 1 : 0.85
-        return (
-          <BarRounded
-            key={p.ts}
-            x={xPos - barWidth / 2}
-            y={yPos}
-            width={barWidth}
-            height={barHeight}
-            fill={color}
-            fillOpacity={opacity}
-            radius={Math.min(barWidth / 2, 4)}
-            top
-            bottom={false}
-          />
-        )
-      })}
+      <TimeBars
+        points={pts}
+        xScale={xScale}
+        yScale={yScale}
+        barWidth={barWidth}
+        hovered={hovered}
+        value={(p) => p.headwayCv ?? 0}
+        color={cvColor}
+      />
       <HitAreas points={pts} xScale={xScale} gap={gap} onHover={onHover} />
 
       <ChartXLabels ticks={xTicks} xScale={xScale} timeRange={timeRange} />
       <ChartYLabels
         ticks={yTicks}
         yScale={yScale}
+        innerWidth={INNER_WIDTH}
         format={(v) => v.toFixed(1)}
       />
 
@@ -790,6 +768,7 @@ function HeadwayChartBody({
         <SvgTooltip
           x={xScale(new Date(hovered.ts * 1000)) ?? 0}
           y={(yScale(hovered.headwayCv ?? 0) ?? 0) - 10}
+          innerWidth={INNER_WIDTH}
           title={fmtTooltipTime(hovered.ts, timeRange)}
           value={`CV ${hovered.headwayCv?.toFixed(2)}`}
           subtitle={
@@ -797,13 +776,7 @@ function HeadwayChartBody({
               ? `razmak ${Math.round(hovered.headwaySec / 60)} min`
               : undefined
           }
-          color={
-            (hovered.headwayCv ?? 0) < 0.3
-              ? "#10b981"
-              : (hovered.headwayCv ?? 0) < 0.5
-                ? "#f59e0b"
-                : "#ef4444"
-          }
+          color={cvColor(hovered.headwayCv ?? 0)}
         />
       )}
     </ChartSvg>
@@ -947,98 +920,6 @@ function HeadwayChartHeader({
 
 // --- Shared chart primitives ---
 
-function SvgTooltip({
-  x,
-  y,
-  title,
-  value,
-  subtitle,
-  color = "#10b981",
-}: {
-  x: number
-  y: number
-  title: string
-  value: string
-  subtitle?: string
-  color?: string
-}) {
-  const width = 156
-  const height = subtitle ? 72 : 52
-  const adjustedX = Math.max(0, Math.min(x - width / 2, INNER_WIDTH - width))
-  const adjustedY = Math.max(0, y - height - 12)
-
-  return (
-    <g className="pointer-events-none transition-all duration-200 ease-out">
-      <g transform={`translate(${adjustedX}, ${adjustedY})`}>
-        <rect
-          width={width}
-          height={height}
-          rx={8}
-          className="fill-white stroke-slate-200 dark:fill-[#262626] dark:stroke-white/10"
-          strokeWidth={1}
-          style={{
-            filter:
-              "drop-shadow(0 4px 12px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.05))",
-          }}
-        />
-        <text
-          x={14}
-          y={22}
-          fontSize={11}
-          fontWeight={500}
-          className="fill-slate-400 dark:fill-slate-500"
-        >
-          {title}
-        </text>
-        <circle cx={18} cy={37} r={3.5} fill={color} />
-        <text
-          x={28}
-          y={41}
-          fontSize={14}
-          fontWeight={600}
-          className="fill-slate-900 dark:fill-slate-100"
-        >
-          {value}
-        </text>
-        {subtitle && (
-          <text
-            x={14}
-            y={58}
-            fontSize={11}
-            fontWeight={400}
-            className="fill-slate-500 dark:fill-slate-400"
-          >
-            {subtitle}
-          </text>
-        )}
-      </g>
-    </g>
-  )
-}
-
-function ChartSvg({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="relative mx-auto w-full">
-      <svg
-        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
-        className="w-full"
-        role="img"
-        aria-label={label}
-      >
-        <Group top={MARGIN.top} left={MARGIN.left}>
-          {children}
-        </Group>
-      </svg>
-    </div>
-  )
-}
-
 function ChartXLabels({
   ticks,
   xScale,
@@ -1060,95 +941,6 @@ function ChartXLabels({
         >
           {fmtTime(t.getTime() / 1000, timeRange)}
         </text>
-      ))}
-    </>
-  )
-}
-
-function ChartYLabels({
-  ticks,
-  yScale,
-  format,
-}: {
-  ticks: Array<number>
-  yScale: ReturnType<typeof scaleLinear<number>>
-  format?: (v: number) => string
-}) {
-  return (
-    <>
-      {ticks.map((v) => {
-        let label: string
-        if (format) {
-          label = format(v)
-        } else {
-          label = "0m"
-          if (v !== 0) {
-            const m = Math.round(v / 60)
-            if (m >= 60 && m % 60 === 0) {
-              label = `${m / 60}h`
-            } else if (m > 60) {
-              label = `${Math.floor(m / 60)}h ${m % 60}m`
-            } else {
-              label = `${m}m`
-            }
-          }
-        }
-        return (
-          <text
-            key={v}
-            x={INNER_WIDTH + 8}
-            y={(yScale(v) ?? 0) + 1}
-            textAnchor="start"
-            dominantBaseline="middle"
-            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
-          >
-            {label}
-          </text>
-        )
-      })}
-    </>
-  )
-}
-
-function computeBarLayout(
-  points: Array<HistoryPoint>,
-  xScale: ReturnType<typeof scaleTime<number>>
-) {
-  const gap =
-    points.length > 1
-      ? Math.abs(
-          (xScale(new Date(points[1].ts * 1000)) ?? 0) -
-            (xScale(new Date(points[0].ts * 1000)) ?? 0)
-        )
-      : 8
-  return { gap, barWidth: Math.max(8, gap * 0.4) }
-}
-
-function HitAreas({
-  points,
-  xScale,
-  gap,
-  onHover,
-}: {
-  points: Array<HistoryPoint>
-  xScale: ReturnType<typeof scaleTime<number>>
-  gap: number
-  onHover: (p: HistoryPoint | null) => void
-}) {
-  return (
-    <>
-      {points.map((p) => (
-        <rect
-          key={p.ts}
-          x={(xScale(new Date(p.ts * 1000)) ?? 0) - gap / 2}
-          y={0}
-          width={gap}
-          height={INNER_HEIGHT}
-          fill="transparent"
-          onPointerEnter={() => onHover(p)}
-          onPointerLeave={() => onHover(null)}
-          className="cursor-crosshair outline-none"
-        />
       ))}
     </>
   )

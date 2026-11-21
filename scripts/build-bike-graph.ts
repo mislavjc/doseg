@@ -4,12 +4,8 @@
  * Usage: bun scripts/build-bike-graph.ts
  */
 
-import { createReadStream } from "node:fs"
-import createParser from "osm-pbf-parser"
-import through2 from "through2"
-
-import { BBOX, writeBinaryGraph } from "./lib/osm-graph"
-import type { Edge, OsmItem } from "./lib/osm-graph"
+import { collectStreetGraph, writeBinaryGraph } from "./lib/osm-graph"
+import type { Coord, Edge, GraphWay } from "./lib/osm-graph"
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/bike-graph.bin"
@@ -43,12 +39,6 @@ const BIKE_ALLOWED_VALUES = new Set([
 ])
 
 import { fastDistKm as distKm } from "../lib/geo"
-
-interface BikeableWay {
-  refs: Array<number>
-  forward: boolean
-  backward: boolean
-}
 
 function isBikeAllowed(tags: Record<string, string>): boolean {
   const highway = tags.highway
@@ -112,90 +102,10 @@ function getDirection(tags: Record<string, string>) {
   return { forward, backward }
 }
 
-function parseOsmData(
-  nodeCoords: Map<number, { lat: number; lon: number }>,
-  bikeableWays: Array<BikeableWay>
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    createReadStream(INPUT)
-      .pipe(createParser())
-      .pipe(
-        through2.obj(
-          (items: Array<OsmItem>, _enc: string, next: () => void) => {
-            for (const item of items) {
-              if (item.type === "node") {
-                const { lat, lon } = item
-                if (
-                  lat !== undefined &&
-                  lon !== undefined &&
-                  lat >= BBOX.minLat &&
-                  lat <= BBOX.maxLat &&
-                  lon >= BBOX.minLon &&
-                  lon <= BBOX.maxLon
-                ) {
-                  nodeCoords.set(item.id, { lat, lon })
-                }
-              } else if (item.type === "way" && item.tags) {
-                if (!isBikeAllowed(item.tags)) {
-                  continue
-                }
-                const { forward, backward } = getDirection(item.tags)
-                bikeableWays.push({
-                  refs: item.refs ?? [],
-                  forward,
-                  backward,
-                })
-              }
-            }
-            next()
-          }
-        )
-      )
-      .on("finish", resolve)
-      .on("error", reject)
-  })
-}
-
-function filterValidWays(
-  bikeableWays: Array<BikeableWay>,
-  nodeCoords: Map<number, { lat: number; lon: number }>
-) {
-  const usedNodeIds = new Set<number>()
-  const validWays: Array<BikeableWay> = []
-
-  for (const way of bikeableWays) {
-    const validRefs: Array<number> = []
-    for (const ref of way.refs) {
-      if (nodeCoords.has(ref)) {
-        validRefs.push(ref)
-        usedNodeIds.add(ref)
-      } else {
-        if (validRefs.length >= 2) {
-          validWays.push({
-            refs: [...validRefs],
-            forward: way.forward,
-            backward: way.backward,
-          })
-        }
-        validRefs.length = 0
-      }
-    }
-    if (validRefs.length >= 2) {
-      validWays.push({
-        refs: validRefs,
-        forward: way.forward,
-        backward: way.backward,
-      })
-    }
-  }
-
-  return { usedNodeIds, validWays }
-}
-
 function buildEdges(
-  validWays: Array<BikeableWay>,
+  validWays: Array<GraphWay<ReturnType<typeof getDirection>>>,
   nodeIdToIdx: Map<number, number>,
-  nodeList: Array<{ lat: number; lon: number }>
+  nodeList: Array<Coord>
 ): Array<Edge> {
   const edges: Array<Edge> = []
 
@@ -226,34 +136,11 @@ function buildEdges(
 }
 
 async function main() {
-  console.log("Collecting bikeable ways and all nodes within bbox...")
-  const nodeCoords = new Map<number, { lat: number; lon: number }>()
-  const bikeableWays: Array<BikeableWay> = []
-
-  await parseOsmData(nodeCoords, bikeableWays)
-
-  console.log(
-    `  ${nodeCoords.size} nodes in bbox, ${bikeableWays.length} bikeable ways`
+  const { validWays, nodeIdToIdx, nodeList } = await collectStreetGraph(
+    INPUT,
+    "bikeable",
+    (tags) => (isBikeAllowed(tags) ? getDirection(tags) : null)
   )
-
-  console.log("Building graph...")
-  const { usedNodeIds, validWays } = filterValidWays(bikeableWays, nodeCoords)
-
-  console.log(
-    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
-  )
-
-  const nodeIdToIdx = new Map<number, number>()
-  const nodeList: Array<{ lat: number; lon: number }> = []
-
-  for (const id of usedNodeIds) {
-    const coord = nodeCoords.get(id)
-    if (!coord) {
-      continue
-    }
-    nodeIdToIdx.set(id, nodeList.length)
-    nodeList.push(coord)
-  }
 
   const edges = buildEdges(validWays, nodeIdToIdx, nodeList)
   console.log(`  ${edges.length} directed edges`)

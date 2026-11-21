@@ -1,19 +1,26 @@
 import { ImageResponse } from "next/og"
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
+import type { CSSProperties, ReactNode } from "react"
 
 // Editorial tokens (globals.css). Satori can't resolve CSS vars, so the
 // values are mirrored here. Keep in sync with the :root block.
 // --ground
-const GROUND = "#ffffff"
+export const GROUND = "#ffffff"
 // --ink
-const INK = "#0a0a0a"
+export const INK = "#0a0a0a"
+// --ink-muted
+export const INK_MUTED = "#6a7178"
 // --zg-blue
-const ZG_BLUE = "#0e51c9"
+export const ZG_BLUE = "#0e51c9"
 // --navy
 const NAVY = "#0e3fb0"
 
 const ASSETS_DIR = join(process.cwd(), "app/api/og/assets")
+
+function pngDataUri(path: string): string {
+  return `data:image/png;base64,${readFileSync(path).toString("base64")}`
+}
 
 type OgAssets = {
   geistMonoRegular: Buffer
@@ -28,38 +35,13 @@ function getAssets(): OgAssets {
   if (cachedAssets) {
     return cachedAssets
   }
-  const tram = readFileSync(join(ASSETS_DIR, "tram.png"))
   cachedAssets = {
     geistMonoRegular: readFileSync(join(ASSETS_DIR, "GeistMono-Regular.ttf")),
     geistMonoBold: readFileSync(join(ASSETS_DIR, "GeistMono-Bold.ttf")),
     herosBold: readFileSync(join(ASSETS_DIR, "TeXGyreHeros-Bold.ttf")),
-    tramSrc: `data:image/png;base64,${tram.toString("base64")}`,
+    tramSrc: pngDataUri(join(ASSETS_DIR, "tram.png")),
   }
   return cachedAssets
-}
-
-/** Regular mono + bold Heros, the pair every hero OG card renders with. */
-export function ogFonts() {
-  const { geistMonoRegular, herosBold } = getAssets()
-  return [
-    {
-      name: "Geist Mono",
-      data: geistMonoRegular,
-      weight: 400,
-      style: "normal",
-    },
-    { name: "TeX Gyre Heros", data: herosBold, weight: 700, style: "normal" },
-  ] satisfies NonNullable<
-    ConstructorParameters<typeof ImageResponse>[1]
-  >["fonts"]
-}
-
-/** Cloud-fade layer the hero OG cards lay over their maps; null if unbaked. */
-export function heroCloudSrc(): string | null {
-  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
-  return existsSync(cloudPath)
-    ? `data:image/png;base64,${readFileSync(cloudPath).toString("base64")}`
-    : null
 }
 
 function MonoCaption({
@@ -205,5 +187,166 @@ export function renderOgCard({
         },
       ],
     }
+  )
+}
+
+/**
+ * Hero OG card shell: a 1200×630 white column (map window over a band),
+ * rendered with regular mono + bold Heros.
+ */
+export function renderHeroCard(...children: Array<ReactNode>): ImageResponse {
+  const { geistMonoRegular, herosBold } = getAssets()
+  return new ImageResponse(
+    <div
+      style={{
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: GROUND,
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {children}
+    </div>,
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        {
+          name: "Geist Mono",
+          data: geistMonoRegular,
+          weight: 400,
+          style: "normal",
+        },
+        {
+          name: "TeX Gyre Heros",
+          data: herosBold,
+          weight: 700,
+          style: "normal",
+        },
+      ],
+    }
+  )
+}
+
+/** A full-width image layer of the map window, cover-cropped. */
+export function mapLayer(top: number, height: number) {
+  return {
+    position: "absolute" as const,
+    top: `${top}px`,
+    left: "0px",
+    width: "1200px",
+    height: `${height}px`,
+    objectFit: "cover" as const,
+  }
+}
+
+/** Map window: hero PNG + cloud fade (when baked), then the card's overlays. */
+export function HeroMapWindow({
+  heroPath,
+  height,
+  layer,
+  children,
+}: {
+  heroPath: string
+  height: number
+  layer: CSSProperties
+  children: ReactNode
+}) {
+  const cloudPath = join(process.cwd(), "public/hero-cloud.png")
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "1200px",
+        height: `${height}px`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      <img src={pngDataUri(heroPath)} alt="" style={layer} />
+      {existsSync(cloudPath) && (
+        <img src={pngDataUri(cloudPath)} alt="" style={layer} />
+      )}
+      {children}
+    </div>
+  )
+}
+
+/** White info band under the map: breadcrumb, headline, facts. */
+export function HeroInfoBand({
+  crumb,
+  headline,
+  headlineSize,
+  facts,
+}: {
+  crumb: string
+  headline: string
+  headlineSize: number
+  facts: string
+}) {
+  return (
+    <div
+      style={{
+        width: "1200px",
+        height: "160px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: "8px",
+        backgroundColor: GROUND,
+        borderTop: `2px solid ${ZG_BLUE}`,
+        padding: "0 56px",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "Geist Mono",
+          fontSize: "24px",
+          lineHeight: "32px",
+          letterSpacing: "0.96px",
+          color: ZG_BLUE,
+          display: "flex",
+        }}
+      >
+        {crumb}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          width: "1088px",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "TeX Gyre Heros",
+            fontSize: `${headlineSize}px`,
+            fontWeight: 700,
+            lineHeight: "44px",
+            color: INK,
+            display: "flex",
+          }}
+        >
+          {headline}
+        </div>
+        <div
+          style={{
+            fontFamily: "Geist Mono",
+            fontSize: "24px",
+            lineHeight: "38px",
+            color: INK_MUTED,
+            display: "flex",
+          }}
+        >
+          {facts}
+        </div>
+      </div>
+    </div>
   )
 }

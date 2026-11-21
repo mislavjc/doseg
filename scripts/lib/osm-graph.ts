@@ -1,7 +1,9 @@
-import { writeFileSync } from "node:fs"
+import { createReadStream, writeFileSync } from "node:fs"
+import createParser from "osm-pbf-parser"
+import through2 from "through2"
 
 /** An OSM element from the PBF parser. */
-export interface OsmItem {
+interface OsmItem {
   type: "node" | "way" | "relation"
   id: number
   lat?: number
@@ -9,6 +11,8 @@ export interface OsmItem {
   tags?: Record<string, string>
   refs?: Array<number>
 }
+
+export type Coord = { lat: number; lon: number }
 
 /** A weighted graph edge (distance in centimeters). */
 export interface Edge {
@@ -18,7 +22,7 @@ export interface Edge {
 }
 
 /** Zagreb, generously: the area both street graphs are cut to. */
-export const BBOX = {
+const BBOX = {
   minLat: 45.7,
   maxLat: 45.92,
   minLon: 15.75,
@@ -35,7 +39,7 @@ export const BBOX = {
  */
 export function writeBinaryGraph(
   path: string,
-  nodeList: Array<{ lat: number; lon: number }>,
+  nodeList: Array<Coord>,
   edges: Array<Edge>
 ) {
   edges.sort((a, b) => a.from - b.from)
@@ -89,4 +93,115 @@ export function writeBinaryGraph(
 
   const sizeMB = (totalSize / 1024 / 1024).toFixed(1)
   console.log(`Done! ${nodeCount} nodes, ${edgeCount} edges, ${sizeMB} MB`)
+}
+
+/** A way's node refs plus whatever its script keeps per way. */
+export type GraphWay<T> = T & { refs: Array<number> }
+
+function parseOsmData<T extends object>(
+  input: string,
+  toWay: (tags: Record<string, string>) => T | null
+) {
+  const nodeCoords = new Map<number, Coord>()
+  const ways: Array<GraphWay<T>> = []
+  return new Promise<{
+    nodeCoords: Map<number, Coord>
+    ways: Array<GraphWay<T>>
+  }>((resolve, reject) => {
+    createReadStream(input)
+      .pipe(createParser())
+      .pipe(
+        through2.obj(
+          (items: Array<OsmItem>, _enc: string, next: () => void) => {
+            for (const item of items) {
+              if (item.type === "node") {
+                const { lat, lon } = item
+                if (
+                  lat !== undefined &&
+                  lon !== undefined &&
+                  lat >= BBOX.minLat &&
+                  lat <= BBOX.maxLat &&
+                  lon >= BBOX.minLon &&
+                  lon <= BBOX.maxLon
+                ) {
+                  nodeCoords.set(item.id, { lat, lon })
+                }
+              } else if (item.type === "way" && item.tags) {
+                const way = toWay(item.tags)
+                if (way) {
+                  ways.push({ ...way, refs: item.refs ?? [] })
+                }
+              }
+            }
+            next()
+          }
+        )
+      )
+      .on("finish", () => resolve({ nodeCoords, ways }))
+      .on("error", reject)
+  })
+}
+
+function filterValidWays<T>(
+  ways: Array<GraphWay<T>>,
+  nodeCoords: Map<number, Coord>
+) {
+  const usedNodeIds = new Set<number>()
+  const validWays: Array<GraphWay<T>> = []
+
+  for (const way of ways) {
+    const validRefs: Array<number> = []
+    for (const ref of way.refs) {
+      if (nodeCoords.has(ref)) {
+        validRefs.push(ref)
+        usedNodeIds.add(ref)
+      } else {
+        if (validRefs.length >= 2) {
+          validWays.push({ ...way, refs: [...validRefs] })
+        }
+        validRefs.length = 0
+      }
+    }
+    if (validRefs.length >= 2) {
+      validWays.push({ ...way, refs: validRefs })
+    }
+  }
+
+  return { usedNodeIds, validWays }
+}
+
+/**
+ * Streams the PBF, keeps nodes inside BBOX and the ways `toWay` accepts,
+ * splits ways at nodes outside the bbox and indexes the nodes they use.
+ */
+export async function collectStreetGraph<T extends object>(
+  input: string,
+  kind: string,
+  toWay: (tags: Record<string, string>) => T | null
+) {
+  console.log(`Collecting ${kind} ways and all nodes within bbox...`)
+  const { nodeCoords, ways } = await parseOsmData(input, toWay)
+
+  console.log(`  ${nodeCoords.size} nodes in bbox, ${ways.length} ${kind} ways`)
+
+  console.log("Building graph...")
+  const { usedNodeIds, validWays } = filterValidWays(ways, nodeCoords)
+
+  console.log(
+    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
+  )
+
+  const nodeIdToIdx = new Map<number, number>()
+  const nodeList: Array<Coord> = []
+
+  for (const id of usedNodeIds) {
+    const coord = nodeCoords.get(id)
+    if (!coord) {
+      continue
+    }
+    nodeIdToIdx.set(id, nodeList.length)
+    nodeList.push(coord)
+  }
+
+  return { validWays, nodeIdToIdx, nodeList }
 }

@@ -6,12 +6,10 @@
  * Binary format: see writeBinaryGraph in scripts/lib/osm-graph.ts.
  */
 
-import { createReadStream, readFileSync } from "node:fs"
-import createParser from "osm-pbf-parser"
-import through2 from "through2"
+import { readFileSync } from "node:fs"
 
-import { BBOX, writeBinaryGraph } from "./lib/osm-graph"
-import type { Edge, OsmItem } from "./lib/osm-graph"
+import { collectStreetGraph, writeBinaryGraph } from "./lib/osm-graph"
+import type { Coord, Edge } from "./lib/osm-graph"
 
 const INPUT = "data/osm/croatia.osm.pbf"
 const OUTPUT = "data/walk-graph.bin"
@@ -92,87 +90,16 @@ function toblerFactor(slope: number): number {
   return Math.exp(-3.5 * (Math.abs(slope + 0.05) - 0.05))
 }
 
-function parseOsmData(
-  nodeCoords: Map<number, { lat: number; lon: number }>,
-  walkableWays: Array<{ refs: Array<number> }>
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    createReadStream(INPUT)
-      .pipe(createParser())
-      .pipe(
-        through2.obj(
-          (items: Array<OsmItem>, _enc: string, next: () => void) => {
-            for (const item of items) {
-              if (item.type === "node") {
-                const { lat, lon } = item
-                if (
-                  lat !== undefined &&
-                  lon !== undefined &&
-                  lat >= BBOX.minLat &&
-                  lat <= BBOX.maxLat &&
-                  lon >= BBOX.minLon &&
-                  lon <= BBOX.maxLon
-                ) {
-                  nodeCoords.set(item.id, { lat, lon })
-                }
-              } else if (item.type === "way" && item.tags) {
-                const hw = item.tags.highway
-                if (!hw || !WALKABLE_HIGHWAYS.has(hw)) {
-                  continue
-                }
-                if (item.tags.access === "private" || item.tags.foot === "no") {
-                  continue
-                }
-                walkableWays.push({ refs: item.refs ?? [] })
-              }
-            }
-            next()
-          }
-        )
-      )
-      .on("finish", resolve)
-      .on("error", reject)
-  })
-}
-
-function filterValidWays(
-  walkableWays: Array<{ refs: Array<number> }>,
-  nodeCoords: Map<number, { lat: number; lon: number }>
-) {
-  const usedNodeIds = new Set<number>()
-  const validWays: Array<Array<number>> = []
-
-  for (const way of walkableWays) {
-    const validRefs: Array<number> = []
-    for (const ref of way.refs) {
-      if (nodeCoords.has(ref)) {
-        validRefs.push(ref)
-        usedNodeIds.add(ref)
-      } else {
-        if (validRefs.length >= 2) {
-          validWays.push([...validRefs])
-        }
-        validRefs.length = 0
-      }
-    }
-    if (validRefs.length >= 2) {
-      validWays.push(validRefs)
-    }
-  }
-
-  return { usedNodeIds, validWays }
-}
-
 function buildEdges(
-  validWays: Array<Array<number>>,
+  validWays: Array<{ refs: Array<number> }>,
   nodeIdToIdx: Map<number, number>,
-  nodeList: Array<{ lat: number; lon: number }>,
+  nodeList: Array<Coord>,
   srtmTiles: Map<string, Int16Array>
 ): Array<Edge> {
   const edges: Array<Edge> = []
   const hasElevation = srtmTiles.size > 0
 
-  for (const refs of validWays) {
+  for (const { refs } of validWays) {
     for (let i = 0; i < refs.length - 1; i++) {
       const fromIdx = nodeIdToIdx.get(refs[i])
       const toIdx = nodeIdToIdx.get(refs[i + 1])
@@ -211,34 +138,20 @@ function buildEdges(
 }
 
 async function main() {
-  console.log("Collecting walkable ways and all nodes within bbox...")
-  const nodeCoords = new Map<number, { lat: number; lon: number }>()
-  const walkableWays: Array<{ refs: Array<number> }> = []
-
-  await parseOsmData(nodeCoords, walkableWays)
-
-  console.log(
-    `  ${nodeCoords.size} nodes in bbox, ${walkableWays.length} walkable ways`
-  )
-
-  console.log("Building graph...")
-  const { usedNodeIds, validWays } = filterValidWays(walkableWays, nodeCoords)
-
-  console.log(
-    `  ${usedNodeIds.size} used nodes, ${validWays.length} valid way segments`
-  )
-
-  const nodeIdToIdx = new Map<number, number>()
-  const nodeList: Array<{ lat: number; lon: number }> = []
-
-  for (const id of usedNodeIds) {
-    const coord = nodeCoords.get(id)
-    if (!coord) {
-      continue
+  const { validWays, nodeIdToIdx, nodeList } = await collectStreetGraph(
+    INPUT,
+    "walkable",
+    (tags) => {
+      const hw = tags.highway
+      if (!hw || !WALKABLE_HIGHWAYS.has(hw)) {
+        return null
+      }
+      if (tags.access === "private" || tags.foot === "no") {
+        return null
+      }
+      return {}
     }
-    nodeIdToIdx.set(id, nodeList.length)
-    nodeList.push(coord)
-  }
+  )
 
   console.log("Loading SRTM elevation data...")
   const srtmTiles = loadSRTMTiles()

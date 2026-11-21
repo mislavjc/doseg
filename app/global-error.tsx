@@ -1,8 +1,6 @@
 "use client"
 
-import { Geist_Mono } from "next/font/google"
-import localFont from "next/font/local"
-
+import { geistMono, heros } from "@/app/fonts/root"
 import { ErrorMessage, ErrorShell, RouteBreak } from "@/components/error-page"
 
 import "./globals.css"
@@ -12,28 +10,6 @@ import "./globals.css"
  * it must provide its own <html>/<body>, styles, and fonts (the root layout's
  * are gone). Same route-line 500 design as app/error.tsx.
  */
-
-const geistMono = Geist_Mono({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-mono",
-})
-
-const heros = localFont({
-  src: [
-    {
-      path: "./fonts/TeXGyreHeros-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./fonts/TeXGyreHeros-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-heros",
-  display: "swap",
-})
 
 export default function GlobalError({
   reset,

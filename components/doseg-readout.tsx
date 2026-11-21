@@ -1,5 +1,6 @@
 import { plural } from "@/app/linije/copy"
 import { LineBadge } from "@/app/statistika/editorial/blocks"
+import { Lollipop } from "@/app/statistika/editorial/pristup"
 import type { NearbyLine, NearbyStop } from "@/lib/doseg-at"
 import type { NearestBajs } from "@/lib/okolina"
 import { cn } from "@/lib/utils"
@@ -51,7 +52,6 @@ function GaugeRow({
   accent: "blue" | "muted"
   meta?: string
 }) {
-  const bar = accent === "blue" ? "bg-zg-blue" : "bg-ink-faint"
   // Line is a % of the flexible track (longest = 36%) so the value and meta
   // text that follow never truncate inside the 620px column.
   const pct = (meters / maxMeters) * 36
@@ -66,20 +66,7 @@ function GaugeRow({
         {label}
       </span>
       <div className="flex min-w-0 flex-1 items-center gap-[7px]">
-        <span className={cn("size-[7px] shrink-0 rounded-[2px]", bar)} />
-        <span
-          className={cn("h-0.5 shrink-0", bar)}
-          style={{ width: `${pct}%` }}
-        />
-        <span className={cn("h-[11px] w-[3px] shrink-0", bar)} />
-        <span
-          className={cn(
-            "shrink-0 pl-[3px] font-mono text-label whitespace-nowrap tabular-nums",
-            accent === "blue" ? "text-ink" : "text-ink-muted"
-          )}
-        >
-          {meters} m
-        </span>
+        <Lollipop pct={pct} meters={meters} accent={accent} />
         {meta && (
           <span className="min-w-0 truncate font-mono text-label text-ink-faint">
             · {meta}

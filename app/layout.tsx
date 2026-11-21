@@ -1,37 +1,11 @@
 import type { Metadata, Viewport } from "next"
-import { Geist_Mono } from "next/font/google"
-import localFont from "next/font/local"
-
+import { geistMono, heros } from "@/app/fonts/root"
 import { JsonLd } from "@/app/statistika/editorial/json-ld"
 import { PlausibleProvider } from "@/components/plausible-provider"
 import { Agentation } from "@/components/agentation"
 import SwrProvider from "@/lib/swr-config"
 
 import "./globals.css"
-
-// Geist Mono — labels, eyebrows, nav, data cells (statistika editorial system).
-const geistMono = Geist_Mono({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-mono",
-})
-
-// TeX Gyre Heros (self-hosted) — prose, hooks, stat numbers (statistika editorial system).
-const heros = localFont({
-  src: [
-    {
-      path: "./fonts/TeXGyreHeros-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./fonts/TeXGyreHeros-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-heros",
-  display: "swap",
-})
 
 export const viewport: Viewport = {
   width: "device-width",

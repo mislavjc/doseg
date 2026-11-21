@@ -15,7 +15,8 @@ interface BadgeInfo {
   color: string
 }
 
-function segmentMidpoint(line: TramLine, segIdx: number) {
+/** A line's segment between stations segIdx and segIdx+1, offset into its lane. */
+export function laneSegment(line: TramLine, segIdx: number) {
   const aId = line.stationIds[segIdx]
   const bId = line.stationIds[segIdx + 1]
   const key = edgeKey(aId, bId)
@@ -25,13 +26,18 @@ function segmentMidpoint(line: TramLine, segIdx: number) {
   }
   const idx = e.lines.indexOf(line.number)
   const off = (idx - (e.lines.length - 1) / 2) * SPACING
-
   const sA = STATIONS[aId],
     sB = STATIONS[bId]
-  const x1 = sA.x + e.px * off
-  const y1 = sA.y + e.py * off
-  const x2 = sB.x + e.px * off
-  const y2 = sB.y + e.py * off
+  return {
+    x1: sA.x + e.px * off,
+    y1: sA.y + e.py * off,
+    x2: sB.x + e.px * off,
+    y2: sB.y + e.py * off,
+  }
+}
+
+function segmentMidpoint(line: TramLine, segIdx: number) {
+  const { x1, y1, x2, y2 } = laneSegment(line, segIdx)
 
   const mx = (x1 + x2) / 2
   const my = (y1 + y2) / 2

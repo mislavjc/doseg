@@ -6,10 +6,10 @@ import {
 
 import { plural } from "@/app/linije/copy"
 import { SectionHeader } from "@/app/statistika/editorial/blocks"
+import { MetodologijaSection } from "@/app/statistika/editorial/metodologija"
 import {
   Body,
   BodyMuted,
-  Chip,
   Eyebrow,
   Hairline,
   Hook,
@@ -889,34 +889,10 @@ export function Metodologija({ rides }: { rides: BajsRides }) {
   ]
 
   return (
-    <Section id="metodologija">
-      <div className="flex flex-col gap-5">
-        <Eyebrow>metodologija</Eyebrow>
-        <Hook>Odakle brojke</Hook>
-        <Body>
-          Sustav javnih bicikala objavljuje otvoreni GBFS feed sa stanjem svake
-          stanice. Snimamo ga svake minute{from ? ` od ${from}` : ""} i
-          uspoređujemo uzastopne snimke.
-        </Body>
-
-        <div className="flex flex-wrap gap-1.75 pt-0.5">
-          {chips.map((c) => (
-            <Chip key={c}>{c}</Chip>
-          ))}
-        </div>
-
-        <div className="mt-2 flex flex-col gap-2.25">
-          <MonoLabel>uz oprez</MonoLabel>
-          {caveats.map((c) => (
-            <div key={c} className="flex items-baseline gap-2.5">
-              <span className="shrink-0 font-mono text-label text-zg-blue">
-                ·
-              </span>
-              <BodyMuted>{c}</BodyMuted>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
+    <MetodologijaSection hook="Odakle brojke" chips={chips} caveats={caveats}>
+      Sustav javnih bicikala objavljuje otvoreni GBFS feed sa stanjem svake
+      stanice. Snimamo ga svake minute{from ? ` od ${from}` : ""} i uspoređujemo
+      uzastopne snimke.
+    </MetodologijaSection>
   )
 }

@@ -509,6 +509,33 @@ function FeaturedCard({ f, legend }: { f: FeaturedItem; legend?: ReactNode }) {
   )
 }
 
+function RowTitle({ it }: { it: Pick<LineRowItem, "title" | "lines"> }) {
+  return (
+    <span
+      className="pr-body"
+      style={{
+        flexGrow: 1,
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "baseline",
+        gap: 8,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: HEROS,
+          fontSize: 16,
+          lineHeight: "20px",
+          color: INK,
+        }}
+      >
+        {it.title}
+      </span>
+      <LineChips lines={it.lines} />
+    </span>
+  )
+}
+
 /** Compact timeline row for a line change with no map (announcement only). */
 function NoticeRow({ it }: { it: LineRowItem }) {
   const [tag, color] = TAG.get(it.category) ?? OTHER_TAG
@@ -546,28 +573,7 @@ function NoticeRow({ it }: { it: LineRowItem }) {
           {tag}
         </span>
       </span>
-      <span
-        className="pr-body"
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "baseline",
-          gap: 8,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: HEROS,
-            fontSize: 16,
-            lineHeight: "20px",
-            color: INK,
-          }}
-        >
-          {it.title}
-        </span>
-        <LineChips lines={it.lines} />
-      </span>
+      <RowTitle it={it} />
       <NewTab />
     </a>
   )
@@ -702,28 +708,7 @@ function StopRow({ it }: { it: StopRowItem }) {
       >
         {dateLabel(it.date, it.approxDate)}
       </span>
-      <span
-        className="pr-body"
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "baseline",
-          gap: 8,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: HEROS,
-            fontSize: 16,
-            lineHeight: "20px",
-            color: INK,
-          }}
-        >
-          {it.title}
-        </span>
-        <LineChips lines={it.lines} />
-      </span>
+      <RowTitle it={it} />
       <NewTab />
     </a>
   )

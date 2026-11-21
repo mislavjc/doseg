@@ -1,3 +1,5 @@
+import type { ReactNode } from "react"
+
 import {
   Body,
   BodyMuted,
@@ -31,14 +33,34 @@ export function Metodologija({
     "0–100",
   ]
   return (
+    <MetodologijaSection
+      hook="Kako računamo doseg"
+      chips={chips}
+      caveats={caveats}
+    >
+      Iz svake točke u gradu računamo koliko se površine može dohvatiti javnim
+      prijevozom za pola sata, pa to svedemo na bod od 0 do 100.
+    </MetodologijaSection>
+  )
+}
+
+export function MetodologijaSection({
+  hook,
+  chips,
+  caveats,
+  children,
+}: {
+  hook: string
+  chips: Array<string>
+  caveats: Array<string>
+  children: ReactNode
+}) {
+  return (
     <Section id="metodologija">
       <div className="flex flex-col gap-5">
         <Eyebrow>metodologija</Eyebrow>
-        <Hook>Kako računamo doseg</Hook>
-        <Body>
-          Iz svake točke u gradu računamo koliko se površine može dohvatiti
-          javnim prijevozom za pola sata, pa to svedemo na bod od 0 do 100.
-        </Body>
+        <Hook>{hook}</Hook>
+        <Body>{children}</Body>
 
         <div className="flex flex-wrap gap-1.75 pt-0.5">
           {chips.map((c) => (

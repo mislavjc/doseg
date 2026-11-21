@@ -8,12 +8,9 @@ import {
   linesAtStation,
   isInterchange,
   LINE_W,
-  SPACING,
-  EDGES,
-  edgeKey,
 } from "@/lib/zagreb-tram-network"
 import type { TramLine } from "@/lib/zagreb-tram-network"
-import { LineBadges } from "./line-badges"
+import { LineBadges, laneSegment } from "./line-badges"
 import { plural } from "@/app/linije/copy"
 
 const INTERCHANGE_R = 7
@@ -46,26 +43,12 @@ interface Seg {
 }
 
 const allSegments: Array<Seg> = TRAM_LINES.flatMap((line) =>
-  line.stationIds.slice(0, -1).map((aId, i) => {
-    const bId = line.stationIds[i + 1]
-    const key = edgeKey(aId, bId)
-    const e = EDGES.get(key)
-    if (e === undefined) {
-      throw new Error(`Missing tram edge ${key}`)
-    }
-    const idx = e.lines.indexOf(line.number)
-    const off = (idx - (e.lines.length - 1) / 2) * SPACING
-    const sA = STATIONS[aId],
-      sB = STATIONS[bId]
-    return {
-      x1: sA.x + e.px * off,
-      y1: sA.y + e.py * off,
-      x2: sB.x + e.px * off,
-      y2: sB.y + e.py * off,
+  line.stationIds.slice(0, -1).map((_, i) =>
+    Object.assign(laneSegment(line, i), {
       line: line.number,
       color: line.color,
-    }
-  })
+    })
+  )
 )
 
 interface StopInfo {

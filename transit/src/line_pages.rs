@@ -242,21 +242,10 @@ pub(crate) struct MergedPattern {
 }
 
 fn fetch_patterns(otp_url: &str, date: &str) -> Vec<get_line_patterns::GetLinePatternsPatterns> {
-    let body = get_line_patterns::Variables {
+    let vars = get_line_patterns::Variables {
         service_date: date.to_string(),
     };
-    let body = GetLinePatterns::build_query(body);
-    let resp: graphql_client::Response<get_line_patterns::ResponseData> =
-        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
-            .header("Content-Type", "application/json")
-            .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
-            .body_mut()
-            .read_json()
-            .expect("Failed to parse OTP response");
-
-    resp.data
-        .expect("OTP returned no data")
+    crate::otp::query::<GetLinePatterns>(otp_url, vars)
         .patterns
         .unwrap_or_default()
         .into_iter()
@@ -281,20 +270,10 @@ pub(crate) enum DayKind {
 
 /// Feed validity window in epoch days, from OTP's serviceTimeRange.
 pub(crate) fn fetch_service_range_days(otp_url: &str) -> (i64, i64) {
-    let mut resp = ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
-        .header("Content-Type", "application/json")
-        .send_json(serde_json::json!({"query": "{ serviceTimeRange { start end } }"}))
+    let range = crate::otp::service_time_range(otp_url)
         .unwrap_or_else(|e| panic!("OTP serviceTimeRange request failed: {e}"));
-    let json: serde_json::Value = resp
-        .body_mut()
-        .read_json()
-        .expect("Failed to parse serviceTimeRange");
-    let start = json["data"]["serviceTimeRange"]["start"]
-        .as_i64()
-        .unwrap_or(0);
-    let end = json["data"]["serviceTimeRange"]["end"]
-        .as_i64()
-        .unwrap_or(0);
+    let start = range["start"].as_i64().unwrap_or(0);
+    let end = range["end"].as_i64().unwrap_or(0);
     (start / 86400, end / 86400)
 }
 

@@ -1,15 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useCallback } from "react"
-import {
-  AttributionControl,
-  MapLibreMap,
-  NavigationControl,
-  Popup,
-} from "@/lib/maplibre"
-import type { GeoJSONSource } from "@/lib/maplibre"
+import { useRef } from "react"
+import { AttributionControl, NavigationControl, Popup } from "@/lib/maplibre"
+import type { MapLibreMap } from "@/lib/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 import useSWR from "swr"
+
+import { MAP_STYLE_URL } from "@/lib/map-styles"
+import { useGeoJSONSourceData, useMapLibre } from "@/lib/use-maplibre"
 
 const ZAGREB: [number, number] = [15.978, 45.815]
 
@@ -151,8 +149,6 @@ function MapLegend() {
 }
 
 export default function BajsStationMap() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<MapLibreMap | null>(null)
   const popupRef = useRef<Popup | null>(null)
 
   const { data } = useSWR<GeoJSON.FeatureCollection>("/api/bajs", {
@@ -160,54 +156,23 @@ export default function BajsStationMap() {
     keepPreviousData: true,
   })
 
-  const updateSource = useCallback(() => {
-    const map = mapRef.current
-    if (!map || !data) {
-      return
-    }
-    const src = map.getSource<GeoJSONSource>("bajs-stations")
-    if (src) {
-      void src.setData(data)
-    }
-  }, [data])
+  const { containerRef, mapRef } = useMapLibre(
+    { style: MAP_STYLE_URL, center: ZAGREB, zoom: 12.5 },
+    (map) => {
+      map.addControl(new NavigationControl({ showCompass: false }), "top-right")
+      map.addControl(new AttributionControl({ compact: true }), "bottom-right")
+      map.on("load", () => {
+        addStationLayer(map)
+        setupInteractions(map, popupRef)
+      })
+      return () => {
+        popupRef.current?.remove()
+      }
+    },
+    []
+  )
 
-  useEffect(() => {
-    if (!containerRef.current) {
-      return
-    }
-    const map = new MapLibreMap({
-      container: containerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-      center: ZAGREB,
-      zoom: 12.5,
-      attributionControl: false,
-    })
-    map.addControl(new NavigationControl({ showCompass: false }), "top-right")
-    map.addControl(new AttributionControl({ compact: true }), "bottom-right")
-    map.on("load", () => {
-      addStationLayer(map)
-      setupInteractions(map, popupRef)
-    })
-    mapRef.current = map
-    const popup = popupRef
-    return () => {
-      popup.current?.remove()
-      map.remove()
-      mapRef.current = null
-    }
-  }, [])
-
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map || !data) {
-      return
-    }
-    if (map.isStyleLoaded()) {
-      updateSource()
-    } else {
-      map.once("load", updateSource)
-    }
-  }, [data, updateSource])
+  useGeoJSONSourceData(mapRef, "bajs-stations", data)
 
   return (
     <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] dark:bg-[#1a1a1a]">

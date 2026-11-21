@@ -1,18 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import {
-  AttributionControl,
-  LngLatBounds,
-  MapLibreMap,
-  Marker,
-  Popup,
-} from "@/lib/maplibre"
+import { AttributionControl, LngLatBounds, Marker, Popup } from "@/lib/maplibre"
 import type {
   ExpressionSpecification,
   GeoJSONSource,
   MapGeoJSONFeature,
   MapLayerMouseEvent,
+  MapLibreMap,
 } from "@/lib/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 import {
@@ -29,6 +24,7 @@ import {
 import { MODE_COLORS, POI_COLORS } from "@/lib/mode-colors"
 import { GEOCODE_KIND_META, POI_CATEGORIES } from "@/lib/poi"
 import { reachColorStops } from "@/lib/reach-ramp"
+import { useMapLibre } from "@/lib/use-maplibre"
 import type { LayersState } from "./layers-panel"
 import { deShout } from "./reach-state"
 import type { LatLon, MapPoi } from "./reach-state"
@@ -315,8 +311,6 @@ function makeDestMarker() {
 }
 
 function useMapInstance(onMapClick: (p: LatLon) => void) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<MapLibreMap | null>(null)
   const [ready, setReady] = useState(false)
 
   const onMapClickRef = useRef(onMapClick)
@@ -324,44 +318,35 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
     onMapClickRef.current = onMapClick
   }, [onMapClick])
 
-  useEffect(() => {
-    if (!containerRef.current) {
-      return
-    }
-    const map = new MapLibreMap({
-      container: containerRef.current,
-      style: MAP_STYLE_URL,
-      center: KARTA_CENTER,
-      zoom: KARTA_ZOOM,
-      attributionControl: false,
-    })
-    mapRef.current = map
-    map.addControl(new AttributionControl({ compact: true }), "bottom-right")
-    map.on("load", () => {
-      applyBasemapBackgroundTint(map)
-      addWalkAreaLayers(map)
-      addRouteLayers(map)
-      addPoiBajsLayers(map)
-      setReady(true)
-    })
-    map.on("click", (e) => {
-      // Dot clicks open the POI popup (usePoiInteractions) — don't also
-      // treat them as a bare map click that would silently start a route.
-      const dotLayers = DOT_LAYERS.filter((l) => map.getLayer(l))
-      if (
-        dotLayers.length > 0 &&
-        map.queryRenderedFeatures(e.point, { layers: dotLayers }).length > 0
-      ) {
-        return
+  const { containerRef, mapRef } = useMapLibre(
+    { style: MAP_STYLE_URL, center: KARTA_CENTER, zoom: KARTA_ZOOM },
+    (map) => {
+      map.addControl(new AttributionControl({ compact: true }), "bottom-right")
+      map.on("load", () => {
+        applyBasemapBackgroundTint(map)
+        addWalkAreaLayers(map)
+        addRouteLayers(map)
+        addPoiBajsLayers(map)
+        setReady(true)
+      })
+      map.on("click", (e) => {
+        // Dot clicks open the POI popup (usePoiInteractions) — don't also
+        // treat them as a bare map click that would silently start a route.
+        const dotLayers = DOT_LAYERS.filter((l) => map.getLayer(l))
+        if (
+          dotLayers.length > 0 &&
+          map.queryRenderedFeatures(e.point, { layers: dotLayers }).length > 0
+        ) {
+          return
+        }
+        onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
+      })
+      return () => {
+        setReady(false)
       }
-      onMapClickRef.current({ lat: e.lngLat.lat, lon: e.lngLat.lng })
-    })
-    return () => {
-      mapRef.current = null
-      setReady(false)
-      map.remove()
-    }
-  }, [])
+    },
+    []
+  )
 
   return { containerRef, mapRef, ready }
 }

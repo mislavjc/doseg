@@ -96,22 +96,42 @@ fn build_raw_pattern(
 /// outgrew that on ZET's 2026-11 feed, so allow a generous ceiling instead.
 const OTP_BODY_LIMIT: u64 = 256 * 1024 * 1024;
 
+/// OTP base URL from `OTP_URL`, defaulting to a local instance.
+pub fn otp_url_from_env() -> String {
+    std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".into())
+}
+
+fn post_json<B: serde::Serialize, R: serde::de::DeserializeOwned>(
+    otp_url: &str,
+    body: &B,
+) -> Result<R, ureq::Error> {
+    ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
+        .header("Content-Type", "application/json")
+        .send_json(body)?
+        .body_mut()
+        .with_config()
+        .limit(OTP_BODY_LIMIT)
+        .read_json()
+}
+
+/// Run a codegen'd GraphQL query against OTP, panicking on any failure.
+pub fn query<Q: GraphQLQuery>(otp_url: &str, variables: Q::Variables) -> Q::ResponseData {
+    let resp: graphql_client::Response<Q::ResponseData> =
+        post_json(otp_url, &Q::build_query(variables))
+            .unwrap_or_else(|e| panic!("OTP request failed: {e}"));
+    resp.data.expect("OTP returned no data")
+}
+
+/// The feed's `serviceTimeRange` object (`start`, `end` as epoch seconds).
+pub fn service_time_range(otp_url: &str) -> Result<serde_json::Value, ureq::Error> {
+    let body = serde_json::json!({ "query": "{ serviceTimeRange { start end } }" });
+    let mut resp: serde_json::Value = post_json(otp_url, &body)?;
+    Ok(resp["data"]["serviceTimeRange"].take())
+}
+
 fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
-    let body = GetPatterns::build_query(get_patterns::Variables {});
-    let resp: graphql_client::Response<get_patterns::ResponseData> =
-        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
-            .header("Content-Type", "application/json")
-            .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
-            .body_mut()
-            .with_config()
-            .limit(OTP_BODY_LIMIT)
-            .read_json()
-            .expect("Failed to parse OTP response");
-
-    let data = resp.data.expect("OTP returned no data");
-
-    data.patterns
+    query::<GetPatterns>(otp_url, get_patterns::Variables {})
+        .patterns
         .unwrap_or_default()
         .into_iter()
         .flatten()
@@ -151,19 +171,10 @@ fn fetch_patterns(otp_url: &str) -> Vec<RawPattern> {
 }
 
 fn fetch_patterns_for_date(otp_url: &str, service_date: &str) -> Vec<RawPattern> {
-    let body = GetPatternsForDate::build_query(get_patterns_for_date::Variables {
+    let vars = get_patterns_for_date::Variables {
         service_date: service_date.to_string(),
-    });
-    let resp: graphql_client::Response<get_patterns_for_date::ResponseData> =
-        ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
-            .header("Content-Type", "application/json")
-            .send_json(&body)
-            .unwrap_or_else(|e| panic!("OTP request failed: {e}"))
-            .body_mut()
-            .read_json()
-            .expect("Failed to parse OTP response");
-
-    let data = resp.data.expect("OTP returned no data");
+    };
+    let data = query::<GetPatternsForDate>(otp_url, vars);
 
     data.patterns
         .unwrap_or_default()

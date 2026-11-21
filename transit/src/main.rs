@@ -147,7 +147,7 @@ fn parse_args() -> Args {
     let mut minutes = 30.0;
     let mut workers = num_cpus().saturating_sub(1).max(1);
     let mut day: Option<String> = None;
-    let mut otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".into());
+    let mut otp_url = otp::otp_url_from_env();
     let mut centrality = false;
     let mut line_pages = false;
     let mut stop_pages = false;

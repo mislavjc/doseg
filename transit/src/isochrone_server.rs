@@ -3556,23 +3556,12 @@ async fn handle_occupancy(
 /// isochrones would go walk-only. Returns None on any error — runway is a
 /// best-effort signal, never a startup blocker.
 fn fetch_feed_end_epoch(otp_url: &str) -> Option<i64> {
-    let body = serde_json::json!({ "query": "{ serviceTimeRange { end } }" });
-    let resp: serde_json::Value = ureq::post(&format!("{otp_url}/otp/gtfs/v1"))
-        .header("Content-Type", "application/json")
-        .send_json(&body)
-        .ok()?
-        .body_mut()
-        .read_json()
-        .ok()?;
-    resp.get("data")?
-        .get("serviceTimeRange")?
-        .get("end")?
-        .as_i64()
+    otp::service_time_range(otp_url).ok()?.get("end")?.as_i64()
 }
 
 #[tokio::main]
 async fn main() {
-    let otp_url = std::env::var("OTP_URL").unwrap_or_else(|_| "http://localhost:8080".to_string());
+    let otp_url = otp::otp_url_from_env();
     let data_dir = std::env::var("DATA_DIR").unwrap_or_else(|_| "data".to_string());
     let port: u16 = std::env::var("PORT")
         .unwrap_or_else(|_| "3001".to_string())

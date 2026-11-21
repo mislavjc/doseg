@@ -1,56 +1,56 @@
-import { ImageResponse } from "next/og"
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync } from "node:fs"
 import { join } from "node:path"
+import type { ImageResponse } from "next/og"
 
 import { plural } from "@/app/linije/copy"
 import type { LineHeroMeta } from "@/lib/line-data"
 import type { StopPageData } from "@/lib/generated/StopPageData"
 
-import { heroCloudSrc, ogFonts } from "./card"
-
-// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-// --ink
-const INK = "#0a0a0a"
-// --ink-muted
-const INK_MUTED = "#6a7178"
-// --zg-blue
-const ZG_BLUE = "#0e51c9"
+import {
+  HeroInfoBand,
+  HeroMapWindow,
+  ZG_BLUE,
+  mapLayer,
+  renderHeroCard,
+} from "./card"
 
 /** Map window of the card (Paper "OG stanica — V1"). */
 const MAP_H = 470
-const BAND_H = 160
 
-const MAP_LAYER = {
-  position: "absolute" as const,
-  top: "0px",
-  left: "0px",
-  width: "1200px",
-  height: `${MAP_H}px`,
-  objectFit: "cover" as const,
+/** Facts line: lines + reach (the moat) when present, else service window. */
+function factsText(data: StopPageData): string {
+  const lines = `${data.lineCount} ${plural(data.lineCount, "linija", "linije", "linija")}`
+  if (data.reach) {
+    return `${lines} · ${data.reach.stations30} ${plural(data.reach.stations30, "stanica", "stanice", "stanica")} za 30 min`
+  }
+  return `${lines} · ${data.firstDeparture}-${data.lastDeparture}`
 }
 
-/** Map window: dither hero + cloud fade + centred stop marker (Paper "OG
- *  stanica — V1": clean junction map, no route overlay). */
-function MapWindow({ data }: { data: StopPageData }) {
+/**
+ * Per-stop OG card — Paper "OG stanica — V1": the dithered junction map with the
+ * serving-line corridors + a centred stop bullseye on top, a white info band
+ * below with breadcrumb, headline and facts. Mirrors the line card; 16/12 system
+ * at @2x (Heros Bold 34 + Geist Mono 24). Null when the stop has no baked hero.
+ */
+export function renderStopOgCard(
+  data: StopPageData,
+  meta: LineHeroMeta | null
+): ImageResponse | null {
   const heroPath = join(
     process.cwd(),
     "public/stanice",
     `hero-${data.slug}.png`
   )
-  const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudSrc = heroCloudSrc()
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: "1200px",
-        height: `${MAP_H}px`,
-        display: "flex",
-        overflow: "hidden",
-      }}
+  if (!meta || !existsSync(heroPath)) {
+    return null
+  }
+
+  return renderHeroCard(
+    <HeroMapWindow
+      heroPath={heroPath}
+      height={MAP_H}
+      layer={mapLayer(0, MAP_H)}
     >
-      <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
       {/* Stop marker + name, centred (crop is symmetric around the stop). */}
       <div
         style={{
@@ -90,124 +90,16 @@ function MapWindow({ data }: { data: StopPageData }) {
           }}
         />
       </div>
-    </div>
-  )
-}
-
-/** Facts line: lines + reach (the moat) when present, else service window. */
-function factsText(data: StopPageData): string {
-  const lines = `${data.lineCount} ${plural(data.lineCount, "linija", "linije", "linija")}`
-  if (data.reach) {
-    return `${lines} · ${data.reach.stations30} ${plural(data.reach.stations30, "stanica", "stanice", "stanica")} za 30 min`
-  }
-  return `${lines} · ${data.firstDeparture}-${data.lastDeparture}`
-}
-
-/** White info band: breadcrumb, headline, facts (Paper "OG stanica — V1"). */
-function InfoBand({ data }: { data: StopPageData }) {
-  const crumb = data.kvart
-    ? `doseg.hr / sve stanice / ${data.kvart}`
-    : "doseg.hr / sve stanice"
-  return (
-    <div
-      style={{
-        width: "1200px",
-        height: `${BAND_H}px`,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        gap: "8px",
-        backgroundColor: "#ffffff",
-        borderTop: `2px solid ${ZG_BLUE}`,
-        padding: "0 56px",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "Geist Mono",
-          fontSize: "24px",
-          lineHeight: "32px",
-          letterSpacing: "0.96px",
-          color: ZG_BLUE,
-          display: "flex",
-        }}
-      >
-        {crumb}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          width: "1088px",
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "TeX Gyre Heros",
-            fontSize: "34px",
-            fontWeight: 700,
-            lineHeight: "44px",
-            color: INK,
-            display: "flex",
-          }}
-        >
-          Stanica {data.name}
-        </div>
-        <div
-          style={{
-            fontFamily: "Geist Mono",
-            fontSize: "24px",
-            lineHeight: "38px",
-            color: INK_MUTED,
-            display: "flex",
-          }}
-        >
-          {factsText(data)}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Per-stop OG card — Paper "OG stanica — V1": the dithered junction map with the
- * serving-line corridors + a centred stop bullseye on top, a white info band
- * below with breadcrumb, headline and facts. Mirrors the line card; 16/12 system
- * at @2x (Heros Bold 34 + Geist Mono 24). Null when the stop has no baked hero.
- */
-export function renderStopOgCard(
-  data: StopPageData,
-  meta: LineHeroMeta | null
-): ImageResponse | null {
-  const heroPath = join(
-    process.cwd(),
-    "public/stanice",
-    `hero-${data.slug}.png`
-  )
-  if (!meta || !existsSync(heroPath)) {
-    return null
-  }
-
-  return new ImageResponse(
-    <div
-      style={{
-        width: "1200px",
-        height: "630px",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#ffffff",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <MapWindow data={data} />
-      <InfoBand data={data} />
-    </div>,
-    {
-      width: 1200,
-      height: 630,
-      fonts: ogFonts(),
-    }
+    </HeroMapWindow>,
+    <HeroInfoBand
+      crumb={
+        data.kvart
+          ? `doseg.hr / sve stanice / ${data.kvart}`
+          : "doseg.hr / sve stanice"
+      }
+      headline={`Stanica ${data.name}`}
+      headlineSize={34}
+      facts={factsText(data)}
+    />
   )
 }

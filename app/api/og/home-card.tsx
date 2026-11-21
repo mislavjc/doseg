@@ -1,23 +1,24 @@
-import { ImageResponse } from "next/og"
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync } from "node:fs"
 import { join } from "node:path"
+import type { ImageResponse } from "next/og"
 
 import { plural } from "@/app/linije/copy"
 import { projector } from "@/lib/geo"
 import { loadHomeHero } from "@/lib/home-hero"
 import type { HomeHeroData } from "@/lib/home-hero"
 
-import { heroCloudSrc, ogFonts } from "./card"
+import {
+  GROUND,
+  HeroMapWindow,
+  INK,
+  INK_MUTED,
+  ZG_BLUE,
+  mapLayer,
+  renderHeroCard,
+} from "./card"
 
-// Editorial tokens (globals.css), mirrored — satori can't resolve CSS vars.
-// --ink
-const INK = "#0a0a0a"
-// --ink-muted
-const INK_MUTED = "#6a7178"
 // dot separators (Paper OG1e-2)
 const SEPARATOR = "#c9c9c9"
-// --zg-blue
-const ZG_BLUE = "#0e51c9"
 
 /** Map window of the card (Paper "OG1e-2 · brojači u liniji"). */
 const MAP_H = 456
@@ -46,34 +47,18 @@ function boundarySvg(hero: HomeHeroData): string {
 
 // Hero PNG and boundary SVG share the banner's intrinsic aspect (4.5:1), so an
 // identical cover-crop keeps the two layers registered.
-const MAP_LAYER = {
-  position: "absolute" as const,
-  top: "0px",
-  left: "0px",
-  width: "1200px",
-  height: `${MAP_H}px`,
-  objectFit: "cover" as const,
-}
+const MAP_LAYER = mapLayer(0, MAP_H)
 
 /** Map window: city dither + cloud fade + boundary + centred Zagreb badge. */
-function MapWindow({ hero }: { hero: HomeHeroData }) {
-  const heroPath = join(process.cwd(), "public/hero-zagreb.png")
-  const heroSrc = `data:image/png;base64,${readFileSync(heroPath).toString("base64")}`
-  const cloudSrc = heroCloudSrc()
+function MapWindow({
+  heroPath,
+  hero,
+}: {
+  heroPath: string
+  hero: HomeHeroData
+}) {
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "1200px",
-        height: `${MAP_H}px`,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-      }}
-    >
-      <img src={heroSrc} alt="" style={MAP_LAYER} />
-      {cloudSrc && <img src={cloudSrc} alt="" style={MAP_LAYER} />}
+    <HeroMapWindow heroPath={heroPath} height={MAP_H} layer={MAP_LAYER}>
       <img src={boundarySvg(hero)} alt="" style={MAP_LAYER} />
       <div
         style={{
@@ -88,7 +73,7 @@ function MapWindow({ hero }: { hero: HomeHeroData }) {
       >
         Zagreb
       </div>
-    </div>
+    </HeroMapWindow>
   )
 }
 
@@ -148,7 +133,7 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
         flexDirection: "column",
         justifyContent: "center",
         gap: "16px",
-        backgroundColor: "#ffffff",
+        backgroundColor: GROUND,
         padding: "0 56px",
       }}
     >
@@ -226,37 +211,21 @@ function InfoBand({ counts }: { counts: HomeOgCounts }) {
  */
 export function renderHomeOgCard(counts: HomeOgCounts): ImageResponse | null {
   const hero = loadHomeHero()
-  if (!hero || !existsSync(join(process.cwd(), "public/hero-zagreb.png"))) {
+  const heroPath = join(process.cwd(), "public/hero-zagreb.png")
+  if (!hero || !existsSync(heroPath)) {
     return null
   }
 
-  return new ImageResponse(
+  return renderHeroCard(
+    <MapWindow heroPath={heroPath} hero={hero} />,
     <div
       style={{
         width: "1200px",
-        height: "630px",
+        height: `${RULE_H}px`,
+        backgroundColor: ZG_BLUE,
         display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#ffffff",
-        position: "relative",
-        overflow: "hidden",
       }}
-    >
-      <MapWindow hero={hero} />
-      <div
-        style={{
-          width: "1200px",
-          height: `${RULE_H}px`,
-          backgroundColor: ZG_BLUE,
-          display: "flex",
-        }}
-      />
-      <InfoBand counts={counts} />
-    </div>,
-    {
-      width: 1200,
-      height: 630,
-      fonts: ogFonts(),
-    }
+    />,
+    <InfoBand counts={counts} />
   )
 }

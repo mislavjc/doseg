@@ -409,6 +409,35 @@ function VarianceRanking({
   )
 }
 
+function DistrictRow({
+  i,
+  name,
+  value,
+  children,
+}: {
+  i: number
+  name: string
+  value: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
+            {(i + 1).toString().padStart(2, "0")}
+          </span>
+          <span className="text-body text-slate-700 dark:text-slate-300">
+            {name}
+          </span>
+        </div>
+        {value}
+      </div>
+      <div className="ml-7">{children}</div>
+    </div>
+  )
+}
+
 function VarianceRow({
   d,
   i,
@@ -421,36 +450,29 @@ function VarianceRow({
   const minPct = (d.minReachableCells / totalGridCells) * 100
   const maxPct = (d.maxReachableCells / totalGridCells) * 100
   return (
-    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
-      <div className="mb-2 flex items-baseline justify-between gap-2">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
-            {(i + 1).toString().padStart(2, "0")}
-          </span>
-          <span className="text-body text-slate-700 dark:text-slate-300">
-            {d.name}
-          </span>
-        </div>
+    <DistrictRow
+      i={i}
+      name={d.name}
+      value={
         <span className="shrink-0 font-sans text-body text-sky-600 tabular-nums dark:text-sky-400">
           σ {Math.round(d.stddevReachableCells)}
         </span>
+      }
+    >
+      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
+        <div
+          className="absolute inset-y-0 rounded-full bg-sky-500"
+          style={{
+            left: `${minPct}%`,
+            width: `${Math.max(maxPct - minPct, 1)}%`,
+          }}
+        />
       </div>
-      <div className="ml-7">
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
-          <div
-            className="absolute inset-y-0 rounded-full bg-sky-500"
-            style={{
-              left: `${minPct}%`,
-              width: `${Math.max(maxPct - minPct, 1)}%`,
-            }}
-          />
-        </div>
-        <div className="mt-2 flex justify-between font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
-          <span>Min: {Math.round(d.minReachableCells)}</span>
-          <span>Max: {Math.round(d.maxReachableCells)}</span>
-        </div>
+      <div className="mt-2 flex justify-between font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
+        <span>Min: {Math.round(d.minReachableCells)}</span>
+        <span>Max: {Math.round(d.maxReachableCells)}</span>
       </div>
-    </div>
+    </DistrictRow>
   )
 }
 
@@ -616,29 +638,22 @@ function FrequencyBar({
           ? "bg-blue-500"
           : "bg-indigo-500"
   return (
-    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
-      <div className="mb-2 flex items-baseline justify-between gap-2">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
-            {(i + 1).toString().padStart(2, "0")}
-          </span>
-          <span className="text-body text-slate-700 dark:text-slate-300">
-            {d.name}
-          </span>
-        </div>
+    <DistrictRow
+      i={i}
+      name={d.name}
+      value={
         <span className="shrink-0 font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
           ~{fmtHR(headway, 1)} min
         </span>
+      }
+    >
+      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
+        <div
+          className={`absolute inset-y-0 left-0 rounded-full ${barColor}`}
+          style={{ width: `${barPct}%` }}
+        />
       </div>
-      <div className="ml-7">
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
-          <div
-            className={`absolute inset-y-0 left-0 rounded-full ${barColor}`}
-            style={{ width: `${barPct}%` }}
-          />
-        </div>
-      </div>
-    </div>
+    </DistrictRow>
   )
 }
 

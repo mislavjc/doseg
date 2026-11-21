@@ -2,6 +2,7 @@ import { join } from "node:path"
 
 import { getDataDir } from "@/lib/data-dir"
 import { fastDistKm } from "@/lib/geo"
+import { readHeroMeta } from "@/lib/line-data"
 import type { LineHeroMeta } from "@/lib/line-data"
 import type { StopIndexEntry } from "@/lib/generated/StopIndexEntry"
 import type { StopMode } from "@/lib/generated/StopMode"
@@ -53,11 +54,7 @@ export function loadStopData(slug: string): StopPageData | null {
 /** Baked dither-crop bounds per stop (scripts/build-stop-heroes.ts); same shape
  *  as the line heroes. Null until/unless this stop's map is baked. */
 export function loadStopHeroMeta(slug: string): LineHeroMeta | null {
-  return (
-    readJsonCached<Record<string, LineHeroMeta>>(
-      join(staniceDir(), "hero-meta.json")
-    )?.[slug] ?? null
-  )
+  return readHeroMeta(staniceDir(), slug)
 }
 
 /**

@@ -1,8 +1,6 @@
-import { join } from "node:path"
-
+import { districtContains, requireDistricts } from "@/lib/district-at"
 import { loadScores } from "@/lib/district-scores"
 import { loadLineData, loadLineIndex } from "@/lib/line-data"
-import { readJsonCached } from "@/lib/page-data"
 import { loadStopData, loadStopHeroMeta, loadStopIndex } from "@/lib/stop-data"
 
 import { renderOgCard } from "./card"
@@ -11,59 +9,21 @@ import { renderLineOgCard } from "./line-card"
 import { renderStopOgCard } from "./stop-card"
 import { plural } from "@/app/linije/copy"
 
-type DistrictFeature = {
-  type: "Feature"
-  properties: { name: string; osmId: number; population: number }
-  geometry: { type: "Polygon"; coordinates: Array<Array<Array<number>>> }
-}
-
-function getDistrictGeoJSON(): Array<DistrictFeature> {
-  const parsed = readJsonCached<{ features: Array<DistrictFeature> }>(
-    join(process.cwd(), "data/districts.geojson")
-  )
-  if (!parsed) {
-    throw new Error("data/districts.geojson missing or malformed")
-  }
-  return parsed.features
-}
-
 // Same day-filtered scores the kvart pages render (not the pooled legacy file),
 // so a district's OG card and its page agree on score/rank.
 function getDistrictScores() {
   return loadScores()?.districts ?? []
 }
 
-function pointInPolygon(
-  lat: number,
-  lon: number,
-  polygon: Array<Array<number>>
-): boolean {
-  let inside = false
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i][0]
-    const yi = polygon[i][1]
-    const xj = polygon[j][0]
-    const yj = polygon[j][1]
-
-    const intersect =
-      yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi
-    if (intersect) {
-      inside = !inside
-    }
-  }
-  return inside
-}
-
 function findDistrict(
   lat: number,
   lon: number
 ): { name: string; score: number; rank: number } | null {
-  const features = getDistrictGeoJSON()
+  const features = requireDistricts()
   const districts = getDistrictScores()
 
   for (const feature of features) {
-    const ring = feature.geometry.coordinates[0]
-    if (pointInPolygon(lat, lon, ring)) {
+    if (districtContains(feature, lon, lat)) {
       const districtScore = districts.find(
         (d) => d.name === feature.properties.name
       )

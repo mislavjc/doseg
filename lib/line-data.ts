@@ -49,10 +49,15 @@ export interface LineHeroMeta {
   mobile: LineHeroCrop
 }
 
-export function loadHeroMeta(broj: string): LineHeroMeta | null {
+/** One entry of a baked `<dir>/hero-meta.json` (line, stop and kvart heroes). */
+export function readHeroMeta(dir: string, key: string): LineHeroMeta | null {
   return (
-    readJsonCached<Record<string, LineHeroMeta>>(
-      join(linijeDir(), "hero-meta.json")
-    )?.[broj] ?? null
+    readJsonCached<Record<string, LineHeroMeta>>(join(dir, "hero-meta.json"))?.[
+      key
+    ] ?? null
   )
+}
+
+export function loadHeroMeta(broj: string): LineHeroMeta | null {
+  return readHeroMeta(linijeDir(), broj)
 }

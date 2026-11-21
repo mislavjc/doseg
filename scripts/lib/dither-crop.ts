@@ -2,9 +2,9 @@
  * Shared dithered-map crop machinery for the baked heroes (lines, stops,
  * kvartovi, home, bajs).
  *
- * Rasterises OSM building footprints (scripts/lib/osm-buildings.ts) around a
- * lon/lat bbox into the blue-on-white figure-ground: buildings become Zagreb
- * blue, everything else white. The mask is drawn ~oversampleZoom levels above
+ * Re-renders CARTO's dark-matter basemap from OSM (scripts/lib/osm-basemap.ts)
+ * around a lon/lat bbox into the blue-on-white figure-ground: buildings and
+ * major road fills become Zagreb blue, casings and everything else white. The mask is drawn ~oversampleZoom levels above
  * the fitting zoom and box-downscaled, so the urban fabric keeps its texture.
  */
 
@@ -15,8 +15,8 @@ import sharp from "sharp"
 
 import { mercatorX, mercatorY } from "../../lib/geo"
 import { mapConcurrent } from "./concurrency"
-import { loadFootprints, rasterizeFootprints } from "./osm-buildings"
-import type { Footprints } from "./osm-buildings"
+import { FIT_VERSION, loadBasemap, renderBasemap } from "./osm-basemap"
+import type { Basemap } from "./osm-basemap"
 
 const TILE_SIZE = 256
 
@@ -58,9 +58,9 @@ const invMercX = (x: number, worldPx: number) => (x / worldPx) * 360 - 180
 const invMercY = (y: number, worldPx: number) =>
   (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / worldPx))) * 180) / Math.PI
 
-let footprints: Promise<Footprints> | undefined
+let basemap: Promise<Basemap> | undefined
 
-/** Building mask for a native crop rect at the given zoom (1 = building). */
+/** Basemap mask for a native crop rect at the given zoom (1 = blue). */
 async function buildingMask(
   zoom: number,
   x0: number,
@@ -68,15 +68,8 @@ async function buildingMask(
   natW: number,
   natH: number
 ) {
-  footprints ??= loadFootprints()
-  return rasterizeFootprints(
-    await footprints,
-    TILE_SIZE * 2 ** zoom,
-    x0,
-    y0,
-    natW,
-    natH
-  )
+  basemap ??= loadBasemap()
+  return renderBasemap(await basemap, zoom, x0, y0, natW, natH)
 }
 
 async function cropSig(
@@ -86,9 +79,10 @@ async function cropSig(
   outH: number,
   pad: number
 ): Promise<string> {
-  footprints ??= loadFootprints()
+  basemap ??= loadBasemap()
   return [
-    (await footprints).source,
+    (await basemap).source,
+    FIT_VERSION,
     bbox.map((v) => v.toFixed(5)).join(","),
     `${outW}x${outH}`,
     pad,

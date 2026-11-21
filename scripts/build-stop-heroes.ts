@@ -11,7 +11,7 @@
  * The SVG overlay (line corridors + stop marker + to/from points) is drawn at
  * runtime by app/stanice/stop-hero.tsx from data.hero — these baked maps are the
  * dithered ground under it. Stops without a baked map fall back to the overlay
- * on plain white. Footprints come from the OSM extract (scripts/lib/osm-buildings.ts).
+ * on plain white. The basemap is re-rendered from the OSM extract (scripts/lib/osm-basemap.ts).
  *
  *   bun scripts/build-stop-heroes.ts [--stop reljkoviceva] [--min-lines 3] [--cutoff 80]
  */

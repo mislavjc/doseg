@@ -5,28 +5,47 @@ import type { Ring } from "./geo"
 import { readJsonCached } from "./page-data"
 
 /**
- * Which kvart a coordinate falls in, from the same `data/districts.geojson`
- * the OG cards use. Server-only: it reads from disk.
+ * The one reader of `data/districts.geojson` (kvart pages, OG cards, the map
+ * sidebar, which kvart a coordinate falls in). Server-only: it reads from disk.
  */
 
-interface DistrictFeature {
+export interface DistrictFeature {
   properties: { name: string }
   geometry: { type: "Polygon"; coordinates: Array<Ring> }
 }
 
-export function districtAt(lat: number, lon: number): string | null {
-  const features =
-    readJsonCached<{ features: Array<DistrictFeature> }>(
-      join(process.cwd(), "data/districts.geojson")
-    )?.features ?? []
-  for (const f of features) {
-    const [outer, ...holes] = f.geometry.coordinates
-    if (
-      pointInRing(lon, lat, outer) &&
-      !holes.some((h) => pointInRing(lon, lat, h))
-    ) {
-      return f.properties.name
-    }
+function readDistricts() {
+  return readJsonCached<{ features: Array<DistrictFeature> }>(
+    join(process.cwd(), "data/districts.geojson")
+  )
+}
+
+export function loadDistricts(): Array<DistrictFeature> {
+  return readDistricts()?.features ?? []
+}
+
+export function requireDistricts(): Array<DistrictFeature> {
+  const geo = readDistricts()
+  if (!geo) {
+    throw new Error("data/districts.geojson missing or malformed")
   }
-  return null
+  return geo.features
+}
+
+export function districtContains(
+  d: DistrictFeature,
+  lon: number,
+  lat: number
+): boolean {
+  const [outer, ...holes] = d.geometry.coordinates
+  return (
+    pointInRing(lon, lat, outer) && !holes.some((h) => pointInRing(lon, lat, h))
+  )
+}
+
+export function districtAt(lat: number, lon: number): string | null {
+  return (
+    loadDistricts().find((f) => districtContains(f, lon, lat))?.properties
+      .name ?? null
+  )
 }

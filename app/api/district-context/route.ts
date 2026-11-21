@@ -1,12 +1,12 @@
-import { join } from "node:path"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
 
 import { jsonResponse } from "@/lib/api-response"
+import { districtContains, requireDistricts } from "@/lib/district-at"
+import type { DistrictFeature } from "@/lib/district-at"
 import { loadScores } from "@/lib/district-scores"
 import { pointInRing } from "@/lib/geo"
 import type { Ring } from "@/lib/geo"
-import { readJsonCached } from "@/lib/page-data"
 
 /**
  * Origin → district context for the map sidebar (map redesign §4 stats CTA):
@@ -14,11 +14,6 @@ import { readJsonCached } from "@/lib/page-data"
  * reach polygon touches. The reach outer ring comes from the client (it
  * already has the isochrone); district polygons stay on the server.
  */
-
-type DistrictFeature = {
-  properties: { name: string }
-  geometry: { type: "Polygon"; coordinates: Array<Ring> }
-}
 
 type DistrictScore = { name: string; rank: number; score: number }
 
@@ -32,16 +27,11 @@ function loadDistricts() {
   if (cache) {
     return cache
   }
-  const geo = readJsonCached<{ features: Array<DistrictFeature> }>(
-    join(process.cwd(), "data/districts.geojson")
-  )
-  if (!geo) {
-    throw new Error("data/districts.geojson missing or malformed")
-  }
+  const features = requireDistricts()
   // Day-filtered scores (same as the kvart pages), not the pooled legacy file.
   const districts = loadScores()?.districts ?? []
   cache = {
-    features: geo.features,
+    features,
     scores: new Map(
       districts.map((d) => [
         d.name,
@@ -51,14 +41,6 @@ function loadDistricts() {
     cityAreaKm2: districts.reduce((s, d) => s + d.areaKm2, 0),
   }
   return cache
-}
-
-function districtContains(d: DistrictFeature, lon: number, lat: number) {
-  const [outer, ...holes] = d.geometry.coordinates
-  if (!pointInRing(lon, lat, outer)) {
-    return false
-  }
-  return !holes.some((h) => pointInRing(lon, lat, h))
 }
 
 /** Sampled two-way vertex test — close enough for a "N od 17" count. */

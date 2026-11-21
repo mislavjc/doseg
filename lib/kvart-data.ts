@@ -10,10 +10,11 @@ import {
 import type { DistrictScore } from "@/app/statistika/stat-data"
 import { getDataDir } from "@/lib/data-dir"
 import type { LineIndexEntry } from "@/lib/generated/LineIndexEntry"
-import { fastDistKm, pointInRing } from "@/lib/geo"
-import type { Ring } from "@/lib/geo"
+import { districtContains, loadDistricts } from "@/lib/district-at"
+import type { DistrictFeature } from "@/lib/district-at"
+import { fastDistKm } from "@/lib/geo"
 import { kvartSlug } from "@/lib/kvart-slug"
-import { loadLineIndex } from "@/lib/line-data"
+import { loadLineIndex, readHeroMeta } from "@/lib/line-data"
 import type { LineHeroMeta } from "@/lib/line-data"
 import { readJsonCached } from "@/lib/page-data"
 
@@ -111,18 +112,6 @@ export interface KvartData {
 
 // ── raw file loaders (kept local; all paths are committed) ───────────────────
 
-interface GeoFeature {
-  properties: { name: string }
-  geometry: { type: string; coordinates: Array<Ring> }
-}
-function loadGeo(): Array<GeoFeature> {
-  return (
-    readJsonCached<{ features: Array<GeoFeature> }>(
-      join(process.cwd(), "data/districts.geojson")
-    )?.features ?? []
-  )
-}
-
 export interface Poi {
   name: string
   lat: number
@@ -154,20 +143,11 @@ function loadPromjene(): Array<PromjenaEntry> {
   )
 }
 
-/** Per-kvart baked dither hero crops (data/kvart/hero-meta.json from the bake). */
-function loadHeroMeta(slug: string): LineHeroMeta | null {
-  return (
-    readJsonCached<Record<string, LineHeroMeta>>(
-      join(getDataDir(), "kvart", "hero-meta.json")
-    )?.[slug] ?? null
-  )
-}
-
 // Only consider POIs within 4 km of the kvart for "nearest".
 const NEARBY_KM = 4
 
 function poiInDistrict(
-  geo: GeoFeature | undefined,
+  geo: DistrictFeature | undefined,
   pois: Array<Poi>
 ): Array<PoiCat> {
   const keys: Array<PoiCat["key"]> = ["hospital", "school", "park"]
@@ -179,12 +159,7 @@ function poiInDistrict(
       nearestKm: null,
     }))
   }
-  const [outer, ...holes] = geo.geometry.coordinates
-  const inside = pois.filter(
-    (p) =>
-      pointInRing(p.lon, p.lat, outer) &&
-      !holes.some((h) => pointInRing(p.lon, p.lat, h))
-  )
+  const inside = pois.filter((p) => districtContains(geo, p.lon, p.lat))
   return keys.map((key) => ({
     key,
     count: inside.filter((p) => p.category === key).length,
@@ -333,7 +308,7 @@ function loadKvartImpl(slug: string): KvartData | null {
       : null
 
   // POI in the kvart (point-in-polygon) + nearest by straight-line distance
-  const geo = loadGeo().find((f) => f.properties.name === d.name)
+  const geo = loadDistricts().find((f) => f.properties.name === d.name)
   const pois = loadPois()
   const poi = poiInDistrict(geo, pois)
   for (const c of poi) {
@@ -384,7 +359,7 @@ function loadKvartImpl(slug: string): KvartData | null {
     bars,
     cityAvgScore,
     boundary: geo?.geometry.coordinates[0] ?? [],
-    hero: loadHeroMeta(slug),
+    hero: readHeroMeta(join(getDataDir(), "kvart"), slug),
   }
 }
 

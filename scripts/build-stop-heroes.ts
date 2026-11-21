@@ -11,7 +11,7 @@
  * The SVG overlay (line corridors + stop marker + to/from points) is drawn at
  * runtime by app/stanice/stop-hero.tsx from data.hero — these baked maps are the
  * dithered ground under it. Stops without a baked map fall back to the overlay
- * on plain white. Tiles cache in .cache/tiles/ (shared with the line heroes).
+ * on plain white. The basemap is re-rendered from the OSM extract (scripts/lib/osm-basemap.ts).
  *
  *   bun scripts/build-stop-heroes.ts [--stop reljkoviceva] [--min-lines 3] [--cutoff 80]
  */
@@ -31,7 +31,6 @@ const MOBILE = { suffix: "-m", outW: 1500, outH: 1180, pad: 0.22 }
 const root = process.cwd()
 const dataDir = join(root, "data", "stanice")
 const outDir = join(root, "public", "stanice")
-const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
 const onlyStop = argValue("--stop")
 const minLines = Number(argValue("--min-lines") ?? 3)
@@ -41,13 +40,8 @@ const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 // Stops crop a junction window, deeper than the line heroes (km-wide routes).
 // zoomMax 17 → a ~2.4 km-wide crop centred on the stop: enough surrounding city
 // to recognise the part of town, while the junction stays legible. (z16 ≈ 4.8 km
-// reads generic; z18 ≈ 1.2 km is too tight to place.) Tiles fetched on first run.
-const cropper = createDitherCropper({
-  cacheDir,
-  cutoff,
-  zoomOverride,
-  zoomMax: 17,
-})
+// reads generic; z18 ≈ 1.2 km is too tight to place.)
+const cropper = createDitherCropper({ cutoff, zoomOverride, zoomMax: 17 })
 
 async function main() {
   mkdirSync(outDir, { recursive: true })

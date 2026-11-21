@@ -6,8 +6,8 @@
  *   - public/kvart/hero-<slug>.png  (+ -m mobile crop)
  *   - data/kvart/hero-meta.json     (lon/lat bounds per crop, for the border overlay)
  *
- * Tile/dither machinery is shared via scripts/lib/dither-crop.ts (same as the
- * line + stop heroes); tiles cache at .cache/tiles/dark_nolabels. Run:
+ * Dither machinery is shared via scripts/lib/dither-crop.ts (same as the
+ * line + stop heroes). Run:
  *   bun scripts/build-kvart-heroes.ts [--kvart tresnjevka-sjever] [--zoom 14] [--cutoff 80]
  */
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
@@ -33,13 +33,12 @@ const MOBILE_PAD = 0.5
 const root = process.cwd()
 const outDir = join(root, "public", "kvart")
 const dataDir = join(root, "data", "kvart")
-const cacheDir = join(root, ".cache", "tiles", "dark_nolabels")
 
 const onlyKvart = argValue("--kvart")
 const zoomOverride = argValue("--zoom") ? Number(argValue("--zoom")) : undefined
 const cutoff = Number(argValue("--cutoff") ?? 80)
 
-const cropper = createDitherCropper({ cacheDir, cutoff, zoomOverride })
+const cropper = createDitherCropper({ cutoff, zoomOverride })
 
 function bboxOf(coords: Array<Ring>): Array<number> {
   let w = Infinity,

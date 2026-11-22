@@ -18,8 +18,8 @@
     "indexnow": "bun scripts/indexnow.ts",
     "test": "vitest run",
     "e2e": "scripts/e2e.sh",
-    "e2e:update": "scripts/e2e.sh --update-snapshots",
-    "e2e:record": "rm -rf e2e/fixtures/upstream && E2E_RECORD=1 scripts/e2e.sh --update-snapshots",
+    "e2e:update": "scripts/e2e.sh --update-snapshots=changed",
+    "e2e:record": "rm -rf e2e/fixtures/upstream && E2E_RECORD=1 scripts/e2e.sh --update-snapshots=changed",
     "prepare": "lefthook install",
     "format:check": "oxfmt --check \"**/*.{ts,tsx}\"",
     "dup": "jscpd"

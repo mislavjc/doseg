@@ -26,6 +26,9 @@ for (const [name, path] of Object.entries(PAGES)) {
       mask: [
         // Anything printing the wall clock.
         page.locator("time"),
+        // MapLibre fades labels and tiles in on its own clock, which CSS
+        // animation freezing cannot reach. Maps are covered by behaviour tests.
+        page.locator(".maplibregl-map"),
         // Scrollspy navs: which section is marked depends on scroll history.
         page.getByRole("navigation", { name: "Sekcije izvještaja" }),
         page.getByRole("navigation", { name: "Odjeljci izvještaja" }),

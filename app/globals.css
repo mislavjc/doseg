@@ -72,6 +72,14 @@
   --blue-wash: #f2f6fd; /* current-hour row tint in vozni red */
   --blue-pale: #c2d2f2; /* off-peak histogram bars */
   --ink-ghost: #c9cdd3; /* departed times / past rows */
+  /* ZET tram line colours (data, /karta-tramvaja; mapped per line in lib/tram-lines.ts) */
+  --tram-blue: #0072ce;
+  --tram-green-dark: #00843d;
+  --tram-green: #4cb848;
+  --tram-yellow: #ffb81c;
+  --tram-pink: #e4258f;
+  --tram-purple: #7b2d8e;
+  --sava: #dbe6f8; /* the river band on the tram map */
 }
 
 /* Not inline: `font-sans` and raw var(--font-sans) both read the variable, so

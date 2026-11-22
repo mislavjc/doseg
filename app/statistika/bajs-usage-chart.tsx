@@ -114,14 +114,15 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
   const { xScale, yScale, xTicks, yTicks, current, peak, avg } =
     useUsageScales(points)
   const { gap, barWidth } = computeBarLayout(points, xScale, 2, 0.65)
-  const barColor = (v: number) => (v > avg * 1.2 ? "#3b82f6" : "#60a5fa")
+  const barColor = (v: number) =>
+    v > avg * 1.2 ? "var(--zg-blue)" : "var(--blue-pale)"
 
   return (
-    <div className="flex flex-col overflow-hidden border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
+    <div className="flex flex-col overflow-hidden border-t border-hairline pt-8">
+      <div className="overflow-hidden bg-surface p-5 sm:p-6">
         <ChartHeader current={current} peak={peak} />
         <div className="mt-8 mb-4">
-          <h4 className="text-body text-slate-500">Dnevni trend korištenja</h4>
+          <h4 className="text-body text-ink-muted">Dnevni trend korištenja</h4>
         </div>
         <ChartSvg
           width={CHART_WIDTH}
@@ -135,7 +136,7 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
               y1={yScale(0) ?? 0}
               x2={INNER_WIDTH}
               y2={yScale(0) ?? 0}
-              stroke="#94a3b8"
+              stroke="var(--ink-faint)"
               strokeWidth={1}
               strokeOpacity={0.2}
             />
@@ -188,31 +189,31 @@ function ChartCard({ points }: { points: Array<UsagePoint> }) {
 function ChartHeader({ current, peak }: { current: number; peak: number }) {
   return (
     <div className="mb-8 flex flex-col">
-      <h3 className="mb-6 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+      <h3 className="mb-6 font-sans text-head font-bold text-ink">
         Trend korištenja
       </h3>
 
       <div className="flex flex-wrap gap-8 sm:gap-12">
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
-            <span className="h-3 w-1 rounded-full bg-[#3b82f6]"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
+            <span className="h-3 w-1 bg-zg-blue"></span>
             Trenutno
           </div>
-          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+          <span className="mb-1 font-sans text-head font-bold text-ink">
             {fmtHR(current)}
           </span>
-          <span className="text-body text-slate-500">u uporabi</span>
+          <span className="text-body text-ink-muted">u uporabi</span>
         </div>
 
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
-            <span className="h-3 w-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
+            <span className="h-3 w-1 bg-ink-ghost"></span>
             Maksimum
           </div>
-          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+          <span className="mb-1 font-sans text-head font-bold text-ink">
             {fmtHR(peak)}
           </span>
-          <span className="text-body text-slate-500">najviše istovremeno</span>
+          <span className="text-body text-ink-muted">najviše istovremeno</span>
         </div>
       </div>
     </div>
@@ -251,7 +252,7 @@ function ChartXLabels({
             x={xScale(t)}
             y={INNER_HEIGHT + 24}
             textAnchor="middle"
-            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+            className="fill-ink-muted font-mono text-label"
           >
             {fmtTime(t.getTime() / 1000)}
           </text>
@@ -265,15 +266,15 @@ function ChartXLabels({
 
 function LoadingState() {
   return (
-    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col border-t border-hairline pt-8">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Dnevni trend
       </div>
-      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
+      <div className="bg-surface p-5 sm:p-6">
         <div className="flex items-center justify-center py-20">
-          <div className="flex items-center gap-3 text-body text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-3 text-body text-ink-muted">
             <svg
-              className="h-5 w-5 animate-spin text-lime-500"
+              className="h-5 w-5 animate-spin text-zg-blue"
               viewBox="0 0 24 24"
               fill="none"
               aria-hidden="true"
@@ -304,16 +305,14 @@ function LoadingState() {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col border-t border-hairline pt-8">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Dnevni trend
       </div>
-      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-        <div className="rounded-2xl bg-red-50/50 p-8 text-center dark:bg-red-950/10">
-          <p className="text-body text-red-700 dark:text-red-400">
-            Nije moguće dohvatiti podatke: {message}
-          </p>
-        </div>
+      <div className="border-l-2 border-ink bg-surface p-5">
+        <p className="font-mono text-label text-ink">
+          Nije moguće dohvatiti podatke: {message}
+        </p>
       </div>
     </div>
   )
@@ -321,15 +320,13 @@ function ErrorState({ message }: { message: string }) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col border-t border-slate-100 pt-8 dark:border-white/5">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col border-t border-hairline pt-8">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Dnevni trend
       </div>
-      <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-        <div className="rounded-2xl bg-slate-50/50 p-8 text-center dark:bg-zinc-900/20">
-          <p className="text-body text-slate-600 dark:text-slate-400">
-            Podaci se prikupljaju...
-          </p>
+      <div className="bg-surface p-5 sm:p-6">
+        <div className="bg-surface p-8 text-center">
+          <p className="text-body text-ink-2">Podaci se prikupljaju...</p>
         </div>
       </div>
     </div>

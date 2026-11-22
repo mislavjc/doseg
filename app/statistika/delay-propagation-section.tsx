@@ -80,7 +80,7 @@ function StopXLabels({
             y={innerH + 16}
             textAnchor="end"
             transform={`rotate(-45 ${x} ${innerH + 16})`}
-            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+            className="fill-ink-muted font-mono text-label"
           >
             {label}
           </text>
@@ -105,18 +105,18 @@ function LastPointMarker({
         cx={x}
         cy={y}
         r={3}
-        fill="#0072CE"
-        stroke="#fff"
+        fill="var(--zg-blue)"
+        stroke="var(--ground)"
         strokeWidth={1.5}
-        className="dark:stroke-zinc-900"
+        className=""
       />
       <text
         x={x + 12}
         y={y - 12}
-        fill="#0072CE"
+        fill="var(--zg-blue)"
         fontSize={12}
         fontWeight="bold"
-        className="dark:fill-sky-400"
+        className=""
       >
         {fmtDelaySec(delay)}
       </text>
@@ -134,7 +134,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
   const lastY = yScale(lastPoint.avgDelay)
 
   return (
-    <div className="flex flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
+    <div className="flex flex-col gap-3 bg-surface p-5 sm:p-6">
       <div className="overflow-x-auto">
         <svg
           width={width}
@@ -147,10 +147,10 @@ function DelayChart({ data }: { data: DelayProfileData }) {
             <GridRows
               scale={yScale}
               width={innerW}
-              stroke="#cbd5e1"
+              stroke="var(--ink-ghost)"
               strokeOpacity={0.4}
               strokeWidth={1}
-              className="dark:stroke-slate-700"
+              className=""
             />
             {minDelay < 0 && (
               <line
@@ -158,7 +158,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
                 y1={yScale(0)}
                 x2={innerW}
                 y2={yScale(0)}
-                stroke="#94a3b8"
+                stroke="var(--ink-faint)"
                 strokeWidth={1}
                 strokeOpacity={0.6}
                 strokeDasharray="4 4"
@@ -172,7 +172,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
                 textAnchor="end"
                 fontSize={11}
                 dominantBaseline="central"
-                className="fill-slate-600 dark:fill-slate-400"
+                className="fill-ink-muted"
               >
                 {fmtDelaySec(t)}
               </text>
@@ -182,7 +182,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
               data={points}
               x={(d) => xScale(d.stopName) ?? 0}
               y={(d) => yScale(d.p90Delay)}
-              stroke="#94a3b8"
+              stroke="var(--ink-faint)"
               strokeWidth={1}
               strokeDasharray="4 4"
               curve={curveStepAfter}
@@ -191,7 +191,7 @@ function DelayChart({ data }: { data: DelayProfileData }) {
               data={points}
               x={(d) => xScale(d.stopName) ?? 0}
               y={(d) => yScale(d.avgDelay)}
-              stroke="#0072CE"
+              stroke="var(--zg-blue)"
               strokeWidth={2}
               curve={curveStepAfter}
             />
@@ -205,13 +205,13 @@ function DelayChart({ data }: { data: DelayProfileData }) {
 
 function ChartLegend() {
   return (
-    <div className="mb-6 flex flex-wrap gap-6 text-body text-slate-500 dark:text-slate-400">
+    <div className="mb-6 flex flex-wrap gap-6 text-body text-ink-muted">
       <span className="flex items-center gap-2">
-        <span className="inline-block h-0.5 w-4 bg-blue-500" /> Prosječno
+        <span className="inline-block h-0.5 w-4 bg-zg-blue" /> Prosječno
         kašnjenje
       </span>
       <span className="flex items-center gap-2">
-        <span className="inline-block h-0.5 w-4 border-t border-dashed border-slate-400 dark:border-slate-500" />{" "}
+        <span className="inline-block h-0.5 w-4 border-t border-dashed border-ink-ghost" />{" "}
         P90 kašnjenje
       </span>
     </div>
@@ -230,11 +230,7 @@ function DelayProfileBody({
   selectedRoute: string
 }) {
   if (error) {
-    return (
-      <p className="text-body text-slate-500 dark:text-slate-400">
-        Podaci nisu dostupni
-      </p>
-    )
+    return <p className="text-body text-ink-muted">Podaci nisu dostupni</p>
   }
   if (isLoading || !data) {
     return (
@@ -243,15 +239,15 @@ function DelayProfileBody({
         role="status"
         aria-label="Učitavanje"
       >
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500" />
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-hairline-strong border-t-zg-blue" />
         <span className="sr-only">Učitavanje...</span>
       </div>
     )
   }
   if (data.points.length === 0) {
     return (
-      <div className="rounded-[12px] bg-[#f9f9f9] p-8 text-center sm:p-12 dark:bg-[#1a1a1a]">
-        <p className="text-body text-slate-500 dark:text-slate-400">
+      <div className="bg-surface p-8 text-center sm:p-12">
+        <p className="text-body text-ink-muted">
           Nema podataka o kašnjenju za liniju {selectedRoute} u zadnjih 24h
         </p>
       </div>
@@ -282,7 +278,7 @@ function RouteSelector({
       value={selectedRoute}
       onChange={(e) => onChange(e.target.value)}
       aria-label="Linija"
-      className="h-10 min-w-[160px] rounded-full border border-slate-100 bg-white/80 px-4 text-body text-slate-700 transition-colors hover:border-slate-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:outline-none dark:border-white/10 dark:bg-zinc-900/80 dark:text-slate-200 dark:hover:border-white/20"
+      className="h-9 min-w-[160px] border border-hairline-strong bg-white px-3 font-mono text-label text-ink transition-colors focus-visible:ring-2 focus-visible:ring-zg-blue focus-visible:outline-none"
     >
       {routes.map((r) => (
         <option key={r} value={r}>
@@ -309,7 +305,7 @@ export default function DelayPropagationSection({
   })
 
   return (
-    <section className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline py-16 sm:py-24">
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Propagacija kašnjenja</StatModuleTitle>

@@ -24,15 +24,15 @@ interface OccupancyData {
 }
 
 const LEVEL_COLORS = {
-  empty: { bg: "#22c55e", label: "Prazno" },
-  fewSeats: { bg: "#facc15", label: "Malo mjesta" },
-  standing: { bg: "#f97316", label: "Stajaća mjesta" },
-  full: { bg: "#ef4444", label: "Puno" },
+  empty: { bg: "var(--zg-blue)", label: "Prazno" },
+  fewSeats: { bg: "var(--ink-ghost)", label: "Malo mjesta" },
+  standing: { bg: "var(--ink-faint)", label: "Stajaća mjesta" },
+  full: { bg: "var(--ink)", label: "Puno" },
 } as const
 
 function dominantColor(h: OccupancyRouteHour): string {
   if (h.total === 0) {
-    return "#e2e8f0"
+    return "var(--hairline-strong)"
   }
   const max = Math.max(h.empty, h.fewSeats, h.standing, h.full)
   if (max === h.full) {
@@ -62,10 +62,10 @@ export default function OccupancySection() {
   }
 
   return (
-    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline-strong py-16 sm:py-24">
       <StatModuleTitle className="mb-12">Zauzetost vozila</StatModuleTitle>
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
-        <StatProse className="flex-1 text-body text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-body text-ink-2">
           <p>
             Razina popunjenosti vozila po liniji i satu iz GTFS-RT feeda.
             Prikazano ako ZET šalje podatke o popunjenosti.
@@ -84,13 +84,10 @@ export default function OccupancySection() {
 
 function Legend() {
   return (
-    <div className="mb-8 flex flex-wrap gap-6 font-mono text-label text-slate-500 dark:text-slate-400">
+    <div className="mb-8 flex flex-wrap gap-6 font-mono text-label text-ink-muted">
       {Object.entries(LEVEL_COLORS).map(([key, val]) => (
         <div key={key} className="flex items-center gap-2">
-          <div
-            className="h-3 w-3 rounded"
-            style={{ backgroundColor: val.bg }}
-          />
+          <div className="h-3 w-3" style={{ backgroundColor: val.bg }} />
           <span>{val.label}</span>
         </div>
       ))}
@@ -106,13 +103,13 @@ function HeatmapGrid({ routes }: { routes: Array<OccupancyRoute> }) {
       <table className="w-full border-collapse font-mono text-label">
         <thead>
           <tr>
-            <th className="w-14 pb-4 text-right font-mono text-label text-slate-500 dark:text-slate-400">
+            <th className="w-14 pb-4 text-right font-mono text-label text-ink-muted">
               Linija
             </th>
             {SERVICE_HOURS.map((h) => (
               <th
                 key={h}
-                className="pb-4 text-center font-mono text-label text-slate-400 dark:text-slate-500"
+                className="pb-4 text-center font-mono text-label text-ink-faint"
                 style={{ minWidth: 24 }}
               >
                 {h % 4 === 0 ? h : ""}
@@ -134,7 +131,7 @@ function HeatmapRow({ route }: { route: OccupancyRoute }) {
   const hourMap = new Map(route.hours.map((h) => [h.hour, h]))
   return (
     <tr className="group">
-      <td className="py-1 pr-4 text-right font-mono text-label text-slate-600 dark:text-slate-300">
+      <td className="py-1 pr-4 text-right font-mono text-label text-ink-2">
         {route.routeId}
       </td>
       {SERVICE_HOURS.map((h) => (
@@ -162,7 +159,7 @@ function HeatmapCell({
     return (
       // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- a data cell, not a control; the row and column headers label it
       <td className="p-[1px]">
-        <div className="h-8 w-full rounded bg-slate-100 transition-colors group-hover:opacity-80 dark:bg-white/5" />
+        <div className="h-8 w-full bg-track transition-colors group-hover:opacity-80" />
       </td>
     )
   }
@@ -170,11 +167,11 @@ function HeatmapCell({
     // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- a data cell, not a control; the row and column headers label it
     <td className="p-[1px]">
       <div
-        className="relative h-8 w-full rounded transition-opacity group-hover:opacity-80"
+        className="relative h-8 w-full transition-opacity group-hover:opacity-80"
         title={`${routeId} @ ${hour}:00 - prazno: ${data.empty}, malo mjesta: ${data.fewSeats}, stajaća: ${data.standing}, puno: ${data.full}`}
       >
         <div
-          className="absolute inset-0 rounded"
+          className="absolute inset-0"
           style={{
             backgroundColor: dominantColor(data),
             opacity: cellOpacity(data),

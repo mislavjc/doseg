@@ -2,8 +2,8 @@
 
 import type { District as DistrictScore } from "@/lib/generated/District"
 
-const LABEL_DARK = "#0f172a"
-const LABEL_LIGHT = "#fafaf9"
+const LABEL_DARK = "var(--ink)"
+const LABEL_LIGHT = "var(--ground)"
 
 /** Same grid positions as connectivity map; scores are static snapshot from district-scores. */
 const ZAGREB_DISTRICTS_GRID = [
@@ -129,37 +129,37 @@ const NUM_ROWS = 6
 
 function connectivityColor(score: number) {
   if (score >= 80) {
-    return "#398f71"
+    return "color-mix(in srgb, var(--rank-100) 95%, var(--rank-0))"
   }
   if (score >= 60) {
-    return "#4ea586"
+    return "color-mix(in srgb, var(--rank-100) 78%, var(--rank-0))"
   }
   if (score >= 40) {
-    return "#66bba1"
+    return "color-mix(in srgb, var(--rank-100) 60%, var(--rank-0))"
   }
   if (score >= 30) {
-    return "#81d2bb"
+    return "color-mix(in srgb, var(--rank-100) 44%, var(--rank-0))"
   }
   if (score >= 20) {
-    return "#a1e7d5"
+    return "color-mix(in srgb, var(--rank-100) 28%, var(--rank-0))"
   }
-  return "#c4f8ea"
+  return "color-mix(in srgb, var(--rank-100) 14%, var(--rank-0))"
 }
 
 function bajsBoostColor(boostPct: number) {
   if (boostPct >= 40) {
-    return "#d97706"
+    return "var(--ink-faint)"
   }
   if (boostPct >= 25) {
-    return "#f59e0b"
+    return "var(--ink-faint)"
   }
   if (boostPct >= 10) {
-    return "#fbbf24"
+    return "color-mix(in srgb, var(--rank-100) 45%, var(--rank-0))"
   }
   if (boostPct > 0) {
-    return "#fcd34d"
+    return "color-mix(in srgb, var(--rank-100) 22%, var(--rank-0))"
   }
-  return "#94a3b8"
+  return "var(--ink-faint)"
 }
 
 function labelForBajs(boostPct: number) {
@@ -176,7 +176,7 @@ export function ZagrebBlockMap() {
         col: d.col,
         row: d.row,
         bg: connectivityColor(d.score),
-        label: LABEL_DARK,
+        label: d.score >= 60 ? LABEL_LIGHT : LABEL_DARK,
         title: `${d.name} - ${d.score}/100`,
         tooltip: `${d.name}: ${d.score}/100`,
       }))}
@@ -229,7 +229,7 @@ function ZagrebDistrictGrid({ cells }: { cells: Array<GridCell> }) {
   const byPos = new Map(cells.map((c) => [`${c.col},${c.row}`, c]))
 
   return (
-    <div className="flex w-full justify-center overflow-hidden rounded-xl bg-[#fbfbf9] py-8 sm:overflow-visible">
+    <div className="flex w-full justify-center overflow-hidden sm:overflow-visible">
       <div
         className="grid gap-[3px]"
         style={{
@@ -257,14 +257,14 @@ function ZagrebDistrictGrid({ cells }: { cells: Array<GridCell> }) {
             >
               <span className="text-body">{cell.short}</span>
               <div
-                className={`pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(280px,85vw)] -translate-x-1/2 rounded bg-gray-900 px-3 py-1.5 text-center font-mono text-label leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 ${
+                className={`pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(280px,85vw)] -translate-x-1/2 bg-ink px-3 py-1.5 text-center font-mono text-label leading-snug text-white opacity-0 transition-opacity group-hover:opacity-100 ${
                   tooltipBelow ? "top-full mt-1.5" : "bottom-full mb-1.5"
                 }`}
               >
                 {tooltipBelow ? (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-ink" />
                 ) : (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink" />
                 )}
                 {cell.tooltip}
               </div>

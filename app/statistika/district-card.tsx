@@ -17,22 +17,22 @@ function DenseSpecialBadges({ d }: { d: DistrictScore }) {
   return (
     <div className="mt-2 flex flex-wrap gap-1.5">
       {d.trainLines.length > 0 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-teal-50 px-1.5 py-0.5 font-mono text-label text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
+        <div className="inline-flex items-center gap-1 bg-blue-wash px-1.5 py-0.5 font-mono text-label text-zg-blue">
           HŽ Vlak
         </div>
       )}
       {d.bajsStations > 0 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-amber-50 px-1.5 py-0.5 font-mono text-label text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+        <div className="inline-flex items-center gap-1 bg-surface px-1.5 py-0.5 font-mono text-label text-ink-muted">
           {d.bajsStations} BAJS
         </div>
       )}
       {d.peakOffpeakDrop >= 30 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-indigo-50 px-1.5 py-0.5 font-mono text-label text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+        <div className="inline-flex items-center gap-1 bg-blue-wash px-1.5 py-0.5 font-mono text-label text-zg-blue">
           -{d.peakOffpeakDrop}% navečer
         </div>
       )}
       {d.desertPct >= 20 && (
-        <div className="inline-flex items-center gap-1 rounded-sm bg-red-50 px-1.5 py-0.5 font-mono text-label text-red-700 dark:bg-red-900/30 dark:text-red-400">
+        <div className="inline-flex items-center gap-1 bg-surface px-1.5 py-0.5 font-mono text-label text-ink">
           {d.desertPct}% pustinja
         </div>
       )}
@@ -62,17 +62,15 @@ function DenseBoostBars({
         <span className={colorClass}>{label}</span>
         <span className={colorClass}>+{pctVal}%</span>
       </div>
-      <div
-        className={`relative h-1 w-full overflow-hidden rounded-full ${bgClass}`}
-      >
+      <div className={`relative h-1 w-full overflow-hidden ${bgClass}`}>
         <div
-          className={`absolute inset-y-0 left-0 rounded-full ${barClass}`}
+          className={`absolute inset-y-0 left-0 ${barClass}`}
           style={{
             width: `${Math.min((rawVal / totalGridCells) * 100, 100)}%`,
           }}
         />
         <div
-          className="absolute inset-y-0 left-0 bg-black/10 dark:bg-white/10"
+          className="absolute inset-y-0 left-0 bg-black/10"
           style={{ width: `${reachPctNum}%` }}
         />
       </div>
@@ -86,18 +84,18 @@ function DenseBoostBars({
           "S HŽ Vlakovima",
           d.trainBoostPct,
           d.trainAvgReachableCells,
-          "text-teal-600 dark:text-teal-400",
-          "bg-teal-100 dark:bg-teal-900/30",
-          "bg-teal-500 dark:bg-teal-400"
+          "text-zg-blue",
+          "bg-blue-wash",
+          "bg-blue-pale"
         )}
       {d.bajsBoostPct > 0 &&
         renderBoost(
           "S BAJS Biciklima",
           d.bajsBoostPct,
           d.bajsAvgReachableCells,
-          "text-amber-600 dark:text-amber-400",
-          "bg-amber-100 dark:bg-amber-900/30",
-          "bg-amber-500 dark:bg-amber-400"
+          "text-ink-muted",
+          "bg-surface",
+          "bg-ink-ghost"
         )}
     </>
   )
@@ -106,25 +104,25 @@ function DenseBoostBars({
 function DenseLinesList({ d }: { d: DistrictScore }) {
   return (
     <div className="mt-4">
-      <span className="mb-2 block font-mono text-label text-slate-400">
+      <span className="mb-2 block font-mono text-label text-ink-faint">
         Linije
       </span>
       <div className="flex flex-wrap gap-1">
         {d.tramLines.map((line) => (
           <span
             key={`t${line}`}
-            className="flex h-5 min-w-5 items-center justify-center rounded-sm bg-slate-100 px-1 font-mono text-label text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+            className="flex h-5 min-w-5 items-center justify-center bg-track px-1 font-mono text-label text-ink-2"
           >
             {line}
           </span>
         ))}
         {d.busLines.length > 0 && (
-          <span className="flex h-5 items-center justify-center rounded-sm bg-slate-100 px-1.5 font-mono text-label text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+          <span className="flex h-5 items-center justify-center bg-track px-1.5 font-mono text-label text-ink-2">
             {d.busLines.length} bus
           </span>
         )}
         {d.trainLines.length > 0 && (
-          <span className="flex h-5 items-center justify-center rounded-sm bg-teal-50 px-1.5 font-mono text-label text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
+          <span className="flex h-5 items-center justify-center bg-blue-wash px-1.5 font-mono text-label text-zg-blue">
             HŽ
           </span>
         )}
@@ -147,19 +145,17 @@ function DistrictCardHeader({
       <div className="flex items-center gap-4">
         <DistrictEmblem pathData={emblemPath} rank={d.rank} color={bandColor} />
         <div>
-          <div className="mb-1 font-mono text-label font-bold text-slate-400">
+          <div className="mb-1 font-mono text-label font-bold text-ink-faint">
             Kvart
           </div>
-          <h4 className="text-head font-bold text-slate-900 dark:text-slate-100">
-            {d.name}
-          </h4>
+          <h4 className="text-head font-bold text-ink">{d.name}</h4>
         </div>
       </div>
       <div className="text-right">
         <div className="text-head font-bold" style={{ color: bandColor }}>
           {d.score}
         </div>
-        <div className="font-mono text-label text-slate-400">Indeks</div>
+        <div className="font-mono text-label text-ink-faint">Indeks</div>
       </div>
     </div>
   )
@@ -168,27 +164,25 @@ function DistrictCardHeader({
 function DenseStatTiles({ d }: { d: DistrictScore }) {
   return (
     <div className="flex justify-between gap-3 text-center">
-      <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-        <div className="mb-0.5 font-mono text-label text-slate-400">Stan.</div>
-        <div className="text-body text-slate-900 dark:text-slate-100">
+      <div className="flex-1 bg-surface py-3">
+        <div className="mb-0.5 font-mono text-label text-ink-faint">Stan.</div>
+        <div className="text-body text-ink">
           {d.population !== null && d.population !== 0
             ? fmtHR(d.population / 1000, 1) + "k"
             : "-"}
         </div>
       </div>
-      <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-        <div className="mb-0.5 font-mono text-label text-slate-400">
+      <div className="flex-1 bg-surface py-3">
+        <div className="mb-0.5 font-mono text-label text-ink-faint">
           Stanice
         </div>
-        <div className="text-body text-slate-900 dark:text-slate-100">
-          {d.stops}
-        </div>
+        <div className="text-body text-ink">{d.stops}</div>
       </div>
-      <div className="flex-1 rounded-3xl bg-slate-50/50 py-3 dark:bg-slate-800/30">
-        <div className="mb-0.5 font-mono text-label text-slate-400">
+      <div className="flex-1 bg-surface py-3">
+        <div className="mb-0.5 font-mono text-label text-ink-faint">
           Interval
         </div>
-        <div className="text-body text-slate-900 dark:text-slate-100">
+        <div className="text-body text-ink">
           ~{Math.round(d.medianHeadwayMin)}m
         </div>
       </div>
@@ -208,7 +202,7 @@ export function DistrictCard({
   const cityReachPctNum = (cityAvg / totalGridCells) * 100
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-[24px] border border-slate-200/60 bg-white transition-colors hover:border-slate-300/80 dark:border-white/5 dark:bg-slate-900/50 dark:hover:border-white/10">
+    <div className="flex h-full flex-col overflow-hidden border border-hairline-strong bg-white">
       <DistrictCardHeader d={d} emblemPath={emblemPath} bandColor={bandColor} />
 
       <div className="px-6">
@@ -219,20 +213,20 @@ export function DistrictCard({
         </div>
       </div>
 
-      <div className="mt-6 border-t border-slate-50/80 p-6 pb-5 dark:border-slate-800/50">
-        <div className="mb-4 flex justify-between font-mono text-label text-slate-500">
+      <div className="mt-6 border-t border-hairline p-6 pb-5">
+        <div className="mb-4 flex justify-between font-mono text-label text-ink-muted">
           <span>Doseg grada</span>
-          <span className="font-semibold text-slate-900 dark:text-white">
+          <span className="font-semibold text-ink">
             {pct(d.avgReachableCells, totalGridCells)}%
           </span>
         </div>
-        <div className="relative h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="relative h-2 w-full bg-track">
           <div
-            className="absolute inset-y-0 left-0 rounded-full"
+            className="absolute inset-y-0 left-0"
             style={{ width: `${reachPctNum}%`, backgroundColor: bandColor }}
           />
           <div
-            className="absolute inset-y-0 w-[2px] bg-slate-300 dark:bg-slate-600"
+            className="absolute inset-y-0 w-[2px] bg-ink-ghost"
             style={{ left: `${cityReachPctNum}%` }}
           />
         </div>
@@ -242,16 +236,16 @@ export function DistrictCard({
         </div>
       </div>
 
-      <div className="mt-auto border-t border-slate-50/80 bg-slate-50/30 px-6 py-5 dark:border-slate-800/50 dark:bg-slate-800/10">
+      <div className="mt-auto border-t border-hairline px-6 py-5">
         <DenseLinesList d={d} />
 
         <div className="mt-6 flex items-center justify-between">
           <Link
             href={mapLink}
-            className="group flex items-center gap-2 text-body text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+            className="group flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors hover:text-navy"
           >
             <span>Istraži područje</span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:translate-x-1 dark:bg-slate-800">
+            <span className="transition-transform group-hover:translate-x-1">
               &rarr;
             </span>
           </Link>

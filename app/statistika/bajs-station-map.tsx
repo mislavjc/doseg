@@ -9,6 +9,13 @@ import useSWR from "swr"
 import { MAP_STYLE_URL } from "@/lib/map-styles"
 import { useGeoJSONSourceData, useMapLibre } from "@/lib/use-maplibre"
 
+// MapLibre paint can't resolve CSS variables; these mirror :root in
+// app/globals.css (--zg-blue, --ink-faint, --ink, --ground). Keep them in sync.
+const STATION_OK = "#0e51c9"
+const STATION_LOW = "#9aa0a6"
+const STATION_EMPTY = "#0a0a0a"
+const GROUND = "#ffffff"
+
 const ZAGREB: [number, number] = [15.978, 45.815]
 
 interface StationProps {
@@ -46,10 +53,10 @@ function addStationLayer(map: MapLibreMap) {
       "circle-color": [
         "case",
         ["==", ["get", "bikesAvailable"], 0],
-        "#ef4444",
+        STATION_EMPTY,
         ["<=", ["get", "bikesAvailable"], 3],
-        "#eab308",
-        "#22c55e",
+        STATION_LOW,
+        STATION_OK,
       ],
       "circle-radius": [
         "interpolate",
@@ -62,7 +69,7 @@ function addStationLayer(map: MapLibreMap) {
         30,
         10,
       ],
-      "circle-stroke-color": "#ffffff",
+      "circle-stroke-color": GROUND,
       "circle-stroke-width": 1.5,
       "circle-opacity": 0.9,
     },
@@ -86,7 +93,7 @@ function stationPopup(p: StationProps) {
     el("div", "", "Dokovi: ", strong(p.docksAvailable)),
     el(
       "div",
-      "color:#64748b;font-family:var(--font-mono),monospace;font-size:12px;line-height:16px;margin-top:2px",
+      "color:var(--ink-muted);font-family:var(--font-mono),monospace;font-size:12px;line-height:16px;margin-top:2px",
       `Kapacitet: ${p.capacity}`
     )
   )
@@ -126,22 +133,19 @@ function setupInteractions(
 
 function MapLegend() {
   return (
-    <div className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-3 py-2 font-mono text-label backdrop-blur-sm dark:bg-zinc-900/90">
-      <div className="mb-1 font-semibold text-slate-700 dark:text-slate-300">
-        Dostupnost
-      </div>
+    <div className="absolute bottom-3 left-3 bg-surface px-3 py-2 font-mono text-label backdrop-blur-sm">
+      <div className="mb-1 font-semibold text-ink-2">Dostupnost</div>
       <div className="flex items-center gap-3">
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />{" "}
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-zg-blue" />{" "}
           4+
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#eab308]" />{" "}
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-ink-faint" />{" "}
           1–3
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />{" "}
-          0
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-ink" /> 0
         </span>
       </div>
     </div>
@@ -175,8 +179,8 @@ export default function BajsStationMap() {
   useGeoJSONSourceData(mapRef, "bajs-stations", data)
 
   return (
-    <div className="overflow-hidden rounded-[12px] bg-[#f9f9f9] dark:bg-[#1a1a1a]">
-      <div className="relative overflow-hidden rounded-[12px]">
+    <div className="overflow-hidden bg-surface">
+      <div className="relative overflow-hidden">
         <div
           ref={containerRef}
           role="application"

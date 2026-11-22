@@ -9,31 +9,13 @@ import {
   StatModuleTitle,
 } from "./stat-typography"
 
-const sectionAccents = {
-  "promet-danas": {
-    gradient:
-      "from-emerald-400 to-teal-500 dark:from-emerald-500 dark:to-teal-600",
-    eyebrowColor: "text-emerald-600 dark:text-emerald-400",
-  },
-  pouzdanost: {
-    gradient: "from-sky-400 to-blue-500 dark:from-sky-500 dark:to-blue-600",
-    eyebrowColor: "text-sky-600 dark:text-sky-400",
-  },
-  povezanost: {
-    gradient:
-      "from-violet-400 to-purple-500 dark:from-violet-500 dark:to-purple-600",
-    eyebrowColor: "text-violet-600 dark:text-violet-400",
-  },
-  bajs: {
-    gradient:
-      "from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600",
-    eyebrowColor: "text-amber-600 dark:text-amber-400",
-  },
-  analiza: {
-    gradient: "from-rose-400 to-pink-500 dark:from-rose-500 dark:to-pink-600",
-    eyebrowColor: "text-rose-600 dark:text-rose-400",
-  },
-}
+const SECTION_IDS = [
+  "promet-danas",
+  "pouzdanost",
+  "povezanost",
+  "bajs",
+  "analiza",
+] as const
 
 export function SectionGroup({
   id,
@@ -43,42 +25,25 @@ export function SectionGroup({
   description,
   children,
 }: {
-  id: keyof typeof sectionAccents
+  id: (typeof SECTION_IDS)[number]
   number: number
   eyebrow: string
   title: string
   description: string
   children: React.ReactNode
 }) {
-  const accent = sectionAccents[id]
-  const numLabel = String(number).padStart(2, "0")
-
   return (
-    <div
-      id={id}
-      className="relative mt-24 scroll-mt-28 pt-14 sm:mt-32 sm:pt-16"
-    >
-      <div className="absolute inset-x-0 top-0 flex items-center gap-0">
-        <div
-          className={`h-[2px] w-12 rounded-full bg-gradient-to-r ${accent.gradient}`}
-        />
-        <div className="h-px flex-1 bg-slate-200/80 dark:bg-white/[0.08]" />
+    <div id={id} className="relative mt-20 scroll-mt-24 pt-6 sm:mt-28">
+      <div className="absolute inset-x-0 top-0 flex">
+        <div className="h-[2px] w-12 bg-zg-blue" />
+        <div className="mt-px h-px flex-1 bg-hairline-strong" />
       </div>
-
-      <div className="relative">
-        <p
-          className={`mb-3 font-mono text-label font-bold ${accent.eyebrowColor}`}
-        >
-          {numLabel} - {eyebrow}
-        </p>
-
-        <div className="mb-4">
-          <StatGroupTitle>{title}</StatGroupTitle>
-        </div>
-
-        <StatGroupLead>{description}</StatGroupLead>
-      </div>
-
+      <p className="flex gap-2 font-mono text-label lowercase">
+        <span className="text-zg-blue">{String(number).padStart(2, "0")}</span>
+        <span className="text-ink-faint">{eyebrow}</span>
+      </p>
+      <StatGroupTitle className="mt-1">{title}</StatGroupTitle>
+      <StatGroupLead className="mt-2">{description}</StatGroupLead>
       {children}
     </div>
   )
@@ -88,54 +53,20 @@ export function EditorialStat({
   value,
   note,
   detail,
-  valueColor = "text-[#171717] dark:text-[#ededed]",
 }: {
   value: string
   note?: string
   detail?: string
-  valueColor?: string
 }) {
   return (
-    <div className="flex min-h-[160px] flex-col justify-between rounded-sm bg-[#f5f5f5] p-6 sm:min-h-[200px] lg:p-8 dark:bg-[#1a1a1a]">
-      <div className="flex items-baseline gap-1">
-        <StatKpiValue className={valueColor}>{value}</StatKpiValue>
-        {note && <StatKpiNote className={valueColor}>{note}</StatKpiNote>}
+    <div className="flex flex-col gap-1.5 border-t border-hairline-strong py-4 sm:px-5 sm:[&:not(:nth-child(3n))]:border-r sm:[&:not(:nth-child(3n))]:border-r-hairline sm:[&:nth-child(3n+1)]:pl-0">
+      <div className="flex items-baseline">
+        <StatKpiValue>{value}</StatKpiValue>
+        {note && <StatKpiNote>{note}</StatKpiNote>}
       </div>
-      {detail && (
-        <StatKpiCaption className="text-slate-600 dark:text-slate-400">
-          {detail}
-        </StatKpiCaption>
-      )}
+      {detail && <StatKpiCaption>{detail}</StatKpiCaption>}
     </div>
   )
-}
-
-const sectionColorMap = {
-  slate: "text-slate-800 dark:text-slate-200",
-  rose: "text-rose-800 dark:text-rose-200",
-  emerald: "text-emerald-800 dark:text-emerald-200",
-  teal: "text-teal-800 dark:text-teal-200",
-  violet: "text-violet-800 dark:text-violet-200",
-  red: "text-red-800 dark:text-red-200",
-  amber: "text-amber-800 dark:text-amber-200",
-  sky: "text-sky-800 dark:text-sky-200",
-  blue: "text-blue-800 dark:text-blue-200",
-  orange: "text-orange-800 dark:text-orange-200",
-  indigo: "text-indigo-800 dark:text-indigo-200",
-}
-
-const sectionBgMap = {
-  slate: "dark:bg-white/10",
-  rose: "dark:bg-rose-500/20",
-  emerald: "dark:bg-emerald-500/20",
-  teal: "dark:bg-teal-500/20",
-  violet: "dark:bg-violet-500/20",
-  red: "dark:bg-red-500/20",
-  amber: "dark:bg-amber-500/20",
-  sky: "dark:bg-sky-500/20",
-  blue: "dark:bg-blue-500/20",
-  orange: "dark:bg-orange-500/20",
-  indigo: "dark:bg-indigo-500/20",
 }
 
 const sectionIconPaths = {
@@ -239,21 +170,15 @@ function SectionIconSvg({ icon }: { icon: keyof typeof sectionIconPaths }) {
 
 export function SectionIcon({
   icon,
-  color,
   title,
 }: {
   icon: keyof typeof sectionIconPaths
-  color: keyof typeof sectionColorMap
   title: string
 }) {
   return (
-    <div className={`mb-6 flex items-center gap-3 ${sectionColorMap[color]}`}>
-      <span
-        className={`flex h-10 w-10 items-center justify-center rounded-full bg-white ${sectionBgMap[color]}`}
-      >
-        <SectionIconSvg icon={icon} />
-      </span>
-      <StatModuleTitle className="text-head font-bold">{title}</StatModuleTitle>
+    <div className="mb-6 flex items-center gap-3 text-ink-muted">
+      <SectionIconSvg icon={icon} />
+      <StatModuleTitle>{title}</StatModuleTitle>
     </div>
   )
 }
@@ -277,30 +202,26 @@ function RankingListItem({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="w-5 shrink-0 text-right font-mono text-label text-slate-400 tabular-nums">
+      <span className="w-5 shrink-0 text-right font-mono text-label text-ink-faint tabular-nums">
         {i + 1}.
       </span>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between gap-2">
-          <span className="truncate text-body text-slate-900 dark:text-slate-100">
-            {d.name}
-          </span>
+          <span className="truncate text-body text-ink">{d.name}</span>
           <span
             className={`shrink-0 font-sans text-body tabular-nums ${color.text}`}
           >
             {label(d)}
           </span>
         </div>
-        <div
-          className={`relative h-1.5 w-full overflow-hidden rounded-full ${color.bg}`}
-        >
+        <div className={`relative h-1.5 w-full overflow-hidden ${color.bg}`}>
           <div
-            className={`absolute inset-y-0 left-0 rounded-full ${color.bar}`}
+            className={`absolute inset-y-0 left-0 ${color.bar}`}
             style={{ width: `${(value(d) / maxVal) * 100}%` }}
           />
         </div>
       </div>
-      <span className="shrink-0 font-mono text-label text-slate-400 tabular-nums dark:text-slate-500">
+      <span className="shrink-0 font-mono text-label text-ink-faint tabular-nums">
         {trailing(d)}
       </span>
     </div>
@@ -339,19 +260,11 @@ export function RankingList({
   )
 }
 
-export function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-svh bg-slate-50 px-2 pt-12 pb-6 font-sans text-[#171717] selection:bg-purple-100 sm:px-6 sm:pt-20">
-      {children}
-    </div>
-  )
-}
-
 export function BackLink() {
   return (
     <Link
       href="/karta"
-      className="mb-16 inline-flex items-center gap-2 text-body text-[#a3a3a3] lowercase transition-colors duration-150 hover:text-[#171717]"
+      className="inline-flex items-center gap-1.5 font-mono text-label text-zg-blue transition-colors duration-150 hover:text-navy"
     >
       <svg
         aria-hidden="true"
@@ -386,11 +299,11 @@ export function DistrictEmblem({
         <DistrictEmblemSvg pathData={pathData} color={color} />
       ) : (
         <div
-          className="absolute inset-0 rounded-2xl border"
-          style={{ borderColor: color, backgroundColor: `${color}1a` }}
+          className="absolute inset-0 border"
+          style={{ borderColor: color }}
         />
       )}
-      <span className="relative z-10 inline-flex min-w-7 items-center justify-center px-2 py-1 font-sans text-body text-slate-900 tabular-nums dark:text-white">
+      <span className="relative z-10 inline-flex min-w-7 items-center justify-center px-2 py-1 font-sans text-body text-ink tabular-nums">
         {rank}
       </span>
     </div>
@@ -405,27 +318,21 @@ function DistrictEmblemSvg({
   color: string
 }) {
   return (
-    <>
-      <div
-        className="absolute inset-[11px] rounded-full blur-[10px]"
-        style={{ backgroundColor: `${color}18` }}
+    <svg
+      width="56"
+      height="56"
+      viewBox="0 0 56 56"
+      className="absolute inset-0 overflow-visible"
+      aria-hidden="true"
+    >
+      <path
+        d={pathData}
+        fill="none"
+        fillRule="evenodd"
+        stroke={color}
+        strokeWidth="1.35"
+        strokeLinejoin="round"
       />
-      <svg
-        width="56"
-        height="56"
-        viewBox="0 0 56 56"
-        className="absolute inset-0 overflow-visible"
-        aria-hidden="true"
-      >
-        <path
-          d={pathData}
-          fill={`${color}14`}
-          fillRule="evenodd"
-          stroke={color}
-          strokeWidth="1.35"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </>
+    </svg>
   )
 }

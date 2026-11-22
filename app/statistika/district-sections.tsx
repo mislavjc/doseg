@@ -28,7 +28,7 @@ export function DistrictBandsSection({
   base: BaseInsights
 }) {
   return (
-    <div className="flex flex-col gap-24 border-t border-slate-100 py-16 sm:py-24 dark:border-white/10">
+    <div className="flex flex-col gap-24 border-t border-hairline py-16 sm:py-24">
       {bands.map((band) => (
         <section key={band.label}>
           <BandHeader band={band} />
@@ -60,14 +60,14 @@ function BandHeader({
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-4">
         <span
-          className="inline-block h-3 w-3 shrink-0 rounded-full"
+          className="inline-block size-3 shrink-0"
           style={{ backgroundColor: band.color }}
         />
         <StatModuleTitle className="text-head font-bold">
           {band.label}
         </StatModuleTitle>
       </div>
-      <span className="pl-7 text-body text-slate-500 dark:text-slate-400">
+      <span className="pl-7 font-mono text-label text-ink-faint lowercase">
         {band.districts.length}{" "}
         {band.districts.length === 1
           ? "kvart"
@@ -91,7 +91,7 @@ export function MethodologySection({
   return (
     <section
       id="metodologija"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <StatModuleTitle className="mb-12">Metodologija izračuna</StatModuleTitle>
       <MethodologyGrid data={data} base={base} bajs={bajs} />
@@ -113,16 +113,13 @@ function MethodologyGrid({
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
       <MethodologyGridItems data={data} base={base} />
       {bajs.hasBajs && (
-        <MethodologyItem color="amber" title="BAJS">
+        <MethodologyItem title="BAJS">
           Idealni scenarij:{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
+          <strong className="font-medium text-ink">
             {bajs.bajsTotalStations}
           </strong>{" "}
           stanica, svaka s 1 biciklom. Brzina{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            14 km/h
-          </strong>
-          .
+          <strong className="font-medium text-ink">14 km/h</strong>.
         </MethodologyItem>
       )}
     </div>
@@ -138,44 +135,40 @@ function MethodologyGridItems({
 }) {
   return (
     <>
-      <MethodologyItem color="emerald" title="Algoritam">
+      <MethodologyItem title="Algoritam">
         Dijkstrina pretraga nad{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          ZET GTFS
-        </strong>{" "}
-        i pješačkom mrežom.
+        <strong className="font-medium text-ink">ZET GTFS</strong> i pješačkom
+        mrežom.
       </MethodologyItem>
-      <MethodologyItem color="cyan" title="Raster">
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          {data.gridSpacingM}m
-        </strong>{" "}
+      <MethodologyItem title="Raster">
+        <strong className="font-medium text-ink">{data.gridSpacingM}m</strong>{" "}
         razmak ·{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           {data.totalSamplePoints.toLocaleString("hr-HR")}
         </strong>{" "}
         uzoraka u naseljima.
       </MethodologyItem>
-      <MethodologyItem color="blue" title="Metrika">
+      <MethodologyItem title="Metrika">
         Udio dosežnih ćelija od ukupno{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           {data.totalGridCells.toLocaleString("hr-HR")}
         </strong>{" "}
         u gradu.
       </MethodologyItem>
-      <MethodologyItem color="purple" title="Vozni red">
+      <MethodologyItem title="Vozni red">
         Prosjek od{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           {data.departureCount}{" "}
           {plural(data.departureCount, "polazak", "polaska", "polazaka")}
         </strong>{" "}
         u prozoru{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           {base.displayDepartureTime}
         </strong>{" "}
         (vršni sat). Čekanje na stanicu modelirano kao pola intervala dolaska
         linije. Bez kašnjenja u voznom redu.
       </MethodologyItem>
-      <MethodologyItem color="slate" title="Zašto 30 minuta?">
+      <MethodologyItem title="Zašto 30 minuta?">
         30 minuta je međunarodni standard za mjerenje dostupnosti javnog
         prijevoza (OECD, EU Sustainable Mobility). Obuhvaća jednu tramvajsku ili
         autobusnu dionicu s presjedanjem - tipično svakodnevno putovanje u
@@ -185,47 +178,29 @@ function MethodologyGridItems({
   )
 }
 
-const METHODOLOGY_DOT_COLORS = {
-  emerald: "#10b981",
-  cyan: "#06b6d4",
-  blue: "#3b82f6",
-  purple: "#a855f7",
-  slate: "#94a3b8",
-  amber: "#f59e0b",
-}
-
 function MethodologyItem({
-  color,
   title,
   children,
 }: {
-  color: keyof typeof METHODOLOGY_DOT_COLORS
   title: string
   children: React.ReactNode
 }) {
-  const colorHex = METHODOLOGY_DOT_COLORS[color]
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <span className="flex items-center gap-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
-        <span
-          className="inline-block h-2 w-2 rounded-full"
-          style={{ backgroundColor: colorHex }}
-        />
+    <div className="flex flex-col gap-1.5 border-t border-hairline-strong pt-4 pb-6">
+      <span className="font-mono text-label text-ink-faint lowercase">
         {title}
       </span>
-      <p className="text-body text-slate-700 dark:text-slate-300">{children}</p>
+      <p className="text-body text-ink-2">{children}</p>
     </div>
   )
 }
 
 function MethodologyFooter({ base }: { base: BaseInsights }) {
   return (
-    <div className="mt-12 flex flex-col gap-6 border-t border-slate-100 pt-10 dark:border-white/10">
-      <p className="font-mono text-label text-slate-500 dark:text-slate-400">
+    <div className="mt-12 flex flex-col gap-6 border-t border-hairline pt-10">
+      <p className="font-mono text-label text-ink-muted">
         Zadnji izračun proveden:{" "}
-        <span className="font-medium text-slate-900 dark:text-slate-100">
-          {base.generatedLabel}
-        </span>
+        <span className="font-medium text-ink">{base.generatedLabel}</span>
       </p>
       <MethodologyDownload />
     </div>
@@ -238,7 +213,7 @@ function MethodologyDownload() {
       <a
         href="/api/open-data"
         download="doseg-district-scores.json"
-        className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-body text-white transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+        className="inline-flex items-center gap-2 bg-ink px-4 py-2 text-body text-white transition-[transform,colors] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-ink active:scale-[0.98]"
       >
         <svg
           aria-hidden="true"
@@ -257,7 +232,7 @@ function MethodologyDownload() {
         </svg>
         Preuzmi podatke (JSON)
       </a>
-      <span className="max-w-xs text-body text-slate-500 sm:max-w-md dark:text-slate-400">
+      <span className="max-w-xs text-body text-ink-muted sm:max-w-md">
         Svi izračunati podaci po kvartovima - rezultati, populacija, pustinjski
         indeks, BAJS utjecaj, večernji pad - u strojno čitljivom JSON formatu.
         Slobodno za korištenje uz navođenje izvora.

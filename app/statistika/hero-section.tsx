@@ -37,16 +37,14 @@ export function StatHero({
   worst: DistrictScore
 }) {
   return (
-    <section className="mb-24">
+    <section className="mt-4">
+      <StatPageTitle>Povezanost kvartova</StatPageTitle>
       <StatHeroMeta>
         <StatHeroMetaText>jutarnji presjek</StatHeroMetaText>
-        <span className="h-1 w-1 rounded-full bg-slate-200 dark:bg-slate-600" />
-        <span className="text-body text-slate-400 dark:text-slate-500">
-          {departureTime}
-        </span>
+        <span aria-hidden>·</span>
+        <span>{departureTime}</span>
       </StatHeroMeta>
-      <StatPageTitle className="mb-8">Povezanost kvartova</StatPageTitle>
-      <StatBodyLarge>
+      <StatBodyLarge className="mt-4">
         U Zagrebu, prosječni stanovnik kvarta{" "}
         <StatEmphasis>{best.name}</StatEmphasis> može doseći
         <StatEmphasis> {bestPct}% grada </StatEmphasis>u {maxMinutes} minuta. S
@@ -71,9 +69,12 @@ export function HeadlineInsights({
   bajs: BajsInsights
 }) {
   return (
-    <div className="mt-8 mb-24 sm:mt-12">
+    <div className="mt-14 sm:mt-16">
+      <StatOverline>
+        gradski presjek · {data.districts.length} kvartova
+      </StatOverline>
       <StatDisplayHeading>Gradski presjek povezanosti</StatDisplayHeading>
-      <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 border-b border-hairline-strong sm:grid-cols-3">
         <EditorialStat
           detail="Gradski prosjek od 100. Populacijski ponderiran prosječni rezultat."
           value={String(base.cityWeightedScore)}
@@ -124,12 +125,15 @@ function BajsEditorialStat({ bajs }: { bajs: BajsInsights }) {
 
 export function ChoroplethSection() {
   return (
-    <section id="karta" className="mb-24">
-      <div className="mb-8">
-        <StatOverline className="mb-2 normal-case">Karta područja</StatOverline>
+    <section
+      id="karta"
+      className="mt-20 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-14"
+    >
+      <div className="sm:w-[280px] sm:shrink-0">
+        <StatOverline>Karta područja</StatOverline>
         <ChoroplethLegend />
       </div>
-      <div className="w-full rounded-[12px] bg-[#f9f9f9] p-4 sm:p-6 dark:bg-[#1a1a1a]">
+      <div className="w-full">
         <ZagrebBlockMap />
       </div>
     </section>
@@ -138,13 +142,13 @@ export function ChoroplethSection() {
 
 function ChoroplethLegend() {
   return (
-    <p className="flex flex-wrap items-center gap-x-4 gap-y-2 text-body text-slate-600 dark:text-slate-400">
+    <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-label text-ink-2 lowercase sm:flex-col sm:items-start">
       <span className="flex items-center gap-2">
-        <span className="inline-block h-2 w-2 rounded-full bg-[#16a34a]" />
+        <span className="inline-block size-3 bg-navy" />
         Bolja povezanost
       </span>
       <span className="flex items-center gap-2">
-        <span className="inline-block h-2 w-2 rounded-full bg-[#9333ea]" />
+        <span className="inline-block size-3 bg-blue-pale" />
         Lošija povezanost
       </span>
     </p>
@@ -215,26 +219,21 @@ export function AccessibilityGapSection({ base }: { base: BaseInsights }) {
   return (
     <section
       id="jaz"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <StatModuleTitle className="text-rose-800 dark:text-rose-400">
+          <StatModuleTitle className="text-ink">
             Jaz u dostupnosti
           </StatModuleTitle>
           <StatModuleLead>
-            Samo{" "}
-            <strong className="font-medium text-rose-900 dark:text-rose-300">
-              {goodPct}%
-            </strong>{" "}
+            Samo <strong className="font-medium text-ink">{goodPct}%</strong>{" "}
             Zagrepčana ({base.goodPop.toLocaleString("hr-HR")} stan.) živi u
             kvartovima s rezultatom ≥50. Istovremeno,{" "}
-            <strong className="font-medium text-rose-900 dark:text-rose-300">
-              {poorPct}%
-            </strong>{" "}
-            ({base.poorPop.toLocaleString("hr-HR")} stan.) živi u kvartovima
-            gdje je rezultat ispod 25 - to uključuje{" "}
-            <span className="text-slate-600 dark:text-slate-400">
+            <strong className="font-medium text-ink">{poorPct}%</strong> (
+            {base.poorPop.toLocaleString("hr-HR")} stan.) živi u kvartovima gdje
+            je rezultat ispod 25 - to uključuje{" "}
+            <span className="text-ink-2">
               {base.poorDistricts.map((d) => d.name).join(", ")}
             </span>
             .
@@ -242,11 +241,11 @@ export function AccessibilityGapSection({ base }: { base: BaseInsights }) {
         </div>
       </div>
       <div className="mt-2">
-        <div className="flex h-6 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-          <div className="bg-emerald-500" style={{ width: `${goodPct}%` }} />
-          <div className="bg-rose-500" style={{ width: `${poorPct}%` }} />
+        <div className="flex h-6 w-full overflow-hidden bg-track">
+          <div className="bg-zg-blue" style={{ width: `${goodPct}%` }} />
+          <div className="bg-ink-2" style={{ width: `${poorPct}%` }} />
         </div>
-        <div className="mt-3 flex justify-between text-body text-slate-500">
+        <div className="mt-3 flex justify-between text-body text-ink-muted">
           <span>Dobra povezanost (&ge;50): {goodPct}%</span>
           <span>Lo&#353;a povezanost (&lt;25): {poorPct}%</span>
         </div>

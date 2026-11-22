@@ -8,6 +8,7 @@
 // Replay (default): answer from e2e/fixtures/upstream/, and log anything
 // unrecorded as a miss, which fails the run in global teardown.
 // Record (E2E_RECORD=1): forward to the real upstream and save the response.
+// Record missing (E2E_RECORD=missing): replay what exists, record only the rest.
 import { createHash } from "node:crypto"
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { createServer } from "node:http"
@@ -15,7 +16,8 @@ import type { IncomingMessage, ServerResponse } from "node:http"
 import { join } from "node:path"
 
 const FIXTURE_DIR = join(import.meta.dirname, "..", "fixtures", "upstream")
-const RECORD = process.env.E2E_RECORD === "1"
+const RECORD_ALL = process.env.E2E_RECORD === "1"
+const RECORD = RECORD_ALL || process.env.E2E_RECORD === "missing"
 const ISOCHRONE_UPSTREAM =
   process.env.E2E_ISOCHRONE_UPSTREAM ?? "https://doseg.hr"
 const OTP_UPSTREAM = process.env.E2E_OTP_UPSTREAM ?? "http://localhost:8080"
@@ -163,14 +165,16 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
   const body = await readBody(req)
   const key = requestKey(method, target, body)
   const paths = fixturePaths(key, target)
+  const replayed = RECORD_ALL && !recorded.has(key) ? null : replay(paths)
   const hit =
-    RECORD && !recorded.has(key)
+    replayed ??
+    (RECORD
       ? await record(
           { method, target, body, contentType: req.headers["content-type"] },
           paths,
           key
         )
-      : replay(paths)
+      : null)
   if (RECORD) {
     recorded.add(key)
   }

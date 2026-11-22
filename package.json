@@ -20,6 +20,7 @@
     "e2e": "scripts/e2e.sh",
     "e2e:update": "scripts/e2e.sh --update-snapshots=changed",
     "e2e:record": "rm -rf e2e/fixtures/upstream && E2E_RECORD=1 scripts/e2e.sh --update-snapshots=changed",
+    "e2e:record-missing": "E2E_RECORD=missing scripts/e2e.sh",
     "prepare": "lefthook install",
     "format:check": "oxfmt --check \"**/*.{ts,tsx}\"",
     "dup": "jscpd"

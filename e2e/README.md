@@ -16,6 +16,7 @@ run by the `e2e` job in `.github/workflows/ci.yml` on every PR.
 bun run e2e          # build, serve, run everything
 bun run e2e:update   # same, and rewrite any screenshot that changed
 bun run e2e:record   # re-record upstream fixtures from the live services, then update screenshots
+bun run e2e:record-missing  # record only requests that have no fixture yet; keeps the rest
 ```
 
 Pass Playwright flags after `--`, e.g. `bun run e2e -- visual -g statistika` or
@@ -78,7 +79,12 @@ feed rolls and `E2E_NOW` moves, or when you want fresher live data:
 bun run e2e:record
 ```
 
-It deletes the recordings, runs the whole suite with `E2E_RECORD=1`, and lets
+When only a few requests changed (a new query parameter, a new page), use
+`bun run e2e:record-missing`: it replays every existing recording and records
+only what is missing, so live data elsewhere stays frozen and the screenshots
+do not move. Delete the recordings the old requests used.
+
+`bun run e2e:record` deletes the recordings, runs the whole suite with `E2E_RECORD=1`, and lets
 the fixture server forward each request to the real upstream and save the
 answer. The isochrone and RT endpoints are recorded from production
 (`https://doseg.hr`, override with `E2E_ISOCHRONE_UPSTREAM`); OTP from

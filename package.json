@@ -17,6 +17,9 @@
     "build:poi-photos": "bun scripts/build-poi-photos.ts",
     "indexnow": "bun scripts/indexnow.ts",
     "test": "vitest run",
+    "e2e": "playwright test",
+    "e2e:update": "playwright test --update-snapshots",
+    "e2e:record": "rm -rf e2e/fixtures/upstream && E2E_RECORD=1 playwright test --update-snapshots",
     "prepare": "lefthook install",
     "format:check": "oxfmt --check \"**/*.{ts,tsx}\"",
     "dup": "jscpd"
@@ -48,6 +51,7 @@
   },
   "devDependencies": {
     "@cloudflare/oxlint-config": "0.1.0",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.6",

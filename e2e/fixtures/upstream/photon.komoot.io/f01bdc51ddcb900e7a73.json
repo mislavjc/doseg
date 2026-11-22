@@ -1,0 +1,5 @@
+{
+  "key": "GET https://photon.komoot.io/reverse?lat=45.81862681274521&lon=15.990226079771986&lang=default",
+  "status": 200,
+  "contentType": "application/json"
+}

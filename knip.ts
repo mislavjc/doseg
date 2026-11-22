@@ -7,6 +7,8 @@ const config: KnipConfig = {
     "scripts/promjene/eval/*.ts",
     "lib/generated/index.ts",
     "scripts/proto/*.ts",
+    // Loaded by e2e/serve.ts through NODE_OPTIONS=--import, which knip cannot follow.
+    "e2e/upstream/preload.ts",
   ],
   project: ["**/*.{ts,tsx,mjs,css}"],
   includeEntryExports: true,

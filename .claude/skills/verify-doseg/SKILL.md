@@ -15,6 +15,25 @@ what they catch. They are not a proof that a page works: the pages read
 committed JSON at request time and the map depends on two more services, so a
 green build says nothing about what renders.
 
+## The automated suite
+
+`bun run e2e` runs the Playwright suite in `e2e/` against a production build
+with every upstream replayed from recorded fixtures: smoke (every route family
+200 with no console, page or CSP errors), behaviour (`/karta` click and reach
+panel, mobile sheet, `/bajs` popup, tram map) and full-page visual baselines
+of the editorial and line pages. CI runs it as the `e2e` job on every PR. It runs
+inside the Playwright Docker image (`scripts/e2e.sh`), so it needs Docker.
+Run it before pushing anything that touches a page; it replaces building main
+and the branch by hand and pixel-diffing them.
+
+When a change is meant to look different, `bun run e2e:update` rewrites the
+baselines in `e2e/__screenshots__/`; commit them with the change. Fixtures and
+how to re-record them: [`e2e/README.md`](../../../e2e/README.md).
+
+The suite proves the build renders and the core interactions work with frozen
+data. It does not prove live isochrones are right, so use the tiers below for
+anything that depends on the real engine or fresh data.
+
 ## Launch
 
 Two tiers. Pick the smaller one that covers what you changed.
@@ -34,7 +53,12 @@ Two tiers. Pick the smaller one that covers what you changed.
   isochrone server then needs `data/walk-graph.bin`; if it is missing, run
   `./scripts/setup-dev.sh`.
 
-Ready means `https://doseg.localhost` answers 200. `up.sh` polls for that and
+On a machine without portless (cloud agents), `up.sh` falls back to plain
+`next dev` on `http://localhost:3100` and records that URL in
+`tmp/verify/run/base-url`; `doctor.sh` and `snap.sh` read it. Substitute it
+for `https://doseg.localhost` in the raw `ab open` examples below.
+
+Ready means the app URL answers 200. `up.sh` polls for that and
 prints the startup log tail if it never comes.
 
 **One instance only.** portless owns the `doseg.localhost` hostname, so a

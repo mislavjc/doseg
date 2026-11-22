@@ -32,8 +32,19 @@ wait_for() { # wait_for <label> <check-cmd> <seconds> <logfile>
 
 # 1. Next dev behind portless at https://doseg.localhost.
 # portless owns that hostname: a second dev server cannot have it, so an
-# already-serving instance is reused rather than duplicated.
-if [[ $(code https://doseg.localhost/) == 200 ]]; then
+# already-serving instance is reused rather than duplicated. Machines without
+# portless (cloud agents) get plain next dev on :3100 instead. The URL lands in
+# $RUN/base-url, which doctor.sh and snap.sh read.
+if command -v portless >/dev/null 2>&1; then
+  BASE=https://doseg.localhost
+  START="bun dev"
+else
+  BASE=http://localhost:3100
+  START="bun scripts/build-district-map-svg.ts && bunx next dev --turbopack -p 3100"
+fi
+echo "$BASE" > "$RUN/base-url"
+
+if [[ $(code "$BASE/") == 200 ]]; then
   if alive "$RUN/next.pid"; then
     echo "==> Next already running (ours, pid $(cat "$RUN/next.pid")) - reusing."
   else
@@ -41,13 +52,13 @@ if [[ $(code https://doseg.localhost/) == 200 ]]; then
   fi
 else
   echo "==> Starting Next dev..."
-  nohup bun dev > "$LOGS/next.log" 2>&1 &
+  nohup bash -c "$START" > "$LOGS/next.log" 2>&1 &
   echo $! > "$RUN/next.pid"
-  wait_for "Next" '[[ $(code https://doseg.localhost/) == 200 ]]' 150 "$LOGS/next.log" \
+  wait_for "Next" '[[ $(code "$BASE/") == 200 ]]' 150 "$LOGS/next.log" \
     || { rm -f "$RUN/next.pid"; exit 1; }
 fi
 
-$FULL || { echo "==> Up (static tier). Isochrones need --full."; exit 0; }
+$FULL || { echo "==> Up (static tier) at $BASE. Isochrones need --full."; exit 0; }
 
 # 2. OTP on :8080. scripts/otp.sh picks its own source: reuse -> ssh tunnel to
 # netcup -> local Docker (that last one builds a graph, hence the long wait).
@@ -74,4 +85,4 @@ else
     || { rm -f "$RUN/isochrone.pid"; exit 1; }
 fi
 
-echo "==> Up (full tier). https://doseg.localhost"
+echo "==> Up (full tier). $BASE"

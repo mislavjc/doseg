@@ -1,0 +1,5 @@
+{
+  "key": "GET https://doseg.hr/api/isochrone?lat=45.813&lon=15.977&time=08%3A00&v=5&routing=0&lines=0",
+  "status": 200,
+  "contentType": "application/json"
+}

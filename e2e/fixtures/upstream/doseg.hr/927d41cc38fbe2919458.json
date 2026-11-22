@@ -1,0 +1,5 @@
+{
+  "key": "GET https://doseg.hr/api/rt/history?route=6&from=1795417200&to=1795503600",
+  "status": 200,
+  "contentType": "application/json"
+}

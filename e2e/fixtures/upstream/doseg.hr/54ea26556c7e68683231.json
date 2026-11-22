@@ -1,0 +1,5 @@
+{
+  "key": "GET https://doseg.hr/api/rt/fleet-deployment",
+  "status": 200,
+  "contentType": "application/json"
+}

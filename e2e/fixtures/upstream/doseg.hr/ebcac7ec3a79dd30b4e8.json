@@ -1,0 +1,5 @@
+{
+  "key": "GET https://doseg.hr/api/rt/bajs-station-flow?days=30",
+  "status": 200,
+  "contentType": "application/json"
+}

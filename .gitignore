@@ -58,3 +58,7 @@ squirrel.toml
 mprocs.log
 data/gtfs-rt.db*
 .cache/
+
+# playwright
+/test-results/
+/playwright-report/

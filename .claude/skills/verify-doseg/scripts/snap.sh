@@ -38,7 +38,8 @@ mkdir -p "$OUT"
 
 ab console --clear >/dev/null
 ab network requests --clear >/dev/null
-ab open "https://doseg.localhost${PATH_ARG}"
+BASE=$(cat tmp/verify/run/base-url 2>/dev/null || echo https://doseg.localhost)
+ab open "${BASE}${PATH_ARG}"
 
 if [[ -n $WAIT ]]; then
   ab wait --text "$WAIT" || { echo "!! never saw \"$WAIT\" on $PATH_ARG" >&2; ab screenshot "$OUT/failed.png"; exit 1; }

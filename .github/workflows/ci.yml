@@ -59,12 +59,20 @@ jobs:
       # setup-bun needs unzip, which the image lacks; npm ships the same binary.
       - run: npm install -g --silent bun@1
       - run: bun install --frozen-lockfile --ignore-scripts
-      - uses: actions/cache@v4
+      # Turbopack's build cache: a warm build compiles in seconds instead of ~50s.
+      # Restore and save are split so a failing run still warms the next one.
+      - id: next-cache
+        uses: actions/cache/restore@v4
         with:
           path: .next/cache
           key: next-e2e-${{ hashFiles('bun.lock') }}-${{ hashFiles('app/**', 'components/**', 'lib/**', 'hooks/**', 'next.config.mjs') }}
           restore-keys: next-e2e-${{ hashFiles('bun.lock') }}-
       - run: bun run e2e
+      - if: always() && steps.next-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .next/cache
+          key: ${{ steps.next-cache.outputs.cache-primary-key }}
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

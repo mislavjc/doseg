@@ -24,6 +24,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   expect: {
+    // CI shares four cores between four browsers and the Next server.
+    timeout: 15_000,
     toHaveScreenshot: {
       animations: "disabled",
       caret: "hide",

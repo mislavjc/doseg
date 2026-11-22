@@ -30,6 +30,10 @@ export default defineConfig({
       animations: "disabled",
       caret: "hide",
       scale: "css",
+      // Baselines render in the same image as every run, so pixels match
+      // exactly; Playwright's default 0.2 colour tolerance let a token shift
+      // from #0e51c9 to #2a63d4 through.
+      threshold: 0,
     },
   },
   projects: [

@@ -43,30 +43,26 @@ jobs:
 
   # Playwright smoke, behaviour and visual tests against a production build
   # (next build && next start) with every upstream replayed from
-  # e2e/fixtures/. Job id and name are stable: required-check material.
+  # e2e/fixtures/. Runs in the Playwright image, which carries the browsers and
+  # the fonts the screenshot baselines were rendered with (scripts/e2e.sh uses
+  # the same image locally). Keep the image tag on the @playwright/test version.
+  # Job id and name are stable: required-check material.
   e2e:
     name: e2e
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
+      options: --ipc=host
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
       - run: bun install --frozen-lockfile --ignore-scripts
-      - id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-      - if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: bunx playwright install chromium --only-shell
       - uses: actions/cache@v4
         with:
           path: .next/cache
-          key: next-e2e-${{ runner.os }}-${{ hashFiles('bun.lock') }}-${{ hashFiles('app/**', 'components/**', 'lib/**', 'hooks/**', 'next.config.mjs') }}
-          restore-keys: next-e2e-${{ runner.os }}-${{ hashFiles('bun.lock') }}-
+          key: next-e2e-${{ hashFiles('bun.lock') }}-${{ hashFiles('app/**', 'components/**', 'lib/**', 'hooks/**', 'next.config.mjs') }}
+          restore-keys: next-e2e-${{ hashFiles('bun.lock') }}-
       - run: bun run e2e
       - if: failure()
         uses: actions/upload-artifact@v4

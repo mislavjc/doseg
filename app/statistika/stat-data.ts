@@ -467,22 +467,22 @@ export function computeBands(data: ScoreData) {
   return [
     {
       label: "Odlična povezanost",
-      color: "#16a34a",
+      color: "var(--navy)",
       districts: data.districts.filter((d) => d.score >= 70),
     },
     {
       label: "Dobra povezanost",
-      color: "#0891b2",
+      color: "var(--zg-blue)",
       districts: data.districts.filter((d) => d.score >= 50 && d.score < 70),
     },
     {
       label: "Slaba povezanost",
-      color: "#2563eb",
+      color: "var(--ink-muted)",
       districts: data.districts.filter((d) => d.score >= 25 && d.score < 50),
     },
     {
       label: "Loša povezanost",
-      color: "#9333ea",
+      color: "var(--ink)",
       districts: data.districts.filter((d) => d.score < 25),
     },
   ].filter((b) => b.districts.length > 0)

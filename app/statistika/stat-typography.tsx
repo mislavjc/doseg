@@ -20,10 +20,7 @@ export function StatPageTitle({
 }: ComponentPropsWithoutRef<"h1">) {
   return (
     <h1
-      className={cn(
-        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("font-sans text-head font-bold text-ink", className)}
       {...props}
     >
       {children}
@@ -38,7 +35,7 @@ export function StatHeroMeta({
   return (
     <div
       className={cn(
-        "mb-6 flex items-center gap-3 text-body text-slate-400 dark:text-slate-500",
+        "flex items-center gap-2 font-mono text-label text-ink-muted",
         className
       )}
       {...props}
@@ -50,15 +47,7 @@ export function StatHeroMetaText({
   className,
   ...props
 }: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn(
-        "font-medium text-slate-400 lowercase dark:text-slate-500",
-        className
-      )}
-      {...props}
-    />
-  )
+  return <span className={cn("lowercase", className)} {...props} />
 }
 
 // --- Major TOC bands (one per scroll group) ---
@@ -70,10 +59,7 @@ export function StatGroupTitle({
 }: ComponentPropsWithoutRef<"h2">) {
   return (
     <h2
-      className={cn(
-        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("font-sans text-head font-bold text-ink", className)}
       {...props}
     >
       {children}
@@ -87,10 +73,7 @@ export function StatGroupLead({
 }: ComponentPropsWithoutRef<"p">) {
   return (
     <p
-      className={cn(
-        "mb-12 max-w-[650px] text-body text-slate-600 dark:text-slate-400",
-        className
-      )}
+      className={cn("mb-10 max-w-[620px] text-body text-ink-muted", className)}
       {...props}
     />
   )
@@ -109,10 +92,7 @@ export function StatModuleTitle({
 }: StatModuleTitleProps) {
   return (
     <Tag
-      className={cn(
-        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("font-sans text-head font-bold text-ink", className)}
       {...props}
     />
   )
@@ -124,10 +104,7 @@ export function StatModuleLead({
 }: ComponentPropsWithoutRef<"p">) {
   return (
     <p
-      className={cn(
-        "mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300",
-        className
-      )}
+      className={cn("mt-2 max-w-[620px] text-body text-ink-2", className)}
       {...props}
     />
   )
@@ -142,10 +119,7 @@ export function StatDisplayHeading({
 }: ComponentPropsWithoutRef<"h2">) {
   return (
     <h2
-      className={cn(
-        "mb-8 text-center text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("mb-5 text-head font-bold text-ink", className)}
       {...props}
     >
       {children}
@@ -162,7 +136,7 @@ export function StatOverline({
   return (
     <p
       className={cn(
-        "mb-2 text-body text-slate-400 lowercase dark:text-slate-500",
+        "mb-1 font-mono text-label text-ink-faint lowercase",
         className
       )}
       {...props}
@@ -180,7 +154,7 @@ export function StatEyebrow({
   return (
     <Tag
       className={cn(
-        "mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400",
+        "mb-2 font-mono text-label text-ink-faint lowercase",
         className
       )}
       {...props}
@@ -194,15 +168,7 @@ export function StatBodyLarge({
   className,
   ...props
 }: ComponentPropsWithoutRef<"p">) {
-  return (
-    <p
-      className={cn(
-        "text-body leading-[1.8] text-slate-600 dark:text-slate-400",
-        className
-      )}
-      {...props}
-    />
-  )
+  return <p className={cn("text-body text-ink-2", className)} {...props} />
 }
 
 export function StatProse({
@@ -211,10 +177,7 @@ export function StatProse({
 }: ComponentPropsWithoutRef<"div">) {
   return (
     <div
-      className={cn(
-        "flex flex-col gap-6 text-body leading-[1.8] text-slate-600 dark:text-slate-400",
-        className
-      )}
+      className={cn("flex flex-col gap-4 text-body text-ink-2", className)}
       {...props}
     />
   )
@@ -224,27 +187,14 @@ export function StatMuted({
   className,
   ...props
 }: ComponentPropsWithoutRef<"p">) {
-  return (
-    <p
-      className={cn("text-body text-slate-500 dark:text-slate-400", className)}
-      {...props}
-    />
-  )
+  return <p className={cn("text-body text-ink-muted", className)} {...props} />
 }
 
 export function StatEmphasis({
   className,
   ...props
 }: ComponentPropsWithoutRef<"span">) {
-  return (
-    <span
-      className={cn(
-        "font-medium text-slate-900 dark:text-slate-100",
-        className
-      )}
-      {...props}
-    />
-  )
+  return <span className={cn("font-bold text-ink", className)} {...props} />
 }
 
 // --- KPI / editorial numerals ---
@@ -255,10 +205,7 @@ export function StatKpiValue({
 }: ComponentPropsWithoutRef<"span">) {
   return (
     <span
-      className={cn(
-        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("font-sans text-head font-bold text-ink", className)}
       {...props}
     />
   )
@@ -270,10 +217,7 @@ export function StatKpiNote({
 }: ComponentPropsWithoutRef<"span">) {
   return (
     <span
-      className={cn(
-        "font-sans text-head font-bold text-slate-900 dark:text-slate-100",
-        className
-      )}
+      className={cn("font-sans text-head font-bold text-ink", className)}
       {...props}
     />
   )
@@ -285,10 +229,7 @@ export function StatKpiCaption({
 }: ComponentPropsWithoutRef<"div">) {
   return (
     <div
-      className={cn(
-        "mt-8 font-mono text-label text-slate-600 dark:text-slate-400",
-        className
-      )}
+      className={cn("font-mono text-label text-ink-muted", className)}
       {...props}
     />
   )
@@ -301,13 +242,7 @@ export function StatInsight({
   ...props
 }: ComponentPropsWithoutRef<"div">) {
   return (
-    <div
-      className={cn(
-        "mt-10 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-6 sm:p-7 dark:border-white/10 dark:bg-white/4",
-        className
-      )}
-      {...props}
-    />
+    <div className={cn("mt-10 bg-surface p-5 sm:p-6", className)} {...props} />
   )
 }
 
@@ -315,12 +250,7 @@ export function StatInsightBody({
   className,
   ...props
 }: ComponentPropsWithoutRef<"p">) {
-  return (
-    <p
-      className={cn("text-body text-slate-600 dark:text-slate-300", className)}
-      {...props}
-    />
-  )
+  return <p className={cn("text-body text-ink-2", className)} {...props} />
 }
 
 // --- Dense card / list title (district rows, etc.) ---

@@ -21,22 +21,22 @@ interface FleetDeploymentData {
 
 function pctColor(pct: number): string {
   if (pct >= 90) {
-    return "text-emerald-600 dark:text-emerald-400"
+    return "text-zg-blue"
   }
   if (pct >= 50) {
-    return "text-amber-600 dark:text-amber-400"
+    return "text-ink-muted"
   }
-  return "text-red-600 dark:text-red-400"
+  return "text-ink"
 }
 
 function pctBg(pct: number): string {
   if (pct >= 90) {
-    return "bg-emerald-500"
+    return "bg-zg-blue"
   }
   if (pct >= 50) {
-    return "bg-amber-500"
+    return "bg-ink-ghost"
   }
-  return "bg-red-500"
+  return "bg-ink-2"
 }
 
 // --- Main component ---
@@ -48,12 +48,12 @@ export default function FleetDeploymentSection() {
   )
 
   return (
-    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline-strong py-16 sm:py-24">
       <StatModuleTitle className="mb-12">
         Pokrivenost flote u stvarnom vremenu
       </StatModuleTitle>
       <div className="flex flex-col gap-12">
-        <StatProse className="flex-1 text-body text-slate-700 dark:text-slate-300">
+        <StatProse className="flex-1 text-body text-ink-2">
           <p>
             Koliko planiranih polazaka trenutačno šalje podatke o poziciji
             vozila? Nizak postotak znači da ZET ne prati sve linije u stvarnom
@@ -63,9 +63,7 @@ export default function FleetDeploymentSection() {
         </StatProse>
         <div className="w-full">
           {error && !data && (
-            <p className="text-body text-slate-500 dark:text-slate-400">
-              Podaci nisu dostupni
-            </p>
+            <p className="text-body text-ink-muted">Podaci nisu dostupni</p>
           )}
           {isLoading && !data && (
             <div
@@ -73,7 +71,7 @@ export default function FleetDeploymentSection() {
               role="status"
               aria-label="Učitavanje"
             >
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-hairline-strong border-t-zg-blue" />
               <span className="sr-only">Učitavanje...</span>
             </div>
           )}
@@ -115,7 +113,7 @@ function SummaryRow({
   withoutSignal: number
 }) {
   return (
-    <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-6 dark:border-white/10">
+    <div className="flex flex-col gap-2 border-l-2 border-hairline-strong pl-6">
       <div>
         <span
           className={`font-sans text-head font-bold tabular-nums ${pctColor(data.totalDeploymentPct)}`}
@@ -123,23 +121,19 @@ function SummaryRow({
           {Math.round(data.totalDeploymentPct)}%
         </span>
       </div>
-      <div className="text-body text-slate-500 dark:text-slate-400">
+      <div className="text-body text-ink-muted">
         ukupno pokriveno ({data.totalActive} / {data.totalScheduled} polazaka)
       </div>
-      <div className="mt-2 flex gap-6 text-body text-slate-600 dark:text-slate-400">
+      <div className="mt-2 flex gap-6 text-body text-ink-2">
         <span className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {withSignal}
-          </strong>{" "}
-          s RT signalom
+          <span className="inline-block h-2 w-2 rounded-full bg-zg-blue" />
+          <strong className="font-medium text-ink">{withSignal}</strong> s RT
+          signalom
         </span>
         <span className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {withoutSignal}
-          </strong>{" "}
-          bez signala
+          <span className="inline-block h-2 w-2 rounded-full bg-ink-ghost" />
+          <strong className="font-medium text-ink">{withoutSignal}</strong> bez
+          signala
         </span>
       </div>
     </div>
@@ -155,8 +149,8 @@ function ActiveRoutesTable({
 }) {
   const sorted = routes.toSorted((a, b) => b.deploymentPct - a.deploymentPct)
   return (
-    <div className="mt-8 border-t border-slate-100 pt-6 dark:border-white/5">
-      <div className="mb-4 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="mt-8 border-t border-hairline pt-6">
+      <div className="mb-4 font-mono text-label font-bold text-ink-muted">
         Linije s RT signalom
       </div>
       <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -171,12 +165,12 @@ function ActiveRoutesTable({
 function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
   return (
     <div className="flex items-center gap-2 py-1">
-      <span className="w-10 shrink-0 text-right font-mono text-label text-slate-800 tabular-nums dark:text-slate-200">
+      <span className="w-10 shrink-0 text-right font-mono text-label text-ink tabular-nums">
         {r.routeId}
       </span>
-      <div className="h-1.5 flex-1 rounded-full bg-slate-100 dark:bg-slate-800">
+      <div className="h-1.5 flex-1 bg-track">
         <div
-          className={`h-full rounded-full ${pctBg(r.deploymentPct)}`}
+          className={`h-full ${pctBg(r.deploymentPct)}`}
           style={{ width: `${Math.max(r.deploymentPct, 2)}%` }}
         />
       </div>
@@ -193,8 +187,8 @@ function ActiveRouteItem({ r }: { r: FleetRouteDeployment }) {
 
 function SilentRoutesList({ routes }: { routes: Array<FleetRouteDeployment> }) {
   return (
-    <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
-      <div className="mb-2 font-mono text-label font-bold text-slate-400 dark:text-slate-500">
+    <div className="mt-6 border-t border-hairline pt-4">
+      <div className="mb-2 font-mono text-label font-bold text-ink-faint">
         Bez RT signala ({routes.length}{" "}
         {plural(routes.length, "linija", "linije", "linija")})
       </div>
@@ -202,7 +196,7 @@ function SilentRoutesList({ routes }: { routes: Array<FleetRouteDeployment> }) {
         {routes.map((r) => (
           <span
             key={r.routeId}
-            className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-label text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+            className="bg-track px-1.5 py-0.5 font-mono text-label text-ink-faint"
           >
             {r.routeId}
           </span>

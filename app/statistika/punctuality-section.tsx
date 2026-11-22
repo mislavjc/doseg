@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react"
 import useSWR from "swr"
+import { IconChevronDownSmall } from "@central-icons-react/square-outlined-radius-0-stroke-2/IconChevronDownSmall"
+import { cn } from "@/lib/utils"
 import { pickPreferredRoute } from "@/lib/format"
 import { Term } from "@/components/ui/term"
 import { StatModuleLead, StatModuleTitle } from "./stat-typography"
@@ -201,7 +203,7 @@ export default function PunctualitySection({
   return (
     <section
       id="tocnost"
-      className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline-strong py-16 sm:py-24"
     >
       <PunctualityHeader />
       <PunctualityControls
@@ -253,7 +255,7 @@ function PunctualityControls({
         value={selectedRoute}
         onChange={onRouteChange}
       />
-      <span className="hidden h-5 w-px bg-slate-200 sm:block dark:bg-white/10" />
+      <span className="hidden h-5 w-px bg-hairline-strong sm:block" />
       <TimeRangeSelector value={timeRange} onChange={onTimeRangeChange} />
     </div>
   )
@@ -296,8 +298,6 @@ const ROUTE_GROUPS: Array<{ mode: string; label: string }> = [
   { mode: "BUS", label: "Bus" },
 ]
 
-const SELECT_CHEVRON_SVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 3.5 3 3 3-3'/%3E%3C/svg%3E")`
-
 function RouteSelector({
   routes,
   value,
@@ -308,10 +308,10 @@ function RouteSelector({
   onChange: (v: string) => void
 }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/50 py-1 pr-1 pl-3.5 dark:border-white/10 dark:bg-zinc-900/50">
+    <div className="relative inline-flex items-center gap-3 border border-hairline-strong bg-white pl-3">
       <label
         htmlFor="punctuality-route"
-        className="pointer-events-none flex items-center gap-1.5 font-mono text-label text-slate-500 dark:text-slate-400"
+        className="pointer-events-none flex items-center gap-1.5 font-mono text-label text-ink-faint lowercase"
       >
         <svg
           width="14"
@@ -333,12 +333,7 @@ function RouteSelector({
         id="punctuality-route"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-w-[80px] cursor-pointer appearance-none rounded-full border-0 bg-slate-900 py-1.5 pr-7 pl-3 font-mono text-label text-white shadow-sm transition-all hover:bg-slate-800 focus:ring-2 focus:ring-indigo-400/40 focus:ring-offset-1 focus:outline-none sm:min-w-[100px] dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white dark:focus:ring-indigo-500/40"
-        style={{
-          backgroundImage: SELECT_CHEVRON_SVG,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "right 10px center",
-        }}
+        className="min-w-[80px] cursor-pointer appearance-none border-0 bg-transparent py-2 pr-8 pl-1 font-mono text-label text-ink focus-visible:ring-2 focus-visible:ring-zg-blue focus-visible:outline-none sm:min-w-[100px]"
       >
         {ROUTE_GROUPS.map(({ mode, label }) => {
           const group = routes.filter((r) => r.mode === mode)
@@ -356,6 +351,11 @@ function RouteSelector({
           )
         })}
       </select>
+      <IconChevronDownSmall
+        size={16}
+        aria-hidden
+        className="pointer-events-none absolute right-2 text-ink-muted"
+      />
     </div>
   )
 }
@@ -368,17 +368,18 @@ function TimeRangeSelector({
   onChange: (v: TimeRange) => void
 }) {
   return (
-    <div className="flex gap-1 rounded-full border border-slate-200 bg-white/50 p-1 dark:border-white/10 dark:bg-zinc-900/50">
+    <div className="flex border border-hairline-strong">
       {TIME_RANGES.map((range) => (
         <button
           type="button"
           key={range}
           onClick={() => onChange(range)}
-          className={`rounded-full px-4 py-1.5 font-mono text-label transition-colors ${
+          className={cn(
+            "px-3 py-2 font-mono text-label transition-colors not-first:border-l not-first:border-hairline-strong",
             value === range
-              ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
-              : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
-          }`}
+              ? "bg-zg-blue text-white"
+              : "text-ink-2 hover:text-ink"
+          )}
         >
           {TIME_RANGE_LABELS[range]}
         </button>
@@ -392,7 +393,7 @@ function TimeRangeSelector({
 function LoadingState() {
   return (
     <div className="flex items-center justify-center py-20">
-      <div className="flex items-center gap-3 text-body text-slate-500 dark:text-slate-400">
+      <div className="flex items-center gap-3 text-body text-ink-muted">
         <LoadingSpinner />
         Učitavanje podataka...
       </div>
@@ -403,7 +404,7 @@ function LoadingState() {
 function LoadingSpinner() {
   return (
     <svg
-      className="h-5 w-5 animate-spin text-sky-500"
+      className="h-5 w-5 animate-spin text-zg-blue"
       viewBox="0 0 24 24"
       fill="none"
       role="img"
@@ -430,11 +431,11 @@ function LoadingSpinner() {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-red-200 bg-red-50/50 p-12 text-center dark:border-red-900/20 dark:bg-red-900/10">
-      <p className="text-body text-red-600 dark:text-red-400">
+    <div className="flex flex-col gap-1 border-l-2 border-ink bg-surface p-5">
+      <p className="font-mono text-label text-ink">
         Nije moguće dohvatiti podatke: {message}
       </p>
-      <p className="mt-2 text-body text-red-500/70 dark:text-red-500/50">
+      <p className="text-body text-ink-muted">
         Provjeri je li backend pokrenut.
       </p>
     </div>
@@ -443,11 +444,9 @@ function ErrorState({ message }: { message: string }) {
 
 function EmptyState() {
   return (
-    <div className="rounded-2xl border border-slate-200/60 bg-slate-100 p-12 text-center dark:border-white/10 dark:bg-zinc-800/60">
-      <p className="text-body text-slate-600 dark:text-slate-400">
-        Nema podataka za odabrani period.
-      </p>
-      <p className="mt-2 text-body text-slate-500 dark:text-slate-500">
+    <div className="border border-hairline-strong bg-track p-12 text-center">
+      <p className="text-body text-ink-2">Nema podataka za odabrani period.</p>
+      <p className="mt-2 text-body text-ink-muted">
         Podaci se prikupljaju u stvarnom vremenu iz{" "}
         <Term title="General Transit Feed Specification - Real Time: međunarodni standard za podatke o javnom prijevozu">
           GTFS-RT
@@ -463,9 +462,10 @@ function EmptyState() {
 const CHART_WIDTH = 700
 const INNER_WIDTH = CHART_WIDTH - MARGIN.left - MARGIN.right
 
-const delayColor = (delay: number) => (delay < 180 ? "#10b981" : "#f59e0b")
+const delayColor = (delay: number) =>
+  delay < 180 ? "var(--zg-blue)" : "var(--ink-ghost)"
 const cvColor = (cv: number) =>
-  cv < 0.3 ? "#10b981" : cv < 0.5 ? "#f59e0b" : "#ef4444"
+  cv < 0.3 ? "var(--zg-blue)" : cv < 0.5 ? "var(--ink-ghost)" : "var(--ink)"
 
 function fmtDelayAxis(v: number): string {
   if (v === 0) {
@@ -540,7 +540,7 @@ function DelayChartBody({
           y1={yScale(0) ?? 0}
           x2={INNER_WIDTH}
           y2={yScale(0) ?? 0}
-          stroke="#94a3b8"
+          stroke="var(--ink-faint)"
           strokeWidth={1}
           strokeOpacity={0.2}
         />
@@ -590,12 +590,12 @@ function DelayChart({
   const [hovered, setHovered] = useState<HistoryPoint | null>(null)
 
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-3 sm:p-5 dark:bg-[#1a1a1a]">
+    <div className="bg-surface p-3 sm:p-5">
       <DelayChartHeader points={points} />
       <div className="mt-8 mb-4">
-        <h4 className="flex items-center gap-2 text-body text-slate-500 dark:text-slate-400">
+        <h4 className="flex items-center gap-2 text-body text-ink-muted">
           <span
-            className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500"
+            className="inline-block h-1.5 w-1.5 rounded-full bg-zg-blue"
             aria-hidden="true"
           />
           Uživo kašnjenje u prometu
@@ -626,45 +626,45 @@ function DelayChartHeader({ points }: { points: Array<HistoryPoint> }) {
 
   return (
     <div className="flex flex-col">
-      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-ink-muted">
         Točnost polazaka
       </h3>
 
       <div className="mb-5 flex flex-wrap gap-4 sm:gap-8">
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
-            <span className="h-3 w-1 rounded-full bg-[#10b981]"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
+            <span className="h-3 w-1 bg-zg-blue"></span>
             Na vrijeme
           </div>
-          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+          <span className="mb-1 font-sans text-head font-bold text-ink">
             {onTimePct}%
           </span>
-          <span className="text-body text-slate-500">
+          <span className="text-body text-ink-muted">
             {onTimeTrips.toLocaleString("hr-HR")}
           </span>
         </div>
 
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
-            <span className="h-3 w-1 rounded-full bg-[#f59e0b]"></span>
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
+            <span className="h-3 w-1 bg-ink-ghost"></span>
             Kašnjenje
           </div>
-          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+          <span className="mb-1 font-sans text-head font-bold text-ink">
             {delayedPct}%
           </span>
-          <span className="text-body text-slate-500">
+          <span className="text-body text-ink-muted">
             {delayedTrips.toLocaleString("hr-HR")}
           </span>
         </div>
       </div>
 
-      <div className="flex h-1.5 w-full gap-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+      <div className="flex h-1.5 w-full gap-1 overflow-hidden bg-track">
         <div
-          className="h-full bg-[#10b981] transition-all duration-500"
+          className="h-full bg-zg-blue transition-all duration-500"
           style={{ width: `${onTimePct}%` }}
         />
         <div
-          className="h-full bg-[#f59e0b] transition-all duration-500"
+          className="h-full bg-ink-ghost transition-all duration-500"
           style={{ width: `${delayedPct}%` }}
         />
       </div>
@@ -799,12 +799,12 @@ function HeadwayChart({
     scales
 
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-3 sm:p-5 dark:bg-[#1a1a1a]">
+    <div className="bg-surface p-3 sm:p-5">
       <HeadwayChartHeader avgHeadway={avgHeadway} avgCv={avgCv} />
       <div className="mt-8 mb-4">
-        <h4 className="flex items-center gap-2 text-body text-slate-500 dark:text-slate-400">
+        <h4 className="flex items-center gap-2 text-body text-ink-muted">
           <span
-            className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500"
+            className="inline-block h-1.5 w-1.5 rounded-full bg-zg-blue"
             aria-hidden="true"
           />
           Varijacija razmaka uživo
@@ -840,7 +840,7 @@ function RegularityZone({
         y={y03}
         width={INNER_WIDTH}
         height={Math.max(0, (yScale(0) ?? 0) - y03)}
-        fill="#94a3b8"
+        fill="var(--ink-faint)"
         fillOpacity={0.06}
       />
       <line
@@ -848,7 +848,7 @@ function RegularityZone({
         y1={y03}
         x2={INNER_WIDTH}
         y2={y03}
-        stroke="#94a3b8"
+        stroke="var(--ink-faint)"
         strokeWidth={1}
         strokeDasharray="4 3"
         strokeOpacity={0.35}
@@ -857,7 +857,7 @@ function RegularityZone({
         x={INNER_WIDTH - 2}
         y={y03 - 4}
         textAnchor="end"
-        className="fill-slate-400/80 font-mono text-label dark:fill-slate-500"
+        className="fill-ink-muted font-mono text-label"
       >
         dobra regularnost
       </text>
@@ -874,21 +874,17 @@ function HeadwayChartHeader({
 }) {
   const quality = avgCv < 0.3 ? "odlična" : avgCv < 0.5 ? "umjerena" : "loša"
   const qualityColor =
-    avgCv < 0.3
-      ? "text-[#10b981]"
-      : avgCv < 0.5
-        ? "text-[#f59e0b]"
-        : "text-[#ef4444]"
+    avgCv < 0.3 ? "text-zg-blue" : avgCv < 0.5 ? "text-ink-ghost" : "text-ink"
 
   return (
     <div className="flex flex-col">
-      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-ink-muted">
         Regularnost razmaka
       </h3>
 
       <div className="mb-5 flex flex-wrap gap-4 sm:gap-8">
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
             Kvaliteta
           </div>
           <span
@@ -899,15 +895,15 @@ function HeadwayChartHeader({
         </div>
 
         <div className="flex flex-col">
-          <div className="mb-1 flex items-center gap-1.5 text-body text-slate-500">
+          <div className="mb-1 flex items-center gap-1.5 text-body text-ink-muted">
             <Term title="Koeficijent varijacije - niži broj znači pravilniji razmak između vozila">
               CV
             </Term>
           </div>
-          <span className="mb-1 font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+          <span className="mb-1 font-sans text-head font-bold text-ink">
             {avgCv.toFixed(2)}
           </span>
-          <span className="text-body text-slate-500">
+          <span className="text-body text-ink-muted">
             {avgHeadway >= 60
               ? `${Math.round(avgHeadway / 60)} min prosjek`
               : `${Math.round(avgHeadway)} s prosjek`}
@@ -937,7 +933,7 @@ function ChartXLabels({
           x={xScale(t)}
           y={INNER_HEIGHT + 24}
           textAnchor="middle"
-          className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+          className="fill-ink-muted font-mono text-label"
         >
           {fmtTime(t.getTime() / 1000, timeRange)}
         </text>

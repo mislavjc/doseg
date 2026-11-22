@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { LazyMotion, domAnimation, m } from "motion/react"
+import { cn } from "@/lib/utils"
 
 const groups = [
   {
@@ -57,45 +57,33 @@ export default function StatSectionTabs() {
     groups.find((g) => g.links.includes(activeLinkId))?.id ?? groups[0].id
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div
-        className="pointer-events-none sticky top-4 z-40 mb-6 flex w-full justify-center px-4 sm:top-6 sm:mb-8"
-        initial={{ y: -20, opacity: 0, filter: "blur(4px)" }}
-        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-        transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      >
-        <nav
-          aria-label="Odjeljci izvještaja"
-          className="island island-compact scrollbar-hide pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto sm:gap-1.5"
-        >
-          {groups.map((group) => {
-            const isActive = activeGroupId === group.id
-            const targetId = group.links[0]
-
-            return (
-              <a
-                key={group.id}
-                href={`#${targetId}`}
-                className={[
-                  "relative flex h-8 shrink-0 items-center justify-center rounded-full px-3.5 font-mono text-label transition-colors outline-none sm:h-9 sm:px-4",
-                  isActive
-                    ? "text-white"
-                    : "text-neutral-500 hover:bg-neutral-100/60 hover:text-neutral-900 active:bg-neutral-200/60",
-                ].join(" ")}
-              >
-                <span className="relative z-10">{group.title}</span>
-                {isActive && (
-                  <m.div
-                    layoutId="activeTabIndicator"
-                    className="absolute inset-0 z-0 rounded-full bg-neutral-900 shadow-sm"
-                    transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-                  />
-                )}
-              </a>
-            )
-          })}
-        </nav>
-      </m.div>
-    </LazyMotion>
+    <nav
+      aria-label="Odjeljci izvještaja"
+      className="sticky top-0 z-40 mt-12 bg-ground"
+    >
+      <div className="scrollbar-hide mx-auto flex w-full max-w-[840px] gap-6 overflow-x-auto px-4 sm:px-8">
+        {groups.map((group) => {
+          const isActive = activeGroupId === group.id
+          return (
+            <a
+              key={group.id}
+              href={`#${group.links[0]}`}
+              aria-current={isActive ? "true" : undefined}
+              className={cn(
+                "shrink-0 border-b-2 py-3 font-mono text-label whitespace-nowrap lowercase transition-colors duration-150 outline-none",
+                isActive
+                  ? "border-zg-blue text-ink"
+                  : "border-transparent text-ink-muted hover:text-ink focus-visible:text-ink"
+              )}
+            >
+              {group.title}
+            </a>
+          )
+        })}
+      </div>
+      <div className="mx-auto w-full max-w-[840px] px-4 sm:px-8">
+        <div className="h-px bg-hairline-strong" />
+      </div>
+    </nav>
   )
 }

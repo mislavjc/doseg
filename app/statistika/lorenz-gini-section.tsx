@@ -13,12 +13,12 @@ export function LorenzSection({ giniData }: { giniData: GiniData }) {
   return (
     <section
       id="lorenz"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Lorenzova krivulja dostupnosti</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-ink-2">
             Krivulja prikazuje kumulativni udio stanovništva u odnosu na
             kumulativni udio dostupnosti. Što je krivulja bliže dijagonali, to
             je raspodjela pravednija.
@@ -28,11 +28,11 @@ export function LorenzSection({ giniData }: { giniData: GiniData }) {
       <div className="flex flex-col md:flex-row md:items-start md:gap-16">
         <div className="w-full md:w-[320px] md:shrink-0">
           <LorenzChart lorenzPoints={giniData.lorenzPoints} />
-          <p className="mt-6 text-center text-body text-slate-500 dark:text-slate-400">
+          <p className="mt-6 text-center text-body text-ink-muted">
             Što je krivulja dalje od dijagonale, to je nejednakost veća.
           </p>
         </div>
-        <div className="mt-12 flex-1 text-body text-slate-700 md:mt-0 dark:text-slate-300">
+        <div className="mt-12 flex-1 text-body text-ink-2 md:mt-0">
           <p>
             Ova krivulja prikazuje kumulativni udio dostupnosti u odnosu na
             kumulativni udio stanovništva.
@@ -111,7 +111,7 @@ function LorenzGridAndCurve({
         scale={lyScale}
         width={liw}
         tickValues={[0.25, 0.5, 0.75]}
-        stroke="#94a3b8"
+        stroke="var(--ink-faint)"
         strokeOpacity={0.15}
         strokeWidth={1}
       />
@@ -119,7 +119,7 @@ function LorenzGridAndCurve({
         scale={lxScale}
         height={lih}
         tickValues={[0.25, 0.5, 0.75]}
-        stroke="#94a3b8"
+        stroke="var(--ink-faint)"
         strokeOpacity={0.15}
         strokeWidth={1}
       />
@@ -130,7 +130,7 @@ function LorenzGridAndCurve({
             .toReversed()
             .map((p) => `${lxScale(p.x)},${lyScale(p.y)}`),
         ].join(" ")}
-        fill="#6ee7b7"
+        fill="var(--blue-pale)"
         fillOpacity={0.3}
       />
       <line
@@ -138,7 +138,7 @@ function LorenzGridAndCurve({
         y1={lih}
         x2={liw}
         y2={0}
-        stroke="#94a3b8"
+        stroke="var(--ink-faint)"
         strokeWidth={1}
         strokeDasharray="4 3"
       />
@@ -146,7 +146,7 @@ function LorenzGridAndCurve({
         data={lorenzPoints}
         x={(d) => lxScale(d.x)}
         y={(d) => lyScale(d.y)}
-        stroke="#059669"
+        stroke="var(--zg-blue)"
         strokeWidth={2.5}
         strokeLinejoin="round"
       />
@@ -173,7 +173,7 @@ function LorenzAxisLabels({
           x={lxScale(v)}
           y={lih + 16}
           textAnchor="middle"
-          className="fill-slate-400 font-mono text-label dark:fill-slate-500"
+          className="fill-ink-muted font-mono text-label"
         >
           {Math.round(v * 100)}%
         </text>
@@ -185,7 +185,7 @@ function LorenzAxisLabels({
           y={lyScale(v) + 1}
           textAnchor="end"
           dominantBaseline="middle"
-          className="fill-slate-400 font-mono text-label dark:fill-slate-500"
+          className="fill-ink-muted font-mono text-label"
         >
           {Math.round(v * 100)}%
         </text>
@@ -194,7 +194,7 @@ function LorenzAxisLabels({
         x={liw / 2}
         y={lih + 28}
         textAnchor="middle"
-        className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+        className="fill-ink-muted font-mono text-label"
       >
         Udio stanovništva (%)
       </text>
@@ -204,7 +204,7 @@ function LorenzAxisLabels({
         textAnchor="middle"
         dominantBaseline="middle"
         transform={`rotate(-90, -22, ${lih / 2})`}
-        className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+        className="fill-ink-muted font-mono text-label"
       >
         Udio dostupnosti (%)
       </text>
@@ -248,12 +248,12 @@ export function GiniSection({ giniData }: { giniData: GiniData }) {
   return (
     <section
       id="gini"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>Gini koeficijent</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-ink-2">
             Gini koeficijent mjeri nejednakost. 0 predstavlja savršenu jednakost
             (svi imaju istu dostupnost), a 1 potpunu nejednakost.
           </p>
@@ -262,13 +262,13 @@ export function GiniSection({ giniData }: { giniData: GiniData }) {
 
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
         <div className="flex shrink-0 items-baseline gap-2">
-          <span className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+          <span className="font-sans text-head font-bold text-ink tabular-nums">
             {fmtHR(giniData.gini, 2)}
           </span>
         </div>
         <div className="flex-1">
           <GiniCards giniData={giniData} />
-          <div className="mt-12 text-body text-slate-700 dark:text-slate-300">
+          <div className="mt-12 text-body text-ink-2">
             <GiniInterpretation giniData={giniData} />
             {/* The previous copy here benchmarked against "most European
                   cities: 0,25 to 0,35" with no source behind it. Removed rather
@@ -288,30 +288,30 @@ export function GiniSection({ giniData }: { giniData: GiniData }) {
 
 function GiniCards({ giniData }: { giniData: GiniData }) {
   return (
-    <div className="grid grid-cols-1 gap-8 border-l-2 border-slate-100 pl-6 sm:grid-cols-3 dark:border-white/10">
+    <div className="grid grid-cols-1 gap-8 border-l-2 border-hairline pl-6 sm:grid-cols-3">
       <div className="flex flex-col">
-        <div className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+        <div className="font-mono text-label font-bold text-ink-muted">
           Jutro
         </div>
-        <div className="mt-2 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="mt-2 font-sans text-head font-bold text-ink tabular-nums">
           {fmtHR(giniData.gini, 3)}
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+        <div className="font-mono text-label font-bold text-ink-muted">
           S BAJS-om
         </div>
         <div
-          className={`mt-2 font-sans text-head font-bold tabular-nums ${giniData.bajsGini > giniData.gini ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}
+          className={`mt-2 font-sans text-head font-bold tabular-nums ${giniData.bajsGini > giniData.gini ? "text-ink" : "text-zg-blue"}`}
         >
           {fmtHR(giniData.bajsGini, 3)}
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+        <div className="font-mono text-label font-bold text-ink-muted">
           Večer
         </div>
-        <div className="mt-2 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="mt-2 font-sans text-head font-bold text-ink tabular-nums">
           {fmtHR(giniData.eveningGini, 3)}
         </div>
       </div>

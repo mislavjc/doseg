@@ -177,39 +177,35 @@ function computeInsights(
 function NetworkOverviewCards({ data }: { data: NetworkStatsOutput }) {
   const { vehicleKm, deadEndStops, fleet } = data
   return (
-    <div className="grid grid-cols-1 gap-10 rounded-[12px] bg-[#f9f9f9] p-6 sm:grid-cols-3 sm:gap-10 sm:p-8 dark:bg-[#1a1a1a]">
+    <div className="grid grid-cols-1 gap-10 bg-surface p-6 sm:grid-cols-3 sm:gap-10 sm:p-8">
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {fmtDots(vehicleKm.total)}
         </div>
-        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
-          vozilo-km/dan
-        </div>
-        <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
+        <div className="mt-3 text-body text-ink-2 sm:mt-2">vozilo-km/dan</div>
+        <div className="mt-2 text-body text-ink-muted sm:mt-1">
           Tramvaj {fmtDots(vehicleKm.tram)} · Autobus {fmtDots(vehicleKm.bus)}
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {fleet ? fmtDots(fleet.totalBlocks) : "-"}
         </div>
-        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
-          vozila
-        </div>
+        <div className="mt-3 text-body text-ink-2 sm:mt-2">vozila</div>
         {fleet && (
-          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted sm:mt-1">
             Tramvaj {fleet.tramBlocks} · Autobus {fleet.busBlocks}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {fmtDots(deadEndStops.total)}
         </div>
-        <div className="mt-3 text-body text-slate-600 sm:mt-2 dark:text-slate-400">
+        <div className="mt-3 text-body text-ink-2 sm:mt-2">
           slijepih stanica
         </div>
-        <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted sm:mt-1">
           Autobus {fmtDots(deadEndStops.byMode["BUS"] ?? 0)} · Tramvaj{" "}
           {deadEndStops.byMode["TRAM"] ?? 0} · Vlak{" "}
           {deadEndStops.byMode["RAIL"] ?? 0}
@@ -292,7 +288,7 @@ function HeatmapSvg({
             y={ri * (HEATMAP_CELL_H + HEATMAP_GAP) + HEATMAP_CELL_H / 2 + 1}
             textAnchor="end"
             dominantBaseline="central"
-            className="fill-slate-600 font-mono text-label dark:fill-slate-400"
+            className="fill-ink-muted font-mono text-label"
           >
             {r.name}
           </text>
@@ -312,7 +308,7 @@ function HeatmapSvg({
             }
             y={rows * (HEATMAP_CELL_H + HEATMAP_GAP) + 16}
             textAnchor="middle"
-            className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+            className="fill-ink-muted font-mono text-label"
           >
             {h}h
           </text>
@@ -346,7 +342,7 @@ function HeatmapCells({
             fill={dep === 0 ? "transparent" : colorScale(dep)}
             stroke={dep === 0 ? "currentColor" : "none"}
             strokeWidth={dep === 0 ? 0.5 : 0}
-            className={dep === 0 ? "text-slate-200 dark:text-slate-700" : ""}
+            className={dep === 0 ? "text-ink-ghost" : ""}
           />
         ))
       )}
@@ -366,7 +362,7 @@ function HeatmapCells({
               dominantBaseline="central"
               className={
                 dep < maxDep * 0.42
-                  ? "fill-slate-700 font-mono text-label dark:fill-slate-200"
+                  ? "fill-ink font-mono text-label"
                   : "fill-white/90 font-mono text-label"
               }
             >
@@ -385,11 +381,11 @@ function HeatmapInsight({
   insights: ReturnType<typeof computeInsights>
 }) {
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-slate-50/80 p-6 sm:p-7 dark:border-white/10 dark:bg-white/4">
-      <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col border border-hairline-strong bg-surface p-6 sm:p-7">
+      <h3 className="mb-2 font-mono text-label font-bold text-ink-muted">
         Satni polasci tramvaja
       </h3>
-      <p className="text-body text-slate-600 dark:text-slate-300">
+      <p className="text-body text-ink-2">
         Broj polazaka po satu za svaku tramvajsku liniju. Svjetlija boja znači
         više polazaka. Vršni sat je <strong>{insights.peakHour}:00</strong> s{" "}
         {insights.peakDeps} tramvajskih polazaka.
@@ -435,14 +431,20 @@ function HourlyHeatmap({
   const maxDep = Math.max(...allDeps, 1)
   const colorScale = scaleLinear<string>({
     domain: [0, maxDep * 0.25, maxDep * 0.5, maxDep * 0.75, maxDep],
-    range: ["transparent", "#e2e8f0", "#94a3b8", "#475569", "#0f172a"],
+    range: [
+      "transparent",
+      "var(--hairline-strong)",
+      "var(--ink-faint)",
+      "var(--ink-muted)",
+      "var(--ink)",
+    ],
   })
 
   return (
     <div className="flex flex-col gap-8">
       <HeatmapInsight insights={insights} />
-      <div className="overflow-x-auto rounded-2xl border border-slate-200/60 bg-slate-100 p-4 sm:rounded-3xl sm:p-6 dark:border-white/10 dark:bg-zinc-800/60">
-        <p className="mb-3 text-center text-body text-slate-500 sm:hidden dark:text-slate-400">
+      <div className="sm: overflow-x-auto border border-hairline-strong bg-track p-4 sm:p-6">
+        <p className="mb-3 text-center text-body text-ink-muted sm:hidden">
           Povucite vodoravno za sve sate i linije.
         </p>
         <HeatmapSvg
@@ -460,15 +462,15 @@ function HourlyHeatmap({
 // ---------------------------------------------------------------------------
 function cvColor(cv: number | null): string {
   if (cv === null) {
-    return "text-slate-400 dark:text-slate-500"
+    return "text-ink-faint"
   }
   if (cv < 0.2) {
-    return "text-slate-700 dark:text-slate-300"
+    return "text-ink-2"
   }
   if (cv <= 0.4) {
-    return "text-slate-500 dark:text-slate-400"
+    return "text-ink-muted"
   }
-  return "text-slate-900 dark:text-slate-200"
+  return "text-ink"
 }
 
 function cvLabel(cv: number | null): string {
@@ -497,8 +499,8 @@ function RouteQualityCardStatRow({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-w-0 items-baseline justify-between gap-3 border-b border-slate-100 py-2 last:border-0 sm:gap-2 sm:py-1.5 dark:border-white/5">
-      <span className="min-w-0 shrink font-mono text-label text-slate-500 sm:truncate dark:text-slate-400">
+    <div className="flex min-w-0 items-baseline justify-between gap-3 border-b border-hairline py-2 last:border-0 sm:gap-2 sm:py-1.5">
+      <span className="min-w-0 shrink font-mono text-label text-ink-muted sm:truncate">
         {label}
       </span>
       <span
@@ -513,16 +515,10 @@ function RouteQualityCardStatRow({
 function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
   return (
     <div className="mt-1 min-w-0">
-      <RouteQualityCardStatRow
-        label="Tortuoznost"
-        valueClassName="text-slate-900 dark:text-slate-100"
-      >
+      <RouteQualityCardStatRow label="Tortuoznost" valueClassName="text-ink">
         {r.tortuosity === null ? "-" : fmtHR(r.tortuosity, 2)}
       </RouteQualityCardStatRow>
-      <RouteQualityCardStatRow
-        label="Razmak"
-        valueClassName="text-slate-900 dark:text-slate-100"
-      >
+      <RouteQualityCardStatRow label="Razmak" valueClassName="text-ink">
         {r.stopSpacing ? `${Math.round(r.stopSpacing.avgM)} m` : "-"}
       </RouteQualityCardStatRow>
       <RouteQualityCardStatRow
@@ -531,10 +527,7 @@ function RouteQualityCardStats({ r }: { r: NetworkRoute }) {
       >
         {r.headwayCv === null ? "-" : fmtHR(r.headwayCv, 2)}
       </RouteQualityCardStatRow>
-      <RouteQualityCardStatRow
-        label="Vrh:baza"
-        valueClassName="text-slate-900 dark:text-slate-100"
-      >
+      <RouteQualityCardStatRow label="Vrh:baza" valueClassName="text-ink">
         {r.peakToBaseRatio === null ? "-" : fmtHR(r.peakToBaseRatio, 2)}
       </RouteQualityCardStatRow>
     </div>
@@ -545,20 +538,20 @@ function RouteQualityCard({ r }: { r: NetworkRoute }) {
   const totalDeps = r.hourlyDepartures.reduce((s, v) => s + v, 0)
   const isNight = totalDeps < 30
   return (
-    <div className="isolate flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[12px] bg-[#f9f9f9] p-5 dark:bg-[#1a1a1a]">
+    <div className="isolate flex min-h-0 min-w-0 flex-col overflow-hidden bg-surface p-5">
       <div className="mb-2 flex min-w-0 items-center justify-between gap-2">
-        <span className="inline-flex h-8 w-11 shrink-0 items-center justify-center rounded-sm bg-white/90 text-head font-bold text-slate-700 dark:bg-white/10 dark:text-slate-200">
+        <span className="inline-flex h-8 w-11 shrink-0 items-center justify-center bg-surface text-head font-bold text-ink-2">
           {r.name}
         </span>
         {isNight && (
-          <span className="shrink-0 font-mono text-label text-slate-400">
+          <span className="shrink-0 font-mono text-label text-ink-faint">
             noćna
           </span>
         )}
       </div>
       <RouteQualityCardStats r={r} />
       {r.headwayCv !== null && (
-        <div className="mt-2 min-w-0 truncate font-mono text-label text-slate-500">
+        <div className="mt-2 min-w-0 truncate font-mono text-label text-ink-muted">
           <span className={cvColor(r.headwayCv)}>
             Takt: {cvLabel(r.headwayCv)}
           </span>
@@ -574,20 +567,20 @@ function RouteQualityInsight({
   insights: ReturnType<typeof computeInsights>
 }) {
   return (
-    <div className="flex flex-col rounded-[12px] bg-[#f9f9f9] p-6 sm:p-7 dark:bg-[#1a1a1a]">
-      <h3 className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col bg-surface p-6 sm:p-7">
+      <h3 className="mb-2 font-mono text-label font-bold text-ink-muted">
         Zanimljivosti
       </h3>
-      <p className="text-body text-slate-700 dark:text-slate-300">
+      <p className="text-body text-ink-2">
         {insights.mostDirect && insights.mostWinding && (
           <>
             Najizravnija linija je{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+            <strong className="font-medium text-ink">
               tramvaj {insights.mostDirect.name}
             </strong>{" "}
             (tortuoznost {fmtHR(insights.mostDirect.tortuosity, 2)}), a
             najkrivudavija{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+            <strong className="font-medium text-ink">
               tramvaj {insights.mostWinding.name}
             </strong>{" "}
             ({fmtHR(insights.mostWinding.tortuosity, 2)} -{" "}
@@ -599,12 +592,12 @@ function RouteQualityInsight({
           <>
             {" "}
             Korelacija je jasna: linije s većim razmakom stajališta voze brže.{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+            <strong className="font-medium text-ink">
               Tramvaj {insights.fastest.name}
             </strong>{" "}
             ({Math.round(insights.fastest.spacing)} m razmak) postiže{" "}
             {fmtHR(insights.fastest.speed, 1)} km/h, dok{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+            <strong className="font-medium text-ink">
               tramvaj {insights.slowest.name}
             </strong>{" "}
             ({Math.round(insights.slowest.spacing)} m) ide samo{" "}
@@ -636,7 +629,7 @@ function RouteQualityCards({
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <StatModuleTitle>Kvaliteta tramvajskih linija</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-ink-2">
             Tortuoznost mjeri koliko je ruta neizravna (1,0 = savršeno ravna).
             CV takta označava ujednačenost razmaka polazaka (manje = bolje).
           </p>
@@ -661,39 +654,39 @@ function RouteQualityCards({
 // ---------------------------------------------------------------------------
 function FleetNumbers({ fleet }: { fleet: Fleet }) {
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-7 sm:p-8 dark:bg-[#1a1a1a]">
+    <div className="bg-surface p-7 sm:p-8">
       <div className="grid grid-cols-2 gap-6 sm:gap-4">
         <div>
-          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+          <div className="font-sans text-head font-bold text-ink tabular-nums">
             {fleet.totalBlocks}
           </div>
-          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted sm:mt-1">
             ukupno blokova
           </div>
         </div>
         <div>
-          <div className="font-sans text-head font-bold text-slate-700 tabular-nums dark:text-slate-200">
+          <div className="font-sans text-head font-bold text-ink-2 tabular-nums">
             {fleet.interlinedBlocks}
           </div>
-          <div className="mt-2 text-body text-slate-500 sm:mt-1 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted sm:mt-1">
             interliniranih
           </div>
         </div>
       </div>
-      <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-100 pt-5 sm:mt-4 sm:gap-6 sm:pt-4 dark:border-slate-800">
+      <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-hairline pt-5 sm:mt-4 sm:gap-6 sm:pt-4">
         <div>
-          <span className="font-sans text-head font-bold text-slate-800 tabular-nums dark:text-slate-200">
+          <span className="font-sans text-head font-bold text-ink tabular-nums">
             {fleet.tramBlocks}
           </span>
-          <span className="ml-2 text-body text-slate-500 sm:ml-1.5">
+          <span className="ml-2 text-body text-ink-muted sm:ml-1.5">
             tramvajskih
           </span>
         </div>
         <div>
-          <span className="font-sans text-head font-bold text-slate-800 tabular-nums dark:text-slate-200">
+          <span className="font-sans text-head font-bold text-ink tabular-nums">
             {fleet.busBlocks}
           </span>
-          <span className="ml-2 text-body text-slate-500 sm:ml-1.5">
+          <span className="ml-2 text-body text-ink-muted sm:ml-1.5">
             autobusnih
           </span>
         </div>
@@ -708,8 +701,8 @@ function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
     .slice(0, 5)
 
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="bg-surface p-5 sm:p-6">
+      <div className="mb-3 font-mono text-label font-bold text-ink-muted">
         Najsloženiji blokovi
       </div>
       <div className="space-y-2.5">
@@ -718,14 +711,14 @@ function FleetTopBlocks({ fleet }: { fleet: Fleet }) {
             key={block.blockId}
             className="flex flex-wrap items-center gap-1.5"
           >
-            <span className="shrink-0 font-mono text-label text-slate-600 tabular-nums dark:text-slate-300">
+            <span className="shrink-0 font-mono text-label text-ink-2 tabular-nums">
               {block.blockId}
             </span>
-            <span className="font-mono text-label text-slate-400">→</span>
+            <span className="font-mono text-label text-ink-faint">→</span>
             {block.routes.map((route) => (
               <span
                 key={route}
-                className="inline-flex h-5 items-center rounded-md bg-slate-100 px-1.5 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-white/10 dark:text-slate-200"
+                className="inline-flex h-5 items-center bg-track px-1.5 font-mono text-label font-bold text-ink-2 tabular-nums"
               >
                 {route}
               </span>
@@ -749,7 +742,7 @@ function FleetSection({
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <StatModuleTitle>Vozni park i interlining</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-ink-2">
             Koliko se često ista vozila (blokovi) koriste na više različitih
             linija tijekom dana, što štedi resurse, ali komplicira mrežu.
           </p>
@@ -791,15 +784,13 @@ function WeekdayOnlyCard({
   weekendService: WeekendService
 }) {
   return (
-    <div className="flex flex-col border-l-2 border-indigo-500 py-2 pl-6">
-      <div className="mb-2 font-mono text-label font-bold text-indigo-700">
+    <div className="flex flex-col border-l-2 border-zg-blue py-2 pl-6">
+      <div className="mb-2 font-mono text-label font-bold text-zg-blue">
         Samo radnim danom
       </div>
-      <div className="mb-4 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="mb-4 font-sans text-head font-bold text-ink tabular-nums">
         {weekendService.weekdayOnlyCount}{" "}
-        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
-          linija
-        </span>
+        <span className="font-sans text-body text-ink-muted">linija</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {weekendService.weekdayOnlyRoutes
@@ -820,7 +811,7 @@ function WeekdayOnlyCard({
           .map((route) => (
             <span
               key={route}
-              className="inline-flex h-6 items-center rounded-sm bg-slate-100 px-2 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
+              className="inline-flex h-6 items-center bg-track px-2 font-mono text-label font-bold text-ink-2 tabular-nums"
             >
               {route}
             </span>
@@ -838,21 +829,19 @@ function AsymmetryCard({
   topAsymmetric: Array<DirectionalAsymmetryEntry>
 }) {
   return (
-    <div className="flex flex-col border-l-2 border-slate-300 py-2 pl-6">
-      <div className="mb-2 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+    <div className="flex flex-col border-l-2 border-hairline-strong py-2 pl-6">
+      <div className="mb-2 font-mono text-label font-bold text-ink-muted">
         Smjerna asimetrija
       </div>
-      <div className="mb-4 font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+      <div className="mb-4 font-sans text-head font-bold text-ink tabular-nums">
         {asymmetry.length}{" "}
-        <span className="font-sans text-body text-slate-500 dark:text-slate-400">
-          linija
-        </span>
+        <span className="font-sans text-body text-ink-muted">linija</span>
       </div>
       <div className="flex flex-col gap-2">
         {topAsymmetric.map((entry) => (
           <div
             key={entry.name}
-            className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5"
+            className="flex flex-col border-b border-hairline py-3 last:border-0"
           >
             <AsymmetryBar entry={entry} />
           </div>
@@ -869,33 +858,27 @@ function AsymmetryBar({ entry }: { entry: DirectionalAsymmetryEntry }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 items-center justify-center rounded-sm bg-slate-100 px-2 font-mono text-label font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+        <span className="inline-flex h-6 items-center justify-center bg-track px-2 font-mono text-label font-bold text-ink-2">
           {entry.name}
         </span>
-        <span className="text-body text-slate-700 dark:text-slate-300">
+        <span className="text-body text-ink-2">
           {entry.outboundTrips} odl. / {entry.inboundTrips} dol.
         </span>
       </div>
       <div className="ml-2 flex items-center gap-2">
-        <span className="w-8 text-right font-mono text-label text-slate-500 dark:text-slate-400">
+        <span className="w-8 text-right font-mono text-label text-ink-muted">
           odl.
         </span>
         <div className="flex-1">
-          <div
-            className="h-1.5 rounded-full bg-slate-900 dark:bg-slate-100"
-            style={{ width: `${outPct}%` }}
-          />
+          <div className="h-1.5 bg-ink" style={{ width: `${outPct}%` }} />
         </div>
       </div>
       <div className="ml-2 flex items-center gap-2">
-        <span className="w-8 text-right font-mono text-label text-slate-500 dark:text-slate-400">
+        <span className="w-8 text-right font-mono text-label text-ink-muted">
           dol.
         </span>
         <div className="flex-1">
-          <div
-            className="h-1.5 rounded-full bg-slate-400 dark:bg-slate-500"
-            style={{ width: `${inPct}%` }}
-          />
+          <div className="h-1.5 bg-ink-ghost" style={{ width: `${inPct}%` }} />
         </div>
       </div>
     </div>
@@ -952,10 +935,10 @@ function WeekendAsymmetrySection({
     ) ?? []
 
   return (
-    <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline pt-16">
       <div className="mb-12">
         <StatModuleTitle>Vikend i smjerna asimetrija</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Neke linije ne voze vikendom, a neke imaju različit broj polazaka u
           svakom smjeru.
         </p>
@@ -988,32 +971,32 @@ function HistogramBars({
     <div className="space-y-1">
       {data.map((bucket) => (
         <div key={bucket.label} className="flex items-center gap-2 sm:gap-2">
-          <span className="w-12 shrink-0 text-right font-mono text-label text-slate-500 tabular-nums sm:w-10 dark:text-slate-400">
+          <span className="w-12 shrink-0 text-right font-mono text-label text-ink-muted tabular-nums sm:w-10">
             {bucket.label}
           </span>
           <div className="flex-1">
             <div className="flex h-5 items-center gap-px">
               {bucket.tramStops > 0 && (
                 <div
-                  className="h-full rounded-l bg-slate-400 dark:bg-slate-500"
+                  className="h-full bg-ink-ghost"
                   style={{ width: `${(bucket.tramStops / max) * 100}%` }}
                 />
               )}
               {bucket.busStops > 0 && (
                 <div
-                  className={`h-full bg-indigo-300 dark:bg-indigo-500/70 ${bucket.tramStops === 0 ? "rounded-l" : ""}`}
+                  className={`h-full bg-blue-pale ${bucket.tramStops === 0 ? "" : ""}`}
                   style={{ width: `${(bucket.busStops / max) * 100}%` }}
                 />
               )}
               {bucket.railStops > 0 && (
                 <div
-                  className="h-full rounded-r bg-amber-200/90 dark:bg-amber-200/40"
+                  className="h-full bg-track"
                   style={{ width: `${(bucket.railStops / max) * 100}%` }}
                 />
               )}
             </div>
           </div>
-          <span className="w-8 text-right font-mono text-label text-slate-400 tabular-nums">
+          <span className="w-8 text-right font-mono text-label text-ink-faint tabular-nums">
             {bucket.stopCount}
           </span>
         </div>
@@ -1038,27 +1021,22 @@ function ServiceHistogram({
   hasRail: boolean
 }) {
   return (
-    <div className="flex flex-col rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
+    <div className="flex flex-col bg-surface p-5 sm:p-6">
       <div className={`mb-1 font-mono text-label font-bold ${titleColor}`}>
         {title}
       </div>
-      <div className="mb-4 text-body text-slate-600 dark:text-slate-400">
-        {subtitle}
-      </div>
+      <div className="mb-4 text-body text-ink-2">{subtitle}</div>
       <HistogramBars data={data} max={max} />
-      <div className="mt-3 flex gap-4 font-mono text-label text-slate-500 dark:text-slate-400">
+      <div className="mt-3 flex gap-4 font-mono text-label text-ink-muted">
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-2 rounded-sm bg-slate-400" />{" "}
-          tramvaj
+          <span className="inline-block h-2 w-2 bg-ink-ghost" /> tramvaj
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-2 rounded-sm bg-indigo-300 dark:bg-indigo-500/70" />{" "}
-          autobus
+          <span className="inline-block h-2 w-2 bg-blue-pale" /> autobus
         </span>
         {hasRail && (
           <span className="flex items-center gap-1">
-            <span className="inline-block h-2 w-2 rounded-sm bg-amber-200/90 dark:bg-amber-200/50" />{" "}
-            vlak
+            <span className="inline-block h-2 w-2 bg-track" /> vlak
           </span>
         )}
       </div>
@@ -1075,43 +1053,37 @@ function ServiceSpanNumbers({ span }: { span: ServiceSpan }) {
   const { nightGap } = span
 
   return (
-    <div className="mb-8 grid grid-cols-1 gap-6 rounded-[12px] bg-[#f9f9f9] p-5 sm:grid-cols-3 sm:gap-8 sm:p-6 dark:bg-[#1a1a1a]">
+    <div className="mb-8 grid grid-cols-1 gap-6 bg-surface p-5 sm:grid-cols-3 sm:gap-8 sm:p-6">
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-amber-600 tabular-nums dark:text-amber-400">
+        <div className="font-sans text-head font-bold text-ink-muted tabular-nums">
           {span.firstMorningDeparture}
         </div>
-        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
-          prvi jutarnji polazak
-        </div>
+        <div className="mt-2 text-body text-ink-2">prvi jutarnji polazak</div>
         {tramMode && (
-          <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
+          <div className="mt-1 text-body text-ink-muted">
             Tramvaj {tramMode.earliestDeparture} · Autobus{" "}
             {busMode?.earliestDeparture ?? "-"}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-indigo-600 tabular-nums dark:text-indigo-400">
+        <div className="font-sans text-head font-bold text-zg-blue tabular-nums">
           {span.lastEveningDeparture}
         </div>
-        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
-          zadnji večernji polazak
-        </div>
+        <div className="mt-2 text-body text-ink-2">zadnji večernji polazak</div>
         {tramMode && (
-          <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
+          <div className="mt-1 text-body text-ink-muted">
             Tramvaj {tramMode.latestDeparture} · Autobus{" "}
             {busMode?.latestDeparture ?? "-"}
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-red-600 tabular-nums dark:text-red-400">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {Math.round(nightGap.pctDarkBy23)}%
         </div>
-        <div className="mt-2 text-body text-slate-600 dark:text-slate-400">
-          stanica u mraku do 23h
-        </div>
-        <div className="mt-1 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-2">stanica u mraku do 23h</div>
+        <div className="mt-1 text-body text-ink-muted">
           {fmtDots(nightGap.stopsDarkBy23)} od {fmtDots(nightGap.totalStops)}{" "}
           stanica
         </div>
@@ -1122,11 +1094,11 @@ function ServiceSpanNumbers({ span }: { span: ServiceSpan }) {
 
 function PastMidnightCard({ routes }: { routes: Array<string> }) {
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-1 font-mono text-label font-bold text-emerald-600 dark:text-emerald-400">
+    <div className="bg-surface p-5 sm:p-6">
+      <div className="mb-1 font-mono text-label font-bold text-zg-blue">
         Usluga nakon ponoći
       </div>
-      <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
+      <div className="mb-3 text-body text-ink-muted">
         {routes.length} {plural(routes.length, "linija", "linije", "linija")}{" "}
         čija usluga prelazi ponoć
       </div>
@@ -1134,13 +1106,13 @@ function PastMidnightCard({ routes }: { routes: Array<string> }) {
         {routes.slice(0, 30).map((route) => (
           <span
             key={route}
-            className="inline-flex h-6 items-center rounded-full bg-emerald-100 px-2 font-mono text-label font-bold text-emerald-800 tabular-nums dark:bg-emerald-900/40 dark:text-emerald-300"
+            className="inline-flex h-6 items-center bg-chip-blue px-2 font-mono text-label font-bold text-zg-blue tabular-nums"
           >
             {route}
           </span>
         ))}
         {routes.length > 30 && (
-          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-slate-400">
+          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-ink-faint">
             +{routes.length - 30}
           </span>
         )}
@@ -1151,11 +1123,11 @@ function PastMidnightCard({ routes }: { routes: Array<string> }) {
 
 function EndingBefore23Card({ routes }: { routes: Array<string> }) {
   return (
-    <div className="rounded-[12px] bg-[#f9f9f9] p-5 sm:p-6 dark:bg-[#1a1a1a]">
-      <div className="mb-1 font-mono text-label font-bold text-red-600 dark:text-red-400">
+    <div className="bg-surface p-5 sm:p-6">
+      <div className="mb-1 font-mono text-label font-bold text-ink">
         Gašenje prije 23h
       </div>
-      <div className="mb-3 text-body text-slate-500 dark:text-slate-400">
+      <div className="mb-3 text-body text-ink-muted">
         {routes.length}{" "}
         {plural(
           routes.length,
@@ -1169,13 +1141,13 @@ function EndingBefore23Card({ routes }: { routes: Array<string> }) {
         {routes.slice(0, 20).map((route) => (
           <span
             key={route}
-            className="inline-flex h-6 items-center rounded-full bg-red-100 px-2 font-mono text-label font-bold text-red-800 tabular-nums dark:bg-red-900/40 dark:text-red-300"
+            className="inline-flex h-6 items-center bg-surface px-2 font-mono text-label font-bold text-ink tabular-nums"
           >
             {route}
           </span>
         ))}
         {routes.length > 20 && (
-          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-slate-400">
+          <span className="inline-flex h-6 items-center px-1 font-mono text-label text-ink-faint">
             +{routes.length - 20}
           </span>
         )}
@@ -1239,10 +1211,10 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
   const hasRail = span.hasRail
 
   return (
-    <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline pt-16">
       <div className="mb-12">
         <StatModuleTitle>Kad se Zagreb budi i gasi</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Kada stajalište dobije prvi polazak ujutro, a kada ostaje bez usluge
           navečer. Zagreb ne spava u isto vrijeme - neki kvartovi gube prijevoz
           satima prije ostatka grada.
@@ -1257,7 +1229,7 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
           max={maxFirst}
           title="Buđenje mreže"
           subtitle="Koliko stanica dobije prvi polazak u svakom polusatu"
-          titleColor="text-amber-600 dark:text-amber-400"
+          titleColor="text-ink-muted"
           hasRail={hasRail}
         />
         <ServiceHistogram
@@ -1265,7 +1237,7 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
           max={maxLast}
           title="Gašenje mreže"
           subtitle="Kada stanice gube zadnji polazak navečer"
-          titleColor="text-indigo-600 dark:text-indigo-400"
+          titleColor="text-zg-blue"
           hasRail={hasRail}
         />
       </div>
@@ -1281,34 +1253,32 @@ function ServiceSpanSection({ span }: { span: ServiceSpan }) {
 // ---------------------------------------------------------------------------
 function pulseWaitColor(waitMin: number): string {
   if (waitMin < 3) {
-    return "text-emerald-600 dark:text-emerald-400"
+    return "text-zg-blue"
   }
   if (waitMin <= 6) {
-    return "text-amber-600 dark:text-amber-400"
+    return "text-ink-muted"
   }
-  return "text-red-600 dark:text-red-400"
+  return "text-ink"
 }
 
 function pulseWaitBg(waitMin: number): string {
   if (waitMin < 3) {
-    return "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
+    return "bg-track text-ink-2"
   }
   if (waitMin <= 6) {
-    return "bg-slate-200/80 text-slate-800 dark:bg-white/15 dark:text-slate-200"
+    return "bg-hairline-strong text-ink"
   }
-  return "bg-slate-300 text-slate-900 dark:bg-white/20 dark:text-white"
+  return "bg-ink-ghost text-ink"
 }
 
 function PulseHubRow({ hub }: { hub: PulseHub }) {
   return (
-    <tr className="border-b border-slate-100 last:border-0 dark:border-slate-800">
+    <tr className="border-b border-hairline last:border-0">
       <td className="py-3 pr-4 text-left">
-        <div className="text-body text-slate-800 dark:text-slate-200">
-          {hub.stopName}
-        </div>
+        <div className="text-body text-ink">{hub.stopName}</div>
       </td>
       <td className="py-3 pr-4 text-center">
-        <span className="font-sans text-body text-slate-800 tabular-nums dark:text-slate-200">
+        <span className="font-sans text-body text-ink tabular-nums">
           {hub.routeCount}
         </span>
       </td>
@@ -1317,13 +1287,13 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
           {hub.routes.slice(0, 8).map((route) => (
             <span
               key={route}
-              className="inline-flex h-5 items-center rounded bg-slate-100 px-1.5 font-mono text-label font-bold text-slate-700 tabular-nums dark:bg-slate-800 dark:text-slate-300"
+              className="inline-flex h-5 items-center bg-track px-1.5 font-mono text-label font-bold text-ink-2 tabular-nums"
             >
               {route}
             </span>
           ))}
           {hub.routes.length > 8 && (
-            <span className="font-mono text-label text-slate-400">
+            <span className="font-mono text-label text-ink-faint">
               +{hub.routes.length - 8}
             </span>
           )}
@@ -1331,13 +1301,13 @@ function PulseHubRow({ hub }: { hub: PulseHub }) {
       </td>
       <td className="py-3 pr-4 text-center">
         <span
-          className={`inline-flex h-6 items-center rounded-full px-2 font-mono text-label font-bold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
+          className={`inline-flex h-6 items-center px-2 font-mono text-label font-bold tabular-nums ${pulseWaitBg(hub.avgTransferWaitMin)}`}
         >
           {fmtHR(hub.avgTransferWaitMin, 1)} min
         </span>
       </td>
       <td className="py-3 text-center">
-        <span className="font-mono text-label text-slate-700 tabular-nums dark:text-slate-300">
+        <span className="font-mono text-label text-ink-2 tabular-nums">
           {hub.bestHour}:00
         </span>
         <span
@@ -1361,15 +1331,15 @@ function pulseHeatColor(wait: number, maxWait: number): string {
   }
   const t = Math.min(wait / maxWait, 1)
   if (t < 0.33) {
-    return "#e2e8f0"
+    return "var(--hairline-strong)"
   }
   if (t < 0.55) {
-    return "#94a3b8"
+    return "var(--ink-faint)"
   }
   if (t < 0.77) {
-    return "#64748b"
+    return "var(--ink-muted)"
   }
-  return "#1e293b"
+  return "var(--ink)"
 }
 
 function PulseHeatmapCells({
@@ -1412,7 +1382,7 @@ function PulseHeatmapCells({
               dominantBaseline="central"
               className={
                 wait < maxWait * 0.33
-                  ? "fill-slate-700 font-mono text-label dark:fill-slate-200"
+                  ? "fill-ink font-mono text-label"
                   : "fill-white/90 font-mono text-label"
               }
             >
@@ -1438,7 +1408,7 @@ function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
   const svgH = topHubs.length * (PULSE_CELL_H + PULSE_GAP) + 24
 
   return (
-    <div className="mt-6 w-full overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200/60 bg-slate-100 p-4 [-webkit-overflow-scrolling:touch] sm:rounded-3xl sm:p-8 dark:border-white/10 dark:bg-zinc-800/60">
+    <div className="sm: mt-6 w-full overflow-x-auto overscroll-x-contain border border-hairline-strong bg-track p-4 [-webkit-overflow-scrolling:touch] sm:p-8">
       <svg
         width={svgW}
         height={svgH}
@@ -1454,7 +1424,7 @@ function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
             y={ri * (PULSE_CELL_H + PULSE_GAP) + PULSE_CELL_H / 2 + 1}
             textAnchor="end"
             dominantBaseline="central"
-            className="fill-slate-600 font-mono text-label dark:fill-slate-400"
+            className="fill-ink-muted font-mono text-label"
           >
             {hub.stopName.length > 18
               ? hub.stopName.slice(0, 16) + "..."
@@ -1474,7 +1444,7 @@ function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
               }
               y={topHubs.length * (PULSE_CELL_H + PULSE_GAP) + 16}
               textAnchor="middle"
-              className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+              className="fill-ink-muted font-mono text-label"
             >
               {h}h
             </text>
@@ -1486,23 +1456,23 @@ function PulseHeatmap({ hubs }: { hubs: Array<PulseHub> }) {
 
 function PulseHubsTable({ hubs }: { hubs: Array<PulseHub> }) {
   return (
-    <div className="overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200/60 bg-slate-100 [-webkit-overflow-scrolling:touch] sm:rounded-3xl dark:border-white/10 dark:bg-zinc-800/60">
+    <div className="sm: overflow-x-auto overscroll-x-contain border border-hairline-strong bg-track [-webkit-overflow-scrolling:touch]">
       <table className="w-full min-w-[640px] text-left">
         <thead>
-          <tr className="border-b border-slate-100 dark:border-slate-700">
-            <th className="px-6 py-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+          <tr className="border-b border-hairline">
+            <th className="px-6 py-3 font-mono text-label font-bold text-ink-muted">
               Stajalište
             </th>
-            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-ink-muted">
               Linije
             </th>
-            <th className="px-4 py-3 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+            <th className="px-4 py-3 font-mono text-label font-bold text-ink-muted">
               Rute
             </th>
-            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-ink-muted">
               Prosj. čekanje
             </th>
-            <th className="px-4 py-3 text-center font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+            <th className="px-4 py-3 text-center font-mono text-label font-bold text-ink-muted">
               Najbolji sat
             </th>
           </tr>
@@ -1569,10 +1539,10 @@ function PulseSchedulingSection({ hubs }: { hubs: Array<PulseHub> }) {
   const pulsedCount = hubs.filter((h) => h.bestHourWaitMin < 5).length
 
   return (
-    <section className="flex flex-col border-t border-slate-100 pt-16 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline pt-16">
       <div className="mb-12">
         <StatModuleTitle>Pulse scheduling</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Pulse scheduling znači sinkronizaciju dolazaka različitih linija na
           ključna čvorišta, kako bi putnici mogli presjedati s minimalnim
           čekanjem. Analiziramo {hubs.length} najvećih presjedačkih čvorišta.
@@ -1608,12 +1578,12 @@ export default function NetworkStatsSection() {
   return (
     <section
       id="mreza"
-      className="flex min-w-0 flex-col border-t border-slate-100 py-14 sm:py-24 dark:border-white/10"
+      className="flex min-w-0 flex-col border-t border-hairline py-14 sm:py-24"
     >
       <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <StatModuleTitle>Analiza mreže</StatModuleTitle>
-          <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+          <p className="mt-4 max-w-xl text-body text-ink-2">
             Detaljan pregled rasporeda, kapaciteta i karakteristika voznog reda
             zagrebačkog javnog prijevoza.
           </p>

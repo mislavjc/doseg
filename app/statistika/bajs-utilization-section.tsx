@@ -25,12 +25,12 @@ interface BajsUtilizationData {
 
 function pctColor(pct: number): string {
   if (pct >= 60) {
-    return "text-emerald-600 dark:text-emerald-400"
+    return "text-zg-blue"
   }
   if (pct >= 30) {
-    return "text-amber-600 dark:text-amber-400"
+    return "text-ink-muted"
   }
-  return "text-slate-500 dark:text-slate-400"
+  return "text-ink-muted"
 }
 
 export default function BajsUtilizationSection() {
@@ -40,7 +40,7 @@ export default function BajsUtilizationSection() {
   )
 
   return (
-    <section className="flex flex-col border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+    <section className="flex flex-col border-t border-hairline-strong py-16 sm:py-24">
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <StatModuleTitle>BAJS iskorištenost</StatModuleTitle>
@@ -51,18 +51,14 @@ export default function BajsUtilizationSection() {
         </div>
       </div>
 
-      {error && (
-        <p className="text-body text-slate-500 dark:text-slate-400">
-          {error.message}
-        </p>
-      )}
+      {error && <p className="text-body text-ink-muted">{error.message}</p>}
       {isLoading && !data && (
         <div
           className="flex h-40 items-center justify-center"
           role="status"
           aria-label="Učitavanje"
         >
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-lime-500" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-hairline-strong border-t-zg-blue" />
           <span className="sr-only">Učitavanje...</span>
         </div>
       )}
@@ -76,7 +72,7 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
     data.activeStations - data.emptyStations.length - data.fullStations.length
 
   return (
-    <div className="grid grid-cols-1 gap-8 rounded-[12px] bg-[#f9f9f9] p-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-slate-200 sm:p-10 dark:bg-[#1a1a1a] sm:dark:divide-white/10">
+    <div className="sm: grid grid-cols-1 gap-8 bg-surface p-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-hairline-strong sm:p-10">
       <div className="flex flex-col gap-3 sm:pr-10">
         <div>
           <span
@@ -85,11 +81,9 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
             {fmtHR(data.utilizationPct, 1)}%
           </span>
         </div>
-        <div className="text-body text-slate-500 dark:text-slate-400">
-          iskorištenost
-        </div>
+        <div className="text-body text-ink-muted">iskorištenost</div>
       </div>
-      <div className="flex flex-col gap-4 border-t border-slate-200 pt-8 text-body text-slate-600 sm:border-0 sm:pt-0 sm:pr-10 sm:pl-10 dark:border-white/10 dark:text-slate-400">
+      <div className="flex flex-col gap-4 border-t border-hairline-strong pt-8 text-body text-ink-2 sm:border-0 sm:pt-0 sm:pr-10 sm:pl-10">
         <Metric value={data.bikesInUse} label="u uporabi" />
         <Metric value={data.totalBikesAvailable} label="na stanicama" />
         <Metric
@@ -97,22 +91,18 @@ function MetricsCard({ data }: { data: BajsUtilizationData }) {
           label="ukupni bicikli"
         />
       </div>
-      <div className="flex flex-col border-t border-slate-200 pt-8 sm:border-0 sm:pt-0 sm:pl-10 dark:border-white/10">
+      <div className="flex flex-col border-t border-hairline-strong pt-8 sm:border-0 sm:pt-0 sm:pl-10">
         <StatusBadge
           count={data.emptyStations.length}
           label="praznih"
-          dotColor="bg-red-500"
+          dotColor="bg-ink-2"
         />
         <StatusBadge
           count={data.fullStations.length}
           label="punih"
-          dotColor="bg-amber-500"
+          dotColor="bg-ink-ghost"
         />
-        <StatusBadge
-          count={normal}
-          label="dostupnih"
-          dotColor="bg-emerald-500"
-        />
+        <StatusBadge count={normal} label="dostupnih" dotColor="bg-zg-blue" />
       </div>
     </div>
   )
@@ -145,17 +135,13 @@ function StatusBadge({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 border-b border-slate-100 py-4 last:border-0 dark:border-white/5`}
+      className={`flex items-center gap-3 border-b border-hairline py-4 last:border-0`}
     >
       <div className="flex items-center gap-3">
-        <span className={`inline-block h-3 w-3 rounded ${dotColor}`} />
-        <span className="text-body text-slate-700 dark:text-slate-300">
-          {label}
-        </span>
+        <span className={`inline-block h-3 w-3 ${dotColor}`} />
+        <span className="text-body text-ink-2">{label}</span>
       </div>
-      <span className="font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
-        {count}
-      </span>
+      <span className="font-sans text-body text-ink tabular-nums">{count}</span>
     </div>
   )
 }
@@ -163,7 +149,7 @@ function StatusBadge({
 function Metric({ value, label }: { value: number; label: string }) {
   return (
     <span className="flex items-center gap-3">
-      <strong className="font-sans text-head font-bold text-slate-900 dark:text-slate-100">
+      <strong className="font-sans text-head font-bold text-ink">
         {value.toLocaleString("hr-HR")}
       </strong>
       <span>{label}</span>

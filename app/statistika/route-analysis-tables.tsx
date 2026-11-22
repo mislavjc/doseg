@@ -36,44 +36,41 @@ function RouteTableHead() {
       <tr>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Linija
         </th>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Stanica
         </th>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Udaljenost
         </th>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Polasci
         </th>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Brzina
         </th>
         <th
           scope="col"
-          className="pr-8 pb-4 text-left text-body text-slate-400 dark:text-slate-500"
+          className="pr-8 pb-4 text-left text-body text-ink-faint"
         >
           Vožnja
         </th>
-        <th
-          scope="col"
-          className="pb-4 text-left text-body text-slate-400 dark:text-slate-500"
-        >
+        <th scope="col" className="pb-4 text-left text-body text-ink-faint">
           Interval
         </th>
       </tr>
@@ -99,10 +96,10 @@ function ExpandableRouteTable({
   return (
     <div className="flex flex-col">
       <div className="mb-8 flex items-baseline gap-3">
-        <h3 className="font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+        <h3 className="font-mono text-label font-bold text-ink-muted">
           {title}
         </h3>
-        <span className="font-mono text-label text-slate-400 tabular-nums dark:text-slate-500">
+        <span className="font-mono text-label text-ink-faint tabular-nums">
           {routes.length} {plural(routes.length, "linija", "linije", "linija")}
         </span>
       </div>
@@ -123,7 +120,7 @@ function ExpandableRouteTable({
       {needsToggle && (
         <button
           type="button"
-          className="mt-6 self-start rounded-full border border-slate-200 bg-white px-5 py-2.5 text-body text-slate-600 transition-[transform,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-slate-300 hover:text-slate-900 active:scale-[0.98] dark:border-white/10 dark:bg-zinc-900/40 dark:text-slate-300 dark:hover:border-white/20"
+          className="mt-6 self-start border border-hairline-strong bg-white px-5 py-2.5 text-body text-ink-2 transition-[transform,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-hairline-strong hover:text-ink active:scale-[0.98]"
           aria-expanded={expanded}
           aria-controls={regionId}
           onClick={() => setExpanded((e) => !e)}
@@ -139,33 +136,33 @@ function ExpandableRouteTable({
 
 function headwayStatus(headway: number | null) {
   if (headway === null) {
-    return { dot: "", text: "-", color: "text-slate-300 dark:text-slate-600" }
+    return { dot: "", text: "-", color: "text-ink-faint" }
   }
   if (headway <= 8) {
     return {
-      dot: "bg-emerald-500",
+      dot: "bg-zg-blue",
       text: `~${Math.round(headway)} min`,
-      color: "text-emerald-600 dark:text-emerald-400",
+      color: "text-zg-blue",
     }
   }
   if (headway <= 15) {
     return {
-      dot: "bg-emerald-500",
+      dot: "bg-zg-blue",
       text: `~${Math.round(headway)} min`,
-      color: "text-slate-700 dark:text-slate-300",
+      color: "text-ink-2",
     }
   }
   if (headway <= 30) {
     return {
-      dot: "bg-amber-400",
+      dot: "bg-ink-ghost",
       text: `~${Math.round(headway)} min`,
-      color: "text-amber-600 dark:text-amber-400",
+      color: "text-ink-muted",
     }
   }
   return {
-    dot: "bg-red-500",
+    dot: "bg-ink-2",
     text: `~${Math.round(headway)} min`,
-    color: "text-red-600 dark:text-red-400",
+    color: "text-ink",
   }
 }
 
@@ -174,44 +171,38 @@ function RouteRow({ route }: { route: RouteInfo }) {
   const hw = headwayStatus(route.avgHeadwayMin)
 
   return (
-    <tr className="even:bg-slate-50/70 dark:even:bg-white/[0.02]">
+    <tr className="even:bg-surface">
       <td className="py-3 pr-8">
         <span
-          className={`inline-flex min-w-[2.5rem] items-center justify-center rounded-md px-2.5 py-1 text-head font-bold tabular-nums ${
-            isTram
-              ? "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-              : "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+          className={`inline-flex min-w-[2.5rem] items-center justify-center px-2.5 py-1 text-head font-bold tabular-nums ${
+            isTram ? "bg-blue-wash text-zg-blue" : "bg-surface text-ink-muted"
           }`}
         >
           {route.name}
         </span>
       </td>
-      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-ink-2 tabular-nums">
         {route.stops}
       </td>
-      <td className="py-3 pr-8 text-body text-slate-700 dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-ink-2">
         {fmtHR(route.distanceKm, 1)}
-        <span className="ml-1.5 inline-flex rounded bg-slate-100 px-1.5 py-0.5 font-mono text-label text-slate-500 dark:bg-white/5 dark:text-slate-400">
+        <span className="ml-1.5 inline-flex bg-track px-1.5 py-0.5 font-mono text-label text-ink-muted">
           km
         </span>
       </td>
-      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-ink-2 tabular-nums">
         {route.dailyDepartures.toLocaleString("hr-HR")}
-        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
+        <span className="ml-1.5 text-body text-ink-faint">
           {fmtHR(route.depPerHour, 1)}/h
         </span>
       </td>
-      <td className="py-3 pr-8 text-body text-slate-700 tabular-nums dark:text-slate-300">
+      <td className="py-3 pr-8 text-body text-ink-2 tabular-nums">
         {fmtHR(route.commercialSpeedKmh, 1)}
-        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
-          km/h
-        </span>
+        <span className="ml-1.5 text-body text-ink-faint">km/h</span>
       </td>
-      <td className="py-3 pr-8 text-body text-slate-600 tabular-nums dark:text-slate-400">
+      <td className="py-3 pr-8 text-body text-ink-2 tabular-nums">
         {route.travelTimeMin}
-        <span className="ml-1.5 text-body text-slate-400 dark:text-slate-500">
-          min
-        </span>
+        <span className="ml-1.5 text-body text-ink-faint">min</span>
       </td>
       <td className={`py-3 text-body ${hw.color}`}>
         {hw.dot ? (

@@ -10,7 +10,12 @@ import InsightsSection from "./insights-section"
 import AccessibilityProfileSection from "./accessibility-profile-section"
 import { loadScores, loadAllData, sortRoutesByName } from "./stat-data"
 import type { ScoreData, AllData } from "./stat-data"
-import { Shell, BackLink, SectionGroup } from "./stat-shared"
+import { formatHrDate } from "@/lib/hr-date"
+import { Breadcrumb } from "./editorial/blocks"
+import { Footer } from "./editorial/footer"
+import { Hero } from "./editorial/hero"
+import { EditorialShell } from "./editorial/primitives"
+import { BackLink, SectionGroup } from "./stat-shared"
 import { StatMuted, StatPageTitle } from "./stat-typography"
 import {
   StatHero,
@@ -52,78 +57,77 @@ import { DistrictBandsSection, MethodologySection } from "./district-sections"
  */
 export function PodaciDashboard() {
   const data = loadScores()
-  if (!data) {
-    return (
-      <Shell>
-        <main
-          id="main-content"
-          className="mx-auto min-h-[calc(100svh-6rem)] w-full max-w-[1200px] overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04] sm:rounded-3xl"
-        >
-          <div className="p-6 sm:p-8">
-            <BackLink />
-            <NoDataMessage />
-          </div>
-        </main>
-      </Shell>
-    )
-  }
-  return <StatistikaContent data={data} />
+  return (
+    <EditorialShell>
+      <Hero active="statistika" />
+      {data ? <StatistikaContent data={data} /> : <NoDataMessage />}
+      <Footer updated={data ? formatHrDate(data.generatedAt) : ""} />
+    </EditorialShell>
+  )
+}
+
+function PodaciBreadcrumb() {
+  return (
+    <Breadcrumb
+      trail={[
+        { label: "doseg.hr", href: "/" },
+        { label: "statistika", href: "/statistika" },
+        { label: "podaci" },
+      ]}
+    />
+  )
 }
 
 function NoDataMessage() {
   return (
-    <>
-      <StatPageTitle className="mt-8">Povezanost kvartova</StatPageTitle>
-      <div className="mt-10 rounded-xl bg-white/4 px-5 py-4 ring-1 ring-white/6">
+    <div className="mx-auto w-full max-w-[620px] px-4 py-14 sm:px-8 sm:py-20">
+      <PodaciBreadcrumb />
+      <StatPageTitle className="mt-4">Povezanost kvartova</StatPageTitle>
+      <div className="mt-6 flex flex-col gap-1 border-l-2 border-ink bg-surface p-5">
         <StatMuted>
           Nije moguće generirati podatke. Provjeri je li OTP pokrenut.
         </StatMuted>
-        <p className="mt-1 text-body text-slate-600">
+        <p className="text-body text-ink-muted">
           Pokreni{" "}
-          <code className="rounded bg-white/6 px-1.5 py-0.5 font-mono text-label text-slate-400">
+          <code className="font-mono text-label text-ink">
             docker compose up otp
           </code>{" "}
           pa osvježi stranicu.
         </p>
       </div>
-    </>
+      <div className="mt-4">
+        <BackLink />
+      </div>
+    </div>
   )
 }
 
 function StatistikaContent({ data }: { data: ScoreData }) {
   const all = loadAllData(data)
   return (
-    <Shell>
-      <StatSectionTabs />
-      <div className="mx-auto w-full max-w-[min(100%,56rem)] px-3 pt-4 pb-16 sm:px-6 sm:pt-6">
-        <main
-          id="main-content"
-          className="min-w-0 overflow-x-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_-4px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] sm:rounded-3xl"
-        >
-          <div className="mx-auto w-full max-w-[800px] px-5 pt-8 sm:px-8 sm:pt-12">
-            <BackLink />
-            <StatHero
-              best={all.base.best}
-              bestPct={all.base.bestPct}
-              departureTime={all.base.displayDepartureTime}
-              maxMinutes={data.maxMinutes}
-              ratio={all.base.ratio}
-              worst={all.base.worst}
-            />
-          </div>
-
-          <div className="mx-auto w-full max-w-[1100px] px-5 sm:px-8">
-            <HeadlineInsights data={data} base={all.base} bajs={all.bajs} />
-          </div>
-
-          <div className="mx-auto w-full max-w-[800px] px-5 pb-10 sm:px-8 sm:pb-14">
-            <ChoroplethSection />
-            <InsightsSection connectivityGaps={all.connectivityGaps} />
-            <StatistikaContentSections data={data} all={all} />
-          </div>
-        </main>
+    <>
+      <div className="mx-auto w-full max-w-[620px] px-4 pt-14 sm:px-8 sm:pt-16">
+        <PodaciBreadcrumb />
+        <StatHero
+          best={all.base.best}
+          bestPct={all.base.bestPct}
+          departureTime={all.base.displayDepartureTime}
+          maxMinutes={data.maxMinutes}
+          ratio={all.base.ratio}
+          worst={all.base.worst}
+        />
+        <div className="mt-4">
+          <BackLink />
+        </div>
       </div>
-    </Shell>
+      <StatSectionTabs />
+      <div className="mx-auto w-full max-w-[840px] px-4 pb-20 sm:px-8">
+        <HeadlineInsights data={data} base={all.base} bajs={all.bajs} />
+        <ChoroplethSection />
+        <InsightsSection connectivityGaps={all.connectivityGaps} />
+        <StatistikaContentSections data={data} all={all} />
+      </div>
+    </>
   )
 }
 

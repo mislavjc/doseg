@@ -68,11 +68,11 @@ export function ChartGrid({
       scale={yScale}
       width={innerWidth}
       tickValues={yTicks}
-      stroke="#e2e8f0"
+      stroke="var(--hairline-strong)"
       strokeOpacity={0.5}
       strokeWidth={1}
       strokeDasharray="4 4"
-      className="dark:stroke-slate-700"
+      className=""
     />
   )
 }
@@ -171,7 +171,7 @@ export function ChartYLabels({
           y={(yScale(v) ?? 0) + 1}
           textAnchor="start"
           dominantBaseline="middle"
-          className="fill-slate-500 font-mono text-label dark:fill-slate-400"
+          className="fill-ink-muted font-mono text-label"
         >
           {format(v)}
         </text>
@@ -208,31 +208,20 @@ export function SvgTooltip({
         <rect
           width={width}
           height={height}
-          rx={8}
-          className="fill-white stroke-slate-200 dark:fill-[#262626] dark:stroke-white/10"
+          className="fill-white stroke-ink-ghost"
           strokeWidth={1}
-          style={{
-            filter:
-              "drop-shadow(0 4px 12px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.05))",
-          }}
         />
         <text
           x={14}
           y={22}
           fontSize={11}
           fontWeight={500}
-          className="fill-slate-400 dark:fill-slate-500"
+          className="fill-ink-muted"
         >
           {title}
         </text>
         <circle cx={18} cy={37} r={3.5} fill={color} />
-        <text
-          x={28}
-          y={41}
-          fontSize={14}
-          fontWeight={600}
-          className="fill-slate-900 dark:fill-slate-100"
-        >
+        <text x={28} y={41} fontSize={14} fontWeight={600} className="fill-ink">
           {value}
         </text>
         {subtitle && (
@@ -241,7 +230,7 @@ export function SvgTooltip({
             y={58}
             fontSize={11}
             fontWeight={400}
-            className="fill-slate-500 dark:fill-slate-400"
+            className="fill-ink-muted"
           >
             {subtitle}
           </text>

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import useSWR from "swr"
 import { Term } from "@/components/ui/term"
 import { cn } from "@/lib/utils"
-import { StatModuleTitle } from "./stat-typography"
+import { StatEyebrow, StatModuleTitle } from "./stat-typography"
 
 // --- Types ---
 
@@ -42,20 +42,12 @@ export default function InsightsSection({
   const hasGaps = connectivityGaps.length > 0
 
   return (
-    <section className="border-t border-slate-200 py-16 sm:py-24 dark:border-white/10">
+    <section className="border-t border-hairline-strong py-16 sm:py-24">
       {hasGaps && (
-        <>
-          <div className="mb-8">
-            <StatModuleTitle className="text-body">
-              Ključni nalazi
-            </StatModuleTitle>
-          </div>
-
-          <KeyFindingsCarousel
-            key={connectivityGaps.map((g) => g.issue).join("|")}
-            gaps={connectivityGaps}
-          />
-        </>
+        <KeyFindingsCarousel
+          key={connectivityGaps.map((g) => g.issue).join("|")}
+          gaps={connectivityGaps}
+        />
       )}
 
       <OperationalHealth />
@@ -114,8 +106,13 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
       return
     }
     const updateCardWidth = () => {
+      const cols = gaps.length > 1 && el.clientWidth >= 560 ? 2 : 1
       const cardW =
-        gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
+        gaps.length <= 1
+          ? el.clientWidth
+          : cols === 2
+            ? (el.clientWidth - GAP) / 2
+            : el.clientWidth - PEEK - GAP
       el.style.setProperty("--card-w", `${Math.round(cardW)}px`)
       measure()
     }
@@ -140,12 +137,21 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
 
   return (
     <div className="relative">
-      {canScrollRight && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-white via-white/60 to-transparent dark:from-zinc-950 dark:via-zinc-950/60"
-        />
-      )}
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <StatEyebrow>ključni nalazi</StatEyebrow>
+          <StatModuleTitle>Ključni nalazi</StatModuleTitle>
+        </div>
+        {gaps.length > 1 && (
+          <CarouselNav
+            count={gaps.length}
+            active={active}
+            canScrollLeft={canScrollLeft}
+            canScrollRight={canScrollRight}
+            onScrollToIndex={scrollToIndex}
+          />
+        )}
+      </div>
       <div
         ref={scrollRef}
         style={{ gap: GAP }}
@@ -161,63 +167,44 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
           </div>
         ))}
       </div>
-      {gaps.length > 1 && (
-        <CarouselNav
-          gaps={gaps}
-          active={active}
-          canScrollLeft={canScrollLeft}
-          canScrollRight={canScrollRight}
-          onScrollToIndex={scrollToIndex}
-        />
-      )}
     </div>
   )
 }
 
 // --- Carousel navigation ---
 
+const pad2 = (n: number) => String(n).padStart(2, "0")
+
 function CarouselNav({
-  gaps,
+  count,
   active,
   canScrollLeft,
   canScrollRight,
   onScrollToIndex,
 }: {
-  gaps: Array<ConnectivityGap>
+  count: number
   active: number
   canScrollLeft: boolean
   canScrollRight: boolean
   onScrollToIndex: (i: number) => void
 }) {
   return (
-    <div className="mt-1 flex items-center justify-center gap-3">
+    <div className="flex items-center gap-3">
+      <span
+        className="font-mono text-label text-ink-muted tabular-nums"
+        aria-live="polite"
+      >
+        {pad2(active + 1)} / {pad2(count)}
+      </span>
       <CarouselArrowButton
         direction="left"
         enabled={canScrollLeft}
         onClick={() => onScrollToIndex(Math.max(0, active - 1))}
       />
-      <div className="flex gap-2" role="tablist" aria-label="Nalazi">
-        {gaps.map((gap, i) => (
-          <button
-            key={gap.issue}
-            type="button"
-            role="tab"
-            aria-selected={i === active}
-            aria-label={`Nalaz ${i + 1}`}
-            onClick={() => onScrollToIndex(i)}
-            className={cn(
-              "h-2 rounded-full transition-[width,background-color] duration-200 ease-out",
-              i === active
-                ? "w-6 bg-slate-800 dark:bg-slate-200"
-                : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500"
-            )}
-          />
-        ))}
-      </div>
       <CarouselArrowButton
         direction="right"
         enabled={canScrollRight}
-        onClick={() => onScrollToIndex(Math.min(gaps.length - 1, active + 1))}
+        onClick={() => onScrollToIndex(Math.min(count - 1, active + 1))}
       />
     </div>
   )
@@ -239,10 +226,8 @@ function CarouselArrowButton({
       disabled={!enabled}
       onClick={onClick}
       className={cn(
-        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors dark:border-white/10 dark:bg-zinc-900 dark:text-slate-200",
-        enabled
-          ? "hover:bg-slate-50 dark:hover:bg-zinc-800"
-          : "cursor-not-allowed opacity-40"
+        "flex size-8 shrink-0 items-center justify-center border border-hairline-strong bg-white text-ink-2 transition-colors",
+        enabled ? "hover:bg-surface" : "cursor-not-allowed opacity-40"
       )}
     >
       <svg
@@ -270,24 +255,23 @@ function GapCard({ gap, index }: { gap: ConnectivityGap; index: number }) {
   const isCritical = gap.severity === "critical"
 
   return (
-    <div className="flex h-full min-h-[180px] flex-col gap-3 rounded-[12px] bg-[#f9f9f9] p-4 sm:min-h-[200px] sm:p-6 dark:bg-[#1a1a1a]">
+    <div className="flex h-full flex-col gap-2 border border-hairline-strong bg-white p-4 sm:p-5">
       <div className="flex items-center gap-3">
         <span
-          className={`inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 font-mono text-label ${
-            isCritical
-              ? "border-red-200 text-red-600 dark:border-red-900/50 dark:text-red-400"
-              : "border-slate-200 text-slate-500 dark:border-white/10 dark:text-slate-400"
-          }`}
+          className={cn(
+            "inline-flex items-center px-2 py-1 font-mono text-label lowercase",
+            isCritical ? "bg-ink text-white" : "bg-surface text-ink"
+          )}
         >
           {isCritical ? "Kritično" : "Upozorenje"}
         </span>
-        <span className="text-body text-slate-500 dark:text-slate-400">
+        <span className="font-mono text-label text-ink-faint lowercase">
           Nalaz {index < 10 ? `0${index}` : index}
         </span>
       </div>
-      <div className="mt-1 flex flex-col gap-1.5 text-body text-slate-900 dark:text-slate-100">
-        <span className="font-medium">{gap.issue}</span>
-        <span className="text-slate-600 dark:text-slate-400">{gap.impact}</span>
+      <div className="flex flex-col gap-2">
+        <span className="text-head font-bold text-ink">{gap.issue}</span>
+        <span className="text-body text-ink-muted">{gap.impact}</span>
       </div>
     </div>
   )
@@ -327,7 +311,7 @@ function OperationalHealth() {
 
   return (
     <div className="mt-12">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Operativni problemi (zadnjih 24h)
       </div>
       <HealthTable routes={unreliable.slice(0, 8)} />
@@ -340,15 +324,15 @@ function OperationalHealth() {
 function labelColor(label: string): string {
   switch (label) {
     case "stable":
-      return "text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40"
+      return "text-zg-blue bg-blue-wash"
     case "moderate":
-      return "text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40"
+      return "text-ink-muted bg-surface"
     case "unreliable":
-      return "text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/40"
+      return "text-ink bg-surface"
     case "critical":
-      return "text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-950/60"
+      return "text-ink bg-surface"
     default:
-      return "text-slate-600 bg-slate-50 dark:text-slate-400 dark:bg-slate-800"
+      return "text-ink-2 bg-surface"
   }
 }
 
@@ -372,7 +356,7 @@ function HealthTable({ routes }: { routes: Array<RouteHealth> }) {
     <div className="overflow-x-auto">
       <table className="w-full text-body">
         <thead>
-          <tr className="border-b border-slate-200 text-left font-mono text-label font-bold text-slate-500 dark:border-white/10 dark:text-slate-400">
+          <tr className="border-b border-hairline-strong text-left font-mono text-label font-bold text-ink-muted">
             <th className="py-2 pr-3">Linija</th>
             <th className="py-2 pr-3">Stanje</th>
             <th className="py-2 pr-2 text-right sm:pr-6">Na vrijeme</th>
@@ -397,32 +381,30 @@ function HealthTable({ routes }: { routes: Array<RouteHealth> }) {
 
 function HealthRow({ route: r }: { route: RouteHealth }) {
   return (
-    <tr className="border-b border-slate-100 dark:border-white/5">
+    <tr className="border-b border-hairline">
       <td className="py-2.5 pr-3">
-        <span className="font-mono font-medium text-slate-900 dark:text-slate-100">
-          {r.routeId}
-        </span>
-        <span className="ml-2 font-mono text-label text-slate-400">
+        <span className="font-mono font-medium text-ink">{r.routeId}</span>
+        <span className="ml-2 font-mono text-label text-ink-faint">
           {modeLabel(r.mode)}
         </span>
       </td>
       <td className="py-2.5 pr-3">
         <span
-          className={`inline-block rounded-full px-2 py-0.5 font-mono text-label ${labelColor(r.label)}`}
+          className={`inline-block px-2 py-0.5 font-mono text-label ${labelColor(r.label)}`}
         >
           {labelText(r.label)}
         </span>
       </td>
       <td
-        className={`py-2.5 pr-6 text-right font-mono tabular-nums ${r.onTimePct < 0.6 ? "text-red-600 dark:text-red-400" : r.onTimePct < 0.8 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}
+        className={`py-2.5 pr-6 text-right font-mono tabular-nums ${r.onTimePct < 0.6 ? "text-ink" : r.onTimePct < 0.8 ? "text-ink-muted" : "text-zg-blue"}`}
       >
         {Math.round(r.onTimePct * 100)}%
       </td>
-      <td className="py-2.5 pr-6 text-right font-mono text-slate-700 tabular-nums dark:text-slate-300">
+      <td className="py-2.5 pr-6 text-right font-mono text-ink-2 tabular-nums">
         {formatDelay(r.avgDelay)}
       </td>
       <td
-        className={`py-2.5 pr-3 text-right font-mono tabular-nums ${r.headwayCv === null ? "text-slate-300 dark:text-slate-600" : r.headwayCv > 0.5 ? "text-red-600 dark:text-red-400" : r.headwayCv > 0.3 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}
+        className={`py-2.5 pr-3 text-right font-mono tabular-nums ${r.headwayCv === null ? "text-ink-faint" : r.headwayCv > 0.5 ? "text-ink" : r.headwayCv > 0.3 ? "text-ink-muted" : "text-zg-blue"}`}
       >
         {r.headwayCv === null ? "-" : r.headwayCv.toFixed(2)}
       </td>
@@ -436,20 +418,20 @@ function HealthRow({ route: r }: { route: RouteHealth }) {
 function SeverityBar({ score }: { score: number }) {
   const color =
     score >= 70
-      ? "bg-red-500"
+      ? "bg-ink-2"
       : score >= 45
-        ? "bg-amber-500"
+        ? "bg-ink-ghost"
         : score >= 20
-          ? "bg-sky-500"
-          : "bg-emerald-500"
+          ? "bg-blue-pale"
+          : "bg-zg-blue"
   return (
     <div className="flex items-center justify-end gap-2">
-      <span className="font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
+      <span className="font-mono text-label text-ink-muted tabular-nums">
         {Math.round(score)}
       </span>
-      <div className="h-2 w-12 rounded-full bg-slate-100 sm:w-16 dark:bg-slate-800">
+      <div className="h-2 w-12 bg-track sm:w-16">
         <div
-          className={`h-full rounded-full ${color}`}
+          className={`h-full ${color}`}
           style={{ width: `${Math.min(score, 100)}%` }}
         />
       </div>

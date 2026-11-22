@@ -34,7 +34,7 @@ export function BajsImpactSection({
   return (
     <section
       id="bajs"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <BajsHeader />
@@ -60,7 +60,7 @@ function BajsHeader() {
   return (
     <div>
       <StatModuleTitle>Utjecaj BAJS bicikala</StatModuleTitle>
-      <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+      <p className="mt-4 max-w-xl text-body text-ink-2">
         Koliko se dostupnost svakog kvarta poboljšava kada se uz javni prijevoz
         koriste i BAJS bicikli. Mjereno u idealnom scenariju gdje je svaka
         stanica operativna s barem jednim biciklom.
@@ -72,17 +72,17 @@ function BajsHeader() {
 function BajsMapSection({ districts }: { districts: ScoreData["districts"] }) {
   return (
     <div className="mt-12">
-      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-body text-slate-500 dark:text-slate-400">
+      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-body text-ink-muted">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded-full bg-[#d97706]" />
+          <span className="inline-block h-3 w-3 rounded-full bg-ink-faint" />
           Tamnije = veći dobitak
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded-full bg-[#94a3b8]" />
+          <span className="inline-block h-3 w-3 rounded-full bg-ink-faint" />
           Sivo = bez utjecaja
         </span>
       </div>
-      <div className="mx-auto w-full max-w-3xl rounded-[12px] bg-[#f9f9f9] p-4 sm:p-8 dark:bg-[#1a1a1a]">
+      <div className="mx-auto w-full max-w-3xl bg-surface p-4 sm:p-8">
         <ZagrebBajsBlockMap districts={districts} />
       </div>
     </div>
@@ -92,7 +92,7 @@ function BajsMapSection({ districts }: { districts: ScoreData["districts"] }) {
 function BajsRanking({ bajs }: { bajs: BajsInsights }) {
   return (
     <div>
-      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-ink-muted">
         Tko najviše profitira
       </h3>
       <RankingList
@@ -101,9 +101,9 @@ function BajsRanking({ bajs }: { bajs: BajsInsights }) {
         label={(d) => `+${d.bajsBoostPct}%`}
         trailing={(d) => `${d.bajsStations} st.`}
         color={{
-          text: "text-amber-700 dark:text-amber-400",
-          bg: "bg-amber-100 dark:bg-amber-900/30",
-          bar: "bg-amber-500",
+          text: "text-ink-muted",
+          bg: "bg-surface",
+          bar: "bg-ink-ghost",
         }}
       />
     </div>
@@ -121,11 +121,11 @@ function BajsAnalysis({ data, bajs }: { data: ScoreData; bajs: BajsInsights }) {
 
 function BajsEquityCard({ data }: { data: ScoreData }) {
   return (
-    <div className="flex flex-col rounded-xl bg-amber-50/60 p-6 ring-1 ring-amber-200/40 dark:bg-amber-950/15 dark:ring-amber-800/20">
-      <h3 className="mb-4 font-mono text-label font-bold text-amber-700">
+    <div className="flex flex-col bg-surface p-6 ring-1 ring-hairline-strong">
+      <h3 className="mb-4 font-mono text-label font-bold text-ink-muted">
         Smanjuje li BAJS jaz?
       </h3>
-      <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
+      <div className="space-y-4 text-body text-ink-2">
         <p>
           <BajsEquityText data={data} />
         </p>
@@ -146,11 +146,11 @@ function BajsEquityText({ data }: { data: ScoreData }) {
     return (
       <>
         Da. Slabije povezani kvartovi prosječno dobivaju{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           +{Math.round(bottomBoost)}%
         </strong>{" "}
         poboljšanja, dok bolje povezani dobivaju{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           +{Math.round(topBoost)}%
         </strong>
         . BAJS bicikli sužavaju jaz u dostupnosti.
@@ -160,11 +160,9 @@ function BajsEquityText({ data }: { data: ScoreData }) {
   return (
     <>
       Ne u dovoljnoj mjeri. Bolje povezani kvartovi dobivaju{" "}
-      <strong className="font-medium text-slate-900 dark:text-slate-100">
-        +{Math.round(topBoost)}%
-      </strong>{" "}
+      <strong className="font-medium text-ink">+{Math.round(topBoost)}%</strong>{" "}
       poboljšanja, dok slabije povezani dobivaju{" "}
-      <strong className="font-medium text-slate-900 dark:text-slate-100">
+      <strong className="font-medium text-ink">
         +{Math.round(bottomBoost)}%
       </strong>
       . BAJS stanice su koncentrirane u centru - proširenje mreže prema rubnim
@@ -177,34 +175,30 @@ function BajsEquityText({ data }: { data: ScoreData }) {
 
 function BajsTotalImpactCard({ bajs }: { bajs: BajsInsights }) {
   return (
-    <div className="mt-6 flex flex-col border-t-2 border-amber-400 pt-6 dark:border-amber-600">
-      <h3 className="mb-4 font-mono text-label font-bold text-amber-700">
+    <div className="mt-6 flex flex-col border-t-2 border-ink-ghost pt-6">
+      <h3 className="mb-4 font-mono text-label font-bold text-ink-muted">
         Ukupni utjecaj
       </h3>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div className="flex flex-col">
-          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+          <div className="font-sans text-head font-bold text-ink tabular-nums">
             +{bajs.cityBajsBoost}%
           </div>
-          <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
-            prosječni dobitak
-          </div>
+          <div className="mt-2 text-body text-ink-muted">prosječni dobitak</div>
         </div>
         <div className="flex flex-col">
-          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+          <div className="font-sans text-head font-bold text-ink tabular-nums">
             {bajs.bajsTotalStations}
           </div>
-          <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
-            stanica u gradu
-          </div>
+          <div className="mt-2 text-body text-ink-muted">stanica u gradu</div>
         </div>
         <div className="flex flex-col">
-          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+          <div className="font-sans text-head font-bold text-ink tabular-nums">
             {bajs.topBajsBeneficiary === undefined
               ? "-"
               : `+${bajs.topBajsBeneficiary.bajsBoostPct}%`}
           </div>
-          <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted">
             max. dobitak
             <br />({bajs.topBajsBeneficiary?.name ?? "-"})
           </div>
@@ -218,28 +212,24 @@ function BajsCoverageStats({ bajs }: { bajs: BajsInsights }) {
   return (
     <div className="mb-6 grid grid-cols-1 gap-8 sm:grid-cols-3">
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {bajs.coveragePct}%
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
-          stanica pokriveno
-        </div>
+        <div className="mt-2 text-body text-ink-muted">stanica pokriveno</div>
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {bajs.coveredStops}
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted">
           od {bajs.totalStops} stanica
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           350m
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
-          pješački doseg
-        </div>
+        <div className="mt-2 text-body text-ink-muted">pješački doseg</div>
       </div>
     </div>
   )
@@ -247,20 +237,18 @@ function BajsCoverageStats({ bajs }: { bajs: BajsInsights }) {
 
 function BajsCoverageCard({ bajs }: { bajs: BajsInsights }) {
   return (
-    <div className="flex flex-col rounded-lg border border-amber-200/60 bg-gradient-to-br from-amber-50/40 to-transparent p-6 dark:border-amber-800/25 dark:from-amber-950/10">
-      <h3 className="mb-4 font-mono text-label font-bold text-amber-700">
+    <div className="flex flex-col border border-hairline-strong p-6">
+      <h3 className="mb-4 font-mono text-label font-bold text-ink-muted">
         Pokrivenost posljednje milje
       </h3>
       <BajsCoverageStats bajs={bajs} />
-      <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
+      <div className="space-y-4 text-body text-ink-2">
         <p>
           Bike-sharing kao &ldquo;posljednja milja&rdquo; funkcionira samo ako
           postoji BAJS stanica blizu tramvajske ili autobusne stanice. Od{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
-            {bajs.totalStops}
-          </strong>{" "}
+          <strong className="font-medium text-ink">{bajs.totalStops}</strong>{" "}
           stanica javnog prijevoza u Zagrebu, samo{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
+          <strong className="font-medium text-ink">
             {bajs.coveredStops} ({bajs.coveragePct}%)
           </strong>{" "}
           ima BAJS stanicu unutar 350 metara hoda.
@@ -268,7 +256,7 @@ function BajsCoverageCard({ bajs }: { bajs: BajsInsights }) {
         <p>
           {bajs.zeroBajsDistricts.length > 0 ? (
             <>
-              <strong className="font-medium text-slate-900 dark:text-slate-100">
+              <strong className="font-medium text-ink">
                 {bajs.zeroBajsDistricts.length}{" "}
                 {bajs.zeroBajsDistricts.length === 1
                   ? "kvart nema"
@@ -296,11 +284,11 @@ function BajsCoverageCard({ bajs }: { bajs: BajsInsights }) {
 function BajsDensityCard({ bajs }: { bajs: BajsInsights }) {
   const lastDistrict = bajs.densityRanked.at(-1)
   return (
-    <div className="flex flex-col rounded-lg bg-white/60 p-6 shadow-sm ring-1 shadow-amber-900/5 ring-slate-200/60 dark:bg-white/[0.03] dark:shadow-none dark:ring-white/10">
-      <h3 className="mb-2 font-mono text-label font-bold text-amber-700">
+    <div className="flex flex-col bg-surface p-6 ring-1 ring-hairline-strong">
+      <h3 className="mb-2 font-mono text-label font-bold text-ink-muted">
         Gustoća BAJS stanica
       </h3>
-      <p className="mb-6 text-body text-slate-500 dark:text-slate-400">
+      <p className="mb-6 text-body text-ink-muted">
         Stanica po km² - koliko je infrastruktura ravnomjerno raspoređena
       </p>
       <RankingList
@@ -309,21 +297,21 @@ function BajsDensityCard({ bajs }: { bajs: BajsInsights }) {
         label={(d) => `${fmtHR(d.bajsDensityPerKm2, 2)} st./km²`}
         trailing={(d) => `${fmtHR(d.bajsPer10k, 1)}/10k st.`}
         color={{
-          text: "text-amber-600 dark:text-amber-400",
-          bg: "bg-amber-100 dark:bg-amber-900/30",
-          bar: "bg-amber-500",
+          text: "text-ink-muted",
+          bg: "bg-surface",
+          bar: "bg-ink-ghost",
         }}
       />
       {bajs.topDensity !== undefined && lastDistrict && (
-        <div className="mt-6 rounded-md bg-amber-50/50 px-4 py-3 dark:bg-amber-950/10">
-          <p className="text-body text-slate-700 dark:text-slate-300">
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <div className="mt-6 bg-surface px-4 py-3">
+          <p className="text-body text-ink-2">
+            <strong className="font-medium text-ink">
               {bajs.topDensity.name}
             </strong>{" "}
             ima {fmtHR(bajs.topDensity.bajsDensityPerKm2, 2)} stanica/km², dok{" "}
             {lastDistrict.name} ima samo{" "}
             {fmtHR(lastDistrict.bajsDensityPerKm2, 2)}. Razlika u gustoći od{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
+            <strong className="font-medium text-ink">
               {Math.round(
                 bajs.topDensity.bajsDensityPerKm2 /
                   (lastDistrict.bajsDensityPerKm2 || 0.01)
@@ -352,7 +340,7 @@ export function VarianceSection({
   return (
     <section
       id="varijacija"
-      className="mt-16 flex flex-col border-t border-slate-100 py-16 sm:mt-20 sm:py-24 dark:border-white/10"
+      className="mt-16 flex flex-col border-t border-hairline py-16 sm:mt-20 sm:py-24"
     >
       <VarianceHeader />
       <CollapsibleContent
@@ -373,7 +361,7 @@ function VarianceHeader() {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Nejednakost unutar kvarta</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Neki kvartovi imaju odlične dijelove i prometne pustinje unutar istog
           područja. Standardna devijacija mjeri koliko se rezultati razlikuju
           unutar jednog kvarta.
@@ -392,7 +380,7 @@ function VarianceRanking({
 }) {
   return (
     <div className="flex min-w-0 flex-col">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Najveća varijacija u dostupnosti
       </div>
       <div className="space-y-3 overflow-hidden">
@@ -421,15 +409,13 @@ function DistrictRow({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col border-b border-slate-100 py-3 last:border-0 dark:border-white/5">
+    <div className="flex flex-col border-b border-hairline py-3 last:border-0">
       <div className="mb-2 flex items-baseline justify-between gap-2">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-label font-bold text-slate-400 dark:text-slate-500">
+          <span className="font-mono text-label font-bold text-ink-faint">
             {(i + 1).toString().padStart(2, "0")}
           </span>
-          <span className="text-body text-slate-700 dark:text-slate-300">
-            {name}
-          </span>
+          <span className="text-body text-ink-2">{name}</span>
         </div>
         {value}
       </div>
@@ -454,21 +440,21 @@ function VarianceRow({
       i={i}
       name={d.name}
       value={
-        <span className="shrink-0 font-sans text-body text-sky-600 tabular-nums dark:text-sky-400">
+        <span className="shrink-0 font-sans text-body text-zg-blue tabular-nums">
           σ {Math.round(d.stddevReachableCells)}
         </span>
       }
     >
-      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
+      <div className="relative h-1.5 w-full overflow-hidden bg-track">
         <div
-          className="absolute inset-y-0 rounded-full bg-sky-500"
+          className="absolute inset-y-0 bg-blue-pale"
           style={{
             left: `${minPct}%`,
             width: `${Math.max(maxPct - minPct, 1)}%`,
           }}
         />
       </div>
-      <div className="mt-2 flex justify-between font-mono text-label text-slate-500 tabular-nums dark:text-slate-400">
+      <div className="mt-2 flex justify-between font-mono text-label text-ink-muted tabular-nums">
         <span>Min: {Math.round(d.minReachableCells)}</span>
         <span>Max: {Math.round(d.maxReachableCells)}</span>
       </div>
@@ -491,16 +477,14 @@ function VarianceInterpretation({
   return (
     <div className="flex flex-col gap-6">
       <VarianceStatCards variance={variance} />
-      <div className="mt-4 flex flex-col border-l-2 border-sky-500 py-2 pl-6">
-        <h3 className="mb-4 font-mono text-label font-bold text-sky-700">
+      <div className="mt-4 flex flex-col border-l-2 border-blue-pale py-2 pl-6">
+        <h3 className="mb-4 font-mono text-label font-bold text-zg-blue">
           Grad ekstrema ({mostUnequal.name})
         </h3>
-        <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
+        <div className="space-y-4 text-body text-ink-2">
           <p>
             Najnejednakiji kvart je{" "}
-            <strong className="font-medium text-slate-900 dark:text-slate-100">
-              {mostUnequal.name}
-            </strong>{" "}
+            <strong className="font-medium text-ink">{mostUnequal.name}</strong>{" "}
             - neki stanovnici imaju odličnu povezanost javnim prijevozom, dok
             susjedi 500 metara uzbrdo nemaju gotovo ništa.
           </p>
@@ -512,11 +496,11 @@ function VarianceInterpretation({
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col border-l-2 border-slate-300 py-2 pl-6">
-        <h3 className="mb-4 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <div className="mt-6 flex flex-col border-l-2 border-hairline-strong py-2 pl-6">
+        <h3 className="mb-4 font-mono text-label font-bold text-ink-muted">
           Ujednačena dostupnost ({mostEqual.name})
         </h3>
-        <p className="text-body text-slate-700 dark:text-slate-300">
+        <p className="text-body text-ink-2">
           Nasuprot tome, <strong>{mostEqual.name}</strong> ima najmanju
           varijaciju (σ {Math.round(mostEqual.stddevReachableCells)}). Rezultati
           se kreću u uskom rasponu od {Math.round(mostEqual.minReachableCells)}{" "}
@@ -536,19 +520,19 @@ function VarianceStatCards({ variance }: { variance: VarianceInsightsData }) {
   return (
     <div className="mb-4 grid grid-cols-1 gap-8 sm:grid-cols-2">
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           σ {Math.round(variance.varianceRanked[0]?.stddevReachableCells ?? 0)}
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted">
           najveća std. devijacija
           <br />({variance.varianceRanked[0]?.name})
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {d === undefined ? "-" : rangeVal.toLocaleString("hr-HR")}
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted">
           max raspon ćelija
           <br />
           (min → max unutar kvarta)
@@ -565,7 +549,7 @@ export function FrequencySection({ freq }: { freq: FreqInsights }) {
   return (
     <section
       id="frekvencija"
-      className="mt-16 flex flex-col border-t border-slate-100 py-16 sm:mt-20 sm:py-24 dark:border-white/10"
+      className="mt-16 flex flex-col border-t border-hairline py-16 sm:mt-20 sm:py-24"
     >
       <FrequencyHeader freq={freq} />
       <CollapsibleContent
@@ -588,7 +572,7 @@ function FrequencyHeader({ freq }: { freq: FreqInsights }) {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Frekvencija prijevoza</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Medijan intervala dolaska vozila po kvartu, radnim danom. Raspon ide
           od ~{minHw} min u najpovezanijim kvartovima do ~{maxHw} min u rubnima
           koji ovise o rjeđim autobusnim linijama.
@@ -601,7 +585,7 @@ function FrequencyHeader({ freq }: { freq: FreqInsights }) {
 function FrequencyChart({ freq }: { freq: FreqInsights }) {
   return (
     <div className="flex min-w-0 flex-col">
-      <div className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <div className="mb-6 font-mono text-label font-bold text-ink-muted">
         Interval po kvartu (minuta)
       </div>
       <div className="space-y-2 overflow-hidden">
@@ -631,25 +615,25 @@ function FrequencyBar({
   const barPct = maxHeadway > 0 ? (headway / maxHeadway) * 100 : 0
   const barColor =
     headway <= 10
-      ? "bg-emerald-500"
+      ? "bg-zg-blue"
       : headway <= 15
-        ? "bg-cyan-500"
+        ? "bg-blue-pale"
         : headway <= 25
-          ? "bg-blue-500"
-          : "bg-indigo-500"
+          ? "bg-zg-blue"
+          : "bg-zg-blue"
   return (
     <DistrictRow
       i={i}
       name={d.name}
       value={
-        <span className="shrink-0 font-sans text-body text-slate-900 tabular-nums dark:text-slate-100">
+        <span className="shrink-0 font-sans text-body text-ink tabular-nums">
           ~{fmtHR(headway, 1)} min
         </span>
       }
     >
-      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
+      <div className="relative h-1.5 w-full overflow-hidden bg-track">
         <div
-          className={`absolute inset-y-0 left-0 rounded-full ${barColor}`}
+          className={`absolute inset-y-0 left-0 ${barColor}`}
           style={{ width: `${barPct}%` }}
         />
       </div>
@@ -661,13 +645,13 @@ function FrequencyInterpretation({ freq }: { freq: FreqInsights }) {
   return (
     <div className="flex min-w-0 flex-col gap-6">
       <FrequencyStatCards freq={freq} />
-      <div className="mt-4 flex flex-col border-l-2 border-blue-500 py-2 pl-6">
-        <h3 className="mb-4 font-mono text-label font-bold text-blue-700">
+      <div className="mt-4 flex flex-col border-l-2 border-zg-blue py-2 pl-6">
+        <h3 className="mb-4 font-mono text-label font-bold text-zg-blue">
           Jaz u frekvenciji
         </h3>
-        <p className="text-body text-slate-700 dark:text-slate-300">
+        <p className="text-body text-ink-2">
           Najpovezaniji kvart ima medijan razmaka od{" "}
-          <strong className="font-medium text-slate-900 dark:text-slate-100">
+          <strong className="font-medium text-ink">
             ~{Math.round(freq.freqRanked[0]?.medianHeadwayMin ?? 0)} min
           </strong>
           , a najrjeđi ~{Math.round(freq.maxHeadway)} min. Rubni kvartovi ovise
@@ -675,8 +659,8 @@ function FrequencyInterpretation({ freq }: { freq: FreqInsights }) {
           praktičnu dostupnost.
         </p>
       </div>
-      <div className="mt-4 border-l-2 border-slate-300 py-2 pl-6">
-        <p className="text-body text-slate-500 dark:text-slate-400">
+      <div className="mt-4 border-l-2 border-hairline-strong py-2 pl-6">
+        <p className="text-body text-ink-muted">
           Noćne tramvajske linije (31-34) održavaju promet do ~05:30, dajući
           kvartovima s tramvajem praktično 24-satnu pokrivenost.
         </p>
@@ -689,18 +673,18 @@ function FrequencyStatCards({ freq }: { freq: FreqInsights }) {
   return (
     <div className="mb-4 grid grid-cols-1 gap-8 sm:grid-cols-2">
       <div className="flex flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {freq.totalLines}
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted">
           linija opslužuje Zagreb
         </div>
       </div>
       <div className="flex min-w-0 flex-col">
-        <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="font-sans text-head font-bold text-ink tabular-nums">
           {freq.allTramLines.size} tram + {freq.allBusLines.size} bus
         </div>
-        <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+        <div className="mt-2 text-body text-ink-muted">
           tramvajskih i autobusnih
         </div>
       </div>
@@ -716,7 +700,7 @@ export function LineSpeedSection({
   return (
     <section
       id="brzina"
-      className="flex flex-col border-t border-slate-100 py-16 sm:py-24 dark:border-white/10"
+      className="flex flex-col border-t border-hairline py-16 sm:py-24"
     >
       <LineSpeedHeader />
       <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
@@ -736,7 +720,7 @@ function LineSpeedHeader() {
     <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <StatModuleTitle>Brzina linija</StatModuleTitle>
-        <p className="mt-4 max-w-xl text-body text-slate-700 dark:text-slate-300">
+        <p className="mt-4 max-w-xl text-body text-ink-2">
           Komercijalna brzina prometnih sredstava - koliko brzo se vozilo kreće
           uključujući zaustavljanja na stanicama. Brži mod znači veći doseg u
           istih 30 minuta.
@@ -749,7 +733,7 @@ function LineSpeedHeader() {
 function LineSpeedCards({ lineSpeed }: { lineSpeed: LineSpeedInsights }) {
   return (
     <div>
-      <h3 className="mb-6 font-mono text-label font-bold text-slate-500 dark:text-slate-400">
+      <h3 className="mb-6 font-mono text-label font-bold text-ink-muted">
         Komercijalna brzina po modu
       </h3>
       <div className="flex flex-col gap-4">
@@ -819,29 +803,29 @@ const speedModeIconPaths = {
 
 const speedModeColorMap = {
   rose: {
-    icon: "text-rose-600 dark:text-rose-400",
-    text: "text-rose-600 dark:text-rose-400",
-    bg: "bg-rose-50 dark:bg-rose-900/20",
-    bar: "bg-rose-100 dark:bg-rose-900/30",
+    icon: "text-ink",
+    text: "text-ink",
+    bg: "bg-surface",
+    bar: "bg-surface",
   },
   blue: {
-    icon: "text-blue-600 dark:text-blue-400",
-    text: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-50 dark:bg-blue-900/20",
-    bar: "bg-blue-100 dark:bg-blue-900/30",
+    icon: "text-zg-blue",
+    text: "text-zg-blue",
+    bg: "bg-blue-wash",
+    bar: "bg-chip-blue",
   },
   teal: {
-    icon: "text-teal-600 dark:text-teal-400",
-    text: "text-teal-600 dark:text-teal-400",
-    bg: "bg-teal-50 dark:bg-teal-900/20",
-    bar: "bg-teal-100 dark:bg-teal-900/30",
+    icon: "text-zg-blue",
+    text: "text-zg-blue",
+    bg: "bg-blue-wash",
+    bar: "bg-blue-wash",
   },
 }
 
 const speedModeBarColor = {
-  rose: "bg-rose-500",
-  blue: "bg-blue-500",
-  teal: "bg-teal-500",
+  rose: "bg-ink-2",
+  blue: "bg-zg-blue",
+  teal: "bg-blue-pale",
 }
 
 function SpeedModeIcon({
@@ -889,32 +873,26 @@ function SpeedModeRow({
   return (
     <div className="flex items-center gap-4">
       <div
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${c.bg}`}
+        className={`flex h-12 w-12 shrink-0 items-center justify-center ${c.bg}`}
       >
         <SpeedModeIcon icon={icon} className={c.icon} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between">
-          <span className="text-body text-slate-900 dark:text-slate-100">
-            {label}
-          </span>
+          <span className="text-body text-ink">{label}</span>
           <span
             className={`font-sans text-head font-bold tabular-nums ${c.text}`}
           >
             {speed} km/h
           </span>
         </div>
-        <div
-          className={`relative h-2.5 w-full overflow-hidden rounded-full ${c.bar}`}
-        >
+        <div className={`relative h-2.5 w-full overflow-hidden ${c.bar}`}>
           <div
-            className={`absolute inset-y-0 left-0 rounded-full ${barColorFull}`}
+            className={`absolute inset-y-0 left-0 ${barColorFull}`}
             style={{ width: `${barPct}%` }}
           />
         </div>
-        <div className="mt-1 font-mono text-label text-slate-500 dark:text-slate-400">
-          {note}
-        </div>
+        <div className="mt-1 font-mono text-label text-ink-muted">{note}</div>
       </div>
     </div>
   )
@@ -922,12 +900,12 @@ function SpeedModeRow({
 
 function SpeedWalkBajs() {
   return (
-    <div className="mt-2 border-t border-black/5 pt-4 dark:border-white/5">
-      <div className="flex items-center justify-between text-body text-slate-500 dark:text-slate-400">
+    <div className="mt-2 border-t border-black/5 pt-4">
+      <div className="flex items-center justify-between text-body text-ink-muted">
         <span>Hodanje</span>
         <span className="font-sans tracking-tight tabular-nums">5 km/h</span>
       </div>
-      <div className="mt-2 flex items-center justify-between text-body text-slate-500 dark:text-slate-400">
+      <div className="mt-2 flex items-center justify-between text-body text-ink-muted">
         <span>BAJS bicikl</span>
         <span className="font-sans tracking-tight tabular-nums">14 km/h</span>
       </div>
@@ -938,25 +916,25 @@ function SpeedWalkBajs() {
 function LineSpeedInterpretation() {
   return (
     <div>
-      <h3 className="font-sans text-head font-bold text-orange-800 dark:text-orange-400">
+      <h3 className="font-sans text-head font-bold text-ink-2">
         Brzina vs. frekvencija
       </h3>
-      <div className="my-8 flex flex-col gap-8 border-y border-slate-100 py-6 sm:flex-row sm:gap-12 dark:border-white/10">
-        <div className="flex flex-col border-l-2 border-orange-500 py-1 pl-4">
-          <div className="font-sans text-head font-bold text-orange-700 tabular-nums dark:text-orange-400">
+      <div className="my-8 flex flex-col gap-8 border-y border-hairline py-6 sm:flex-row sm:gap-12">
+        <div className="flex flex-col border-l-2 border-ink-faint py-1 pl-4">
+          <div className="font-sans text-head font-bold text-ink-2 tabular-nums">
             {TRAM_SPEED_KMH}
           </div>
-          <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted">
             km/h tramvaj
             <br className="hidden sm:block" />
             (komercijalna brzina)
           </div>
         </div>
-        <div className="flex flex-col border-l-2 border-slate-300 py-1 pl-4 dark:border-slate-700">
-          <div className="font-sans text-head font-bold text-slate-900 tabular-nums dark:text-slate-100">
+        <div className="flex flex-col border-l-2 border-hairline-strong py-1 pl-4">
+          <div className="font-sans text-head font-bold text-ink tabular-nums">
             {Math.round(TRAM_SPEED_KMH * 0.5)} km
           </div>
-          <div className="mt-2 text-body text-slate-500 dark:text-slate-400">
+          <div className="mt-2 text-body text-ink-muted">
             doseg tramvajem
             <br className="hidden sm:block" /> u 30 min
           </div>
@@ -969,10 +947,10 @@ function LineSpeedInterpretation() {
 
 function LineSpeedInterpretationText() {
   return (
-    <div className="space-y-4 text-body text-slate-700 dark:text-slate-300">
+    <div className="space-y-4 text-body text-ink-2">
       <p>
         Autobus je prosječno{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           {Math.round(
             ((BUS_SPEED_KMH - TRAM_SPEED_KMH) / TRAM_SPEED_KMH) * 100
           )}
@@ -980,25 +958,21 @@ function LineSpeedInterpretationText() {
         </strong>{" "}
         od tramvaja (uključuje predgradske linije), ali tramvaj dominira u
         dosegu zahvaljujući{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          frekvenciji
-        </strong>
-        . Tramvajska linija dolazi svakih 7-10 minuta, a na koridorima s više
+        <strong className="font-medium text-ink">frekvenciji</strong>.
+        Tramvajska linija dolazi svakih 7-10 minuta, a na koridorima s više
         linija u istom smjeru i češće. Autobus često vozi svakih 15-30 minuta.
       </p>
       <p>
         U 30-minutnom budžetu, putnik autobusom prosječno čeka{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
-          7-15 minuta
-        </strong>{" "}
-        na polazak - to je polovica budžeta izgubljena prije nego što se uopće
-        počne kretati. Tramvajski putnik na frekventnoj stanici koristi 27-28 od
-        30 minuta na stvarno putovanje.
+        <strong className="font-medium text-ink">7-15 minuta</strong> na polazak
+        - to je polovica budžeta izgubljena prije nego što se uopće počne
+        kretati. Tramvajski putnik na frekventnoj stanici koristi 27-28 od 30
+        minuta na stvarno putovanje.
       </p>
       <p>
         HŽ vlak je nominalno najbrži ({TRAIN_SPEED_KMH} km/h), ali s intervalom
         od 30-60 minuta{" "}
-        <strong className="font-medium text-slate-900 dark:text-slate-100">
+        <strong className="font-medium text-ink">
           cijeli budžet odlazi na čekanje
         </strong>
         . Brzina bez frekvencije ne donosi ništa.

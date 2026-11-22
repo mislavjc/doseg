@@ -348,6 +348,12 @@ pub(crate) fn pick_date_and_fetch(
     }
 }
 
+/// A representative service date for a day kind, probed the same way the
+/// line pages pick theirs.
+pub(crate) fn pick_service_date(otp_url: &str, kind: DayKind, today: i64, last_day: i64) -> String {
+    pick_date_and_fetch(otp_url, kind, "service date", today, last_day).0
+}
+
 /// Merge the three per-date fetches into one pattern map keyed by OTP code.
 pub(crate) fn merge_patterns(
     fetches: [Vec<get_line_patterns::GetLinePatternsPatterns>; 3],

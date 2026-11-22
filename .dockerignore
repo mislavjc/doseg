@@ -21,6 +21,7 @@ data/*
 !data/promjene
 !data/kvart
 !data/stanice
+!data/karta-tramvaja
 .DS_Store
 *.pem
 .env*.local

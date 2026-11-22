@@ -15,6 +15,7 @@ mod osm;
 mod otp;
 mod route_stats;
 mod stop_pages;
+mod tram_map;
 mod transit_graph;
 mod walk_expand;
 mod walk_graph;
@@ -78,6 +79,7 @@ struct Args {
     otp_url: String,
     centrality: bool,
     line_pages: bool,
+    tram_map: bool,
     stop_pages: bool,
     isochrone_url: String,
     skip_isochrone: bool,
@@ -150,6 +152,7 @@ fn parse_args() -> Args {
     let mut otp_url = otp::otp_url_from_env();
     let mut centrality = false;
     let mut line_pages = false;
+    let mut tram_map = false;
     let mut stop_pages = false;
     let mut isochrone_url =
         std::env::var("ISOCHRONE_URL").unwrap_or_else(|_| "http://localhost:3002".into());
@@ -197,6 +200,10 @@ fn parse_args() -> Args {
                 line_pages = true;
                 i += 1;
             }
+            "--tram-map" => {
+                tram_map = true;
+                i += 1;
+            }
             "--stop-pages" => {
                 stop_pages = true;
                 i += 1;
@@ -234,6 +241,7 @@ fn parse_args() -> Args {
         otp_url,
         centrality,
         line_pages,
+        tram_map,
         stop_pages,
         isochrone_url,
         skip_isochrone,
@@ -583,6 +591,12 @@ fn main() {
             args.line.as_deref(),
             Path::new("../data"),
         );
+        return;
+    }
+
+    // Standalone tram-map topology: OTP only.
+    if args.tram_map {
+        tram_map::generate(&args.otp_url, Path::new("../data"));
         return;
     }
 

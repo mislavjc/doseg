@@ -543,6 +543,33 @@ function HoverTooltip({ stopId }: { stopId: string }) {
   )
 }
 
+function useWheelZoom(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  setView: React.Dispatch<React.SetStateAction<View>>
+) {
+  // passive: false required to prevent page scroll
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) {
+      return
+    }
+    const handler = (e: WheelEvent) => {
+      e.preventDefault()
+      const rect = el.getBoundingClientRect()
+      setView((v) =>
+        zoomAtPoint(
+          v,
+          e.deltaY > 0 ? 0.92 : 1.08,
+          e.clientX - rect.left,
+          e.clientY - rect.top
+        )
+      )
+    }
+    el.addEventListener("wheel", handler, { passive: false })
+    return () => el.removeEventListener("wheel", handler)
+  }, [containerRef, setView])
+}
+
 function usePanZoom() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [view, setView] = useState<View>({ x: 0, y: 0, s: 1 })
@@ -551,10 +578,18 @@ function usePanZoom() {
     dragStart = useRef<{ x: number; y: number } | null>(null)
 
   const onDown = useCallback((e: React.PointerEvent) => {
-    if (isElement(e.target) && e.target.closest("[data-ui]")) {
+    const ui = isElement(e.target) ? e.target.closest("[data-ui]") : null
+    if (ui && !ui.closest("svg")) {
       return
     }
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    if (ptrs.current.size === 2) {
+      const [a, b] = [...ptrs.current.values()]
+      pinchDist.current = Math.hypot(a.x - b.x, a.y - b.y)
+    }
+    if (ui) {
+      return
+    }
     dragStart.current = { x: e.clientX, y: e.clientY }
     containerRef.current?.setPointerCapture(e.pointerId)
   }, [])
@@ -581,10 +616,11 @@ function usePanZoom() {
           throw new Error("Pan-zoom container is not mounted")
         }
         const rect = container.getBoundingClientRect()
+        const factor = dist / pinchDist.current
         setView((v) =>
           zoomAtPoint(
             v,
-            dist / (pinchDist.current ?? 0),
+            factor,
             (pts[0].x + pts[1].x) / 2 - rect.left,
             (pts[0].y + pts[1].y) / 2 - rect.top
           )
@@ -604,27 +640,7 @@ function usePanZoom() {
     return ds && Math.hypot(e.clientX - ds.x, e.clientY - ds.y) < 4
   }, [])
 
-  // passive: false required to prevent page scroll
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) {
-      return
-    }
-    const handler = (e: WheelEvent) => {
-      e.preventDefault()
-      const rect = el.getBoundingClientRect()
-      setView((v) =>
-        zoomAtPoint(
-          v,
-          e.deltaY > 0 ? 0.92 : 1.08,
-          e.clientX - rect.left,
-          e.clientY - rect.top
-        )
-      )
-    }
-    el.addEventListener("wheel", handler, { passive: false })
-    return () => el.removeEventListener("wheel", handler)
-  }, [])
+  useWheelZoom(containerRef, setView)
 
   const zoomIn = useCallback(
     () => setView((v) => ({ ...v, s: Math.min(MAX_ZOOM, v.s * 1.3) })),

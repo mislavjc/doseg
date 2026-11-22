@@ -255,7 +255,9 @@ function ZagrebDistrictGrid({ cells }: { cells: Array<GridCell> }) {
               style={{ backgroundColor: cell.bg, color: cell.label }}
               title={cell.title}
             >
-              <span className="text-body">{cell.short}</span>
+              <span className="font-mono text-label lowercase">
+                {cell.short}
+              </span>
               <div
                 className={`pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(280px,85vw)] -translate-x-1/2 bg-ink px-3 py-1.5 text-center font-mono text-label leading-snug text-white opacity-0 transition-opacity group-hover:opacity-100 ${
                   tooltipBelow ? "top-full mt-1.5" : "bottom-full mb-1.5"

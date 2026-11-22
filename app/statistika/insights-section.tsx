@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import useSWR from "swr"
 import { Term } from "@/components/ui/term"
 import { cn } from "@/lib/utils"
-import { StatModuleTitle } from "./stat-typography"
+import { StatEyebrow, StatModuleTitle } from "./stat-typography"
 
 // --- Types ---
 
@@ -44,18 +44,10 @@ export default function InsightsSection({
   return (
     <section className="border-t border-hairline-strong py-16 sm:py-24">
       {hasGaps && (
-        <>
-          <div className="mb-8">
-            <StatModuleTitle className="text-body">
-              Ključni nalazi
-            </StatModuleTitle>
-          </div>
-
-          <KeyFindingsCarousel
-            key={connectivityGaps.map((g) => g.issue).join("|")}
-            gaps={connectivityGaps}
-          />
-        </>
+        <KeyFindingsCarousel
+          key={connectivityGaps.map((g) => g.issue).join("|")}
+          gaps={connectivityGaps}
+        />
       )}
 
       <OperationalHealth />
@@ -114,8 +106,13 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
       return
     }
     const updateCardWidth = () => {
+      const cols = gaps.length > 1 && el.clientWidth >= 560 ? 2 : 1
       const cardW =
-        gaps.length <= 1 ? el.clientWidth : el.clientWidth - PEEK - GAP
+        gaps.length <= 1
+          ? el.clientWidth
+          : cols === 2
+            ? (el.clientWidth - GAP) / 2
+            : el.clientWidth - PEEK - GAP
       el.style.setProperty("--card-w", `${Math.round(cardW)}px`)
       measure()
     }
@@ -140,12 +137,21 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
 
   return (
     <div className="relative">
-      {canScrollRight && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l/60"
-        />
-      )}
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <StatEyebrow>ključni nalazi</StatEyebrow>
+          <StatModuleTitle>Ključni nalazi</StatModuleTitle>
+        </div>
+        {gaps.length > 1 && (
+          <CarouselNav
+            count={gaps.length}
+            active={active}
+            canScrollLeft={canScrollLeft}
+            canScrollRight={canScrollRight}
+            onScrollToIndex={scrollToIndex}
+          />
+        )}
+      </div>
       <div
         ref={scrollRef}
         style={{ gap: GAP }}
@@ -161,63 +167,44 @@ function KeyFindingsCarousel({ gaps }: { gaps: Array<ConnectivityGap> }) {
           </div>
         ))}
       </div>
-      {gaps.length > 1 && (
-        <CarouselNav
-          gaps={gaps}
-          active={active}
-          canScrollLeft={canScrollLeft}
-          canScrollRight={canScrollRight}
-          onScrollToIndex={scrollToIndex}
-        />
-      )}
     </div>
   )
 }
 
 // --- Carousel navigation ---
 
+const pad2 = (n: number) => String(n).padStart(2, "0")
+
 function CarouselNav({
-  gaps,
+  count,
   active,
   canScrollLeft,
   canScrollRight,
   onScrollToIndex,
 }: {
-  gaps: Array<ConnectivityGap>
+  count: number
   active: number
   canScrollLeft: boolean
   canScrollRight: boolean
   onScrollToIndex: (i: number) => void
 }) {
   return (
-    <div className="mt-1 flex items-center justify-center gap-3">
+    <div className="flex items-center gap-3">
+      <span
+        className="font-mono text-label text-ink-muted tabular-nums"
+        aria-live="polite"
+      >
+        {pad2(active + 1)} / {pad2(count)}
+      </span>
       <CarouselArrowButton
         direction="left"
         enabled={canScrollLeft}
         onClick={() => onScrollToIndex(Math.max(0, active - 1))}
       />
-      <div className="flex gap-2" role="tablist" aria-label="Nalazi">
-        {gaps.map((gap, i) => (
-          <button
-            key={gap.issue}
-            type="button"
-            role="tab"
-            aria-selected={i === active}
-            aria-label={`Nalaz ${i + 1}`}
-            onClick={() => onScrollToIndex(i)}
-            className={cn(
-              "h-2 transition-[width,background-color] duration-200 ease-out",
-              i === active
-                ? "w-6 bg-ink"
-                : "w-2 bg-ink-ghost hover:bg-ink-ghost"
-            )}
-          />
-        ))}
-      </div>
       <CarouselArrowButton
         direction="right"
         enabled={canScrollRight}
-        onClick={() => onScrollToIndex(Math.min(gaps.length - 1, active + 1))}
+        onClick={() => onScrollToIndex(Math.min(count - 1, active + 1))}
       />
     </div>
   )

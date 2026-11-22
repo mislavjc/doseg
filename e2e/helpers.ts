@@ -36,13 +36,18 @@ export async function settle(page: Page) {
   page.on("requestfinished", untrack)
   page.on("requestfailed", untrack)
   await page.evaluate(async () => {
-    const step = window.innerHeight
+    // Half a viewport per step and two frames per stop: an IntersectionObserver
+    // only sees positions that survive into a rendered frame, and a loaded
+    // runner drops frames. Missing one leaves a MountWhenNear unmounted.
+    const step = Math.floor(window.innerHeight / 2)
     for (let y = 0; y < document.body.scrollHeight; y += step) {
       window.scrollTo(0, y)
-      // oxlint-disable-next-line no-await-in-loop -- each step must paint before the next
+      // oxlint-disable-next-line no-await-in-loop -- each stop must render before the next
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
-          resolve()
+          requestAnimationFrame(() => {
+            resolve()
+          })
         })
       })
     }

@@ -21,7 +21,8 @@ green build says nothing about what renders.
 with every upstream replayed from recorded fixtures: smoke (every route family
 200 with no console, page or CSP errors), behaviour (`/karta` click and reach
 panel, mobile sheet, `/bajs` popup, tram map) and full-page visual baselines
-of the editorial and line pages. CI runs it as the `e2e` job on every PR.
+of the editorial and line pages. CI runs it as the `e2e` job on every PR. It runs
+inside the Playwright Docker image (`scripts/e2e.sh`), so it needs Docker.
 Run it before pushing anything that touches a page; it replaces building main
 and the branch by hand and pixel-diffing them.
 

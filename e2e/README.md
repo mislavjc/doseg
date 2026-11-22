@@ -13,20 +13,38 @@ run by the `e2e` job in `.github/workflows/ci.yml` on every PR.
 ## Commands
 
 ```bash
-bun run e2e          # build, serve, run everything (about a minute after the build)
+bun run e2e          # build, serve, run everything
 bun run e2e:update   # same, and rewrite any screenshot that changed
 bun run e2e:record   # re-record upstream fixtures from the live services, then update screenshots
 ```
 
-Pass Playwright flags after `--`, e.g. `bun run e2e -- visual -g statistika`.
-`E2E_SKIP_BUILD=1` reuses the last build (and an already-running e2e server).
-First run on a machine: `bunx playwright install chromium --only-shell`.
+Pass Playwright flags after `--`, e.g. `bun run e2e -- visual -g statistika` or
+`bun run e2e:update -- visual`. `E2E_SKIP_BUILD=1` reuses the last build.
+
+All three go through `scripts/e2e.sh`, which runs the suite inside
+`mcr.microsoft.com/playwright:v<version>-noble`, the image the CI job runs in.
+Screenshots are compared with zero colour tolerance, and they only match when
+they are rendered with the same fonts and rasterizer, so this is the only
+supported way to run the suite. You need Docker. On an arm64 Mac, Docker
+emulates amd64, which is slow but gives the same pixels. Linux x86_64 machines
+(cloud agents included) run it natively. Keep the image tag in
+`.github/workflows/ci.yml` on the `@playwright/test` version.
 
 **After an intended visual change** (a redesign, a copy edit, a data roll), run
-`bun run e2e:update`, look at the diff of `e2e/__screenshots__/`, and commit it
-with the change. The baselines are rendered by Chromium's headless shell on
-Linux x86_64, the same as CI; a macOS or arm64 render will not match, so update
-them from a Linux x86_64 machine (any cloud agent machine works).
+`bun run e2e:update`, look at the diff in `e2e/__screenshots__/`, and commit
+it with the change.
+
+## Determinism
+
+- Visual tests run `settle()` (`e2e/helpers.ts`) first. It scrolls the page
+  top to bottom half a viewport at a time so every `MountWhenNear` section
+  mounts, scrolls back up, and waits until the network is idle and the DOM has
+  not changed for 500ms.
+- Masked regions: `<time>` elements, the scrollspy section navs (which link is
+  highlighted depends on scroll history), and every MapLibre map (it fades
+  labels and tiles in on its own clock). Maps are covered by the behaviour
+  tests.
+- No retries. A flaky test should fail.
 
 ## Hermetic by construction
 

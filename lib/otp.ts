@@ -63,6 +63,7 @@ export async function fetchIsochrone(
 ): Promise<IsochroneResponse> {
   const searchParams = buildIsochroneSearchParams(params)
   searchParams.set("routing", "0")
+  searchParams.set("lines", "0")
   const response = await fetch(`/api/isochrone?${searchParams.toString()}`, {
     signal,
   })

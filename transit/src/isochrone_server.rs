@@ -1501,6 +1501,9 @@ struct IsochroneParams {
     /// `realtime=0` disables the live GTFS-RT overlay so the result is a pure
     /// function of the static schedule (used by the page-data generator).
     realtime: Option<String>,
+    /// `lines=0` leaves out the reached transit lines (`features`), about two
+    /// thirds of the payload, for clients that only draw the walk area.
+    lines: Option<String>,
 }
 
 // --- Handler ---
@@ -1580,8 +1583,13 @@ async fn handle_isochrone(
     let mut walk_area_features = Vec::new();
 
     if routing_mode != "only" {
-        let transit_features =
-            generate_transit_features(&state.transit_graph, &result.times, &state.snapped_segments);
+        if params.lines.as_deref() != Some("0") {
+            features.extend(generate_transit_features(
+                &state.transit_graph,
+                &result.times,
+                &state.snapped_segments,
+            ));
+        }
         walk_area_features = generate_walk_area(
             &state.walk_graph,
             &result.times,
@@ -1590,7 +1598,6 @@ async fn handle_isochrone(
             lat,
             lon,
         );
-        features.extend(transit_features);
     }
     // Both paths reached this point before, so the mark stays where it was.
     let t_walk = Instant::now();

@@ -1,14 +1,6 @@
 import type { Network } from "./graph"
 import type { BendChoice, Placed, Pt } from "./geometry"
-import {
-  dist,
-  placeStations,
-  pointSegDist,
-  routeChain,
-  segSegDist,
-  segmentsTouch,
-  turnSteps,
-} from "./geometry"
+import { dist, placeStations, routeChain, segmentsTouch } from "./geometry"
 
 /** Target distance between neighbouring stations, map units (px at 1x). */
 export const SPACING = 40
@@ -196,5 +188,3 @@ export function dirOf(route: Array<Pt>, atStart: boolean): Pt {
   const l = dist(a, b) || 1
   return { x: (b.x - a.x) / l, y: (b.y - a.y) / l }
 }
-
-export { pointSegDist, segSegDist, segmentsTouch, turnSteps }

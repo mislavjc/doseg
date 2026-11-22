@@ -1,5 +1,5 @@
 import type { Context, Drawn } from "./layout"
-import { LINE_W, bundleWidth, dirOf } from "./layout"
+import { LINE_W, dirOf } from "./layout"
 import type { Pt } from "./geometry"
 import { dist } from "./geometry"
 
@@ -162,7 +162,7 @@ function lineVertices(
 const f = (n: number) => Math.round(n * 10) / 10
 
 /** SVG path through the vertices with concentric arcs at every corner. */
-export function roundedPath(vs: Array<Vertex>): string {
+function roundedPath(vs: Array<Vertex>): string {
   if (vs.length === 0) {
     return ""
   }
@@ -206,5 +206,3 @@ export function linePaths(
     }
   })
 }
-
-export { bundleWidth }

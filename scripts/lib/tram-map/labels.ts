@@ -9,10 +9,10 @@ import type { Pt } from "./geometry"
  * then chain order, so a chain's labels prefer to stay on one side.
  */
 
-export const LABEL_H = 14
+const LABEL_H = 14
 const GAP = 5
 
-export type Side = "e" | "w" | "n" | "s" | "ne" | "nw" | "se" | "sw"
+type Side = "e" | "w" | "n" | "s" | "ne" | "nw" | "se" | "sw"
 const SIDES: Array<Side> = ["e", "w", "ne", "nw", "se", "sw", "n", "s"]
 const SIDE_COST: Record<Side, number> = {
   e: 0,
@@ -25,14 +25,14 @@ const SIDE_COST: Record<Side, number> = {
   s: 0.5,
 }
 
-export interface Box {
+interface Box {
   x0: number
   y0: number
   x1: number
   y1: number
 }
 
-export interface Label {
+interface Label {
   station: number
   side: Side
   box: Box
@@ -44,7 +44,7 @@ interface Obstacle {
   half: number
 }
 
-export function labelBox(p: Pt, w: number, reach: number, side: Side): Box {
+function labelBox(p: Pt, w: number, reach: number, side: Side): Box {
   const h = LABEL_H
   const d = reach * Math.SQRT1_2
   switch (side) {

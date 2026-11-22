@@ -19,7 +19,7 @@ import { pointSegDist, segSegDist, segmentsTouch, turnSteps } from "./geometry"
  * wrong order or a missing stop cannot be produced, only checked (validate.ts).
  */
 
-export const WEIGHTS = {
+const WEIGHTS = {
   spacing: 6,
   tooClose: 400,
   bend: 6,
@@ -154,7 +154,7 @@ function geoTerms(ctx: Context, s: State, d: Drawn) {
     const cos =
       (gv.x * dv.x + gv.y * dv.y) /
       ((Math.hypot(gv.x, gv.y) || 1) * (Math.hypot(dv.x, dv.y) || 1))
-    direction += 1 - cos
+    direction += 1 - cos + (cos < 0.5 ? 4 * (0.5 - cos) : 0)
   })
   let geography = 0
   ctx.geo.forEach((g, i) => {
@@ -204,7 +204,7 @@ function rotationTerm(ctx: Context, d: Drawn) {
 }
 
 /** How far a label must sit from its station centre to clear the bundle. */
-export const labelReach = (ctx: Context) => (station: number) =>
+const labelReach = (ctx: Context) => (station: number) =>
   (ctx.net.stations[station].lines.filter((l) => Number(l) < 30).length *
     LINE_W) /
     2 +

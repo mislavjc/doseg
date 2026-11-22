@@ -14,7 +14,7 @@ const LON0 = 15.98
 const KM_PER_DEG_LAT = 111.13
 const KM_PER_DEG_LON = KM_PER_DEG_LAT * Math.cos((LAT0 * Math.PI) / 180)
 
-export interface Station {
+interface Station {
   id: string
   name: string
   /** Geographic position in km east / km south of the city centre. */
@@ -23,13 +23,13 @@ export interface Station {
   lines: Array<string>
 }
 
-export interface LineRoute {
+interface LineRoute {
   broj: string
   isNight: boolean
   stations: Array<number>
 }
 
-export interface Chain {
+interface Chain {
   a: number
   b: number
   /** Station indices strictly between a and b, in order from a. */

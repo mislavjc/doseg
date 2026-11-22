@@ -122,7 +122,7 @@ export function MobileLegend({ lines, activeLine, onToggleLine }: LegendProps) {
         )}
       </button>
       {open && (
-        <div className="grid grid-cols-8 gap-1.5 px-4 pb-4">
+        <div className="grid grid-cols-10 gap-1 px-3 pb-3">
           {lines.map((l) => (
             <button
               type="button"
@@ -130,7 +130,7 @@ export function MobileLegend({ lines, activeLine, onToggleLine }: LegendProps) {
               onClick={() => onToggleLine(l.broj)}
               aria-pressed={activeLine === l.broj}
               aria-label={`${l.broj} ${lineName(l.terminals)}`}
-              className="flex h-8 items-center justify-center font-mono text-label font-bold text-ground transition-opacity"
+              className="flex h-7 items-center justify-center font-mono text-label font-bold text-ground transition-opacity"
               style={{
                 backgroundColor: tramLineColor(l.broj),
                 opacity: activeLine !== null && activeLine !== l.broj ? 0.3 : 1,

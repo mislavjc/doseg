@@ -1,19 +1,14 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import {
-  AttributionControl,
-  MapLibreMap,
-  NavigationControl,
-  Popup,
-} from "@/lib/maplibre"
-import type { GeoJSONSource, LngLatBoundsLike } from "@/lib/maplibre"
+import { AttributionControl, NavigationControl, Popup } from "@/lib/maplibre"
+import type { LngLatBoundsLike, MapLibreMap } from "@/lib/maplibre"
 import type { StyleSpecification } from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import useSWR from "swr"
 
 import { plural } from "@/app/linije/copy"
 import meta from "@/data/bajs-tiles.json"
+import { useGeoJSONSourceData, useMapLibre } from "@/lib/use-maplibre"
 
 import {
   addStationLayers,
@@ -136,22 +131,14 @@ function openingBounds(data: Feed): LngLatBoundsLike {
 }
 
 export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<MapLibreMap | null>(null)
-
   const { data } = useSWR<Feed>("/api/bajs", {
     refreshInterval: REFRESH_MS,
     keepPreviousData: true,
     fallbackData: initial,
   })
 
-  useEffect(() => {
-    if (!containerRef.current) {
-      return
-    }
-
-    const map = new MapLibreMap({
-      container: containerRef.current,
+  const { containerRef, mapRef } = useMapLibre(
+    {
       style: DITHER_STYLE,
       bounds: openingBounds(initial),
       fitBoundsOptions: {
@@ -166,59 +153,47 @@ export default function BajsHeroMap({ initial = EMPTY }: { initial?: Feed }) {
       // The map fills the top of a long editorial page, so a plain wheel must
       // keep scrolling it. Zoom is ctrl/⌘+wheel, or two fingers on touch.
       cooperativeGestures: true,
-      attributionControl: false,
-    })
-    map.touchZoomRotate.disableRotation()
-    map.addControl(
-      new NavigationControl({ showCompass: false }),
-      "bottom-right"
-    )
-    map.addControl(
-      new AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
-      "bottom-right"
-    )
+    },
+    (map) => {
+      map.touchZoomRotate.disableRotation()
+      map.addControl(
+        new NavigationControl({ showCompass: false }),
+        "bottom-right"
+      )
+      map.addControl(
+        new AttributionControl({
+          compact: true,
+          customAttribution: ATTRIBUTION,
+        }),
+        "bottom-right"
+      )
 
-    const popup = new Popup({
-      className: "bajs-hero-popup",
-      closeButton: false,
-      maxWidth: "240px",
-      offset: 14,
-    })
+      const popup = new Popup({
+        className: "bajs-hero-popup",
+        closeButton: false,
+        maxWidth: "240px",
+        offset: 14,
+      })
 
-    map.on("load", () => {
-      addStationLayers(map, initial)
-      addInteractions(map, popup)
-      // MapLibre opens the compact credit expanded, which drops a line of grey
-      // text into the middle of the map. Fold it back behind its button.
-      containerRef.current
-        ?.querySelector(".maplibregl-ctrl-attrib")
-        ?.classList.remove("maplibregl-compact-show")
-    })
+      map.on("load", () => {
+        addStationLayers(map, initial)
+        addInteractions(map, popup)
+        // MapLibre opens the compact credit expanded, which drops a line of grey
+        // text into the middle of the map. Fold it back behind its button.
+        map
+          .getContainer()
+          .querySelector(".maplibregl-ctrl-attrib")
+          ?.classList.remove("maplibregl-compact-show")
+      })
 
-    mapRef.current = map
-    return () => {
-      popup.remove()
-      map.remove()
-      mapRef.current = null
-    }
-  }, [initial])
+      return () => {
+        popup.remove()
+      }
+    },
+    [initial]
+  )
 
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map || !data) {
-      return
-    }
-    const apply = () => {
-      void map.getSource<GeoJSONSource>("stations")?.setData(data)
-    }
-    // The source only exists once the load handler above has run, so its absence
-    // is exactly the signal that we still have to wait for it.
-    if (map.getSource("stations")) {
-      apply()
-    } else {
-      map.once("load", apply)
-    }
-  }, [data])
+  useGeoJSONSourceData(mapRef, "stations", data)
 
   return (
     <div

@@ -56,7 +56,8 @@ jobs:
       options: --ipc=host
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      # setup-bun needs unzip, which the image lacks; npm ships the same binary.
+      - run: npm install -g --silent bun@1
       - run: bun install --frozen-lockfile --ignore-scripts
       - uses: actions/cache@v4
         with:

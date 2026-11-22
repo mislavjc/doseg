@@ -5,9 +5,11 @@ import { AttributionControl, LngLatBounds, Marker, Popup } from "@/lib/maplibre"
 import type {
   ExpressionSpecification,
   GeoJSONSource,
+  LayerSpecification,
   MapGeoJSONFeature,
   MapLayerMouseEvent,
   MapLibreMap,
+  StyleSpecification,
 } from "@/lib/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 import {
@@ -16,7 +18,7 @@ import {
 } from "@central-icons-react/square-outlined-radius-0-stroke-2"
 
 import {
-  applyBasemapBackgroundTint,
+  BASEMAP_BACKGROUND,
   KARTA_CENTER,
   KARTA_ZOOM,
   MAP_STYLE_URL,
@@ -51,101 +53,117 @@ const EMPTY_FC: GeoJSON.FeatureCollection = {
 // single source the legend uses (lib/reach-ramp). Clamps at 30 min, as before.
 const REACH_FILL = reachColorStops(1800)
 
-/** First symbol/label layer ID so data layers render below text. */
-function firstSymbolLayerId(map: MapLibreMap): string | undefined {
-  for (const l of map.getStyle().layers ?? []) {
-    if (l.type === "symbol") {
-      return l.id
-    }
-  }
-  return undefined
-}
+/** Basemap label layers that surface earlier while a reach is on screen:
+ * [id, zoom with a reach, zoom without]. */
+const LABEL_ZOOMS: Array<[string, number, number]> = [
+  ["roadname_major", 11, 13],
+  ["roadname_pri", 12, 14],
+  ["roadname_sec", 13, 15],
+  ["roadname_minor", 14, 16],
+  ["place_suburbs", 10, 12],
+  ["place_hamlet", 10, 12],
+  ["place_villages", 8, 10],
+]
 
-/** Same basemap tweaks as `/` — hide buildings, surface labels earlier. */
+/** Same basemap tweaks as `/` - hide buildings, surface labels earlier. */
 function tweakBasemapForIsochrone(map: MapLibreMap, active: boolean) {
   for (const id of ["building", "building-top"]) {
     if (map.getLayer(id)) {
-      map.setLayoutProperty(id, "visibility", active ? "none" : "visible")
+      setVisibility(map, id, !active)
     }
   }
-  const overrides: Array<[string, number, number]> = [
-    ["roadname_major", 11, 13],
-    ["roadname_pri", 12, 14],
-    ["roadname_sec", 13, 15],
-    ["roadname_minor", 14, 16],
-    ["place_suburbs", 10, 12],
-    ["place_hamlet", 10, 12],
-    ["place_villages", 8, 10],
-  ]
-  for (const [id, earlyZoom, defaultZoom] of overrides) {
-    if (map.getLayer(id)) {
-      map.setLayerZoomRange(id, active ? earlyZoom : defaultZoom, 24)
+  for (const [id, earlyZoom, defaultZoom] of LABEL_ZOOMS) {
+    const layer = map.getLayer(id)
+    const minzoom = active ? earlyZoom : defaultZoom
+    if (layer && (layer.minzoom !== minzoom || layer.maxzoom !== 24)) {
+      map.setLayerZoomRange(id, minzoom, 24)
     }
   }
 }
 
-function addWalkAreaLayers(map: MapLibreMap) {
-  const firstLabelId = firstSymbolLayerId(map)
-  map.addSource("walk-area", { type: "geojson", data: EMPTY_FC })
-  map.addLayer(
-    {
-      id: "walk-area-fill",
-      type: "fill",
-      source: "walk-area",
-      paint: {
-        "fill-color": REACH_FILL,
-        "fill-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10,
-          0.07,
-          14,
-          0.04,
-          16,
-          0,
-        ],
-      },
-    },
-    firstLabelId
-  )
-  map.addLayer(
-    {
-      id: "walk-area-border",
-      type: "line",
-      source: "walk-area",
-      paint: {
-        "line-color": REACH_FILL,
-        "line-width": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10,
-          1.5,
-          13,
-          2,
-          16,
-          2.5,
-        ],
-        "line-opacity": [
-          "interpolate",
-          ["linear"],
-          ["get", "time"],
-          600,
-          0.7,
-          2700,
-          0.4,
-        ],
-      },
-      layout: { "line-cap": "round", "line-join": "round" },
-    },
-    firstLabelId
-  )
+/** Every setter below repaints even when nothing changed, and each repaint
+ * during boot is a full WebGL frame, so they only run on a real change. */
+function setVisibility(map: MapLibreMap, id: string, visible: boolean) {
+  const value = visible ? "visible" : "none"
+  if ((map.getLayoutProperty(id, "visibility") ?? "visible") !== value) {
+    map.setLayoutProperty(id, "visibility", value)
+  }
 }
 
-function addRouteLayers(map: MapLibreMap) {
-  map.addSource("route", { type: "geojson", data: EMPTY_FC })
-  map.addLayer({
+const appliedData = new WeakMap<GeoJSONSource, GeoJSON.FeatureCollection>()
+
+/** setData re-tiles the source in the worker and repaints, even for an empty
+ * collection replacing an empty one. */
+function syncSource(
+  map: MapLibreMap,
+  id: string,
+  data: GeoJSON.FeatureCollection | null
+) {
+  const src = map.getSource<GeoJSONSource>(id)
+  const next = data ?? EMPTY_FC
+  if (!src || (appliedData.get(src) ?? EMPTY_FC) === next) {
+    return
+  }
+  appliedData.set(src, next)
+  void src.setData(next)
+}
+
+// Reach borders fade with travel time; under a route they all drop to 0.15.
+const BORDER_OPACITY: ExpressionSpecification = [
+  "interpolate",
+  ["linear"],
+  ["get", "time"],
+  600,
+  0.7,
+  2700,
+  0.4,
+]
+
+const WALK_AREA_LAYERS: Array<LayerSpecification> = [
+  {
+    id: "walk-area-fill",
+    type: "fill",
+    source: "walk-area",
+    paint: {
+      "fill-color": REACH_FILL,
+      "fill-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        0.07,
+        14,
+        0.04,
+        16,
+        0,
+      ],
+    },
+  },
+  {
+    id: "walk-area-border",
+    type: "line",
+    source: "walk-area",
+    paint: {
+      "line-color": REACH_FILL,
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        1.5,
+        13,
+        2,
+        16,
+        2.5,
+      ],
+      "line-opacity": BORDER_OPACITY,
+    },
+    layout: { "line-cap": "round", "line-join": "round" },
+  },
+]
+
+const ROUTE_LAYERS: Array<LayerSpecification> = [
+  {
     id: "route-casing",
     type: "line",
     source: "route",
@@ -155,8 +173,8 @@ function addRouteLayers(map: MapLibreMap) {
       "line-opacity": 0.15,
     },
     layout: { "line-cap": "round", "line-join": "round" },
-  })
-  map.addLayer({
+  },
+  {
     id: "route-walk",
     type: "line",
     source: "route",
@@ -167,21 +185,21 @@ function addRouteLayers(map: MapLibreMap) {
       "line-dasharray": [1.5, 2],
     },
     layout: { "line-cap": "round", "line-join": "round" },
-  })
-  map.addLayer({
+  },
+  {
     id: "route-bike",
     type: "line",
     source: "route",
     filter: ["==", ["get", "mode"], "BIKE"],
     paint: {
-      // Per-leg color (BAJS amber) — matches the sidebar strip/chips.
+      // Per-leg color (BAJS amber) - matches the sidebar strip/chips.
       "line-color": ["coalesce", ["get", "color"], MODE_COLORS.bike],
       "line-width": 3.5,
       "line-dasharray": [0.8, 1.4],
     },
     layout: { "line-cap": "round", "line-join": "round" },
-  })
-  map.addLayer({
+  },
+  {
     id: "route-transit",
     type: "line",
     source: "route",
@@ -196,10 +214,10 @@ function addRouteLayers(map: MapLibreMap) {
       "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 13, 5, 16, 7],
     },
     layout: { "line-cap": "round", "line-join": "round" },
-  })
-}
+  },
+]
 
-// POIs outside the current reach fade back — counts in the sidebar refer to
+// POIs outside the current reach fade back - counts in the sidebar refer to
 // what's inside the band, the map should agree at a glance.
 const IN_REACH_OPACITY: ExpressionSpecification = [
   "case",
@@ -208,12 +226,18 @@ const IN_REACH_OPACITY: ExpressionSpecification = [
   1,
 ]
 
-function addPoiBajsLayers(map: MapLibreMap) {
-  map.addSource("poi", { type: "geojson", data: EMPTY_FC })
-  map.addLayer({
+function poiFilter(categories: Array<string>): ExpressionSpecification {
+  return ["in", ["get", "category"], ["literal", categories]]
+}
+
+// Both dot layers start hidden, which is what the layer toggles default to.
+const POI_BAJS_LAYERS: Array<LayerSpecification> = [
+  {
     id: "poi-dots",
     type: "circle",
     source: "poi",
+    filter: poiFilter([]),
+    layout: { visibility: "none" },
     paint: {
       "circle-radius": [
         "interpolate",
@@ -242,12 +266,12 @@ function addPoiBajsLayers(map: MapLibreMap) {
       "circle-stroke-color": "#ffffff",
       "circle-stroke-opacity": IN_REACH_OPACITY,
     },
-  })
-  map.addSource("bajs", { type: "geojson", data: EMPTY_FC })
-  map.addLayer({
+  },
+  {
     id: "bajs-dots",
     type: "circle",
     source: "bajs",
+    layout: { visibility: "none" },
     paint: {
       "circle-radius": [
         "interpolate",
@@ -264,7 +288,50 @@ function addPoiBajsLayers(map: MapLibreMap) {
       "circle-stroke-width": 2,
       "circle-stroke-color": "#ffffff",
     },
+  },
+]
+
+/**
+ * The basemap and every overlay as one style, so the map parses, tiles and
+ * paints once instead of re-tiling and repainting for each source and layer
+ * added after load. The basemap starts tinted and in its no-reach state; the
+ * reach layers sit under the first label layer so text stays on top.
+ */
+function kartaStyle(
+  _previous: StyleSpecification | undefined,
+  next: StyleSpecification
+): StyleSpecification {
+  const labelZoom = new Map(LABEL_ZOOMS.map(([id, , zoom]) => [id, zoom]))
+  const basemap = next.layers.map((layer): LayerSpecification => {
+    if (layer.type === "background") {
+      return {
+        ...layer,
+        paint: { ...layer.paint, "background-color": BASEMAP_BACKGROUND },
+      }
+    }
+    const minzoom = labelZoom.get(layer.id)
+    return minzoom === undefined ? layer : { ...layer, minzoom, maxzoom: 24 }
   })
+  const firstLabel = basemap.findIndex((l) => l.type === "symbol")
+  const split = firstLabel === -1 ? basemap.length : firstLabel
+  const empty = { type: "geojson", data: EMPTY_FC } as const
+  return {
+    ...next,
+    sources: {
+      ...next.sources,
+      "walk-area": empty,
+      route: empty,
+      poi: empty,
+      bajs: empty,
+    },
+    layers: [
+      ...basemap.slice(0, split),
+      ...WALK_AREA_LAYERS,
+      ...basemap.slice(split),
+      ...ROUTE_LAYERS,
+      ...POI_BAJS_LAYERS,
+    ],
+  }
 }
 
 function dataBounds(fc: GeoJSON.FeatureCollection): LngLatBounds | null {
@@ -319,14 +386,15 @@ function useMapInstance(onMapClick: (p: LatLon) => void) {
   }, [onMapClick])
 
   const { containerRef, mapRef } = useMapLibre(
-    { style: MAP_STYLE_URL, center: KARTA_CENTER, zoom: KARTA_ZOOM },
+    {
+      style: MAP_STYLE_URL,
+      transformStyle: kartaStyle,
+      center: KARTA_CENTER,
+      zoom: KARTA_ZOOM,
+    },
     (map) => {
       map.addControl(new AttributionControl({ compact: true }), "bottom-right")
       map.on("load", () => {
-        applyBasemapBackgroundTint(map)
-        addWalkAreaLayers(map)
-        addRouteLayers(map)
-        addPoiBajsLayers(map)
         setReady(true)
       })
       map.on("click", (e) => {
@@ -389,8 +457,9 @@ function useLayerSync(
     if (!map || !ready) {
       return
     }
-    const src = map.getSource<GeoJSONSource>("poi")
-    void src?.setData(
+    syncSource(
+      map,
+      "poi",
       pois
         ? {
             type: "FeatureCollection",
@@ -411,7 +480,7 @@ function useLayerSync(
               },
             })),
           }
-        : EMPTY_FC
+        : null
     )
   }, [mapRef, ready, pois])
 
@@ -424,12 +493,11 @@ function useLayerSync(
     const enabled = POI_CATEGORIES.map((c) => c.key).filter(
       (k) => layers.poi[k]
     )
-    map.setFilter("poi-dots", ["in", ["get", "category"], ["literal", enabled]])
-    map.setLayoutProperty(
-      "poi-dots",
-      "visibility",
-      enabled.length > 0 ? "visible" : "none"
-    )
+    const filter = poiFilter(enabled)
+    if (JSON.stringify(map.getFilter("poi-dots")) !== JSON.stringify(filter)) {
+      map.setFilter("poi-dots", filter)
+    }
+    setVisibility(map, "poi-dots", enabled.length > 0)
   }, [mapRef, ready, layers.poi])
 
   useEffect(() => {
@@ -437,13 +505,8 @@ function useLayerSync(
     if (!map || !ready) {
       return
     }
-    const src = map.getSource<GeoJSONSource>("bajs")
-    void src?.setData(bajs ?? EMPTY_FC)
-    map.setLayoutProperty(
-      "bajs-dots",
-      "visibility",
-      layers.bajs ? "visible" : "none"
-    )
+    syncSource(map, "bajs", bajs)
+    setVisibility(map, "bajs-dots", layers.bajs)
   }, [mapRef, ready, layers.bajs, bajs])
 }
 
@@ -743,8 +806,7 @@ function useDataSync(
     if (!map || !ready) {
       return
     }
-    const src = map.getSource<GeoJSONSource>("walk-area")
-    void src?.setData(walkArea ?? EMPTY_FC)
+    syncSource(map, "walk-area", walkArea)
     tweakBasemapForIsochrone(map, Boolean(walkArea?.features.length))
     if (walkArea && walkArea.features.length > 0 && !route) {
       const bounds = dataBounds(walkArea)
@@ -765,25 +827,17 @@ function useDataSync(
       return
     }
     const hasRoute = Boolean(route?.features.length)
-    map.setLayoutProperty(
-      "walk-area-fill",
-      "visibility",
-      hasRoute || !doseg ? "none" : "visible"
-    )
-    map.setLayoutProperty(
-      "walk-area-border",
-      "visibility",
-      doseg ? "visible" : "none"
-    )
-    map.setPaintProperty(
-      "walk-area-border",
-      "line-opacity",
-      hasRoute
-        ? 0.15
-        : ["interpolate", ["linear"], ["get", "time"], 600, 0.7, 2700, 0.4]
-    )
-    const src = map.getSource<GeoJSONSource>("route")
-    void src?.setData(route ?? EMPTY_FC)
+    setVisibility(map, "walk-area-fill", !hasRoute && doseg)
+    setVisibility(map, "walk-area-border", doseg)
+    const borderOpacity = hasRoute ? 0.15 : BORDER_OPACITY
+    if (
+      JSON.stringify(
+        map.getPaintProperty("walk-area-border", "line-opacity")
+      ) !== JSON.stringify(borderOpacity)
+    ) {
+      map.setPaintProperty("walk-area-border", "line-opacity", borderOpacity)
+    }
+    syncSource(map, "route", route)
     if (route && route.features.length > 0) {
       const bounds = dataBounds(route)
       if (bounds) {

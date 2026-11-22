@@ -54,13 +54,12 @@ export async function settle(page: Page) {
     window.scrollTo(0, 0)
     await document.fonts.ready
   })
-  for (let round = 0; round < 30; round += 1) {
+  // Bounded: a page that polls forever still gets captured, just later.
+  const deadline = Date.now() + 20_000
+  do {
     // oxlint-disable-next-line no-await-in-loop -- poll until both are quiet
     await page.evaluate(domQuiet)
-    if (inflight.size === 0) {
-      break
-    }
-  }
+  } while (inflight.size > 0 && Date.now() < deadline)
   page.off("request", track)
   page.off("requestfinished", untrack)
   page.off("requestfailed", untrack)

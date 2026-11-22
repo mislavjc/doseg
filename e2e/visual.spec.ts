@@ -15,6 +15,10 @@ const PAGES = {
   "linija-31": "/linije/31",
 }
 
+// settle() scrolls the whole page and waits for quiet; /statistika/podaci is
+// 33,000px tall and a busy CI runner needs well over the default 30s.
+test.describe.configure({ timeout: 90_000 })
+
 for (const [name, path] of Object.entries(PAGES)) {
   test(`${path} looks unchanged`, async ({ page }) => {
     await page.goto(path)

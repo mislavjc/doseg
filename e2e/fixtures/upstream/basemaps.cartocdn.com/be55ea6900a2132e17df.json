@@ -1,0 +1,5 @@
+{
+  "key": "GET https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+  "status": 200,
+  "contentType": "application/json; charset=utf-8"
+}

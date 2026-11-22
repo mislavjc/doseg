@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"osm_type":"R","osm_id":226224,"osm_key":"place","osm_value":"city","type":"city","name":"Zagreb","country":"Hrvatska","countrycode":"HR","extra":{"admin_level":"4"},"extent":[15.7732052,45.9691466,16.2395548,45.6139895]},"geometry":{"type":"Point","coordinates":[15.9772795,45.8130967]}}]}

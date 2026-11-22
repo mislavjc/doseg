@@ -23,11 +23,15 @@ const WEIGHTS = {
   spacing: 6,
   tooClose: 400,
   bend: 6,
+  jog: 150,
   turn: 4,
   crossing: 2000,
   clearance: 300,
   direction: 60,
-  geography: 0.4,
+  geography: 300,
+  displacement: 400,
+  aspect: 3000,
+  heading: 40,
   rotation: 60,
   labelOverlap: 4,
   labelSide: 4,
@@ -80,6 +84,22 @@ function turnTerms(ctx: Context, d: Drawn) {
 }
 
 const neg = (p: Pt): Pt => ({ x: -p.x, y: -p.y })
+
+/** A bent chain whose short leg is under JOG_MIN reads as a jog, not a turn. */
+const JOG_MIN = 0.8 * SPACING
+
+function jogTerm(d: Drawn) {
+  let jog = 0
+  for (const r of d.routes) {
+    for (let i = 1; i < r.length && r.length > 2; i++) {
+      const leg = Math.hypot(r[i].x - r[i - 1].x, r[i].y - r[i - 1].y)
+      if (leg > 0.5 && leg < JOG_MIN) {
+        jog += ((JOG_MIN - leg) / SPACING) ** 2 + 0.2
+      }
+    }
+  }
+  return jog
+}
 
 function segmentsOf(ctx: Context, d: Drawn): Array<Seg> {
   return d.routes.flatMap((r, ci) =>
@@ -141,7 +161,7 @@ function crossingTerms(ctx: Context, d: Drawn, segs: Array<Seg>) {
   return { crossing, clearance }
 }
 
-function geoTerms(ctx: Context, s: State, d: Drawn) {
+function geoTerms(ctx: Context, d: Drawn) {
   let direction = 0
   ctx.net.chains.forEach((c, ci) => {
     const [ga, gb] = [ctx.net.stations[c.a], ctx.net.stations[c.b]]
@@ -156,11 +176,76 @@ function geoTerms(ctx: Context, s: State, d: Drawn) {
       ((Math.hypot(gv.x, gv.y) || 1) * (Math.hypot(dv.x, dv.y) || 1))
     direction += 1 - cos + (cos < 0.5 ? 4 * (0.5 - cos) : 0)
   })
+  return { direction, ...fidelityTerms(ctx, d) }
+}
+
+const span = (pts: Array<Pt>, axis: "x" | "y") =>
+  Math.max(...pts.map((p) => p[axis])) - Math.min(...pts.map((p) => p[axis]))
+
+/** Furthest a station may sit from its fitted real position, in SPACINGs. */
+const MAX_DISPLACEMENT = 2
+
+/**
+ * Geographic fidelity of every station. The real positions are fitted onto
+ * the drawing with one uniform scale and a translation (no stretch, no
+ * rotation), so the map may grow or shift but keeps Zagreb's west-east
+ * shape. geography is the mean squared residual, displacement the excess
+ * over MAX_DISPLACEMENT, aspect the log drift of the bounding box's
+ * proportions, heading how far each track between neighbouring stations
+ * turns away from its real bearing beyond the 22.5 degrees octilinear
+ * drawing has to give up.
+ */
+function fidelityTerms(ctx: Context, d: Drawn) {
+  const geo = ctx.geoAll
+  const n = d.pos.length
+  let [gx, gy, px, py] = [0, 0, 0, 0]
+  for (let i = 0; i < n; i++) {
+    gx += geo[i].x
+    gy += geo[i].y
+    px += d.pos[i].x
+    py += d.pos[i].y
+  }
+  ;[gx, gy, px, py] = [gx / n, gy / n, px / n, py / n]
+  let [num, den] = [0, 0]
+  for (let i = 0; i < n; i++) {
+    const [ax, ay] = [geo[i].x - gx, geo[i].y - gy]
+    num += ax * (d.pos[i].x - px) + ay * (d.pos[i].y - py)
+    den += ax * ax + ay * ay
+  }
+  const k = num / (den || 1)
   let geography = 0
-  ctx.geo.forEach((g, i) => {
-    geography += (s.x[i] - g.x) ** 2 + (s.y[i] - g.y) ** 2
-  })
-  return { direction, geography: geography * (GRID / SPACING) ** 2 }
+  let displacement = 0
+  for (let i = 0; i < n; i++) {
+    const rx = d.pos[i].x - px - k * (geo[i].x - gx)
+    const ry = d.pos[i].y - py - k * (geo[i].y - gy)
+    const r = Math.hypot(rx, ry) / SPACING
+    geography += r * r
+    if (r > MAX_DISPLACEMENT) {
+      displacement += (r - MAX_DISPLACEMENT) ** 2 + 0.2
+    }
+  }
+  const aspect =
+    Math.log(
+      span(d.pos, "x") /
+        (span(d.pos, "y") || 1) /
+        (span(geo, "x") / (span(geo, "y") || 1))
+    ) ** 2
+  let heading = 0
+  for (const r of ctx.net.routes) {
+    if (r.isNight) {
+      continue
+    }
+    for (let i = 1; i < r.stations.length; i++) {
+      const [a, b] = [r.stations[i - 1], r.stations[i]]
+      const drawn = Math.atan2(d.pos[b].y - d.pos[a].y, d.pos[b].x - d.pos[a].x)
+      const real = Math.atan2(geo[b].y - geo[a].y, geo[b].x - geo[a].x)
+      const turn = Math.abs(
+        Math.atan2(Math.sin(drawn - real), Math.cos(drawn - real))
+      )
+      heading += Math.max(0, turn - Math.PI / 8) ** 2
+    }
+  }
+  return { geography: geography / n, displacement, aspect, heading }
 }
 
 /** Incident chains around each node must keep their geographic cyclic order. */
@@ -252,9 +337,10 @@ export function score(ctx: Context, s: State): Breakdown {
         n + (r.length > 2 ? 1 + 0.3 * ctx.net.chains[ci].lines.length : 0),
       0
     ),
+    jog: jogTerm(d),
     turn: turnTerms(ctx, d),
     ...crossingTerms(ctx, d, segs),
-    ...geoTerms(ctx, s, d),
+    ...geoTerms(ctx, d),
     rotation: rotationTerm(ctx, d),
     river: riverTerm(ctx, d, s),
   }

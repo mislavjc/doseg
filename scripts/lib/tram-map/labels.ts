@@ -1,5 +1,6 @@
 import type { Context, Drawn } from "./layout"
-import { CHAR_W, bundleWidth } from "./layout"
+import { bundleWidth } from "./layout"
+import { textWidth } from "./heros-metrics"
 import type { Pt } from "./geometry"
 
 /**
@@ -9,7 +10,7 @@ import type { Pt } from "./geometry"
  * then chain order, so a chain's labels prefer to stay on one side.
  */
 
-const LABEL_H = 14
+const LABEL_H = 16
 const GAP = 5
 
 type Side = "e" | "w" | "n" | "s" | "ne" | "nw" | "se" | "sw"
@@ -36,6 +37,7 @@ interface Label {
   station: number
   side: Side
   box: Box
+  w: number
 }
 
 interface Obstacle {
@@ -182,12 +184,13 @@ export function placeLabels(
     y1: p.y + 4,
   }))
   const placed: Array<Label> = []
+  const bold = new Set(ctx.net.nodes)
   const sideOf = new Map<number, Side>()
   let overlap = 0
   let preference = 0
   for (const { station, prev } of placementOrder(ctx)) {
     const p = d.pos[station]
-    const w = ctx.net.stations[station].name.length * CHAR_W
+    const w = textWidth(ctx.net.stations[station].name, bold.has(station))
     const reach = reachOf(station) + GAP
     let best = {
       cost: Infinity,
@@ -208,9 +211,9 @@ export function placeLabels(
         hit += segmentInBox(o.a, o.b, o.half, box) * 4
       }
       const padded = {
-        x0: box.x0 - 10,
+        x0: box.x0 - 14,
         y0: box.y0 - 2,
-        x1: box.x1 + 10,
+        x1: box.x1 + 14,
         y1: box.y1 + 2,
       }
       for (const l of placed) {
@@ -231,7 +234,7 @@ export function placeLabels(
         best = { cost, side, box, hit }
       }
     }
-    placed.push({ station, side: best.side, box: best.box })
+    placed.push({ station, side: best.side, box: best.box, w })
     sideOf.set(station, best.side)
     overlap += best.hit
     preference += best.cost - best.hit

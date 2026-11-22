@@ -94,8 +94,8 @@ function Stations({ data, activeLine, activeStop, onSelect }: LayerProps) {
           <text
             x={s.label.x}
             y={s.label.y}
-            fontFamily="var(--font-mono)"
-            fontSize={12}
+            fontFamily="var(--font-heros)"
+            fontSize={16}
             fontWeight={s.kind === "tick" ? 400 : 700}
             fill="var(--ink)"
             className="pointer-events-none select-none"
@@ -150,6 +150,7 @@ export function MapSvg({ view, ...props }: LayerProps & { view: View }) {
     <svg
       viewBox={`${x} ${y} ${w} ${h}`}
       preserveAspectRatio="xMidYMid meet"
+      overflow="visible"
       className="h-full w-full"
       role="img"
       aria-label="Shematska karta tramvajskih linija"

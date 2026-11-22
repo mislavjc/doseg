@@ -1,4 +1,5 @@
 import { readJson } from "../json"
+import { fullName } from "./names"
 
 import type { TramMapNetwork } from "@/lib/generated/TramMapNetwork"
 
@@ -145,7 +146,7 @@ export function loadNetwork(path: string): Network {
   const index = new Map(raw.stations.map((s, i) => [s.id, i]))
   const stations: Array<Station> = raw.stations.map((s) => ({
     id: s.id,
-    name: s.name,
+    name: fullName(s.name),
     lines: s.lines,
     ...toKm(s.lat, s.lon),
   }))

@@ -1,18 +1,11 @@
 import type { Context, Drawn, State } from "./layout"
-import {
-  GRID,
-  LINE_W,
-  SPACING,
-  bundleWidth,
-  dirOf,
-  draw,
-  riverRow,
-} from "./layout"
+import { LINE_W, SPACING, bundleWidth, dirOf, draw } from "./layout"
 import type { Breakdown } from "./score"
 import { labelsFor } from "./score"
 import type { Pt } from "./geometry"
 import { dist } from "./geometry"
 import { linePaths, lineOffsets } from "./bundles"
+import { fullName } from "./names"
 import type { RiverResult } from "./river"
 import type {
   TramMapLayout,
@@ -143,7 +136,7 @@ function stationsLayout(
       kind,
       lines: st.lines,
       mark,
-      label: { x: r1(box.x0), y: r1(box.y1 - 3) },
+      label: { x: r1(box.x0), y: r1(box.y1 - 4), w: r1(label?.w ?? 0) },
       oneWay,
     }
   })
@@ -156,12 +149,12 @@ function viewBoxOf(
 ): [number, number, number, number] {
   const xs = [
     ...d.pos.map((p) => p.x),
-    ...stations.map((s) => s.label.x + s.name.length * 7.2),
+    ...stations.map((s) => s.label.x + s.label.w),
   ]
   const ys = [
     ...d.pos.map((p) => p.y),
     ...stations.map((s) => s.label.y),
-    ...stations.map((s) => s.label.y - 14),
+    ...stations.map((s) => s.label.y - 16),
   ]
   const pad = SPACING
   const x0 = Math.min(...xs, ...stations.map((s) => s.label.x)) - pad
@@ -180,13 +173,13 @@ export function assemble(
   s: State,
   raw: TramMapNetwork,
   sc: Breakdown,
-  river: (d: Drawn, level: (x: number) => number) => RiverResult
+  river: (d: Drawn) => RiverResult
 ): TramMapLayout {
   const d = draw(ctx, s)
   const offsets = lineOffsets(ctx, d)
   const stations = stationsLayout(ctx, d, raw, offsets, s)
   const paths = linePaths(ctx, d, offsets)
-  const rv = river(d, (x) => riverRow(s.river, x / GRID) * GRID)
+  const rv = river(d)
   const nodes: Record<string, [number, number]> = {}
   ctx.net.nodes.forEach((v, i) => {
     nodes[ctx.net.stations[v].id] = [s.x[i], s.y[i]]
@@ -203,7 +196,7 @@ export function assemble(
     lines: paths.map(({ broj, isNight, d: path }) => {
       const ids = raw.lines.find((l) => l.broj === broj)?.stations ?? []
       const name = (id: string | undefined) =>
-        raw.stations.find((st) => st.id === id)?.name ?? ""
+        fullName(raw.stations.find((st) => st.id === id)?.name ?? "")
       const terminals: [string, string] = [name(ids[0]), name(ids.at(-1))]
       return { broj, isNight, terminals, d: path }
     }),

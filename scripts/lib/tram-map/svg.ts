@@ -23,7 +23,7 @@ const color = (broj: string) => TOKENS[tramLineToken(broj)]
 
 export function layoutSvg(
   layout: TramMapLayout,
-  opts: { title?: string; scale?: number } = {}
+  opts: { title?: string; scale?: number; under?: string; over?: string } = {}
 ): string {
   const [x, y, w, h] = layout.viewBox
   const scale = opts.scale ?? 1
@@ -32,6 +32,7 @@ export function layoutSvg(
   const parts = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}" width="${w * scale}" height="${h * scale}">`,
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${GROUND}"/>`,
+    opts.under ?? "",
     `<path d="${layout.river.d}" fill="none" stroke="${RIVER}" stroke-width="${layout.river.width}" stroke-linecap="round" stroke-linejoin="round"/>`,
     ...day.map(
       (l) =>
@@ -52,7 +53,7 @@ export function layoutSvg(
     }
     const weight = s.kind === "tick" ? 400 : 700
     parts.push(
-      `<text x="${s.label.x}" y="${s.label.y}" font-family="Geist Mono" font-size="12" font-weight="${weight}" fill="${INK}">${s.name}</text>`
+      `<text x="${s.label.x}" y="${s.label.y}" font-family="TeX Gyre Heros" font-size="16" font-weight="${weight}" fill="${INK}">${s.name}</text>`
     )
   }
   if (opts.title !== undefined) {
@@ -60,6 +61,6 @@ export function layoutSvg(
       `<text x="${x + 16}" y="${y + 24}" font-family="Geist Mono" font-size="12" fill="${INK}">${opts.title}</text>`
     )
   }
-  parts.push("</svg>")
+  parts.push(opts.over ?? "", "</svg>")
   return parts.join("")
 }

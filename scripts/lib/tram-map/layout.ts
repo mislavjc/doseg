@@ -3,13 +3,11 @@ import type { BendChoice, Placed, Pt } from "./geometry"
 import { dist, placeStations, routeChain, segmentsTouch } from "./geometry"
 
 /** Target distance between neighbouring stations, map units (px at 1x). */
-export const SPACING = 40
+export const SPACING = 48
 /** Skeleton nodes sit on a grid this fine. */
 export const GRID = 20
 /** One line's stroke width; a bundle is lines x LINE_W wide. */
 export const LINE_W = 5
-/** Geist Mono at 12px: advance width per character. */
-export const CHAR_W = 7.2
 
 export interface State {
   /** Grid coordinates per skeleton node, parallel to network.nodes. */
@@ -84,35 +82,95 @@ function geoCrossings(net: Network): Set<string> {
   return out
 }
 
-/** Map-space geography seen through a fisheye: radius r from the busiest
- * station becomes r^FISHEYE, so the dense centre gets room and the long
- * suburban runs shorten. */
-const FISHEYE = 0.75
+/**
+ * The geography the layout is held to: a blend of two views of the real
+ * stop positions, each normalised to a median stop gap of 1. The fisheye
+ * maps radius r from the busiest station to r^FISHEYE, so the dense centre
+ * gets a little room. The evened view walks the network outward from the
+ * same station and shortens every stop gap of length l to l^EVEN while
+ * keeping its real bearing, so long suburban gaps (the Gračani spur) shrink
+ * most and spacing comes out more even, without bending any line.
+ */
+const FISHEYE = 0.8
+const EVEN = 0.4
+const EVEN_BLEND = 0.75
 
-function fisheye(net: Network): Array<Pt> {
-  const hub = net.stations.reduce((best, s) =>
-    s.lines.length > best.lines.length ? s : best
+const hubOf = (net: Network) =>
+  net.stations.reduce(
+    (best, s, i) =>
+      s.lines.length > net.stations[best].lines.length ? i : best,
+    0
   )
+
+function fisheye(net: Network, hub: number): Array<Pt> {
+  const h = net.stations[hub]
   return net.stations.map((s) => {
-    const dx = s.gx - hub.gx
-    const dy = s.gy - hub.gy
+    const dx = s.gx - h.gx
+    const dy = s.gy - h.gy
     const r = Math.hypot(dx, dy)
     const k = r === 0 ? 1 : r ** FISHEYE / r
     return { x: dx * k, y: dy * k }
   })
 }
 
-export function makeContext(net: Network, south: Array<boolean>): Context {
-  const nodeIndex = new Map(net.nodes.map((s, i) => [s, i]))
-  const fished = fisheye(net)
-  const geoGaps = net.chains
+function evened(net: Network, hub: number): Array<Pt> {
+  const adj = new Map<number, Set<number>>()
+  for (const r of net.routes) {
+    r.stations.forEach((v, i) => {
+      const u = r.stations[i - 1]
+      if (u !== undefined) {
+        adj.set(u, (adj.get(u) ?? new Set()).add(v))
+        adj.set(v, (adj.get(v) ?? new Set()).add(u))
+      }
+    })
+  }
+  const pos = new Map<number, Pt>([[hub, { x: 0, y: 0 }]])
+  const queue = [hub]
+  for (let qi = 0; qi < queue.length; qi++) {
+    const v = queue[qi]
+    const pv = pos.get(v) ?? { x: 0, y: 0 }
+    for (const u of adj.get(v) ?? []) {
+      if (pos.has(u)) {
+        continue
+      }
+      const dx = net.stations[u].gx - net.stations[v].gx
+      const dy = net.stations[u].gy - net.stations[v].gy
+      const l = Math.hypot(dx, dy)
+      const k = l === 0 ? 0 : l ** EVEN / l
+      pos.set(u, { x: pv.x + dx * k, y: pv.y + dy * k })
+      queue.push(u)
+    }
+  }
+  return net.stations.map((_, i) => pos.get(i) ?? { x: 0, y: 0 })
+}
+
+function medianGap(net: Network, pts: Array<Pt>) {
+  const gaps = net.chains
     .map((c) => {
-      const [a, b] = [fished[c.a], fished[c.b]]
+      const [a, b] = [pts[c.a], pts[c.b]]
       return Math.hypot(b.x - a.x, b.y - a.y) / (c.mids.length + 1)
     })
     .toSorted((p, q) => p - q)
-  const scale = SPACING / GRID / geoGaps[Math.floor(geoGaps.length / 2)]
-  const geoAll = fished.map((p) => ({ x: p.x * scale, y: p.y * scale }))
+  return gaps[Math.floor(gaps.length / 2)]
+}
+
+function reference(net: Network): Array<Pt> {
+  const hub = hubOf(net)
+  const views = [fisheye(net, hub), evened(net, hub)].map((pts) => {
+    const k = 1 / medianGap(net, pts)
+    return pts.map((p) => ({ x: p.x * k, y: p.y * k }))
+  })
+  return views[0].map((f, i) => ({
+    x: f.x * (1 - EVEN_BLEND) + views[1][i].x * EVEN_BLEND,
+    y: f.y * (1 - EVEN_BLEND) + views[1][i].y * EVEN_BLEND,
+  }))
+}
+
+export function makeContext(net: Network, south: Array<boolean>): Context {
+  const nodeIndex = new Map(net.nodes.map((s, i) => [s, i]))
+  const ref = reference(net)
+  const scale = SPACING / GRID / medianGap(net, ref)
+  const geoAll = ref.map((p) => ({ x: p.x * scale, y: p.y * scale }))
   const geo = net.nodes.map((s) => geoAll[s])
   return {
     net,

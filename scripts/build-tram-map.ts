@@ -27,6 +27,7 @@ import { initialState, makeContext } from "./lib/tram-map/layout"
 import { loadSava, riverFor, southBank } from "./lib/tram-map/river"
 import type { Breakdown } from "./lib/tram-map/score"
 import { score } from "./lib/tram-map/score"
+import { overlayLayers } from "./lib/tram-map/overlay"
 import { layoutSvg } from "./lib/tram-map/svg"
 import { validateLayout } from "./lib/tram-map/validate"
 import type { TramMapLayout } from "@/lib/tram-map-layout"
@@ -161,7 +162,7 @@ async function main() {
     : await runSeeds()
   const sc = score(ctx, best)
   const raw = readJson<TramMapNetwork>(NETWORK)
-  const layout = assemble(ctx, best, raw, sc, riverFor(ctx))
+  const layout = assemble(ctx, best, raw, sc, riverFor(ctx, sava))
   const errors = validateLayout(raw, layout, net)
   if (errors.length > 0) {
     console.error(errors.join("\n"))
@@ -174,16 +175,21 @@ async function main() {
   const renders = opt("--renders", join(CACHE, "renders"))
   mkdirSync(renders, { recursive: true })
   const name = opt("--name", `layout-${Math.round(sc.total)}`)
+  const title = `${name}  score ${sc.total.toFixed(0)}`
+  await sharp(Buffer.from(layoutSvg(layout, { title, scale: 1.5 })))
+    .png()
+    .toFile(join(renders, `${name}.png`))
   await sharp(
     Buffer.from(
       layoutSvg(layout, {
-        title: `${name}  score ${sc.total.toFixed(0)}`,
+        title: `${title}  over OSM`,
         scale: 1.5,
+        ...overlayLayers(layout, net, join(CACHE, "basemap.json")),
       })
     )
   )
     .png()
-    .toFile(join(renders, `${name}.png`))
+    .toFile(join(renders, `${name}-overlay.png`))
   if (best.seed > 0) {
     copyFileSync(
       join(CACHE, "runs", `seed-${best.seed}.csv`),

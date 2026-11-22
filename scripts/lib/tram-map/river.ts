@@ -108,14 +108,34 @@ export function southBank(
 }
 
 /**
- * The band runs through the corridor between the drawn north-bank network
- * and the drawn south-bank stations: at each x it takes the midpoint of the
- * gap where both banks are present, and otherwise keeps a fixed distance
- * from the one that is. The real river only decides which bank each station
- * is on.
+ * The real centreline carried onto the drawing by the uniform scale and
+ * translation that best fits the true stop positions to the drawn ones.
  */
-export function riverFor(ctx: Context) {
-  return (d: Drawn, level: (x: number) => number): RiverResult => {
+function projectSava(ctx: Context, d: Drawn, sava: Array<Pt>): Array<Pt> {
+  const st = ctx.net.stations
+  const n = st.length
+  const gx = st.reduce((a, s) => a + s.gx, 0) / n
+  const gy = st.reduce((a, s) => a + s.gy, 0) / n
+  const px = d.pos.reduce((a, p) => a + p.x, 0) / n
+  const py = d.pos.reduce((a, p) => a + p.y, 0) / n
+  let [num, den] = [0, 0]
+  st.forEach((s, i) => {
+    num += (s.gx - gx) * (d.pos[i].x - px) + (s.gy - gy) * (d.pos[i].y - py)
+    den += (s.gx - gx) ** 2 + (s.gy - gy) ** 2
+  })
+  const k = num / (den || 1)
+  return sava.map((p) => ({ x: px + k * (p.x - gx), y: py + k * (p.y - gy) }))
+}
+
+/**
+ * The band follows the real Sava wherever the drawing leaves room for it,
+ * and otherwise is pushed into the corridor between the drawn north-bank
+ * tracks and the drawn south-bank stations, so every station stays on its
+ * real bank.
+ */
+export function riverFor(ctx: Context, sava: Array<Pt>) {
+  return (d: Drawn): RiverResult => {
+    const real = projectSava(ctx, d, sava)
     const north: Array<[Pt, Pt]> = []
     d.routes.forEach((r, ci) => {
       const c = ctx.net.chains[ci]
@@ -150,19 +170,12 @@ export function riverFor(ctx: Context) {
         Infinity,
         ...southPts.filter((p) => Math.abs(p.x - x) < window).map((p) => p.y)
       )
-      if (yN === -Infinity && yS === Infinity) {
-        samples.push({ x, y: level(x) })
-        continue
-      }
-      const y =
-        yN === -Infinity
-          ? yS - CLEAR
-          : yS === Infinity
-            ? yN + CLEAR
-            : (yN + yS) / 2
+      const lo = yN + CLEAR
+      const hi = yS - CLEAR
+      const want = yAt(real, x)
       samples.push({
         x,
-        y: Math.max(level(x) - WANDER, Math.min(level(x) + WANDER, y)),
+        y: lo > hi ? (yN + yS) / 2 : Math.max(lo, Math.min(hi, want)),
       })
     }
     const smooth = chaikin(smoothY(samples, 4), 3)
@@ -181,8 +194,7 @@ export function riverFor(ctx: Context) {
   }
 }
 
-const CLEAR = 46
-const WANDER = 14
+const CLEAR = 30
 
 function smoothY(pts: Array<Pt>, radius: number): Array<Pt> {
   return pts.map((p, i) => {

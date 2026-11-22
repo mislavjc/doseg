@@ -14,27 +14,68 @@ import type { View } from "./use-pan-zoom"
 import { usePanZoom } from "./use-pan-zoom"
 
 /**
- * The map opens at 1 CSS px per map unit, so station labels render at the
- * system's 12px, centred on the main square; on desktop the centre shifts
- * right to clear the legend. Zoom out to see the whole network.
+ * Desktop opens with the whole network fitted between the legend and the
+ * zoom buttons. Mobile opens on the city centre, the ring from Trg dr.
+ * Franje Tuđmana to Šubićeva with every label whole, framed below the header
+ * and zoom buttons and above the collapsed legend.
  */
-const CENTRE = "Trg bana J. Jelačića"
+const CORE = new Set([
+  "Trg dr. Franje Tuđmana",
+  "Draškovićeva",
+  "Šubićeva",
+  "Studentski centar",
+  "Glavni kolodvor",
+])
 const MOBILE_MAX = 640
 const LEGEND_W = 336
+const ZOOM_W = 60
+const PAD = 24
+const MOBILE_TOP = 118
+const MOBILE_BOTTOM = 150
+
+function frame(width: number, height: number) {
+  return width < MOBILE_MAX
+    ? { x0: 12, y0: MOBILE_TOP, x1: width - 12, y1: height - MOBILE_BOTTOM }
+    : {
+        x0: LEGEND_W + PAD,
+        y0: PAD,
+        x1: width - ZOOM_W - PAD,
+        y1: height - PAD,
+      }
+}
+
+/** The map-unit box to open on: the centre ring on mobile, else everything. */
+function subject(data: TramMapData, mobile: boolean) {
+  const [vx, vy, vw, vh] = data.viewBox
+  const core = mobile ? data.stations.filter((s) => CORE.has(s.name)) : []
+  if (core.length === 0) {
+    return { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh }
+  }
+  return {
+    x0: Math.min(...core.map((s) => Math.min(s.x, s.label.x))),
+    y0: Math.min(...core.map((s) => Math.min(s.y, s.label.y - 12))),
+    x1: Math.max(...core.map((s) => Math.max(s.x, s.label.x + s.label.w))),
+    y1: Math.max(...core.map((s) => Math.max(s.y, s.label.y + 4))),
+  }
+}
 
 function openingView(data: TramMapData) {
   return (width: number, height: number): View => {
     const [vx, vy, vw, vh] = data.viewBox
     const k = Math.min(width / vw, height / vh)
-    const centre = data.stations.find((s) => s.name === CENTRE) ?? {
-      x: vx + vw / 2,
-      y: vy + vh / 2,
+    const box = frame(width, height)
+    const area = subject(data, width < MOBILE_MAX)
+    const s = Math.min(
+      (box.x1 - box.x0) / ((area.x1 - area.x0) * k),
+      (box.y1 - box.y0) / ((area.y1 - area.y0) * k)
+    )
+    const cx = (width - vw * k) / 2 + ((area.x0 + area.x1) / 2 - vx) * k
+    const cy = (height - vh * k) / 2 + ((area.y0 + area.y1) / 2 - vy) * k
+    return {
+      x: (box.x0 + box.x1) / 2 - s * cx,
+      y: (box.y0 + box.y1) / 2 - s * cy,
+      s,
     }
-    const sx = (width - vw * k) / 2 + (centre.x - vx) * k
-    const sy = (height - vh * k) / 2 + (centre.y - vy) * k
-    const s = Math.max(1, 1 / k)
-    const left = width >= MOBILE_MAX ? LEGEND_W : 0
-    return { x: left + (width - left) / 2 - s * sx, y: height / 2 - s * sy, s }
   }
 }
 

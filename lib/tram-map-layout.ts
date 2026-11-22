@@ -21,7 +21,8 @@ export interface TramMapStationLayout {
   kind: "tick" | "interchange" | "terminal"
   lines: Array<string>
   mark: TramMapMark
-  label: { x: number; y: number }
+  /** Baseline-left of the 16px Heros label, and its width. */
+  label: { x: number; y: number; w: number }
   oneWay: Array<{ broj: string; towards: string }>
 }
 

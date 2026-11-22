@@ -11,7 +11,7 @@ import {
 export type View = { x: number; y: number; s: number }
 
 const MIN_ZOOM = 0.6
-const MAX_ZOOM = 6
+const MAX_ZOOM = 12
 
 const isElement = (target: EventTarget): target is Element =>
   "closest" in target

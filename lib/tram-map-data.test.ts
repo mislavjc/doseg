@@ -75,9 +75,9 @@ describe("tram map data", () => {
     const boxes = map.stations.map((s) => ({
       name: s.name,
       x0: s.label.x,
-      x1: s.label.x + s.name.length * 7.2,
-      y0: s.label.y - 11,
-      y1: s.label.y + 3,
+      x1: s.label.x + s.label.w,
+      y0: s.label.y - 12,
+      y1: s.label.y + 4,
     }))
     const clashes = boxes.flatMap((a, i) =>
       boxes

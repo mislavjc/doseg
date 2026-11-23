@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-20T00:00:00.000Z",
+  "generatedAt": "2026-11-23T00:00:00.000Z",
   "departureTime": "08:00",
-  "stopCount": 2787,
-  "computationSeconds": 0.81,
+  "stopCount": 2777,
+  "computationSeconds": 0.55,
   "betweenness": [
     {
       "name": "Park Maksimir",
@@ -223,7 +223,7 @@
       "key": "45.82208,16.02749",
       "lat": 45.822082,
       "lon": 16.027492,
-      "score": 0.01,
+      "score": 0.02,
       "rank": 10,
       "routes": [
         "231",
@@ -501,33 +501,12 @@
       ]
     },
     {
-      "name": "Branimir centar",
-      "key": "45.80557,15.98445",
-      "lat": 45.805568,
-      "lon": 15.98445,
-      "score": 1.11,
-      "rank": 3,
-      "routes": [
-        "T13",
-        "T14",
-        "T15",
-        "T2",
-        "T31",
-        "T33",
-        "T34",
-        "T4",
-        "T6",
-        "T8",
-        "T9"
-      ]
-    },
-    {
       "name": "Zagreb Glavni kolodvor",
       "key": "45.80445,15.97881",
       "lat": 45.8044512,
       "lon": 15.9788116,
-      "score": 1.11,
-      "rank": 4,
+      "score": 1.12,
+      "rank": 3,
       "routes": [
         "HŽ Harmica - Dugo Selo",
         "HŽ Harmica - Ivanić Grad",
@@ -545,7 +524,6 @@
         "HŽ Tovarnik - Zagreb Glavni kolodvor",
         "HŽ Vinkovci - Zaprešić",
         "HŽ Volinja - Zagreb Glavni kolodvor",
-        "HŽ Vukovar - Split",
         "HŽ Vukovar - Zagreb Glavni kolodvor",
         "HŽ Zagreb Glavni kolodvor - Bjelovar",
         "HŽ Zagreb Glavni kolodvor - Duga Resa",
@@ -577,11 +555,32 @@
       ]
     },
     {
+      "name": "Branimir centar",
+      "key": "45.80557,15.98445",
+      "lat": 45.805568,
+      "lon": 15.98445,
+      "score": 1.12,
+      "rank": 4,
+      "routes": [
+        "T13",
+        "T14",
+        "T15",
+        "T2",
+        "T31",
+        "T33",
+        "T34",
+        "T4",
+        "T6",
+        "T8",
+        "T9"
+      ]
+    },
+    {
       "name": "Draškovićeva",
       "key": "45.81283,15.98343",
       "lat": 45.812828,
       "lon": 15.983432,
-      "score": 1.1,
+      "score": 1.11,
       "rank": 5,
       "routes": [
         "T11",
@@ -650,7 +649,7 @@
       "key": "45.80562,15.97366",
       "lat": 45.805617,
       "lon": 15.973661,
-      "score": 1.09,
+      "score": 1.1,
       "rank": 9,
       "routes": [
         "T2",
@@ -664,7 +663,7 @@
       "key": "45.80613,15.99144",
       "lat": 45.806132,
       "lon": 15.991438,
-      "score": 1.09,
+      "score": 1.1,
       "rank": 10,
       "routes": [
         "T14",
@@ -830,7 +829,7 @@
       "key": "45.81002,15.99297",
       "lat": 45.810019,
       "lon": 15.992974,
-      "score": 1.07,
+      "score": 1.08,
       "rank": 19,
       "routes": [
         "T1",
@@ -865,18 +864,18 @@
     }
   ],
   "networkDiameter": {
-    "minutes": 904.5,
-    "fromStop": "Solin",
-    "toStop": "Osijek",
-    "fromLat": 43.537167,
-    "fromLon": 16.4709657,
-    "toLat": 45.552737,
-    "toLon": 18.6834083
+    "minutes": 906.0,
+    "fromStop": "Đakovo",
+    "toStop": "Split",
+    "fromLat": 45.3136468,
+    "fromLon": 18.4217919,
+    "toLat": 43.5047301,
+    "toLon": 16.4429578
   },
   "averagePathLength": {
-    "minutes": 70.98,
-    "reachablePairs": 5042570,
-    "totalPairs": 7764582,
-    "reachablePct": 64.94
+    "minutes": 70.83,
+    "reachablePairs": 5037886,
+    "totalPairs": 7708952,
+    "reachablePct": 65.35
   }
 }

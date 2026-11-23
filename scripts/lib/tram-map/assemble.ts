@@ -145,26 +145,34 @@ function stationsLayout(
 function viewBoxOf(
   d: Drawn,
   stations: Array<TramMapStationLayout>,
-  ctx: Context
+  river: RiverResult["bounds"]
 ): [number, number, number, number] {
-  const xs = [
-    ...d.pos.map((p) => p.x),
-    ...stations.map((s) => s.label.x + s.label.w),
-  ]
-  const ys = [
-    ...d.pos.map((p) => p.y),
-    ...stations.map((s) => s.label.y),
-    ...stations.map((s) => s.label.y - 16),
-  ]
   const pad = SPACING
-  const x0 = Math.min(...xs, ...stations.map((s) => s.label.x)) - pad
-  const y0 = Math.min(...ys) - pad
-  void ctx
+  const x0 = Math.min(
+    river.x0,
+    ...d.pos.map((p) => p.x - pad),
+    ...stations.map((s) => s.label.x - pad)
+  )
+  const y0 = Math.min(
+    river.y0,
+    ...d.pos.map((p) => p.y - pad),
+    ...stations.map((s) => s.label.y - 16 - pad)
+  )
+  const x1 = Math.max(
+    river.x1,
+    ...d.pos.map((p) => p.x + pad),
+    ...stations.map((s) => s.label.x + s.label.w + pad)
+  )
+  const y1 = Math.max(
+    river.y1,
+    ...d.pos.map((p) => p.y + pad),
+    ...stations.map((s) => s.label.y + pad)
+  )
   return [
     Math.floor(x0),
     Math.floor(y0),
-    Math.ceil(Math.max(...xs) + pad - x0),
-    Math.ceil(Math.max(...ys) + pad - y0),
+    Math.ceil(x1 - Math.floor(x0)),
+    Math.ceil(y1 - Math.floor(y0)),
   ]
 }
 
@@ -191,7 +199,7 @@ export function assemble(
     ] = s.bend[ci]
   })
   return {
-    viewBox: viewBoxOf(d, stations, ctx),
+    viewBox: viewBoxOf(d, stations, rv.bounds),
     lineWidth: LINE_W,
     lines: paths.map(({ broj, isNight, d: path }) => {
       const ids = raw.lines.find((l) => l.broj === broj)?.stations ?? []

@@ -50,17 +50,30 @@ export function DesktopLegend({
   onReset,
   showReset,
 }: LegendProps & { onReset: () => void; showReset: boolean }) {
+  const [open, setOpen] = useState(false)
   const day = lines.filter((l) => !l.isNight)
   const night = lines.filter((l) => l.isNight)
   return (
     <div
       data-ui
-      className="absolute bottom-4 left-4 z-10 hidden max-h-[calc(100svh-104px)] w-80 overflow-y-auto border border-hairline-strong bg-ground py-3 sm:block"
+      className="absolute bottom-4 left-4 z-10 hidden max-h-[calc(100svh-104px)] w-80 overflow-y-auto border border-hairline-strong bg-ground sm:block"
     >
-      <div className="flex items-center justify-between px-4 pb-2">
-        <h2 className="font-mono text-label text-ink-faint">
-          tramvajske linije
-        </h2>
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <button
+          type="button"
+          onClick={() => setOpen((p) => !p)}
+          aria-expanded={open}
+          className="flex flex-1 items-center justify-between gap-3"
+        >
+          <h2 className="font-mono text-label text-ink-faint">
+            tramvajske linije
+          </h2>
+          {open ? (
+            <IconChevronDownSmall size={16} className="text-ink-muted" />
+          ) : (
+            <IconChevronTopSmall size={16} className="text-ink-muted" />
+          )}
+        </button>
         {showReset && (
           <button
             type="button"
@@ -71,6 +84,31 @@ export function DesktopLegend({
           </button>
         )}
       </div>
+      {open && (
+        <LegendLists
+          day={day}
+          night={night}
+          activeLine={activeLine}
+          onToggleLine={onToggleLine}
+        />
+      )}
+    </div>
+  )
+}
+
+function LegendLists({
+  day,
+  night,
+  activeLine,
+  onToggleLine,
+}: {
+  day: Array<TramMapLine>
+  night: Array<TramMapLine>
+  activeLine: string | null
+  onToggleLine: (broj: string) => void
+}) {
+  return (
+    <div className="pb-3">
       <div className="flex flex-col">
         {day.map((l) => (
           <LegendRow

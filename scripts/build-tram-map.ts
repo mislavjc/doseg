@@ -20,6 +20,7 @@ import sharp from "sharp"
 
 import { readJson } from "./lib/json"
 import { anneal } from "./lib/tram-map/anneal"
+import { findCorridors, loadTramTracks } from "./lib/tram-map/corridors"
 import { assemble } from "./lib/tram-map/assemble"
 import { loadNetwork } from "./lib/tram-map/graph"
 import type { Context, State } from "./lib/tram-map/layout"
@@ -152,7 +153,12 @@ async function runSeeds(): Promise<State & { seed: number }> {
 async function main() {
   const net = loadNetwork(NETWORK)
   const sava = await loadSava(join(CACHE, "sava.json"))
-  const ctx = makeContext(net, southBank(net.stations, sava))
+  const tracks = await loadTramTracks(join(CACHE, "tram-tracks.json"))
+  const ctx = makeContext(
+    net,
+    southBank(net.stations, sava),
+    findCorridors(net, tracks)
+  )
   if (flag("--worker")) {
     runWorker(ctx)
     return

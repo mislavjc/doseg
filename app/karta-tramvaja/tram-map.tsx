@@ -14,10 +14,11 @@ import type { View } from "./use-pan-zoom"
 import { usePanZoom } from "./use-pan-zoom"
 
 /**
- * Desktop opens with the whole network fitted between the legend and the
- * zoom buttons. Mobile opens on the city centre, the ring from Trg dr.
- * Franje Tuđmana to Šubićeva with every label whole, framed below the header
- * and zoom buttons and above the collapsed legend.
+ * Desktop opens on the network's west-east extent, Prečko to Dubec, below
+ * the header and above the collapsed legend; only the Gračani spur (line 15
+ * alone) may run off the top. Mobile opens on the city centre, the ring from
+ * Trg dr. Franje Tuđmana to Šubićeva with every label whole, framed below
+ * the header and zoom buttons and above the collapsed legend.
  */
 const CORE = new Set([
   "Trg dr. Franje Tuđmana",
@@ -27,9 +28,11 @@ const CORE = new Set([
   "Glavni kolodvor",
 ])
 const MOBILE_MAX = 640
-const LEGEND_W = 336
+const SPUR = "15"
 const ZOOM_W = 60
 const PAD = 24
+const DESKTOP_TOP = 96
+const DESKTOP_BOTTOM = 88
 const MOBILE_TOP = 118
 const MOBILE_BOTTOM = 150
 
@@ -37,20 +40,18 @@ function frame(width: number, height: number) {
   return width < MOBILE_MAX
     ? { x0: 12, y0: MOBILE_TOP, x1: width - 12, y1: height - MOBILE_BOTTOM }
     : {
-        x0: LEGEND_W + PAD,
-        y0: PAD,
+        x0: PAD,
+        y0: DESKTOP_TOP,
         x1: width - ZOOM_W - PAD,
-        y1: height - PAD,
+        y1: height - DESKTOP_BOTTOM,
       }
 }
 
-/** The map-unit box to open on: the centre ring on mobile, else everything. */
+/** The map-unit box to open on: the centre ring on mobile, else all but the spur. */
 function subject(data: TramMapData, mobile: boolean) {
-  const [vx, vy, vw, vh] = data.viewBox
-  const core = mobile ? data.stations.filter((s) => CORE.has(s.name)) : []
-  if (core.length === 0) {
-    return { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh }
-  }
+  const core = data.stations.filter((s) =>
+    mobile ? CORE.has(s.name) : s.lines.some((l) => l !== SPUR)
+  )
   return {
     x0: Math.min(...core.map((s) => Math.min(s.x, s.label.x))),
     y0: Math.min(...core.map((s) => Math.min(s.y, s.label.y - 12))),

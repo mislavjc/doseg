@@ -48,6 +48,16 @@ export interface Context {
   geoAll: Array<Pt>
   /** Per station: on the south bank of the Sava. */
   south: Array<boolean>
+  /**
+   * Straight real streets (corridors.ts), each to be drawn as one straight
+   * segment: its stations, the chains that run along it, and the skeleton
+   * node indices on it.
+   */
+  corridors: Array<{
+    stations: Array<number>
+    chains: Array<number>
+    nodes: Array<number>
+  }>
   /** Chain pairs whose tracks really cross without a shared stop ("i|j"). */
   realCrossings: Set<string>
 }
@@ -166,7 +176,11 @@ function reference(net: Network): Array<Pt> {
   }))
 }
 
-export function makeContext(net: Network, south: Array<boolean>): Context {
+export function makeContext(
+  net: Network,
+  south: Array<boolean>,
+  corridors: Array<Array<number>>
+): Context {
   const nodeIndex = new Map(net.nodes.map((s, i) => [s, i]))
   const ref = reference(net)
   const scale = SPACING / GRID / medianGap(net, ref)
@@ -179,6 +193,19 @@ export function makeContext(net: Network, south: Array<boolean>): Context {
     geoAll,
     south,
     realCrossings: geoCrossings(net),
+    corridors: corridors.map((stations) => {
+      const on = new Set(stations)
+      return {
+        stations,
+        chains: net.chains.flatMap((c, ci) =>
+          [c.a, ...c.mids, c.b].every((v) => on.has(v)) ? [ci] : []
+        ),
+        nodes: stations.flatMap((v) => {
+          const i = nodeIndex.get(v)
+          return i === undefined ? [] : [i]
+        }),
+      }
+    }),
   }
 }
 

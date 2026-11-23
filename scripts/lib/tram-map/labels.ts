@@ -211,13 +211,13 @@ export function placeLabels(
         hit += segmentInBox(o.a, o.b, o.half, box) * 4
       }
       const padded = {
-        x0: box.x0 - 14,
+        x0: box.x0 - 20,
         y0: box.y0 - 2,
-        x1: box.x1 + 14,
+        x1: box.x1 + 20,
         y1: box.y1 + 2,
       }
       for (const l of placed) {
-        hit += overlapArea(l.box, padded) / 4
+        hit += overlapArea(l.box, padded)
       }
       const own = boxDist(box, p)
       markers.forEach((m, v) => {

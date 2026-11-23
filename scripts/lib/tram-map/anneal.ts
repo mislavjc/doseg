@@ -45,10 +45,46 @@ const DIRS = [
   [-1, -1],
 ]
 
-function mutate(s: State, rand: () => number): State {
+/**
+ * Put one skeleton node of a random corridor onto the octilinear line
+ * through another node of it, in the direction the corridor's two ends
+ * currently point. Aligning a long street one random nudge at a time is
+ * hopeless; this move does it directly.
+ */
+function snapToCorridor(
+  ctx: Context,
+  s: State,
+  next: State,
+  rand: () => number
+) {
+  const c = ctx.corridors[Math.floor(rand() * ctx.corridors.length)]
+  if (c === undefined || c.nodes.length < 2) {
+    return
+  }
+  const first = c.nodes[0]
+  const last = c.nodes.at(-1) ?? first
+  const angle = Math.atan2(s.y[last] - s.y[first], s.x[last] - s.x[first])
+  const step = Math.round(angle / (Math.PI / 4))
+  const [ux, uy] = [
+    Math.round(Math.cos((step * Math.PI) / 4)),
+    Math.round(Math.sin((step * Math.PI) / 4)),
+  ]
+  const anchor = c.nodes[Math.floor(rand() * c.nodes.length)]
+  const moved = c.nodes[Math.floor(rand() * c.nodes.length)]
+  const [dx, dy] = [s.x[moved] - s.x[anchor], s.y[moved] - s.y[anchor]]
+  const t = Math.round((dx * ux + dy * uy) / (ux * ux + uy * uy))
+  next.x[moved] = s.x[anchor] + t * ux
+  next.y[moved] = s.y[anchor] + t * uy
+}
+
+function mutate(ctx: Context, s: State, rand: () => number): State {
   const next = clone(s)
   const n = s.x.length
   const roll = rand()
+  if (roll > 0.9) {
+    snapToCorridor(ctx, s, next, rand)
+    return next
+  }
   if (roll < 0.04) {
     next.river[Math.floor(rand() * 3)] += rand() < 0.5 ? 1 : -1
     return next
@@ -88,7 +124,7 @@ export function anneal(ctx: Context, start: State, opts: AnnealOptions) {
   let bestScore = curScore
   for (let it = 0; it < opts.iterations; it++) {
     const t = opts.t0 * (1 - it / opts.iterations) ** 2 + 1e-3
-    const cand = mutate(cur, rand)
+    const cand = mutate(ctx, cur, rand)
     const candScore = score(ctx, cand)
     const delta = candScore.total - curScore.total
     if (delta <= 0 || rand() < Math.exp(-delta / t)) {

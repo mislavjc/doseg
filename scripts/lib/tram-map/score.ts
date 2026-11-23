@@ -24,6 +24,7 @@ const WEIGHTS = {
   tooClose: 400,
   bend: 6,
   jog: 150,
+  corridor: 300,
   turn: 4,
   crossing: 2000,
   clearance: 300,
@@ -84,6 +85,31 @@ function turnTerms(ctx: Context, d: Drawn) {
 }
 
 const neg = (p: Pt): Pt => ({ x: -p.x, y: -p.y })
+
+/**
+ * Every station of a corridor, and every corner of the chains along it, must
+ * sit on the straight line between the corridor's two ends.
+ */
+function corridorTerm(ctx: Context, d: Drawn) {
+  let bad = 0
+  for (const c of ctx.corridors) {
+    const a = d.pos[c.stations[0]]
+    const b = d.pos[c.stations.at(-1) ?? c.stations[0]]
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1
+    const pts = [
+      ...c.stations.map((v) => d.pos[v]),
+      ...c.chains.flatMap((ci) => d.routes[ci]),
+    ]
+    for (const p of pts) {
+      const dev =
+        Math.abs((p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x)) / len
+      if (dev > 2) {
+        bad += (dev / SPACING) ** 2 + 0.3
+      }
+    }
+  }
+  return bad
+}
 
 /** A bent chain whose short leg is under JOG_MIN reads as a jog, not a turn. */
 const JOG_MIN = 0.8 * SPACING
@@ -183,7 +209,7 @@ const span = (pts: Array<Pt>, axis: "x" | "y") =>
   Math.max(...pts.map((p) => p[axis])) - Math.min(...pts.map((p) => p[axis]))
 
 /** Furthest a station may sit from its fitted real position, in SPACINGs. */
-const MAX_DISPLACEMENT = 2
+const MAX_DISPLACEMENT = 3
 
 /**
  * Geographic fidelity of every station. The real positions are fitted onto
@@ -338,6 +364,7 @@ export function score(ctx: Context, s: State): Breakdown {
       0
     ),
     jog: jogTerm(d),
+    corridor: corridorTerm(ctx, d),
     turn: turnTerms(ctx, d),
     ...crossingTerms(ctx, d, segs),
     ...geoTerms(ctx, d),

@@ -22,6 +22,8 @@ export interface RiverResult {
   d: string
   width: number
   sideErrors: number
+  /** Extent of the band, so the view box can hold all of it. */
+  bounds: { x0: number; y0: number; x1: number; y1: number }
 }
 
 export async function loadSava(cachePath: string): Promise<Array<Pt>> {
@@ -146,33 +148,23 @@ export function riverFor(ctx: Context, sava: Array<Pt>) {
     })
     const southPts = d.pos.filter((_, v) => ctx.south[v])
     const xs = d.pos.map((p) => p.x)
-    const [minX, maxX] = [Math.min(...xs) - 120, Math.max(...xs) + 120]
+    const [minX, maxX] = [Math.min(...xs) - SPACING, Math.max(...xs) + SPACING]
     const window = SPACING * 1.5
     const samples: Array<Pt> = []
     for (let x = minX; x <= maxX; x += GRID) {
-      let yN = -Infinity
-      for (const [a, b] of north) {
-        if (
-          Math.max(a.x, b.x) < x - window ||
-          Math.min(a.x, b.x) > x + window
-        ) {
-          continue
-        }
-        const t =
-          a.x === b.x ? 0.5 : Math.max(0, Math.min(1, (x - a.x) / (b.x - a.x)))
-        yN = Math.max(
-          yN,
-          a.y + t * (b.y - a.y),
-          Math.abs(a.x - b.x) < 1 ? Math.max(a.y, b.y) : -Infinity
-        )
-      }
+      const yN = northEdge(north, x, window)
       const yS = Math.min(
         Infinity,
         ...southPts.filter((p) => Math.abs(p.x - x) < window).map((p) => p.y)
       )
-      const lo = yN + CLEAR
-      const hi = yS - CLEAR
-      const want = yAt(real, x)
+      const lo = yN === -Infinity ? yS - HUG : yN + CLEAR
+      const hi =
+        yS === Infinity
+          ? Math.max(lo, northEdge(north, x, REACH)) + HUG
+          : yS - CLEAR
+      const want = Number.isFinite(lo)
+        ? yAt(real, x)
+        : (samples.at(-1)?.y ?? yAt(real, x))
       samples.push({
         x,
         y: lo > hi ? (yN + yS) / 2 : Math.max(lo, Math.min(hi, want)),
@@ -190,11 +182,47 @@ export function riverFor(ctx: Context, sava: Array<Pt>) {
         (p, i) => `${i === 0 ? "M" : "L"}${Math.round(p.x)} ${Math.round(p.y)}`
       )
       .join("")
-    return { d: dPath, width: BAND, sideErrors }
+    const ys = smooth.map((p) => p.y)
+    return {
+      d: dPath,
+      width: BAND,
+      sideErrors,
+      bounds: {
+        x0: minX - BAND / 2,
+        y0: Math.min(...ys) - BAND / 2,
+        x1: maxX + BAND / 2,
+        y1: Math.max(...ys) + BAND / 2,
+      },
+    }
   }
 }
 
 const CLEAR = 30
+/**
+ * Where only one bank has track, the band stays within HUG of it: of the
+ * southernmost north-bank track within REACH, so it runs below the whole
+ * neighbourhood rather than up between its branches.
+ */
+const HUG = 70
+const REACH = 600
+
+/** Lowest (southernmost) north-bank track within w of x. */
+function northEdge(north: Array<[Pt, Pt]>, x: number, w: number) {
+  let yN = -Infinity
+  for (const [a, b] of north) {
+    if (Math.max(a.x, b.x) < x - w || Math.min(a.x, b.x) > x + w) {
+      continue
+    }
+    const t =
+      a.x === b.x ? 0.5 : Math.max(0, Math.min(1, (x - a.x) / (b.x - a.x)))
+    yN = Math.max(
+      yN,
+      a.y + t * (b.y - a.y),
+      Math.abs(a.x - b.x) < 1 ? Math.max(a.y, b.y) : -Infinity
+    )
+  }
+  return yN
+}
 
 function smoothY(pts: Array<Pt>, radius: number): Array<Pt> {
   return pts.map((p, i) => {

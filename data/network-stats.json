@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20T00:00:00.000Z",
+  "generatedAt": "2026-11-23T00:00:00.000Z",
   "vehicleKm": {
     "tram": 27989,
     "bus": 58717,
@@ -7444,50 +7444,6 @@
       "peakToBaseRatio": null
     },
     {
-      "name": "Slavonski Brod - Dugo Selo",
-      "mode": "RAIL",
-      "hourlyDepartures": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "headwayCv": null,
-      "peakHeadwayCv": null,
-      "tortuosity": 1.07,
-      "straightLineKm": 155.07,
-      "stopSpacing": {
-        "avgM": 5051,
-        "minM": 1416,
-        "maxM": 10351,
-        "cv": 0.4,
-        "count": 34
-      },
-      "peakDepPerHour": 0.0,
-      "baseDepPerHour": 0.0,
-      "peakToBaseRatio": null
-    },
-    {
       "name": "Split - Osijek",
       "mode": "RAIL",
       "hourlyDepartures": [
@@ -7708,50 +7664,6 @@
       "peakToBaseRatio": null
     },
     {
-      "name": "Virovitica - Dugo Selo",
-      "mode": "RAIL",
-      "hourlyDepartures": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "headwayCv": null,
-      "peakHeadwayCv": null,
-      "tortuosity": 1.19,
-      "straightLineKm": 90.36,
-      "stopSpacing": {
-        "avgM": 4297,
-        "minM": 992,
-        "maxM": 9843,
-        "cv": 0.59,
-        "count": 26
-      },
-      "peakDepPerHour": 0.0,
-      "baseDepPerHour": 0.0,
-      "peakToBaseRatio": null
-    },
-    {
       "name": "Volinja - Zagreb Glavni kolodvor",
       "mode": "RAIL",
       "hourlyDepartures": [
@@ -7796,50 +7708,6 @@
       "peakToBaseRatio": null
     },
     {
-      "name": "Vukovar - Split",
-      "mode": "RAIL",
-      "hourlyDepartures": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "headwayCv": null,
-      "peakHeadwayCv": null,
-      "tortuosity": 2.05,
-      "straightLineKm": 285.91,
-      "stopSpacing": {
-        "avgM": 17724,
-        "minM": 2159,
-        "maxM": 78092,
-        "cv": 0.86,
-        "count": 34
-      },
-      "peakDepPerHour": 0.0,
-      "baseDepPerHour": 0.0,
-      "peakToBaseRatio": null
-    },
-    {
       "name": "Vukovar - Zagreb Glavni kolodvor",
       "mode": "RAIL",
       "hourlyDepartures": [
@@ -7873,11 +7741,11 @@
       "tortuosity": 1.11,
       "straightLineKm": 238.58,
       "stopSpacing": {
-        "avgM": 13280,
+        "avgM": 12076,
         "minM": 2742,
-        "maxM": 32029,
-        "cv": 0.59,
-        "count": 21
+        "maxM": 24059,
+        "cv": 0.47,
+        "count": 23
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -8354,14 +8222,14 @@
       ],
       "headwayCv": null,
       "peakHeadwayCv": null,
-      "tortuosity": 1.12,
+      "tortuosity": 1.1,
       "straightLineKm": 49.24,
       "stopSpacing": {
-        "avgM": 4584,
+        "avgM": 6042,
         "minM": 1135,
-        "maxM": 9843,
-        "cv": 0.56,
-        "count": 13
+        "maxM": 18020,
+        "cv": 0.99,
+        "count": 10
       },
       "peakDepPerHour": 0.0,
       "baseDepPerHour": 0.0,
@@ -9205,9 +9073,9 @@
     }
   ],
   "deadEndStops": {
-    "total": 1418,
+    "total": 1408,
     "byMode": {
-      "RAIL": 57,
+      "RAIL": 47,
       "BUS": 1338,
       "TRAM": 23
     },
@@ -18579,41 +18447,6 @@
         "mode": "BUS"
       },
       {
-        "name": "Podravska Bistrica",
-        "lat": 45.7427199,
-        "lon": 17.6089696,
-        "route": "Split - Osijek",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Sladojevci",
-        "lat": 45.726886,
-        "lon": 17.6388105,
-        "route": "Split - Osijek",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Nova Bukovica",
-        "lat": 45.6625706,
-        "lon": 17.7773112,
-        "route": "Split - Osijek",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Mikleuš",
-        "lat": 45.6167919,
-        "lon": 17.8122462,
-        "route": "Split - Osijek",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Velimirovac",
-        "lat": 45.5125348,
-        "lon": 18.0950525,
-        "route": "Split - Osijek",
-        "mode": "RAIL"
-      },
-      {
         "name": "Jelisavac",
         "lat": 45.5233923,
         "lon": 18.1548171,
@@ -18698,73 +18531,38 @@
         "mode": "RAIL"
       },
       {
-        "name": "Donji Dolac",
-        "lat": 43.6517843,
-        "lon": 16.126636,
-        "route": "Vukovar - Split",
+        "name": "Podravska Bistrica",
+        "lat": 45.7427199,
+        "lon": 17.6089696,
+        "route": "Split - Osijek",
         "mode": "RAIL"
       },
       {
-        "name": "Bakovići",
-        "lat": 43.6415939,
-        "lon": 16.1885406,
-        "route": "Vukovar - Split",
+        "name": "Sladojevci",
+        "lat": 45.726886,
+        "lon": 17.6388105,
+        "route": "Split - Osijek",
         "mode": "RAIL"
       },
       {
-        "name": "Preslo",
-        "lat": 43.6295939,
-        "lon": 16.2139194,
-        "route": "Vukovar - Split",
+        "name": "Nova Bukovica",
+        "lat": 45.6625706,
+        "lon": 17.7773112,
+        "route": "Split - Osijek",
         "mode": "RAIL"
       },
       {
-        "name": "Prgomet",
-        "lat": 43.6102947,
-        "lon": 16.2261751,
-        "route": "Vukovar - Split",
+        "name": "Mikleuš",
+        "lat": 45.6167919,
+        "lon": 17.8122462,
+        "route": "Split - Osijek",
         "mode": "RAIL"
       },
       {
-        "name": "Labin Dalmatinski",
-        "lat": 43.5837773,
-        "lon": 16.2331331,
-        "route": "Vukovar - Split",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Sadine",
-        "lat": 43.563448,
-        "lon": 16.2986679,
-        "route": "Vukovar - Split",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Kaštel Kambelovac",
-        "lat": 43.5554943,
-        "lon": 16.3857134,
-        "route": "Vukovar - Split",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Kaštel Gomilica",
-        "lat": 43.5534973,
-        "lon": 16.4001883,
-        "route": "Vukovar - Split",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Solin",
-        "lat": 43.537167,
-        "lon": 16.4709657,
-        "route": "Vukovar - Split",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Dujmovača",
-        "lat": 43.5275144,
-        "lon": 16.4818404,
-        "route": "Vukovar - Split",
+        "name": "Velimirovac",
+        "lat": 45.5125348,
+        "lon": 18.0950525,
+        "route": "Split - Osijek",
         "mode": "RAIL"
       },
       {
@@ -18842,27 +18640,6 @@
         "lat": 45.3356931,
         "lon": 17.7572836,
         "route": "Zagreb Glavni kolodvor - Požega",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Nugla",
-        "lat": 45.4122949,
-        "lon": 14.0243499,
-        "route": "Zagreb Glavni kolodvor - Pula",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Roč",
-        "lat": 45.4003667,
-        "lon": 14.0388762,
-        "route": "Zagreb Glavni kolodvor - Pula",
-        "mode": "RAIL"
-      },
-      {
-        "name": "Ročko polje",
-        "lat": 45.3738621,
-        "lon": 14.0799031,
-        "route": "Zagreb Glavni kolodvor - Pula",
         "mode": "RAIL"
       },
       {
@@ -18974,6 +18751,27 @@
         "name": "Šijana",
         "lat": 44.8884825,
         "lon": 13.8660853,
+        "route": "Zagreb Glavni kolodvor - Pula",
+        "mode": "RAIL"
+      },
+      {
+        "name": "Nugla",
+        "lat": 45.4122949,
+        "lon": 14.0243499,
+        "route": "Zagreb Glavni kolodvor - Pula",
+        "mode": "RAIL"
+      },
+      {
+        "name": "Roč",
+        "lat": 45.4003667,
+        "lon": 14.0388762,
+        "route": "Zagreb Glavni kolodvor - Pula",
+        "mode": "RAIL"
+      },
+      {
+        "name": "Ročko polje",
+        "lat": 45.3738621,
+        "lon": 14.0799031,
         "route": "Zagreb Glavni kolodvor - Pula",
         "mode": "RAIL"
       },
@@ -19148,74 +18946,133 @@
     "interlinedBlocks": 91,
     "interlinedExamples": [
       {
-        "blockId": "15901",
-        "routes": [
-          "159",
-          "163"
-        ]
-      },
-      {
-        "blockId": "13001",
-        "routes": [
-          "124",
-          "130"
-        ]
-      },
-      {
-        "blockId": "30803",
-        "routes": [
-          "307",
-          "308",
-          "313"
-        ]
-      },
-      {
-        "blockId": "12002",
-        "routes": [
-          "120",
-          "127",
-          "128",
-          "131",
-          "176",
-          "177"
-        ]
-      },
-      {
-        "blockId": "20201",
-        "routes": [
-          "201",
-          "202"
-        ]
-      },
-      {
-        "blockId": "26701",
-        "routes": [
-          "267",
-          "282"
-        ]
-      },
-      {
-        "blockId": "12201",
-        "routes": [
-          "122",
-          "123"
-        ]
-      },
-      {
-        "blockId": "21603",
+        "blockId": "21601",
         "routes": [
           "216",
           "276"
         ]
       },
       {
-        "blockId": "28001",
+        "blockId": "27801",
+        "routes": [
+          "278",
+          "282"
+        ]
+      },
+      {
+        "blockId": "11203",
+        "routes": [
+          "112",
+          "159",
+          "160",
+          "162"
+        ]
+      },
+      {
+        "blockId": "10203",
+        "routes": [
+          "102",
+          "103"
+        ]
+      },
+      {
+        "blockId": "11202",
+        "routes": [
+          "112",
+          "159",
+          "160",
+          "164",
+          "168"
+        ]
+      },
+      {
+        "blockId": "16101",
+        "routes": [
+          "160",
+          "161",
+          "163"
+        ]
+      },
+      {
+        "blockId": "10201",
+        "routes": [
+          "102",
+          "103"
+        ]
+      },
+      {
+        "blockId": "21704",
+        "routes": [
+          "216",
+          "217"
+        ]
+      },
+      {
+        "blockId": "13901",
+        "routes": [
+          "139",
+          "141"
+        ]
+      },
+      {
+        "blockId": "20502",
+        "routes": [
+          "205",
+          "230"
+        ]
+      },
+      {
+        "blockId": "11101",
+        "routes": [
+          "110",
+          "111",
+          "112",
+          "160",
+          "161",
+          "162",
+          "163",
+          "164",
+          "168"
+        ]
+      },
+      {
+        "blockId": "11001",
+        "routes": [
+          "110",
+          "111",
+          "133",
+          "160",
+          "162",
+          "163"
+        ]
+      },
+      {
+        "blockId": "12202",
+        "routes": [
+          "122",
+          "123"
+        ]
+      },
+      {
+        "blockId": "27401",
+        "routes": [
+          "261",
+          "274"
+        ]
+      },
+      {
+        "blockId": "11801",
+        "routes": [
+          "112",
+          "118",
+          "132"
+        ]
+      },
+      {
+        "blockId": "27103",
         "routes": [
           "271",
-          "274",
-          "277",
-          "280",
-          "284"
+          "272"
         ]
       },
       {
@@ -19231,78 +19088,28 @@
         ]
       },
       {
-        "blockId": "27201",
-        "routes": [
-          "224",
-          "264",
-          "270",
-          "272",
-          "273"
-        ]
-      },
-      {
-        "blockId": "26303",
-        "routes": [
-          "263",
-          "273"
-        ]
-      },
-      {
-        "blockId": "22601",
-        "routes": [
-          "213",
-          "226"
-        ]
-      },
-      {
-        "blockId": "27102",
-        "routes": [
-          "261",
-          "271",
-          "272"
-        ]
-      },
-      {
-        "blockId": "22401",
-        "routes": [
-          "213",
-          "224",
-          "230"
-        ]
-      },
-      {
-        "blockId": "20101",
-        "routes": [
-          "201",
-          "202"
-        ]
-      },
-      {
-        "blockId": "21201",
-        "routes": [
-          "212",
-          "269"
-        ]
-      },
-      {
-        "blockId": "16002",
-        "routes": [
-          "160",
-          "168"
-        ]
-      },
-      {
-        "blockId": "13901",
-        "routes": [
-          "139",
-          "141"
-        ]
-      },
-      {
-        "blockId": "21601",
+        "blockId": "23001",
         "routes": [
           "216",
-          "276"
+          "230",
+          "232",
+          "261"
+        ]
+      },
+      {
+        "blockId": "27101",
+        "routes": [
+          "264",
+          "271",
+          "272",
+          "280"
+        ]
+      },
+      {
+        "blockId": "10902",
+        "routes": [
+          "109",
+          "124"
         ]
       }
     ]
@@ -20276,9 +20083,9 @@
       {
         "name": "",
         "mode": "RAIL",
-        "weekdayTrips": 331,
-        "saturdayTrips": 131,
-        "sundayTrips": 246
+        "weekdayTrips": 286,
+        "saturdayTrips": 99,
+        "sundayTrips": 242
       },
       {
         "name": "1",
@@ -20691,15 +20498,12 @@
         "Pula - Zagreb Glavni kolodvor",
         "Rijeka - Zagreb Glavni kolodvor",
         "Savski Marof - Novska",
-        "Slavonski Brod - Dugo Selo",
         "Split - Osijek",
         "Split - Zagreb Glavni kolodvor",
         "Tovarnik - Zagreb Glavni kolodvor",
         "Varaždin - Golubovec",
         "Vinkovci - Zaprešić",
-        "Virovitica - Dugo Selo",
         "Volinja - Zagreb Glavni kolodvor",
-        "Vukovar - Split",
         "Vukovar - Zagreb Glavni kolodvor",
         "Zabok - Gornja Stubica",
         "Zabok - Kotoriba",
@@ -20788,15 +20592,12 @@
         "Pula - Zagreb Glavni kolodvor",
         "Rijeka - Zagreb Glavni kolodvor",
         "Savski Marof - Novska",
-        "Slavonski Brod - Dugo Selo",
         "Split - Osijek",
         "Split - Zagreb Glavni kolodvor",
         "Tovarnik - Zagreb Glavni kolodvor",
         "Varaždin - Golubovec",
         "Vinkovci - Zaprešić",
-        "Virovitica - Dugo Selo",
         "Volinja - Zagreb Glavni kolodvor",
-        "Vukovar - Split",
         "Vukovar - Zagreb Glavni kolodvor",
         "Zabok - Gornja Stubica",
         "Zabok - Kotoriba",
